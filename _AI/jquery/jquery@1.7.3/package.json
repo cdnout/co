@@ -1,0 +1,6 @@
+{
+  "name": "jQuery",
+  "dependencies": {
+    "jquery": "^1.7.3"
+  }
+}

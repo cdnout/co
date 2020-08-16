@@ -1,0 +1,6 @@
+{
+  "name": "Bootstrap",
+  "dependencies": {
+    "bootstrap": "^4.1.0"
+  }
+}
