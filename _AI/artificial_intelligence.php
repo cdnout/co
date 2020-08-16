@@ -1,6 +1,7 @@
 <?php 
   ini_set('max_execution_time', 30000);
   set_time_limit(30000);
+$version_linit = "";
 include("var.php");
 // function entire directory
   function custom_copy($src, $dst) {
@@ -87,6 +88,7 @@ include("var.php");
     
       // CDN AI
       print_r($listfiles);
+      //print_r($listfiles);
       // Getting Versions
       $commas = "'";
       $get_v =  shell_exec("npm v $prname versions");
@@ -103,7 +105,11 @@ include("var.php");
         }
       }
 
+      if(!empty($version_limit)) {
+        $get_v_ar = array_slice($get_v_ar, $version_limit);  
+      }
       
+      print_r($get_v_ar);
       $dirp = "var.php";
       $contents = file_get_contents($dirp);
       $contents = str_replace($get_v_ar, 'hascol', $contents);

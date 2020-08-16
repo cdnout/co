@@ -48,6 +48,19 @@
       $less_exists = "true";
     }
   
+    $gif_ = preg_grep("~^.*\.gif~", scandir("../../$prname/"));  
+    if(!empty($json_)) {
+      $gif_exists = "true";
+    }
+    $png_ = preg_grep("~^.*\.png~", scandir("../../$prname/"));  
+    if(!empty($json_)) {
+      $png_exists = "true";
+    }
+    $jpg_ = preg_grep("~^.*\.jpg~", scandir("../../$prname/"));  
+    if(!empty($json_)) {
+      $jpg_exists = "true";
+    }
+  
   
     if(isset($latest_v)) {
       $version_number = $v_h_latest;
@@ -145,7 +158,9 @@
                       } else {
                         $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                       }
-                      js_pre_code($made_link);
+                      if(file_exists($made_link)) {
+                        js_pre_code($made_link);
+                      }
                     }
                   }
                 }
@@ -153,8 +168,10 @@
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $cssext = ".css";
-                    if(strpos($made_link, $cssext) !== false){                                         
-                      css_pre_code($made_link);
+                    if(strpos($made_link, $cssext) !== false){
+                      if(file_exists($made_link)) {
+                        css_pre_code($made_link);
+                      }
                     }
                   }
                 }
@@ -162,8 +179,10 @@
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $jsonext = ".json";
-                    if(strpos($made_link, $jsonext) !== false){                                         
-                      json_pre_code($made_link);
+                    if(strpos($made_link, $jsonext) !== false){
+                      if(file_exists($made_link)) {
+                        json_pre_code($made_link);
+                      }
                     }
                   }
                 }
@@ -174,7 +193,9 @@
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url_font";
                     $fontext = ".svg";
                     if(strpos($made_link, $fontext) !== false){                                         
-                      font_pre_code($made_link, $cdn_file_url_font);
+                      if(file_exists($made_link)) {
+                        font_pre_code($made_link, $cdn_file_url_font);  
+                      }
                     }
                   }
                 }

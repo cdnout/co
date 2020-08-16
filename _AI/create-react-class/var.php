@@ -19,8 +19,8 @@ $listfiles = $listfiles_arr;
 $keyfiles = array("create-react-class.min.js");
 $github = "https://github.com/facebook/react";
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$gitrg = "https://github.com/facebook/react/archive/v"; // .tar.gz
+$gitrg = ""; // .tar.gz
 $keywords = array("Legacy API for creating react components", "react", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
 $listfolders = "";
-  
+$version_limit = "-10";
 ?>

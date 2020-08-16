@@ -1,6 +1,3 @@
 {
-  "name": "jQuery",
-  "dependencies": {
-    "create-react-class": "^1.2.4"
-  }
+  "name": "Create React Class"
 }

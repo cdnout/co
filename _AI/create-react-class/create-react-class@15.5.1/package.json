@@ -1,5 +1,5 @@
 {
-  "name": "jQuery",
+  "name": "Create React Class",
   "dependencies": {
     "create-react-class": "^15.5.1"
   }
