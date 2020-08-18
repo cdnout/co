@@ -355,7 +355,6 @@
               <a href="javascript:;" class="btn-show"><span class="show">+ Show all files</span><span class="less">- Show less files</span></a>  
                 
               <?php   } ?>
-              
               </div>
             </div>
             
