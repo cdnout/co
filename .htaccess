@@ -1,0 +1,45 @@
+RewriteEngine On
+
+RewriteCond %{HTTPS} on
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+RewriteCond %{HTTPS} !=on
+
+ErrorDocument 404 https://cdnout.com/404/
+ErrorDocument 500 https://cdnout.com/404/
+ErrorDocument 400 https://cdnout.com/404/
+ErrorDocument 403 https://cdnout.com/404/
+
+RewriteEngine On
+
+# proc/self/environ? no way!
+RewriteCond %{QUERY_STRING} proc/self/environ [OR]
+
+# Block out any script trying to set a mosConfig value through the URL
+RewriteCond %{QUERY_STRING} mosConfig_[a-zA-Z_]{1,21}(=|\%3D) [OR]
+
+# Block out any script trying to base64_encode crap to send via URL
+RewriteCond %{QUERY_STRING} base64_encode.*(.*) [OR]
+
+# Block out any script that includes a <script> tag in URL
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+
+# Block out any script trying to set a PHP GLOBALS variable via URL
+RewriteCond %{QUERY_STRING} GLOBALS(=|[|\%[0-9A-Z]{0,2}) [OR]
+
+# Block out any script trying to modify a _REQUEST variable via URL
+RewriteCond %{QUERY_STRING} _REQUEST(=|[|\%[0-9A-Z]{0,2})
+
+# Send all blocked request to homepage with 403 Forbidden error!
+
+RewriteCond %{REQUEST_URI} !^/\.well-known/cpanel-dcv/[0-9a-zA-Z_-]+$
+RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/(?:\ Ballot169)?
+RewriteCond %{REQUEST_URI} !^/\.well-known/pki-validation/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
+RewriteRule ^(.*)$ 404.php [F,L]
+
+<FilesMatch "\.(ttf|otf|eot|woff)$">
+  <IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+  </IfModule>
+</FilesMatch>

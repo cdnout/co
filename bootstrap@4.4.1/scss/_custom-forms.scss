@@ -9,7 +9,6 @@
 
 .custom-control {
   position: relative;
-  z-index: 1;
   display: block;
   min-height: $font-size-base * $line-height-base;
   padding-left: $custom-control-gutter + $custom-control-indicator-size;
@@ -136,10 +135,10 @@
 
   .custom-control-input:disabled {
     &:checked ~ .custom-control-label::before {
-      @include gradient-bg($custom-control-indicator-checked-disabled-bg);
+      background-color: $custom-control-indicator-checked-disabled-bg;
     }
     &:indeterminate ~ .custom-control-label::before {
-      @include gradient-bg($custom-control-indicator-checked-disabled-bg);
+      background-color: $custom-control-indicator-checked-disabled-bg;
     }
   }
 }
@@ -162,7 +161,7 @@
 
   .custom-control-input:disabled {
     &:checked ~ .custom-control-label::before {
-      @include gradient-bg($custom-control-indicator-checked-disabled-bg);
+      background-color: $custom-control-indicator-checked-disabled-bg;
     }
   }
 }
@@ -205,7 +204,7 @@
 
   .custom-control-input:disabled {
     &:checked ~ .custom-control-label::before {
-      @include gradient-bg($custom-control-indicator-checked-disabled-bg);
+      background-color: $custom-control-indicator-checked-disabled-bg;
     }
   }
 }
@@ -238,9 +237,8 @@
     border-color: $custom-select-focus-border-color;
     outline: 0;
     @if $enable-shadows {
-      @include box-shadow($custom-select-box-shadow, $custom-select-focus-box-shadow);
+      box-shadow: $custom-select-box-shadow, $custom-select-focus-box-shadow;
     } @else {
-      // Avoid using mixin so we can pass custom focus shadow properly
       box-shadow: $custom-select-focus-box-shadow;
     }
 

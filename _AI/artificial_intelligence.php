@@ -132,7 +132,6 @@ include("var.php");
     
       // CDN AI
       print_r($listfiles);
-      //print_r($listfiles);
       // Getting Versions
       $commas = "'";
       $get_v =  shell_exec("npm v $prname versions");
@@ -173,10 +172,7 @@ include("var.php");
           }        
       }
       // File Copying
-      $dist_fonts = $dist."/fonts";
-      $dist_scss = $foldersname."/node_modules/".$prname."/scss";
-      $dist_less = $foldersname."/node_modules/".$prname."/less";
-      $dist_img = $foldersname."/node_modules/".$prname."/images";
+      
       foreach($get_v_ar as $key => $version) {
             
             $version = preg_replace('/\s+/', '', $version);
@@ -197,7 +193,10 @@ include("var.php");
           recursiveScan($dist,$listfolders, $listfiles, $foldersname); 
             
               // checking for fonts inside dist
-             
+             $dist_fonts = $dist."/fonts";
+            $dist_scss = $foldersname."/node_modules/".$prname."/scss";
+            $dist_less = $foldersname."/node_modules/".$prname."/less";
+            $dist_img = $foldersname."/node_modules/".$prname."/images";
               
               $forward_path_dir = "../../$foldersname/fonts";
               if(file_exists($dist_fonts)) {

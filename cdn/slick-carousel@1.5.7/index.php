@@ -256,8 +256,10 @@
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $cssext = ".css";
+                    if(file_exists($made_link)){
                     if(strpos($made_link, $cssext) !== false){
                       css_pre_code($made_link);
+                    }
                     }
                   }
                 }
@@ -265,10 +267,10 @@
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $jsonext = ".json";
+                    if(file_exists($made_link)){
                     if(strpos($made_link, $jsonext) !== false){
-                      
-                        json_pre_code($made_link);
-                      
+                        json_pre_code($made_link); 
+                    }
                     }
                   }
                 }
@@ -340,9 +342,16 @@
               ?>
               <div class="btn-holder">
                 <?php if(isset($scss_folder) or isset($less_folder)) { ?>
-                <a href="javascript:;" class="btn btn-dark">Download SCSS/LESS Files</a>  
+                
+                
+                <?php if(file_exists("../../zip/$foldername.zip")) { ?>
+              <a href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark">Download Files (JS <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
+                <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> <?php if(isset($cdn_real_fonts)) { echo "- Fonts"; } ?>)</a>
               <?php } ?>
-              <?php if(isset($scss_file_ex) or isset($less_file_ex) or isset($cdn_real_font) or isset($cdn_real_img)) { ?>
+                
+                
+              <?php } ?>
+              <?php if(isset($scss_file_ex) or isset($less_file_ex) or isset($cdn_real_fonts) or isset($cdn_real_img)) { ?>
               <a href="javascript:;" class="btn-show"><span class="show">+ Show all files</span><span class="less">- Show less files</span></a>  
                 
               <?php   } ?>
