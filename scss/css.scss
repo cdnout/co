@@ -557,16 +557,34 @@ main {
   }
   
   &.font {
-    background: #1a1a1a;
-    color: $yellow;
+    background: #eee;
     font-size: 11px;
     padding: 15px 20px;
+    display: none;
+    .show-all & {
+      display: block;
+    }
     code {
       white-space: pre-wrap;
       font: 11px/20px "Verdana";
       letter-spacing: 0;
     }
-    
+  }
+  
+  &.scss, &.less, &.img {
+    padding-left: 20px;
+    background: rgba(purple, .1);
+    display: none;
+    .show-all & {
+      display: block;
+    }
+  }
+  
+  &.less {
+    background: rgba(purple, .08);
+  }
+  &.img {
+    background: rgba(orange, .1);
   }
 
   &.np {
@@ -1039,6 +1057,7 @@ code {
     border-bottom: 2px solid darken($gray-lightest, 5%);
     padding: 0 0 45px 55px;
     overflow: hidden;
+    min-height: 200px;
     margin: 0 0 40px;
     font-size: 14px;
 
@@ -1095,7 +1114,7 @@ code {
       @media (min-width: 1300px) {
         position: absolute;
         right: 0;
-        top: 120px;
+        top: 90px;
         margin: 0;
         width: 230px;
       }
@@ -1386,5 +1405,33 @@ margin: 2px 4px 0 6px;
   margin: 0 2px;
   display: inline-block;
   vertical-align: top;
-  padding-bottom: 2px;
+  padding-bottom: 2px; 
+}
+.btn-holder {
+  display: flex;
+  align-items: center;
+  padding-top: 15px;
+  margin: -15px;
+  .btn-show, .btn {
+    margin: 15px;
+  }
+}
+.btn-show {
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: .5px;
+  .show {
+    display: inline;
+    .show-all & {
+      display: none;
+    }
+  }
+  .less {
+    display: none;
+    .show-all & {
+      display: inline;
+    }
+  }
 }

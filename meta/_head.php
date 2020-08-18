@@ -84,6 +84,48 @@ function js_pre_code($made_link) {
     <button data-clipboard-text='<?php echo $made_link; ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
   </div>
 </div>
+<?php
+} function scss_pre_code($made_link) {
+  $mapext = "map";
+  if(strpos($made_link, $mapext) !== false){ 
+    $mapfile = "mapfile";
+  }
+?>
+<div class="code-line scss <?php if(isset($mapfile)) { echo $mapfile; } ?>">
+  <code class="copycat" data-clipboard-text='<?php echo $made_link; ?>'><?php echo $made_link; ?></code>
+  <div class="copy-cat">
+    <button data-clipboard-text='@import "<?php echo $made_link; ?>";' title="Copy Import SCSS Tag" type="button" class="btn-coppier copycat"><i class="icon-code1"></i></button>
+    <button data-clipboard-text='<?php echo $made_link; ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
+  </div>
+</div>
+<?php
+} function less_pre_code($made_link) {
+  $mapext = "map";
+  if(strpos($made_link, $mapext) !== false){ 
+    $mapfile = "mapfile";
+  }
+?>
+<div class="code-line less <?php if(isset($mapfile)) { echo $mapfile; } ?>">
+  <code class="copycat" data-clipboard-text='<?php echo $made_link; ?>'><?php echo $made_link; ?></code>
+  <div class="copy-cat">
+    <button data-clipboard-text='@import "<?php echo $made_link; ?>";' title="Copy Import Less Tag" type="button" class="btn-coppier copycat"><i class="icon-code1"></i></button>
+    <button data-clipboard-text='<?php echo $made_link; ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
+  </div>
+</div>
+<?php
+} function img_pre_code($made_link) {
+  $mapext = "map";
+  if(strpos($made_link, $mapext) !== false){ 
+    $mapfile = "mapfile";
+  }
+?>
+<div class="code-line img <?php if(isset($mapfile)) { echo $mapfile; } ?>">
+  <code class="copycat" data-clipboard-text='<?php echo $made_link; ?>'><?php echo $made_link; ?></code>
+  <div class="copy-cat">
+    <button data-clipboard-text='<img src="<?php echo $made_link; ?>" alt="Image description">' title="Copy Image Tag" type="button" class="btn-coppier copycat"><i class="icon-code1"></i></button>
+    <button data-clipboard-text='<?php echo $made_link; ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
+  </div>
+</div>
 <?php } function font_pre_code($made_link, $made_name) { ?>
 
 <div class="code-line font">
@@ -106,7 +148,7 @@ function js_pre_code($made_link) {
          url('<?php echo $made_link; ?>.woff') format('woff'),
          url('<?php echo $made_link; ?>.svg# <?php echo $made_name; ?>') format('svg');
   }
-</code>
+</code> 
 </div>
 <?php } function json_pre_code($made_link) { 
   $mapext = "map";

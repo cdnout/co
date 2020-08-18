@@ -1,6 +1,5 @@
 <?php 
-$title = "Slick Carousel";
-$prname = "slick-carousel"; // npm command
+
 
 $file_cnn = "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js
 https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/ajax-loader.gif 
@@ -29,13 +28,15 @@ foreach($file_cnn as $filecn){
     $listfiles_arr[] = $listfiles_ar;
   }
 }
-$listfiles = $listfiles_arr;
 
+
+$listfiles = $listfiles_arr;
+$title = "Slick Carousel";
+$prname = "slick-carousel"; // npm command
 $keyfiles = array("slick.min.js", "slick.min.css");
 $github = "https://github.com/kenwheeler/slick";
-$npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
 $gitrg = "https://github.com/kenwheeler/slick/archive/"; // .tar.gz
 $keywords = array("carousel", "responsive carousel", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
-$listfolders = "";
-
+$npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
+$version_limit = "-10"; // give negative value 
 ?>

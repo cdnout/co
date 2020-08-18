@@ -2,6 +2,7 @@
   ini_set('max_execution_time', 30000);
   set_time_limit(30000);
 $version_linit = "";
+$listfolders = "";
 include("var.php");
 // function entire directory
   function custom_copy($src, $dst) {
@@ -70,13 +71,56 @@ include("var.php");
                 foreach ($listfiles as $value) {
                   
                   if($filename == $value) {
-                    
-                    $file;
                     $forward_paths = "../../$thefolder/$filename";
-                    $forward_index = "../../$thefolder/index.js";
-                    if(!file_exists($forward_paths)) {
-                      copy($file,$forward_paths);
-                    }
+                    $fileext = pathinfo($filename, PATHINFO_EXTENSION);
+                    //print_r($fileextension);
+                    
+                      
+                      if($fileext != "woff" && $fileext != "woff2" && $fileext != "svg" && $fileext != "eot" && $fileext != "ttf" && $fileext != "otf" && $fileext != "jpg" && $fileext != "gif" && $fileext != "png" && $fileext != "webp" ){
+                        if(!file_exists($forward_paths)) {
+                          copy($file,$forward_paths);
+                        }
+                      } else {
+                        if($fileext == "jpg" or $fileext == "gif" or $fileext == "png" or $fileext == "webp"){
+                        $forward_paths = "../../$thefolder/img/$filename";
+                        if(!file_exists("../../$thefolder/img/")){
+                          mkdir("../../$thefolder/img", 0777, true);
+                        }
+                        if(!file_exists($forward_paths)) {
+                          copy($file,$forward_paths);
+                        }
+                      }
+                      if($fileext == "woff" or $fileext == "woff2" or $fileext == "svg" or $fileext == "eot" or $fileext == "ttf" or $fileext == "otf"){
+                        $forward_paths = "../../$thefolder/fonts/$filename";
+                        if(!file_exists("../../$thefolder/fonts/")){
+                          mkdir("../../$thefolder/fonts", 0777, true);
+                        }
+                        if(!file_exists($forward_paths)) {
+                          copy($file,$forward_paths);
+                        }
+                      }
+                        /*
+                      if($fileext == "scss"){
+                        $forward_paths = "../../$thefolder/scss/$filename";
+                          if(!file_exists("../../$thefolder/scss/")){
+                            mkdir("../../$thefolder/scss", 0777, true);
+                          }
+                          if(!file_exists($forward_paths)) {
+                            copy($file,$forward_paths);
+                          }
+                        
+                      }
+                      if($fileext == "less"){
+                        $forward_paths = "../../$thefolder/less/$filename";
+                        
+                        if(!file_exists("../../$thefolder/less/")){
+                            mkdir("../../$thefolder/less", 0777, true);
+                          }
+                          if(!file_exists($forward_paths)) {
+                            copy($file,$forward_paths);
+                          }
+                      }*/
+                      }
                   }
                 }                  
               }
@@ -129,7 +173,10 @@ include("var.php");
           }        
       }
       // File Copying
-      
+      $dist_fonts = $dist."/fonts";
+      $dist_scss = $foldersname."/node_modules/".$prname."/scss";
+      $dist_less = $foldersname."/node_modules/".$prname."/less";
+      $dist_img = $foldersname."/node_modules/".$prname."/images";
       foreach($get_v_ar as $key => $version) {
             
             $version = preg_replace('/\s+/', '', $version);
@@ -150,14 +197,15 @@ include("var.php");
           recursiveScan($dist,$listfolders, $listfiles, $foldersname); 
             
               // checking for fonts inside dist
-              $dist_fonts = $dist."/fonts";
-              $forward_path_dir = "../../$foldersname";
+             
+              
+              $forward_path_dir = "../../$foldersname/fonts";
               if(file_exists($dist_fonts)) {
                 custom_copy($dist_fonts, $forward_path_dir);
               }
               
-              // copy scss if exists
-              $dist_scss = $foldersname."/node_modules/".$prname."/scss";
+              // copy scss folder if exists
+              
               $forward_path_scss = "../../$foldersname/scss";
               if(file_exists($dist_scss)) {
                 if(!file_exists($forward_path_scss)){
@@ -165,13 +213,38 @@ include("var.php");
                   custom_copy($dist_scss, $forward_path_scss);
                 }
               }
-              // copy less if exists
-              $dist_less = $foldersname."/node_modules/".$prname."/less";
+              // copy less folder if exists
+              
+              
               $forward_path_less = "../../$foldersname/less";
               if(file_exists($dist_less)) {
                 if(!file_exists($forward_path_less)){
                   mkdir($forward_path_less, 0777, true); 
                   custom_copy($dist_less, $forward_path_less);
+                }
+              }
+              // copy img folder if exists
+              
+              $forward_path_images = "../../$foldersname/img";
+              if(file_exists($dist_img)) {
+                if(!file_exists($forward_path_images)){
+                  mkdir($forward_path_images, 0777, true); 
+                  custom_copy($dist_img, $forward_path_images);
+                } else {
+                  custom_copy($dist_img, $forward_path_images);
+                }
+              }
+        
+              // copy img folder if exists
+              $dist_img2 = $foldersname."/node_modules/".$prname."/img";
+              
+              $forward_path_images2 = "../../$foldersname/img";
+              if(file_exists($dist_img2)) {
+                if(!file_exists($forward_path_images2)){
+                  mkdir($forward_path_images2, 0777, true); 
+                  custom_copy($dist_img2, $forward_path_images2);
+                } else {
+                  custom_copy($dist_img2, $forward_path_images2);
                 }
               }
           }
@@ -215,19 +288,30 @@ include("var.php");
       // creating index files
       foreach($get_v_ar as $key => $version) {
         $version = preg_replace('/\s+/', '', $version);
-         $foldersname = $prname."@".$version;  
+         $foldersname = $prname."@".$version;
+          
          $index_file = $keyfiles[0];
-         $index_file2 = $listfiles[1];
+         
         
-        if(file_exists("../../$foldersname/index.js")) {
+        if(file_exists("../../$foldersname/$index_file")) {
+          if(file_exists("../../$foldersname/index.js")){
             unlink("../../$foldersname/index.js");
             copy("../../$foldersname/$index_file","../../$foldersname/index.js");
-        } elseif(file_exists("../../$foldersname/index.js")) {
-          unlink("../../$foldersname/index.js");
-          copy("../../$foldersname/$index_file2","../../$foldersname/index.js");
-        } else {
-          echo "";
+          } else {
+            copy("../../$foldersname/$index_file","../../$foldersname/index.js");
+          }
         }
+        else {
+          if(isset($listfiles[1])) {
+            $index_file2 = $listfiles[1];
+            if(file_exists("../../$foldersname/index.js")){
+              unlink("../../$foldersname/index.js");
+              copy("../../$foldersname/$index_file2","../../$foldersname/index.js");
+            } else {
+              copy("../../$foldersname/$index_file2","../../$foldersname/index.js");
+            }
+          }
+        }        
       }
       // creating latest version folder
       foreach($get_v_ar as $key => $version) {

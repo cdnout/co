@@ -22,11 +22,20 @@
     $v_h_latest = str_replace(".zip", '', $v_h_latest);
   
     $cdn_real_path = scandir("../../$foldername/", 1);
-    if(file_exists("../../$foldername/scss")) {
-      $scss_exists = "true";
+    if(file_exists("../../$foldername/fonts")) {
+      $cdn_real_fonts = scandir("../../$foldername/fonts/", 1);
     }
+    if(file_exists("../../$foldername/img")) {
+      $cdn_real_img = scandir("../../$foldername/img/", 1);
+    }
+    if(file_exists("../../$foldername/scss/")) {
+      $scss_exists = "true";
+      $scss_folder = "true";
+    }
+  
     if(file_exists("../../$foldername/less")) {
       $less_exists = "true";
+      $less_folder = "true";
     }
     $css_ = preg_grep("~^.*\.css~", scandir("../../$prname/"));
     if(!empty($css_)) {
@@ -39,13 +48,15 @@
     }
   
     $scss_ = preg_grep("~^.*\.scss~", scandir("../../$prname/"));
-    if(!empty($css_)) {
+    if(!empty($scss_)) {
       $scss_exists = "true";
+      $scss_file_ex = "true";
     }
   
     $less_ = preg_grep("~^.*\.less~", scandir("../../$prname/"));  
     if(!empty($json_)) {
       $less_exists = "true";
+      $less_file_ex = "true";
     }
   
     $gif_ = preg_grep("~^.*\.gif~", scandir("../../$prname/"));  
@@ -144,7 +155,7 @@
             <div class="path">
               <?php 
                 foreach( $keyfiles as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "img") {
                     $index_file = $keyfiles[0];
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     
@@ -158,47 +169,54 @@
                       } else {
                         $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                       }
-                      if(file_exists($made_link)) {
+                      
                         js_pre_code($made_link);
                       }
-                    }
+                    
                   }
                 }
               foreach( $keyfiles as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "img") {
+                    $index_file = $keyfiles[0];
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
-                    $cssext = ".css";
-                    if(strpos($made_link, $cssext) !== false){
-                      if(file_exists($made_link)) {
+                    
+                    
+                    $jsext = ".css";
+                    
+                    if(strpos($made_link, $jsext) !== false){                                         
+                      
+                      if($cdn_file_url == "$index_file") {
+                        $made_link = "https://cdnout.com/$foldername/";
+                      } else {
+                        $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                      }
                         css_pre_code($made_link);
                       }
-                    }
+                     
                   }
                 }
               foreach( $keyfiles as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "img") {
+                    $index_file = $keyfiles[0];
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
-                    $jsonext = ".json";
-                    if(strpos($made_link, $jsonext) !== false){
-                      if(file_exists($made_link)) {
+                    
+                    
+                    $jsext = ".json";
+                    
+                    if(strpos($made_link, $jsext) !== false){                                         
+                      
+                      if($cdn_file_url == "$index_file") {
+                        $made_link = "https://cdnout.com/$foldername/";
+                      } else {
+                        $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                      }
+                      
                         json_pre_code($made_link);
                       }
-                    }
+                    
                   }
                 }
-              foreach( $keyfiles as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
-                    $cdn_file_url_font = explode(".", $cdn_file_url);
-                    $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link = "https://cdnout.com/$foldername/$cdn_file_url_font";
-                    $fontext = ".svg";
-                    if(strpos($made_link, $fontext) !== false){                                         
-                      if(file_exists($made_link)) {
-                        font_pre_code($made_link, $cdn_file_url_font);  
-                      }
-                    }
-                  }
-                }
+              
               ?>
             </div>
           </div>
@@ -217,13 +235,10 @@
             <div class="path">
               <?php 
                 foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
                     $index_file = $keyfiles[0];
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
-                    
-                    
-                    $jsext = ".js";
-                    
+                    $jsext = ".js";                    
                     if(strpos($made_link, $jsext) !== false){                                         
                       
                       if($cdn_file_url == "$index_file") {
@@ -231,41 +246,110 @@
                       } else {
                         $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                       }
-                      js_pre_code($made_link);
+                      
+                        js_pre_code($made_link);
+                      
                     }
                   }
                 }
               foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $cssext = ".css";
-                    if(strpos($made_link, $cssext) !== false){                                         
+                    if(strpos($made_link, $cssext) !== false){
                       css_pre_code($made_link);
                     }
                   }
                 }
               foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $jsonext = ".json";
-                    if(strpos($made_link, $jsonext) !== false){                                         
-                      json_pre_code($made_link);
+                    if(strpos($made_link, $jsonext) !== false){
+                      
+                        json_pre_code($made_link);
+                      
                     }
                   }
                 }
+              
+              
+              
+              // scss files
+              
               foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss") {
-                    $cdn_file_url_font = explode(".", $cdn_file_url);
-                    $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link = "https://cdnout.com/$foldername/$cdn_file_url_font";
-                    $fontext = "svg";
-                    if(strpos($cdn_file_url, $fontext) !== false){                                         
-                      font_pre_code($made_link, $cdn_file_url_font);
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
+                    $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                    $scssext = ".scss";
+                    if(strpos($made_link, $scssext) !== false){
+                      scss_pre_code($made_link);
                     }
                   }
                 }
+              
+              // less files
+              
+                foreach( $cdn_real_path as $cdn_file_url) {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
+                    $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                    $lessext = ".less";
+                    if(strpos($made_link, $lessext) !== false){
+                      
+                        less_pre_code($made_link);
+                      
+                    }
+                  }
+                }
+              
+              
+              // Image files
+              if(isset($cdn_real_img)) {
+                foreach( $cdn_real_img as $cdn_file_url) {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
+                    $made_link = "https://cdnout.com/$foldername/img/$cdn_file_url";
+                    $imgext = array(".jpg", ".webp", ".gif", "png");
+                    foreach($imgext as $imgextO){
+                      $imgextO = $imgextO;
+                      if(strpos($made_link, $imgextO) !== false){                                         
+                        
+                          img_pre_code($made_link);
+                        
+                      }
+                    }
+                  }
+                }
+              }
+              // fonts
+              if(isset($cdn_real_fonts)) {
+              foreach( $cdn_real_fonts as $cdn_file_url) {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
+                    $made_link = "https://cdnout.com/$foldername/fonts/$cdn_file_url";
+                  
+                    $cdn_file_url_font = explode(".", $cdn_file_url);
+                    
+                    $cdn_file_url_font = $cdn_file_url_font[0];
+                    $made_link2 = "https://cdnout.com/$foldername/fonts/$cdn_file_url_font";
+                    $fontext = ".svg";
+                    
+                    if(strpos($made_link, $fontext) !== false){                                         
+                        echo font_pre_code($made_link, $cdn_file_url_font);  
+                    }
+                  }
+                }
+              }
               ?>
+              <div class="btn-holder">
+                <?php if(isset($scss_folder) or isset($less_folder)) { ?>
+                <a href="javascript:;" class="btn btn-dark">Download SCSS/LESS Files</a>  
+              <?php } ?>
+              <?php if(isset($scss_file_ex) or isset($less_file_ex) or isset($cdn_real_font) or isset($cdn_real_img)) { ?>
+              <a href="javascript:;" class="btn-show"><span class="show">+ Show all files</span><span class="less">- Show less files</span></a>  
+                
+              <?php   } ?>
+              
+              </div>
             </div>
+            
           </div>
           <div class="block" id="node">
             <h2><i class="icon-node"></i> <?php echo $title; ?> Node JS Commands</h2>
@@ -302,13 +386,11 @@
                 DIST (JS <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
                 <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> Files)</a>
               <?php } ?>
-              <?php if(isset($npmrg)) { 
-              $headers = @get_headers("$npmrg.$version_number.tgz"); 
-              if($headers && strpos( $headers[0], '404')) { 
-              ?>
+              <?php if(isset($npmrg)) { ?>
               <a  rel="help" href="<?php echo $npmrg.$version_number ?>.tgz" class="btn btn-dark btn-npm"><i class="icon-npm1"></i>Download <?php echo $title."@".$version_number; ?> NPM Package</a>
-              <?php } } ?>
+              <?php } if(!empty($gitrg)) { ?>
               <a rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
+              <?php } ?>
             </div>
         </div>
         </div>

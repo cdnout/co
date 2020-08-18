@@ -223,4 +223,6 @@ $('#search').focus(function(event){
 });
   });
 
-//dynamicallyLoadScript('https://cdnout.com/bootstrap.bundle.min.js');
+$(".btn-show").click(function(){
+  $(this).parent().parent().toggleClass("show-all");
+}); 
