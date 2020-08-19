@@ -122,8 +122,8 @@
           <header class="article-head">
             <h1><?php echo $heading; ?></h1>
             <ul class="meta">
-              <li class="download"><a href="#download"><i class="icon-download"></i>Download</a></li>
-              <?php 
+              <li class="download"><a target="_w" href="#download"><i class="icon-download"></i>Download</a></li>
+              <?php  
               if(isset($github)) {
               ?>
               <li><a rel="nofollow" target="_blank" href="<?php echo $github; ?>"><i class='icon-github'></i>Github</a></li>
@@ -182,17 +182,17 @@
                     
                     
                     $jsext = ".css";
-                    
-                    if(strpos($made_link, $jsext) !== false){                                         
-                      
-                      if($cdn_file_url == "$index_file") {
-                        $made_link = "https://cdnout.com/$foldername/";
-                      } else {
-                        $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
-                      }
-                        css_pre_code($made_link);
-                      }
-                     
+                    if(file_exists("../../$foldername/$cdn_file_url")){
+                      if(strpos($made_link, $jsext) !== false){                                         
+
+                        if($cdn_file_url == "$index_file") {
+                          $made_link = "https://cdnout.com/$foldername/";
+                        } else {
+                          $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                        }
+                          css_pre_code($made_link);
+                        }
+                    }
                   }
                 }
               foreach( $keyfiles as $cdn_file_url) {
@@ -256,10 +256,10 @@
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $cssext = ".css";
-                    if(file_exists($made_link)){
+                   
                     if(strpos($made_link, $cssext) !== false){
                       css_pre_code($made_link);
-                    }
+                    
                     }
                   }
                 }
@@ -267,10 +267,10 @@
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images") {
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     $jsonext = ".json";
-                    if(file_exists($made_link)){
+                    
                     if(strpos($made_link, $jsonext) !== false){
                         json_pre_code($made_link); 
-                    }
+                    
                     }
                   }
                 }
@@ -355,7 +355,6 @@
               <a href="javascript:;" class="btn-show"><span class="show">+ Show all files</span><span class="less">- Show less files</span></a>  
                 
               <?php   } ?>
-              
               </div>
             </div>
             
@@ -391,14 +390,14 @@
             <p>Download latest <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { ?>or Github <?php } ?> packages in ZIP.</p>
             <div class="btn-area">
               <?php if(file_exists("../../zip/$foldername.zip")) { ?>
-              <a href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark"><i class="icon-code-fork"></i>Download <?php echo $title."@".$folderver; ?> 
+              <a target="_blank" href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark"><i class="icon-code-fork"></i>Download <?php echo $title."@".$folderver; ?> 
                 DIST (JS <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
                 <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> Files)</a>
               <?php } ?>
               <?php if(isset($npmrg)) { ?>
-              <a  rel="help" href="<?php echo $npmrg.$version_number ?>.tgz" class="btn btn-dark btn-npm"><i class="icon-npm1"></i>Download <?php echo $title."@".$version_number; ?> NPM Package</a>
+              <a target="_blank" rel="help" href="<?php echo $npmrg.$version_number ?>.tgz" class="btn btn-dark btn-npm"><i class="icon-npm1"></i>Download <?php echo $title."@".$version_number; ?> NPM Package</a>
               <?php } if(!empty($gitrg)) { ?>
-              <a rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
+              <a target="_blank" rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
               <?php } ?>
             </div>
         </div>

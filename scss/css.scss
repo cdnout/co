@@ -8,6 +8,7 @@
 *:focus {
   outline: none !important;
 }
+
 .sr-only,
 .access:not(:focus) {
   position: absolute;
@@ -26,7 +27,7 @@ body {
 }
 
 body {
-  min-width: 1023px; 
+  min-width: 1023px;
 }
 
 .icon-node {
@@ -51,6 +52,14 @@ body {
     z-index: -1;
     bottom: 0;
     top: 0;
+
+    @media (max-height: 899px) {
+      max-width: 1240px;
+    }
+
+    @media (max-width: 1370px) {
+      max-width: 1240px;
+    }
   }
 }
 
@@ -97,6 +106,14 @@ body {
   padding-right: 50px;
   width: 100%;
   min-width: 900px;
+
+  @media (max-height: 899px) {
+    max-width: 1240px;
+  }
+
+  @media (max-width: 1370px) {
+    max-width: 1240px;
+  }
 }
 
 /*
@@ -282,6 +299,10 @@ main {
   align-items: center;
   flex-flow: row nowrap;
 
+  @media (max-height: 899px) {
+    padding: 18px 0;
+  }
+
   &:hover {
     .copy-cat {
       opacity: 1;
@@ -290,19 +311,25 @@ main {
   }
 
   .btn-block {
-    width: 200px;
+    max-width: 200px;
     float: right;
   }
 
   .btn {
     font-weight: 600;
-    width: 200px;
+    width: 180px;
     text-align: center;
     display: block;
     vertical-align: top;
     align-items: center;
     justify-content: center;
 
+    @media (max-height: 899px) {
+      width: 170px;
+      font-size: 12px;
+      padding: 10px 12px;
+      line-height: 16px;
+    }
 
     i {
       flex-shrink: 0;
@@ -313,6 +340,10 @@ main {
       &.icon-code-fork {
         font-size: 19px;
         margin-top: 4px;
+
+        @media (max-height: 899px) {
+          font-size: 18px;
+        }
       }
     }
 
@@ -322,6 +353,10 @@ main {
       padding: 0;
       margin: 12px 0 0;
       background: none !important;
+
+      @media (max-height: 899px) {
+        margin-top: 9px;
+      }
 
       &:hover,
       &:focus {
@@ -341,6 +376,11 @@ main {
     line-height: 30px;
     margin: 0 0 15px;
     letter-spacing: 1px;
+
+    @media (max-height: 899px) {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
   }
 }
 
@@ -541,48 +581,55 @@ main {
   color: $dark;
 
   &:last-child {
-    margin: 0; 
+    margin: 0;
   }
 
   + .code-line {
     background: rgba($secondary, .1);
     border-radius: 15px;
   }
-  
+
   &.mapfile {
     display: none;
+
     .active-map-files & {
       display: flex;
     }
   }
-  
+
   &.font {
     background: #eee;
     font-size: 11px;
     padding: 15px 20px;
     display: none;
+
     .show-all & {
       display: block;
     }
+
     code {
       white-space: pre-wrap;
       font: 11px/20px "Verdana";
       letter-spacing: 0;
     }
   }
-  
-  &.scss, &.less, &.img {
+
+  &.scss,
+  &.less,
+  &.img {
     padding-left: 20px;
     background: rgba(purple, .1);
     display: none;
+
     .show-all & {
       display: block;
     }
   }
-  
+
   &.less {
     background: rgba(purple, .08);
   }
+
   &.img {
     background: rgba(orange, .1);
   }
@@ -655,10 +702,19 @@ code {
   flex-flow: row nowrap;
   margin: 0 -12px;
 
+  @media (max-height: 899px) {
+    font-size: 11px;
+    margin: 0 -10px;
+  }
+
   li {
     padding: 0 12px;
     color: $light;
     position: relative;
+
+    @media (max-height: 899px) {
+      padding: 0 10px;
+    }
 
     &.version {
       text-transform: none;
@@ -688,7 +744,7 @@ code {
         transform: rotate(90deg);
         margin-top: 0;
       }
-      
+
     }
 
     &.download {
@@ -766,11 +822,11 @@ code {
   flex-flow: row nowrap;
   font-family: "Open Sans";
   align-items: flex-start;
-  
+
   .btn-area {
     display: flex;
     flex-flow: column wrap;
-    
+
     .btn {
       box-shadow: none;
       text-transform: capitalize;
@@ -781,25 +837,31 @@ code {
       vertical-align: top;
       align-items: center;
       color: $blue;
-      &:hover, &:focus {
+
+      &:hover,
+      &:focus {
         color: $dark !important;
       }
+
       i {
         font-size: 25px;
         margin: 0 15px 0 0;
         width: 30px;
         line-height: 30px;
         text-align: center;
+
         &.icon-npm1 {
           font-size: 30px;
         }
       }
-         &.btn-npm {
+
+      &.btn-npm {
         color: #CC3534;
-        
+
       }
+
       &.btn-git {
-        color:#333;
+        color: #333;
       }
     }
   }
@@ -877,7 +939,7 @@ code {
     h2 {
       margin: 0 0 15px;
       font-size: 18px;
-      
+
     }
 
     ul {
@@ -888,10 +950,11 @@ code {
 
       li {
         margin: 0 0 12px;
+
         &:last-child {
           margin-bottom: 0;
         }
-        
+
 
         &.active a {
           color: $primary;
@@ -931,16 +994,19 @@ code {
           }
         }
       }
-       &.versions li {
-      
-      &:last-child {
+
+      &.versions li {
+
+        &:last-child {
           order: -1;
-        margin: 0 0 12px;
+          margin: 0 0 12px;
+
           a:after {
             content: "(Live First CDN)";
           }
         }
-        &:nth-last-child(2){
+
+        &:nth-last-child(2) {
           margin-bottom: 0;
         }
       }
@@ -1031,7 +1097,8 @@ code {
       &.icon-download {
         font-size: 30px;
       }
-      &.icon-one img{
+
+      &.icon-one img {
         max-width: 29px;
       }
 
@@ -1250,8 +1317,7 @@ code {
 }
 
 .search-bar {
-  max-width: 80%;
-  margin: 0 auto;
+
   text-align: center;
   font-size: 16px;
   padding: 10px 0;
@@ -1318,6 +1384,9 @@ code {
     transition: all .25s ease-in-out;
     outline: none !important;
     box-shadow: none !important;
+    max-width: 960px;
+    margin: 0 auto;
+    display: block;
     border-radius: 30px;
 
     &:focus {
@@ -1383,6 +1452,7 @@ code {
 
   }
 }
+
 /*
 .btn-text {
   background: rgba($primary, .05);
@@ -1405,31 +1475,39 @@ margin: 2px 4px 0 6px;
   margin: 0 2px;
   display: inline-block;
   vertical-align: top;
-  padding-bottom: 2px; 
+  padding-bottom: 2px;
 }
+
 .btn-holder {
   display: flex;
   align-items: center;
   padding-top: 15px;
   margin: -15px;
-  .btn-show, .btn {
+
+  .btn-show,
+  .btn {
     margin: 15px;
   }
 }
+
 .btn-show {
   font-size: 12px;
   text-transform: uppercase;
   line-height: 1.3;
   font-weight: 600;
   letter-spacing: .5px;
+
   .show {
     display: inline;
+
     .show-all & {
       display: none;
     }
   }
+
   .less {
     display: none;
+
     .show-all & {
       display: inline;
     }

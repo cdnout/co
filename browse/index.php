@@ -57,20 +57,19 @@
             <ul class="meta">
               <li class="node"><a href="../cdn/<?php echo $prname; ?>#node"><i class="icon-node"></i> Node</a></li>
               <?php 
-              if(!empty($gitrg)) {
+              if(!empty($github)) {
               ?>
-              <li><a rel="nofollow" target="_blank" href="<?php echo $gitrg; ?>"><i class='icon-github'></i>Github</a></li>
+              <li><a rel="nofollow" target="_blank" href="<?php echo $github; ?>"><i class='icon-github'></i>Github</a></li>
               <?php } ?>
               <li class="version" title="Current Version: <?php echo $v_h_latest; ?>"><span><i class="icon-layers"></i>v<?php echo $v_h_latest; ?></span></li>
             </ul>
           </div>
           <div class="path"> 
             <div class="btn-block">
-              
                 <button title='Copy <?php echo $prname ?> <?php echo  $v_h_latest; ?> necessary CDN Files' 
                         data-clipboard-text='<?php foreach($keyfiles as $keyfileName){ get_file_code($keyfileName, $prname);} ?>'
                         type="button" class="btn btn-dark copycat">
-                  <i class="icon-copy"></i> Copy <?php if(isset($dbs["cssfiles"])) { ?>CSS &amp; <?php } ?> JS
+                  <i class="icon-copy"></i> Copy Key Files
                 </button>
                 <a href="../cdn/<?php echo $prname ?>/" class="btn btn-light-outline"><i class="icon-code-fork"></i> View All Files</a>
               </div>

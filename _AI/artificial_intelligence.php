@@ -163,7 +163,8 @@ include("var.php");
       // NPM Installation
       foreach($get_v_ar as $key => $version) {
           $version = preg_replace('/\s+/', '', $version);
-          $foldersname = $prname."@".$version;  
+          $foldersname = $prname."@".$version;
+        
           if(!file_exists($foldersname)) {
             shell_exec("cd $foldersname");
             mkdir("$foldersname", 0777, true);
