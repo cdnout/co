@@ -6,10 +6,10 @@
     if(is_dir($directory)){
       if($directory != "." && $directory != "..") {
         echo $directory."<br>";
-        if($directory != "jquery") { // here add thos folder names which dont want to change template
+        
           unlink("$directory/template.php");
           copy("main-template.php", "$directory/template.php");
-        }
+        
       ?>
       <iframe border="0" style="border: 1px solid #000; width: 100% !important; height: 50px; margin: 0 0 15px;" src="<?php echo $directory; ?>/index.php"></iframe>
 <?php

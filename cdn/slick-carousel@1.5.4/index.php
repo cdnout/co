@@ -122,7 +122,7 @@
           <header class="article-head">
             <h1><?php echo $heading; ?></h1>
             <ul class="meta">
-              <li class="download"><a target="_w" href="#download"><i class="icon-download"></i>Download</a></li>
+              <li class="download"><a target="_blank" href="#download"><i class="icon-download"></i>Download</a></li>
               <?php  
               if(isset($github)) {
               ?>
@@ -400,7 +400,7 @@
               <a target="_blank" rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
               <?php } ?>
             </div>
-        </div>
+        </div> 
         </div>
         <aside class="aside">
           <div class="aside-holder sticky-smart-demo">
