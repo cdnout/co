@@ -327,12 +327,14 @@ include("var.php");
         } else {
           copy("var.php","../../cdn/$prname@$latest_version/var.php");  
         }
-
+        if(!isset($version_lock)) {
         if(file_exists("$mainarticle/index.php")) {
+          
           unlink("$mainarticle/index.php");
           copy("template.php","$mainarticle/index.php");
         } else {
           copy("template.php","$mainarticle/index.php");
+        }
         }
         
         if($version == $latest_version) {
@@ -342,12 +344,13 @@ include("var.php");
           } else {
             custom_copy("../../$foldersname", "../../$prname");
           }
-          
+          if(!isset($version_lock)) {
           if(file_exists("../../cdn/$prname")){
             delete_directory("../../cdn/$prname");
             custom_copy("../../cdn/$foldersname", "../../cdn/$prname");
           } else {
             custom_copy("../../cdn/$foldersname", "../../cdn/$prname");
+          }
           }
             
           if(file_exists("../../zip/$prname.zip")){

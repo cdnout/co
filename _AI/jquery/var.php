@@ -10,4 +10,5 @@
   $gitrg = "https://github.com/jquery/jquery/archive/";
   $keywords = array("javascript library", "jquery", "jquery cdn", "cdnout", "jquery npm", "How to install jquery");
   $version_limit = "-42"; // give negative value 
+  $version_lock = "locked";
 ?>

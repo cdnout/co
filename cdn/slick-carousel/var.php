@@ -39,4 +39,5 @@ $gitrg = "https://github.com/kenwheeler/slick/archive/"; // .tar.gz
 $keywords = array("carousel", "responsive carousel", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
 $version_limit = "-10"; // give negative value 
+$version_lock = "locked";
 ?>
