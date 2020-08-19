@@ -385,7 +385,7 @@
             </div>
             <?php } ?>
           </div>
-          <div class="block check" id="download">
+          <div class="block" id="download">
             <h2><i class="icon-download"></i> Download <?php echo $title." ".$folderver; if (isset($latest_v)) {echo "Latest"; } ?> Source Files</h2>
             <p>Download latest <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { ?>or Github <?php } ?> packages in ZIP.</p>
             <div class="btn-area">
