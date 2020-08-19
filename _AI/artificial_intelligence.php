@@ -254,8 +254,17 @@ include("var.php");
         $version = preg_replace('/\s+/', '', $version);
         
           $foldersname = $prname."@".$version;
+        
           if(file_exists("../../$foldersname/")){
           $zip_to_create = "../../zip/$foldersname.zip";
+          
+          
+          if(isset($zip_remake)) {
+            if(file_exists($zip_to_create)) {
+              unlink($zip_to_create);
+            }
+          }
+            
           if(!file_exists($zip_to_create)){
 
           $rootPath = realpath("../../$foldersname/");
@@ -344,14 +353,14 @@ include("var.php");
           } else {
             custom_copy("../../$foldersname", "../../$prname");
           }
-          if(!isset($version_lock)) {
+          
           if(file_exists("../../cdn/$prname")){
             delete_directory("../../cdn/$prname");
             custom_copy("../../cdn/$foldersname", "../../cdn/$prname");
           } else {
             custom_copy("../../cdn/$foldersname", "../../cdn/$prname");
           }
-          }
+          
             
           if(file_exists("../../zip/$prname.zip")){
             unlink("../../zip/$prname.zip");
