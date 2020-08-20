@@ -1,0 +1,6 @@
+{
+  "name": "Create React Class",
+  "dependencies": {
+    "create-react-class": "^1.2.4"
+  }
+}

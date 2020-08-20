@@ -146,6 +146,9 @@ include("var.php");
         if(strpos($one, 'beta') !== false) { 
           unset($get_v_ar[$key]);
         }
+        if(strpos($one, 'rc') !== false) { 
+          unset($get_v_ar[$key]);
+        }
       }
 
       if(!empty($version_limit)) {

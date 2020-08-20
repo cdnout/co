@@ -1,6 +1,6 @@
 {
   "name": "Slick Carousel",
   "dependencies": {
-    "react": "^16.9.0-rc.0"
+    "react": "^16.8.1"
   }
 }
