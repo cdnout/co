@@ -311,27 +311,55 @@ include("var.php");
          $foldersname = $prname."@".$version;
           
          $index_file = $keyfiles[0];
-         
-        
-        if(file_exists("../../$foldersname/$index_file")) {
-          if(file_exists("../../$foldersname/index.js")){
-            unlink("../../$foldersname/index.js");
-            copy("../../$foldersname/$index_file","../../$foldersname/index.js");
+         $jsext_i = ".js";
+        $cssext_i = ".css";
+        if(strpos($index_file, $jsext_i) !== false){
+          $ext_look = $jsext_i;
+          if(file_exists("../../$foldersname/$index_file")) {
+          if(file_exists("../../$foldersname/index$ext_look")){
+            unlink("../../$foldersname/index$ext_look");
+            copy("../../$foldersname/$index_file","../../$foldersname/index$ext_look");
           } else {
-            copy("../../$foldersname/$index_file","../../$foldersname/index.js");
+            copy("../../$foldersname/$index_file","../../$foldersname/index$ext_look");
           }
         }
         else {
           if(isset($listfiles[1])) {
             $index_file2 = $listfiles[1];
-            if(file_exists("../../$foldersname/index.js")){
-              unlink("../../$foldersname/index.js");
-              copy("../../$foldersname/$index_file2","../../$foldersname/index.js");
+            if(file_exists("../../$foldersname/index$ext_look")){
+              unlink("../../$foldersname/index$ext_look");
+              copy("../../$foldersname/$index_file2","../../$foldersname/index$ext_look");
             } else {
-              copy("../../$foldersname/$index_file2","../../$foldersname/index.js");
+              copy("../../$foldersname/$index_file2","../../$foldersname/index$ext_look");
             }
           }
-        }        
+        }
+        } 
+        
+        
+        if(strpos($index_file, $cssext_i) !== false) {
+          $ext_look = $cssext_i;
+          if(file_exists("../../$foldersname/$index_file")) {
+          if(file_exists("../../$foldersname/index$ext_look")){
+            unlink("../../$foldersname/index$ext_look");
+            copy("../../$foldersname/$index_file","../../$foldersname/index$ext_look");
+          } else {
+            copy("../../$foldersname/$index_file","../../$foldersname/index$ext_look");
+          }
+        }
+        else {
+          if(isset($listfiles[1])) {
+            $index_file2 = $listfiles[1];
+            if(file_exists("../../$foldersname/index$ext_look")){
+              unlink("../../$foldersname/index$ext_look");
+              copy("../../$foldersname/$index_file2","../../$foldersname/index$ext_look");
+            } else {
+              copy("../../$foldersname/$index_file2","../../$foldersname/index$ext_look");
+            }
+          }
+        }
+        }
+  
       }
       // creating latest version folder
       foreach($get_v_ar as $key => $version) {
