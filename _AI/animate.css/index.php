@@ -1,1 +1,0 @@
-<?php include "../artificial_intelligence.php"; ?> 
