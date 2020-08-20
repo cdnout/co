@@ -104,6 +104,10 @@
     } else {
       $github_ = "and Github";
     }
+  if(file_exists("../../$foldername/cjs")){
+    $cjs_exists = "true";
+  }
+ 
 ?>
 
 <head>

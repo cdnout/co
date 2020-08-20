@@ -104,6 +104,10 @@
     } else {
       $github_ = "and Github";
     }
+  if(file_exists("../../$foldername/cjs")){
+    $cjs_exists = "true";
+  }
+ 
 ?>
 
 <head>
@@ -424,7 +428,13 @@
               <a target="_blank" rel="help" href="<?php echo $npmrg.$version_number ?>.tgz" class="btn btn-dark btn-npm"><i class="icon-npm1"></i>Download <?php echo $title."@".$version_number; ?> NPM Package</a>
               <?php } if(!empty($gitrg)) { ?>
               <a target="_blank" rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
-              <?php } ?>
+              <?php } else { 
+              if(!isset($gitmaster)) {
+                $gitmaster = $github;
+              }
+              ?>
+              <a target="_blank" rel="help" href="<?php echo $gitmaster ?>/archive/master.zip" class="btn btn-dark btn-git"><i class="icon-github"></i>Download Github Master</a>
+              <?php } ?> 
             </div>
         </div> 
         </div>

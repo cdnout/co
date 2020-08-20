@@ -253,13 +253,28 @@ include("var.php");
             // additional directory
           if(isset($additional_dir)) {
             $dist_source = $foldersname."/node_modules/".$prname."/$additional_dir";
-            $forward_path_source = "../../$foldersname/$additional_dir";
+          
+            if($additional_dir == "cjs"){
+              $scan_addDir = scandir($dist_source);
+              foreach($scan_addDir as $scan_addFile) {
+                if($scan_addFile != "." && $scan_addFile != "..") {
+                if(file_exists("../../$foldersname/cjs_$scan_addFile")){
+                  unlink("../../$foldersname/cjs_$scan_addFile");
+                  copy("$dist_source/$scan_addFile","../../$foldersname/cjs_$scan_addFile");
+                } else {
+                  copy("$dist_source/$scan_addFile","../../$foldersname/cjs_$scan_addFile");
+                }
+                }
+              }
+            } else {            
+            
             if(file_exists($dist_source)) {
               if(!file_exists($forward_path_source)){
                 mkdir($forward_path_source, 0777, true); 
                 custom_copy($dist_source, $forward_path_source);
               }
             }
+          }
           }
           }
 
