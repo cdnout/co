@@ -1,0 +1,6 @@
+{
+  "name": "Slick Carousel",
+  "dependencies": {
+    "angular": "^1.8.0"
+  }
+}
