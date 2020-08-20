@@ -186,7 +186,7 @@
                       if(strpos($made_link, $jsext) !== false){                                         
 
                         if($cdn_file_url == "$index_file") {
-                          $made_link = "https://cdnout.com/$foldername/";
+                          $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                         } else {
                           $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                         }
@@ -206,14 +206,13 @@
                     if(strpos($made_link, $jsext) !== false){                                         
                       
                       if($cdn_file_url == "$index_file") {
-                        $made_link = "https://cdnout.com/$foldername/";
+                        $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                       } else {
                         $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                       }
                       
                         json_pre_code($made_link);
                       }
-                    
                   }
                 }
               

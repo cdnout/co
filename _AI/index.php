@@ -5,7 +5,7 @@
   foreach($directories as $directory) {
     if(is_dir($directory)){
       if($directory != "." && $directory != "..") {
-        echo $directory."<br>";
+        echo "<a href='$directory'>$directory</a>"."<br>";
         
           unlink("$directory/template.php");
           copy("main-template.php", "$directory/template.php");

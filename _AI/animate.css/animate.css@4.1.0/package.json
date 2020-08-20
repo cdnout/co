@@ -1,0 +1,6 @@
+{
+  "name": "Slick Carousel",
+  "dependencies": {
+    "animate.css": "^4.1.0"
+  }
+}

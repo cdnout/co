@@ -205,7 +205,6 @@ include("var.php");
               }
               
               // copy scss folder if exists
-              
               $forward_path_scss = "../../$foldersname/scss";
               if(file_exists($dist_scss)) {
                 if(!file_exists($forward_path_scss)){
@@ -247,6 +246,18 @@ include("var.php");
                   custom_copy($dist_img2, $forward_path_images2);
                 }
               }
+            
+            // additional directory
+          if(isset($additional_dir)) {
+            $dist_source = $foldersname."/node_modules/".$prname."/$additional_dir";
+            $forward_path_source = "../../$foldersname/$additional_dir";
+            if(file_exists($dist_source)) {
+              if(!file_exists($forward_path_source)){
+                mkdir($forward_path_source, 0777, true); 
+                custom_copy($dist_source, $forward_path_source);
+              }
+            }
+          }
           }
 
       // Creating Zips
@@ -346,7 +357,19 @@ include("var.php");
         }
         }
         
+        
         if($version == $latest_version) {
+          if(isset($latest_version_dir)) {
+            $dist_source = $foldersname."/node_modules/".$prname."/$latest_version_dir";
+            $forward_path_source = "../../$foldersname/$latest_version_dir";
+            if(file_exists($dist_source)) {
+              if(!file_exists($forward_path_source)){
+                mkdir($forward_path_source, 0777, true); 
+                custom_copy($dist_source, $forward_path_source);
+              }
+            }
+          }
+        
           if(file_exists("../../$prname")){
             delete_directory("../../$prname");
             custom_copy("../../$foldersname", "../../$prname");
