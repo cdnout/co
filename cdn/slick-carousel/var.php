@@ -1,6 +1,4 @@
 <?php 
-
-
 $file_cnn = "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js
 https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/ajax-loader.gif 
 https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css
@@ -40,5 +38,5 @@ $keywords = array("carousel", "responsive carousel", "$title cdn", "$title cdnou
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
 $version_limit = "-10"; // give negative value 
 $version_lock = "locked"; // cdn/index.php for older versions will not replaced.
-$zip_remake = "true"; // will create zips for all version
+//$zip_remake = "true"; // will create zips for all version
 ?>
