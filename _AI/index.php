@@ -1,6 +1,6 @@
 <?php 
-  ini_set('max_execution_time', 30000);
-  set_time_limit(30000);
+  ini_set('max_execution_time', 300000);
+  set_time_limit(300000);
   $directories = scandir("./");
   foreach($directories as $directory) {
     if(is_dir($directory)){
