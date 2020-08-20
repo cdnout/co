@@ -44,7 +44,7 @@
     
     $js_ = preg_grep("~^.*\.js~", scandir("../../$prname/"));
     if(!empty($js_)) {
-      echo $js_exists = "true";
+      $js_exists = "true";
     }
   
     $json_ = preg_grep("~^.*\.json~", scandir("../../$prname/"));  
