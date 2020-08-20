@@ -35,7 +35,7 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "React Dom";
 $prname = "react-dom"; // npm command
-$keyfiles = array("react.production.min.js");
+$keyfiles = array("react-dom.production.min.js");
 $github = "https://github.com/facebook/react";
 $gitrg = ""; // .tar.gz
 $keywords = array("react-dom", "react-dom js", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github"); 
