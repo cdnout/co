@@ -9,4 +9,5 @@
   $gitrg = "https://github.com/twbs/bootstrap/archive/v";
   $keywords = array("Frotn End Framework", "frontend", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
   $version_limit = "-22";
+  //$version_lock = "locked";
 ?>
