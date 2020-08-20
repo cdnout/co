@@ -24,4 +24,5 @@ $keywords = array("Legacy API for creating react components", "react", "$title c
 $listfolders = "";
 $version_limit = "-9"; 
 $version_lock = "locked";
+//$zip_remake = "true"; // will create zips for all version
 ?>

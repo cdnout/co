@@ -10,4 +10,5 @@
   $keywords = array("Frotn End Framework", "frontend", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
   $version_limit = "-22";
   $version_lock = "locked";
+  //$zip_remake = "true"; // will create zips for all version
 ?>

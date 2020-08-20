@@ -41,6 +41,11 @@
     if(!empty($css_)) {
       $css_exists = "true";
     }
+    
+    $js_ = preg_grep("~^.*\.js~", scandir("../../$prname/"));
+    if(!empty($js_)) {
+      echo $js_exists = "true";
+    }
   
     $json_ = preg_grep("~^.*\.json~", scandir("../../$prname/"));  
     if(!empty($json_)) {
@@ -79,7 +84,7 @@
       $version_number = $folderver;
     }
   if(isset($css_exists)) {
-    $orcss = "or css";
+    $orcss = "or CSS";
      } else {
        $orcss = "";
      }
@@ -88,6 +93,12 @@
     } else {
       $npm_ = "NPM, Yarn";
     }
+  if(!isset($js_exists)) {
+    $orcss = "CSS";
+    $js_text = "";
+  } else {
+    $js_text = "JS";
+  }
   if(empty($npmrg)){
       $github_ = "Github";
     } else {
@@ -100,12 +111,12 @@
     if(isset($latest_v)) {
       $heading =  "$title CDN Sources, $npm_ $github_ Installation and Packages";
       $head_title = "$heading - Download $title | CDN OUT";
-      $description = "$title Live First CDN resources including js $orcss files with their minified versions. How to install $title with $npm_ $github_ or download $title DIST Files.";
+      $description = "$title Live First CDN resources including $js_text $orcss files with their minified versions. How to install $title with $npm_ $github_ or download $title DIST Files.";
     } else {
       $heading =  "$title $folderver CDN, Download $title NPM Package, Install $title with One Click";
       $head_title = "$title $folderver CDN, Download $title $folderver NPM Package, Install $title with One Click | CDN OUT";
 
-      $description = "$title $folderver CDN links including js $orcss files with their minified versions. $npm_ $github_ installation guide for $title $folderver or Download $npm_ $github_ source packages.";
+      $description = "$title $folderver CDN links including $js_text $orcss files with their minified versions. $npm_ $github_ installation guide for $title $folderver or Download $npm_ $github_ source packages.";
     }
     $base_url = "../../";
     include($base_url.'meta/_head.php'); 
@@ -238,7 +249,7 @@
           <?php } else { ?>
           <div class="block" id="cdn">
             <h2><i><img src="<?php echo $base_url; ?>images/icon-version.svg" width="30" alt="Cloud Icon"></i> <?php echo $title." ".$folderver; ?> CDN</h2>
-            <p><?php echo $title; ?> <?php echo $folderver; ?> CDN resources for all their JS <?php echo $orcss; ?> files with their minified versions.</p>
+            <p><?php echo $title; ?> <?php echo $folderver; ?> CDN resources for all their <?php echo $js_text." ".$orcss; ?> files along with minified versions.</p>
             <strong class="note add">1) You may change version number anytime. <br>2) Minified versions does not need last file name. </strong>
             <?php } ?>
             <div class="path">
@@ -402,11 +413,11 @@
           </div>
           <div class="block" id="download">
             <h2><i class="icon-download"></i> Download <?php echo $title." ".$folderver; if (isset($latest_v)) {echo "Latest"; } ?> Source Files</h2>
-            <p>Download latest <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { ?>or Github <?php } ?> packages in ZIP.</p>
+            <p>Download <?php if (isset($latest_v)) {echo "Latest"; } ?> <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { ?>or Github <?php } ?> packages in ZIP.</p>
             <div class="btn-area">
               <?php if(file_exists("../../zip/$foldername.zip")) { ?>
               <a target="_blank" href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark"><i class="icon-code-fork"></i>Download <?php echo $title."@".$folderver; ?> 
-                DIST (JS <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
+                DIST (<?php echo $js_text; ?> <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
                 <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> Files)</a>
               <?php } ?>
               <?php if(isset($npmrg)) { ?>

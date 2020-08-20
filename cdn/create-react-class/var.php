@@ -23,5 +23,6 @@ $gitrg = ""; // .tar.gz
 $keywords = array("Legacy API for creating react components", "react", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
 $listfolders = "";
 $version_limit = "-9"; 
-//$version_lock = "locked";
+$version_lock = "locked";
+//$zip_remake = "true"; // will create zips for all version
 ?>

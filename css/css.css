@@ -895,6 +895,13 @@ main {
       display: block;
       height: auto;
       width: 100%; }
+  .code-line:not(.font) code {
+    white-space: nowrap;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    position: relative;
+    display: block; }
 
 .btn-coppier {
   border: 0; }
@@ -1307,9 +1314,10 @@ code {
       .cdn-release .note.add {
         position: absolute;
         right: 0;
+        font-size: 12px;
         top: 90px;
         margin: 0;
-        width: 230px; } }
+        width: 200px; } }
 
 #mast-head {
   position: fixed;
