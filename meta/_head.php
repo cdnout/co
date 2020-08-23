@@ -1,5 +1,5 @@
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<?php /*
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174652325-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -7,7 +7,7 @@
   gtag('js', new Date());
 
   gtag('config', 'UA-174652325-1'); 
-</script> */ ?>
+</script>
 <?php 
 $url="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
 header("Access-Control-Allow-Origin: *"); 
