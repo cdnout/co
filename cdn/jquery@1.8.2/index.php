@@ -16,7 +16,7 @@
     }
     $url = "../$folderexit/var.php"; 
     include ($url);
-    $v_h = preg_grep("~^$prname.*\.zip$~", scandir("../../zip/", 1));
+    $v_h = preg_grep("~^$prname@.*\.zip$~", scandir("../../zip/", 1));
     $v_h_latest = current($v_h);
     $v_h_latest = str_replace("$prname@", '', $v_h_latest);
     $v_h_latest = str_replace(".zip", '', $v_h_latest);
@@ -99,11 +99,21 @@
   } else {
     $js_text = "JS";
   }
-  if(empty($npmrg)){
+  if(!isset($npmrg)){
       $github_ = "Github";
+      
     } else {
       $github_ = "and Github";
+      
     }
+  if(!isset($npmrg) && !empty($github)) {
+    $npm_ = "";
+    $github_ = "Github";
+  }
+  if(file_exists("../../$foldername/cjs")){
+    $cjs_exists = "true";
+  }
+ 
 ?>
 
 <head>
@@ -120,8 +130,8 @@
     }
     $base_url = "../../";
     include($base_url.'meta/_head.php'); 
-    if(isset($latest_version_dir)) {
-      $the_dir = $latest_version_dir;
+    if(isset($additional_dir)) {
+      $the_dir = $additional_dir;
     } else {
        $the_dir = "";
      }
@@ -367,12 +377,13 @@
               }
               ?>
               <div class="btn-holder">
-                <?php if(isset($scss_folder) or isset($less_folder)) { ?>
+                <?php if(isset($scss_folder) or isset($less_folder) or !empty($the_dir)) { ?>
                 
                 
                 <?php if(file_exists("../../zip/$foldername.zip")) { ?>
-              <a href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark">Download Files (JS <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
-                <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> <?php if(isset($cdn_real_fonts)) { echo "- Fonts"; } ?>)</a>
+              <a href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark">Download Files (<?php if(isset($js_exists)) {echo "JS "; } ?> <?php if(isset($css_exists)) { ?><?php if(isset($js_exists)) {echo "- ";} ?>CSS <?php } ?> 
+                
+                <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> <?php if(isset($cdn_real_fonts)) { echo "- Fonts"; } ?> <?php if(!empty($the_dir)) {echo "& SCSS/LESS";} ?>)</a>
               <?php } ?>
                 
                 
@@ -416,15 +427,21 @@
             <p>Download <?php if (isset($latest_v)) {echo "Latest"; } ?> <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { ?>or Github <?php } ?> packages in ZIP.</p>
             <div class="btn-area">
               <?php if(file_exists("../../zip/$foldername.zip")) { ?>
-              <a target="_blank" href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark"><i class="icon-code-fork"></i>Download <?php echo $title."@".$folderver; ?> 
+              <a target="_blank" href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark"><i class="icon-code-fork"></i>Download <?php echo $title; if (!isset($latest_v)) { echo "@".$folderver; } ?> 
                 DIST (<?php echo $js_text; ?> <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
                 <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> Files)</a>
-              <?php } ?>
+              <?php } ?> 
               <?php if(isset($npmrg)) { ?>
               <a target="_blank" rel="help" href="<?php echo $npmrg.$version_number ?>.tgz" class="btn btn-dark btn-npm"><i class="icon-npm1"></i>Download <?php echo $title."@".$version_number; ?> NPM Package</a>
               <?php } if(!empty($gitrg)) { ?>
               <a target="_blank" rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
-              <?php } ?>
+              <?php } else { 
+              if(!isset($gitmaster)) {
+                $gitmaster = $github;
+              }
+              ?>
+              <a target="_blank" rel="help" href="<?php echo $gitmaster ?>/archive/master.zip" class="btn btn-dark btn-git"><i class="icon-github"></i>Download Github Master</a>
+              <?php } ?> 
             </div>
         </div> 
         </div>
@@ -456,6 +473,7 @@
               <h2>Old Versions</h2>
 
               <ul class="versions">
+                <li class="<?php if($prname == $foldername) { echo "active"; } ?>"><a href="../<?php echo $prname ?>/"><?php echo $prname ?> (Live First CDN)</a></li>
                 <?php foreach($v_h as $version_){ 
                     $version_ = str_replace(".zip", '', $version_);
                   ?>

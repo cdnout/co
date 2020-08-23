@@ -26,10 +26,9 @@ $keywords = array("react", "react js", "$title cdn", "$title cdnout", "$title np
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
 $version_limit = "-15"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
-//$zip_remake = "true"; // will create zips for all version
 $additional_dir = "cjs";
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
-//$zip_remake = "true"; // will create zips for all version
+$zip_remake = "true"; // will create zips for all version
 //$additional_dir; for all versions 
 ?>
 

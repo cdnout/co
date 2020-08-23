@@ -381,9 +381,9 @@
                 
                 
                 <?php if(file_exists("../../zip/$foldername.zip")) { ?>
-              <a href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark">Download Files (JS <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
+              <a href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark">Download Files (<?php if(isset($js_exists)) {echo "JS "; } ?> <?php if(isset($css_exists)) { ?><?php if(isset($js_exists)) {echo "- ";} ?>CSS <?php } ?> 
                 
-                <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> <?php if(isset($cdn_real_fonts)) { echo "- Fonts"; } ?> <?php if(!empty($the_dir)) {echo "& Others";} ?>)</a>
+                <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> <?php if(isset($cdn_real_fonts)) { echo "- Fonts"; } ?> <?php if(!empty($the_dir)) {echo "& SCSS/LESS";} ?>)</a>
               <?php } ?>
                 
                 
