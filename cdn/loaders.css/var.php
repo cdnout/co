@@ -16,8 +16,8 @@ foreach($file_cnn as $filecn){
 
  
 $listfiles = $listfiles_arr;
-$title = "Loader CSS (Animations)";
-$prname = "loaders.css"; // npm command
+$title = "Loaders CSS (Animations)";
+$prname = "loaders.css"; // npm command 
 $keyfiles = array("loaders.min.css", "loaders.css.js");
 $github = "https://github.com/ConnorAtherton/loaders.css";
 $gitrg = ""; // .tar.gz

@@ -17,9 +17,9 @@
     $url = "../$folderexit/var.php"; 
     include ($url);
     $v_h = preg_grep("~^$prname@.*\.zip$~", scandir("../../zip/", 1));
-    $v_h_latest = $prname;
-    //$v_h_latest = str_replace("$prname@", '', $v_h_latest);
-    //$v_h_latest = str_replace(".zip", '', $v_h_latest);
+    $v_h_latest = current($v_h);
+    $v_h_latest = str_replace("$prname@", '', $v_h_latest);
+    $v_h_latest = str_replace(".zip", '', $v_h_latest);
   
     $cdn_real_path = scandir("../../$foldername/", 1);
     if(file_exists("../../$foldername/fonts")) {
@@ -130,8 +130,8 @@
     }
     $base_url = "../../";
     include($base_url.'meta/_head.php'); 
-    if(isset($latest_version_dir)) {
-      $the_dir = $latest_version_dir;
+    if(isset($additional_dir)) {
+      $the_dir = $additional_dir;
     } else {
        $the_dir = "";
      }
@@ -377,12 +377,13 @@
               }
               ?>
               <div class="btn-holder">
-                <?php if(isset($scss_folder) or isset($less_folder)) { ?>
+                <?php if(isset($scss_folder) or isset($less_folder) or !empty($the_dir)) { ?>
                 
                 
                 <?php if(file_exists("../../zip/$foldername.zip")) { ?>
               <a href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark">Download Files (JS <?php if(isset($css_exists)) { ?>- CSS <?php } ?> 
-                <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> <?php if(isset($cdn_real_fonts)) { echo "- Fonts"; } ?>)</a>
+                
+                <?php if(isset($scss_exists)) { ?>- SCSS <?php } ?> <?php if(isset($less_exists)) { ?> - Less <?php } ?> <?php if(isset($json_exists)) { ?> - JSON <?php } ?> <?php if(isset($cdn_real_fonts)) { echo "- Fonts"; } ?> <?php if(!empty($the_dir)) {echo "& Others";} ?>)</a>
               <?php } ?>
                 
                 
