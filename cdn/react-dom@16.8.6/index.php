@@ -99,11 +99,17 @@
   } else {
     $js_text = "JS";
   }
-  if(empty($npmrg)){
+  if(!isset($npmrg)){
       $github_ = "Github";
+      
     } else {
       $github_ = "and Github";
+      
     }
+  if(!isset($npmrg) && !empty($github)) {
+    $npm_ = "";
+    $github_ = "Github";
+  }
   if(file_exists("../../$foldername/cjs")){
     $cjs_exists = "true";
   }
