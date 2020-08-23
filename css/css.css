@@ -1174,14 +1174,7 @@ code {
             .cdn-release .widget ul li a:hover:before {
               border-color: #f24e4e; }
       .cdn-release .widget ul.versions li:last-child {
-        -webkit-box-ordinal-group: 0;
-        -ms-flex-order: -1;
-        order: -1;
-        margin: 0 0 12px; }
-        .cdn-release .widget ul.versions li:last-child a:after {
-          content: "(Live First CDN)"; }
-      .cdn-release .widget ul.versions li:nth-last-child(2) {
-        margin-bottom: 0; }
+        margin: 0; }
     .cdn-release .widget .meta {
       font-weight: 600; }
     .cdn-release .widget .btn-block {

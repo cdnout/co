@@ -1006,16 +1006,7 @@ code {
       &.versions li {
 
         &:last-child {
-          order: -1;
-          margin: 0 0 12px;
-
-          a:after {
-            content: "(Live First CDN)";
-          }
-        }
-
-        &:nth-last-child(2) {
-          margin-bottom: 0;
+          margin: 0;
         }
       }
     }
