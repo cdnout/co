@@ -28,5 +28,7 @@ $version_limit = "-3"; // give negative value
 //$additional_dir = "src"; 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$additional_dir; for all versions 
+$cat = array("preloader", "lazy ads loader");
+$type_s = "js";
 ?>
 
