@@ -25,4 +25,6 @@ $listfolders = "";
 $version_limit = "-8"; 
 //$version_lock = "locked";
 $zip_remake = "true"; // will create zips for all version
+$cat = array("react api", "react components creator");
+$type_s = "react";
 ?>

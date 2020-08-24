@@ -23,7 +23,7 @@ $prname = "loadCSS"; // npm command
 $keyfiles = array("loadCSS.min.js");
 $github = "https://github.com/filamentgroup/loadCSS";
 $gitrg = ""; // .tar.gz
-$keywords = array("Load CSS Asynchronously", "js", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A function for loading CSS asynchronously"); 
+$keywords = array("Load CSS Asynchronously", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A function for loading CSS asynchronously"); 
 //$npmrg = "";
 $version_limit = "-2"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
@@ -32,5 +32,7 @@ $version_limit = "-2"; // give negative value
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 //$additional_dir; for all versions 
+$cat = array("css loader", "preloader", "css preloader");
+$type_s = "js";
 ?>
 

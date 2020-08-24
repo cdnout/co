@@ -16,7 +16,7 @@ foreach($file_cnn as $filecn){
 
  
 $listfiles = $listfiles_arr;
-$title = "Loaders CSS (Animations)";
+$title = "Loaders CSS";
 $prname = "loaders.css"; // npm command 
 $keyfiles = array("loaders.min.css");
 $github = "https://github.com/ConnorAtherton/loaders.css";
@@ -30,5 +30,7 @@ $additional_dir = "src";
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$zip_remake = "true"; // will create zips for all version
 //$additional_dir; for all versions 
+$cat = array("css animations", "pre-made animations");
+$type_s = "css";
 ?>
 

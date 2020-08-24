@@ -29,5 +29,7 @@ $zip_remake = "true"; // will create zips for all version
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$zip_remake = "true"; // will create zips for all version
 //$additional_dir; for all versions 
+$cat = array("Module Loader", "preloader");
+$type_s = "Angular";
 ?>
 

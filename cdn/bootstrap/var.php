@@ -11,4 +11,6 @@
   $version_limit = "-22";
   //$version_lock = "locked";
   $zip_remake = "true"; // will create zips for all version
+  $cat = array("front end framework");
+  $type_s = "front end";
 ?>

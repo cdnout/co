@@ -29,4 +29,7 @@ $version_limit = "-5"; // give negative value
 $zip_remake = "true"; // will create zips for all version
 $latest_version_dir = "source";// only for latest versions
 //$additional_dir; for all versions 
+$cat = array("css animations", "pre-made animations");
+$type_s = "css";
+
 ?>

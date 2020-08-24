@@ -12,4 +12,6 @@
   $version_limit = "-42"; // give negative value 
   //$version_lock = "locked";
 $zip_remake = "true"; // will create zips for all version
+$cat = array("javascript library");
+$type_s = "jquery";
 ?>

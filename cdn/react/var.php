@@ -30,5 +30,7 @@ $additional_dir = "cjs";
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 //$additional_dir; for all versions 
+$cat = array("react");
+$type_s = "react";
 ?>
 

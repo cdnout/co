@@ -45,5 +45,7 @@ $version_limit = "-10"; // give negative value
 //$zip_remake = "true"; // will create zips for all version
 $additional_dir = "cjs";
 $zip_remake = "true"; // will create zips for all version
+$cat = array("react api");
+$type_s = "react";
 ?>
 
