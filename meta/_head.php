@@ -160,7 +160,20 @@ function js_pre_code($made_link) {
   <code class="copycat" data-clipboard-text='<?php echo $made_link ?>'>
     <?php echo $made_link ?></code>
   <div class="copy-cat">
-    <button data-clipboard-text='<script src="<?php echo $made_link ?>"></script>' title="Copy Script Tag" type="button" class="btn-coppier copycat"><i class="icon-code1"></i></button>
+    <button data-clipboard-text='<?php echo $made_link ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
+  </div>
+</div>
+<?php } function ts_pre_code($made_link) { 
+  $mapext = "map";
+  if(strpos($made_link, $mapext) !== false){ 
+    $mapfile = "mapfile";
+  }
+?>
+<div class="code-line ts <?php if(isset($mapfile)) { echo $mapfile; } ?>">
+  <code class="copycat" data-clipboard-text='<?php echo $made_link ?>'>
+    <?php echo $made_link ?></code>
+  <div class="copy-cat">
+    
     <button data-clipboard-text='<?php echo $made_link ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
   </div>
 </div>
