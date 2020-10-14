@@ -246,7 +246,26 @@
                       }
                   }
                 }
-              
+              foreach( $keyfiles as $cdn_file_url) {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
+                    $index_file = $keyfiles[0];
+                    $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                    
+                    
+                    $tsext = ".ts";
+                    
+                    if(strpos($cdn_file_url, $tsext) !== false){                                         
+                      
+                      if($cdn_file_url == "$index_file") {
+                        $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                      } else {
+                        $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                      }
+                      
+                        ts_pre_code($made_link);
+                      }
+                  }
+                }
               ?>
             </div>
           </div>
@@ -265,6 +284,7 @@
             <div class="path">
               <?php 
                
+                
               
                 foreach( $cdn_real_path as $cdn_file_url) {
                   
@@ -339,7 +359,17 @@
                     }
                   }
                 }
+              // ts files
               
+                foreach( $cdn_real_path as $cdn_file_url) {
+                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
+                    $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
+                    $tstext = ".ts";
+                    if(strpos($cdn_file_url, $tstext) !== false){
+                        ts_pre_code($made_link);
+                    }
+                  }
+                }
               
               // Image files
               if(isset($cdn_real_img)) {

@@ -133,5 +133,7 @@ $zip_remake = "true"; // will create zips for all version
 //$additional_dir = "src"; 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$additional_dir; for all versions 
+$cat = array("preloader", "css loaders");
+$type_s = "css";
 ?>
 

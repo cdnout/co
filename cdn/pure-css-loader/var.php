@@ -31,7 +31,6 @@ $keyfiles = array("css-loader.css");
 $github = "https://github.com/raphaelfabeni/css-loader";
 $gitrg = "https://github.com/raphaelfabeni/css-loader/archive/v"; // .tar.gz
 $keywords = array("css loader", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Simple loaders for your web applications using only one div and pure CSS"); 
-$type_c = "css";
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-"; 
 $version_limit = "-5"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
@@ -39,5 +38,7 @@ $zip_remake = "true"; // will create zips for all version
 $additional_dir = "src"; 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$additional_dir; for all versions 
+$cat = array("preloader", "css loaders");
+$type_s = "css";
 ?>
 

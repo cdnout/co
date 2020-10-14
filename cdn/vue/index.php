@@ -17,7 +17,6 @@
     $url = "../$folderexit/var.php"; 
     include ($url);
     $v_h = preg_grep("~^$prname@.*\.zip$~", scandir("../../zip/", 1));
-   
     $v_h_latest = current($v_h);
     $v_h_latest = str_replace("$prname@", '', $v_h_latest);
     $v_h_latest = str_replace(".zip", '', $v_h_latest);
