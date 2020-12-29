@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="cdn-cf">
 <?php 
   $url="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; 
   $variable = explode("/", $url); 
@@ -28,12 +28,22 @@
 foreach($file_cnn as $filecn){
    
   if(!empty($filecn)){
-    $listfiles_ar_p = substr($filecn, strpos($filecn, "$prname/"));
+    $listfiles_ar_p = substr($filecn, strpos($filecn, "libs/"));
     $listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1);
+    $listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1);
+    $listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1);
+    
+    $listfiles_filename = $listfiles_ar_p;
+    
+    $listfiles_ar_ppr = explode("/", $filecn);
+    $listfiles_ar_pr_name = $listfiles_ar_ppr[3];
+    //echo $listfiles_ar_p = substr($listfiles_ar_p, "/");
+    //echo "<br>";
+    //$listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1);
     //$listfiles_ar_p = preg_replace('/\s+/', '', $listfiles_ar_p);
-    $listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1); 
+    //$listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1); 
     //$listfiles_ar = preg_replace('/\s+/', '', $listfiles_ar);
-    $listfiles_arr_p[] = $listfiles_ar_p;
+    $listfiles_arr_p[] = $listfiles_filename;
   }
 }
 
@@ -127,7 +137,7 @@ $listfiles = $listfiles_arr_p;
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $cssext = ".css";
                     $cdn_file_url = str_replace(".css.js", '', $cdn_file_url);
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     if(strpos($cdn_file_url, $cssext) !== false){
                         $css_exists = "true";
                       }
@@ -164,7 +174,7 @@ $listfiles = $listfiles_arr_p;
               
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $lessext = ".less";
                     if(strpos($cdn_file_url, $lessext) !== false){
                       $less_exists = "true";
@@ -189,7 +199,7 @@ $listfiles = $listfiles_arr_p;
               
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $imgext = array(".jpg", ".svg", ".webp", ".gif", ".png");
                     foreach($imgext as $imgextO){
                       $imgextO = $imgextO;
@@ -208,12 +218,12 @@ $listfiles = $listfiles_arr_p;
               
               foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/fonts/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/fonts/$cdn_file_url";
                   
                     $cdn_file_url_font = explode(".", $cdn_file_url);
                     
                     $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url_font";
+                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url_font";
                     $fontext = ".woff2";
                     
                     if(strpos($cdn_file_url, $fontext) !== false){
@@ -320,12 +330,12 @@ $listfiles = $listfiles_arr_p;
               Copy <a href="javascript:;" data-clipboard-text='<?php foreach($keyfiles as $keyfileName){  get_file_code($keyfileName, $foldername);} ?>' class="btn-text copycat">all key files</a> with one click or copy necessary files cdn one by one given below:
             </p>
             <?php } ?>
-            <div class="path">
+            <div class="path" style="max-width: 80%;">
               <?php 
                 foreach( $keyfiles as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $index_file = $keyfiles[0];
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     
                     
                     $jsext = ".js";
@@ -333,9 +343,9 @@ $listfiles = $listfiles_arr_p;
                     if(strpos($cdn_file_url, $jsext) !== false){                                         
                       
                       if($cdn_file_url == "$index_file") {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       } else {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       }
                       
                         js_pre_code($made_link);
@@ -346,7 +356,7 @@ $listfiles = $listfiles_arr_p;
               foreach( $keyfiles as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $index_file = $keyfiles[0];
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     
                     
                     $cssext = ".css";
@@ -354,9 +364,9 @@ $listfiles = $listfiles_arr_p;
                       if(strpos($cdn_file_url, $cssext) !== false){                                         
 
                         if($cdn_file_url == "$index_file") {
-                          $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                          $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                         } else {
-                          $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                          $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                         }
                           css_pre_code($made_link);
                         }
@@ -366,7 +376,7 @@ $listfiles = $listfiles_arr_p;
               foreach( $keyfiles as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $index_file = $keyfiles[0];
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     
                     
                     $jsext = ".json";
@@ -374,9 +384,9 @@ $listfiles = $listfiles_arr_p;
                     if(strpos($cdn_file_url, $jsext) !== false){                                         
                       
                       if($cdn_file_url == "$index_file") {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       } else {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       }
                       
                         json_pre_code($made_link);
@@ -386,7 +396,7 @@ $listfiles = $listfiles_arr_p;
               foreach( $keyfiles as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $index_file = $keyfiles[0];
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     
                     
                     $tsext = ".ts";
@@ -394,9 +404,9 @@ $listfiles = $listfiles_arr_p;
                     if(strpos($cdn_file_url, $tsext) !== false){                                         
                       
                       if($cdn_file_url == "$index_file") {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       } else {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       }
                       
                         ts_pre_code($made_link);
@@ -429,15 +439,15 @@ $listfiles = $listfiles_arr_p;
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $index_file = $keyfiles[0];
                     $cdn_file_url = str_replace(".js.css", '', $cdn_file_url);
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $jsext = ".js";  
                     
                     if(strpos($cdn_file_url, $jsext) !== false){                                         
                       
                       if($cdn_file_url == "$index_file") {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       } else {
-                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                        $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                       }
                         js_pre_code($made_link);
                       
@@ -450,7 +460,7 @@ $listfiles = $listfiles_arr_p;
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $cssext = ".css";
                     $cdn_file_url = str_replace(".css.js", '', $cdn_file_url);
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     if(strpos($cdn_file_url, $cssext) !== false){
                         css_pre_code($made_link);  
                       }
@@ -460,7 +470,7 @@ $listfiles = $listfiles_arr_p;
               
               foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $jsonext = ".json";
                     
                     if(strpos($cdn_file_url, $jsonext) !== false){
@@ -476,7 +486,7 @@ $listfiles = $listfiles_arr_p;
               
               foreach( $cdn_real_path as $cdn_file_url) {
                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $scssext = ".scss";
                     if(strpos($cdn_file_url, $scssext) !== false){
                       $less_file_ex = "exists";
@@ -489,7 +499,7 @@ $listfiles = $listfiles_arr_p;
               
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $lessext = ".less";
                     if(strpos($cdn_file_url, $lessext) !== false){
                       $less_file_ex = "exists";
@@ -502,7 +512,7 @@ $listfiles = $listfiles_arr_p;
               
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $tstext = ".ts";
                     if(strpos($cdn_file_url, $tstext) !== false){
                         ts_pre_code($made_link);
@@ -514,7 +524,7 @@ $listfiles = $listfiles_arr_p;
               
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                     $imgext = array(".jpg", ".svg", ".webp", ".gif", ".png");
                     foreach($imgext as $imgextO){
                       $imgextO = $imgextO;
@@ -531,12 +541,12 @@ $listfiles = $listfiles_arr_p;
               
               foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/fonts/$cdn_file_url";
+                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/fonts/$cdn_file_url";
                   
                     $cdn_file_url_font = explode(".", $cdn_file_url);
                     
                     $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$prname/$folderver/$cdn_file_url_font";
+                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url_font";
                     $fontext = ".woff2";
                     
                     if(strpos($cdn_file_url, $fontext) !== false){
@@ -571,13 +581,13 @@ $listfiles = $listfiles_arr_p;
               <h2><i class="icon-node"></i> <?php echo $title; ?> Node JS Commands</h2>
               <p>List of <?php echo $title; ?> NPM, Yarn or Github Commands and Packages details.</p>
               <?php if(!empty($npmrg)) { ?>
-              <div class="path">
+              <div class="path" style="max-width: 80%;">
                 <h3>How to install <?php echo $title." ".$folderver; ?> with NPM<span>Install NodeJS and copy below text in Command:</span></h3>
                 <div class="code-line np">
                   <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $foldername; ?>">&rsaquo; npm i <?php echo $foldername; ?></code>
                 </div>
               </div>
-              <div class="path">
+              <div class="path" style="max-width: 80%;">
                 <h3>How to install <?php echo $title." ".$folderver; ?> with Yarn<span>Install NodeJS and copy below text in Command:</span></h3>
                 <div class="code-line np">
                   <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $foldername; ?>">&rsaquo; yarn add <?php echo $foldername; ?></code>
@@ -585,7 +595,7 @@ $listfiles = $listfiles_arr_p;
               </div>
               <?php } ?>
               <?php if(!empty($github)) { ?>
-              <div class="path">
+              <div class="path" style="max-width: 80%;">
                 <h3>How to install <?php echo $title; ?> with Github <span>Use SVN or GIT to checkout using below URL: </span></h3>
                 <div class="code-line np">
                   <code title="Click to Copy" class="copycat" data-clipboard-text="<?php echo $github; ?>">&rsaquo; <?php echo $github; ?></code>
