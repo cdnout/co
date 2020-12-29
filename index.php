@@ -19,7 +19,7 @@
             <p>Live First CDN Resources of Libraries which saves your time. Automatic update files to the latest versions on same cdn source.<br> 
               Host <a href="#" title="This Feature will be available soon.">custom files</a> on CDN, Auto Updating and One Click Installation makes your website and workflow faster.</p>
           </div>
-          <input id="search" type="search" class="form-control" placeholder="Search from 3000+ libraries...">
+          <input id="search" type="search" class="form-control" placeholder="Search from top libraries...">
         </div>
       </div>
     </div>
