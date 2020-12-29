@@ -65,6 +65,7 @@ function js_pre_code($made_link) {
   if(strpos($made_link, $mapext) !== false){ 
     $mapfile = "mapfile";
   }
+
 ?>
 
 <div class="code-line js <?php if(isset($mapfile)) { echo $mapfile; } ?>">
@@ -77,7 +78,7 @@ function js_pre_code($made_link) {
 </div>
 
 <?php
-} function css_pre_code($made_link) {
+}  function css_pre_code($made_link) {
   $mapext = "map";
   if(strpos($made_link, $mapext) !== false){ 
     $mapfile = "mapfile";
@@ -86,6 +87,7 @@ function js_pre_code($made_link) {
 <div class="code-line css <?php if(isset($mapfile)) { echo $mapfile; } ?>">
   <code class="copycat" data-clipboard-text='<?php echo $made_link; ?>'><?php echo $made_link; ?></code>
   <div class="copy-cat">
+    
     <button data-clipboard-text='<link href="<?php echo $made_link; ?>" rel="stylesheet" media="all">' title="Copy CSS Tag" type="button" class="btn-coppier copycat"><i class="icon-code1"></i></button>
     <button data-clipboard-text='<?php echo $made_link; ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
   </div>
