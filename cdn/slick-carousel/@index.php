@@ -16,14 +16,7 @@
     }
     $url = "../$folderexit/var.php"; 
     include ($url);
-   /* $v_h = preg_grep("~^$prname@.*\.zip$~", scandir("../../zip/", 1));
-    $v_h_latest = current($v_h);
-    $v_h_latest = str_replace("$prname@", '', $v_h_latest);
-    $v_h_latest = str_replace(".zip", '', $v_h_latest);
-  */
-  
-    $v_h = preg_grep("~^$prname@.*~", scandir("../../cdn/", 1));
-  
+    $v_h = preg_grep("~^$prname@.*\.zip$~", scandir("../../zip/", 1));
     $v_h_latest = current($v_h);
     $v_h_latest = str_replace("$prname@", '', $v_h_latest);
     $v_h_latest = str_replace(".zip", '', $v_h_latest);
@@ -66,7 +59,7 @@
     }
   
     $less_ = preg_grep("~^.*\.less~", scandir("../../$prname/"));  
-    if(!empty($less_)) {
+    if(!empty($json_)) {
       $less_exists = "true";
       $less_file_ex = "true";
     }
@@ -219,9 +212,9 @@
                     $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
                     
                     
-                    $cssext = ".css";
+                    $jsext = ".css";
                     if(file_exists("../../$foldername/$cdn_file_url")){
-                      if(strpos($cdn_file_url, $cssext) !== false){                                         
+                      if(strpos($cdn_file_url, $jsext) !== false){                                         
 
                         if($cdn_file_url == "$index_file") {
                           $made_link = "https://cdnout.com/$foldername/$cdn_file_url";
@@ -383,7 +376,7 @@
                 foreach( $cdn_real_img as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $made_link = "https://cdnout.com/$foldername/img/$cdn_file_url";
-                    $imgext = array(".jpg", ".svg", ".webp", ".gif", ".png");
+                    $imgext = array(".jpg", ".webp", ".gif", "png");
                     foreach($imgext as $imgextO){
                       $imgextO = $imgextO;
                       if(strpos($cdn_file_url, $imgextO) !== false){                                         
@@ -406,7 +399,7 @@
                     
                     $cdn_file_url_font = $cdn_file_url_font[0];
                     $made_link2 = "https://cdnout.com/$foldername/fonts/$cdn_file_url_font";
-                    $fontext = ".woff2";
+                    $fontext = ".svg";
                     
                     if(strpos($cdn_file_url, $fontext) !== false){                                         
                         echo font_pre_code($made_link, $cdn_file_url_font);  
