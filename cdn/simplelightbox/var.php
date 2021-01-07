@@ -25,15 +25,18 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Simple Touch Lightbox";
 $prname = "simplelightbox"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("simple-lightbox.min.js", "simple-lightbox.min.css");
 $github = "https://github.com/andreknieriem/simplelightbox";
 $gitrg = "https://github.com/andreknieriem/simplelightbox/archive/v"; // .tar.gz
-$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Touch-friendly image lightbox for mobile and desktop with jQuery"); 
+$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Touch-friendly image lightbox for mobile and desktop with jQuery."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat = array("lightbox", "modal", "gallery", "jquery-plugin", "touchfriendly", "responsive", "popup", "dialog");
-$type_s = "js";
+$type_s = "jquery";
 ?>
 

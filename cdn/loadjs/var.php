@@ -19,18 +19,21 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Load JS";
 $prname = "loadjs"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("loadjs.min.js");
 $github = "https://github.com/muicss/loadjs";
 $gitrg = ""; // .tar.gz
-$keywords = array("async loader js", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Tiny async loader for modern browsers"); 
+$keywords = array("async loader js", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Tiny async loader for modern browsers."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 //$additional_dir = "src"; 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$additional_dir; for all versions 
 $cat = array("preloader", "async loader");
-$type_s = "js";
+$type_s = "jquery";
 ?>
 

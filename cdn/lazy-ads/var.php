@@ -17,16 +17,20 @@ $listfiles = $listfiles_arr;
 $title = "Lazy Ads Loader";
 $prname = "lazy-ads"; // npm command
 $keyfiles = array("lazyad-loader.min.js");
+$fileNameSpecial = "lazyad-loader";
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $github = "https://github.com/madgex/lazy-ads";
 $gitrg = ""; // .tar.gz
 $keywords = array("lazy ads loading", "$prname", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Deliver synchronous ads asynchronously with RWD support without modifying the ad code."); 
-$type_c = "js";
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-"; 
-$version_limit = "-3"; // give negative value 
+$version_limit = "-10"; // give negative value  
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$zip_remake = "true"; // will create zips for all version
 //$additional_dir = "src"; 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$additional_dir; for all versions 
+$zip_remake = "true"; // will create zips for all version
+$type_s = "jquery";
 ?>
 

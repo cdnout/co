@@ -18,12 +18,15 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Loaders CSS";
 $prname = "loaders.css"; // npm command 
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("loaders.min.css");
 $github = "https://github.com/ConnorAtherton/loaders.css";
 $gitrg = ""; // .tar.gz
 $keywords = array("CSS Animation loader", "css", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Loading animations in pure css"); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $additional_dir = "src"; 

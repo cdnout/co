@@ -19,12 +19,15 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Angular JS";
 $prname = "angular"; // npm command
-$keyfiles = array("angular.min.js");
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
+$keyfiles = array("angular.min.js", "angular-csp.min.css");
 $github = "https://github.com/angular/angular";
 $gitrg = ""; // .tar.gz
 $keywords = array("angular js", "angular", "", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github"); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-10"; // give negative value 
+$version_limit = "-20"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat = array("Angular");

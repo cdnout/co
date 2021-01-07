@@ -36,21 +36,26 @@ foreach($file_cnn as $filecn){
     $listfiles_filename = $listfiles_ar_p;
     
     $listfiles_ar_ppr = explode("/", $filecn);
-    $listfiles_ar_pr_name = $listfiles_ar_ppr[3];
-    //echo $listfiles_ar_p = substr($listfiles_ar_p, "/");
-    //echo "<br>";
-    //$listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1);
-    //$listfiles_ar_p = preg_replace('/\s+/', '', $listfiles_ar_p);
-    //$listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1); 
-    //$listfiles_ar = preg_replace('/\s+/', '', $listfiles_ar);
     $listfiles_arr_p[] = $listfiles_filename;
   }
 }
-
+  $listfiles_ar_pr_name = $prname;
+ 
 
 $listfiles = $listfiles_arr_p;
   $cdn_real_path = $listfiles;
-  
+   foreach( $cdn_real_path as $cdn_file_url__ff) {
+    $cdn_file_url__ff = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $cdn_file_url__ff));
+    $listfiles_ar_fn = explode("/", $cdn_file_url__ff); 
+    $listfiles_ar_fnf = end($listfiles_ar_fn);
+    $listfiles_ar_fnf = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_fnf));
+    $listfiles_ar_exx = explode(".", $listfiles_ar_fnf); 
+    $listfiles_ar_exx_final = end($listfiles_ar_exx);
+    $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
+    if($listfiles_ar_exx_final_cl == "ttf" or $listfiles_ar_exx_final_cl == "svg" or $listfiles_ar_exx_final_cl == "eot" or $listfiles_ar_exx_final_cl == "woff" or $listfiles_ar_exx_final_cl == "woff2") {
+      $cdn_real_fonts = "exists";
+    }
+  }
   /*
     if(file_exists("../../$foldername/fonts")) {
       $cdn_real_fonts = scandir("../../$foldername/fonts/", 1);
@@ -178,7 +183,7 @@ $listfiles = $listfiles_arr_p;
                     $lessext = ".less";
                     if(strpos($cdn_file_url, $lessext) !== false){
                       $less_exists = "true";
-      $less_file_ex = "true";
+                      $less_file_ex = "true";
                       
                     }
                   }
@@ -200,7 +205,7 @@ $listfiles = $listfiles_arr_p;
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
-                    $imgext = array(".jpg", ".svg", ".webp", ".gif", ".png");
+                    $imgext = array(".jpg", ".webp", ".gif", ".png");
                     foreach($imgext as $imgextO){
                       $imgextO = $imgextO;
                       if(strpos($cdn_file_url, $imgextO) !== false){                                         
@@ -213,25 +218,6 @@ $listfiles = $listfiles_arr_p;
                   }
                 }
               
-              // fonts
-              
-              
-              foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/fonts/$cdn_file_url";
-                  
-                    $cdn_file_url_font = explode(".", $cdn_file_url);
-                    
-                    $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url_font";
-                    $fontext = ".woff2";
-                    
-                    if(strpos($cdn_file_url, $fontext) !== false){
-                      $cdn_real_font = "true";
-                      
-                    }
-                  }
-              }
   
   
     if(isset($latest_v)) {
@@ -294,7 +280,7 @@ $listfiles = $listfiles_arr_p;
   <div id="page">
     <?php include($base_url.'meta/_header.php'); ?>
 
-    <main class="main container sticky-smart-placeholder">
+    <main class="main container sticky-smart-placeholder">      
       <article class="cdn-release">
         <div class="content-holder">
           <header class="article-head">
@@ -360,7 +346,7 @@ $listfiles = $listfiles_arr_p;
                     
                     
                     $cssext = ".css";
-                    if(file_exists("../../$foldername/$cdn_file_url")){
+                    
                       if(strpos($cdn_file_url, $cssext) !== false){                                         
 
                         if($cdn_file_url == "$index_file") {
@@ -369,8 +355,8 @@ $listfiles = $listfiles_arr_p;
                           $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                         }
                           css_pre_code($made_link);
-                        }
-                    }
+                        } 
+                    
                   }
                 }
               foreach( $keyfiles as $cdn_file_url) {
@@ -525,11 +511,11 @@ $listfiles = $listfiles_arr_p;
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
-                    $imgext = array(".jpg", ".svg", ".webp", ".gif", ".png");
+                    $imgext = array(".jpg", ".webp", ".gif", ".png");
                     foreach($imgext as $imgextO){
                       $imgextO = $imgextO;
                       if(strpos($cdn_file_url, $imgextO) !== false){                                         
-                        $cdn_real_fonts = "exists";
+                        $cdn_real_img = "exists";
                         img_pre_code($made_link);                        
                       }
                     }
@@ -537,26 +523,76 @@ $listfiles = $listfiles_arr_p;
                 }
               
               // fonts
-              
-              
-              foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/fonts/$cdn_file_url";
-                  
-                    $cdn_file_url_font = explode(".", $cdn_file_url);
-                    
-                    $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url_font";
-                    $fontext = ".woff2";
-                    
-                    if(strpos($cdn_file_url, $fontext) !== false){
-                      $cdn_real_img = "exists";
-                      echo font_pre_code($made_link, $cdn_file_url_font);  
-                    }
-                  }
-                
-              }
-              ?>
+              if(isset($cdn_real_fonts)){
+                ?>
+                <div class="code-line font">
+<code title="Click to Copy" class="copycat" data-clipboard-text='
+@font-face {
+  font-family:"<?php echo $listfiles_ar_pr_name; ?>-font";
+  <?php 
+                foreach( $cdn_real_path as $cdn_file_url) {
+                  $cdn_file_url = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $cdn_file_url));
+                  $listfiles_ar_fn = explode("/", $cdn_file_url); 
+                  $listfiles_ar_fnf = end($listfiles_ar_fn);
+                  $listfiles_ar_fnf = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_fnf));
+                  $listfiles_ar_exx = explode(".", $listfiles_ar_fnf); 
+                  $listfiles_ar_exx_final = end($listfiles_ar_exx);
+                  $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
+                  $the_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";      
+  if($listfiles_ar_exx_final_cl == "eot") { ?> src: url("<?php echo $the_link ?>");
+  <?php } 
+
+  if($listfiles_ar_exx_final_cl == "eot") { ?> src: url("<?php echo $the_link ?>?#iefix") format("embedded-opentype");
+  <?php } 
+  if($listfiles_ar_exx_final_cl == "woff2") { ?> src: url("<?php echo $the_link ?>") format("woff2");
+  <?php } 
+  if($listfiles_ar_exx_final_cl == "woff") { ?>src: url("<?php echo $the_link ?>") format("woff");
+  <?php } 
+  if($listfiles_ar_exx_final_cl == "ttf") { ?>src: url("<?php echo $the_link ?>") format("truetype");
+  <?php  } 
+  /*if($listfiles_ar_exx_final_cl == "svg") { ?>src: url("<?php echo $the_link ?>#<?php echo $listfiles_ar_pr_name ?>-font") format("svg"); 
+  <?php } 
+  */
+}
+?>
+font-weight: normal;
+  font-style: normal;
+}
+'>@font-face {
+  font-family:"<?php echo $listfiles_ar_pr_name; ?>-font";
+  <?php 
+                foreach( $cdn_real_path as $cdn_file_url) {
+                  $cdn_file_url = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $cdn_file_url));
+                  $listfiles_ar_fn = explode("/", $cdn_file_url); 
+                  $listfiles_ar_fnf = end($listfiles_ar_fn);
+                  $listfiles_ar_fnf = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_fnf));
+                  $listfiles_ar_exx = explode(".", $listfiles_ar_fnf); 
+                  $listfiles_ar_exx_final = end($listfiles_ar_exx);
+                  $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
+                  $the_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";      
+  if($listfiles_ar_exx_final_cl == "eot") { ?> src: url("<?php echo $the_link ?>");
+  <?php } 
+
+  if($listfiles_ar_exx_final_cl == "eot") { ?> src: url("<?php echo $the_link ?>?#iefix") format("embedded-opentype");
+  <?php } 
+  if($listfiles_ar_exx_final_cl == "woff2") { ?> src: url("<?php echo $the_link ?>") format("woff2");
+  <?php } 
+  if($listfiles_ar_exx_final_cl == "woff") { ?>src: url("<?php echo $the_link ?>") format("woff");
+  <?php } 
+  if($listfiles_ar_exx_final_cl == "ttf") { ?>src: url("<?php echo $the_link ?>") format("truetype");
+  <?php } 
+  /*if($listfiles_ar_exx_final_cl == "svg") { ?>src: url("<?php echo $the_link ?>#<?php echo $listfiles_ar_pr_name ?>-font") format("svg"); 
+  <?php } 
+  */ 
+}
+?>
+font-weight: normal;
+  font-style: normal;
+}</code>
+                </div>
+                <?php 
+                }
+            ?>
                 <div class="btn-holder">
                   <?php if(isset($scss_folder) or isset($less_folder) or !empty($the_dir)) { ?>
 
@@ -666,5 +702,5 @@ $listfiles = $listfiles_arr_p;
     </main>
     <?php include($base_url.'meta/_footer.php'); ?>
 </body>
+</html> 
 
-</html>

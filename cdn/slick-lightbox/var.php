@@ -18,10 +18,13 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Slick Lightbox";
 $prname = "slick-lightbox"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("slick-lightbox.min.js", "slick-lightbox.css");
 $github = "https://github.com/mreq/slick-lightbox";
 $gitrg = ""; // .tar.gz
-$keywords = array("lightbox", "fancybox", "responsive lightbox", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
+$keywords = array("lightbox", "fancybox", "responsive lightbox", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github", "A lightbox wrapper for Ken's amazing slick carousel. "); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
 $cat = array("lightbox", "fancybox");
 $type_s = "jquery";

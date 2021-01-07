@@ -134,6 +134,7 @@ function js_pre_code($made_link) {
     <button data-clipboard-text='<?php echo $made_link; ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
   </div>
 </div>
+
 <?php } function font_pre_code($made_link, $made_name) { ?>
 
 <div class="code-line font">
@@ -157,6 +158,19 @@ function js_pre_code($made_link) {
          url('<?php echo $made_link; ?>.svg# <?php echo $made_name; ?>') format('svg');
   }
 </code> 
+</div>
+<?php } function font_pre_code_single($made_link, $name) { ?>
+
+<div class="code-line font_single <?php if(isset($mapfile)) { echo $mapfile; } ?>">
+  <code class="copycat" data-clipboard-text='<?php echo $made_link; ?>'><?php echo $made_link; ?></code>
+  <div class="copy-cat">
+    <button data-clipboard-text='@font-face {
+font-family: <?php echo $name ?>;
+src: url("<?php echo $made_link; ?>");
+}' 
+            title="Copy FontFace Code" type="button" class="btn-coppier copycat"><i class="icon-code1"></i></button>
+    <button data-clipboard-text='<?php echo $made_link; ?>' title="Copy URL" type="button" class="btn-coppier copycat"><i class="icon-website"></i></button>
+  </div>
 </div>
 <?php } function json_pre_code($made_link) { 
   $mapext = "map";

@@ -18,11 +18,14 @@ $listfiles = $listfiles_arr;
 
 $keyfiles = array("create-react-class.min.js");
 $github = "https://github.com/facebook/react";
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
 $gitrg = ""; // .tar.gz
 $keywords = array("Legacy API for creating react components", "react", "$title cdn", "$title cdnout", "$title npm", "How to install $title", "$title github"); 
 $listfolders = "";
-$version_limit = "-8"; 
+$version_limit = "-10"; 
 //$version_lock = "locked";
 $zip_remake = "true"; // will create zips for all version
 $cat = array("react api", "react components creator");

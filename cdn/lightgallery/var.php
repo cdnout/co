@@ -39,11 +39,11 @@ $github = "https://github.com/sachinchoolur/lightGallery";
 $gitrg = "https://github.com/sachinchoolur/lightGallery/archive/"; // .tar.gz
 $keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A customizable, modular, responsive, lightbox gallery plugin. "); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-9"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat_s = "gallery, lightbox, image, video, jquery, plugin, responsive gallery, touch gallery";
 $cat = explode(',', $cat_s);
-$type_s = "js";
+$type_s = "jquery";
 ?>
 

@@ -16,15 +16,18 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Typescript";
 $prname = "typescript"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("typescript.min.js");
 $github = "https://github.com/microsoft/TypeScript";
 $gitrg = "https://github.com/microsoft/TypeScript/archive/v"; // .tar.gz
-$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "TypeScript is a superset of JavaScript that compiles to clean JavaScript output. "); 
+$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "TypeScript is a superset of JavaScript that compiles to clean JavaScript output."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
 $version_limit = "-15"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true";  // will create zips for all version
 $cat = array("compiler", "library", "language");
-$type_s = "js"; 
+$type_s = "s2"; 
 ?>
 

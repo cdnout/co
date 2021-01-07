@@ -16,16 +16,30 @@
     }
     $url = "../$folderexit/var.php"; 
     include ($url);
+     
     $v_h = preg_grep("~^$prname@.*~", scandir("../../cdn/", 1));
+  /*
+    $v_h_latest = current($v_h);
+    $v_h_latest = str_replace("$prname@", '', $v_h_latest);
+    $v_h_latest = str_replace(".zip", '', $v_h_latest);*/
   
+  $filess = glob("../../cdn/$foldername/" . '*.txt');
+  $filess2 = implode("/", $filess);
+  $filess2 = explode("/", $filess2);            
+  $version_file = end($filess2);
+  $v_h_latest = substr($version_file, 0, strpos($version_file, ".txt"));
+  if(empty($v_h_latest)) {      
     $v_h_latest = current($v_h);
     $v_h_latest = str_replace("$prname@", '', $v_h_latest);
     $v_h_latest = str_replace(".zip", '', $v_h_latest);
-  
+    }
     //$cdn_real_path = scandir("../../$foldername/", 1);
+if(!isset($fileNameSpecial)) {
+  $fileNameSpecial = $prname;
+}
 
-
-foreach($file_cnn as $filecn){
+  if(isset($myfiles_smaller)) {
+    foreach($file_cnn as $filecn){ 
    
   if(!empty($filecn)){
     $listfiles_ar_p = substr($filecn, strpos($filecn, "libs/"));
@@ -36,21 +50,37 @@ foreach($file_cnn as $filecn){
     $listfiles_filename = $listfiles_ar_p;
     
     $listfiles_ar_ppr = explode("/", $filecn);
-    $listfiles_ar_pr_name = $listfiles_ar_ppr[3];
-    //echo $listfiles_ar_p = substr($listfiles_ar_p, "/");
-    //echo "<br>";
-    //$listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1);
-    //$listfiles_ar_p = preg_replace('/\s+/', '', $listfiles_ar_p);
-    //$listfiles_ar_p = substr($listfiles_ar_p, strpos($listfiles_ar_p, "/") + 1); 
-    //$listfiles_ar = preg_replace('/\s+/', '', $listfiles_ar);
     $listfiles_arr_p[] = $listfiles_filename;
+    $listfiles = $listfiles_arr_p;
+  $cdn_real_path = $listfiles;
   }
 }
-
-
-$listfiles = $listfiles_arr_p;
-  $cdn_real_path = $listfiles;
+  } else {
+      $json_url = "https://api.cdnjs.com/libraries/$fileNameSpecial/$folderver";
+$get_headers = get_headers($json_url);
+$get_headers = current($get_headers);
+if($get_headers != "HTTP/1.1 404 Not Found") {
+  $json = file_get_contents($json_url);   
+  $data = json_decode($json, TRUE);
+  $file_cnn = $data['files'];
+  $listfiles = $file_cnn;
+  $cdn_real_path = $listfiles; 
+}
+  }
+  $listfiles_ar_pr_name = $fileNameSpecial;
   
+   foreach( $cdn_real_path as $cdn_file_url__ff) {
+    $cdn_file_url__ff = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $cdn_file_url__ff));
+    $listfiles_ar_fn = explode("/", $cdn_file_url__ff); 
+    $listfiles_ar_fnf = end($listfiles_ar_fn);
+    $listfiles_ar_fnf = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_fnf));
+    $listfiles_ar_exx = explode(".", $listfiles_ar_fnf); 
+    $listfiles_ar_exx_final = end($listfiles_ar_exx);
+    $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
+    if($listfiles_ar_exx_final_cl == "ttf" or $listfiles_ar_exx_final_cl == "svg" or $listfiles_ar_exx_final_cl == "eot" or $listfiles_ar_exx_final_cl == "woff" or $listfiles_ar_exx_final_cl == "woff2") {
+      $cdn_real_fonts = "exists";
+    }
+  }
   /*
     if(file_exists("../../$foldername/fonts")) {
       $cdn_real_fonts = scandir("../../$foldername/fonts/", 1);
@@ -178,7 +208,7 @@ $listfiles = $listfiles_arr_p;
                     $lessext = ".less";
                     if(strpos($cdn_file_url, $lessext) !== false){
                       $less_exists = "true";
-      $less_file_ex = "true";
+                      $less_file_ex = "true";
                       
                     }
                   }
@@ -200,7 +230,7 @@ $listfiles = $listfiles_arr_p;
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
-                    $imgext = array(".jpg", ".svg", ".webp", ".gif", ".png");
+                    $imgext = array(".jpg", ".webp", ".gif", ".png");
                     foreach($imgext as $imgextO){
                       $imgextO = $imgextO;
                       if(strpos($cdn_file_url, $imgextO) !== false){                                         
@@ -213,25 +243,6 @@ $listfiles = $listfiles_arr_p;
                   }
                 }
               
-              // fonts
-              
-              
-              foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/fonts/$cdn_file_url";
-                  
-                    $cdn_file_url_font = explode(".", $cdn_file_url);
-                    
-                    $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url_font";
-                    $fontext = ".woff2";
-                    
-                    if(strpos($cdn_file_url, $fontext) !== false){
-                      $cdn_real_font = "true";
-                      
-                    }
-                  }
-              }
   
   
     if(isset($latest_v)) {
@@ -290,17 +301,21 @@ $listfiles = $listfiles_arr_p;
   ?>
 </head>
 
-<body class="search-active page-details">
+<body class="search-active page-details page-clash">
   <div id="page">
     <?php include($base_url.'meta/_header.php'); ?>
 
-    <main class="main container sticky-smart-placeholder">
+    <main class="main container sticky-smart-placeholder">      
       <article class="cdn-release">
         <div class="content-holder">
           <header class="article-head">
             <h1><?php echo $heading; ?></h1>
             <ul class="meta">
               <li class="download"><a target="_blank" href="#download"><i class="icon-download"></i>Download</a></li>
+              <?php if(isset($npmrg)) { ?>
+              <?php if(!empty($npmrg)) { ?>
+              <li><a rel="nofollow" target="_blank" href="https://www.npmjs.com/package/<?php echo $prname; ?>"><i class="icon-npm1"></i>NPM</a></li>
+              <?php }} ?> 
               <?php  
               if(isset($github)) {
               ?>
@@ -316,6 +331,10 @@ $listfiles = $listfiles_arr_p;
               Shortest CDN URLs and Minified versions helps to improve page speed and SEO.
               <?php } ?>
             </p>
+            <div class="about">
+              <h2>About  <?php echo $title; ?>: </h2>
+              <p><?php echo end($keywords); ?></p>
+            </div>
           </header>
           <div class="block" id="keyfiles">
             <?php if(isset($latest_v)) {?>
@@ -330,7 +349,7 @@ $listfiles = $listfiles_arr_p;
               Copy <a href="javascript:;" data-clipboard-text='<?php foreach($keyfiles as $keyfileName){  get_file_code($keyfileName, $foldername);} ?>' class="btn-text copycat">all key files</a> with one click or copy necessary files cdn one by one given below:
             </p>
             <?php } ?>
-            <div class="path" style="max-width: 80%;">
+            <div class="path">
               <?php 
                 foreach( $keyfiles as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
@@ -360,7 +379,7 @@ $listfiles = $listfiles_arr_p;
                     
                     
                     $cssext = ".css";
-                    if(file_exists("../../$foldername/$cdn_file_url")){
+                    
                       if(strpos($cdn_file_url, $cssext) !== false){                                         
 
                         if($cdn_file_url == "$index_file") {
@@ -369,8 +388,8 @@ $listfiles = $listfiles_arr_p;
                           $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                         }
                           css_pre_code($made_link);
-                        }
-                    }
+                        } 
+                    
                   }
                 }
               foreach( $keyfiles as $cdn_file_url) {
@@ -415,6 +434,17 @@ $listfiles = $listfiles_arr_p;
                 }
               ?>
             </div>
+            <?php if(isset($type_s) && $type_s != "react" && $type_s != "angular"  && $type_s != "vue" && $type_s != "css"  && $type_s != "s2") { ?>
+            <div class="jquery_latest">
+              <div class="path">
+              <h3>Do you need <a href="../jquery/" target="_blank">jQuery Library</a> : </h3>
+              <?php 
+                $jquery_link = "https://cdnout.com/jquery/";
+                js_pre_code($jquery_link);
+              ?>
+            </div>
+            </div>
+            <?php } ?>
           </div>
           <?php 
             if(isset($latest_v)) {
@@ -428,11 +458,8 @@ $listfiles = $listfiles_arr_p;
               <p><?php echo $title; ?> <?php echo $folderver; ?> CDN resources for all their <?php echo $js_text." ".$orcss; ?> files along with minified versions.</p>
               <!-- <strong class="note add">1) You may change version number anytime. <br>2) Minified versions does not need last file name. </strong> -->
               <?php } ?>
-              <div class="path" style="max-width: 80%;">
-                <?php 
-               
-                
-              
+              <div class="path">
+                <?php               
                 foreach( $cdn_real_path as $cdn_file_url) {
                   
                  
@@ -525,11 +552,11 @@ $listfiles = $listfiles_arr_p;
                 foreach( $cdn_real_path as $cdn_file_url) {
                   if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
                     $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
-                    $imgext = array(".jpg", ".svg", ".webp", ".gif", ".png");
+                    $imgext = array(".jpg", ".webp", ".gif", ".png");
                     foreach($imgext as $imgextO){
                       $imgextO = $imgextO;
                       if(strpos($cdn_file_url, $imgextO) !== false){                                         
-                        $cdn_real_fonts = "exists";
+                        $cdn_real_img = "exists";
                         img_pre_code($made_link);                        
                       }
                     }
@@ -537,26 +564,31 @@ $listfiles = $listfiles_arr_p;
                 }
               
               // fonts
-              
-              
-              foreach( $cdn_real_path as $cdn_file_url) {
-                  if ($cdn_file_url != "." && $cdn_file_url != ".." && $cdn_file_url != "index.js" && $cdn_file_url != "less" && $cdn_file_url != "scss"  && $cdn_file_url != "images" && $cdn_file_url != "img" && $cdn_file_url != "fonts" && $cdn_file_url != "$the_dir" && $cdn_file_url != "$the_dir2") {
-                    $made_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/fonts/$cdn_file_url";
-                  
-                    $cdn_file_url_font = explode(".", $cdn_file_url);
-                    
-                    $cdn_file_url_font = $cdn_file_url_font[0];
-                    $made_link2 = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url_font";
-                    $fontext = ".woff2";
-                    
-                    if(strpos($cdn_file_url, $fontext) !== false){
-                      $cdn_real_img = "exists";
-                      echo font_pre_code($made_link, $cdn_file_url_font);  
-                    }
-                  }
+              if(isset($cdn_real_fonts)){
                 
-              }
-              ?>
+                foreach( $cdn_real_path as $index=>$cdn_file_url) {
+                  $cdn_file_url = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $cdn_file_url));
+                  $listfiles_ar_fn = explode("/", $cdn_file_url); 
+                  $listfiles_ar_fnf = end($listfiles_ar_fn);
+                  $listfiles_ar_fnf = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_fnf));
+                  $listfiles_ar_fnf2 = pathinfo($listfiles_ar_fnf);
+                  $listfiles_ar_fnf2 = $listfiles_ar_fnf2['filename'];
+                  $listfiles_ar_exx = explode(".", $listfiles_ar_fnf); 
+                  $listfiles_ar_exx_final = end($listfiles_ar_exx);
+                  $listfiles_ar_exx_final_current = array_pop($listfiles_ar_exx);
+                  $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
+                  $the_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";    
+                 
+                    
+  if($listfiles_ar_exx_final_cl == "eot") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+   if($listfiles_ar_exx_final_cl == "woff") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+                  if($listfiles_ar_exx_final_cl == "woff2") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+                  if($listfiles_ar_exx_final_cl == "ttf") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+                  if($listfiles_ar_exx_final_cl == "otf") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+
+}
+                }
+            ?>
                 <div class="btn-holder">
                   <?php if(isset($scss_folder) or isset($less_folder) or !empty($the_dir)) { ?>
 
@@ -581,24 +613,33 @@ $listfiles = $listfiles_arr_p;
               <h2><i class="icon-node"></i> <?php echo $title; ?> Node JS Commands</h2>
               <p>List of <?php echo $title; ?> NPM, Yarn or Github Commands and Packages details.</p>
               <?php if(!empty($npmrg)) { ?>
-              <div class="path" style="max-width: 80%;">
+              <div class="path">
                 <h3>How to install <?php echo $title." ".$folderver; ?> with NPM<span>Install NodeJS and copy below text in Command:</span></h3>
                 <div class="code-line np">
                   <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $foldername; ?>">&rsaquo; npm i <?php echo $foldername; ?></code>
+                  <div class="copy-cat">
+                    <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
+                  </div>
                 </div>
               </div>
-              <div class="path" style="max-width: 80%;">
+              <div class="path">
                 <h3>How to install <?php echo $title." ".$folderver; ?> with Yarn<span>Install NodeJS and copy below text in Command:</span></h3>
                 <div class="code-line np">
-                  <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $foldername; ?>">&rsaquo; yarn add <?php echo $foldername; ?></code>
+                  <code title="Click to Copy" class="copycat" data-clipboard-text="yarn add <?php echo $foldername; ?>">&rsaquo; yarn add <?php echo $foldername; ?></code>
+                  <div class="copy-cat">
+                    <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
+                  </div>
                 </div>
               </div>
               <?php } ?>
               <?php if(!empty($github)) { ?>
-              <div class="path" style="max-width: 80%;">
+              <div class="path">
                 <h3>How to install <?php echo $title; ?> with Github <span>Use SVN or GIT to checkout using below URL: </span></h3>
                 <div class="code-line np">
                   <code title="Click to Copy" class="copycat" data-clipboard-text="<?php echo $github; ?>">&rsaquo; <?php echo $github; ?></code>
+                  <div class="copy-cat">
+                    <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
+                  </div>
                 </div>
               </div>
               <?php } ?>
@@ -666,5 +707,5 @@ $listfiles = $listfiles_arr_p;
     </main>
     <?php include($base_url.'meta/_footer.php'); ?>
 </body>
+</html> 
 
-</html>

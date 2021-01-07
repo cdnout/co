@@ -29,7 +29,9 @@ body {
 body {
   min-width: 1023px;
 }
-
+button {
+  cursor: pointer;
+}
 .icon-node {
   color: #393;
 }
@@ -291,7 +293,33 @@ main {
   max-width: 960px;
   margin: 0 auto;
 }
-
+.jquery_latest {
+  padding: 20px 0 0 0;
+  h3 {
+    position: relative;
+  
+    z-index: 50;
+    &:after {
+      position: absolute;
+     left: -34px;
+     top: -5px;
+      font-size: 20px;
+      content: "...";
+      z-index: -1;
+      letter-spacing: 1px;
+      color: $yellow;
+      font-weight: 700;
+      width: 100%;
+    }
+  }
+  h3 a {
+    color: $primary;
+    border-bottom: 1px dotted $primary;
+    padding-bottom: 2px;
+    display: inline-block;
+    vertical-align: top;
+  }
+}
 .cdn {
   border-bottom: 2px solid darken($gray-lightest, 5%);
   display: flex;
@@ -388,6 +416,10 @@ main {
   flex-shrink: 0;
   max-width: 550px;
   margin: 0 0 20px;
+  
+  .page-clash & {
+    max-width: 80%;
+  }
 
   &:last-child {
     margin: 0;
@@ -476,7 +508,7 @@ main {
     color: $white;
     padding: 0;
 
-    + .btn-coppier {
+    + .btn-coppier, &.btn-red {
       background: $primary;
 
     }
@@ -596,12 +628,22 @@ main {
       display: flex;
     }
   }
-
+  
+  &.font_single {
+    
+    padding-left: 20px;
+    background: #ecfbff;
+    display: none;
+    .show-all & {
+      display: block;
+    }
+  }
   &.font {
-    background: #eee;
+    background: #f5f6f9;
     font-size: 11px;
     padding: 15px 20px;
     display: none;
+    font-weight: 700;
 
     .show-all & {
       display: block;
@@ -638,6 +680,16 @@ main {
     background: lighten(#43853d, 55%);
     //color: $white;
     padding-left: 20px;
+    .copy-cat {
+      width: 33px;
+      background: none;
+      pointer-events: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      > .btn-coppier {
+        width: 100%;
+      }
+    }
   }
 
   &.gray {
@@ -675,7 +727,8 @@ main {
       width: 100%;
     }
   }
-  &:not(.font){
+
+  &:not(.font) {
     code {
       white-space: nowrap;
       overflow: hidden;
@@ -703,25 +756,26 @@ code {
 
 .meta {
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   letter-spacing: 1px;
   line-height: 22px;
   flex-flow: row nowrap;
-  margin: 0 -12px;
+  
+  margin: 0 -15px;
 
   @media (max-height: 899px) {
-    font-size: 11px;
-    margin: 0 -10px;
+    //font-size: 11px;
+    //margin: 0 -10px;
   }
 
   li {
-    padding: 0 12px;
+    padding: 0 15px;
     color: $light;
     position: relative;
 
     @media (max-height: 899px) {
-      padding: 0 10px;
+      //padding: 0 10px;
     }
 
     &.version {
@@ -734,9 +788,14 @@ code {
       line-height: 22px;
       font-weight: 400;
       transition: all .3s ease-in-out;
-      margin: -2px 10px 0 0;
+      margin: -2px 12px 0 0;
 
       &.icon-node {
+        margin-top: 0;
+      }
+
+      &.icon-npm1 {
+        font-size: 25px;
         margin-top: 0;
       }
 
@@ -830,7 +889,10 @@ code {
   flex-flow: row nowrap;
   font-family: "Open Sans";
   align-items: flex-start;
-
+  font-size: 14px;
+  .meta {
+    font-weight: 600 !important;
+  }
   .btn-area {
     display: flex;
     flex-flow: column wrap;
@@ -887,12 +949,11 @@ code {
     flex-shrink: 0;
     margin: 0 0 0 50px;
     position: relative;
-    will-change: min-height;
 
     .aside-holder {
       //position: fixed;
       //width: 270px;
-
+      padding-top: 10px;
       @media (max-height: 750px) {
         position: static;
       }
@@ -901,20 +962,16 @@ code {
 
   .widget {
     background: lighten($gray-light, 38%);
-    padding: 25px 20px;
+    padding: 22px 20px;
     margin: 0 0 25px;
+    border-radius: 5px;
 
-    @media (max-height: 899px) {
-      padding: 15px 20px;
-      margin: 0 0 20px;
-    }
+   
 
     &.widget-one {
       background: none;
+      padding: 0 0 10px;;
 
-      @media (max-height: 899px) {
-        padding: 0;
-      }
 
       h2 {
         display: none;
@@ -945,7 +1002,7 @@ code {
     }
 
     h2 {
-      margin: 0 0 15px;
+      margin: 0 0 16px;
       font-size: 18px;
 
     }
@@ -957,7 +1014,7 @@ code {
       flex-flow: column nowrap;
 
       li {
-        margin: 0 0 12px;
+        margin: 0 0 15px;
 
         &:last-child {
           margin-bottom: 0;
@@ -984,13 +1041,13 @@ code {
             position: absolute;
             left: 0;
 
-            top: 5px;
-            border: 2px solid $gray;
+            top: 6px;
+            border: 2px solid rgba($gray, .3);
             content: "";
-            width: 9px;
+            width: 8px;
             border-radius: 50%;
             transition: all .3s ease-in-out;
-            height: 9px;
+            height: 8px;
           }
 
           &:hover {
@@ -1041,14 +1098,14 @@ code {
   .article-head {
     position: relative;
     margin: 0 0 50px;
-    color: $blue-dark;
+    //color: $blue-dark;
     line-height: 2;
     border-bottom: 2px solid darken($gray-lightest, 5%);
     padding: 0 0 45px;
   }
 
   .meta {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .content-holder {
@@ -1057,19 +1114,18 @@ code {
   }
 
   h1 {
-    font-size: 25px;
-    line-height: 40px;
-    margin: 0 0 12px;
+    font-size: 23px;
+    line-height: 38px;
+    margin: 0 0 15px;
     color: $dark;
-
     font-weight: 600;
   }
 
   h2 {
-    font-size: 20px;
-    line-height: 28px;
+    font-size: 18px;
+    line-height: 27px;
     font-weight: 600;
-    margin: 0 0 15px;
+    margin: 0 0 10px;
     letter-spacing: 0;
     color: $dark;
 
@@ -1117,14 +1173,36 @@ code {
       margin: 0;
     }
   }
-
+  p {
+      max-width: 85%;
+    }
+  .about {
+    background: #fefcf0;
+    max-width: 85%;
+    padding: 20px 25px;
+    border-radius: 5px;
+    
+    color: $blue-dark;
+    
+    h2 {
+      margin: 0 0 15px;
+    }
+    p {
+      font-weight: 500;
+      max-width: 100%;
+      letter-spacing: .25px;
+      line-height: 1.8;
+      font-family: $font-montserrat;
+      color: lighten($blue-dark, 5%);
+    }
+  }
   .block {
     position: relative;
     border-bottom: 2px solid darken($gray-lightest, 5%);
-    padding: 0 0 45px 55px;
+    padding: 0 0 55px 55px;
     overflow: hidden;
     min-height: 200px;
-    margin: 0 0 40px;
+    margin: 0 0 50px;
     font-size: 14px;
 
     &:hover {
@@ -1138,7 +1216,7 @@ code {
       margin: 0;
       border: 0;
     }
-
+    
   }
 
   h3 {

@@ -24,16 +24,19 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Nano Gallery 2";
 $prname = "nanogallery2"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("jquery.nanogallery2.min.js", "nanogallery2.min.css");
 $github = "https://github.com/nanostudio-org/nanogallery2";
 $gitrg = "https://github.com/nanostudio-org/nanogallery2/archive/v"; // .tar.gz
-$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "a modern photo / video gallery and lightbox"); 
+$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A modern photo / video gallery and lightbox."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat_s = "image, javascript, gallery, portfolio, photo, photoset, slideshow, flickr, picasa, smugmug, effects, responsive";
 $cat = explode(',', $cat_s);
-$type_s = "js";
+$type_s = "jquery";
 ?>
 

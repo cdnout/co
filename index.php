@@ -47,13 +47,20 @@
         foreach($dirs as $value){
           $url = 'cdn/'.$value.'/var.php';
           
+          
           if(file_exists($url)){
             include($url);
-            $v_h = preg_grep("~^$prname.*\.zip$~", scandir("zip/"));
-            $v_h_latest = end($v_h);
-            $v_h_latest = str_replace("$prname@", '', $v_h_latest);
-            $v_h_latest = str_replace(".zip", '', $v_h_latest);
-            
+            $filess = glob("cdn/$value/" . '*.txt');
+            $filess2 = implode("/", $filess);
+            $filess2 = explode("/", $filess2);            
+            $version_file = end($filess2);
+            $v_h_latest = substr($version_file, 0, strpos($version_file, ".txt")); 
+            if(empty($v_h_latest)) {
+              $v_h = preg_grep("~^$prname@.*~", scandir("cdn/"));
+              $v_h_latest = end($v_h);
+              $v_h_latest = str_replace("$prname@", '', $v_h_latest);
+              $v_h_latest = str_replace(".zip", '', $v_h_latest);
+            }
           ?>
          <article class="cdn">
           <div class="text-box">            

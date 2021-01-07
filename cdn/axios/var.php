@@ -18,15 +18,18 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Axios";
 $prname = "axios"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("axios.min.js");
 $github = "https://github.com/axios/axios";
 $gitrg = "https://github.com/axios/axios/archive/v"; // .tar.gz
 $keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Promise based HTTP client for the browser and node.js"); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$zip_remake = "true"; // will create zips for all version
 $cat = array("http-client", "xhr", "node", "ajax", "promise");
-$type_s = "js";
+$type_s = "jquery";
 ?>
 

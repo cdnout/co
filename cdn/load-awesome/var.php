@@ -121,13 +121,16 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Load Awesome";
 $prname = "load-awesome"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("loaders.css");
 $github = "https://github.com/danielcardoso/load-awesome";
 $gitrg = "https://github.com/danielcardoso/load-awesome/archive/"; // .tar.gz
 $keywords = array("pure css loaders", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "An awesome collection of — Pure CSS — Loaders and Spinners"); 
 $type_c = "css";
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-"; 
-$version_limit = "-3"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 //$additional_dir = "src"; 

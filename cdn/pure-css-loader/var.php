@@ -25,14 +25,17 @@ foreach($file_cnn as $filecn){
 
  
 $listfiles = $listfiles_arr;
-$title = "CSS Loader";
+$title = "Pure CSS Loader";
 $prname = "pure-css-loader"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("css-loader.css");
 $github = "https://github.com/raphaelfabeni/css-loader";
 $gitrg = "https://github.com/raphaelfabeni/css-loader/archive/v"; // .tar.gz
 $keywords = array("css loader", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Simple loaders for your web applications using only one div and pure CSS"); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-"; 
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $additional_dir = "src"; 

@@ -30,15 +30,14 @@ $prname = "photoswipe"; // npm command
 $keyfiles = array("photoswipe.min.js","photoswipe.min.css");
 $github = "https://github.com/dimsemenov/PhotoSwipe";
 $gitrg = "https://github.com/dimsemenov/PhotoSwipe/archive/v"; // .tar.gz
-$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A customizable, modular, responsive, The most popular front-end framework for developing responsive,
-JavaScript gallery"); 
+$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "JavaScript image gallery for mobile and desktop, modular, framework independent."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-9"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "UNlocked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat_s = "image, gallery, lightbox, photo, touch, swipe, zoom";
 $cat = explode(',', $cat_s);
-$type_s = "";
+$type_s = "jquery";
 
 //$additional_dir = "cjs";
 ?>

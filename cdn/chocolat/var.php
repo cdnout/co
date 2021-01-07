@@ -34,13 +34,13 @@ $prname = "chocolat"; // npm command
 $keyfiles = array("chocolat.cjs.js", "chocolat.min.css");
 $github = "https://github.com/nicolas-t/Chocolat";
 $gitrg = "https://github.com/nicolas-t/Chocolat/archive/"; // .tar.gz
-$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A Responsive jQuery Lightbox Plugin"); 
+$keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A Responsive jQuery Lightbox Plugin."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-2"; // give negative value 
+$version_limit = "-9"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat_s = "jquery, lightbox, plugin, responsive";
 $cat = explode(',', $cat_s);
-$type_s = "js";
+$type_s = "jquery";
 ?>
 

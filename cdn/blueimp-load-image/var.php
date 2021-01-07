@@ -34,12 +34,15 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Blueimp Load Image";
 $prname = "blueimp-load-image"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("load-image.all.min.js");
 $github = "https://github.com/blueimp/JavaScript-Load-Image";
 $gitrg = ""; // .tar.gz
 $keywords = array("Blueimp Load Image", "Blueimp Load Image js", "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "Load images provided as File or Blob objects or via URL. Retrieve an optionally scaled, cropped or rotated HTML img or canvas element. Use methods to parse image metadata to extract IPTC and Exif tags as well as embedded thumbnail images, to overwrite the Exif Orientation value and to restore the complete image header after resizing. "); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 //$zip_remake = "true"; // will create zips for all version
 //$additional_dir = "cjs";

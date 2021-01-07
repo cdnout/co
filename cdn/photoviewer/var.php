@@ -18,16 +18,19 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Photo Viewer";
 $prname = "photoviewer"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("photoviewer.min.js", "photoviewer.min.css");
 $github = "https://github.com/nzbin/photoviewer";
 $gitrg = "https://github.com/nzbin/photoviewer/archive/v"; // .tar.gz
 $keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A JS plugin to view images just like in Windows."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-5"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat_s = "photoviewer, lightbox, image-gallery, responsive modal, rich photo viewer";
 $cat = explode(',', $cat_s);
-$type_s = "js";
+$type_s = "jquery";
 ?>
 

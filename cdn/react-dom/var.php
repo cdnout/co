@@ -35,6 +35,9 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "React Dom";
 $prname = "react-dom"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("react-dom.production.min.js");
 $github = "https://github.com/facebook/react";
 $gitrg = ""; // .tar.gz
