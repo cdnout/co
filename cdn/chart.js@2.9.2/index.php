@@ -649,7 +649,7 @@ if($get_headers != "HTTP/1.1 404 Not Found") {
               <div class="path">
                 <h3>How to install <?php echo $title." ".$folderver; ?> with NPM<span>Install NodeJS and copy below text in Command:</span></h3>
                 <div class="code-line np">
-                  <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $prname_; ?>">&rsaquo; npm i <?php echo $prname_; ?></code></code>
+                 <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $prname_; ?>">&rsaquo; npm i <?php echo $prname_; ?></code>
                   <div class="copy-cat">
                     <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
                   </div>
@@ -658,7 +658,7 @@ if($get_headers != "HTTP/1.1 404 Not Found") {
               <div class="path">
                 <h3>How to install <?php echo $title." ".$folderver; ?> with Yarn<span>Install NodeJS and copy below text in Command:</span></h3>
                 <div class="code-line np">
-                  <code title="Click to Copy" class="copycat" data-clipboard-text="yarn add <?php echo $prname_; ?>">&rsaquo; yarn add <?php echo $prname_; ?></code></code>
+                  <code title="Click to Copy" class="copycat" data-clipboard-text="yarn add <?php echo $prname_; ?>">&rsaquo; yarn add <?php echo $prname_; ?></code>
                   <div class="copy-cat">
                     <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
                   </div>

@@ -18,7 +18,7 @@ foreach($file_cnn as $filecn){
 
  
 $listfiles = $listfiles_arr;
-//$fileNameSpecial = "Chart.js";
+$fileNameSpecial = "Chart.js";
 //$myfiles = "true";
 //$myfiles_smaller = "true";
 
