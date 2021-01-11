@@ -125,7 +125,10 @@
   if(file_exists("../../$foldername/cjs")){
     $cjs_exists = "true";
   }
- 
+ /*if(!isset($fileNameSpecial)) {
+  $fileNameSpecial = $prname;
+}*/
+
 ?>
 
 <head>
@@ -362,7 +365,7 @@
                 }
               ?>
             </div>
-            <?php if(isset($type_s) && $type_s != "react" && $type_s != "angular"  && $type_s != "vue" && $type_s != "s1"  && $type_s != "s2") { ?>
+            <?php if(isset($type_s) && $type_s != "react" && $type_s != "angular"  && $type_s != "vue" && $type_s != "css"  && $type_s != "s2") { ?>
             <div class="jquery_latest">
               <div class="path">
               <h3>Do you need <a href="../jquery/" target="_blank">jQuery Library</a> : </h3>
@@ -384,7 +387,7 @@
           <div class="block" id="cdn">
             <h2><i><img src="<?php echo $base_url; ?>images/icon-version.svg" width="30" alt="Cloud Icon"></i> <?php echo $title." ".$folderver; ?> CDN</h2>
             <p><?php echo $title; ?> <?php echo $folderver; ?> CDN resources for all their <?php echo $js_text." ".$orcss; ?> files along with minified versions.</p>
-            <strong class="note add">1) You may change version number anytime. <br>2) Minified versions does not need last file name. </strong>
+            
             <?php } ?>
             <div class="path">
               <?php 
@@ -490,11 +493,12 @@
                   }
                 }
               }
+              $listfiles_ar_pr_name = $prname;
               // fonts
               
            
-              if(isset($cdn_real_fonts)){
-                $listfiles_ar_pr_name = $prname;
+             /* if(isset($cdn_real_fonts)){
+                
               
                 ?>
                 <div class="code-line font">
@@ -556,6 +560,30 @@ font-style: normal;
 </code>
                 </div>
                 <?php 
+                }*/
+              if(isset($cdn_real_fonts)){
+                
+                foreach( $cdn_real_fonts as $index=>$cdn_file_url) {
+                  $cdn_file_url = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $cdn_file_url));
+                  $listfiles_ar_fn = explode("/", $cdn_file_url); 
+                  $listfiles_ar_fnf = end($listfiles_ar_fn);
+                  $listfiles_ar_fnf = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_fnf));
+                  $listfiles_ar_fnf2 = pathinfo($listfiles_ar_fnf);
+                  $listfiles_ar_fnf2 = $listfiles_ar_fnf2['filename'];
+                  $listfiles_ar_exx = explode(".", $listfiles_ar_fnf); 
+                  $listfiles_ar_exx_final = end($listfiles_ar_exx);
+                  $listfiles_ar_exx_final_current = array_pop($listfiles_ar_exx);
+                  $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
+                  $the_link = "https://cdnout.com/$listfiles_ar_pr_name/fonts/$cdn_file_url";    
+                 
+                    
+  if($listfiles_ar_exx_final_cl == "eot") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+   if($listfiles_ar_exx_final_cl == "woff") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+                  if($listfiles_ar_exx_final_cl == "woff2") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+                  if($listfiles_ar_exx_final_cl == "ttf") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+                  if($listfiles_ar_exx_final_cl == "otf") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
+
+}
                 }
               ?>
               <div class="btn-holder">
@@ -583,7 +611,7 @@ font-style: normal;
             <div class="path">
               <h3>How to install <?php echo $title." ".$folderver; ?> with NPM<span>Install NodeJS and copy below text in Command:</span></h3>
               <div class="code-line np">
-                <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $foldername; ?>">&rsaquo; npm i <?php echo $foldername; ?></code>
+                <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $prname_; ?>">&rsaquo; npm i <?php echo $prname_; ?></code>
                 <div class="copy-cat">
                   <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
                 </div>
@@ -592,7 +620,7 @@ font-style: normal;
             <div class="path">
               <h3>How to install <?php echo $title." ".$folderver; ?> with Yarn<span>Install NodeJS and copy below text in Command:</span></h3>
               <div class="code-line np">
-                <code title="Click to Copy" class="copycat" data-clipboard-text="yarn add <?php echo $foldername; ?>">&rsaquo; yarn add <?php echo $foldername; ?></code>
+                <code title="Click to Copy" class="copycat" data-clipboard-text="yarn add <?php echo $prname_; ?>">&rsaquo; yarn add <?php echo $prname_; ?></code>
                 <div class="copy-cat">
                   <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
                 </div>

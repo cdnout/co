@@ -40,9 +40,9 @@ if(strpos($prname, "/") !== false){
   $prname_special = str_replace('/', '', $prname_special);
   $prname_special = str_replace('@', '', $prname_special);
   $prname = $prname_special;
+  $npmrg = "https://registry.npmjs.org/$prname_/-/$prname-";
 } else {
   $prname = $prname; 
 }
-//$afterNodes = "";
 ?>
 

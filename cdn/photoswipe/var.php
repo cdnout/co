@@ -27,6 +27,9 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Photoswipe Gallery";
 $prname = "photoswipe"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("photoswipe.min.js","photoswipe.min.css");
 $github = "https://github.com/dimsemenov/PhotoSwipe";
 $gitrg = "https://github.com/dimsemenov/PhotoSwipe/archive/v"; // .tar.gz
@@ -39,6 +42,19 @@ $cat_s = "image, gallery, lightbox, photo, touch, swipe, zoom";
 $cat = explode(',', $cat_s);
 $type_s = "jquery";
 
-//$additional_dir = "cjs";
+//$additional_dir = "svgs";
+
+$prname_ = $prname;
+if(strpos($prname, "/") !== false){
+  $prname_special = strstr($prname, '/');
+  $prname_special = substr($prname, strpos($prname, "/") + 1);    
+  //$prname_special = substr($prname, 0, strpos($prname, '/'));
+  $prname_special = str_replace('/', '', $prname_special);
+  $prname_special = str_replace('@', '', $prname_special);
+  $prname = $prname_special;
+  $npmrg = "https://registry.npmjs.org/$prname_/-/$prname-";
+} else {
+  $prname = $prname; 
+}
 ?>
 

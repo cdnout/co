@@ -125,9 +125,9 @@
   if(file_exists("../../$foldername/cjs")){
     $cjs_exists = "true";
   }
- if(!isset($fileNameSpecial)) {
+ /*if(!isset($fileNameSpecial)) {
   $fileNameSpecial = $prname;
-}
+}*/
 
 ?>
 
@@ -493,7 +493,7 @@
                   }
                 }
               }
-              $listfiles_ar_pr_name = $fileNameSpecial;
+              $listfiles_ar_pr_name = $prname;
               // fonts
               
            
@@ -574,7 +574,7 @@ font-style: normal;
                   $listfiles_ar_exx_final = end($listfiles_ar_exx);
                   $listfiles_ar_exx_final_current = array_pop($listfiles_ar_exx);
                   $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
-                  $the_link = "https://cdnout.com/$listfiles_ar_pr_name/$cdn_file_url";    
+                  $the_link = "https://cdnout.com/$listfiles_ar_pr_name/fonts/$cdn_file_url";    
                  
                     
   if($listfiles_ar_exx_final_cl == "eot") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
@@ -611,7 +611,7 @@ font-style: normal;
             <div class="path">
               <h3>How to install <?php echo $title." ".$folderver; ?> with NPM<span>Install NodeJS and copy below text in Command:</span></h3>
               <div class="code-line np">
-                <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $foldername; ?>">&rsaquo; npm i <?php echo $foldername; ?></code>
+                <code title="Click to Copy" class="copycat" data-clipboard-text="npm i <?php echo $prname_; ?>">&rsaquo; npm i <?php echo $prname_; ?></code>
                 <div class="copy-cat">
                   <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
                 </div>
@@ -620,7 +620,7 @@ font-style: normal;
             <div class="path">
               <h3>How to install <?php echo $title." ".$folderver; ?> with Yarn<span>Install NodeJS and copy below text in Command:</span></h3>
               <div class="code-line np">
-                <code title="Click to Copy" class="copycat" data-clipboard-text="yarn add <?php echo $foldername; ?>">&rsaquo; yarn add <?php echo $foldername; ?></code>
+                <code title="Click to Copy" class="copycat" data-clipboard-text="yarn add <?php echo $prname_; ?>">&rsaquo; yarn add <?php echo $prname_; ?></code>
                 <div class="copy-cat">
                   <button class="btn-coppier btn-red"><i class="icon-copy"></i></button>
                 </div>

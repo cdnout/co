@@ -34,16 +34,31 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Light Gallery";
 $prname = "lightgallery"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("lightgallery.min.js", "lightgallery.min.css");
 $github = "https://github.com/sachinchoolur/lightGallery";
 $gitrg = "https://github.com/sachinchoolur/lightGallery/archive/"; // .tar.gz
 $keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A customizable, modular, responsive, lightbox gallery plugin. "); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-9"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat_s = "gallery, lightbox, image, video, jquery, plugin, responsive gallery, touch gallery";
 $cat = explode(',', $cat_s);
 $type_s = "jquery";
+$prname_ = $prname;
+if(strpos($prname, "/") !== false){
+  $prname_special = strstr($prname, '/');
+  $prname_special = substr($prname, strpos($prname, "/") + 1);    
+  //$prname_special = substr($prname, 0, strpos($prname, '/'));
+  $prname_special = str_replace('/', '', $prname_special);
+  $prname_special = str_replace('@', '', $prname_special);
+  $prname = $prname_special;
+  $npmrg = "https://registry.npmjs.org/$prname_/-/$prname-";
+} else {
+  $prname = $prname; 
+}
 ?>
 

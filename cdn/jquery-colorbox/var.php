@@ -53,18 +53,34 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "jQuery Colorbox";
 $prname = "jquery-colorbox"; // npm command
+//$fileNameSpecial = $prname;
+//$myfiles = "true";
+//$myfiles_smaller = "true";
 $keyfiles = array("jquery.colorbox-min.js");
 $github = "https://github.com/jackmoore/colorbox";
 $gitrg=""; // .tar.gz
 $keywords = array($title, $prname, "$title cdn", "$title cdnout", "$title npm", "Download $title", "$title github", "A customizable, modular, responsive, The most popular front-end framework for developing responsive,jQuery lightbox and modal window plugin."); 
 $npmrg = "https://registry.npmjs.org/$prname/-/$prname-";
-$version_limit = "-9"; // give negative value 
+$version_limit = "-10"; // give negative value 
 //$version_lock = "locked"; // cdn/index.php for older versions will not replaced.
 $zip_remake = "true"; // will create zips for all version
 $cat_s = "modal, lightbox, gallery, popup, ui, jquery-plugin";
 $cat = explode(',', $cat_s);
-$type_s = "";
+$type_s = "jquery";
 
-//$additional_dir = "cjs";
+//$additional_dir = "svgs";
+
+$prname_ = $prname;
+if(strpos($prname, "/") !== false){
+  $prname_special = strstr($prname, '/');
+  $prname_special = substr($prname, strpos($prname, "/") + 1);    
+  //$prname_special = substr($prname, 0, strpos($prname, '/'));
+  $prname_special = str_replace('/', '', $prname_special);
+  $prname_special = str_replace('@', '', $prname_special);
+  $prname = $prname_special;
+  $npmrg = "https://registry.npmjs.org/$prname_/-/$prname-";
+} else {
+  $prname = $prname; 
+}
 ?>
 

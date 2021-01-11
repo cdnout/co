@@ -15,7 +15,7 @@ foreach($file_cnn as $filecn){
 $listfiles = $listfiles_arr;
 $title = "Slick Carousel";
 $prname = "slick-carousel"; // npm command
-//$fileNameSpecial = $prname;
+//$fileNameSpecial = "";
 //$myfiles = "true";
 //$myfiles_smaller = "true";
 $keyfiles = array("slick.min.js", "slick.min.css");
@@ -28,4 +28,16 @@ $version_limit = "-10"; // give negative value
 $zip_remake = "true"; // will create zips for all version
 $cat = array("carousel", "slider");
 $type_s = "jquery";
+$prname_ = $prname;
+if(strpos($prname, "/") !== false){
+  $prname_special = strstr($prname, '/');
+  $prname_special = substr($prname, strpos($prname, "/") + 1);    
+  //$prname_special = substr($prname, 0, strpos($prname, '/'));
+  $prname_special = str_replace('/', '', $prname_special);
+  $prname_special = str_replace('@', '', $prname_special);
+  $prname = $prname_special;
+  $npmrg = "https://registry.npmjs.org/$prname_/-/$prname-";
+} else {
+  $prname = $prname; 
+}
 ?>
