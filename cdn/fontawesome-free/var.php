@@ -30,7 +30,7 @@ $cat_s = "css, font, icons, fontawesome, webfont, svg-icons, svg-sprites";
 $cat = explode(',', $cat_s);
 $type_s = "s2";
 
-$additional_dir = "svgs";
+//$additional_dir = "svgs";
 
 $prname_ = $prname;
 if(strpos($prname, "/") !== false){

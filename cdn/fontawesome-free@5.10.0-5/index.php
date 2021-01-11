@@ -594,7 +594,7 @@ if($get_headers != "HTTP/1.1 404 Not Found") {
                   $listfiles_ar_exx_final = end($listfiles_ar_exx);
                   $listfiles_ar_exx_final_current = array_pop($listfiles_ar_exx);
                   $listfiles_ar_exx_final_cl = preg_replace("/[ \t]+/", "", preg_replace("/[\r\n]+/", "", $listfiles_ar_exx_final));
-                  $the_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/fonts/$cdn_file_url";    
+                  $the_link = "https://cdnjs.cloudflare.com/ajax/libs/$listfiles_ar_pr_name/$folderver/$cdn_file_url";
                  
                     
   if($listfiles_ar_exx_final_cl == "eot") { font_pre_code_single($the_link, $listfiles_ar_fnf2); } 
