@@ -13,4 +13,16 @@
   $zip_remake = "true"; // will create zips for all version
   $cat = array("front end framework");
   $type_s = "front end";
+$prname_ = $prname;
+if(strpos($prname, "/") !== false){
+  $prname_special = strstr($prname, '/');
+  $prname_special = substr($prname, strpos($prname, "/") + 1);    
+  //$prname_special = substr($prname, 0, strpos($prname, '/'));
+  $prname_special = str_replace('/', '', $prname_special);
+  $prname_special = str_replace('@', '', $prname_special);
+  $prname = $prname_special;
+  $npmrg = "https://registry.npmjs.org/$prname_/-/$prname-";
+} else {
+  $prname = $prname; 
+}
 ?>

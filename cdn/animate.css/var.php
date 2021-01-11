@@ -16,6 +16,7 @@ foreach($file_cnn as $filecn){
 }
 
 
+
 $listfiles = $listfiles_arr;
 $title = "Animate CSS";
 $prname = "animate.css"; // npm command
@@ -33,6 +34,17 @@ $zip_remake = "true"; // will create zips for all version
 $latest_version_dir = "source";// only for latest versions
 //$additional_dir; for all versions 
 $cat = array("css animations", "pre-made animations");
-$type_s = "css";
-
+$type_s = "css";  
+$prname_ = $prname;
+if(strpos($prname, "/") !== false){
+  $prname_special = strstr($prname, '/');
+  $prname_special = substr($prname, strpos($prname, "/") + 1);    
+  //$prname_special = substr($prname, 0, strpos($prname, '/'));
+  $prname_special = str_replace('/', '', $prname_special);
+  $prname_special = str_replace('@', '', $prname_special);
+  $prname = $prname_special;
+  $npmrg = "https://registry.npmjs.org/$prname_/-/$prname-";
+} else {
+  $prname = $prname; 
+}
 ?>
