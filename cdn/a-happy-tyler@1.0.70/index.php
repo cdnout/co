@@ -86,11 +86,11 @@ foreach($keyfiles_list as $file_ext) {
   $file_ext_final = pathinfo($file_ext_filename, PATHINFO_EXTENSION);
  
   if($file_ext_final == "css") {
-    $key_css_file_list = array("$file_ext");
+    $key_css_file_list[] = $file_ext;
     
   }
   if($file_ext_final == "js") {
-    $key_js_file_list = array("$file_ext");
+    $key_js_file_list[] = $file_ext;
   } 
 }
 if(!empty($key_css_file_list)) {
