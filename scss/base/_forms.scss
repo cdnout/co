@@ -1,0 +1,31 @@
+// forms
+form,
+fieldset {
+	margin: 0;
+	padding: 0;
+	border-style: none;
+}
+
+.form-control,
+select {
+	-webkit-appearance: none;
+	
+}
+
+textarea,
+textarea.form-control {
+	resize: vertical;
+	vertical-align: top;
+	min-height: 93px;
+	max-height: 120px;
+}
+
+button,
+input[type='button'],
+input[type='reset'],
+input[type='file'],
+input[type='submit'] {
+	-webkit-appearance: none;
+	-webkit-border-radius: 0;
+	cursor: pointer;
+}

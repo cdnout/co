@@ -1,0 +1,1 @@
+[{"name":"aes-js","version":"3.1.2","description":"A pure JavaScript implementation of the AES block cipher and all common modes of operation.","repository":"git:\/\/github.com\/ricmoo\/aes-js.git","keyfiles":"index.min.js","keywords":["aes","aes-ctr","aes-ofb","aes-ecb","aes-cbc","aes-cfb","encrypt","decrypt","block","cipher"],"npm":"aes-js"}]
