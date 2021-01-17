@@ -71,31 +71,48 @@ foreach($data as $data_as) {
   $github = str_replace('http:', '', $github);
   $github = str_replace('https:', '', $github);
   $github = str_replace('.git', '', $github);
-}
-            
-if(isset($keyfiles_add)) {
-  $keyfiles_list = array_merge($keyfiles_list, $keyfiles_add);
-}
+  
+    if(isset($keyfiles_add)) {
+    $keyfiles_list_ar = array_merge($keyfiles_list, $keyfiles_add);
+    
+} else {
+    $keyfiles_add = array("");
+    $keyfiles_list_ar = $keyfiles_list;
+  }
 
 $key_css_live = $key_js_live = "";
-foreach($keyfiles_list as $file_ext) {
+foreach($keyfiles_list_ar as $file_ext) {
   $file_ext_i = explode("/", $file_ext);
   $file_ext_filename = end($file_ext_i);
   $file_ext_final = pathinfo($file_ext_filename, PATHINFO_EXTENSION);
 
   if($file_ext_final == "js") {
+    if(file_exists("$director/index.js")) {
+  
     $key_js_live = <<<EOD
 <script src="https://cdnout.com/$director/"></script>
 
 EOD;
-  }
-  if($file_ext_final == "css") {
-    $key_css_live = <<<EOD
-<link rel="stylesheet" href="https://cdnout.com/$director/$file_ext" media="all">
+    } else {
+      $key_js_live = <<<EOD
+<script src="https://cdnout.com/$director/$file_ext"></script>
 
 EOD;
+    }
+  } 
+  if($file_ext_final == "css") {
+    if(file_exists("$director/css/base.css")) {
+    $key_css_live = <<<EOD
+<link rel="stylesheet" href="https://cdnout.com/$director/css/base.css" media="all">
+EOD;
+    } else {
+      $key_css_live = <<<EOD
+<link rel="stylesheet" href="https://cdnout.com/$director/$file_ext" media="all">
+EOD;
+    }
   }
-}        
+} 
+}      
             
           ?>
          <article class="cdn">
