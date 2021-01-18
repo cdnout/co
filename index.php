@@ -79,13 +79,10 @@ foreach($data as $data_as) {
   $github = str_replace('https:', '', $github);
   $github = str_replace('.git', '', $github);
   
-  if(isset($keyfiles_add)) {
+  if(!empty($keyfiles_add)) {
     $keyfiles_list_ar = array_merge($keyfiles_list, $keyfiles_add);
     
-} else {
-    $keyfiles_add = array("");
-    $keyfiles_list_ar = $keyfiles_list;
-  }
+}
 
 $key_css_live = $key_js_live = "";
 foreach($keyfiles_list_ar as $file_ext) {

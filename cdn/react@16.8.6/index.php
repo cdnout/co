@@ -75,7 +75,7 @@ $json_main_data = json_decode($json_main, TRUE);
 $files_list = $json_main_data['files'];
 $cdn_real_path = $files_list;
 
-if(isset($keyfiles_add)) {
+if(!empty($keyfiles_add)) {
   $keyfiles_list = array_merge($keyfiles_list, $keyfiles_add);
 }
 $keyfiles_list = array_intersect($keyfiles_list, $files_list);

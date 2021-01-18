@@ -72,7 +72,7 @@ foreach($data as $data_as) {
   $github = str_replace('https:', '', $github);
   $github = str_replace('.git', '', $github);
   
-    if(isset($keyfiles_add)) {
+    if(!empty($keyfiles_add)) {
     $keyfiles_list_ar = array_merge($keyfiles_list, $keyfiles_add);
     
 } else {
@@ -87,7 +87,7 @@ foreach($keyfiles_list_ar as $file_ext) {
   $file_ext_final = pathinfo($file_ext_filename, PATHINFO_EXTENSION);
 
   if($file_ext_final == "js") {
-    if(file_exists("$director/index.js")) {
+    if(file_exists("../$director/index.js")) {
   
     $key_js_live = <<<EOD
 <script src="https://cdnout.com/$director/"></script>
@@ -101,11 +101,11 @@ EOD;
     }
   } 
   if($file_ext_final == "css") {
-    if(file_exists("$director/css/base.css")) {
+    if(file_exists("../$director/css/base.css")) {
     $key_css_live = <<<EOD
 <link rel="stylesheet" href="https://cdnout.com/$director/css/base.css" media="all">
 EOD;
-    } else {
+    } else { 
       $key_css_live = <<<EOD
 <link rel="stylesheet" href="https://cdnout.com/$director/$file_ext" media="all">
 EOD;
