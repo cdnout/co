@@ -1,0 +1,1001 @@
+/*! backpack.css v2.2.0 | MIT License | github.com/chris-pearce/backpack.css */
+
+/**
+ * 1. Vendor stylesheets.
+ * 2. See the "File structure" section in CONTRIBUTING.md.
+ * 3. The stylesheet names come from MDN's HTML elements reference document. See
+ *    https://developer.mozilla.org/en-US/docs/Web/HTML/Element.
+ *
+ * NOTE: The order of the imports must be maintained.
+ */
+
+/* Document
+ * ========================================================================== */
+
+/**
+ * Add border box sizing in all browsers (opinionated).
+ */
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+/**
+ * 1. Add text decoration inheritance in all browsers (opinionated).
+ * 2. Add vertical alignment inheritance in all browsers (opinionated).
+ */
+
+::before,
+::after {
+  text-decoration: inherit; /* 1 */
+  vertical-align: inherit; /* 2 */
+}
+
+/**
+ * 1. Use the default cursor in all browsers (opinionated).
+ * 2. Change the line height in all browsers (opinionated).
+ * 3. Breaks words to prevent overflow in all browsers (opinionated).
+ * 4. Use a 4-space tab width in all browsers (opinionated).
+ * 5. Remove the grey highlight on links in iOS (opinionated).
+ * 6. Prevent adjustments of font size after orientation changes in iOS.
+ */
+
+html {
+  cursor: default; /* 1 */
+  line-height: 1.5; /* 2 */
+  overflow-wrap: anywhere; /* 3 */
+  -moz-tab-size: 4; /* 4 */
+  tab-size: 4; /* 4 */
+  -webkit-tap-highlight-color: transparent /* 5 */;
+  -webkit-text-size-adjust: 100%; /* 6 */
+}
+
+/* Sections
+ * ========================================================================== */
+
+/**
+ * Remove the margin in all browsers (opinionated).
+ */
+
+body {
+  margin: 0;
+}
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Edge, Firefox, and Safari.
+ */
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/* Grouping content
+ * ========================================================================== */
+
+/**
+ * Remove the margin on nested lists in Chrome, Edge, and Safari.
+ */
+
+dl dl,
+dl ol,
+dl ul,
+ol dl,
+ul dl {
+  margin: 0;
+}
+
+/**
+ * 1. Correct the inheritance of border color in Firefox.
+ * 2. Add the correct box sizing in Firefox.
+ */
+
+hr {
+  color: inherit; /* 1 */
+  height: 0; /* 2 */
+}
+
+/**
+ * Remove the list style on navigation lists in all browsers (opinionated).
+ */
+
+nav ol,
+nav ul {
+  list-style: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E");
+  padding: 0;
+}
+
+/**
+ * Prevent VoiceOver from ignoring list semantics in Safari (opinionated).
+ */
+
+nav li::before {
+  content: "\200B";
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ * 3. Prevent overflow of the container in all browsers (opinionated).
+ */
+
+pre {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+  overflow: auto; /* 3 */
+}
+
+/* Text-level semantics
+ * ========================================================================== */
+
+/**
+ * Add the correct text decoration in Safari.
+ */
+
+abbr[title] {
+  text-decoration: underline;
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+code,
+kbd,
+samp {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/**
+ * Add the correct font size in all browsers.
+ */
+
+small {
+  font-size: 80%;
+}
+
+/* Embedded content
+ * ========================================================================== */
+
+/*
+ * Change the alignment on media elements in all browsers (opinionated).
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+/**
+ * Add the correct display in iOS 4-7.
+ */
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+ * Remove the border on iframes in all browsers (opinionated).
+ */
+
+iframe {
+  border-style: none;
+}
+
+/**
+ * Change the fill color to match the text color in all browsers (opinionated).
+ */
+
+svg:not([fill]) {
+  fill: currentColor;
+}
+
+/* Tabular data
+ * ========================================================================== */
+
+/**
+ * 1. Collapse border spacing in all browsers (opinionated).
+ * 2. Correct table border color inheritance in all Chrome, Edge, and Safari.
+ * 3. Remove text indentation from table contents in Chrome, Edge, and Safari.
+ */
+
+table {
+  border-collapse: collapse; /* 1 */
+  border-color: inherit; /* 2 */
+  text-indent: 0; /* 3 */
+}
+
+/* Forms
+ * ========================================================================== */
+
+/**
+ * Remove the margin on controls in Safari.
+ */
+
+button,
+input,
+select {
+  margin: 0;
+}
+
+/**
+ * Remove the inheritance of text transform in Firefox.
+ */
+
+button {
+  text-transform: none;
+}
+
+/**
+ * Correct the inability to style buttons in iOS and Safari.
+ */
+
+button,
+[type="button" i],
+[type="reset" i],
+[type="submit" i] {
+  -webkit-appearance: button;
+}
+
+/**
+ * 1. Change the inconsistent appearance in all browsers (opinionated).
+ * 2. Correct the padding in Firefox.
+ */
+
+fieldset {
+  border: 1px solid #a0a0a0; /* 1 */
+  padding: 0.35em 0.75em 0.625em; /* 2 */
+}
+
+/**
+ * Add the correct vertical alignment in Chrome, Edge, and Firefox.
+ */
+
+progress {
+  vertical-align: baseline;
+}
+
+/**
+ * Remove the inheritance of text transform in Firefox.
+ */
+
+select {
+  text-transform: none;
+}
+
+/**
+ * 1. Remove the margin in Firefox and Safari.
+ * 3. Change the resize direction in all browsers (opinionated).
+ */
+
+textarea {
+  margin: 0; /* 1 */
+  resize: vertical; /* 3 */
+}
+
+/**
+ * 1. Correct the odd appearance in Chrome, Edge, and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+
+[type="search" i] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Safari.
+ */
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * Correct the text style of placeholders in Chrome, Edge, and Safari.
+ */
+
+::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.54;
+}
+
+/**
+ * Remove the inner padding in Chrome, Edge, and Safari on macOS.
+ */
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * 1. Correct the inability to style upload buttons in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/**
+ * Remove the inner border and padding of focus outlines in Firefox.
+ */
+
+::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+/**
+ * Restore the focus outline styles unset by the previous rule in Firefox.
+ */
+
+:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+/**
+ * Remove the additional :invalid styles in Firefox.
+ */
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/* Interactive
+ * ========================================================================== */
+
+/*
+ * Add the correct styles in Safari.
+ */
+
+dialog {
+  background-color: white;
+  border: solid;
+  color: black;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+  height: fit-content;
+  left: 0;
+  margin: auto;
+  padding: 1em;
+  position: absolute;
+  right: 0;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+}
+
+dialog:not([open]) {
+  display: none;
+}
+
+/*
+ * Add the correct display in all browsers.
+ */
+
+summary {
+  display: list-item;
+}
+
+/* Accessibility
+ * ========================================================================== */
+
+/**
+ * Change the cursor on busy elements in all browsers (opinionated).
+ */
+
+[aria-busy="true" i] {
+  cursor: progress;
+}
+
+/*
+ * Change the cursor on control elements in all browsers (opinionated).
+ */
+
+[aria-controls] {
+  cursor: pointer;
+}
+
+/*
+ * Change the cursor on disabled, not-editable, or otherwise
+ * inoperable elements in all browsers (opinionated).
+ */
+
+[aria-disabled="true" i],
+[disabled] {
+  cursor: not-allowed;
+}
+
+/*
+ * Change the display on visually hidden accessible elements
+ * in all browsers (opinionated).
+ */
+
+[aria-hidden="false" i][hidden] {
+  display: initial;
+}
+
+[aria-hidden="false" i][hidden]:not(:focus) {
+  clip: rect(0, 0, 0, 0);
+  position: absolute;
+}
+
+/* 1 */
+
+/**
+ * 1. Change the inconsistent appearance in all browsers (opinionated).
+ * 2. Add typography inheritance in all browsers (opinionated).
+ */
+
+button,
+input,
+select,
+textarea {
+  background-color: transparent; /* 1 */
+  border: 1px solid WindowFrame; /* 1 */
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  letter-spacing: inherit; /* 2 */
+  padding: 0.25em 0.375em; /* 1 */
+}
+
+/**
+ * Change the inconsistent appearance in all browsers (opinionated).
+ */
+
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: no-repeat right center / 1em;
+  border-radius: 0;
+  padding-right: 1em;
+}
+
+/**
+ * Change the inconsistent appearance in all browsers (opinionated).
+ */
+
+select:not([multiple]):not([size]) {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='4'%3E%3Cpath d='M4 0h6L7 4'/%3E%3C/svg%3E");
+}
+
+/**
+ * Remove the border and padding in all browsers (opinionated).
+ */
+
+[type="color" i],
+[type="range" i] {
+  border-width: 0;
+  padding: 0;
+}
+
+/* 1 */
+
+/*
+* 1. Remove animations when motion is reduced (opinionated).
+* 2. Remove fixed background attachments when motion is reduced (opinionated).
+* 3. Remove timed scrolling behaviors when motion is reduced (opinionated).
+* 4. Remove transitions when motion is reduced (opinionated).
+*/
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-delay: -1ms !important; /* 1 */
+    animation-duration: 1ms !important; /* 1 */
+    animation-iteration-count: 1 !important; /* 1 */
+    background-attachment: initial !important; /* 2 */
+    scroll-behavior: auto !important; /* 3 */
+    transition-delay: 0s !important; /* 4 */
+    transition-duration: 0s !important; /* 4 */
+  }
+}
+
+/* 1 */
+
+/**
+ * Use the default user interface font in all browsers (opinionated).
+ */
+
+html {
+  font-family:
+    system-ui,
+    /* macOS 10.11-10.12 */ -apple-system,
+    /* Windows 6+ */ "Segoe UI",
+    /* Android 4+ */ "Roboto",
+    /* Ubuntu 10.10+ */ "Ubuntu",
+    /* Gnome 3+ */ "Cantarell",
+    /* KDE Plasma 5+ */ "Noto Sans",
+    /* fallback */ sans-serif,
+    /* macOS emoji */ "Apple Color Emoji",
+    /* Windows emoji */ "Segoe UI Emoji",
+    /* Windows emoji */ "Segoe UI Symbol",
+    /* Linux emoji */ "Noto Color Emoji";
+}
+
+/**
+ * Use the default monospace user interface font in all browsers (opinionated).
+ */
+
+code,
+kbd,
+samp,
+pre {
+  font-family:
+    /* macOS 10.10+ */ "Menlo",
+    /* Windows 6+ */ "Consolas",
+    /* Android 4+ */ "Roboto Mono",
+    /* Ubuntu 10.10+ */ "Ubuntu Monospace",
+    /* KDE Plasma 5+ */ "Noto Mono",
+    /* KDE Plasma 4+ */ "Oxygen Mono",
+    /* Linux/OpenOffice fallback */ "Liberation Mono",
+    /* fallback */ monospace,
+    /* macOS emoji */ "Apple Color Emoji",
+    /* Windows emoji */ "Segoe UI Emoji",
+    /* Windows emoji */ "Segoe UI Symbol",
+    /* Linux emoji */ "Noto Color Emoji";
+}
+
+/* 1 */
+
+/**
+ * Prevents an unwanted focus outline from appearing around elements that might
+ * still respond to pointer events.
+ */
+
+/* stylelint-disable-next-line a11y/no-outline-none */
+
+[tabindex='-1']:focus {
+  outline: none !important;
+}
+
+/**
+ * Apply Firefox's default focus ring instead of sanitize.css's version as it is
+ * more prominent.
+ */
+
+:-moz-focusring {
+  outline: 5px auto Highlight;
+}
+
+/**
+ * Remove the outline in cases where the UA determines via heuristics that the
+ * focus should not be visible. This is mainly for ensuring that a focus
+ * ring does not render for mouse pointers.
+ *
+ * @credit https://css-tricks.com/the-focus-visible-trick/
+ */
+
+/* stylelint-disable-next-line a11y/no-outline-none */
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* 2 */
+
+/**
+ * 1. Apply OpenType features globally:
+ *    - Apply kerning.
+ *    - Apply common ligatures.
+ *    - Apply standard ligatures
+ *    - Apply contextual ligatures.
+ *    - Apply proportional numerals.
+ *    - Apply old-style numerals.
+ *    NOTE: If any of the `font-feature-settings` values are not required on
+ *    child elements, e.g.: `<td>`, then you have to turn them off explicitly.
+ *    Also, see the "OpenType features" section in the README.md.
+ * 2. Set the global font size using the standard user-agent size, which is
+ *    typically 16px.
+ */
+
+html {
+  font-feature-settings: 'kern', 'liga', 'clig', 'calt', 'onum', 'pnum'; /* 1 */
+  -webkit-font-kerning: normal;
+          font-kerning: normal; /* 1 */
+  font-size: 1rem; /* 2 */
+  font-variant-ligatures: common-ligatures contextual; /* 1 */
+  font-variant-numeric: oldstyle-nums proportional-nums; /* 1 */
+}
+
+/* 3 */
+
+/*
+ * 1. Remove the top inner shadow that iOS applies to all textual inputs.
+ * 2. Remove rounded corners that iOS applies to all input buttons.
+ */
+
+input,
+textarea {
+  background-clip: padding-box; /* 1 */
+  border-radius: 0; /* 2 */
+}
+
+/*
+ * 1. Prevent any horizontal overflow.
+ * 2. sanitize.css's evergreen.css stylesheet doesn't apply the logical property
+ *    version. Therefore, it's applied here alongside the non-logical property
+ *    version.
+ */
+
+textarea {
+  max-width: 100%; /* 1 */
+  resize: vertical; /* 2 */
+  resize: block; /* 2 */
+}
+
+/*
+ * Apply left text alignment to buttons instead of the default center alignment.
+ */
+
+[type='submit'],
+[type='button'],
+[type='reset'],
+button {
+  text-align: left;
+  text-align: start;
+}
+
+/*
+ * Apply the more familiar pointer cursor to non-disabled buttons.
+ */
+
+[type='submit']:not(:disabled),
+[type='button']:not(:disabled),
+[type='reset']:not(:disabled),
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/**
+ * Apply OpenType features to mostly numeric input types:
+ * - Remove kerning.
+ * - Remove proportional numerals.
+ * - Remove old-style numerals.
+ * - Apply lining numerals.
+ *
+ * NOTE: See the "OpenType features" section in the README.md.
+ */
+
+[type='color'],
+[type='date'],
+[type='datetime-local'],
+[type='month'],
+[type='number'],
+[type='range'],
+[type='tel'],
+[type='time'],
+[type='week'] {
+  font-feature-settings: 'kern' 0, 'onum' 0, 'lnum';
+  -webkit-font-kerning: none;
+          font-kerning: none;
+  font-variant-numeric: lining-nums;
+}
+
+/**
+ * Indicates that a label will shift focus to its associated control.
+ */
+
+label[for] {
+  cursor: pointer;
+}
+
+/**
+ * 1. Remove user-agent styles.
+ * 2. Fix an issue in Safari where the element prematurely wraps.
+ */
+
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 1 */
+  width: 100%; /* 2 */
+}
+
+/**
+ * 1. Remove user-agent styles.
+ * 2. Override the user-agent's `min-width: min-content;` rule with the more
+ *    standard `min-width: 0;` to render as a block element would.
+ *    @credit https://thatemil.com/blog/2015/01/03/reset-your-fieldset.
+ * 3. Remove the padding applied by both the user-agent and sanitize.css.
+ */
+
+fieldset {
+  border: 0; /* 1 */
+  min-width: 0; /* 2 */
+  padding: 0; /* 3 */
+}
+
+body:not(:-moz-handler-blocked) fieldset {
+  display: table-cell;
+}
+
+/* 3 */
+
+/**
+ * Scope heading styles to classes instead of an element selector so that styles
+ * get divorced from semantics. I.e., if you want a `<h4>` to look like a `<h2>`
+ * you can easily do this. Therefore, all heading elements get reset to have the
+ * same styles as the body copy. See:
+ * https://medium.com/fed-or-dead/handling-headings-in-a-ui-component-library-2587de93c890
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: normal;
+  line-height: inherit;
+}
+
+/* 3 */
+
+/*
+ * Apply a more readable underline for links.
+ */
+
+a {
+  -webkit-text-decoration-skip: ink;
+          text-decoration-skip-ink: auto;
+}
+
+/*
+ * The majority of the time, italic formatting is not desired.
+ */
+
+em {
+  font-style: normal;
+}
+
+/*
+ * Override sanitize.css's 80% font size to be 100% as the majority of the time
+ * a smaller font size is not desired.
+ */
+
+small {
+  font-size: 100%;
+}
+
+/**
+ * Apply a more suitable treatment to superscript and subscript text if it's
+ * supported.
+ */
+
+@supports (font-variant-position: sub) and (font-variant-position: super) {
+  sub,
+  sup {
+    vertical-align: inherit;
+  }
+
+  sub {
+    font-variant-position: sub;
+  }
+
+  sup {
+    font-variant-position: super;
+  }
+}
+
+/* 3 */
+
+/*
+ * Lists in applications hardly ever require their default markers and
+ * indentation. Therefore, it makes sense to remove these user-agent styles
+ * rather than doing it within each list-type component. When default styled
+ * lists are needed, say, in some long-form copy, then markers and indentation
+ * can get reintroduced within a specific component that handles that type of
+ * list.
+ *
+ * 1. Override sanitize.css's `list-style` styles.
+ * 2. Remove the pseudo-element sanitize.css applies.
+ *
+ * NOTE: The overridden sanitize.css styles above are applied as the fix
+ * sanitize.css applies to prevent VoiceOver from ignoring list semantics in
+ * Safari when list markers get removed (see:
+ * https://www.scottohara.me/blog/2019/01/12/lists-and-safari.html) does not
+ * make a difference when testing in latest Safari.
+ *
+ * TODO: Create a GitHub issue letting sanitize.css know about the NOTE: above.
+ */
+
+ul,
+ol,
+nav ol /* 1 */,
+nav ul /* 1 */ {
+  list-style: none;
+  padding: 0;
+}
+
+nav li::before {
+  display: none; /* 2 */
+}
+
+/*
+ * 1. Apply a solid, thin horizontal rule.
+ * 2. Remove Firefox's `color: gray` style.
+ * 3. Remove user-agent's default 1px height, and common `overflow: hidden`.
+ *
+ * @credit https://github.com/jensimmons/cssremedy/
+ */
+
+hr {
+  border-style: solid; /* 1 */
+  border-width: 1px 0 0; /* 1 */
+  color: inherit; /* 2 */
+  height: 0; /* 3 */
+  overflow: visible; /* 3 */
+}
+
+/* 3 */
+
+/*
+ * Using a block display, make all embedded elements responsive by default.
+ *
+ * @credit https://github.com/jensimmons/cssremedy
+ */
+
+audio,
+canvas,
+embed,
+iframe,
+img,
+object,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+/*
+ * Maintain intrinsic aspect ratios when `max-width` is applied (`iframe`,
+ * `embed`, and `object` have no intrinsic ratio; their height gets applied
+ * explicitly).
+ *
+ * @credit https://github.com/jensimmons/cssremedy
+ */
+
+img,
+svg,
+video,
+canvas {
+  height: auto;
+}
+
+/*
+ * Remove the default `300px` width, especially as audio files are unlikely to
+ * come with a `width` attribute.
+ *
+ * @credit https://github.com/jensimmons/cssremedy
+*/
+
+audio {
+  width: 100%;
+}
+
+/* 3 */
+
+/*
+ * Remove user-agent styles.
+ */
+
+th {
+  font-weight: normal;
+  text-align: left;
+  text-align: start;
+}
+
+/**
+ * Apply OpenType features to table cells:
+ * - Remove proportional numerals.
+ * - Remove old-style numerals
+ * - Apply lining numerals.
+ * - Apply tabular numerals.
+ * - Apply slashed zero.
+ *
+ * NOTE: See the "OpenType features" section in the README.md.
+ */
+
+td {
+  font-feature-settings: 'onum' 0, 'pnum' 0, 'lnum', 'tnum', 'zero';
+  font-variant-numeric: lining-nums tabular-nums slashed-zero;
+}
+
+/* 3 */
+
+/**
+ * Remove margin from all elements that have it applied by default.
+ */
+
+blockquote,
+figure,
+form,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+pre,
+ul,
+ol {
+  margin: 0;
+}
+
+/**
+ * Apply OpenType features to elements that use a monospaced font:
+ * - Remove kerning.
+ * - Remove common ligatures.
+ * - Remove standard ligatures
+ * - Apply lining numerals.
+ * - Apply tabular numerals.
+ * - Apply slashed zero.
+ *
+ * NOTE: See the "OpenType features" section in the README.md.
+ */
+
+code,
+kbd,
+pre,
+samp {
+  font-feature-settings: 'kern' 0, 'liga' 0, 'clig' 0, 'onum' 0, 'pnum' 0,
+    'tnum', 'lnum', 'zero';
+  -webkit-font-kerning: none;
+          font-kerning: none;
+  font-variant-ligatures: contextual;
+  font-variant-numeric: lining-nums tabular-nums slashed-zero;
+}
+
+/**
+ * Avoid 300ms click delay on touch devices that support the `touch-action` CSS
+ * property.
+ *
+ * @credit
+ * - http://caniuse.com/#feat=css-touch-action
+ * - http://patrickhlauke.github.io/touch/tests/results/#suppressing-300ms-delay
+ * - https://adactio.com/journal/10019
+ * - https://developers.google.com/web/updates/2013/12/300ms-tap-delay-gone-away
+ */
+
+a,
+area,
+button,
+input,
+label,
+select,
+summary,
+textarea,
+[tabindex]:not([tabindex='-1']) {
+  touch-action: manipulation;
+}
+
+/* 2 */
