@@ -1,0 +1,1 @@
+!function(u){u.fn.appendAround=function(){return this.each(function(){var t=u(this),n="data-set",i=t.parent(),e=i[0],a=i.attr(n),r=u("["+n+"='"+a+"']");function o(n){return"none"===u(n).css("display")}function s(){if(o(e)){var n=0;r.each(function(){o(this)||n||(t.appendTo(this),n++,e=this)})}}s(),u(window).bind("resize",s)})}}(jQuery);
