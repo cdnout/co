@@ -1,0 +1,1 @@
+[{"name":"deeplearn","version":"0.5.1","description":"Hardware-accelerated JavaScript library for machine intelligence","repository":"git+https:\/\/github.com\/PAIR-code\/deeplearnjs.git","keyfiles":"deeplearn.min.js","keywords":["deep-learning","typescript","webgl","javascript","machine-learning","neural-network","deep-neural-networks","gpu-acceleration"],"npm":"deeplearn"}]
