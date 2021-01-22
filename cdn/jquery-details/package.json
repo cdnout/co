@@ -1,0 +1,1 @@
+[{"name":"jquery-details","version":"0.1.0","description":"This plugin polyfills <details>\/<summary> HTML elements and adds the appropriate ARIA annotations for optimal accessibility.","repository":"https:\/\/github.com\/mathiasbynens\/jquery-details.git","keyfiles":"jquery.details.min.js","keywords":["html5","details","summary","annotation"],"npm":null}]
