@@ -1,0 +1,1 @@
+[{"name":"leaflet-locatecontrol","version":"0.72.0","description":"A useful control to geolocate the user with many options. Official Leaflet and MapBox plugin.","repository":"https:\/\/github.com\/domoritz\/leaflet-locatecontrol","keyfiles":"L.Control.Locate.min.js","keywords":["leaflet","maps","mobile"],"npm":"leaflet.locatecontrol"}]

@@ -1,0 +1,1 @@
+[{"name":"lave","version":"1.1.10","description":"eval in reverse: stringifying all the stuff that JSON.stringify won't","repository":"git+https:\/\/github.com\/jed\/lave.git","keyfiles":"lave.js","keywords":["stringify","uneval","circular","json","serialize"],"npm":"lave"}]

@@ -1,0 +1,1 @@
+[{"name":"js-scrypt","version":"1.2.0","description":"Emscripten-compiled scrypt, a Password-Based Key Derivation Function from Colin Percival.","repository":"https:\/\/github.com\/tonyg\/js-scrypt.git","keyfiles":"scrypt.min.js","keywords":["scrypt","password"],"npm":null}]

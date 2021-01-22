@@ -1,0 +1,1 @@
+[{"name":"laravel-echo","version":"1.10.0","description":"Laravel Echo library for beautiful Pusher and Socket.IO integration","repository":"git+https:\/\/github.com\/laravel\/echo.git","keyfiles":"echo.js","keywords":["laravel","pusher","socket.io"],"npm":"laravel-echo"}]

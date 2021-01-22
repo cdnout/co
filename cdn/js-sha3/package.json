@@ -1,0 +1,1 @@
+[{"name":"js-sha3","version":"0.8.0","description":"A simple SHA-3 \/ Keccak \/ Shake hash function for JavaScript supports UTF-8 encoding.","repository":"https:\/\/github.com\/emn178\/js-sha3.git","keyfiles":"sha3.min.js","keywords":["sha3","keccak","shake","hash","encryption","cryptography","HMAC"],"npm":"js-sha3"}]

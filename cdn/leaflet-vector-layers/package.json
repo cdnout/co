@@ -1,0 +1,1 @@
+[{"name":"leaflet-vector-layers","version":"1.6.0","description":"Allows to easily create vector layers from a number of geo web services, such as ArcGIS Server, Arc2Earth, GeoIQ, CartoDB and GIS Cloud. ","repository":"git:\/\/github.com\/JasonSanford\/leaflet-vector-layers.git","keyfiles":"lvector.min.js","keywords":["leaflet","GeoJason","vector","Google Maps"],"npm":null}]

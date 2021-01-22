@@ -1,0 +1,1 @@
+[{"name":"libsodium-wrappers","version":"0.5.4","description":"The Sodium cryptographic library compiled to pure JavaScript (wrappers)","repository":"https:\/\/github.com\/jedisct1\/libsodium.js.git","keyfiles":"sodium.min.js","keywords":["crypto","sodium","libsodium","nacl","chacha20","poly1305","curve25519","ed25519","blake2","siphash"],"npm":null}]

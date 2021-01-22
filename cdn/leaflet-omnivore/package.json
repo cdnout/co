@@ -1,0 +1,1 @@
+[{"name":"leaflet-omnivore","version":"0.3.4","description":"a geospatial format parser for Leaflet","repository":"git@github.com:mapbox\/leaflet-omnivore.git","keyfiles":"leaflet-omnivore.min.js","keywords":["leaflet","formats","kml","csv","gpx","geojson","maps","wkt","osm","polyline","topojson","format","converter"],"npm":"leaflet-omnivore"}]

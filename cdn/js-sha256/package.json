@@ -1,0 +1,1 @@
+[{"name":"js-sha256","version":"0.9.0","description":"A simple SHA-256 \/ SHA-224 hash function for JavaScript supports UTF-8 encoding.","repository":"https:\/\/github.com\/emn178\/js-sha256.git","keyfiles":"sha256.min.js","keywords":["sha","sha2","sha224","sha256","hash","encryption","cryptography","HMAC"],"npm":"js-sha256"}]
