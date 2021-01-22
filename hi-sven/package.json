@@ -1,0 +1,11 @@
+{
+  "name": "hi-sven",
+  "version": "1.5.30",
+  "description": "Say hi to Sven",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"ok\" && exit 0"
+  },
+  "author": "Sven Sauleau <sven@sauleau.com>",
+  "license": "MIT"
+}

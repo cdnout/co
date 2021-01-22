@@ -1,0 +1,1 @@
+[{"name":"huntjs","version":"5.0.0","description":"Minimal library to observe nodes entering and leaving the viewport","repository":"git+https:\/\/github.com\/jeremenichelli\/hunt.git","keyfiles":"hunt.umd.js","keywords":["hunt","scroll","intersection","observer","viewport","dom","element"],"npm":"huntjs"}]
