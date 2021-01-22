@@ -1,0 +1,1 @@
+[{"name":"pipes-core","version":"0.8.4","description":"Basic utilities for web streams","repository":"git+https:\/\/github.com\/pipesjs\/core.git","keyfiles":"pipes.core.min.js","keywords":["streams","pipesjs","utils"],"npm":"@pipes\/core"}]

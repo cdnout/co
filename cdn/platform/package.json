@@ -1,0 +1,1 @@
+[{"name":"platform","version":"1.3.6","description":"A platform detection library that works on nearly all JavaScript platforms.","repository":"https:\/\/github.com\/bestiejs\/platform.js.git","keyfiles":"platform.min.js","keywords":["environment","platform","ua","useragent"],"npm":"platform"}]
