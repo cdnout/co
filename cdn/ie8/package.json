@@ -1,0 +1,1 @@
+[{"name":"ie8","version":"0.8.1","description":"some damn DOM fix for this damned browser","repository":"git:\/\/github.com\/WebReflection\/ie8.git","keyfiles":"ie8.js","keywords":["IE8","addEventListener","dispatchEvent","DOM3","document.createEvent","DOMContentLoaded"],"npm":null}]

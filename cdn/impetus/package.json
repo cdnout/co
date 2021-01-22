@@ -1,0 +1,1 @@
+[{"name":"impetus","version":"0.8.8","description":"Add momentum to anything. It's like iScroll, except not for scrolling. Supports mouse and touch events.","repository":"git+ssh:\/\/git@github.com\/chrisbateman\/impetus.git","keyfiles":"impetus.min.js","keywords":["momentum","touch"],"npm":"impetus"}]

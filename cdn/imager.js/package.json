@@ -1,0 +1,1 @@
+[{"name":"imager.js","version":"0.5.1","description":"Imager.js is an alternative solution to the issue of how to handle responsive image loading, created by developers at BBC News.","repository":"git:\/\/github.com\/BBC-News\/Imager.js.git","keyfiles":"Imager.min.js","keywords":["responsive","srcset","images","resize","polyfill","shim","img","PictureFill"],"npm":"imager.js"}]

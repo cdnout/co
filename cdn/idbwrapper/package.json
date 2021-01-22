@@ -1,0 +1,1 @@
+[{"name":"idbwrapper","version":"1.7.2","description":"A cross-browser wrapper for IndexedDB","repository":"https:\/\/github.com\/jensarps\/IDBWrapper","keyfiles":"idbstore.min.js","keywords":["IndexedDB","storage","offline"],"npm":"idb-wrapper"}]
