@@ -1,0 +1,1 @@
+[{"name":"msgpack-lite","version":"0.1.26","description":"Fast Pure JavaScript MessagePack Encoder and Decoder","repository":"https:\/\/github.com\/kawanet\/msgpack-lite.git","keyfiles":"msgpack.min.js","keywords":["buffer","fluentd","messagepack","msgpack","serialize","stream","typedarray","arraybuffer","uint8array"],"npm":"msgpack-lite"}]

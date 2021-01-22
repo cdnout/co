@@ -1,0 +1,1 @@
+[{"name":"native-promise-only","version":"0.8.1","description":"Native Promise Only: A polyfill for native ES6 Promises **only**, nothing else.","repository":"git:\/\/github.com\/getify\/native-promise-only.git","keyfiles":"npo.js","keywords":["ES6","Promise","async","promises-aplus"],"npm":"native-promise-only"}]

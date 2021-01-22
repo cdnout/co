@@ -1,0 +1,1 @@
+[{"name":"microevent","version":"1.0.0","description":"event emitter micro library (works in node+browser)","repository":"git+https:\/\/github.com\/jeromeetienne\/microevent.js.git","keyfiles":"microevent.js","keywords":["event","emitter","observer"],"npm":"microevent"}]

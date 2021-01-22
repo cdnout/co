@@ -1,0 +1,1 @@
+[{"name":"mnist","version":"1.1.0","description":"The goal of this library is to provide an easy-to-use way for training and testing MNIST digits for neural networks (either in the browser or node.js).","repository":"git+https:\/\/github.com\/cazala\/mnist.git","keyfiles":"mnist.js","keywords":["mnist","digits"],"npm":"mnist"}]
