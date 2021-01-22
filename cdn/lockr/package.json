@@ -1,0 +1,1 @@
+[{"name":"lockr","version":"0.8.5","description":"Lockr is an extremely lightweight library (<2kb when minified), designed to facilitate how you interact with localStorage.","repository":"git:\/\/github.com\/tsironis\/lockr.git","keyfiles":"lockr.min.js","keywords":["lock","localstorage","redis"],"npm":"lockr"}]

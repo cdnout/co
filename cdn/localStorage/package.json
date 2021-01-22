@@ -1,0 +1,1 @@
+[{"name":"localStorage","version":"2.0.1","description":"A localStorage polyfill, that enables persistent storage of data in every browser.","repository":"git:\/\/github.com\/mortzdk\/localStorage.git","keyfiles":"localStorage.min.js","keywords":["localStorage"],"npm":null}]

@@ -1,0 +1,1 @@
+[{"name":"mailgun.js","version":"3.0.0","description":"A javascript sdk for Mailgun built with webpack, babel & es6. This can be used in node or in the browser*.","repository":"git:\/\/github.com\/mailgun\/mailgun-js.git","keyfiles":"mailgun.js","keywords":["mailgun","email"],"npm":"mailgun.js"}]

@@ -1,0 +1,1 @@
+[{"name":"mailcheck","version":"1.1.2","description":"A standalone module that suggests a right domain when your users misspell it in an email address.","repository":"git:\/\/github.com\/mailcheck\/mailcheck.git","keyfiles":"mailcheck.min.js","keywords":["form","email","spell check"],"npm":null}]
