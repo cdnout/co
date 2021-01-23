@@ -1,0 +1,1 @@
+[{"name":"stomp.js","version":"2.3.3","description":"STOMP for JavaScript apps (Web browser & node.js)","repository":"https:\/\/github.com\/jmesnil\/stomp-websocket","keyfiles":"stomp.min.js","keywords":["STOMP","Web sockets","messaging","queue"],"npm":"stompjs"}]

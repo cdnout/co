@@ -1,0 +1,1 @@
+[{"name":"stickyfloat","version":"7.5.0","description":"Makes it possible to have a fixed position element that is relative to it's parent. In other words, floats an element along while scrolling...but does this good.","repository":"https:\/\/github.com\/yairEO\/stickyfloat.git","keyfiles":"stickyfloat.min.js","keywords":["float","sticky","position","animation"],"npm":null}]

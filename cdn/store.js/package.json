@@ -1,0 +1,1 @@
+[{"name":"store.js","version":"2.0.12","description":"A localStorage wrapper for all browsers without using cookies or flash. Uses localStorage, globalStorage, and userData behavior under the hood","repository":"git:\/\/github.com\/marcuswestin\/store.js.git","keyfiles":"store.modern.js","keywords":["storage"],"npm":null}]
