@@ -1,0 +1,1 @@
+[{"name":"selectivizr","version":"1.0.2","description":"selectivizr is a JavaScript utility that emulates CSS3 pseudo-classes and attribute selectors in Internet Explorer 6-8. Simply include the script in your pages and selectivizr will do the rest.","repository":"https:\/\/github.com\/keithclark\/selectivizr","keyfiles":"selectivizr-min.js","keywords":["css3","ie"],"npm":null}]

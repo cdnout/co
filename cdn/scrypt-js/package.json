@@ -1,0 +1,1 @@
+[{"name":"scrypt-js","version":"3.0.1","description":"The scrypt password-based key derivation function with sync and cancellable async.","repository":"git:\/\/github.com\/ricmoo\/scrypt-js.git","keyfiles":"scrypt.js","keywords":["scrypt","pbkdf","password","async","asynchronous","stepwise"],"npm":"scrypt-js"}]

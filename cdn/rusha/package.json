@@ -1,0 +1,1 @@
+[{"name":"rusha","version":"0.8.7","description":"A high-performance pure-javascript SHA1 implementation suitable for large binary data.","repository":"https:\/\/github.com\/srijs\/rusha","keyfiles":"rusha.min.js","keywords":["sha1","binary","crypto","hash"],"npm":"rusha"}]
