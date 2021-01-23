@@ -1,0 +1,1 @@
+[{"name":"videojs-contrib-hls","version":"5.15.0","description":"Play back HLS with video.js, even where it's not natively supported","repository":"git@github.com:videojs\/videojs-contrib-hls.git","keyfiles":"videojs-contrib-hls.min.js","keywords":["videojs","videojs-plugin","hls","streaming"],"npm":"videojs-contrib-hls"}]
