@@ -1,0 +1,1 @@
+[{"name":"remarkable","version":"2.0.1","description":"Markdown parser, done right. 100% Commonmark support, extensions, syntax plugins, high speed - all in one.","repository":"git:\/\/github.com\/jonschlinkert\/remarkable.git","keyfiles":"remarkable.min.js","keywords":["md","markdown","process","text","parse","parser","render","renderer","commonmark"],"npm":"remarkable"}]

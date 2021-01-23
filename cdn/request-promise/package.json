@@ -1,0 +1,1 @@
+[{"name":"request-promise","version":"4.2.6","description":"The simplified HTTP request client 'request' with Promise support. Powered by Bluebird.","repository":"git+https:\/\/github.com\/request\/request-promise.git","keyfiles":"rp.js","keywords":["xhr","http","https","promise","request","then","thenable","bluebird"],"npm":"request-promise"}]
