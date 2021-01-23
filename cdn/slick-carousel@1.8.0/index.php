@@ -122,6 +122,7 @@ EOD;
 EOD;
     }
   }
+  
   if($file_ext_final == "css") {
     if(file_exists("../../$director/css/base.css")) {
     $key_css_live = <<<EOD
@@ -133,7 +134,7 @@ EOD;
 EOD;
     }
   }
-}
+} 
 
 foreach($files_list as $file_ext) {
   $file_ext_i = explode("/", $file_ext);
@@ -273,9 +274,10 @@ EOD;
               <?php }} ?>
               <?php  
               if(isset($github)) {
+                if(!empty($github)) {
               ?>
               <li><a rel="nofollow" target="_blank" href="<?php echo $github; ?>"><i class='icon-github'></i>Github</a></li>
-              <?php } ?>
+              <?php } } ?>
               <li title="<?php if(isset($latest_v)) { ?>Current <?php } ?> Version: <?php echo $version_number; ?>"><span><i class="icon-layers"></i><?php echo $version_number; ?></span></li>
 
             </ul>
@@ -331,7 +333,11 @@ EOD;
                 }
               }
               if(!empty($key_css_file_list)) {
-                $index_file = $key_css_file_list[0];
+                if(!empty($key_css_file_list)) {
+                  $index_file = $key_css_file_list[0];
+                } else {
+                  $index_file = "";
+                }
                 foreach($key_css_file_list as $cdn_file_url) {
                   if($cdn_file_url == $index_file && file_exists("../../$director/css/base.css")) {
                     
@@ -519,7 +525,7 @@ EOD;
           </div>
           <div class="block" id="download">
             <h2><i class="icon-download"></i> Download <?php echo $title." ".$folderver; if (isset($latest_v)) {echo "Latest"; } ?> Source Files</h2>
-            <p>Download <?php if (isset($latest_v)) {echo "Latest"; } ?> <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { ?>or Github <?php } ?> packages in ZIP.</p>
+            <p>Download <?php if (isset($latest_v)) {echo "Latest"; } ?> <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { if(!empty($github)) { ?>or Github <?php } } ?> packages in ZIP.</p>
             <div class="btn-area">
               <?php if(file_exists("../../zip/$foldername.zip")) { ?>
               <a target="_blank" href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark"><i class="icon-code-fork"></i>Download <?php echo $title; if (!isset($latest_v)) { echo "@".$folderver; } ?> 
@@ -528,7 +534,9 @@ EOD;
               <?php } ?> 
               <?php if(isset($npmrg)) { ?>
               <a target="_blank" rel="help" href="<?php echo $npmrg.$version_number ?>.tgz" class="btn btn-dark btn-npm"><i class="icon-npm1"></i>Download <?php echo $title."@".$version_number; ?> NPM Package</a>
-              <?php } if(!empty($gitrg)) { ?>
+              <?php } 
+              if(isset($github)) { if(!empty($github)) {
+              if(!empty($gitrg)) { ?>
               <a target="_blank" rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
               <?php } else { 
               if(!isset($gitmaster)) {
@@ -541,7 +549,7 @@ EOD;
   }
               ?>              
               <a target="_blank" rel="help" href="<?php echo $gitmaster ?>/archive/<?php echo $github_archive_path; ?>.zip" class="btn btn-dark btn-git"><i class="icon-github"></i>Download Github Master</a>
-              <?php } ?> 
+              <?php } } } ?> 
             </div>
         </div> 
             

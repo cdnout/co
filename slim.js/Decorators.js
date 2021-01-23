@@ -1,0 +1,1 @@
+export const tag=function(t){return function(n){window.Slim.tag(t,n)}};export const template=function(t){return function(n){n.prototype.__defineGetter__("template",function(){return t})}};export const useShadow=function(t){return function(n){n.prototype.__defineGetter__("useShadow",function(){return t})}};
