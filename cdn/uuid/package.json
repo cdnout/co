@@ -1,0 +1,1 @@
+[{"name":"uuid","version":"8.3.2","description":"RFC4122 (v1, v4, and v5) UUIDs","repository":"git+https:\/\/github.com\/uuidjs\/uuid.git","keyfiles":"uuid.min.js","keywords":["uuid","guid","rfc4122"],"npm":"uuid"}]

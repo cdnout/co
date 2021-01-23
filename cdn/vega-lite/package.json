@@ -1,0 +1,1 @@
+[{"name":"vega-lite","version":"4.17.0","description":"Vega-lite provides a higher-level grammar for visual analysis, comparable to ggplot or Tableau, that generates complete Vega specifications.","repository":"https:\/\/github.com\/vega\/vega-lite.git","keyfiles":"vega-lite.min.js","keywords":["visualization","grammar"],"npm":"vega-lite"}]
