@@ -1,0 +1,1 @@
+[{"name":"webextension-polyfill","version":"0.7.0","description":"A lightweight polyfill library for Promise-based WebExtension APIs in Chrome.","repository":"git+https:\/\/github.com\/mozilla\/webextension-polyfill.git","keyfiles":"browser-polyfill.min.js","keywords":["polyfill","webextension","promise"],"npm":"webextension-polyfill"}]

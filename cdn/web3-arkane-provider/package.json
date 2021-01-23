@@ -1,0 +1,1 @@
+[{"name":"web3-arkane-provider","version":"0.18.0","description":"Arkane-enabled Web3 Provider for the web","repository":"git+https:\/\/github.com\/ArkaneNetwork\/web3-arkane-provider.git","keyfiles":"web3-arkane-provider.js","keywords":["ethereum","hd","wallet","mnemonic","provider","arkane","truffle"],"npm":"@arkane-network\/web3-arkane-provider"}]

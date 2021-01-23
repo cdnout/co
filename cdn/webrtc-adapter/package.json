@@ -1,0 +1,1 @@
+[{"name":"webrtc-adapter","version":"7.4.0","description":"A shim to insulate apps from WebRTC spec changes and browser prefix differences","repository":"git:\/\/github.com\/webrtc\/adapter.git","keyfiles":"adapter.min.js","keywords":["WebRTC","PeerConnection","RTCPeerConnection","getUserMedia","Chrome","Chromium","Firefox","Edge","Adapter","Shim"],"npm":null}]

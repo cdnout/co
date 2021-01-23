@@ -1,0 +1,1 @@
+[{"name":"weblas","version":"0.9.1","description":"GPU accelerated BLAS for node and the browser","repository":"https:\/\/github.com\/waylonflinn\/weblas","keyfiles":"weblas.js","keywords":["gpu","blas","gemm","matrix","multiply","neural network","deep learning"],"npm":"weblas"}]
