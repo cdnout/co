@@ -23,7 +23,7 @@ $data = json_decode($json, TRUE);
 foreach($data as $data_as) {
   $director = $data_as['name'];
   $title = str_replace("-", " ", $director);
-  $title = ucfirst($title);
+  $title = ucwords($title);
   $latest_version = $data_as['version'];
   $keyfiles = $data_as['keyfiles'];
   $keyfiles_list = explode(",", $keyfiles);
@@ -79,7 +79,7 @@ if(!empty($keyfiles_add)) {
   $keyfiles_list = array_merge($keyfiles_list, $keyfiles_add);
 }
 $keyfiles_list = array_intersect($keyfiles_list, $files_list);
-  $key_js_file_list = $key_css_file_list = "";
+$key_js_file_list = $key_css_file_list = "";
 foreach($keyfiles_list as $file_ext) {
   $file_ext_i = explode("/", $file_ext);
   $file_ext_filename = end($file_ext_i);
@@ -109,28 +109,39 @@ foreach($keyfiles_list as $file_ext) {
   $file_ext_final = pathinfo($file_ext_filename, PATHINFO_EXTENSION);
 
   if($file_ext_final == "js") {
+    if(file_exists("../../$director/index.js")) {
+  
     $key_js_live = <<<EOD
 <script src="https://cdnout.com/$director/"></script>
 
 EOD;
-  }
-  if($file_ext_final == "css") {
-    $key_css_live = <<<EOD
-<link rel="stylesheet" href="https://cdnout.com/$director/$file_ext" media="all">
+    } else {
+      $key_js_live = <<<EOD
+<script src="https://cdnout.com/$director/$file_ext"></script>
 
 EOD;
+    }
   }
-}
+  
+  if($file_ext_final == "css") {
+    if(file_exists("../../$director/css/base.css")) {
+    $key_css_live = <<<EOD
+<link rel="stylesheet" href="https://cdnout.com/$director/css/base.css" media="all">
+EOD;
+    } else {
+      $key_css_live = <<<EOD
+<link rel="stylesheet" href="https://cdnout.com/$director/$file_ext" media="all">
+EOD;
+    }
+  }
+} 
 
 foreach($files_list as $file_ext) {
   $file_ext_i = explode("/", $file_ext);
   $file_ext_filename = end($file_ext_i);
   $file_ext_final = pathinfo($file_ext_filename, PATHINFO_EXTENSION);
  
-  if($file_ext_final == "css") {
-    $css_file_list[] = $file_ext;
-    $css_exists = "true";
-  }
+  
   if($file_ext_final == "js") {
     $js_file_list[] = $file_ext;
     $js_exists = "true";
@@ -150,6 +161,10 @@ foreach($files_list as $file_ext) {
   if($file_ext_final == "ts") {
     $ts_file_list[] = $file_ext;
     $ts_exists = "true";
+  }
+  if($file_ext_final == "css") {
+    $css_file_list[] = $file_ext;
+    $css_exists = "true";
   }
   if($file_ext_final == "woff" || $file_ext_final == "ttf" || $file_ext_final == "otf" || $file_ext_final == "woff2" || $file_ext_final == "eot") {
     $font_file_list[] = $file_ext;
@@ -259,9 +274,10 @@ EOD;
               <?php }} ?>
               <?php  
               if(isset($github)) {
+                if(!empty($github)) {
               ?>
               <li><a rel="nofollow" target="_blank" href="<?php echo $github; ?>"><i class='icon-github'></i>Github</a></li>
-              <?php } ?>
+              <?php } } ?>
               <li title="<?php if(isset($latest_v)) { ?>Current <?php } ?> Version: <?php echo $version_number; ?>"><span><i class="icon-layers"></i><?php echo $version_number; ?></span></li>
 
             </ul>
@@ -317,9 +333,23 @@ EOD;
                 }
               }
               if(!empty($key_css_file_list)) {
+                if(!empty($key_css_file_list)) {
+                  $index_file = $key_css_file_list[0];
+                } else {
+                  $index_file = "";
+                }
                 foreach($key_css_file_list as $cdn_file_url) {
+                  if($cdn_file_url == $index_file && file_exists("../../$director/css/base.css")) {
+                    
+                    if(isset($latest_v)) {
+                      $made_link = "https://cdnout.com/$director/css/base.css";
+                    } else {
+                      $made_link = "$file_path/$cdn_file_url";
+                    }
+                  } else {
+                    $made_link = "$file_path/$cdn_file_url";
+                  }
                   
-                  $made_link = "$file_path/$cdn_file_url";
                   css_pre_code($made_link);
                 }
               }
@@ -376,6 +406,29 @@ EOD;
               if(isset($css_file_list)) {
                 foreach($css_file_list as $cdn_file_url) {
                   $made_link = "$file_path/$cdn_file_url";
+                  css_pre_code($made_link);
+                }
+              }
+              
+              
+              if(!empty($css_file_list)) {
+                if(!empty($key_css_file_list)) {
+                  $index_file = $key_css_file_list[0];
+                } else {
+                  $index_file = "";
+                }
+                foreach($css_file_list as $cdn_file_url) {
+                  if($cdn_file_url == $index_file && file_exists("../../$director/css/base.css")) {
+                    
+                    if(isset($latest_v)) {
+                      $made_link = "https://cdnout.com/$director/css/base.css";
+                    } else {
+                      $made_link = "$file_path/$cdn_file_url";
+                    }
+                  } else {
+                    $made_link = "$file_path/$cdn_file_url";
+                  }
+                  
                   css_pre_code($made_link);
                 }
               }
@@ -472,7 +525,7 @@ EOD;
           </div>
           <div class="block" id="download">
             <h2><i class="icon-download"></i> Download <?php echo $title." ".$folderver; if (isset($latest_v)) {echo "Latest"; } ?> Source Files</h2>
-            <p>Download <?php if (isset($latest_v)) {echo "Latest"; } ?> <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { ?>or Github <?php } ?> packages in ZIP.</p>
+            <p>Download <?php if (isset($latest_v)) {echo "Latest"; } ?> <?php echo $title." ".$folderver ?> Source DIST Files<?php if(isset($npmrg)) { ?>, NPM <?php } ?> <?php if(isset($github)) { if(!empty($github)) { ?>or Github <?php } } ?> packages in ZIP.</p>
             <div class="btn-area">
               <?php if(file_exists("../../zip/$foldername.zip")) { ?>
               <a target="_blank" href="../../zip/<?php echo $foldername ?>.zip" class="btn btn-dark"><i class="icon-code-fork"></i>Download <?php echo $title; if (!isset($latest_v)) { echo "@".$folderver; } ?> 
@@ -481,15 +534,22 @@ EOD;
               <?php } ?> 
               <?php if(isset($npmrg)) { ?>
               <a target="_blank" rel="help" href="<?php echo $npmrg.$version_number ?>.tgz" class="btn btn-dark btn-npm"><i class="icon-npm1"></i>Download <?php echo $title."@".$version_number; ?> NPM Package</a>
-              <?php } if(!empty($gitrg)) { ?>
+              <?php } 
+              if(isset($github)) { if(!empty($github)) {
+              if(!empty($gitrg)) { ?>
               <a target="_blank" rel="help" href="<?php echo $gitrg.$version_number ?>.tar.gz" class="btn btn-dark btn-git"><i class="icon-github"></i>Download <?php echo $title."@".$version_number; ?> Github Package</a>
               <?php } else { 
               if(!isset($gitmaster)) {
                 $gitmaster = $github;
               }
-              ?>
-              <a target="_blank" rel="help" href="<?php echo $gitmaster ?>/archive/master.zip" class="btn btn-dark btn-git"><i class="icon-github"></i>Download Github Master</a>
-              <?php } ?> 
+  if(isset($github_master_word)) {
+    $github_archive_path = "$github_master_word";
+  } else {
+    $github_archive_path = "master";
+  }
+              ?>              
+              <a target="_blank" rel="help" href="<?php echo $gitmaster ?>/archive/<?php echo $github_archive_path; ?>.zip" class="btn btn-dark btn-git"><i class="icon-github"></i>Download Github Master</a>
+              <?php } } } ?> 
             </div>
         </div> 
             

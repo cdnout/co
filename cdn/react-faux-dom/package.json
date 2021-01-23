@@ -1,0 +1,1 @@
+[{"name":"react-faux-dom","version":"4.5.0","description":"DOM like data structure to be mutated by D3 et al, then rendered to React elements","repository":"git+https:\/\/github.com\/Olical\/react-faux-dom.git","keyfiles":"ReactFauxDOM.min.js","keywords":["d3","react","dom","virtual"],"npm":"react-faux-dom"}]
