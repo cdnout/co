@@ -50,7 +50,7 @@ function normalizeName(name) {
     name = String(name)
   }
   if (/[^a-z0-9\-#$%&'*+.^_`|~!]/i.test(name) || name === '') {
-    throw new TypeError('Invalid character in header field name')
+    throw new TypeError('Invalid character in header field name: "' + name + '"')
   }
   return name.toLowerCase()
 }
@@ -246,7 +246,9 @@ function Body() {
       this._bodyText = body = Object.prototype.toString.call(body)
     }
 
-    if (!this.headers.get('content-type')) {
+    var contentType = this.headers.get('content-type')
+
+    if (!contentType) {
       if (typeof body === 'string') {
         this.headers.set('content-type', 'text/plain;charset=UTF-8')
       } else if (this._bodyBlob && this._bodyBlob.type) {
@@ -254,6 +256,10 @@ function Body() {
       } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
         this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
       }
+    } else if (contentType.indexOf('json') >= 0 && typeof this._bodyInit !== 'string') {
+      // Always pass a text representation of a non-stringified JSON body
+      // to `XMLHttpRequest.send` to retain a compatible behavior with the browser.
+      this._bodyInit = this._bodyText
     }
   }
 
@@ -450,7 +456,7 @@ export function Response(bodyInit, options) {
   this.type = 'default'
   this.status = options.status === undefined ? 200 : options.status
   this.ok = this.status >= 200 && this.status < 300
-  this.statusText = 'statusText' in options ? options.statusText : ''
+  this.statusText = options.statusText === undefined ? '' : '' + options.statusText
   this.headers = new Headers(options.headers)
   this.url = options.url || ''
   this._initBody(bodyInit)

@@ -6,7 +6,7 @@
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   3.24.1
+ * @version   3.24.2
  */
 /*globals process */
 var define, require, Ember; // Used in @ember/-internals/environment/lib/global.js
@@ -18468,7 +18468,7 @@ define("@ember/-internals/routing/lib/services/router", ["exports", "@ember/-int
     currentRoute: (0, _computed.readOnly)('_router.currentRoute')
   });
 });
-define("@ember/-internals/routing/lib/services/routing", ["exports", "@ember/object/computed", "@ember/polyfills", "@ember/service"], function (_exports, _computed, _polyfills, _service) {
+define("@ember/-internals/routing/lib/services/routing", ["exports", "@ember/-internals/owner", "@ember/-internals/utils", "@ember/object/computed", "@ember/polyfills", "@ember/service"], function (_exports, _owner, _utils, _computed, _polyfills, _service) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -18479,7 +18479,7 @@ define("@ember/-internals/routing/lib/services/routing", ["exports", "@ember/obj
   /**
   @module ember
   */
-
+  var ROUTER = (0, _utils.symbol)('ROUTER');
   /**
     The Routing service is used by LinkComponent, and provides facilities for
     the component/view layer to interact with the router.
@@ -18490,7 +18490,21 @@ define("@ember/-internals/routing/lib/services/routing", ["exports", "@ember/obj
     @private
     @class RoutingService
   */
+
   class RoutingService extends _service.default {
+    get router() {
+      var router = this[ROUTER];
+
+      if (router !== undefined) {
+        return router;
+      }
+
+      var owner = (0, _owner.getOwner)(this);
+      router = owner.lookup('router:main');
+      router.setupRouter();
+      return this[ROUTER] = router;
+    }
+
     hasRoute(routeName) {
       return this.router.hasRoute(routeName);
     }
@@ -18510,9 +18524,10 @@ define("@ember/-internals/routing/lib/services/routing", ["exports", "@ember/obj
     }
 
     generateURL(routeName, models, queryParams) {
-      var router = this.router; // return early when the router microlib is not present, which is the case for {{link-to}} in integration tests
+      var router = this.router; // Return early when transition has not started, when rendering in tests without visit(),
+      // we cannot infer the route context which <LinkTo/> needs be aware of
 
-      if (!router._routerMicrolib) {
+      if (!router._initialTransitionStarted) {
         return;
       }
 
@@ -21598,6 +21613,7 @@ define("@ember/-internals/routing/lib/system/router", ["exports", "@ember/-inter
     constructor() {
       super(...arguments);
       this._didSetupRouter = false;
+      this._initialTransitionStarted = false;
       this.currentURL = null;
       this.currentRouteName = null;
       this.currentPath = null;
@@ -21973,6 +21989,8 @@ define("@ember/-internals/routing/lib/system/router", ["exports", "@ember/-inter
     }
 
     _doURLTransition(routerJsMethod, url) {
+      this._initialTransitionStarted = true;
+
       var transition = this._routerMicrolib[routerJsMethod](url || '/');
 
       didBeginTransition(transition, this);
@@ -22090,6 +22108,7 @@ define("@ember/-internals/routing/lib/system/router", ["exports", "@ember/-inter
 
     reset() {
       this._didSetupRouter = false;
+      this._initialTransitionStarted = false;
 
       if (this._routerMicrolib) {
         this._routerMicrolib.reset();
@@ -22299,6 +22318,7 @@ define("@ember/-internals/routing/lib/system/router", ["exports", "@ember/-inter
       var targetRouteName = _targetRouteName || (0, _utils.getActiveTargetName)(this._routerMicrolib);
 
       (true && !(Boolean(targetRouteName) && this._routerMicrolib.hasRoute(targetRouteName)) && (0, _debug.assert)(`The route ${targetRouteName} was not found`, Boolean(targetRouteName) && this._routerMicrolib.hasRoute(targetRouteName)));
+      this._initialTransitionStarted = true;
       var queryParams = {};
 
       this._processActiveTransitionQueryParams(targetRouteName, models, queryParams, _queryParams);
@@ -36727,9 +36747,7 @@ define("@ember/engine/index", ["exports", "@ember/engine/lib/engine-parent", "@e
     registry.injection('route', '_bucketCache', (0, _container.privatize)`-bucket-cache:main`);
     registry.injection('route', '_router', 'router:main'); // Register the routing service...
 
-    registry.register('service:-routing', _routing.RoutingService); // Then inject the app router into it
-
-    registry.injection('service:-routing', 'router', 'router:main'); // DEBUGGING
+    registry.register('service:-routing', _routing.RoutingService); // DEBUGGING
 
     registry.register('resolver-for-debugging:main', registry.resolver, {
       instantiate: false
@@ -59685,7 +59703,7 @@ define("ember/version", ["exports"], function (_exports) {
     value: true
   });
   _exports.default = void 0;
-  var _default = "3.24.1";
+  var _default = "3.24.2";
   _exports.default = _default;
 });
 define("node-module/index", ["exports"], function (_exports) {

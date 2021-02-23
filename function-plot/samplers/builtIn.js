@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const clamp_1 = __importDefault(require("clamp"));
-const linspace_1 = __importDefault(require("linspace"));
 const utils_1 = __importDefault(require("../utils"));
 const eval_1 = require("../helpers/eval");
 function checkAsymptote(d0, d1, d, sign, level) {
@@ -18,7 +17,7 @@ function checkAsymptote(d0, d1, d, sign, level) {
     const n = 10;
     const x0 = d0[0];
     const x1 = d1[0];
-    const samples = linspace_1.default(x0, x1, n);
+    const samples = utils_1.default.linspace(x0, x1, n);
     let oldY, oldX;
     for (let i = 0; i < n; i += 1) {
         const x = samples[i];

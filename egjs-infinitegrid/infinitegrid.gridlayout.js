@@ -4,7 +4,7 @@ name: @egjs/infinitegrid
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-infinitegrid
-version: 3.7.1
+version: 3.8.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -1346,7 +1346,7 @@ version: 3.7.1
         var _this = this;
 
         if (groupIndex < 0) {
-          return null;
+          return this.appendGroup(group);
         }
 
         var prevItems = group.items || [];
@@ -4177,13 +4177,12 @@ version: 3.7.1
         var itemManager = this._itemManager;
         var infinite = this._infinite;
         var isResize = renderer.resize();
-        var items = this.getItems();
+        var visibleItems = this.getItems();
         var _a = this.options,
             isEqualSize = _a.isEqualSize,
             isConstantSize = _a.isConstantSize,
             transitionDuration = _a.transitionDuration;
         var isLayoutAll = isRelayout && (isEqualSize || isConstantSize);
-        var size = itemManager.size();
 
         this._watcher.resize();
 
@@ -4191,56 +4190,11 @@ version: 3.7.1
           if (isResize) {
             this._setSize(renderer.getViewportSize());
           }
-        } // check childElement
+        } // first layout (startCursor -1 endCursor -1)
 
 
-        if (!items.length) {
-          var children_1 = toArray(renderer.container.children).filter(function (el) {
-            return el.className.indexOf(IGNORE_CLASSNAME) === -1;
-          });
-          var hasChildren = children_1.length > 0;
-
-          if (size) {
-            var firstGroup = itemManager.getGroup(0);
-
-            if (hasChildren) {
-              firstGroup.items.forEach(function (item, i) {
-                item.el = children_1[i];
-              });
-            } // has items, no visible items
-
-
-            this._postLayout({
-              groups: [firstGroup],
-              hasChildren: hasChildren,
-              fromCache: false,
-              isAppend: true
-            });
-          } else {
-            // no items, no visible items
-            if (hasChildren) {
-              var groupKey = children_1[0].getAttribute("data-groupkey");
-
-              if (typeof groupKey !== "string") {
-                groupKey = undefined;
-              }
-
-              this._insert({
-                elements: children_1,
-                isAppend: true,
-                hasChildren: true,
-                groupKey: groupKey
-              });
-            } else {
-              if (renderer.getContainerSize()) {
-                renderer.setContainerSize(0);
-              }
-
-              this._requestAppend({});
-            }
-          }
-
-          return this;
+        if (!visibleItems.length) {
+          return this._firstLayout();
         } // layout datas
 
 
@@ -4250,7 +4204,7 @@ version: 3.7.1
 
         var data = isLayoutAll || !(isRelayout && isResize) ? itemManager.getGroups() : itemManager.sliceGroups(startCursor, endCursor + 1); // LayoutManger interface
 
-        this._relayout(isRelayout, data, isResize ? items : []);
+        this._relayout(isRelayout, data, isResize ? visibleItems : []);
 
         if (isLayoutAll) {
           this._fit();
@@ -4258,12 +4212,12 @@ version: 3.7.1
           itemManager.clearOutlines(startCursor, endCursor);
         }
 
-        this._renderer.renderItems(items, transitionDuration);
+        this._renderer.renderItems(visibleItems, transitionDuration);
 
         isRelayout && this._watcher.setScrollPos();
 
         this._onLayoutComplete({
-          items: items,
+          items: visibleItems,
           isAppend: true,
           fromCache: true,
           isTrusted: false,
@@ -4996,7 +4950,7 @@ version: 3.7.1
             isAppend = _a.isAppend,
             hasChildren = _a.hasChildren,
             _b = _a.groupKey,
-            groupKey = _b === void 0 ? new Date().getTime() + Math.floor(Math.random() * 1000) : _b;
+            groupKey = _b === void 0 ? this._getRandomKey() : _b;
 
         if (this._isProcessing() || elements.length === 0) {
           return;
@@ -5017,7 +4971,7 @@ version: 3.7.1
             isAppend = _a.isAppend,
             hasChildren = _a.hasChildren,
             _b = _a.groupKey,
-            groupKey = _b === void 0 ? new Date().getTime() + Math.floor(Math.random() * 1000) : _b;
+            groupKey = _b === void 0 ? this._getRandomKey() : _b;
 
         if (!items.length) {
           return;
@@ -5536,6 +5490,80 @@ version: 3.7.1
         this._infinite.scroll(scrollPos);
       };
 
+      __proto._firstLayout = function () {
+        var renderer = this._renderer;
+        var infinite = this._infinite;
+        var itemManager = this._itemManager;
+        var attributePrefix = this.options.attributePrefix;
+        var children = toArray(renderer.container.children).filter(function (el) {
+          return el.className.indexOf(IGNORE_CLASSNAME) === -1;
+        });
+        var hasChildren = children.length > 0;
+
+        if (itemManager.size()) {
+          // no visible items
+          if (hasChildren) {
+            itemManager.pluck("items").forEach(function (item, i) {
+              item.el = children[i];
+            });
+          }
+        } else {
+          // no items, no visible items, no elements
+          if (!hasChildren) {
+            if (renderer.getContainerSize()) {
+              renderer.setContainerSize(0);
+            }
+
+            this._requestAppend({});
+
+            return this;
+          } // no items, no visible items
+
+
+          var prevGroupKey_1 = "" + this._getRandomKey();
+
+          children.forEach(function (el) {
+            var groupKey = el.getAttribute(attributePrefix + "groupkey");
+
+            if (typeof groupKey !== "string") {
+              groupKey = prevGroupKey_1;
+            }
+
+            prevGroupKey_1 = groupKey;
+            itemManager.insert({
+              groupKey: groupKey,
+              el: el
+            });
+          });
+        } // The currently displayed elements are visible groups.
+
+
+        var groups = itemManager.getGroups();
+        infinite.setCursor("start", 0);
+        infinite.setCursor("end", groups.length - 1);
+
+        this._postLayout({
+          groups: groups,
+          hasChildren: hasChildren,
+          fromCache: false,
+          isAppend: true
+        });
+
+        return this;
+      };
+
+      __proto._getRandomKey = function () {
+        var itemManager = this._itemManager;
+
+        while (true) {
+          var groupKey = new Date().getTime() + Math.floor(Math.random() * 1000);
+
+          if (!itemManager.getGroupByKey(groupKey)) {
+            return groupKey;
+          }
+        }
+      };
+
       __proto._reset = function () {
         this._status = {
           processingStatus: IDLE,
@@ -5555,7 +5583,7 @@ version: 3.7.1
        */
 
 
-      InfiniteGrid.VERSION = "3.7.1";
+      InfiniteGrid.VERSION = "3.8.1";
       return InfiniteGrid;
     }(Component);
 

@@ -1,4 +1,4 @@
-/* esri-leaflet - v2.5.3 - Wed Jan 06 2021 13:19:09 GMT-0600 (Central Standard Time)
+/* esri-leaflet - v3.0.0 - Mon Jan 25 2021 16:19:56 GMT-0600 (Central Standard Time)
  * Copyright (c) 2021 Environmental Systems Research Institute, Inc.
  * Apache-2.0 */
 (function (global, factory) {
@@ -7,7 +7,7 @@
   (global = global || self, factory((global.L = global.L || {}, global.L.esri = {}), global.L));
 }(this, (function (exports, leaflet) { 'use strict';
 
-  var version = "2.5.3";
+  var version = "3.0.0";
 
   var cors = ((window.XMLHttpRequest && 'withCredentials' in new window.XMLHttpRequest()));
   var pointerEvents = document.documentElement.style.pointerEvents === '';
@@ -1097,6 +1097,10 @@
         this.params.token = token;
       }
       return this;
+    },
+
+    apikey: function (apikey) {
+      return this.token(apikey);
     },
 
     // ArcGIS Server Find/Identify 10.5+
@@ -4332,6 +4336,9 @@
      * Constructor
      */
     initialize: function (options) {
+      if (options.apikey) {
+        options.token = options.apikey;
+      }
       FeatureManager.prototype.initialize.call(this, options);
       this._originalStyle = this.options.style;
       this._layers = {};

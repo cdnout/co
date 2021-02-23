@@ -1,3 +1,19 @@
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
     define(["exports", "warning", "../../globals/js/settings", "../../globals/js/misc/mixin", "../../globals/js/mixins/create-component", "../../globals/js/mixins/init-component-by-launcher", "../../globals/js/mixins/evented-show-hide-state", "../../globals/js/mixins/handles", "../../globals/js/misc/event-matches", "../../globals/js/misc/on"], factory);
@@ -31,22 +47,6 @@
     return obj && obj.__esModule ? obj : {
       default: obj
     };
-  }
-
-  function _typeof(obj) {
-    "@babel/helpers - typeof";
-
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -212,12 +212,12 @@
 
     _createClass(Modal, [{
       key: "createdByLauncher",
-
+      value:
       /**
        * A method that runs when `.init()` is called from `initComponentByLauncher`.
        * @param {Event} evt The event fired on the launcher button.
        */
-      value: function createdByLauncher(evt) {
+      function createdByLauncher(evt) {
         this.show(evt);
       }
       /**
@@ -332,7 +332,7 @@
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode Modal.create .create()}, or {@linkcode Modal.init .init()},
@@ -365,7 +365,7 @@
        *   The name of the custom event telling that modal is sure hidden
        *   without being canceled by the event handler named by `eventBeforeHidden` option (`modal-beinghidden`).
        */
-      get: function get() {
+      function get() {
         var prefix = _settings.default.prefix;
         return {
           selectorInit: '[data-modal]',

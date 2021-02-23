@@ -18514,6 +18514,32 @@ $3Dmol.isEmptyObject = function( obj ) {
     return true;
 };
 
+$3Dmol.makeFunction = function(callback) {
+    //for py3dmol let users provide callback as string
+    if (callback && typeof callback === "string") {
+    /* jshint ignore:start */
+        callback = eval("("+callback+")");
+    /* jshint ignore:end */
+    }
+    // report to console if callback is not a valid function
+    if (callback && typeof callback != "function") {
+        return null;
+    }    
+    return callback;
+};
+
+//standardize voldata/volscheme in style
+$3Dmol.adjustVolumeStyle = function(style) {
+    if(style) {
+        if(style.volformat && !(style.voldata instanceof $3Dmol.VolumeData)) {
+            style.voldata = new $3Dmol.VolumeData(style.voldata, style.volformat);
+        }
+        if(style.volscheme) {
+            style.volscheme = $3Dmol.Gradient.getGradient(style.volscheme);
+        }
+    }
+};
+
 /*
  * math-like functionality
  * quaternion, vector, matrix
@@ -21382,8 +21408,7 @@ $3Dmol.Raycaster = (function() {
 })();
 
 
-//$3Dmol Projecion 
-//TODO: can probably strip this down a lot (only used for selection handling)
+//$3Dmol Projection 
 /** @constructor */
 $3Dmol.Projector = function () {
 
@@ -21556,10 +21581,18 @@ $3Dmol.SpritePlugin = function () {
 
     };
 
-    this.render = function ( scene, camera, viewportWidth, viewportHeight ) {
+    this.render = function ( scene, camera, viewportWidth, viewportHeight, inFront ) {
+        let sprites = [];
+        scene.__webglSprites.forEach(sprite => {
+           //depthTest is false for inFront labels
+            if(inFront && sprite.material.depthTest == false) {
+                sprites.push(sprite);
+            } else if(!inFront && sprite.material.depthTest) {
+                sprites.push(sprite);
+            }
+        });
 
-        var sprites = scene.__webglSprites,
-            nSprites = sprites.length;
+        let nSprites = sprites.length;
 
         if ( ! nSprites ) return;
 
@@ -21613,7 +21646,6 @@ $3Dmol.SpritePlugin = function () {
             _gl.uniform1i( uniforms.fogType, 0 );
             oldFogType = 0;
             sceneFogType = 0;
-
         }
 
 
@@ -21625,7 +21657,8 @@ $3Dmol.SpritePlugin = function () {
 
             sprite = sprites[ i ];
             material = sprite.material;
-
+            if(material.depthTest == false && !inFront) continue;
+            
             if ( ! sprite.visible || material.opacity === 0 ) continue;
 
             if ( ! material.useScreenCoordinates ) {
@@ -22726,8 +22759,6 @@ $3Dmol.Renderer = function(parameters) {
     this.autoUpdateObjects = true;
     this.autoUpdateScene = true;
 
-    this.renderPluginsPost = [];
-
     // info
 
     this.info = {
@@ -22807,6 +22838,8 @@ $3Dmol.Renderer = function(parameters) {
         }
 
     };
+
+    var sprites = new $3Dmol.SpritePlugin();
 
     //screensshader related variables
     var _screenshader = null;
@@ -23014,13 +23047,6 @@ $3Dmol.Renderer = function(parameters) {
                     _gl.ONE, _gl.ONE_MINUS_SRC_ALPHA);
         }
         _oldBlending = blending;
-    };
-
-    // Plugins
-
-    this.addPostPlugin = function(plugin) {
-        plugin.init(this);
-        this.renderPluginsPost.push(plugin);
     };
 
     function enableAttribute(attribute) {
@@ -23870,8 +23896,9 @@ $3Dmol.Renderer = function(parameters) {
 
         renderObjects(scene.__webglObjects, true, "opaque", camera, lights,
                 fog, false, material);
-        // Render plugins (e.g. sprites - labels)
-        renderPlugins(this.renderPluginsPost, scene, camera);
+                
+        // Render embedded labels (sprites)
+        renderSprites(scene, camera, false);
         
         // prime depth buffer
         renderObjects(scene.__webglObjects, true, "blank", camera, lights, fog,
@@ -23894,9 +23921,12 @@ $3Dmol.Renderer = function(parameters) {
         this.renderFrameBuffertoScreen();
         this.setDepthTest(true);
         this.setDepthWrite(true);
+        
+        // Render floating labels (sprites)
+        renderSprites(scene, camera, true);        
     };
 
-    function renderPlugins(plugins, scene, camera) {
+    function renderSprites(scene, camera, inFront) {
 
         // Reset state once regardless
         // This should also fix cartoon render bug (after transparent surface
@@ -23911,29 +23941,20 @@ $3Dmol.Renderer = function(parameters) {
         _oldDoubleSided = -1;
         _currentMaterialId = -1;
         _oldFlipSided = -1;
+        _lightsNeedUpdate = true;
 
-        if (!plugins.length)
-            return;
-
-        for (var i = 0, il = plugins.length; i < il; i++) {
-
-            _lightsNeedUpdate = true;
-
-            plugins[i].render(scene, camera, _currentWidth, _currentHeight);
-
-            // Reset state after plugin render
-            _currentGeometryGroupHash = -1;
-            _currentProgram = null;
-            _currentCamera = null;
-            _oldBlending = -1;
-            _oldDepthWrite = -1;
-            _oldDepthTest = -1;
-            _oldDoubleSided = -1;
-            _currentMaterialId = -1;
-            _oldFlipSided = -1;
-
-        }
-
+        sprites.render(scene, camera, _currentWidth, _currentHeight, inFront);
+        
+        // Reset state a
+        _currentGeometryGroupHash = -1;
+        _currentProgram = null;
+        _currentCamera = null;
+        _oldBlending = -1;
+        _oldDepthWrite = -1;
+        _oldDepthTest = -1;
+        _oldDoubleSided = -1;
+        _currentMaterialId = -1;
+        _oldFlipSided = -1;       
     }
 
     //reinitialize framebuffer without the depth texture attached so we can read to it
@@ -24629,7 +24650,7 @@ $3Dmol.Renderer = function(parameters) {
                         _clearAlpha);
     }
 
-    this.addPostPlugin(new $3Dmol.SpritePlugin());
+    sprites.init(this);
 
 };
 
@@ -26895,7 +26916,7 @@ $(document).ready(function() {
  * @prop {min} - min value for gradient
  * @prop {max} - max value for gradient
  * @prop {mid} - mid point value for gradient (for rwb)
- * @prop {object} map - map of a certain AtomSpec property to a color.: {}} elementMap - Allows the user to provide a mapping of elements to colors to the colorscheme.  This can be done with any properties, and not just 'elem'.
+ * @prop {object} map - map of a certain AtomSpec property to a color of the form `{'prop': 'elem', map:$3Dmol.elementColors.greenCarbon}` Allows the user to provide a mapping of elements to colors to the colorscheme.  This can be done with any properties, and not just 'elem'.
  * @prop {function} colorfunc - Allows the user to provide a function for setting the colorschemes.
  */
  
@@ -32238,13 +32259,12 @@ $3Dmol.GLModel = (function() {
 
             // make sure clickable is a boolean
             clickable = !!clickable;
-
-            // report to console if callback is not a valid function
-            if (callback && typeof callback != "function") {
+            callback = $3Dmol.makeFunction(callback);            
+            if (callback === null) {
                 console.log("Callback is not a function");
                 return;
             }
-
+            
             var i;
             var selected = this.selectedAtoms(sel, atoms);
             var len = selected.length;
@@ -32276,14 +32296,16 @@ $3Dmol.GLModel = (function() {
 
             // make sure hoverable is a boolean
             hoverable = !!hoverable;
+            hover_callback = $3Dmol.makeFunction(hover_callback);
+            unhover_callback = $3Dmol.makeFunction(unhover_callback);            
 
             // report to console if hover_callback is not a valid function
-            if (hover_callback && typeof hover_callback != "function") {
+            if (hover_callback === null) {
                 console.log("Hover_callback is not a function");
                 return;
             }
             // report to console if unhover_callback is not a valid function
-            if (unhover_callback && typeof unhover_callback != "function") {
+            if (unhover_callback === null) {
                 console.log("Unhover_callback is not a function");
                 return;
             }
@@ -32856,24 +32878,24 @@ $3Dmol.GLModel = (function() {
  * @param {ShapeSpec} stylespec - shape style specification
  */
 
- 
+
 
 $3Dmol.GLShape = (function() {
 
     // Marching cube, to match with protein surface generation
     var ISDONE = 2;
 
-    
+
     var finalizeGeo = function(geo) {
         //to avoid creating a bunch of geometries, we leave geoGroup untruncated
         //until render is called, at which point we truncate; 
         //successive called up updateGeo will return a new geometry
         var geoGroup = geo.updateGeoGroup(0);
-        if(geoGroup.vertices > 0) {
+        if (geoGroup.vertices > 0) {
             geoGroup.truncateArrayBuffers(true, true);
         }
     };
-    
+
     /**
      * 
      * @param {$3Dmol.Geometry}
@@ -32885,23 +32907,23 @@ $3Dmol.GLShape = (function() {
 
         color = color || $3Dmol.CC.color(color);
         geo.colorsNeedUpdate = true;
-        
-        var r,g,b;
-        if(color.constructor !== Array) {
+
+        var r, g, b;
+        if (color.constructor !== Array) {
             r = color.r;
             g = color.g;
             b = color.b;
         }
 
 
-        for ( var gg in geo.geometryGroups) {
+        for (var gg in geo.geometryGroups) {
 
             var geoGroup = geo.geometryGroups[gg];
             var colorArr = geoGroup.colorArray;
 
             for (var i = 0, il = geoGroup.vertices; i < il; ++i) {
-            
-                if( color.constructor === Array) {
+
+                if (color.constructor === Array) {
                     var c = color[i];
                     r = c.r;
                     g = c.g;
@@ -32927,8 +32949,8 @@ $3Dmol.GLShape = (function() {
      */
     var drawArrow = function(shape, geo, spec) {
 
-        var from = spec.start, end = spec.end, radius = spec.radius, 
-        radiusRatio = spec.radiusRatio, mid = spec.mid, midoffset = spec.midpos;
+        var from = spec.start, end = spec.end, radius = spec.radius,
+            radiusRatio = spec.radiusRatio, mid = spec.mid, midoffset = spec.midpos;
 
         if (!(from && end))
             return;
@@ -32938,21 +32960,21 @@ $3Dmol.GLShape = (function() {
         // vertices
 
         var dir = end.clone().sub(from);
-        if(midoffset) { //absolute offset, convert to relative
+        if (midoffset) { //absolute offset, convert to relative
             let length = dir.length();
-            if(midoffset > 0) mid = midoffset/length;
-            else mid = (length+midoffset)/length;
-        } 
-        
+            if (midoffset > 0) mid = midoffset / length;
+            else mid = (length + midoffset) / length;
+        }
+
         dir.multiplyScalar(mid);
-        
+
         var to = from.clone().add(dir);
         var negDir = dir.clone().negate();
 
         shape.intersectionShape.cylinder.push(new $3Dmol.Cylinder(from.clone(),
-                to.clone(), radius));
+            to.clone(), radius));
         shape.intersectionShape.sphere.push(new $3Dmol.Sphere(from.clone(),
-                radius));
+            radius));
 
         // get orthonormal vector
         var nvecs = [];
@@ -33001,7 +33023,7 @@ $3Dmol.GLShape = (function() {
             var bottom = nvecs[i].clone().multiplyScalar(radius).add(from);
             var top = nvecs[i].clone().multiplyScalar(radius).add(to);
             var conebase = nvecs[i].clone()
-                    .multiplyScalar(radius * radiusRatio).add(to);
+                .multiplyScalar(radius * radiusRatio).add(to);
 
             vertexArray[offset] = bottom.x;
             vertexArray[offset + 1] = bottom.y;
@@ -33025,9 +33047,9 @@ $3Dmol.GLShape = (function() {
                 var a = new $3Dmol.Vector3(conebase.x, conebase.y, conebase.z);
 
                 shape.intersectionShape.triangle.push(new $3Dmol.Triangle(a, b,
-                        c));
+                    c));
                 shape.intersectionShape.triangle.push(new $3Dmol.Triangle(c
-                        .clone(), b2, a.clone()));
+                    .clone(), b2, a.clone()));
             }
         }
 
@@ -33078,7 +33100,7 @@ $3Dmol.GLShape = (function() {
             // face = [t1, t2, t4], [t2, t3, t4];
             // face = [t1, t2, t3, t4];
 
-            norm = [ nvecs[i], nvecs[i], nvecs[i + 1], nvecs[i + 1] ];
+            norm = [nvecs[i], nvecs[i], nvecs[i + 1], nvecs[i + 1]];
 
             n1 = n2 = nvecs[i];
             n3 = n4 = nvecs[i + 1];
@@ -33163,9 +33185,9 @@ $3Dmol.GLShape = (function() {
         }
         // final face
 
-        face = [ start + 45, start + 46, start + 1, start, start + 47,
-                start + 2 ];
-        norm = [ nvecs[15], nvecs[15], nvecs[0], nvecs[0] ];
+        face = [start + 45, start + 46, start + 1, start, start + 47,
+        start + 2];
+        norm = [nvecs[15], nvecs[15], nvecs[0], nvecs[0]];
 
         faceoffset = geoGroup.faceidx;
         lineoffset = geoGroup.lineidx;
@@ -33303,15 +33325,15 @@ $3Dmol.GLShape = (function() {
         }
 
         var maxRadiusSq = sphere.radius * sphere.radius;
-        if(points.length/3 < numPoints)
-            numPoints = points.length/3;
-            
+        if (points.length / 3 < numPoints)
+            numPoints = points.length / 3;
+
         for (i = 0, il = numPoints; i < il; i++) {
             var x = points[i * 3], y = points[i * 3 + 1], z = points[i * 3 + 2];
             var radiusSq = sphere.center.distanceToSquared({
-                x : x,
-                y : y,
-                z : z
+                x: x,
+                y: y,
+                z: z
             });
             maxRadiusSq = Math.max(maxRadiusSq, radiusSq);
         }
@@ -33319,11 +33341,11 @@ $3Dmol.GLShape = (function() {
         sphere.radius = Math.sqrt(maxRadiusSq);
 
     };
-    
+
     //helper function for adding an appropriately sized mesh
     var addCustomGeo = function(shape, geo, mesh, color, clickable) {
         var geoGroup = geo.addGeoGroup();
-        var vertexArr = mesh.vertexArr, normalArr = mesh.normalArr, 
+        var vertexArr = mesh.vertexArr, normalArr = mesh.normalArr,
             faceArr = mesh.faceArr;
 
         geoGroup.vertices = vertexArr.length;
@@ -33332,8 +33354,8 @@ $3Dmol.GLShape = (function() {
         var offset, v, a, b, c, i, il, r, g;
         var vertexArray = geoGroup.vertexArray;
         var colorArray = geoGroup.colorArray;
-        
-        if(color.constructor !== Array) {
+
+        if (color.constructor !== Array) {
             r = color.r;
             g = color.g;
             b = color.b;
@@ -33344,20 +33366,20 @@ $3Dmol.GLShape = (function() {
             vertexArray[offset] = v.x;
             vertexArray[offset + 1] = v.y;
             vertexArray[offset + 2] = v.z;
-            
-            if( color.constructor === Array) {
+
+            if (color.constructor === Array) {
                 c = color[i];
                 r = c.r;
                 g = c.g;
                 b = c.b;
             }
-            
+
             colorArray[offset] = r;
             colorArray[offset + 1] = g;
             colorArray[offset + 2] = b;
         }
-        
-        if(clickable) {
+
+        if (clickable) {
             for (i = 0, il = geoGroup.faceidx / 3; i < il; ++i) {
                 offset = i * 3;
                 a = faceArr[offset];
@@ -33365,23 +33387,23 @@ $3Dmol.GLShape = (function() {
                 c = faceArr[offset + 2];
                 var vA = new $3Dmol.Vector3(), vB = new $3Dmol.Vector3(), vC = new $3Dmol.Vector3();
                 shape.intersectionShape.triangle.push(new $3Dmol.Triangle(vA
-                        .copy(vertexArr[a]), vB.copy(vertexArr[b]), vC
+                    .copy(vertexArr[a]), vB.copy(vertexArr[b]), vC
                         .copy(vertexArr[c])));
             }
         }
-        
-        if(clickable) {
-            
-            var center = new $3Dmol.Vector3(0,0,0);
+
+        if (clickable) {
+
+            var center = new $3Dmol.Vector3(0, 0, 0);
             var cnt = 0;
-            for(let g = 0; g < geo.geometryGroups.length; g++) {
+            for (let g = 0; g < geo.geometryGroups.length; g++) {
                 center.add(geo.geometryGroups[g].getCentroid());
                 cnt++;
             }
             center.divideScalar(cnt);
-            
-            
-            updateBoundingFromPoints(shape.boundingSphere, {centroid: center}, vertexArray, geoGroup.vertices);
+
+
+            updateBoundingFromPoints(shape.boundingSphere, { centroid: center }, vertexArray, geoGroup.vertices);
         }
 
         geoGroup.faceArray = new Uint16Array(faceArr);
@@ -33402,13 +33424,13 @@ $3Dmol.GLShape = (function() {
                 normalArray[offset + 2] = n.z;
             }
         }
-        
+
         geoGroup.setLineIndices();
         geoGroup.lineidx = geoGroup.lineArray.length;
     };
-    
 
-    
+
+
     // handles custom shape generation from user supplied arrays
     // May need to generate normal and/or line indices
     /**
@@ -33421,25 +33443,25 @@ $3Dmol.GLShape = (function() {
      */
     var drawCustom = function(shape, geo, customSpec) {
         var mesh = customSpec;
-        var vertexArr = mesh.vertexArr; 
+        var vertexArr = mesh.vertexArr;
         var faceArr = mesh.faceArr;
         if (vertexArr.length === 0 || faceArr.length === 0) {
             console
-                    .warn("Error adding custom shape component: No vertices and/or face indices supplied!");
+                .warn("Error adding custom shape component: No vertices and/or face indices supplied!");
         }
 
         var color = customSpec.color;
-        if(typeof(color) == 'undefined') {
+        if (typeof (color) == 'undefined') {
             color = shape.color;
         }
-        color =  $3Dmol.CC.color(color);
+        color = $3Dmol.CC.color(color);
 
         //var firstgeo = geo.geometryGroups.length;
         var splits = $3Dmol.splitMesh(mesh);
-        for(var i = 0, n = splits.length; i < n; i++) {
+        for (var i = 0, n = splits.length; i < n; i++) {
             addCustomGeo(shape, geo, splits[i], splits[i].colorArr ? splits[i].colorArr : color, customSpec.clickable);
-        } 
-    }; 
+        }
+    };
 
 
     /**
@@ -33451,9 +33473,9 @@ $3Dmol.GLShape = (function() {
      * @returns {undefined}
      */
     var updateFromStyle = function(shape, stylespec) {
-        if(typeof(stylespec.color) != 'undefined') {
+        if (typeof (stylespec.color) != 'undefined') {
             shape.color = stylespec.color || new $3Dmol.Color();
-            if(! (stylespec.color instanceof $3Dmol.Color))
+            if (!(stylespec.color instanceof $3Dmol.Color))
                 shape.color = $3Dmol.CC.color(stylespec.color);
         } else {
             shape.color = $3Dmol.CC.color(0);
@@ -33461,25 +33483,20 @@ $3Dmol.GLShape = (function() {
         shape.wireframe = stylespec.wireframe ? true : false;
         //opacity is the preferred nomenclature, support alpha for backwards compat
         shape.opacity = stylespec.alpha ? $3Dmol.Math.clamp(stylespec.alpha, 0.0,
-                1.0) : 1.0;
-        if(typeof(stylespec.opacity) != 'undefined') {
+            1.0) : 1.0;
+        if (typeof (stylespec.opacity) != 'undefined') {
             shape.opacity = $3Dmol.Math.clamp(stylespec.opacity, 0.0, 1.0);
         }
         shape.side = (stylespec.side !== undefined) ? stylespec.side
-                : $3Dmol.DoubleSide;
+            : $3Dmol.DoubleSide;
 
-        shape.linewidth = typeof(stylespec.linewidth) == 'undefined' ? 1 : stylespec.linewidth;
+        shape.linewidth = typeof (stylespec.linewidth) == 'undefined' ? 1 : stylespec.linewidth;
         // Click handling
         shape.clickable = stylespec.clickable ? true : false;
-        shape.callback = typeof (stylespec.callback) === "function" ? stylespec.callback
-                : null;
-
+        shape.callback = $3Dmol.makeFunction(stylespec.callback);
         shape.hoverable = stylespec.hoverable ? true : false;
-        shape.hover_callback = typeof (stylespec.hover_callback) === "function" ? stylespec.hover_callback
-                : null;
-
-        shape.unhover_callback = typeof (stylespec.unhover_callback) === "function" ? stylespec.unhover_callback
-                : null;
+        shape.hover_callback = $3Dmol.makeFunction(stylespec.hover_callback);
+        shape.unhover_callback = $3Dmol.makeFunction(stylespec.unhover_callback);
 
         shape.hidden = stylespec.hidden;
         shape.frame = stylespec.frame;
@@ -33502,10 +33519,10 @@ $3Dmol.GLShape = (function() {
         this.boundingSphere = new $3Dmol.Sphere();
         /** @type {IntersectionShapes} */
         this.intersectionShape = {
-            sphere : [],
-            cylinder : [],
-            line : [],
-            triangle : []
+            sphere: [],
+            cylinder: [],
+            line: [],
+            triangle: []
         };
 
         updateFromStyle(this, stylespec);
@@ -33525,11 +33542,27 @@ $3Dmol.GLShape = (function() {
          */
         this.updateStyle = function(newspec) {
 
-            for ( var prop in newspec) {
+            for (var prop in newspec) {
                 stylespec[prop] = newspec[prop];
             }
 
             updateFromStyle(this, stylespec);
+            
+            if (newspec.voldata && newspec.volscheme) {
+                $3Dmol.adjustVolumeStyle(newspec);
+    
+                //convert volumetric data into colors
+                const scheme = newspec.volscheme;
+                const voldata = newspec.voldata;
+                const cc = $3Dmol.CC;
+                const range = scheme.range() || [-1, 1];
+                geo.setColors(function(x, y, z) {
+                    let val = voldata.getVal(x, y, z);
+                    let col = cc.color(scheme.valueToHex(val, range));
+                    return col;
+                });
+                delete this.color;
+            }    
         };
 
         /**
@@ -33562,28 +33595,28 @@ $3Dmol.GLShape = (function() {
         this.addSphere = function(sphereSpec) {
 
             sphereSpec.center = sphereSpec.center || {
-                x : 0,
-                y : 0,
-                z : 0
+                x: 0,
+                y: 0,
+                z: 0
             };
             sphereSpec.radius = sphereSpec.radius ? $3Dmol.Math.clamp(
-                    sphereSpec.radius, 0, Infinity) : 1.5;
+                sphereSpec.radius, 0, Infinity) : 1.5;
             sphereSpec.color = $3Dmol.CC.color(sphereSpec.color);
-            
+
             this.intersectionShape.sphere.push(new $3Dmol.Sphere(
-                    sphereSpec.center, sphereSpec.radius));
+                sphereSpec.center, sphereSpec.radius));
 
             $3Dmol.GLDraw.drawSphere(geo, sphereSpec.center,
-                    sphereSpec.radius, sphereSpec.color);
+                sphereSpec.radius, sphereSpec.color);
 
             components.push({
-                centroid : new $3Dmol.Vector3(sphereSpec.center.x,
-                        sphereSpec.center.y, sphereSpec.center.z)
+                centroid: new $3Dmol.Vector3(sphereSpec.center.x,
+                    sphereSpec.center.y, sphereSpec.center.z)
             });
             var geoGroup = geo.updateGeoGroup(0);
-            
+
             updateBoundingFromPoints(this.boundingSphere, components,
-                    geoGroup.vertexArray, geoGroup.vertices);
+                geoGroup.vertexArray, geoGroup.vertices);
         };
 
 
@@ -33605,49 +33638,51 @@ $3Dmol.GLShape = (function() {
          */
         this.addBox = function(boxSpec) {
 
-            var dim = boxSpec.dimensions || { w: 1, h:1, d: 1};
+            var dim = boxSpec.dimensions || { w: 1, h: 1, d: 1 };
 
             //dimensions may be scalar or vector quantities
             var w = dim.w;
-            if(typeof(dim.w) == "number") {
-                w = {x:dim.w,y:0,z:0};
+            if (typeof (dim.w) == "number") {
+                w = { x: dim.w, y: 0, z: 0 };
             }
             var h = dim.h;
-            if(typeof(dim.h) == "number") {
-                h = {x:0,y:dim.h,z:0};
+            if (typeof (dim.h) == "number") {
+                h = { x: 0, y: dim.h, z: 0 };
             }
             var d = dim.d;
-            if(typeof(dim.d) == "number") {
-                d = {x:0,y:0,z:dim.d};
+            if (typeof (dim.d) == "number") {
+                d = { x: 0, y: 0, z: dim.d };
             }
-            
+
             //can position using corner OR center
             var c = boxSpec.corner;
-            if(c == undefined) {
-                if(boxSpec.center !== undefined) {
-                    
-                    c  = {x: boxSpec.center.x - 0.5*(w.x+h.x+d.x),
-                          y: boxSpec.center.y - 0.5*(w.y+h.y+d.y),
-                          z: boxSpec.center.z - 0.5*(w.z+h.z+d.z)};
+            if (c == undefined) {
+                if (boxSpec.center !== undefined) {
+
+                    c = {
+                        x: boxSpec.center.x - 0.5 * (w.x + h.x + d.x),
+                        y: boxSpec.center.y - 0.5 * (w.y + h.y + d.y),
+                        z: boxSpec.center.z - 0.5 * (w.z + h.z + d.z)
+                    };
                 } else { // default to origin
-                    c = {x:0,y:0,z:0};
+                    c = { x: 0, y: 0, z: 0 };
                 }
             }
-            
+
             //8 vertices
-            var uv = 
-                [{x: c.x, y: c.y, z:c.z},
-                 {x: c.x+w.x, y: c.y+w.y, z:c.z+w.z},
-                 {x: c.x+h.x, y: c.y+h.y, z:c.z+h.z},
-                 {x: c.x+w.x+h.x, y: c.y+w.y+h.y, z:c.z+w.z+h.z},
-                 {x: c.x+d.x, y: c.y+d.y, z:c.z+d.z},
-                 {x: c.x+w.x+d.x, y: c.y+w.y+d.y, z:c.z+w.z+d.z},
-                 {x: c.x+h.x+d.x, y: c.y+h.y+d.y, z:c.z+h.z+d.z},
-                 {x: c.x+w.x+h.x+d.x, y: c.y+w.y+h.y+d.y, z:c.z+w.z+h.z+d.z}];
-                 
+            var uv =
+                [{ x: c.x, y: c.y, z: c.z },
+                { x: c.x + w.x, y: c.y + w.y, z: c.z + w.z },
+                { x: c.x + h.x, y: c.y + h.y, z: c.z + h.z },
+                { x: c.x + w.x + h.x, y: c.y + w.y + h.y, z: c.z + w.z + h.z },
+                { x: c.x + d.x, y: c.y + d.y, z: c.z + d.z },
+                { x: c.x + w.x + d.x, y: c.y + w.y + d.y, z: c.z + w.z + d.z },
+                { x: c.x + h.x + d.x, y: c.y + h.y + d.y, z: c.z + h.z + d.z },
+                { x: c.x + w.x + h.x + d.x, y: c.y + w.y + h.y + d.y, z: c.z + w.z + h.z + d.z }];
+
             //but.. so that we can have sharp issues, we want a unique normal
             //for each face - since normals are associated with vertices, need to duplicate 
-            
+
             //bottom
             // 0 1
             // 2 3
@@ -33657,45 +33692,45 @@ $3Dmol.GLShape = (function() {
             var verts = [];
             var faces = [];
             //bottom
-            verts.splice(verts.length, 0, uv[0],uv[1],uv[2],uv[3]);
-            faces.splice(faces.length,0, 0,2,1, 1,2,3);
+            verts.splice(verts.length, 0, uv[0], uv[1], uv[2], uv[3]);
+            faces.splice(faces.length, 0, 0, 2, 1, 1, 2, 3);
             var foff = 4;
             //front
-            verts.splice(verts.length, 0, uv[2],uv[3],uv[6],uv[7]);
-            faces.splice(faces.length,0, foff+0,foff+2,foff+1, foff+1,foff+2,foff+3); 
-            foff += 4;   
+            verts.splice(verts.length, 0, uv[2], uv[3], uv[6], uv[7]);
+            faces.splice(faces.length, 0, foff + 0, foff + 2, foff + 1, foff + 1, foff + 2, foff + 3);
+            foff += 4;
             //back
-            verts.splice(verts.length, 0, uv[4],uv[5],uv[0],uv[1]);
-            faces.splice(faces.length,0, foff+0,foff+2,foff+1, foff+1,foff+2,foff+3); 
-            foff += 4;   
+            verts.splice(verts.length, 0, uv[4], uv[5], uv[0], uv[1]);
+            faces.splice(faces.length, 0, foff + 0, foff + 2, foff + 1, foff + 1, foff + 2, foff + 3);
+            foff += 4;
             //top
-            verts.splice(verts.length, 0, uv[6],uv[7],uv[4],uv[5]);
-            faces.splice(faces.length,0, foff+0,foff+2,foff+1, foff+1,foff+2,foff+3); 
-            foff += 4;  
+            verts.splice(verts.length, 0, uv[6], uv[7], uv[4], uv[5]);
+            faces.splice(faces.length, 0, foff + 0, foff + 2, foff + 1, foff + 1, foff + 2, foff + 3);
+            foff += 4;
             //right
-            verts.splice(verts.length, 0, uv[3],uv[1],uv[7],uv[5]);
-            faces.splice(faces.length,0, foff+0,foff+2,foff+1, foff+1,foff+2,foff+3); 
-            foff += 4;  
+            verts.splice(verts.length, 0, uv[3], uv[1], uv[7], uv[5]);
+            faces.splice(faces.length, 0, foff + 0, foff + 2, foff + 1, foff + 1, foff + 2, foff + 3);
+            foff += 4;
             //left
-            verts.splice(verts.length, 0, uv[2],uv[6],uv[0],uv[4]); // fix: was 2 0 6 4 , was flipped! will this ruin anything?
+            verts.splice(verts.length, 0, uv[2], uv[6], uv[0], uv[4]); // fix: was 2 0 6 4 , was flipped! will this ruin anything?
             // and is this the reason for having double sided lambert shading? the box had a flipped face
-            faces.splice(faces.length,0, foff+0,foff+2,foff+1, foff+1,foff+2,foff+3); 
-            foff += 4; 
-                                    
-            var spec = $3Dmol.extend({},boxSpec);
+            faces.splice(faces.length, 0, foff + 0, foff + 2, foff + 1, foff + 1, foff + 2, foff + 3);
+            foff += 4;
+
+            var spec = $3Dmol.extend({}, boxSpec);
             spec.vertexArr = verts;
             spec.faceArr = faces;
             spec.normalArr = [];
             drawCustom(this, geo, spec);
-            
+
             var centroid = new $3Dmol.Vector3();
             components.push({
-                centroid : centroid.addVectors(uv[0],uv[7]).multiplyScalar(0.5)
+                centroid: centroid.addVectors(uv[0], uv[7]).multiplyScalar(0.5)
             });
             var geoGroup = geo.updateGeoGroup(0);
             updateBoundingFromPoints(this.boundingSphere, components, geoGroup.vertexArray, geoGroup.vertices);
         };
-        
+
         /**
          * Creates a cylinder shape
          * @function $3Dmol.GLShape#addCylinder
@@ -33735,25 +33770,25 @@ $3Dmol.GLShape = (function() {
 
 
             var start = new $3Dmol.Vector3(cylinderSpec.start.x || 0,
-                    cylinderSpec.start.y || 0, cylinderSpec.start.z || 0);
+                cylinderSpec.start.y || 0, cylinderSpec.start.z || 0);
             var end = new $3Dmol.Vector3(cylinderSpec.end.x,
-                    cylinderSpec.end.y || 0, cylinderSpec.end.z || 0);
-            if(typeof(end.x) == 'undefined') end.x = 3; //show something even if undefined
+                cylinderSpec.end.y || 0, cylinderSpec.end.z || 0);
+            if (typeof (end.x) == 'undefined') end.x = 3; //show something even if undefined
 
             var radius = cylinderSpec.radius || 0.1;
             var color = $3Dmol.CC.color(cylinderSpec.color);
-            
+
             this.intersectionShape.cylinder.push(new $3Dmol.Cylinder(start, end, radius));
 
-            $3Dmol.GLDraw.drawCylinder(geo, start, end, radius, color, cylinderSpec.fromCap, cylinderSpec.toCap);            
-           
+            $3Dmol.GLDraw.drawCylinder(geo, start, end, radius, color, cylinderSpec.fromCap, cylinderSpec.toCap);
+
             var centroid = new $3Dmol.Vector3();
             components.push({
-                centroid : centroid.addVectors(start,end).multiplyScalar(0.5)
+                centroid: centroid.addVectors(start, end).multiplyScalar(0.5)
             });
             var geoGroup = geo.updateGeoGroup(0);
             updateBoundingFromPoints(this.boundingSphere, components,
-                    geoGroup.vertexArray, geoGroup.vertices);
+                geoGroup.vertexArray, geoGroup.vertices);
 
         };
 
@@ -33763,50 +33798,50 @@ $3Dmol.GLShape = (function() {
          * @param {CylinderSpec} cylinderSpec
          * @return {$3Dmol.GLShape}       
          */
-        this.addDashedCylinder = function(cylinderSpec){
+        this.addDashedCylinder = function(cylinderSpec) {
             cylinderSpec.start = cylinderSpec.start || {};
             cylinderSpec.end = cylinderSpec.end || {};
-            cylinderSpec.dashLength=cylinderSpec.dashLength || 0.25;
-            cylinderSpec.gapLength=cylinderSpec.gapLength || 0.25;
+            cylinderSpec.dashLength = cylinderSpec.dashLength || 0.25;
+            cylinderSpec.gapLength = cylinderSpec.gapLength || 0.25;
 
             var start = new $3Dmol.Vector3(cylinderSpec.start.x || 0,
-                    cylinderSpec.start.y || 0, cylinderSpec.start.z || 0);
+                cylinderSpec.start.y || 0, cylinderSpec.start.z || 0);
             var end = new $3Dmol.Vector3(cylinderSpec.end.x,
-                    cylinderSpec.end.y || 0, cylinderSpec.end.z || 0);
-            if(typeof(end.x) == 'undefined') end.x = 3; //show something even if undefined
+                cylinderSpec.end.y || 0, cylinderSpec.end.z || 0);
+            if (typeof (end.x) == 'undefined') end.x = 3; //show something even if undefined
 
             var radius = cylinderSpec.radius || 0.1;
             var color = $3Dmol.CC.color(cylinderSpec.color);
 
-            var cylinderLength = Math.sqrt(Math.pow((start.x-end.x),2)+Math.pow((start.y-end.y),2)+Math.pow((start.z-end.z),2));
+            var cylinderLength = Math.sqrt(Math.pow((start.x - end.x), 2) + Math.pow((start.y - end.y), 2) + Math.pow((start.z - end.z), 2));
 
-            var count = cylinderLength/(cylinderSpec.gapLength+cylinderSpec.dashLength);
+            var count = cylinderLength / (cylinderSpec.gapLength + cylinderSpec.dashLength);
 
             var new_start = new $3Dmol.Vector3(cylinderSpec.start.x || 0,
-                    cylinderSpec.start.y || 0, cylinderSpec.start.z || 0);
+                cylinderSpec.start.y || 0, cylinderSpec.start.z || 0);
             var new_end = new $3Dmol.Vector3(cylinderSpec.end.x,
-                    cylinderSpec.end.y || 0, cylinderSpec.end.z || 0);
+                cylinderSpec.end.y || 0, cylinderSpec.end.z || 0);
 
-            var gapVector = new $3Dmol.Vector3((end.x-start.x)/(cylinderLength/cylinderSpec.gapLength),(end.y-start.y)/(cylinderLength/cylinderSpec.gapLength),(end.z-start.z)/(cylinderLength/cylinderSpec.gapLength));
-            var dashVector = new $3Dmol.Vector3((end.x-start.x)/(cylinderLength/cylinderSpec.dashLength),(end.y-start.y)/(cylinderLength/cylinderSpec.dashLength),(end.z-start.z)/(cylinderLength/cylinderSpec.dashLength));
+            var gapVector = new $3Dmol.Vector3((end.x - start.x) / (cylinderLength / cylinderSpec.gapLength), (end.y - start.y) / (cylinderLength / cylinderSpec.gapLength), (end.z - start.z) / (cylinderLength / cylinderSpec.gapLength));
+            var dashVector = new $3Dmol.Vector3((end.x - start.x) / (cylinderLength / cylinderSpec.dashLength), (end.y - start.y) / (cylinderLength / cylinderSpec.dashLength), (end.z - start.z) / (cylinderLength / cylinderSpec.dashLength));
 
-            for(var place=0; place < count;place++){
-                new_end = new $3Dmol.Vector3(new_start.x+dashVector.x,new_start.y+dashVector.y,new_start.z+dashVector.z);
+            for (var place = 0; place < count; place++) {
+                new_end = new $3Dmol.Vector3(new_start.x + dashVector.x, new_start.y + dashVector.y, new_start.z + dashVector.z);
 
                 this.intersectionShape.cylinder.push(new $3Dmol.Cylinder(new_start, new_end, radius));
 
-                $3Dmol.GLDraw.drawCylinder(geo, new_start, new_end, radius, color, cylinderSpec.fromCap, cylinderSpec.toCap); 
+                $3Dmol.GLDraw.drawCylinder(geo, new_start, new_end, radius, color, cylinderSpec.fromCap, cylinderSpec.toCap);
 
-                new_start = new $3Dmol.Vector3(new_end.x+gapVector.x,new_end.y+gapVector.y,new_end.z+gapVector.z);
-           
+                new_start = new $3Dmol.Vector3(new_end.x + gapVector.x, new_end.y + gapVector.y, new_end.z + gapVector.z);
+
             }
             var centroid = new $3Dmol.Vector3();
             components.push({
-                centroid : centroid.addVectors(start,end).multiplyScalar(0.5)
+                centroid: centroid.addVectors(start, end).multiplyScalar(0.5)
             });
             var geoGroup = geo.updateGeoGroup(0);
             updateBoundingFromPoints(this.boundingSphere, components,
-                    geoGroup.vertexArray, geoGroup.vertices);
+                geoGroup.vertexArray, geoGroup.vertices);
         };
 
         /**
@@ -33817,15 +33852,15 @@ $3Dmol.GLShape = (function() {
          */
         this.addCurve = function(curveSpec) {
 
-            curveSpec.points = curveSpec.points || [];            
-            curveSpec.smooth = curveSpec.smooth || 10;   
-            if(typeof(curveSpec.fromCap) == "undefined") curveSpec.fromCap = 2;           
-            if(typeof(curveSpec.toCap) == "undefined") curveSpec.toCap = 2;           
+            curveSpec.points = curveSpec.points || [];
+            curveSpec.smooth = curveSpec.smooth || 10;
+            if (typeof (curveSpec.fromCap) == "undefined") curveSpec.fromCap = 2;
+            if (typeof (curveSpec.toCap) == "undefined") curveSpec.toCap = 2;
 
             //subdivide into smoothed spline points
             var points = $3Dmol.subdivide_spline(curveSpec.points, curveSpec.smooth);
-            
-            if(points.length < 3) {
+
+            if (points.length < 3) {
                 console.log("Too few points in addCurve");
                 return;
             }
@@ -33834,59 +33869,61 @@ $3Dmol.GLShape = (function() {
             var color = $3Dmol.CC.color(curveSpec.color);
             //TODO TODO - this is very inefficient, should create our
             //own water tight model with proper normals...
-            
-            
+
+
             //if arrows are requested, peel off enough points to fit
             //at least 2*r of arrowness
             var start = 0;
-            var end = points.length-1;
+            var end = points.length - 1;
             var segmentlen = points[0].distanceTo(points[1]);
-            var npts = Math.ceil(2*radius/segmentlen);
-            if(curveSpec.toArrow) {
+            var npts = Math.ceil(2 * radius / segmentlen);
+            if (curveSpec.toArrow) {
                 end -= npts;
-                let arrowspec = { start: points[end],
-                                  end: points[points.length-1],
-                                  radius: radius,
-                                  color: color,
-                                  mid: 0.0001
-                              };
+                let arrowspec = {
+                    start: points[end],
+                    end: points[points.length - 1],
+                    radius: radius,
+                    color: color,
+                    mid: 0.0001
+                };
                 this.addArrow(arrowspec);
             }
-            if(curveSpec.fromArrow) {
+            if (curveSpec.fromArrow) {
                 start += npts;
-                let arrowspec = { start: points[start],
-                                  end: points[0],
-                                  radius: radius,
-                                  color: color,
-                                  mid: 0.0001
-                              };
+                let arrowspec = {
+                    start: points[start],
+                    end: points[0],
+                    radius: radius,
+                    color: color,
+                    mid: 0.0001
+                };
                 this.addArrow(arrowspec);
-            }            
-            
-            var midway = Math.ceil(points.length/2);
-            var middleSpec = { radius: radius, color: color, fromCap: 2, toCap: 2 };            
-            for(var i=start; i < end; i++){
+            }
+
+            var midway = Math.ceil(points.length / 2);
+            var middleSpec = { radius: radius, color: color, fromCap: 2, toCap: 2 };
+            for (var i = start; i < end; i++) {
                 middleSpec.start = points[i];
-                middleSpec.end = points[i+1];
+                middleSpec.end = points[i + 1];
                 middleSpec.fromCap = 2;
                 middleSpec.toCap = 2;
-                if(i < midway) {
+                if (i < midway) {
                     middleSpec.fromCap = 2;
                     middleSpec.toCap = 0;
-                } else if(i > midway) {
+                } else if (i > midway) {
                     middleSpec.fromCap = 0;
                     middleSpec.toCap = 2;
                 } else {
                     middleSpec.fromCap = 2;
-                    middleSpec.toCap = 2;                    
+                    middleSpec.toCap = 2;
                 }
-                
+
                 this.addCylinder(middleSpec);
             }
-            
+
 
         };
-        
+
         /**
          * Creates a line shape
          * @function $3Dmol.GLShape#addLine         
@@ -33904,10 +33941,10 @@ $3Dmol.GLShape = (function() {
             lineSpec.end = lineSpec.end || {};
 
             var start = new $3Dmol.Vector3(lineSpec.start.x || 0,
-                    lineSpec.start.y || 0, lineSpec.start.z || 0);
+                lineSpec.start.y || 0, lineSpec.start.z || 0);
             var end = new $3Dmol.Vector3(lineSpec.end.x,
-                    lineSpec.end.y || 0, lineSpec.end.z || 0);            
-            if(typeof(end.x) == 'undefined') end.x = 3; //show something even if undefined
+                lineSpec.end.y || 0, lineSpec.end.z || 0);
+            if (typeof (end.x) == 'undefined') end.x = 3; //show something even if undefined
 
             var geoGroup = geo.updateGeoGroup(2);
 
@@ -33915,31 +33952,31 @@ $3Dmol.GLShape = (function() {
             //for consistency with rest of shapes, uses vertices and lines rather
             //than a separate line geometry
             var vstart = geoGroup.vertices;
-            var i = vstart*3;
+            var i = vstart * 3;
             var vertexArray = geoGroup.vertexArray;
             vertexArray[i] = start.x;
-            vertexArray[i+1] = start.y;
-            vertexArray[i+2] = start.z;
-            vertexArray[i+3] = end.x;
-            vertexArray[i+4] = end.y;
-            vertexArray[i+5] = end.z;
+            vertexArray[i + 1] = start.y;
+            vertexArray[i + 2] = start.z;
+            vertexArray[i + 3] = end.x;
+            vertexArray[i + 4] = end.y;
+            vertexArray[i + 5] = end.z;
             geoGroup.vertices += 2;
-            
+
             var lineArray = geoGroup.lineArray;
-            var li =  geoGroup.lineidx;
+            var li = geoGroup.lineidx;
             lineArray[li] = vstart;
-            lineArray[li+1] = vstart+1;
+            lineArray[li + 1] = vstart + 1;
             geoGroup.lineidx += 2;
-            
+
             var centroid = new $3Dmol.Vector3();
             components.push({
-                centroid : centroid.addVectors(start,end).multiplyScalar(0.5)
+                centroid: centroid.addVectors(start, end).multiplyScalar(0.5)
             });
             geoGroup = geo.updateGeoGroup(0);
             updateBoundingFromPoints(this.boundingSphere, components,
-                    geoGroup.vertexArray, geoGroup.vertices);            
+                geoGroup.vertexArray, geoGroup.vertices);
         };
-        
+
         /**
          * Creates an arrow shape
          * @function $3Dmol.GLShape#addArrow        
@@ -33969,54 +34006,54 @@ $3Dmol.GLShape = (function() {
             arrowSpec.end = arrowSpec.end || {};
 
             arrowSpec.start = new $3Dmol.Vector3(arrowSpec.start.x || 0,
-                    arrowSpec.start.y || 0, arrowSpec.start.z || 0);
+                arrowSpec.start.y || 0, arrowSpec.start.z || 0);
 
-            if (arrowSpec.dir instanceof $3Dmol.Vector3 && typeof(arrowSpec.length) === 'number') {
+            if (arrowSpec.dir instanceof $3Dmol.Vector3 && typeof (arrowSpec.length) === 'number') {
                 var end = arrowSpec.dir.clone().multiplyScalar(arrowSpec.length).add(
-                        arrowSpec.start);
+                    arrowSpec.start);
                 arrowSpec.end = end;
             }
 
             else {
                 arrowSpec.end = new $3Dmol.Vector3(arrowSpec.end.x,
-                        arrowSpec.end.y || 0, arrowSpec.end.z || 0);
-                if(typeof(arrowSpec.end.x) == 'undefined') arrowSpec.end.x = 3; //show something even if undefined
+                    arrowSpec.end.y || 0, arrowSpec.end.z || 0);
+                if (typeof (arrowSpec.end.x) == 'undefined') arrowSpec.end.x = 3; //show something even if undefined
             }
 
             arrowSpec.radius = arrowSpec.radius || 0.1;
 
             arrowSpec.radiusRatio = arrowSpec.radiusRatio || 1.618034;
-            
+
             arrowSpec.mid = (0 < arrowSpec.mid && arrowSpec.mid < 1) ? arrowSpec.mid
-                    : 0.618034;
+                : 0.618034;
 
             drawArrow(this, geo, arrowSpec);
 
             var centroid = new $3Dmol.Vector3();
             components.push({
-                centroid : centroid.addVectors(arrowSpec.start, arrowSpec.end)
-                        .multiplyScalar(0.5)
+                centroid: centroid.addVectors(arrowSpec.start, arrowSpec.end)
+                    .multiplyScalar(0.5)
             });
             var geoGroup = geo.updateGeoGroup(0);
             updateBoundingFromPoints(this.boundingSphere, components,
-                    geoGroup.vertexArray, geoGroup.vertices);
+                geoGroup.vertexArray, geoGroup.vertices);
 
         };
 
 
-        var distance_from= function(c1,c2){
-            return Math.sqrt(Math.pow((c1.x-c2.x),2)+Math.pow((c1.y-c2.y),2)+Math.pow((c1.z-c2.z),2));
+        var distance_from = function(c1, c2) {
+            return Math.sqrt(Math.pow((c1.x - c2.x), 2) + Math.pow((c1.y - c2.y), 2) + Math.pow((c1.z - c2.z), 2));
         };
-        
-        var inSelectedRegion=function(coordinate,selectedRegion,radius){
-            
-            for(var i=0;i<selectedRegion.length;i++){
-                if(distance_from(selectedRegion[i],coordinate)<=radius)
+
+        var inSelectedRegion = function(coordinate, selectedRegion, radius) {
+
+            for (var i = 0; i < selectedRegion.length; i++) {
+                if (distance_from(selectedRegion[i], coordinate) <= radius)
                     return true;
             }
             return false;
         };
-                
+
         /**
          * Create isosurface from voluemetric data.
          * @function $3Dmol.GLShape#addIsosurface         
@@ -34046,9 +34083,9 @@ $3Dmol.GLShape = (function() {
                 });
          */
         this.addIsosurface = function(data, volSpec, callback) {//may want to cache the arrays geneerated when selectedRegion ==true
-           
+
             var isoval = (volSpec.isoval !== undefined && typeof (volSpec.isoval) === "number") ? volSpec.isoval
-                    : 0.0;
+                : 0.0;
             var voxel = (volSpec.voxel) ? true : false;
             var smoothness = (volSpec.smoothness === undefined) ? 1 : volSpec.smoothness;
 
@@ -34064,7 +34101,7 @@ $3Dmol.GLShape = (function() {
                 vertnums[i] = -1;
 
             var bitdata = new Uint8Array(nX * nY * nZ);
-           
+
             //mark locations partitioned by isoval
             for (i = 0, il = vals.length; i < il; ++i) {
                 var val = (isoval >= 0) ? vals[i] - isoval : isoval - vals[i];
@@ -34072,36 +34109,36 @@ $3Dmol.GLShape = (function() {
                     bitdata[i] |= ISDONE;
 
             }
-               
+
             var verts = [], faces = [];
 
             $3Dmol.MarchingCube.march(bitdata, verts, faces, {
-                fulltable : true,
-                voxel : voxel,
-                unitCube : data.unit,
-                origin : data.origin,
+                fulltable: true,
+                voxel: voxel,
+                unitCube: data.unit,
+                origin: data.origin,
                 matrix: data.matrix,
-                nX : nX,
-                nY : nY,
-                nZ : nZ
+                nX: nX,
+                nY: nY,
+                nZ: nZ
             });
-            
+
             if (!voxel && smoothness > 0)
                 $3Dmol.MarchingCube.laplacianSmooth(smoothness, verts, faces);
-            var vertexmapping= [];
-            var newvertices= [];
-            var newfaces=[];
+            var vertexmapping = [];
+            var newvertices = [];
+            var newfaces = [];
 
             if (volSpec.selectedRegion && volSpec.coords === undefined) {
                 volSpec.coords = volSpec.selectedRegion; //backwards compat for incorrectly documented feature
             }
             if (volSpec.coords !== undefined) {
 
-                var xmax = volSpec.coords[0].x, 
-                    ymax = volSpec.coords[0].y, 
-                    zmax = volSpec.coords[0].z, 
-                    xmin = volSpec.coords[0].x, 
-                    ymin = volSpec.coords[0].y, 
+                var xmax = volSpec.coords[0].x,
+                    ymax = volSpec.coords[0].y,
+                    zmax = volSpec.coords[0].z,
+                    xmin = volSpec.coords[0].x,
+                    ymin = volSpec.coords[0].y,
                     zmin = volSpec.coords[0].z;
 
                 for (let i = 0; i < volSpec.coords.length; i++) {
@@ -34120,13 +34157,13 @@ $3Dmol.GLShape = (function() {
                 }
 
                 var rad = 2;
-                if(volSpec.radius !== undefined) {
+                if (volSpec.radius !== undefined) {
                     rad = volSpec.radius; //backwards compat
                 }
-                if(volSpec.selectedOffset !== undefined) { //backwards compat
+                if (volSpec.selectedOffset !== undefined) { //backwards compat
                     rad = volSpec.selectedOffset;
                 }
-                if(volSpec.seldist !== undefined) { 
+                if (volSpec.seldist !== undefined) {
                     rad = volSpec.seldist;
                 }
 
@@ -34140,13 +34177,13 @@ $3Dmol.GLShape = (function() {
                 // accounts for radius
                 for (let i = 0; i < verts.length; i++) {
                     if (verts[i].x > xmin &&
-                            verts[i].x < xmax &&
-                            verts[i].y > ymin &&
-                            verts[i].y < ymax &&
-                            verts[i].z > zmin &&
-                            verts[i].z < zmax &&
-                            inSelectedRegion(verts[i],
-                                    volSpec.coords, rad)) {
+                        verts[i].x < xmax &&
+                        verts[i].y > ymin &&
+                        verts[i].y < ymax &&
+                        verts[i].z > zmin &&
+                        verts[i].z < zmax &&
+                        inSelectedRegion(verts[i],
+                            volSpec.coords, rad)) {
                         vertexmapping.push(newvertices.length);
                         newvertices.push(verts[i]);
 
@@ -34157,8 +34194,8 @@ $3Dmol.GLShape = (function() {
                 }
                 for (let i = 0; i + 2 < faces.length; i += 3) {
                     if (vertexmapping[faces[i]] !== -1 &&
-                            vertexmapping[faces[i + 1]] !== -1 &&
-                            vertexmapping[faces[i + 2]] !== -1) {
+                        vertexmapping[faces[i + 1]] !== -1 &&
+                        vertexmapping[faces[i + 2]] !== -1) {
                         newfaces.push(faces[i] - (faces[i] - vertexmapping[faces[i]]));
                         newfaces.push(faces[i + 1] - (faces[i + 1] - vertexmapping[faces[i + 1]]));
                         newfaces.push(faces[i + 2] - (faces[i + 2] - vertexmapping[faces[i + 2]]));
@@ -34167,25 +34204,25 @@ $3Dmol.GLShape = (function() {
                 verts = newvertices;
                 faces = newfaces;
             }
-           
+
             drawCustom(this, geo, {
-                vertexArr : verts,
-                faceArr : faces,
-                normalArr : [],
-                clickable : volSpec.clickable,
-                hoverable : volSpec.hoverable
+                vertexArr: verts,
+                faceArr: faces,
+                normalArr: [],
+                clickable: volSpec.clickable,
+                hoverable: volSpec.hoverable
             });
-            
+
             this.updateStyle(volSpec);
-            
+
             //computing bounding sphere from vertices
             var origin = new $3Dmol.Vector3(data.origin.x, data.origin.y, data.origin.z);
-            var size = new $3Dmol.Vector3(data.size.x*data.unit.x, data.size.y*data.unit.y, data.size.z*data.unit.z);            
+            var size = new $3Dmol.Vector3(data.size.x * data.unit.x, data.size.y * data.unit.y, data.size.z * data.unit.z);
 
-            var total = new $3Dmol.Vector3(0,0,0);
+            var total = new $3Dmol.Vector3(0, 0, 0);
             var maxv = origin.clone();
             var minv = origin.clone().add(size);
-            for(let i = 0; i < verts.length; i++) {
+            for (let i = 0; i < verts.length; i++) {
                 total.add(verts[i]);
                 maxv.max(verts[i]);
                 minv.min(verts[i]);
@@ -34194,11 +34231,11 @@ $3Dmol.GLShape = (function() {
             var len1 = total.distanceTo(minv);
             var len2 = total.distanceTo(maxv);
             this.boundingSphere.center = total;
-            this.boundingSphere.radius = Math.max(len1,len2);
-            if(typeof callback =="function")
+            this.boundingSphere.radius = Math.max(len1, len2);
+            if (typeof callback == "function")
                 callback();
-          };        
-        
+        };
+
         /** 
          * @deprecated Use addIsosurface instead
          * Creates custom shape from volumetric data 
@@ -34218,62 +34255,64 @@ $3Dmol.GLShape = (function() {
             geo.initTypedArrays();
             return geo;
         };
-        
+
         /**
          * Initialize webgl objects for rendering
          * @param {$3Dmol.Object3D} group
          * 
-         */  
+         */
         this.globj = function(group) {
 
             if (renderedShapeObj) {
                 group.remove(renderedShapeObj);
                 renderedShapeObj = null;
             }
-            
-            if(this.hidden)
+
+            if (this.hidden)
                 return;
             finalizeGeo(geo);
             geo.initTypedArrays();
-            
-            if(this.wireframe) {
+
+            if (this.wireframe) {
                 geo.setUpWireframe();
             }
 
-            if(typeof(this.color) != 'undefined')
+            if (typeof (this.color) != 'undefined')
                 updateColor(geo, this.color);
 
             shapeObj = new $3Dmol.Object3D();
             var material = null;
 
-            if(this.side == $3Dmol.DoubleSide) {
+            if (this.side == $3Dmol.DoubleSide) {
                 material = new $3Dmol.MeshDoubleLambertMaterial({
-                    wireframe : this.wireframe,
-                    side : this.side,
-                    transparent : (this.opacity < 1) ? true : false,
-                    opacity : this.opacity,
-                    wireframeLinewidth: this.linewidth
+                    wireframe: this.wireframe,
+                    side: this.side,
+                    transparent: (this.opacity < 1) ? true : false,
+                    opacity: this.opacity,
+                    wireframeLinewidth: this.linewidth,
+                    vertexColors: $3Dmol.VertexColors
                 });
             } else {
                 material = new $3Dmol.MeshLambertMaterial({
-                    wireframe : this.wireframe,
-                    side : this.side,
-                    transparent : (this.opacity < 1) ? true : false,
-                    opacity : this.opacity,
-                    wireframeLinewidth: this.linewidth
+                    wireframe: this.wireframe,
+                    side: this.side,
+                    transparent: (this.opacity < 1) ? true : false,
+                    opacity: this.opacity,
+                    wireframeLinewidth: this.linewidth,
+                    vertexColors: $3Dmol.VertexColors
                 });
             }
-            
+
             var mesh = new $3Dmol.Mesh(geo, material);
 
             shapeObj.add(mesh);
-            
+
             var lineMaterial = new $3Dmol.LineBasicMaterial({
-                linewidth : this.linewidth,
+                linewidth: this.linewidth,
                 color: this.color
             });
             var line = new $3Dmol.Line(linegeo, lineMaterial,
-                    $3Dmol.LinePieces);
+                $3Dmol.LinePieces);
             shapeObj.add(line);
 
             renderedShapeObj = shapeObj.clone();
@@ -34298,7 +34337,7 @@ $3Dmol.GLShape = (function() {
 
     Object.defineProperty(GLShape.prototype, "position", {
 
-        get : function() {
+        get: function() {
             return this.boundingSphere.center;
         }
 
@@ -34306,7 +34345,7 @@ $3Dmol.GLShape = (function() {
 
     Object.defineProperty(GLShape.prototype, "x", {
 
-        get : function() {
+        get: function() {
             return this.boundingSphere.center.x;
         }
 
@@ -34314,7 +34353,7 @@ $3Dmol.GLShape = (function() {
 
     Object.defineProperty(GLShape.prototype, "y", {
 
-        get : function() {
+        get: function() {
             return this.boundingSphere.center.y;
         }
 
@@ -34322,7 +34361,7 @@ $3Dmol.GLShape = (function() {
 
     Object.defineProperty(GLShape.prototype, "z", {
 
-        get : function() {
+        get: function() {
             return this.boundingSphere.center.z;
         }
 
@@ -34340,36 +34379,36 @@ $3Dmol.splitMesh = function(mesh) {
     //peel off 64k vertices rsvh into their own mesh
     //duplicating vertices and normals as necessary to preserve faces and lines
 
-    if(mesh.vertexArr.length < MAXVERT) return [mesh]; //typical case
-    
-    var slices = [{vertexArr: [], normalArr: [], faceArr: []}];
-    if(mesh.colorArr) slices.colorArr = [];
+    if (mesh.vertexArr.length < MAXVERT) return [mesh]; //typical case
+
+    var slices = [{ vertexArr: [], normalArr: [], faceArr: [] }];
+    if (mesh.colorArr) slices.colorArr = [];
     var vertSlice = []; //indexed by original vertex to get current slice
-    var vertIndex =[]; //indexed by original vertex to get index within slice
+    var vertIndex = []; //indexed by original vertex to get index within slice
     var currentSlice = 0;
-    
+
     //for each face, make sure all three vertices (or copies) are in the same slice
     var faces = mesh.faceArr;
-    for(let i = 0, nf = faces.length; i < nf; i += 3) {
+    for (let i = 0, nf = faces.length; i < nf; i += 3) {
         let slice = slices[currentSlice];
-        for(let j = 0; j < 3; j++) {
+        for (let j = 0; j < 3; j++) {
             //process each vertex to make sure it is assigned a slice
             //all vertices of a face must belong to the same slice
-            var v = faces[i+j];
-            if(vertSlice[v] !== currentSlice) { //true if undefined
+            var v = faces[i + j];
+            if (vertSlice[v] !== currentSlice) { //true if undefined
                 vertSlice[v] = currentSlice;
                 vertIndex[v] = slice.vertexArr.length;
                 slice.vertexArr.push(mesh.vertexArr[v]);
-                if(mesh.normalArr && mesh.normalArr[v]) slice.normalArr.push(mesh.normalArr[v]);
-                if(mesh.colorArr && mesh.colorArr[v]) slice.colorArr.push(mesh.colorArr[v]);
+                if (mesh.normalArr && mesh.normalArr[v]) slice.normalArr.push(mesh.normalArr[v]);
+                if (mesh.colorArr && mesh.colorArr[v]) slice.colorArr.push(mesh.colorArr[v]);
             }
             slice.faceArr.push(vertIndex[v]);
         }
-        
-        if(slice.vertexArr.length >= MAXVERT) {
+
+        if (slice.vertexArr.length >= MAXVERT) {
             //new slice
-            slices.push({vertexArr: [], normalArr: [], faceArr: []});
-            if(mesh.colorArr) slices.colorArr = [];
+            slices.push({ vertexArr: [], normalArr: [], faceArr: [] });
+            if (mesh.colorArr) slices.colorArr = [];
             currentSlice++;
         }
     }
@@ -34667,25 +34706,80 @@ $3Dmol.GLViewer = (function() {
                 }
             }
         };
-        // Checks for selection intersects on mousedown
-        var handleClickSelection = function(mouseX, mouseY, event) {
-
-            if(clickables.length == 0) return;
+        
+         /**
+         * Return a list of objects that intersect that at the specified viewer position.
+         * 
+         * @function $3Dmol.GLViewer#targetedObjects
+         * @param {x} - x position in screen coordinates
+         * @param {y} - y position in screen coordinates
+         * @param {objects} - list of objects or selection object specifying what object to check for targeting 
+        */
+        let targetedObjects = this.targetedObjects = function(x,y,objects) {
             var mouse = {
-                x : mouseX,
-                y : mouseY,
+                x : x,
+                y : y,
                 z : -1.0
             };
-
+            if(!Array.isArray(objects)) { //assume selection object
+                objects = this.selectedAtoms(objects);
+            }
+            if(objects.length == 0) return [];
             raycaster.setFromCamera(mouse,camera);
+            return raycaster.intersectObjects(modelGroup, objects);
+        };
+        
+        //return offset of container
+        var canvasOffset = function() {
+          let canvas = glDOM.get(0);
+          let rect = canvas.getBoundingClientRect();
+          let doc = canvas.ownerDocument;
+          let docElem = doc.documentElement;
+          let win = doc.defaultView;
+          return {
+            top: rect.top + win.pageYOffset - docElem.clientTop,
+            left: rect.left + win.pageXOffset - docElem.clientLeft
+          };
+        };
+        
+        /** Convert model coordinates to screen coordinates.
+         * @function $3Dmol.GLViewer#modelToScreen
+         * @param {object | list} - an object or list of objects with x,y,z attributes (e.g. an atom)
+         * @return {object | list} - and object or list of {x: screenX, y: screenY}
+         */
+        this.modelToScreen = function(coords) {
+            let returnsingle = false;
+            if(!Array.isArray(coords)) {
+                coords = [coords];
+                returnsingle = true;
+            }
             
-            var intersects = [];
-            intersects = raycaster.intersectObjects(modelGroup, clickables);
+            let results = [];
+            coords.forEach(coord => {
+                let t = new $3Dmol.Vector3(coord.x,coord.y,coord.z);
+                t.applyMatrix4(modelGroup.matrixWorld);   
+                projector.projectVector(t, camera);       
+                let offset = canvasOffset();
+                let screenX = WIDTH*(t.x+1)/2.0+offset.left;
+                let screenY = -HEIGHT*(t.y-1)/2.0+offset.top;
+                results.push({x:screenX,y:screenY});
+            }); 
+            if(returnsingle) results = results[0];
+            return results;
+        };
+        
+        // Checks for selection intersects on mousedown
+        var handleClickSelection = function(mouseX, mouseY, event) {            
+            let intersects = targetedObjects(mouseX,mouseY,clickables);
             if (intersects.length) {
                 var selected = intersects[0].clickable;
-                if (selected.callback !== undefined &&
-                        typeof (selected.callback) === "function") {
-                    selected.callback(selected, _viewer, event, container);
+                if (selected.callback !== undefined) {
+	                 if(typeof (selected.callback) != "function") {
+	                    selected.callback = $3Dmol.makeFunction(selected.callback);
+	                }
+                    if(typeof (selected.callback) === "function") {
+                        selected.callback(selected, _viewer, event, container);
+                    }
                 }
             }
         };
@@ -34693,11 +34787,21 @@ $3Dmol.GLViewer = (function() {
         //set current_hover to sel (which can be null), calling appropraite callbacks
         var setHover = function(selected, event) {
             if(current_hover == selected) return;
-            if(current_hover) current_hover.unhover_callback(current_hover, _viewer, event, container);
+            if(current_hover) {
+                if(typeof (current_hover.unhover_callback) != "function") {
+                    current_hover.unhover_callback = $3Dmol.makeFunction(current_hover.unhover_callback);
+                } 
+                current_hover.unhover_callback(current_hover, _viewer, event, container);
+            }
             current_hover=selected;
-            if (selected && selected.hover_callback !== undefined &&
-                    typeof (selected.hover_callback) === "function") {
-                selected.hover_callback(selected, _viewer, event, container);
+            
+            if (selected && selected.hover_callback !== undefined) {
+                if(typeof (selected.hover_callback) != "function") {
+                    selected.hover_callback = $3Dmol.makeFunction(selected.hover_callback);
+                }
+                if(typeof (selected.hover_callback) === "function") {
+                    selected.hover_callback(selected, _viewer, event, container);
+                }
             }  
             
         };
@@ -34705,15 +34809,7 @@ $3Dmol.GLViewer = (function() {
         //checks for selection intersects on hover
         var handleHoverSelection = function(mouseX, mouseY){
             if(hoverables.length == 0) return;
-            var mouse = {
-                x : mouseX,
-                y : mouseY,
-                z : -1.0
-            };
-            raycaster.setFromCamera(mouse,camera);
-
-            var intersects = [];
-            intersects = raycaster.intersectObjects(modelGroup, hoverables);
+            let intersects = targetedObjects(mouseX,mouseY,hoverables);
             if (intersects.length) {
                 var selected = intersects[0].clickable;
                 setHover(selected);
@@ -34726,16 +34822,7 @@ $3Dmol.GLViewer = (function() {
         
         //sees if the mouse is still on the object that invoked a hover event and if not then the unhover callback is called
         var handleHoverContinue = function(mouseX,mouseY){
-            var mouse = {
-                x : mouseX,
-                y : mouseY,
-                z : -1.0
-            };
-
-            raycaster.setFromCamera(mouse,camera);
-
-            var intersects = [];
-            intersects = raycaster.intersectObjects(modelGroup, hoverables);
+            let intersects = targetedObjects(mouseX,mouseY,hoverables);
             if(intersects.length == 0 || intersects[0] === undefined){
                 setHover(null);
             }
@@ -34796,20 +34883,7 @@ $3Dmol.GLViewer = (function() {
             t.z = 0;                            
             t.applyQuaternion(q);
             return t;
-        };        
-        
-        //return offset of container
-        var canvasOffset = function() {
-          let canvas = glDOM.get(0);
-          let rect = canvas.getBoundingClientRect();
-          let doc = canvas.ownerDocument;
-          let docElem = doc.documentElement;
-          let win = doc.defaultView;
-          return {
-            top: rect.top + win.pageYOffset - docElem.clientTop,
-            left: rect.left + win.pageXOffset - docElem.clientLeft
-          };
-        };
+        };                
         
         //for grid viewers, return true if point is in this viewer
         var isInViewer = function(x,y) {
@@ -34947,12 +35021,38 @@ $3Dmol.GLViewer = (function() {
                 viewer.zoom(10); //will not zoom all the way
                 viewer.render();
             });
-     */
+        */
         this.setZoomLimits = function(lower, upper) {
             if(typeof(lower) !== 'undefined') config.lowerZoomLimit = lower;
             if(upper) config.upperZoomLimit = upper;
             rotationGroup.position.z = adjustZoomToLimits(rotationGroup.position.z);
             show();
+        };
+
+        /**
+         * Set camera parameters (distance to the origin and field of view)
+         * 
+         * @function $3Dmol.GLViewer#setCameraParameters
+         * @param {parameters} - new camera parameters, with possible fields 
+         *                       being fov for the field of view and z for the 
+         *                       distance to the origin.
+         * @example
+          $.get("data/set1_122_complex.mol2", function(data) {
+                var m = viewer.addModel(data);
+                viewer.setCameraParameters({ fov: 10 , z: 300 });
+                viewer.render();
+            });
+        */
+        this.setCameraParameters = function(parameters) {
+            if (parameters.fov !== undefined) {
+                fov = parameters.fov;
+                camera.fov = fov;
+            }
+
+            if (parameters.z !== undefined) {
+                CAMERA_Z = parameters.z;
+                camera.z = CAMERA_Z;
+            }
         };
 
         var mouseButton;
@@ -38190,21 +38290,6 @@ $3Dmol.GLViewer = (function() {
             "SES":$3Dmol.SurfaceType.SES
         };
 
-        //return a Gradient object, even if what is specified is descriptive
-        var getGradient = function(grad) {
-            if(grad instanceof $3Dmol.Gradient) {
-                return grad;
-            } else if(grad.gradient !== undefined &&  $3Dmol.Gradient.builtinGradients[grad.gradient]){
-                let min = grad.min === undefined ? -1 : grad.min;
-                let max = grad.max === undefined ? 1 : grad.max;
-                if(grad.mid === undefined) {
-                    return new $3Dmol.Gradient.builtinGradients[grad.gradient](min,max);
-                } else {
-                    return new $3Dmol.Gradient.builtinGradients[grad.gradient](min,max, grad.mid);
-                }                
-            }
-            return grad;
-        };
         
         /**
          * Add surface representation to atoms
@@ -38254,13 +38339,7 @@ $3Dmol.GLViewer = (function() {
                 atomlist = shallowCopy(getAtomsFromSel(allsel));
             }
             
-            if(style && style.volformat && !(style.voldata instanceof $3Dmol.VolumeData)) {
-                style.voldata = new $3Dmol.VolumeData(style.voldata, style.volformat);
-            }
-            if(style && style.volscheme) {
-                style.volscheme = getGradient(style.volscheme);
-            }
-            
+            $3Dmol.adjustVolumeStyle(style);
             var symmetries = false;
             var n;
             for (n = 0; n < models.length; n++) { 
@@ -38503,12 +38582,7 @@ $3Dmol.GLViewer = (function() {
          * @param {SurfaceStyleSpec} style - new material style specification
          */ 
         this.setSurfaceMaterialStyle = function(surf, style) {
-            if(style.volformat && !(style.voldata instanceof $3Dmol.VolumeData)) {
-                style.voldata = new $3Dmol.VolumeData(style.voldata, style.volformat);
-            }
-            if(style.volscheme) {
-                style.volscheme = getGradient(style.volscheme);
-            }
+            $3Dmol.adjustVolumeStyle(style);
             if (surfaces[surf]) {
                 var surfArr = surfaces[surf];
                 for (var i = 0; i < surfArr.length; i++) {
@@ -38747,7 +38821,7 @@ var $3Dmol = $3Dmol || {};
  * @param {number} min
  * @param {number} max
  */
-$3Dmol.Gradient = function(/* min, max*/) {};
+$3Dmol.Gradient = function(/* min, max*/) { };
 
 /**
  * Map value to hex color
@@ -38755,25 +38829,41 @@ $3Dmol.Gradient = function(/* min, max*/) {};
  * @param {number} range
  * @returns {number}
  */
-$3Dmol.Gradient.valueToHex = function(/*val, range*/) {};
+$3Dmol.Gradient.valueToHex = function(/*val, range*/) { };
 //return range used for color mapping, null if none set
-$3Dmol.Gradient.range = function() {};
+$3Dmol.Gradient.range = function() { };
 
 
 //if lo > hi, flip, also cap
 $3Dmol.Gradient.normalizeValue = function(lo, hi, val) {
-    if(hi>=lo){
-        if(val < lo) val = lo;
-        if(val > hi) val = hi;
-        return {lo: lo, hi: hi, val: val};
+    if (hi >= lo) {
+        if (val < lo) val = lo;
+        if (val > hi) val = hi;
+        return { lo: lo, hi: hi, val: val };
     }
-    else{
-        if(val>lo) val=lo;
-        if(val < hi) val = hi;
+    else {
+        if (val > lo) val = lo;
+        if (val < hi) val = hi;
         //flip the meaning of val, lo, hi
-        val = (lo-val)+hi;
-        return {lo: hi, hi: lo, val: val};
+        val = (lo - val) + hi;
+        return { lo: hi, hi: lo, val: val };
     }
+};
+
+//return a Gradient object, even if what is specified is descriptive
+$3Dmol.Gradient.getGradient = function(grad) {
+    if (grad instanceof $3Dmol.Gradient) {
+        return grad;
+    } else if (grad.gradient !== undefined && $3Dmol.Gradient.builtinGradients[grad.gradient]) {
+        let min = grad.min === undefined ? -1 : grad.min;
+        let max = grad.max === undefined ? 1 : grad.max;
+        if (grad.mid === undefined) {
+            return new $3Dmol.Gradient.builtinGradients[grad.gradient](min, max);
+        } else {
+            return new $3Dmol.Gradient.builtinGradients[grad.gradient](min, max, grad.mid);
+        }
+    }
+    return grad;
 };
 
 /**
@@ -38782,10 +38872,10 @@ $3Dmol.Gradient.normalizeValue = function(lo, hi, val) {
  * @constructor
  * @implements {$3Dmol.Gradient}
  */
-$3Dmol.Gradient.RWB = function(min, max,mid) {
+$3Dmol.Gradient.RWB = function(min, max, mid) {
 
     var mult = 1.0;
-    if(typeof(max) == 'undefined' && Array.isArray(min) && min.length >= 2) {
+    if (typeof (max) == 'undefined' && Array.isArray(min) && min.length >= 2) {
         //we were passed a single range
         max = min[1];
         min = min[0];
@@ -38793,8 +38883,8 @@ $3Dmol.Gradient.RWB = function(min, max,mid) {
     //map value to hex color, range is provided
     this.valueToHex = function(val, range) {
         var lo, hi;
-        val = mult*val; //reverse if necessary
-        if(range) {
+        val = mult * val; //reverse if necessary
+        if (range) {
             lo = range[0];
             hi = range[1];
         }
@@ -38802,42 +38892,42 @@ $3Dmol.Gradient.RWB = function(min, max,mid) {
             lo = min;
             hi = max;
         }
-    
-        if(val === undefined)
+
+        if (val === undefined)
             return 0xffffff;
-        
+
         var norm = $3Dmol.Gradient.normalizeValue(lo, hi, val);
         lo = norm.lo;
         hi = norm.hi;
         val = norm.val;
-        
-        var middle = (hi+lo)/2;
-        if(range && typeof(range[2]) != "undefined")
+
+        var middle = (hi + lo) / 2;
+        if (range && typeof (range[2]) != "undefined")
             middle = range[2];
-        else if(typeof(mid) != 'undefined')
+        else if (typeof (mid) != 'undefined')
             middle = mid; //allow user to specify midpoint
         else
-            middle = (lo+hi)/2;
+            middle = (lo + hi) / 2;
         var scale, color;
-        
+
         //scale bottom from red to white
-        if(val <= middle) {
-            scale = Math.floor(255*Math.sqrt((val-lo)/(middle-lo)));
-            color = 0xff0000 + 0x100*scale + scale;
+        if (val <= middle) {
+            scale = Math.floor(255 * Math.sqrt((val - lo) / (middle - lo)));
+            color = 0xff0000 + 0x100 * scale + scale;
             return color;
         }
         else { //form white to blue
-            scale = Math.floor(255*Math.sqrt((1-(val-middle)/(hi-middle))));
-            color =  0x10000*scale+0x100*scale+0xff;
+            scale = Math.floor(255 * Math.sqrt((1 - (val - middle) / (hi - middle))));
+            color = 0x10000 * scale + 0x100 * scale + 0xff;
             return color;
         }
     };
-    
+
 
     //return range used for color mapping, null if none set
     this.range = function() {
-        if(typeof(min) != "undefined" && typeof(max) != "undefined") {
-            return [min,max];
+        if (typeof (min) != "undefined" && typeof (max) != "undefined") {
+            return [min, max];
         }
         return null;
     };
@@ -38853,17 +38943,17 @@ $3Dmol.Gradient.RWB = function(min, max,mid) {
  */
 $3Dmol.Gradient.ROYGB = function(min, max) {
     var mult = 1.0;
-    if(typeof(max) == 'undefined' && Array.isArray(min) && min.length >= 2) {
+    if (typeof (max) == 'undefined' && Array.isArray(min) && min.length >= 2) {
         //we were passed a single range
         max = min[1];
         min = min[0];
     }
-    
+
     //map value to hex color, range is provided
     this.valueToHex = function(val, range) {
         var lo, hi;
-        val = mult*val;
-        if(range) {
+        val = mult * val;
+        if (range) {
             lo = range[0];
             hi = range[1];
         }
@@ -38871,47 +38961,47 @@ $3Dmol.Gradient.ROYGB = function(min, max) {
             lo = min;
             hi = max;
         }
-    
-        if(typeof(val) == "undefined")
+
+        if (typeof (val) == "undefined")
             return 0xffffff;
-        
+
         var norm = $3Dmol.Gradient.normalizeValue(lo, hi, val);
         lo = norm.lo;
         hi = norm.hi;
         val = norm.val;
-        
-        var mid = (lo+hi)/2;
-        var q1 = (lo+mid)/2;
-        var q3 = (mid+hi)/2;
-        
+
+        var mid = (lo + hi) / 2;
+        var q1 = (lo + mid) / 2;
+        var q3 = (mid + hi) / 2;
+
         var scale, color;
-        if(val < q1) { //scale green up, red up, blue down
-            scale = Math.floor(255*Math.sqrt((val-lo)/(q1-lo)));
-            color = 0xff0000 + 0x100*scale + 0;
+        if (val < q1) { //scale green up, red up, blue down
+            scale = Math.floor(255 * Math.sqrt((val - lo) / (q1 - lo)));
+            color = 0xff0000 + 0x100 * scale + 0;
             return color;
         }
-        else if(val < mid) { //scale red down, green up, blue down
-            scale = Math.floor(255*Math.sqrt((1-(val-q1)/(mid-q1))));
-            color =  0x010000*scale+0xff00+0x0;
+        else if (val < mid) { //scale red down, green up, blue down
+            scale = Math.floor(255 * Math.sqrt((1 - (val - q1) / (mid - q1))));
+            color = 0x010000 * scale + 0xff00 + 0x0;
             return color;
         }
-        else if(val < q3) { //scale blue up, red down, green up
-            scale = Math.floor(255*Math.sqrt((val-mid)/(q3-mid)));
-            color = 0x000000 + 0xff00 + 0x1*scale;
+        else if (val < q3) { //scale blue up, red down, green up
+            scale = Math.floor(255 * Math.sqrt((val - mid) / (q3 - mid)));
+            color = 0x000000 + 0xff00 + 0x1 * scale;
             return color;
         }
         else { //scale green down, blue up, red down
-            scale = Math.floor(255*Math.sqrt((1-(val-q3)/(hi-q3))));
-            color =  0x000000+0x0100*scale+0xff;
+            scale = Math.floor(255 * Math.sqrt((1 - (val - q3) / (hi - q3))));
+            color = 0x000000 + 0x0100 * scale + 0xff;
             return color;
-        }               
+        }
     };
-   
+
 
     //return range used for color mapping, null if none set
     this.range = function() {
-        if(typeof(min) != "undefined" && typeof(max) != "undefined") {
-            return [min,max];
+        if (typeof (min) != "undefined" && typeof (max) != "undefined") {
+            return [min, max];
         }
         return null;
     };
@@ -38926,12 +39016,12 @@ $3Dmol.Gradient.ROYGB = function(min, max) {
  */
 $3Dmol.Gradient.Sinebow = function(min, max) {
     var mult = 1.0;
-    if(typeof(max) == 'undefined' && Array.isArray(min) && min.length >= 2) {
+    if (typeof (max) == 'undefined' && Array.isArray(min) && min.length >= 2) {
         //we were passed a single range
         max = min[1];
         min = min[0];
     }
-    if(max < min) { //reverse the order
+    if (max < min) { //reverse the order
         mult = -1.0;
         min *= -1.0;
         max *= -1.0;
@@ -38939,8 +39029,8 @@ $3Dmol.Gradient.Sinebow = function(min, max) {
     //map value to hex color, range is provided
     this.valueToHex = function(val, range) {
         var lo, hi;
-        val = mult*val;
-        if(range) {
+        val = mult * val;
+        if (range) {
             lo = range[0];
             hi = range[1];
         }
@@ -38948,32 +39038,32 @@ $3Dmol.Gradient.Sinebow = function(min, max) {
             lo = min;
             hi = max;
         }
-    
-        if(typeof(val) == "undefined")
+
+        if (typeof (val) == "undefined")
             return 0xffffff;
         var norm = $3Dmol.Gradient.normalizeValue(lo, hi, val);
         lo = norm.lo;
         hi = norm.hi;
         val = norm.val;
-        
-        var scale = (val-lo)/(hi-lo);
-        var h = (5*scale/6.0+0.5);
-        var r = Math.sin(Math.PI*h);
-        r *= r*255;
-        var g = Math.sin(Math.PI*(h+1/3.0));
-        g *= g*255;
-        var b = Math.sin(Math.PI*(h+2/3.0));
-        b *= b*255;
-        
-        return 0x10000*Math.floor(r)+0x100*Math.floor(b)+0x1*Math.floor(g);
-        
+
+        var scale = (val - lo) / (hi - lo);
+        var h = (5 * scale / 6.0 + 0.5);
+        var r = Math.sin(Math.PI * h);
+        r *= r * 255;
+        var g = Math.sin(Math.PI * (h + 1 / 3.0));
+        g *= g * 255;
+        var b = Math.sin(Math.PI * (h + 2 / 3.0));
+        b *= b * 255;
+
+        return 0x10000 * Math.floor(r) + 0x100 * Math.floor(b) + 0x1 * Math.floor(g);
+
     };
-    
+
 
     //return range used for color mapping, null if none set
     this.range = function() {
-        if(typeof(min) != "undefined" && typeof(max) != "undefined") {
-            return [min,max];
+        if (typeof (min) != "undefined" && typeof (max) != "undefined") {
+            return [min, max];
         }
         return null;
     };
@@ -40507,7 +40597,7 @@ $3Dmol.Parsers = (function() {
      */
     parsers.cube = parsers.CUBE = function(str /*, options*/) {
         var atoms = [[]];
-        var lines = str.replace(/^\s+/, "").split(/\n\r|\r+/);
+        var lines = str.replace(/^\s+/, "").split(/\n\r|\r+|\n/);
 
         if (lines.length < 6)
             return atoms;
@@ -42551,7 +42641,12 @@ $3Dmol.applyPartialCharges = function(atom, keepexisting) {
  * @typedef ViewerSpec
  * @prop {function} callback - Callback function to be immediately executed on this viewer
  * @prop {Object} defaultcolors - Object defining default atom colors as atom => color property value pairs for all models within this viewer
- * @prop {boolean} nomouse - Whether to disable disable handling of mouse events
+ * @prop {boolean} nomouse - Whether to disable disable handling of mouse events.  
+                If you want to use your own mouse handlers, set this then bind your handlers to the canvas object.  
+                The default 3Dmol.js handlers are available for use: 
+                'mousedown touchstart': viewer._handleMouseDown,
+                'DOMMouseScroll mousewheel': viewer._handleMouseScroll
+                'mousemove touchmove': viewer._handleMouseMove                
  * @prop {string} backgroundColor - Color of the canvas' background
  * @prop {number} camerax
  * @prop {number} hoverDuration
@@ -42743,6 +42838,9 @@ $3Dmol.applyPartialCharges = function(atom, keepexisting) {
  * @prop {number} smoothness - amount to smooth surface (default 1)
  * @prop {list} coords - coordinates around which to include data; use viewer.selectedAtoms() to convert an AtomSelectionSpec to coordinates
  * @prop {number} seldist - distance around coords to include data [default = 2.0]
+ * @prop {$3Dmol.VolumeData} voldata - volumetric data for vertex coloring, can be VolumeData object or raw data if volformat is specified
+ * @prop {$3Dmol.Gradient} volscheme - coloring scheme for mapping volumetric data to vertex color, if not a Gradient object, show describe a builtin gradient one by providing an object with gradient, min, max, and (optionally) mid fields.
+ * @prop {string} volformat - format of voldata if not a $3Dmol.VolumeData object 
  * @prop {boolean} clickable - if true, user can click on object to trigger callback
  * @prop {function} callback - function to call on click
  */

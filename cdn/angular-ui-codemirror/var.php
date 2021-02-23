@@ -1,5 +1,5 @@
 <?php 
-//$npm_check = "";
+$npm_check = "angular-ui-codemirror";
 $keyfiles_add = array("");
 $version_limit = "-10";
 $type_s = "jquery";

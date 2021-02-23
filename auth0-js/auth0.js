@@ -1,7 +1,7 @@
 /**
- * auth0-js v9.14.2
+ * auth0-js v9.14.3
  * Author: Auth0
- * Date: 2021-01-14
+ * Date: 2021-01-26
  * License: MIT
  */
 
@@ -3475,7 +3475,7 @@
 	  decode: decode$1
 	};
 
-	var version = { raw: '9.14.2' };
+	var version = { raw: '9.14.3' };
 
 	var toString = Object.prototype.toString;
 
@@ -4379,6 +4379,7 @@
 	  // auth0
 	  'realm',
 	  'audience',
+	  'otp',
 	  // oauth2
 	  'client_id',
 	  'client_secret',

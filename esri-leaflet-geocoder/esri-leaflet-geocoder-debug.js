@@ -1,5 +1,5 @@
-/* esri-leaflet-geocoder - v2.3.4 - Tue Dec 29 2020 16:04:32 GMT-0600 (Central Standard Time)
- * Copyright (c) 2020 Environmental Systems Research Institute, Inc.
+/* esri-leaflet-geocoder - v3.0.0 - Mon Jan 25 2021 16:30:01 GMT-0600 (Central Standard Time)
+ * Copyright (c) 2021 Environmental Systems Research Institute, Inc.
  * Apache-2.0 */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('leaflet'), require('esri-leaflet')) :
@@ -7,9 +7,9 @@
   (global = global || self, factory((global.L = global.L || {}, global.L.esri = global.L.esri || {}, global.L.esri.Geocoding = {}), global.L, global.L.esri));
 }(this, (function (exports, leaflet, esriLeaflet) { 'use strict';
 
-  var version = "2.3.4";
+  var version = "3.0.0";
 
-  var WorldGeocodingServiceUrl = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/';
+  var WorldGeocodingServiceUrl = 'https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/';
 
   var Geocode = esriLeaflet.Task.extend({
     path: 'findAddressCandidates',
@@ -207,6 +207,9 @@
   var GeocodeService = esriLeaflet.Service.extend({
     initialize: function (options) {
       options = options || {};
+      if (options.apikey) {
+        options.token = options.apikey;
+      }
       if (options.url) {
         esriLeaflet.Service.prototype.initialize.call(this, options);
         this._confirmSuggestSupport();
@@ -957,6 +960,9 @@
     },
 
     initialize: function (options) {
+      if (options.apikey) {
+        options.token = options.apikey;
+      }
       esriLeaflet.FeatureLayerService.prototype.initialize.call(this, options);
       if (typeof this.options.searchFields === 'string') {
         this.options.searchFields = [this.options.searchFields];
@@ -1096,6 +1102,9 @@
     },
 
     initialize: function (options) {
+      if (options.apikey) {
+        options.token = options.apikey;
+      }
       esriLeaflet.MapService.prototype.initialize.call(this, options);
       this._getIdFields();
     },

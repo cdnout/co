@@ -2,7 +2,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('chart.js')) :
   typeof define === 'function' && define.amd ? define(['exports', 'chart.js'], factory) :
   (global = global || self, factory(global.ChartBoxPlot = {}, global.Chart));
-}(this, function (exports, Chart) { 'use strict';
+}(this, (function (exports, Chart) { 'use strict';
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -38,13 +38,13 @@
       var source = arguments[i] != null ? arguments[i] : {};
 
       if (i % 2) {
-        ownKeys(source, true).forEach(function (key) {
+        ownKeys(Object(source), true).forEach(function (key) {
           _defineProperty(target, key, source[key]);
         });
       } else if (Object.getOwnPropertyDescriptors) {
         Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
       } else {
-        ownKeys(source).forEach(function (key) {
+        ownKeys(Object(source)).forEach(function (key) {
           Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
         });
       }
@@ -54,7 +54,7 @@
   }
 
   function _slicedToArray(arr, i) {
-    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
   }
 
   function _arrayWithHoles(arr) {
@@ -62,10 +62,7 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) {
-      return;
-    }
-
+    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
     var _arr = [];
     var _n = true;
     var _d = false;
@@ -91,8 +88,25 @@
     return _arr;
   }
 
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+
   function _nonIterableRest() {
-    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   // See <http://en.wikipedia.org/wiki/Kernel_(statistics)>.
@@ -527,7 +541,7 @@
     };
   }
 
-  var defaults = _objectSpread2({}, Chart.defaults.global.elements.rectangle, {
+  var defaults = _objectSpread2(_objectSpread2({}, Chart.defaults.global.elements.rectangle), {}, {
     borderWidth: 1,
     outlierRadius: 2,
     outlierColor: Chart.defaults.global.elements.rectangle.backgroundColor,
@@ -1249,7 +1263,7 @@
     Chart.defaults.global.datasets.horizontalBoxplot = _objectSpread2({}, Chart.defaults.global.datasets.horizontalBar);
   }
 
-  var boxplot = _objectSpread2({}, array, {
+  var boxplot = _objectSpread2(_objectSpread2({}, array), {}, {
     dataElementType: Chart.elements.BoxAndWhiskers,
     _elementOptions: function _elementOptions() {
       return this.chart.options.elements.boxandwhiskers;
@@ -1342,7 +1356,7 @@
     Chart.defaults.global.datasets.horizontalViolin = _objectSpread2({}, Chart.defaults.global.datasets.horizontalBar);
   }
 
-  var controller = _objectSpread2({}, array, {
+  var controller = _objectSpread2(_objectSpread2({}, array), {}, {
     dataElementType: Chart.elements.Violin,
     _elementOptions: function _elementOptions() {
       return this.chart.options.elements.violin;
@@ -1534,4 +1548,4 @@
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));

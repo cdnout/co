@@ -5,21 +5,21 @@
 }(this, (function (exports) { 'use strict';
 
 	// Set the escape character
-	var char = '&';
-	var doubleChar = char + char;
+	var escapeChar = '&';
+	var doubleEscapeChar = escapeChar + escapeChar;
 
 	// Initlize RegExp
-	var oct = new RegExp(("\\" + char + "[0-7]{1,3}"), 'g');
-	var ucp = new RegExp(("\\" + char + "u\\[.*?\\]"), 'g');
-	var uni = new RegExp(("\\" + char + "u.{0,4}"), 'g');
-	var hex = new RegExp(("\\" + char + "x.{0,2}"), 'g');
-	var esc = new RegExp(("\\" + char), 'g');
-	var b = new RegExp(("\\" + char + "b"), 'g');
-	var t = new RegExp(("\\" + char + "t"), 'g');
-	var n = new RegExp(("\\" + char + "n"), 'g');
-	var v = new RegExp(("\\" + char + "v"), 'g');
-	var f = new RegExp(("\\" + char + "f"), 'g');
-	var r = new RegExp(("\\" + char + "r"), 'g');
+	var oct = new RegExp(("\\" + escapeChar + "[0-7]{1,3}"), 'g');
+	var ucp = new RegExp(("\\" + escapeChar + "u\\[.*?\\]"), 'g');
+	var uni = new RegExp(("\\" + escapeChar + "u.{0,4}"), 'g');
+	var hex = new RegExp(("\\" + escapeChar + "x.{0,2}"), 'g');
+	var esc = new RegExp(("\\" + escapeChar), 'g');
+	var b = new RegExp(("\\" + escapeChar + "b"), 'g');
+	var t = new RegExp(("\\" + escapeChar + "t"), 'g');
+	var n = new RegExp(("\\" + escapeChar + "n"), 'g');
+	var v = new RegExp(("\\" + escapeChar + "v"), 'g');
+	var f = new RegExp(("\\" + escapeChar + "f"), 'g');
+	var r = new RegExp(("\\" + escapeChar + "r"), 'g');
 
 	// Escape octonary sequence
 	var O2C = function () {
@@ -56,7 +56,7 @@
 
 	var efEscape = function (string) {
 		// Split strings
-		var splitArr = string.split(doubleChar);
+		var splitArr = string.split(doubleEscapeChar);
 		var escaped = [];
 
 		// Escape all known escape characters
@@ -79,10 +79,10 @@
 			escaped.push(escapedStr);
 		}
 		// Return escaped string
-		return escaped.join(char)
+		return escaped.join(escapeChar)
 	};
 
-	var checkEscape = function (string) { return string[string.length - 1] === char; };
+	var checkEscape = function (string) { return string[string.length - 1] === escapeChar; };
 
 	var splitWith = function (string, char) {
 		var splitArr = string.split(char);
@@ -99,13 +99,13 @@
 	};
 
 	var splitBy = function (string, char) {
-		var splitArr = string.split(doubleChar);
+		var splitArr = string.split(doubleEscapeChar);
 		var escaped = splitWith(splitArr.shift(), char);
 		for (var i$1 = 0, list = splitArr; i$1 < list.length; i$1 += 1) {
 			var i = list[i$1];
 
 			var escapedSplit = splitWith(i, char);
-			escaped[escaped.length - 1] += "" + doubleChar + (escapedSplit.shift());
+			escaped[escaped.length - 1] += "" + doubleEscapeChar + (escapedSplit.shift());
 			escaped.push.apply(escaped, escapedSplit);
 		}
 		return escaped
@@ -243,22 +243,6 @@
 		return tagInfo
 	};
 
-	var parseNodeAttrs = function (string) {
-		var splitted = splitBy(string, '=');
-		return {
-			name: efEscape(splitted.shift().trim()),
-			value: splitLiterals(splitted.join('=').trim())
-		}
-	};
-
-	var parseNodeProps = function (string) {
-		var splitted = splitBy(string, '=');
-		return {
-			propPath: splitBy(splitted.shift().trim(), '.').map(efEscape),
-			value: splitLiterals(splitted.join('=').trim())
-		}
-	};
-
 	var parseEvent = function (string) {
 		var splitted = splitBy(string, '=');
 		return {
@@ -302,7 +286,7 @@
 				break
 			}
 			default: {
-				console.warn(("Abandoned unsupported eft event option '" + option + "'."));
+				console.warn(("Dropped unsupported eft event option '" + option + "'."));
 			}
 		}
 	};
@@ -337,6 +321,32 @@
 		var escapedName = efEscape(name.trim());
 		if (content) { return [escapedName, splitLiterals(content)] }
 		return [escapedName]
+	};
+
+	var parseNodeProps = function (string) {
+		var splitted = splitBy(string, '=');
+		var propDef = splitted.shift().trim();
+		var ref = splitBy(propDef, '@');
+		var propPathStrRaw = ref[0];
+		var syncTriggerStr = ref[1];
+		var ref$1 = splitBy(propPathStrRaw, '!');
+		var propPathStr = ref$1[0];
+		var updateOnly = ref$1[1];
+		var syncTrigger = syncTriggerStr && getEventOptions(syncTriggerStr);
+		return {
+			propPath: splitBy(propPathStr, '.').map(efEscape),
+			value: splitLiterals(splitted.join('=').trim()),
+			updateOnly: updateOnly,
+			syncTrigger: syncTrigger
+		}
+	};
+
+	var parseNodeAttrs = function (string) {
+		var splitted = splitBy(string, '=');
+		return {
+			name: efEscape(splitted.shift().trim()),
+			value: splitLiterals(splitted.join('=').trim())
+		}
 	};
 
 	var parseLine = function (ref) {
@@ -394,8 +404,20 @@
 					var ref$3 = parseNodeProps(content);
 					var propPath = ref$3.propPath;
 					var value$1 = ref$3.value;
+					var updateOnly = ref$3.updateOnly;
+					var syncTrigger = ref$3.syncTrigger;
+					var propInfo = [propPath, value$1];
+					if (syncTrigger) {
+						propInfo.push(syncTrigger);
+						if (updateOnly === '') {
+							propInfo.push(true);
+						}
+					} else if (updateOnly === '') {
+						propInfo.push(null);
+						propInfo.push(true);
+					}
 					if (!parsingInfo.currentNode[0].p) { parsingInfo.currentNode[0].p = []; }
-					parsingInfo.currentNode[0].p.push([propPath, value$1]);
+					parsingInfo.currentNode[0].p.push(propInfo);
 					parsingInfo.prevType = 'prop';
 					break
 				}
@@ -476,45 +498,8 @@
 		return parser(template)
 	};
 
-	var typeOf = function (obj) {
-		if (Array.isArray(obj)) { return 'array' }
-		return typeof obj
-	};
-
-	var mixStr = function (strs) {
-		var exprs = [], len = arguments.length - 1;
-		while ( len-- > 0 ) exprs[ len ] = arguments[ len + 1 ];
-
-		var string = '';
-		for (var i = 0; i < exprs.length; i++) {
-			if (typeof exprs[i] === 'undefined') { string += strs[i]; }
-			else { string += (strs[i] + exprs[i]); }
-		}
-		return string + strs[strs.length - 1]
-	};
-
-	var getVal = function (ref) {
-		var dataNode = ref.dataNode;
-		var _key = ref._key;
-
-		var data = dataNode[_key];
-		if (typeof data === 'undefined') { return '' }
-		return data
-	};
-
-	var mixVal = function (strs) {
-		var exprs = [], len = arguments.length - 1;
-		while ( len-- > 0 ) exprs[ len ] = arguments[ len + 1 ];
-
-		if (!strs) { return getVal(exprs[0]) }
-		var template = [strs];
-		template.push.apply(template, exprs.map(getVal));
-		return mixStr.apply(void 0, template)
-	};
-
-	var version = "0.12.5";
-
-	var proto = Array.prototype;
+	var SavedArray = Array;
+	var proto = SavedArray.prototype;
 
 	var ARR = {
 		copy: function copy(arr) {
@@ -525,7 +510,7 @@
 			return arr
 		},
 		equals: function equals(left, right) {
-			if (!Array.isArray(right)) { return false }
+			if (!SavedArray.isArray(right)) { return false }
 			if (left === right) { return true }
 			if (left.length !== right.length) { return false }
 			for (var i = 0, l = left.length; i < l; i++) {
@@ -580,11 +565,52 @@
 			while ( len-- > 0 ) items[ len ] = arguments[ len + 1 ];
 
 			return proto.unshift.apply(arr, items)
+		},
+		isArray: function isArray(arr) {
+			return SavedArray.isArray(arr)
 		}
 	};
 
-	if (typeof Set !== 'undefined' && Array.from) { ARR.unique = function (arr) { return Array.from(new Set(arr)); }; }
+	if (typeof Set !== 'undefined' && SavedArray.from) { ARR.unique = function (arr) { return SavedArray.from(new Set(arr)); }; }
 	else { ARR.unique = ARR.rightUnique; }
+
+	var typeOf = function (obj) {
+		if (ARR.isArray(obj)) { return 'array' }
+		return typeof obj
+	};
+
+	var mixStr = function (strs) {
+		var exprs = [], len = arguments.length - 1;
+		while ( len-- > 0 ) exprs[ len ] = arguments[ len + 1 ];
+
+		var string = '';
+		for (var i = 0; i < exprs.length; i++) {
+			if (typeof exprs[i] === 'undefined') { string += strs[i]; }
+			else { string += (strs[i] + exprs[i]); }
+		}
+		return string + strs[strs.length - 1]
+	};
+
+	var getVal = function (ref) {
+		var dataNode = ref.dataNode;
+		var _key = ref._key;
+
+		var data = dataNode[_key];
+		if (typeof data === 'undefined') { return '' }
+		return data
+	};
+
+	var mixVal = function (strs) {
+		var exprs = [], len = arguments.length - 1;
+		while ( len-- > 0 ) exprs[ len ] = arguments[ len + 1 ];
+
+		if (!strs) { return getVal(exprs[0]) }
+		var template = [strs];
+		template.push.apply(template, exprs.map(getVal));
+		return mixStr.apply(void 0, template)
+	};
+
+	var version = "0.13.4";
 
 	var modificationQueue = [];
 	var domQueue = [];
@@ -801,21 +827,24 @@
 		var ctx = ref.ctx;
 		var _key = ref._key;
 
-		var subscriberExecuting = false;
+		var updatingInProgress = false;
 		Object.defineProperty(parentNode, _key, {
 			get: function get() {
 				return dataNode[_key]
 			},
 			set: function set(value) {
-				if (subscriberExecuting) { return }
+				if (updatingInProgress) { return }
+				updatingInProgress = true;
 				// Comparing NaN is like eating a cake and suddenly encounter a grain of sand
-				if (dataNode[_key] === value || (isnan(dataNode[_key]) && isnan(value))) { return }
+				if (dataNode[_key] === value || (isnan(dataNode[_key]) && isnan(value))) {
+					updatingInProgress = false;
+					return
+				}
 				dataNode[_key] = value;
 				inform();
 				queue(handlerNode);
 				exec();
 				if (subscriberNode.length > 0) {
-					subscriberExecuting = true;
 					inform();
 					try {
 						for (var i = 0, list = subscriberNode; i < list.length; i += 1) {
@@ -827,8 +856,8 @@
 						dbg.error('Error caught when executing subscribers:\n', e);
 					}
 					exec();
-					subscriberExecuting = false;
 				}
+				updatingInProgress = false;
 			},
 			enumerable: true
 		});
@@ -888,7 +917,7 @@
 
 	{
 		if (isBrowser) { dbg.info('Running in browser mode.'); }
-		else { dbg.info('Running in non-browser mode, please be sure to set a DOM simulation using `setDOMImpl`.'); }
+		else { dbg.info('Running in non-browser mode, please be sure to set a DOM simulation using `setDOMImpl`. See https://github.com/TheNeuronProject/ef.js#server-side-rendering for detail.'); }
 	}
 
 	var shared = {};
@@ -950,7 +979,7 @@
 
 		var node = mountingPoint.node;
 		if (!node) { return }
-		if (Array.isArray(node)) {
+		if (ARR.isArray(node)) {
 			for (var i$1 = 0, list = node; i$1 < list.length; i$1 += 1) {
 				var i = list[i$1];
 
@@ -1007,7 +1036,7 @@
 		if (isInstance(node, EFFragment)) { return node.append.apply(node, nodes) }
 		// Handle EFComponent
 		if (node instanceof shared.EFBaseComponent) {
-			if (!(Array.isArray(node.children))) {
+			if (!(ARR.isArray(node.children))) {
 				{ dbg.warn(node, 'has no `children` list mount point! Child nodes are all ignored!'); }
 				return
 			}
@@ -1143,6 +1172,7 @@
 	};
 
 	var namespaces = {
+		xml: 'http://www.w3.org/XML/1998/namespace',
 		html: 'http://www.w3.org/1999/xhtml',
 		svg: 'http://www.w3.org/2000/svg',
 		math: 'http://www.w3.org/1998/Math/MathML',
@@ -1235,7 +1265,7 @@
 		var innerData = ref.innerData;
 		var handler = ref.handler;
 
-		if (Array.isArray(val)) {
+		if (ARR.isArray(val)) {
 			var strs = val[0];
 			var exprs = val.slice(1);
 			var tmpl = [strs];
@@ -1258,41 +1288,75 @@
 
 	var addValListener = function (ref) {
 		var ctx = ref.ctx;
+		var syncTrigger = ref.syncTrigger;
+		var updateLock = ref.updateLock;
 		var handlers = ref.handlers;
 		var subscribers = ref.subscribers;
 		var innerData = ref.innerData;
 		var element = ref.element;
+		var lastNode = ref.lastNode;
 		var key = ref.key;
 		var expr = ref.expr;
 		var custom = ref.custom;
 
 		var addListener = custom && '$on' || 'addEventListener';
-		var dispatch = custom && '$dispatch' || 'dispatchEvent';
 		var ref$1 = initBinding({bind: expr, ctx: ctx, handlers: handlers, subscribers: subscribers, innerData: innerData});
 		var parentNode = ref$1.parentNode;
 		var _key = ref$1._key;
+
 		var _update = function () {
+			updateLock.locked = true;
 			inform();
-			if (custom) { parentNode[_key] = element.$data.value; }
-			else { parentNode[_key] = element.value; }
+			if (custom) { parentNode[_key] = lastNode[key]; }
+			else { parentNode[_key] = lastNode[key]; }
 			exec();
 		};
-		if (key === 'value') {
+
+		if (syncTrigger) {
+
+			/*
+			 *  l: listener                 : string
+			 *  s: stopPropagation          : number/undefined
+			 *  i: stopImmediatePropagation : number/undefined
+			 *  p: preventDefault           : number/undefined
+			 *  h: shiftKey                 : number/undefined
+			 *  a: altKey                   : number/undefined
+			 *  c: ctrlKey                  : number/undefined
+			 *  t: metaKey                  : number/undefined
+			 *  u: capture                  : number/undefined
+			 *  k: keyCodes                 : array<number>/undefined
+			 */
+			var l = syncTrigger.l;
+			var s = syncTrigger.s;
+			var i = syncTrigger.i;
+			var p = syncTrigger.p;
+			var h = syncTrigger.h;
+			var a = syncTrigger.a;
+			var c = syncTrigger.c;
+			var t = syncTrigger.t;
+			var u = syncTrigger.u;
+			var k = syncTrigger.k;
+			element[addListener](l, function (e) {
+				if (!!h !== !!e.shiftKey ||
+					!!a !== !!e.altKey ||
+					!!c !== !!e.ctrlKey ||
+					!!t !== !!e.metaKey ||
+					(k && k.indexOf(e.which) === -1)) { return }
+				if (s) { e.stopPropagation(); }
+				if (i) { e.stopImmediatePropagation(); }
+				if (p) { e.preventDefault(); }
+				_update();
+			}, !!u);
+		} else if (key === 'value') {
 			// Listen to input, keyup and change events in order to work in most browsers.
 			element[addListener]('input', _update, true);
 			element[addListener]('keyup', _update, true);
 			element[addListener]('change', _update, true);
-			// // Remove keyup and change listener if browser supports input event correctly
-			// const removeListener = () => {
-			// 	element.removeEventListener('input', removeListener, true)
-			// 	element.removeEventListener('keyup', _update, true)
-			// 	element.removeEventListener('change', _update, true)
-			// }
-			// element[addListener]('input', removeListener, true)
 		} else {
+			var dispatch = custom && '$dispatch' || 'dispatchEvent';
 			element[addListener]('change', function () {
 				// Trigger change to the element it-self
-				element[dispatch](getEvent('ef-change-event'), {bubbles: true, canceoable: false});
+				element[dispatch](getEvent('--ef-change-event--'), {bubbles: true, canceoable: false});
 				if (element.tagName === 'INPUT' && element.type === 'radio' && element.name !== '') {
 					// Trigger change to the the same named radios
 					var radios = DOM.document.querySelectorAll(("input[name=" + (element.name) + "][type=radio]"));
@@ -1306,18 +1370,13 @@
 						for (var i$1 = 0, list = selected; i$1 < list.length; i$1 += 1) {
 							var i = list[i$1];
 
-							i.dispatchEvent(getEvent('ef-change-event'));
+							i.dispatchEvent(getEvent('--ef-change-event--'));
 						}
 					}
 				}
 			}, true);
 			// Use custom event to avoid loops and conflicts
-			element[addListener]('ef-change-event', function () {
-				inform();
-				if (custom) { parentNode[_key] = element.$data.checked; }
-				else { parentNode[_key] = element.checked; }
-				exec();
-			});
+			element[addListener]('--ef-change-event--', _update);
 		}
 	};
 
@@ -1375,7 +1434,7 @@
 				else { element[key] = attr; }
 				return
 			}
-			// Do not set or `is` again
+			// Do not set or update `is` again
 			if (key === 'is') { return }
 			// Handle namespaces
 			if (key.indexOf(':') > -1) {
@@ -1394,6 +1453,8 @@
 		var element = ref.element;
 		var propPath = ref.propPath;
 		var value = ref.value;
+		var syncTrigger = ref.syncTrigger;
+		var updateOnly = ref.updateOnly;
 		var ctx = ref.ctx;
 		var handlers = ref.handlers;
 		var subscribers = ref.subscribers;
@@ -1406,17 +1467,24 @@
 		var lastNode = resolvePath(keyPath, element);
 		if (typeValid(value)) { lastNode[lastKey] = value; }
 		else {
+			var updateLock = {locked: false};
 			var handler = function (val) {
-				lastNode[lastKey] = val;
+				if (!updateLock.locked && lastNode[lastKey] !== val) {
+					lastNode[lastKey] = val;
+				}
+				updateLock.locked = false;
 			};
+
+			if (updateOnly) { handler = function () {
+				updateLock.locked = false;
+			}; }
 			var _handler = regTmpl({val: value, ctx: ctx, handlers: handlers, subscribers: subscribers, innerData: innerData, handler: handler});
-			if (propPath.length === 1 && ((lastKey === 'value' ||
-				lastKey === 'checked')) &&
-				!value[0]) { addValListener({ctx: ctx, handlers: handlers, subscribers: subscribers, innerData: innerData, element: element, key: lastKey, expr: value[1], custom: custom}); }
+			if (syncTrigger ||
+				(propPath.length === 1 && (lastKey === 'value' || lastKey === 'checked')) &&
+				!value[0]) { addValListener({ctx: ctx, syncTrigger: syncTrigger, updateLock: updateLock, handlers: handlers, subscribers: subscribers, innerData: innerData, element: element, lastNode: lastNode, key: lastKey, expr: value[1], custom: custom}); }
 			queue([_handler]);
 		}
 	};
-
 
 	var rawHandler = function (val) { return val; };
 
@@ -1442,7 +1510,7 @@
 		 *  c: ctrlKey                  : number/undefined
 		 *  t: metaKey                  : number/undefined
 		 *  u: capture                  : number/undefined
-		 *  k: keyCodes                 : array/undefined
+		 *  k: keyCodes                 : array<number>/undefined
 		 *  v: value                    : string/array/undefined
 		 */
 		var l = event.l;
@@ -1506,8 +1574,10 @@
 				var ref$1 = list[i];
 				var propPath = ref$1[0];
 				var value = ref$1[1];
+				var syncTrigger = ref$1[2];
+				var updateOnly = ref$1[3];
 
-				addProp({element: element, custom: custom, value: value, propPath: propPath, ctx: ctx, handlers: handlers, subscribers: subscribers, innerData: innerData});
+				addProp({element: element, custom: custom, value: value, propPath: propPath, syncTrigger: syncTrigger, updateOnly: updateOnly, ctx: ctx, handlers: handlers, subscribers: subscribers, innerData: innerData});
 			} }
 		if (e) { for (var i$1 = 0, list$1 = e; i$1 < list$1.length; i$1 += 1) {
 				var event = list$1[i$1];
@@ -2293,7 +2363,7 @@
 			if (parent) {
 				if (key !== '__DIRECTMOUNT__') {
 					if (parent[key]) {
-						if (Array.isArray(parent[key])) {
+						if (ARR.isArray(parent[key])) {
 							// Remove self from parent list mounting point
 							ARR.remove(parent[key], this);
 						} else { parent[key] = nullComponent; }
@@ -2560,7 +2630,7 @@
 	shared.toEFComponent = toEFComponent;
 
 	var flatten = function (prev, item) {
-		if (Array.isArray(item)) { prev.push.apply(prev, item.map(toEFComponent)); }
+		if (ARR.isArray(item)) { prev.push.apply(prev, item.map(toEFComponent)); }
 		else { prev.push(toEFComponent(item)); }
 
 		return prev
@@ -2635,7 +2705,7 @@
 			return anonymous;
 		}(component)); };
 
-	var version$1 = "0.12.5";
+	var version$1 = "0.13.4";
 
 	// Import everything
 
@@ -2733,7 +2803,13 @@
 		return EFComponent
 	};
 
-	{ dbg.info(("ef-core v" + version$1 + " initialized!")); }
+	var coreVersion = version$1;
+
+	{
+		coreVersion = version$1 + "+debug";
+	}
+
+	{ dbg.info(("ef-core v" + coreVersion + " initialized!")); }
 
 	// Import everything
 
@@ -2790,7 +2866,13 @@
 		return create$2(mixStr.apply(void 0, args));
 	};
 
-	{ console.info(("[EF] ef.js v" + version + " initialized!")); }
+	exports.version = version;
+
+	{
+		exports.version = version + "+debug";
+	}
+
+	{ console.info(("[EF] ef.js v" + exports.version + " initialized!")); }
 
 	exports.EFNodeWrapper = EFNodeWrapper;
 	exports.EFTextFragment = EFTextFragment;
@@ -2810,7 +2892,6 @@
 	exports.setDOMImpl = setDOMImpl;
 	exports.setParser = setParser;
 	exports.t = t$1;
-	exports.version = version;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

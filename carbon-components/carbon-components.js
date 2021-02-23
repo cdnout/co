@@ -409,11 +409,11 @@ var CarbonComponents = (function (exports) {
 
       _createClass(CreateComponent, [{
         key: "release",
-
+        value:
         /**
          * Releases this component's instance from the associated element.
          */
-        value: function release() {
+        function release() {
           for (var child = this.children.pop(); child; child = this.children.pop()) {
             child.release();
           }
@@ -458,7 +458,7 @@ var CarbonComponents = (function (exports) {
 
       _createClass(InitComponentBySearch, null, [{
         key: "init",
-
+        value:
         /**
          * Instantiates component in the given node.
          * If the given element indicates that it's an component of this class, instantiates it.
@@ -467,7 +467,7 @@ var CarbonComponents = (function (exports) {
          * @param {object} [options] The component options.
          * @param {boolean} [options.selectorInit] The CSS selector to find components.
          */
-        value: function init() {
+        function init() {
           var _this = this;
 
           var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
@@ -530,13 +530,13 @@ var CarbonComponents = (function (exports) {
 
       _createClass(Handles, [{
         key: "manage",
-
+        value:
         /**
          * Manages the given handle.
          * @param {Handle} handle The handle to manage.
          * @returns {Handle} The given handle.
          */
-        value: function manage(handle) {
+        function manage(handle) {
           this.handles.add(handle);
           return handle;
         }
@@ -755,7 +755,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode Checkbox.create .create()}, or {@linkcode Checkbox.init .init()},
@@ -771,7 +771,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} attribContainedCheckboxState The attribute name for the checked state of contained checkbox.
        * @property {string} attribContainedCheckboxDisabled The attribute name for the disabled state of contained checkbox.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: ".".concat(prefix, "--checkbox"),
@@ -820,7 +820,7 @@ var CarbonComponents = (function (exports) {
 
       _createClass(EventedState, [{
         key: "_changeState",
-
+        value:
         /* eslint-disable jsdoc/check-param-names */
 
         /**
@@ -832,7 +832,7 @@ var CarbonComponents = (function (exports) {
          * @param {EventedState~changeStateCallback} callback The callback called once changing state is finished or is canceled.
          * @private
          */
-        value: function _changeState() {
+        function _changeState() {
           throw new Error('_changeState() should be overriden to perform actual change in state.');
         }
         /**
@@ -1376,7 +1376,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -1393,7 +1393,7 @@ var CarbonComponents = (function (exports) {
        *   Cancellation of this event stops selection of content switcher button.
        * @property {string} [eventAfterSelected] The name of the custom event fired after a switcher button is selected.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-content-switcher]',
@@ -1619,7 +1619,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode ContentSwitcher.create .create()}, or {@linkcode Tab.init .init()},
@@ -1641,7 +1641,7 @@ var CarbonComponents = (function (exports) {
        *   Cancellation of this event stops selection of tab.
        * @property {string} [eventAfterSelected] The name of the custom event fired after a tab is selected.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return Object.assign(Object.create(ContentSwitcher.options), {
           selectorInit: '[data-tabs]',
@@ -1734,7 +1734,7 @@ var CarbonComponents = (function (exports) {
 
       _createClass(EventedShowHideState, [{
         key: "show",
-
+        value:
         /**
          */
 
@@ -1743,7 +1743,7 @@ var CarbonComponents = (function (exports) {
          * @param [evtOrElem] The launching event or element.
          * @param {EventedState~changeStateCallback} [callback] The callback.
          */
-        value: function show(evtOrElem, callback) {
+        function show(evtOrElem, callback) {
           if (!evtOrElem || typeof evtOrElem === 'function') {
             callback = evtOrElem; // eslint-disable-line no-param-reassign
           }
@@ -2517,13 +2517,13 @@ var CarbonComponents = (function (exports) {
 
     }, {
       key: "_handleKeyPress",
-
+      value:
       /**
        * Handles key press on document.
        * @param {Event} event The triggering event.
        * @private
        */
-      value: function _handleKeyPress(event) {
+      function _handleKeyPress(event) {
         var _this3 = this;
 
         var key = event.which;
@@ -2628,7 +2628,7 @@ var CarbonComponents = (function (exports) {
 
       _createClass(InitComponentByLauncher, null, [{
         key: "init",
-
+        value:
         /**
          * `true` suggests that this component is lazily initialized upon an action/event, etc.
          * @type {boolean}
@@ -2645,7 +2645,7 @@ var CarbonComponents = (function (exports) {
          * @param {string} [options.attribInitTarget] The attribute name in the launcher buttons to find target component.
          * @returns {Handle} The handle to remove the event listener to handle clicking.
          */
-        value: function init() {
+        function init() {
           var _this = this;
 
           var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
@@ -2772,12 +2772,12 @@ var CarbonComponents = (function (exports) {
 
     _createClass(Modal, [{
       key: "createdByLauncher",
-
+      value:
       /**
        * A method that runs when `.init()` is called from `initComponentByLauncher`.
        * @param {Event} evt The event fired on the launcher button.
        */
-      value: function createdByLauncher(evt) {
+      function createdByLauncher(evt) {
         this.show(evt);
       }
       /**
@@ -2888,7 +2888,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode Modal.create .create()}, or {@linkcode Modal.init .init()},
@@ -2921,7 +2921,7 @@ var CarbonComponents = (function (exports) {
        *   The name of the custom event telling that modal is sure hidden
        *   without being canceled by the event handler named by `eventBeforeHidden` option (`modal-beinghidden`).
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-modal]',
@@ -3061,7 +3061,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode Loading.create .create()}, or {@linkcode Loading.init .init()},
@@ -3070,7 +3070,7 @@ var CarbonComponents = (function (exports) {
        * @type {object}
        * @property {string} selectorInit The CSS selector to find spinners.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-loading]',
@@ -3207,7 +3207,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode InlineLoading.create .create()},
@@ -3224,7 +3224,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} selectorTextError The CSS selector to find the text describing the error state.
        * @property {string} classLoadingStop The CSS class for spinner's stopped state.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-inline-loading]',
@@ -3624,7 +3624,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode Dropdown.create .create()}, or {@linkcode Dropdown.init .init()},
@@ -3655,7 +3655,7 @@ var CarbonComponents = (function (exports) {
        *   Cancellation of this event stops selection of drop down item.
        * @property {string} [eventAfterSelected] The name of the custom event fired after a drop down item is selected.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-dropdown]',
@@ -3792,7 +3792,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -3803,7 +3803,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} selectorInit The CSS selector to find number input UIs.
        * @property {string} [selectorInput] The CSS selector to find the `<input>` element.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-numberinput]',
@@ -4214,21 +4214,16 @@ var CarbonComponents = (function (exports) {
     'action-bar-cancel': '_actionBarCancel'
   });
 
-  /**
-   * Copyright IBM Corp. 2016, 2018
-   *
-   * This source code is licensed under the Apache-2.0 license found in the
-   * LICENSE file in the root directory of this source tree.
-   */
-
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-  function createCommonjsModule(fn, module) {
-  	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  function createCommonjsModule(fn) {
+    var module = { exports: {} };
+  	return fn(module, module.exports), module.exports;
   }
 
-  var flatpickr = createCommonjsModule(function (module, exports) {
   /* flatpickr v4.6.1, @license MIT */
+
+  var flatpickr = createCommonjsModule(function (module, exports) {
   (function (global, factory) {
        module.exports = factory() ;
   }(commonjsGlobal, function () {
@@ -7743,7 +7738,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode CopyBtn.create .create()}, or {@linkcode CopyBtn.init .init()},
@@ -7755,7 +7750,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} classShowFeedback The CSS selector for showing the feedback tooltip.
        * @property {number} timeoutValue The specified timeout value before the feedback tooltip is hidden.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-copy-btn]',
@@ -7965,7 +7960,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -7976,7 +7971,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} classTallRows The CSS class for making table rows into tall rows.
        * @property {string} classSearchActive The CSS class the active state of the search input.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-toolbar]',
@@ -8013,7 +8008,7 @@ var CarbonComponents = (function (exports) {
 
       _createClass(InitComponentByEvent, null, [{
         key: "init",
-
+        value:
         /**
          * `true` suggests that this component is lazily initialized upon an action/event, etc.
          * @type {boolean}
@@ -8028,7 +8023,7 @@ var CarbonComponents = (function (exports) {
          * @param {string} [options.selectorInit] The CSS selector to find this component.
          * @returns {Handle} The handle to remove the event listener to handle clicking.
          */
-        value: function init() {
+        function init() {
           var _this = this;
 
           var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document;
@@ -8160,12 +8155,12 @@ var CarbonComponents = (function (exports) {
 
     _createClass(Tooltip, [{
       key: "createdByEvent",
-
+      value:
       /**
        * A method called when this widget is created upon events.
        * @param {Event} event The event triggering the creation.
        */
-      value: function createdByEvent(event) {
+      function createdByEvent(event) {
         var relatedTarget = event.relatedTarget,
             type = event.type,
             which = event.which;
@@ -8784,7 +8779,7 @@ var CarbonComponents = (function (exports) {
 
     _createClass(TooltipSimple, null, [{
       key: "options",
-
+      get:
       /**
        * The component options.
        *
@@ -8795,7 +8790,7 @@ var CarbonComponents = (function (exports) {
        * created and how {@linkcode TooltipSimple.init .init()} works.
        * @property {string} selectorInit The CSS selector to find simple tooltip UIs.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-tooltip-definition],[data-tooltip-icon]',
@@ -9019,7 +9014,7 @@ var CarbonComponents = (function (exports) {
       }
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -9037,7 +9032,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} [classCurrent] The className for the current step element.
        * @property {string} [classIncomplete] The className for a incomplete step element.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-progress]',
@@ -9469,14 +9464,14 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
        * properties in this object are overriden for the instance being created.
        * @property {string} selectorInit The CSS selector to find slider instances.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-slider]',
@@ -9605,14 +9600,14 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
        * properties in this object are overriden for the instance being created.
        * @property {string} selectorInit The CSS selector to find Tile instances.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-tile]',
@@ -9695,7 +9690,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode CodeSnippet.create .create()},
@@ -9705,7 +9700,7 @@ var CarbonComponents = (function (exports) {
        * @type {object}
        * @property {string} selectorInit The data attribute to find code snippet UIs.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-code-snippet]',
@@ -9812,7 +9807,7 @@ var CarbonComponents = (function (exports) {
 
     _createClass(TextInput, null, [{
       key: "options",
-
+      get:
       /**
        * The component options.
        *
@@ -9823,7 +9818,7 @@ var CarbonComponents = (function (exports) {
        * created and how {@linkcode TextInput.init .init()} works.
        * @property {string} selectorInit The CSS selector to find text input UIs.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-text-input]',
@@ -9941,11 +9936,11 @@ var CarbonComponents = (function (exports) {
 
     _createClass(SideNav, [{
       key: "isNavExpanded",
-
+      value:
       /**
        * @returns {boolean} `true` if the nav is expanded.
        */
-      value: function isNavExpanded() {
+      function isNavExpanded() {
         return this.element.classList.contains(this.options.classSideNavExpanded);
       }
       /**
@@ -10272,7 +10267,7 @@ var CarbonComponents = (function (exports) {
 
     _createClass(HeaderSubmenu, null, [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -10287,7 +10282,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} [selectorItem] The CSS selector to find the menu items.
        * @property {string} [attribExpanded] The attribute that represents the expanded/collapsed state.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-header-submenu]',
@@ -10412,7 +10407,7 @@ var CarbonComponents = (function (exports) {
 
     _createClass(HeaderNav, null, [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -10427,7 +10422,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} [selectorSubmenuLink] The CSS selector to find the trigger buttons of sub menus.
        * @property {string} [selectorSubmenuItem] The CSS selector to find the sub menu items.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-header-nav]',
@@ -10519,7 +10514,7 @@ var CarbonComponents = (function (exports) {
 
     _createClass(NavigationMenuPanel, null, [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -10533,7 +10528,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} attribInitTarget The attribute name in the launcher buttons to find target popup nav.
        * @property {string[]} initEventNames The events that the component will handles
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           initEventNames: ['click'],
@@ -10746,7 +10741,7 @@ var CarbonComponents = (function (exports) {
 
     _createClass(NavigationMenu, null, [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -10762,7 +10757,7 @@ var CarbonComponents = (function (exports) {
        * @property {string[]} initEventNames The events that the component
        * will handles
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return Object.assign(Object.create(NavigationMenuPanel.options), {
           selectorInit: '[data-navigation-menu]',
@@ -11003,7 +10998,7 @@ var CarbonComponents = (function (exports) {
 
     }], [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor,
@@ -11019,7 +11014,7 @@ var CarbonComponents = (function (exports) {
        * @property {string[]} initEventNames The events that the component
        * will handles
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return Object.assign(Object.create(NavigationMenuPanel.options), {
           selectorInit: '[data-product-switcher]',
@@ -11199,7 +11194,7 @@ var CarbonComponents = (function (exports) {
 
     _createClass(PaginationNav, null, [{
       key: "options",
-
+      get:
       /**
        * The component options.
        * If `options` is specified in the constructor, {@linkcode PaginationNav.create .create()},
@@ -11216,7 +11211,7 @@ var CarbonComponents = (function (exports) {
        * @property {string} [classActive] The CSS class for page's selected state.
        * @property {string} [classDisabled] The CSS class for page's disabled state.
        */
-      get: function get() {
+      function get() {
         var prefix = settings_1.prefix;
         return {
           selectorInit: '[data-pagination-nav]',
@@ -11310,7 +11305,7 @@ var CarbonComponents = (function (exports) {
 
     if (!settings_1.disableAutoInit) {
       componentClasses.forEach(function (Clz) {
-        var h = Clz.init();
+        Clz.init();
       });
     }
   };
@@ -11447,6 +11442,8 @@ var CarbonComponents = (function (exports) {
   exports.TooltipSimple = TooltipSimple;
   exports.settings = settings_1;
   exports.watch = watch;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
   return exports;
 

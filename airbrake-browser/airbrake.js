@@ -1,4 +1,4 @@
-/* airbrake-js v1.4.2 */
+/* airbrake-js v2.1.3 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -29,6 +29,8 @@
     };
 
     function __extends(d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -774,8 +776,9 @@
         var numericProps = ['columnNumber', 'lineNumber'];
         var stringProps = ['fileName', 'functionName', 'source'];
         var arrayProps = ['args'];
+        var objectProps = ['evalOrigin'];
 
-        var props = booleanProps.concat(numericProps, stringProps, arrayProps);
+        var props = booleanProps.concat(numericProps, stringProps, arrayProps, objectProps);
 
         function StackFrame(obj) {
             if (!obj) return;
@@ -1231,7 +1234,7 @@
     })(typeof self !== 'undefined' ? self : commonjsGlobal);
     (function(self) {
 
-    var irrelevant = (function (exports) {
+    ((function (exports) {
 
       var support = {
         searchParams: 'URLSearchParams' in self,
@@ -1757,7 +1760,7 @@
 
       return exports;
 
-    }({}));
+    })({}));
     })(__self__);
     delete __self__.fetch.polyfill;
     exports = __self__.fetch; // To enable: import fetch from 'cross-fetch'
@@ -1783,6 +1786,7 @@
         var opt = {
             method: req.method,
             body: req.body,
+            headers: req.headers,
         };
         return browserPonyfill(req.url, opt).then(function (resp) {
             if (resp.status === 401) {
@@ -2041,6 +2045,12 @@
             if (!hasTdigest) {
                 return;
             }
+            if (!this._opt.performanceStats) {
+                return;
+            }
+            if (!this._opt.queryStats) {
+                return;
+            }
             var ms = q._duration();
             var minute = 60 * 1000;
             var startTime = new Date(Math.floor(q.startTime.getTime() / minute) * minute);
@@ -2122,6 +2132,12 @@
         QueuesStats.prototype.notify = function (q) {
             var _this = this;
             if (!hasTdigest) {
+                return;
+            }
+            if (!this._opt.performanceStats) {
+                return;
+            }
+            if (!this._opt.queueStats) {
                 return;
             }
             var ms = q._duration();
@@ -2212,6 +2228,9 @@
             if (!hasTdigest) {
                 return;
             }
+            if (!this._opt.performanceStats) {
+                return;
+            }
             var ms = req._duration();
             var minute = 60 * 1000;
             var startTime = new Date(Math.floor(req.startTime.getTime() / minute) * minute);
@@ -2278,6 +2297,9 @@
         RoutesBreakdowns.prototype.notify = function (req) {
             var _this = this;
             if (!hasTdigest) {
+                return;
+            }
+            if (!this._opt.performanceStats) {
                 return;
             }
             if (req.statusCode < 200 ||
@@ -2359,8 +2381,160 @@
     }());
 
     var NOTIFIER_NAME = 'airbrake-js/browser';
-    var NOTIFIER_VERSION = '1.4.2';
+    var NOTIFIER_VERSION = '2.1.3';
     var NOTIFIER_URL = 'https://github.com/airbrake/airbrake-js/tree/master/packages/browser';
+
+    // API version to poll.
+    var API_VER = '2020-06-18';
+    // How frequently we should poll the config API.
+    var DEFAULT_INTERVAL = 600000; // 10 minutes
+    var NOTIFIER_INFO = {
+        notifier_name: NOTIFIER_NAME,
+        notifier_version: NOTIFIER_VERSION,
+        os: typeof window !== 'undefined' &&
+            window.navigator &&
+            window.navigator.userAgent
+            ? window.navigator.userAgent
+            : undefined,
+        language: 'JavaScript',
+    };
+    // Remote config settings.
+    var ERROR_SETTING = 'errors';
+    var APM_SETTING = 'apm';
+    var RemoteSettings = /** @class */ (function () {
+        function RemoteSettings(opt) {
+            this._opt = opt;
+            this._requester = makeRequester$1(opt);
+            this._data = new SettingsData(opt.projectId, {
+                project_id: null,
+                poll_sec: 0,
+                updated_at: 0,
+                config_route: '',
+                settings: [],
+            });
+            this._origErrorNotifications = opt.errorNotifications;
+            this._origPerformanceStats = opt.performanceStats;
+        }
+        RemoteSettings.prototype.poll = function () {
+            var _this = this;
+            // First request is immediate. When it's done, we cancel it since we want to
+            // change interval time to the default value.
+            var pollerId = setInterval(function () {
+                _this._doRequest();
+                clearInterval(pollerId);
+            }, 0);
+            // Second fetch is what always runs in background.
+            return setInterval(this._doRequest.bind(this), DEFAULT_INTERVAL);
+        };
+        RemoteSettings.prototype._doRequest = function () {
+            var _this = this;
+            this._requester(this._requestParams(this._opt))
+                .then(function (resp) {
+                _this._data.merge(resp.json);
+                _this._opt.host = _this._data.errorHost();
+                _this._opt.apmHost = _this._data.apmHost();
+                _this._processErrorNotifications(_this._data);
+                _this._processPerformanceStats(_this._data);
+            })
+                .catch(function (_) {
+                return;
+            });
+        };
+        RemoteSettings.prototype._requestParams = function (opt) {
+            return {
+                method: 'GET',
+                url: this._pollUrl(opt),
+                headers: {
+                    Accept: 'application/json',
+                    'Cache-Control': 'no-cache,no-store',
+                },
+            };
+        };
+        RemoteSettings.prototype._pollUrl = function (opt) {
+            var url = new URL(this._data.configRoute(opt.remoteConfigHost));
+            for (var _i = 0, _a = Object.entries(NOTIFIER_INFO); _i < _a.length; _i++) {
+                var _b = _a[_i], key = _b[0], value = _b[1];
+                url.searchParams.append(key, value);
+            }
+            return url.toString();
+        };
+        RemoteSettings.prototype._processErrorNotifications = function (data) {
+            if (!this._origErrorNotifications) {
+                return;
+            }
+            this._opt.errorNotifications = data.errorNotifications();
+        };
+        RemoteSettings.prototype._processPerformanceStats = function (data) {
+            if (!this._origPerformanceStats) {
+                return;
+            }
+            this._opt.performanceStats = data.performanceStats();
+        };
+        return RemoteSettings;
+    }());
+    var SettingsData = /** @class */ (function () {
+        function SettingsData(projectId, data) {
+            this._projectId = projectId;
+            this._data = data;
+        }
+        SettingsData.prototype.merge = function (other) {
+            this._data = __assign(__assign({}, this._data), other);
+        };
+        SettingsData.prototype.configRoute = function (remoteConfigHost) {
+            var host = remoteConfigHost.replace(/\/$/, '');
+            var configRoute = this._data.config_route;
+            if (configRoute === null ||
+                configRoute === undefined ||
+                configRoute === '') {
+                return host + "/" + API_VER + "/config/" + this._projectId + "/config.json";
+            }
+            else {
+                return host + "/" + configRoute;
+            }
+        };
+        SettingsData.prototype.errorNotifications = function () {
+            var s = this._findSetting(ERROR_SETTING);
+            if (s === null) {
+                return true;
+            }
+            return s.enabled;
+        };
+        SettingsData.prototype.performanceStats = function () {
+            var s = this._findSetting(APM_SETTING);
+            if (s === null) {
+                return true;
+            }
+            return s.enabled;
+        };
+        SettingsData.prototype.errorHost = function () {
+            var s = this._findSetting(ERROR_SETTING);
+            if (s === null) {
+                return null;
+            }
+            return s.endpoint;
+        };
+        SettingsData.prototype.apmHost = function () {
+            var s = this._findSetting(APM_SETTING);
+            if (s === null) {
+                return null;
+            }
+            return s.endpoint;
+        };
+        SettingsData.prototype._findSetting = function (name) {
+            var settings = this._data.settings;
+            if (settings === null || settings === undefined) {
+                return null;
+            }
+            var setting = settings.find(function (s) {
+                return s.name === name;
+            });
+            if (setting === undefined) {
+                return null;
+            }
+            return setting;
+        };
+        return SettingsData;
+    }());
 
     var BaseNotifier = /** @class */ (function () {
         function BaseNotifier(opt) {
@@ -2374,10 +2548,17 @@
             }
             this._opt = opt;
             this._opt.host = this._opt.host || 'https://api.airbrake.io';
+            this._opt.remoteConfigHost =
+                this._opt.remoteConfigHost || 'https://notifier-configs.airbrake.io';
+            this._opt.apmHost = this._opt.apmHost || 'https://api.airbrake.io';
             this._opt.timeout = this._opt.timeout || 10000;
-            this._opt.keysBlocklist = this._opt.keysBlocklist ||
-                this._opt.keysBlacklist || [/password/, /secret/];
+            this._opt.keysBlocklist = this._opt.keysBlocklist || [/password/, /secret/];
             this._url = this._opt.host + "/api/v3/projects/" + this._opt.projectId + "/notices?key=" + this._opt.projectKey;
+            this._opt.errorNotifications = this._opt.errorNotifications !== false;
+            this._opt.performanceStats = this._opt.performanceStats !== false;
+            this._opt.queryStats = this._opt.queryStats !== false;
+            this._opt.queueStats = this._opt.queueStats !== false;
+            this._opt.remoteConfig = this._opt.remoteConfig !== false;
             this._processor = this._opt.processor || espProcessor;
             this._requester = makeRequester$1(this._opt);
             this.addFilter(ignoreNoiseFilter);
@@ -2398,6 +2579,10 @@
             this.routes = new Routes(this);
             this.queues = new Queues(this);
             this.queries = new QueriesStats(this._opt);
+            if (this._opt.remoteConfig) {
+                var pollerId_1 = new RemoteSettings(this._opt).poll();
+                this._onClose.push(function () { return clearInterval(pollerId_1); });
+            }
         }
         BaseNotifier.prototype.close = function () {
             for (var _i = 0, _a = this._onClose; _i < _a.length; _i++) {
@@ -2427,6 +2612,10 @@
             };
             if (typeof err !== 'object' || err.error === undefined) {
                 err = { error: err };
+            }
+            if (!this._opt.errorNotifications) {
+                notice.error = new Error("airbrake: not sending this error, errorNotifications is disabled err=" + JSON.stringify(err.error));
+                return Promise$1.resolve(notice);
             }
             if (!err.error) {
                 notice.error = new Error("airbrake: got err=" + JSON.stringify(err.error) + ", wanted an Error");
@@ -2492,7 +2681,7 @@
                 }
                 catch (err) {
                     client.notify({ error: err, params: { arguments: fnArgs } });
-                    this._ignoreNextWindowError();
+                    client._ignoreNextWindowError();
                     throw err;
                 }
             };
@@ -2536,6 +2725,7 @@
             this._notifier = notifier;
             this._routes = new RoutesStats(notifier._opt);
             this._breakdowns = new RoutesBreakdowns(notifier._opt);
+            this._opt = notifier._opt;
         }
         Routes.prototype.start = function (method, route, statusCode, contentType) {
             if (method === void 0) { method = ''; }
@@ -2543,6 +2733,9 @@
             if (statusCode === void 0) { statusCode = 0; }
             if (contentType === void 0) { contentType = ''; }
             var metric = new RouteMetric(method, route, statusCode, contentType);
+            if (!this._opt.performanceStats) {
+                return metric;
+            }
             var scope = this._notifier.scope().clone();
             scope.setContext({ httpMethod: method, route: route });
             scope.setRouteMetric(metric);
@@ -2550,6 +2743,9 @@
             return metric;
         };
         Routes.prototype.notify = function (req) {
+            if (!this._opt.performanceStats) {
+                return;
+            }
             req.end();
             for (var _i = 0, _a = this._notifier._performanceFilters; _i < _a.length; _i++) {
                 var performanceFilter = _a[_i];
@@ -2566,9 +2762,13 @@
         function Queues(notifier) {
             this._notifier = notifier;
             this._queues = new QueuesStats(notifier._opt);
+            this._opt = notifier._opt;
         }
         Queues.prototype.start = function (queue) {
             var metric = new QueueMetric(queue);
+            if (!this._opt.performanceStats) {
+                return metric;
+            }
             var scope = this._notifier.scope().clone();
             scope.setContext({ queue: queue });
             scope.setQueueMetric(metric);
@@ -2576,6 +2776,9 @@
             return metric;
         };
         Queues.prototype.notify = function (q) {
+            if (!this._opt.performanceStats) {
+                return;
+            }
             q.end();
             this._queues.notify(q);
         };
@@ -2871,10 +3074,6 @@
                     window.removeEventListener('offline', _this.onOffline);
                     window.removeEventListener('unhandledrejection', _this.onUnhandledrejection);
                 });
-            }
-            // TODO: deprecated
-            if (_this._opt.ignoreWindowError) {
-                opt.instrumentation.onerror = false;
             }
             _this._instrument(opt.instrumentation);
             return _this;

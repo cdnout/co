@@ -5,7 +5,7 @@
  * billboard.js, JavaScript chart library
  * https://naver.github.io/billboard.js/
  * 
- * @version 2.1.4
+ * @version 2.2.3
 */
 import { timeParse, utcParse, timeFormat, utcFormat } from 'd3-time-format';
 import { event, select, mouse, namespaces, selectAll } from 'd3-selection';
@@ -288,6 +288,7 @@ var State = /** @class */ (function () {
             mouseover: false,
             rendered: false,
             transiting: false,
+            redrawing: false,
             resizing: false,
             toggling: false,
             zooming: false,
@@ -302,6 +303,7 @@ var State = /** @class */ (function () {
             // value for Arc
             radius: 0,
             innerRadius: 0,
+            outerRadius: undefined,
             innerRadiusRatio: 0,
             gaugeArcWidth: 0,
             radiusExpanded: 0,
@@ -367,6 +369,8 @@ var _assign = function __assign() {
     return t;
   }, _assign.apply(this, arguments);
 };
+/** @deprecated */
+
 function __spreadArrays() {
   for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
 
@@ -890,6 +894,8 @@ var data = {
      *  - `asc`: In ascending order
      *  - `null`: It keeps the data load order
      *  - `function(data1, data2) { ... }`: Array.sort compareFunction
+     *
+     *  **NOTE**: order function, only works for Axis based types & Arc types, except `Radar` type.
      * @name data․order
      * @memberof Options
      * @type {string|Function|null}
@@ -909,12 +915,22 @@ var data = {
      *   // specifying sort function
      *   order: function(a, b) {
      *       // param data passed format
-     *       {
-     *          id: "data1", id_org: "data1", values: [
-     *              {x: 5, value: 250, id: "data1", index: 5, name: "data1"},
-     *              ...
-     *          ]
-     *       }
+     *       // {
+     *       //   id: "data1", id_org: "data1", values: [
+     *       //      {x: 5, value: 250, id: "data1", index: 5, name: "data1"},
+     *       //       ...
+     *       //   ]
+     *       // }
+     *
+     *       const reducer = (p, c) => p + Math.abs(c.value);
+     *       const aSum = a.values.reduce(reducer, 0);
+     *       const bSum = b.values.reduce(reducer, 0);
+     *
+     *       // ascending order
+     *       return aSum - bSum;
+     *
+     *       // descending order
+     *       // return bSum - aSum;
      *   }
      * }
      */
@@ -975,13 +991,14 @@ var data = {
      * @property {boolean} [data.labels=false] Show or hide labels on each data points
      * @property {boolean} [data.labels.centered=false] Centerize labels on `bar` shape. (**NOTE:** works only for 'bar' type)
      * @property {Function} [data.labels.format] Set formatter function for data labels.<br>
-     * The formatter function receives 4 arguments such as v, id, i, j and it must return a string that will be shown as the label. The arguments are:<br>
+     * The formatter function receives 4 arguments such as v, id, i, j and it **must return a string**(`\n` character will be used as line break) that will be shown as the label.<br><br>
+     * The arguments are:<br>
      *  - `v` is the value of the data point where the label is shown.
      *  - `id` is the id of the data where the label is shown.
      *  - `i` is the index of the data point where the label is shown.
      *  - `j` is the sub index of the data point where the label is shown.<br><br>
      * Formatter function can be defined for each data by specifying as an object and D3 formatter function can be set (ex. d3.format('$'))
-     * @property {string|object} [data.labels.colors] Set label text colors.
+     * @property {string|object|Function} [data.labels.colors] Set label text colors.
      * @property {object} [data.labels.position] Set each dataset position, relative the original.
      * @property {number} [data.labels.position.x=0] x coordinate position, relative the original.
      * @property {number} [data.labels.position.y=0] y coordinate position, relative the original.
@@ -991,6 +1008,7 @@ var data = {
      * @see [Demo](https://naver.github.io/billboard.js/demo/#Data.DataLabel)
      * @see [Demo: label colors](https://naver.github.io/billboard.js/demo/#Data.DataLabelColors)
      * @see [Demo: label format](https://naver.github.io/billboard.js/demo/#Data.DataLabelFormat)
+     * @see [Demo: label multiline](https://naver.github.io/billboard.js/demo/#Data.DataLabelMultiline)
      * @see [Demo: label overlap](https://naver.github.io/billboard.js/demo/#Data.DataLabelOverlap)
      * @see [Demo: label position](https://naver.github.io/billboard.js/demo/#Data.DataLabelPosition)
      * @example
@@ -999,7 +1017,11 @@ var data = {
      *
      *   // or set specific options
      *   labels: {
-     *     format: function(v, id, i, j) { ... },
+     *     format: function(v, id, i, j) {
+     *         ...
+     *         // to multiline, return with '\n' character
+     *         return "Line1\nLine2";
+     *     },
      *
      *     // it's possible to set for each data
      *     format: {
@@ -1013,11 +1035,19 @@ var data = {
      *     // apply for all label texts
      *     colors: "red",
      *
-     *     // or set different colors per dataset
+     *     // set different colors per dataset
      *     // for not specified dataset, will have the default color value
      *     colors: {
      *        data1: "yellow",
      *        data3: "green"
+     *     },
+     *
+     *     // call back for label text color
+     *     colors: function(color, d) {
+     *         // color: the default data label color string
+     *         // data: ex) {x: 0, value: 200, id: "data3", index: 0}
+     *         ....
+     *         return d.value > 200 ? "cyan" : color;
      *     },
      *
      *     // set x, y coordinate position
@@ -1719,7 +1749,7 @@ var tooltip = {
      *    - 'key' name is used as substitution within template as '{=KEY}'
      *    - The value array length should match with the data length
      * @property {boolean} [tooltip.init.show=false] Show tooltip at the initialization.
-     * @property {number} [tooltip.init.x=0] Set x Axis index to be shown at the initialization.
+     * @property {number} [tooltip.init.x=0] Set x Axis index(or index for Arc(donut, gauge, pie) types) to be shown at the initialization.
      * @property {object} [tooltip.init.position={top: "0px",left: "50px"}] Set the position of tooltip at the initialization.
      * @property {Function} [tooltip.onshow] Set a callback that will be invoked before the tooltip is shown.
      * @property {Function} [tooltip.onhide] Set a callback that will be invoked before the tooltip is hidden.
@@ -1803,7 +1833,7 @@ var tooltip = {
      *      // show at the initialization
      *      init: {
      *          show: true,
-     *          x: 2,
+     *          x: 2, // x Axis index(or index for Arc(donut, gauge, pie) types)
      *          position: {
      *              top: "150px",
      *              left: "250px"
@@ -1876,8 +1906,10 @@ var tooltip = {
  * billboard.js project is licensed under the MIT license
  */
 var win = (function () {
-    var def = function (o) { return typeof o !== "undefined" && o; };
-    return def(self) || def(window) || def(global) || def(globalThis) || Function("return this")();
+    var root = (typeof globalThis === "object" && globalThis !== null && globalThis.Object === Object && globalThis) ||
+        (typeof global === "object" && global !== null && global.Object === Object && global) ||
+        (typeof self === "object" && self !== null && self.Object === Object && self);
+    return root || Function("return this")();
 })();
 /* eslint-enable no-new-func, no-undef */
 var doc = win && win.document;
@@ -3397,22 +3429,38 @@ var data$1 = {
      */
     orderTargets: function (targetsValue) {
         var $$ = this;
-        var config = $$.config;
         var targets = __spreadArrays(targetsValue);
+        var fn = $$.getSortCompareFn();
+        fn && targets.sort(fn);
+        return targets;
+    },
+    /**
+     * Get data.order compare function
+     * @param {boolean} isArc Is for Arc type sort or not
+     * @returns {Function} compare function
+     * @private
+     */
+    getSortCompareFn: function (isArc) {
+        if (isArc === void 0) { isArc = false; }
+        var $$ = this;
+        var config = $$.config;
         var orderAsc = $$.isOrderAsc();
         var orderDesc = $$.isOrderDesc();
+        var fn;
         if (orderAsc || orderDesc) {
-            targets.sort(function (t1, t2) {
+            fn = function (t1, t2) {
                 var reducer = function (p, c) { return p + Math.abs(c.value); };
                 var t1Sum = t1.values.reduce(reducer, 0);
                 var t2Sum = t2.values.reduce(reducer, 0);
-                return orderAsc ? t2Sum - t1Sum : t1Sum - t2Sum;
-            });
+                return isArc ?
+                    (orderAsc ? t1Sum - t2Sum : t2Sum - t1Sum) :
+                    (orderAsc ? t2Sum - t1Sum : t1Sum - t2Sum);
+            };
         }
         else if (isFunction(config.data_order)) {
-            targets.sort(config.data_order.bind($$.api));
-        } // TODO: accept name array for order
-        return targets;
+            fn = config.data_order.bind($$.api);
+        }
+        return fn || null;
     },
     filterByX: function (targets, x) {
         return mergeArray(targets.map(function (t) { return t.values; })).filter(function (v) { return v.x - x === 0; });
@@ -3620,7 +3668,9 @@ var data$1 = {
                     // otherwise, based on the rendered angle value
                 }
                 else {
-                    ratio = (d.endAngle - d.startAngle) / (Math.PI * ($$.hasType("gauge") && !config.gauge_fullCircle ? 1 : 2));
+                    var gaugeArcLength = config.gauge_fullCircle ? $$.getArcLength() : $$.getStartAngle() * -2;
+                    var arcLength = $$.hasType("gauge") ? gaugeArcLength : Math.PI * 2;
+                    ratio = (d.endAngle - d.startAngle) / arcLength;
                 }
             }
             else if (type === "index") {
@@ -3680,6 +3730,16 @@ var data$1 = {
         var $$ = this;
         return $$.isBubbleType(d) && ((isObject(d.value) && ("z" in d.value || "y" in d.value)) ||
             (isArray(d.value) && d.value.length === 2));
+    },
+    /**
+     * Get data object by id
+     * @param {string} id data id
+     * @returns {object}
+     * @private
+     */
+    getDataById: function (id) {
+        var d = this.cache.get(id) || this.api.data(id);
+        return isArray(d) ? d[0] : d;
     }
 };
 
@@ -3925,11 +3985,11 @@ var interaction$1 = {
      */
     dispatchEvent: function (type, index, mouse) {
         var $$ = this;
-        var config = $$.config, _a = $$.state, eventReceiver = _a.eventReceiver, hasRadar = _a.hasRadar, _b = $$.$el, eventRect = _b.eventRect, radar = _b.radar;
+        var config = $$.config, _a = $$.state, eventReceiver = _a.eventReceiver, hasAxis = _a.hasAxis, hasRadar = _a.hasRadar, _b = $$.$el, eventRect = _b.eventRect, arcs = _b.arcs, radar = _b.radar;
         var isMultipleX = $$.isMultipleX();
-        var element = (hasRadar ? radar.axes.select("." + CLASS.axis + "-" + index + " text") : eventRect).node();
+        var element = (hasRadar ? radar.axes.select("." + CLASS.axis + "-" + index + " text") : (eventRect || arcs.selectAll("." + CLASS.target + " path").filter(function (d, i) { return i === index; }))).node();
         var _c = element.getBoundingClientRect(), width = _c.width, left = _c.left, top = _c.top;
-        if (!hasRadar && !isMultipleX) {
+        if (hasAxis && !hasRadar && !isMultipleX) {
             var coords = eventReceiver.coords[index];
             width = coords.w;
             left += coords.x;
@@ -3958,17 +4018,33 @@ var classModule = {
     generateClass: function (prefix, targetId) {
         return " " + prefix + " " + (prefix + this.getTargetSelectorSuffix(targetId));
     },
-    classText: function (d) {
-        return this.generateClass(CLASS.text, d.index);
+    /**
+     * Get class string
+     * @param {string} type Shape type
+     * @param {boolean} withShape Get with shape prefix
+     * @returns {string} Class string
+     * @private
+     */
+    getClass: function (type, withShape) {
+        var _this = this;
+        var isPlural = /s$/.test(type);
+        var useIdKey = /^(area|arc|line)s?$/.test(type);
+        var key = isPlural ? "id" : "index";
+        return function (d) {
+            var data = d.data || d;
+            var result = (withShape ? _this.generateClass(CLASS[isPlural ? "shapes" : "shape"], data[key]) : "") + _this.generateClass(CLASS[type], data[useIdKey ? "id" : key]);
+            return result;
+        };
     },
-    classTexts: function (d) {
-        return this.generateClass(CLASS.texts, d.id);
-    },
-    classShape: function (d) {
-        return this.generateClass(CLASS.shape, d.index);
-    },
-    classShapes: function (d) {
-        return this.generateClass(CLASS.shapes, d.id);
+    /**
+     * Get chart class string
+     * @param {string} type Shape type
+     * @returns {string} Class string
+     * @private
+     */
+    getChartClass: function (type) {
+        var _this = this;
+        return function (d) { return CLASS["chart" + type] + _this.classTarget((d.data ? d.data : d).id); };
     },
     generateExtraLineClass: function () {
         var $$ = this;
@@ -3982,41 +4058,8 @@ var classModule = {
             return classes[ids.indexOf(id) % classes.length];
         };
     },
-    classLine: function (d) {
-        return this.classShape(d) + this.generateClass(CLASS.line, d.id);
-    },
-    classLines: function (d) {
-        return this.classShapes(d) + this.generateClass(CLASS.lines, d.id);
-    },
-    classCircle: function (d) {
-        return this.classShape(d) + this.generateClass(CLASS.circle, d.index);
-    },
-    classCircles: function (d) {
-        return this.classShapes(d) + this.generateClass(CLASS.circles, d.id);
-    },
-    classBar: function (d) {
-        return this.classShape(d) + this.generateClass(CLASS.bar, d.index);
-    },
-    classBars: function (d) {
-        return this.classShapes(d) + this.generateClass(CLASS.bars, d.id);
-    },
-    classArc: function (d) {
-        return this.classShape(d.data) + this.generateClass(CLASS.arc, d.data.id);
-    },
-    classArcs: function (d) {
-        return this.classShapes(d.data) + this.generateClass(CLASS.arcs, d.data.id);
-    },
-    classArea: function (d) {
-        return this.classShape(d) + this.generateClass(CLASS.area, d.id);
-    },
-    classAreas: function (d) {
-        return this.classShapes(d) + this.generateClass(CLASS.areas, d.id);
-    },
     classRegion: function (d, i) {
         return this.generateClass(CLASS.region, i) + " " + ("class" in d ? d["class"] : "");
-    },
-    classEvent: function (d) {
-        return this.generateClass(CLASS.eventRect, d.index);
     },
     classTarget: function (id) {
         var additionalClassSuffix = this.config.data_classes[id];
@@ -4034,21 +4077,6 @@ var classModule = {
     },
     classDefocused: function (d) {
         return " " + (this.state.defocusedTargetIds.indexOf(d.id) >= 0 ? CLASS.defocused : "");
-    },
-    classChartText: function (d) {
-        return CLASS.chartText + this.classTarget(d.id);
-    },
-    classChartLine: function (d) {
-        return CLASS.chartLine + this.classTarget(d.id);
-    },
-    classChartBar: function (d) {
-        return CLASS.chartBar + this.classTarget(d.id);
-    },
-    classChartArc: function (d) {
-        return CLASS.chartArc + this.classTarget(d.data.id);
-    },
-    classChartRadar: function (d) {
-        return CLASS.chartRadar + this.classTarget(d.id);
     },
     getTargetSelectorSuffix: function (targetId) {
         return targetId || targetId === 0 ?
@@ -4972,12 +5000,12 @@ var legend$1 = {
      */
     getLegendItemTextBox: function (id, textElement) {
         var $$ = this;
-        var cache = $$.cache;
+        var cache = $$.cache, state = $$.state;
         var data;
         // do not prefix w/'$', to not be resetted cache in .load() call
         var cacheKey = KEY.legendItemTextBox;
         if (id) {
-            data = cache.get(cacheKey) || {};
+            data = (!state.redrawing && cache.get(cacheKey)) || {};
             if (!data[id]) {
                 data[id] = $$.getTextRect(textElement, CLASS.legendItem);
                 cache.add(cacheKey, data);
@@ -5181,6 +5209,12 @@ var legend$1 = {
             .style("fill-opacity", "0")
             .attr("x", isLegendRightOrInset ? xForLegendRect : pos)
             .attr("y", isLegendRightOrInset ? pos : yForLegendRect);
+        var getColor = function (id) {
+            var data = $$.getDataById(id);
+            return $$.levelColor ?
+                $$.levelColor(data.values[0].value) :
+                $$.color(data);
+        };
         var usePoint = config.legend_usePoint;
         if (usePoint) {
             var ids_2 = [];
@@ -5195,7 +5229,7 @@ var legend$1 = {
                 return doc.createElementNS(namespaces.svg, ("hasValidPointType" in $$) && $$.hasValidPointType(point) ? point : "use");
             })
                 .attr("class", CLASS.legendItemPoint)
-                .style("fill", function (d) { return $$.color(d); })
+                .style("fill", getColor)
                 .style("pointer-events", "none")
                 .attr("href", function (data, idx, selection) {
                 var node = selection[idx];
@@ -5206,7 +5240,7 @@ var legend$1 = {
         else {
             l.append("line")
                 .attr("class", CLASS.legendItemTile)
-                .style("stroke", $$.color)
+                .style("stroke", getColor)
                 .style("pointer-events", "none")
                 .attr("x1", isLegendRightOrInset ? x1ForLegendTile : pos)
                 .attr("y1", isLegendRightOrInset ? pos : yForLegendTile)
@@ -5277,7 +5311,7 @@ var legend$1 = {
             var tiles = legend.selectAll("line." + CLASS.legendItemTile)
                 .data(targetIdz);
             (withTransition ? tiles.transition() : tiles)
-                .style("stroke", $$.levelColor ? function (id) { return $$.levelColor($$.cache.get(id).values[0].value); } : $$.color)
+                .style("stroke", getColor)
                 .attr("x1", x1ForLegendTile)
                 .attr("y1", yForLegendTile)
                 .attr("x2", x2ForLegendTile)
@@ -5305,6 +5339,7 @@ var redraw = {
         var $$ = this;
         var config = $$.config, state = $$.state, $el = $$.$el;
         var main = $el.main;
+        state.redrawing = true;
         var targetsToShow = $$.filterTargetsToShow($$.data.targets);
         var initializing = options.initializing;
         var flow = options.flow;
@@ -5409,6 +5444,7 @@ var redraw = {
         // callback function after redraw ends
         var afterRedraw = flow || config.onrendered ? function () {
             flowFn && flowFn();
+            state.redrawing = false;
             callFn(config.onrendered, $$.api);
         } : null;
         if (afterRedraw) {
@@ -5801,21 +5837,21 @@ var shape = {
         var currScale = isSub ? scale.subX : (scale.zoom || scale.x);
         var barPadding = config.bar_padding;
         var sum = function (p, c) { return p + c; };
-        var halfWidth = isObjectType(offset) && offset.total.length ? offset.total.reduce(sum) / 2 : 0;
+        var halfWidth = isObjectType(offset) && (offset._$total.length ? offset._$total.reduce(sum) / 2 : 0);
         return function (d) {
             var ind = $$.getIndices(indices, d.id);
             var index = d.id in ind ? ind[d.id] : 0;
             var targetsNum = (ind.__max__ || 0) + 1;
             var x = 0;
             if (notEmpty(d.x)) {
-                var xPos = currScale(d.x);
+                var xPos = currScale(d.x, true);
                 if (halfWidth) {
-                    x = xPos - (offset[d.id] || offset.width) +
-                        offset.total.slice(0, index + 1).reduce(sum) -
+                    x = xPos - (offset[d.id] || offset._$width) +
+                        offset._$total.slice(0, index + 1).reduce(sum) -
                         halfWidth;
                 }
                 else {
-                    x = xPos - (isNumber(offset) ? offset : offset.width) * (targetsNum / 2 - index);
+                    x = xPos - (isNumber(offset) ? offset : offset._$width) * (targetsNum / 2 - index);
                 }
             }
             // adjust x position for bar.padding optionq
@@ -6038,16 +6074,16 @@ var size = {
         }
         return padding + (axisWidth * axesLen);
     },
-    getCurrentPaddingRight: function (withoutTickTextOverflow) {
-        if (withoutTickTextOverflow === void 0) { withoutTickTextOverflow = false; }
+    getCurrentPaddingRight: function (withXAxisTickTextOverflow) {
+        if (withXAxisTickTextOverflow === void 0) { withXAxisTickTextOverflow = false; }
         var $$ = this;
         var config = $$.config, hasAxis = $$.state.hasAxis;
         var defaultPadding = 10;
         var legendWidthOnRight = $$.state.isLegendRight ? $$.getLegendWidth() + 20 : 0;
         var axesLen = hasAxis ? config.axis_y2_axes.length : 0;
         var axisWidth = hasAxis ? $$.getAxisWidthByAxisId("y2") : 0;
-        var xAxisTickTextOverflow = withoutTickTextOverflow ?
-            0 : $$.axis.getXAxisTickTextY2Overflow(defaultPadding);
+        var xAxisTickTextOverflow = withXAxisTickTextOverflow ?
+            $$.axis.getXAxisTickTextY2Overflow(defaultPadding) : 0;
         var padding;
         if (isValue(config.padding_right)) {
             padding = config.padding_right + 1; // 1 is needed not to hide tick line
@@ -6176,6 +6212,9 @@ var size = {
             width: legend ? $$.getLegendWidth() : 0,
             height: legend ? $$.getLegendHeight() : 0
         };
+        if (!hasArc && config.axis_x_show && config.axis_x_tick_autorotate) {
+            $$.updateXAxisTickClip();
+        }
         var legendHeightForBottom = state.isLegendRight || state.isLegendInset ? 0 : currLegend.height;
         var xAxisHeight = isRotated || hasArc ? 0 : $$.getHorizontalAxisHeight("x");
         var subchartXAxisHeight = config.subchart_axis_x_show && config.subchart_axis_x_tick_text_show ?
@@ -6185,12 +6224,12 @@ var size = {
         // for main
         state.margin = !hasArc && isRotated ? {
             top: $$.getHorizontalAxisHeight("y2") + $$.getCurrentPaddingTop(),
-            right: hasArc ? 0 : $$.getCurrentPaddingRight(),
+            right: hasArc ? 0 : $$.getCurrentPaddingRight(true),
             bottom: $$.getHorizontalAxisHeight("y") + legendHeightForBottom + $$.getCurrentPaddingBottom(),
             left: subchartHeight + (hasArc ? 0 : $$.getCurrentPaddingLeft())
         } : {
             top: 4 + $$.getCurrentPaddingTop(),
-            right: hasArc ? 0 : $$.getCurrentPaddingRight(),
+            right: hasArc ? 0 : $$.getCurrentPaddingRight(true),
             bottom: xAxisHeight + subchartHeight + legendHeightForBottom + $$.getCurrentPaddingBottom(),
             left: hasArc ? 0 : $$.getCurrentPaddingLeft()
         };
@@ -6244,9 +6283,6 @@ var size = {
         if (state.isLegendRight && hasArc) {
             state.margin3.left = state.arcWidth / 2 + state.radiusExpanded * 1.1;
         }
-        if (!hasArc && config.axis_x_show && config.axis_x_tick_autorotate) {
-            $$.updateXAxisTickClip();
-        }
     }
 };
 
@@ -6275,8 +6311,8 @@ var text = {
      */
     updateTargetsForText: function (targets) {
         var $$ = this;
-        var classChartText = $$.classChartText.bind($$);
-        var classTexts = $$.classTexts.bind($$);
+        var classChartText = $$.getChartClass("Text");
+        var classTexts = $$.getClass("texts", "id");
         var classFocus = $$.classFocus.bind($$);
         var mainTextUpdate = $$.$el.main.select("." + CLASS.chartTexts).selectAll("." + CLASS.chartText)
             .data(targets)
@@ -6297,7 +6333,7 @@ var text = {
         var $$ = this;
         var config = $$.config, $el = $$.$el;
         var dataFn = $$.labelishData.bind($$);
-        var classText = $$.classText.bind($$);
+        var classText = $$.getClass("text", "index");
         $el.text = $el.main.selectAll("." + CLASS.texts).selectAll("." + CLASS.text)
             .data(function (d) { return ($$.isRadarType(d) ? d.values : dataFn(d)); });
         $el.text.exit()
@@ -6312,14 +6348,23 @@ var text = {
             .attr("text-anchor", function (d) { return (config.axis_rotated ? (d.value < 0 ? "end" : "start") : "middle"); })
             .style("fill", $$.updateTextColor.bind($$))
             .style("fill-opacity", "0")
-            .text(function (d, i, j) {
-            var value = $$.isBubbleZType(d) ? $$.getBubbleZData(d.value, "z") : d.value;
-            return $$.dataLabelFormat(d.id)(value, d.id, i, j);
+            .call(function (selection) {
+            selection.each(function (d, i, j) {
+                var value = $$.isBubbleZType(d) ? $$.getBubbleZData(d.value, "z") : d.value;
+                value = $$.dataLabelFormat(d.id)(value, d.id, i, j);
+                if (isNumber(value)) {
+                    this.textContent = value;
+                }
+                else {
+                    setTextValue(select(this), value);
+                }
+            });
         });
     },
     updateTextColor: function (d) {
         var $$ = this;
         var labelColors = $$.config.data_labels_colors;
+        var defaultColor = $$.isArcType(d) && !$$.isRadarType(d) ? null : $$.color(d);
         var color;
         if (isString(labelColors)) {
             color = labelColors;
@@ -6328,7 +6373,10 @@ var text = {
             var id = (d.data || d).id;
             color = labelColors[id];
         }
-        return color || ($$.isArcType(d) && !$$.isRadarType(d) ? null : $$.color(d));
+        else if (isFunction(labelColors)) {
+            color = labelColors.bind($$.api)(defaultColor, d);
+        }
+        return color || defaultColor;
     },
     /**
      * Redraw chartText
@@ -6343,15 +6391,27 @@ var text = {
         var $$ = this;
         var t = getRandom();
         var opacityForText = forFlow ? 0 : $$.opacityForText.bind($$);
-        $$.$el.text.each(function (d, i) {
-            var _this = this;
+        $$.$el.text.each(function (d, index) {
             var text = select(this);
             // do not apply transition for newly added text elements
             (withTransition && text.attr("x") ? text.transition(t) : text)
-                .attr("x", x.bind(this)(d, i))
-                .attr("y", function (d) { return y.bind(_this)(d, i); })
-                .style("fill", $$.updateTextColor.bind($$))
-                .style("fill-opacity", opacityForText);
+                .call(function (selection) {
+                selection.each(function (d) {
+                    select(this)
+                        .style("fill", $$.updateTextColor.bind($$))
+                        .style("fill-opacity", opacityForText);
+                    var posX = x.bind(this)(d, index);
+                    var posY = y.bind(this)(d, index);
+                    // when is multiline
+                    if (this.childElementCount) {
+                        this.setAttribute("transform", "translate(" + posX + " " + posY + ")");
+                    }
+                    else {
+                        this.setAttribute("x", posX);
+                        this.setAttribute("y", posY);
+                    }
+                });
+            });
         });
         // need to return 'true' as of being pushed to the redraw list
         // ref: getRedrawList()
@@ -6711,8 +6771,7 @@ var tooltip$1 = {
     initTooltip: function () {
         var $$ = this;
         var config = $$.config, $el = $$.$el;
-        var bindto = config.tooltip_contents.bindto;
-        $el.tooltip = select(bindto);
+        $el.tooltip = select(config.tooltip_contents.bindto);
         if ($el.tooltip.empty()) {
             $el.tooltip = $el.chart
                 .style("position", "relative")
@@ -6722,9 +6781,15 @@ var tooltip$1 = {
                 .style("pointer-events", "none")
                 .style("display", "none");
         }
+        $$.bindTooltipResizePos();
+    },
+    initShowTooltip: function () {
+        var $$ = this;
+        var config = $$.config, $el = $$.$el, _a = $$.state, hasAxis = _a.hasAxis, hasRadar = _a.hasRadar;
         // Show tooltip if needed
         if (config.tooltip_init_show) {
-            if ($$.axis.isTimeSeries() && isString(config.tooltip_init_x)) {
+            var isArc_1 = !(hasAxis && hasRadar);
+            if ($$.axis && $$.axis.isTimeSeries() && isString(config.tooltip_init_x)) {
                 var targets = $$.data.targets[0];
                 var i = void 0;
                 var val = void 0;
@@ -6736,14 +6801,20 @@ var tooltip$1 = {
                 }
                 config.tooltip_init_x = i;
             }
-            $el.tooltip.html($$.getTooltipHTML($$.data.targets.map(function (d) { return $$.addName(d.values[config.tooltip_init_x]); }), $$.axis.getXAxisTickFormat(), $$.getYFormat($$.hasArcType(null, ["radar"])), $$.color));
-            if (!bindto) {
+            var data = $$.data.targets.map(function (d) {
+                var x = isArc_1 ? 0 : config.tooltip_init_x;
+                return $$.addName(d.values[x]);
+            });
+            if (isArc_1) {
+                data = [data[config.tooltip_init_x]];
+            }
+            $el.tooltip.html($$.getTooltipHTML(data, $$.axis && $$.axis.getXAxisTickFormat(), $$.getYFormat($$.hasArcType(null, ["radar"])), $$.color));
+            if (!config.tooltip_contents.bindto) {
                 $el.tooltip.style("top", config.tooltip_init_position.top)
                     .style("left", config.tooltip_init_position.left)
                     .style("display", "block");
             }
         }
-        $$.bindTooltipResizePos();
     },
     /**
      * Get the tooltip HTML string
@@ -6771,7 +6842,7 @@ var tooltip$1 = {
      */
     getTooltipContent: function (d, defaultTitleFormat, defaultValueFormat, color) {
         var $$ = this;
-        var api = $$.api, config = $$.config;
+        var api = $$.api, config = $$.config, state = $$.state;
         var _a = ["title", "name", "value"].map(function (v) {
             var fn = config["tooltip_format_" + v];
             return isFunction(fn) ? fn.bind(api) : fn;
@@ -6824,11 +6895,15 @@ var tooltip$1 = {
                 return "continue";
             }
             if (isUndefined(text)) {
-                var title = sanitise(titleFormat ? titleFormat(row.x) : row.x);
+                var title = (state.hasAxis || state.hasRadar) &&
+                    sanitise(titleFormat ? titleFormat(row.x) : row.x);
                 text = tplProcess(tpl[0], {
                     CLASS_TOOLTIP: CLASS.tooltip,
                     TITLE: isValue(title) ? (tplStr ? title : "<tr><th colspan=\"2\">" + title + "</th></tr>") : ""
                 });
+            }
+            if (!row.ratio && $$.$el.arcs) {
+                row.ratio = $$.getRatio("arc", $$.$el.arcs.select("path." + CLASS.arc + "-" + row.id).data()[0]);
             }
             param = [row.ratio, row.id, row.index, d];
             value = sanitise(valueFormat.apply(void 0, __spreadArrays([getRowValue(row)], param)));
@@ -6890,7 +6965,7 @@ var tooltip$1 = {
         var hasGauge = $$.hasType("gauge") && !config.gauge_fullCircle;
         var svgLeft = $$.getSvgLeft(true);
         var _a = mouse(element), x = _a[0], y = _a[1];
-        var chartRight = svgLeft + current.width - $$.getCurrentPaddingRight(true);
+        var chartRight = svgLeft + current.width - $$.getCurrentPaddingRight();
         var chartLeft = $$.getCurrentPaddingLeft(true);
         var size = 20;
         // Determine tooltip position
@@ -7677,6 +7752,7 @@ var ChartInternal = /** @class */ (function () {
             callFn(config.data_onmin, $$.api, minMax.min);
             callFn(config.data_onmax, $$.api, minMax.max);
         }
+        config.tooltip_show && $$.initShowTooltip();
         state.rendered = true;
     };
     ChartInternal.prototype.initChartElements = function () {
@@ -8192,8 +8268,6 @@ extend(data$2, {
      */
     names: function (names) {
         var $$ = this.internal;
-        // reset existing legend item dimension cache data
-        $$.cache.remove(KEY.legendItemTextBox);
         return $$.updateDataAttributes("names", names);
     },
     /**
@@ -8830,6 +8904,7 @@ var tooltip$2 = {
      *
      * @example
      *  // show the 2nd x Axis coordinate tooltip
+     *  // for Arc(gauge, donut & pie) and radar type, approch showing tooltip by using "index" number.
      *  chart.tooltip.show({
      *    index: 1
      *  });
@@ -9088,6 +9163,7 @@ var axis = {
      * @param {string} [labels.x] x Axis string
      * @param {string} [labels.y] y Axis string
      * @param {string} [labels.y2] y2 Axis string
+     * @returns {object|undefined} axis labels text object
      * @example
      * // Update axis' label
      * chart.axis.labels({
@@ -9095,15 +9171,31 @@ var axis = {
      *   y: "New Y Axis Label",
      *   y2: "New Y2 Axis Label"
      * });
+     *
+     * chart.axis.labels();
+     * // --> {
+     * //  x: "New X Axis Label",
+     * //  y: "New Y Axis Label",
+     * //  y2: "New Y2 Axis Label"
+     * // }
      */
     labels: function (labels) {
         var $$ = this.internal;
-        if (arguments.length) {
+        var labelText;
+        if (labels) {
             Object.keys(labels).forEach(function (axisId) {
                 $$.axis.setLabelText(axisId, labels[axisId]);
             });
             $$.axis.updateLabels();
         }
+        ["x", "y", "y2"].forEach(function (v) {
+            var text = $$.axis.getLabelText(v);
+            if (text) {
+                !labelText && (labelText = {});
+                labelText[v] = text;
+            }
+        });
+        return labelText;
     },
     /**
      * Get and set axis min value.
@@ -9937,11 +10029,6 @@ var AxisRendererHelper = /** @class */ (function () {
     return AxisRendererHelper;
 }());
 
-/**
- * Copyright (c) 2017 ~ present NAVER Corp.
- * billboard.js project is licensed under the MIT license
- * @ignore
- */
 var AxisRenderer = /** @class */ (function () {
     function AxisRenderer(params) {
         if (params === void 0) { params = {}; }
@@ -10287,6 +10374,7 @@ var AxisRenderer = /** @class */ (function () {
      * @returns {number}
      */
     AxisRenderer.prototype.tickInterval = function (size) {
+        var _this = this;
         var interval;
         if (this.params.isCategory) {
             interval = this.config.tickOffset * 2;
@@ -10296,6 +10384,14 @@ var AxisRenderer = /** @class */ (function () {
                 .node()
                 .getTotalLength() - this.config.outerTickSize * 2;
             interval = length_1 / (size || this.g.selectAll("line").size());
+            // get the interval by its values
+            var intervalByValue = this.config.tickValues
+                .map(function (v, i, arr) {
+                var next = i + 1;
+                return next < arr.length ?
+                    _this.helper.scale(arr[next]) - _this.helper.scale(v) : null;
+            }).filter(Boolean);
+            interval = Math.min.apply(Math, __spreadArrays(intervalByValue, [interval]));
         }
         return interval === Infinity ? 0 : interval;
     };
@@ -10793,17 +10889,24 @@ var Axis = /** @class */ (function () {
             return currentTickMax.size;
         }
         if (svg) {
-            var isYAxis = /^y2?$/.test(id);
+            var isYAxis_1 = /^y2?$/.test(id);
             var targetsToShow = $$.filterTargetsToShow($$.data.targets);
-            var scale = $$.scale[id].copy().domain($$["get" + (isYAxis ? "Y" : "X") + "Domain"](targetsToShow, id));
+            var scale = $$.scale[id].copy().domain($$["get" + (isYAxis_1 ? "Y" : "X") + "Domain"](targetsToShow, id));
             var domain = scale.domain();
-            // do not compute if domain is same
-            if ((domain[0] === domain[1] && domain.every(function (v) { return v > 0; })) ||
-                (isArray(currentTickMax.domain) && currentTickMax.domain[0] === currentTickMax.domain[1])) {
+            var isDomainSame = domain[0] === domain[1] && domain.every(function (v) { return v > 0; });
+            var isCurrentMaxTickDomainSame = isArray(currentTickMax.domain) &&
+                currentTickMax.domain[0] === currentTickMax.domain[1] &&
+                currentTickMax.domain.every(function (v) { return v > 0; });
+            // do not compute if domain or currentMaxTickDomain is same
+            if (isDomainSame || isCurrentMaxTickDomainSame) {
                 return currentTickMax.size;
             }
             else {
                 currentTickMax.domain = domain;
+            }
+            // reset old max state value to prevent from new data loading
+            if (!isYAxis_1) {
+                currentTickMax.ticks.splice(0);
             }
             var axis = this.getAxis(id, scale, false, false, true);
             var tickCount = config["axis_" + id + "_tick_count"];
@@ -10813,9 +10916,9 @@ var Axis = /** @class */ (function () {
             // Do not generate if 'tick values' option is given
             // https://github.com/naver/billboard.js/issues/1251
             if (!tickValues && tickCount) {
-                axis.tickValues(this.generateTickValues(domain, tickCount, isYAxis ? this.isTimeSeriesY() : this.isTimeSeries()));
+                axis.tickValues(this.generateTickValues(domain, tickCount, isYAxis_1 ? this.isTimeSeriesY() : this.isTimeSeries()));
             }
-            !isYAxis && this.updateXAxisTickValues(targetsToShow, axis);
+            !isYAxis_1 && this.updateXAxisTickValues(targetsToShow, axis);
             var dummy = chart.append("svg")
                 .style("visibility", "hidden")
                 .style("position", "fixed")
@@ -10827,7 +10930,7 @@ var Axis = /** @class */ (function () {
                 var currentTextWidth = this.getBoundingClientRect().width;
                 maxWidth = Math.max(maxWidth, currentTextWidth);
                 // cache tick text width for getXAxisTickTextY2Overflow()
-                if (id === "x") {
+                if (!isYAxis_1) {
                     currentTickMax.ticks[i] = currentTextWidth;
                 }
             });
@@ -10881,8 +10984,10 @@ var Axis = /** @class */ (function () {
             var overflow = rotatedTickTextWidth - (tickLength / 2) - remainingTickWidth;
             maxOverflow = Math.max(maxOverflow, overflow);
         }
+        var filteredTargets = $$.filterTargetsToShow($$.data.targets);
         var tickOffset = 0;
-        if (!isTimeSeries) {
+        if (!isTimeSeries &&
+            config.axis_x_tick_count <= filteredTargets.length && filteredTargets[0].values.length) {
             var scale = getScale($$.axis.getAxisType("x"), 0, widthWithoutCurrentPaddingLeft - maxOverflow)
                 .domain([
                 left * -1,
@@ -10913,9 +11018,13 @@ var Axis = /** @class */ (function () {
             var lastX = +$$.getXDomainMax($$.data.targets);
             var timeDiff = lastX - firstX;
             var range = timeDiff + padding.left + padding.right;
-            var relativeTickWidth = (timeDiff / tickCount) / range;
-            var left = padding.left / range / relativeTickWidth || 0;
-            var right = padding.right / range / relativeTickWidth || 0;
+            var left = 0;
+            var right = 0;
+            if (tickCount && range) {
+                var relativeTickWidth = (timeDiff / tickCount) / range;
+                left = padding.left / range / relativeTickWidth;
+                right = padding.right / range / relativeTickWidth;
+            }
             padding = { left: left, right: right };
         }
         return padding;
@@ -11144,7 +11253,7 @@ var eventrect = {
         var config = $$.config, state = $$.state, $el = $$.$el;
         var isMultipleX = $$.isMultipleX();
         if ($el.eventRect) {
-            $$.updateEventRect($el.eventRect);
+            $$.updateEventRect($el.eventRect, true);
         }
         else {
             var eventRects = $$.$el.main.select("." + CLASS.eventRects)
@@ -11256,7 +11365,14 @@ var eventrect = {
             }
         });
     },
-    updateEventRect: function (eventRect) {
+    /**
+     * Update event rect size
+     * @param {d3Selection} eventRect Event <rect> element
+     * @param {boolean} force Force to update
+     * @private
+     */
+    updateEventRect: function (eventRect, force) {
+        if (force === void 0) { force = false; }
         var $$ = this;
         var state = $$.state, $el = $$.$el;
         var eventReceiver = state.eventReceiver, width = state.width, height = state.height, rendered = state.rendered, resizing = state.resizing;
@@ -11264,7 +11380,7 @@ var eventrect = {
         var updateClientRect = function () {
             eventReceiver && (eventReceiver.rect = rectElement.node().getBoundingClientRect());
         };
-        if (!rendered || resizing) {
+        if (!rendered || resizing || force) {
             rectElement
                 .attr("x", 0)
                 .attr("y", 0)
@@ -11420,7 +11536,6 @@ var eventrect = {
         var config = $$.config, state = $$.state;
         var eventReceiver = state.eventReceiver;
         var rect = eventRectEnter
-            .attr("class", $$.classEvent.bind($$))
             .style("cursor", config.data_selection_enabled && config.data_selection_grouped ? "pointer" : null)
             .on("click", function () {
             var currentIdx = eventReceiver.currentIdx, data = eventReceiver.data;
@@ -11532,7 +11647,7 @@ var eventrect = {
                 .selectAll("." + CLASS.shape + "-" + closest.index)
                 .each(function () {
                 if (config.data_selection_grouped || $$.isWithinShape(this, closest)) {
-                    $$.toggleShape(this, closest, closest.index);
+                    $$.toggleShape && $$.toggleShape(this, closest, closest.index);
                     config.data_onclick.bind($$.api)(closest, this);
                 }
             });
@@ -11915,7 +12030,7 @@ var grid = {
     initGrid: function () {
         var $$ = this;
         $$.hasGrid() && $$.initGridLines();
-        $$.config.interaction_enabled && $$.initFocusGrid();
+        $$.initFocusGrid();
     },
     initGridLines: function () {
         var $$ = this;
@@ -12122,7 +12237,7 @@ var grid = {
             grid.append("g").attr("class", CLASS.xgrids);
         config.grid_y_show &&
             grid.append("g").attr("class", CLASS.ygrids);
-        if (config.grid_focus_show) {
+        if (config.interaction_enabled && config.grid_focus_show) {
             grid.append("g")
                 .attr("class", CLASS.xgridFocus)
                 .append("line")
@@ -12480,12 +12595,17 @@ var sizeAxis = {
         var axis = $$.axis, config = $$.config, state = $$.state, $el = $$.$el;
         var rotate = config["axis_" + id + "_tick_rotate"];
         if (id === "x") {
-            var isCategorized = axis.isCategorized();
-            var isTimeSeries = axis.isTimeSeries();
-            var allowedXAxisTypes = isCategorized || isTimeSeries;
-            var tickCount = 0;
+            var allowedXAxisTypes = axis.isCategorized() || axis.isTimeSeries();
             if (config.axis_x_tick_fit && allowedXAxisTypes) {
-                tickCount = state.current.maxTickWidths.x.ticks.length + (isTimeSeries ? -1 : 1);
+                var xTickCount = config.axis_x_tick_count;
+                var currentXTicksLength = state.current.maxTickWidths.x.ticks.length;
+                var tickCount = 0;
+                if (xTickCount) {
+                    tickCount = xTickCount > currentXTicksLength ? currentXTicksLength : xTickCount;
+                }
+                else if (currentXTicksLength) {
+                    tickCount = currentXTicksLength;
+                }
                 if (tickCount !== state.axis.x.tickCount) {
                     state.axis.x.padding = $$.axis.getXAxisPadding(tickCount);
                 }
@@ -12512,11 +12632,11 @@ var sizeAxis = {
         var $$ = this;
         var _a = $$.state, axis = _a.axis, current = _a.current;
         var xAxisLength = current.width -
-            $$.getCurrentPaddingLeft(false) - $$.getCurrentPaddingRight(true);
+            $$.getCurrentPaddingLeft(false) - $$.getCurrentPaddingRight();
         var tickCountWithPadding = axis.x.tickCount +
             axis.x.padding.left + axis.x.padding.right;
         var maxTickWidth = $$.axis.getMaxTickWidth("x");
-        var tickLength = (xAxisLength / tickCountWithPadding) || 0;
+        var tickLength = tickCountWithPadding ? xAxisLength / tickCountWithPadding : 0;
         return maxTickWidth > tickLength;
     }
 };
@@ -12958,6 +13078,7 @@ var x = {
      *   - axis.x.tick.multiline=false
      *   - axis.x.tick.culling=false
      *   - axis.x.tick.fit=true
+     * - **NOTE:** axis.x.tick.clippath=false is necessary for calculating the overflow padding between the end of x axis and the width of the SVG
      * @name axis․x․tick․autorotate
      * @memberof Options
      * @type {boolean}
@@ -12972,7 +13093,8 @@ var x = {
      *       multiline: false,
      *       culling: false,
      *       fit: true
-     *     }
+     *     },
+     *     clipPath: false
      *   }
      * }
      */
@@ -14311,46 +14433,90 @@ var shapeArc = {
         var startingAngle = config[dataType + "_startingAngle"] || 0;
         var padAngle = ($$.hasType("pie") && padding ? padding * 0.01 :
             config[dataType + "_padAngle"]) || 0;
-        var sortValue = $$.isOrderAsc() || $$.isOrderDesc() ?
-            function (a, b) { return ($$.isOrderAsc() ? a - b : b - a); } : null;
         $$.pie = pie$1()
             .startAngle(startingAngle)
             .endAngle(startingAngle + (2 * Math.PI))
             .padAngle(padAngle)
-            .sortValues(sortValue)
-            .value(function (d) { return d.values.reduce(function (a, b) { return a + b.value; }, 0); });
+            .value(function (d) { return d.values.reduce(function (a, b) { return a + b.value; }, 0); })
+            .sort($$.getSortCompareFn.bind($$)(true));
     },
     updateRadius: function () {
         var $$ = this;
         var config = $$.config, state = $$.state;
-        var radius = config.pie_innerRadius;
         var padding = config.pie_padding;
         var w = config.gauge_width || config.donut_width;
         var gaugeArcWidth = $$.filterTargetsToShow($$.data.targets).length *
             config.gauge_arcs_minWidth;
+        // determine radius
         state.radiusExpanded = Math.min(state.arcWidth, state.arcHeight) / 2 * ($$.hasMultiArcGauge() ? 0.85 : 1);
         state.radius = state.radiusExpanded * 0.95;
         state.innerRadiusRatio = w ? (state.radius - w) / state.radius : 0.6;
         state.gaugeArcWidth = w || (gaugeArcWidth <= state.radius - state.innerRadius ?
             state.radius - state.innerRadius :
             (gaugeArcWidth <= state.radius ? gaugeArcWidth : state.radius));
-        var innerRadius = radius || (padding ? padding * (state.innerRadiusRatio + 0.1) : 0);
-        // NOTE: innerRadius can be an object by user setting, only for 'pie' type
+        var innerRadius = config.pie_innerRadius || (padding ? padding * (state.innerRadiusRatio + 0.1) : 0);
+        // NOTE: inner/outerRadius can be an object by user setting, only for 'pie' type
+        state.outerRadius = config.pie_outerRadius;
         state.innerRadius = $$.hasType("donut") || $$.hasType("gauge") ?
             state.radius * state.innerRadiusRatio : innerRadius;
     },
-    getInnerRadius: function (d) {
+    /**
+     * Get pie's inner & outer radius value
+     * @param {object|undefined} d Data object
+     * @returns {object}
+     * @private
+     */
+    getRadius: function (d) {
         var $$ = this;
-        var innerRadius = $$.state.innerRadius;
-        if (!isNumber(innerRadius) && d) {
-            innerRadius = innerRadius[d.data.id] || 0;
+        var data = d && d.data;
+        var _a = $$.state, innerRadius = _a.innerRadius, outerRadius = _a.outerRadius;
+        if (!isNumber(innerRadius) && data) {
+            innerRadius = innerRadius[data.id] || 0;
         }
-        return innerRadius;
+        if (isObject(outerRadius) && data && data.id in outerRadius) {
+            outerRadius = outerRadius[data.id];
+        }
+        else if (!isNumber(outerRadius)) {
+            outerRadius = $$.state.radius;
+        }
+        return { innerRadius: innerRadius, outerRadius: outerRadius };
     },
     updateArc: function () {
         var $$ = this;
+        $$.updateRadius();
         $$.svgArc = $$.getSvgArc();
         $$.svgArcExpanded = $$.getSvgArcExpanded();
+    },
+    getArcLength: function () {
+        var $$ = this;
+        var config = $$.config;
+        var arcLengthInPercent = config.gauge_arcLength * 3.6;
+        var len = (2 * (arcLengthInPercent / 360));
+        if (arcLengthInPercent < -360) {
+            len = -2;
+        }
+        else if (arcLengthInPercent > 360) {
+            len = 2;
+        }
+        return len * Math.PI;
+    },
+    getStartAngle: function () {
+        var $$ = this;
+        var config = $$.config;
+        var isFullCircle = config.gauge_fullCircle;
+        var defaultStartAngle = -1 * Math.PI / 2;
+        var defaultEndAngle = Math.PI / 2;
+        var startAngle = config.gauge_startingAngle;
+        if (!isFullCircle && startAngle <= defaultStartAngle) {
+            startAngle = defaultStartAngle;
+        }
+        else if (!isFullCircle && startAngle >= defaultEndAngle) {
+            startAngle = defaultEndAngle;
+        }
+        else if (startAngle > Math.PI || startAngle < -1 * Math.PI) {
+            startAngle = Math.PI;
+        }
+        return startAngle;
     },
     updateAngle: function (dValue) {
         var $$ = this;
@@ -14361,8 +14527,8 @@ var shapeArc = {
         if (!config) {
             return null;
         }
-        var radius = Math.PI * (config.gauge_fullCircle ? 2 : 1);
-        var gStart = config.gauge_startingAngle;
+        var gStart = $$.getStartAngle();
+        var radius = config.gauge_fullCircle ? $$.getArcLength() : gStart * -2;
         if (d.data && $$.isGaugeType(d.data) && !$$.hasMultiArcGauge()) {
             // to prevent excluding total data sum during the init(when data.hide option is used), use $$.rendered state value
             var totalSum = $$.getTotalDataSum(state.rendered);
@@ -14398,20 +14564,22 @@ var shapeArc = {
     getSvgArc: function () {
         var $$ = this;
         var state = $$.state;
-        var ir = $$.getInnerRadius();
         var singleArcWidth = state.gaugeArcWidth / $$.filterTargetsToShow($$.data.targets).length;
         var hasMultiArcGauge = $$.hasMultiArcGauge();
         var arc$1 = arc()
-            .outerRadius(function (d) { return (hasMultiArcGauge ? (state.radius - singleArcWidth * d.index) : state.radius); })
-            .innerRadius(function (d) { return (hasMultiArcGauge ?
-            state.radius - singleArcWidth * (d.index + 1) :
-            isNumber(ir) ? ir : 0); });
+            .innerRadius(function (d) {
+            var innerRadius = $$.getRadius(d).innerRadius;
+            return hasMultiArcGauge ?
+                state.radius - singleArcWidth * (d.index + 1) :
+                isNumber(innerRadius) ? innerRadius : 0;
+        })
+            .outerRadius(function (d) {
+            var outerRadius = $$.getRadius(d).outerRadius;
+            return hasMultiArcGauge ? (state.radius - singleArcWidth * d.index) : outerRadius;
+        });
         var newArc = function (d, withoutUpdate) {
             var path = "M 0 0";
             if (d.value || d.data) {
-                if (!isNumber(ir)) {
-                    arc$1 = arc$1.innerRadius($$.getInnerRadius(d));
-                }
                 var updated = !withoutUpdate && $$.updateAngle(d);
                 if (withoutUpdate) {
                     path = arc$1(d);
@@ -14434,19 +14602,26 @@ var shapeArc = {
         var hasMultiArcGauge = $$.hasMultiArcGauge();
         var expandWidth = Math.min(state.radiusExpanded * newRate - state.radius, singleArcWidth * 0.8 - (1 - newRate) * 100);
         var arc$1 = arc()
-            .outerRadius(function (d) { return (hasMultiArcGauge ?
-            state.radius - singleArcWidth * d.index + expandWidth :
-            state.radiusExpanded * newRate); })
             .innerRadius(function (d) { return (hasMultiArcGauge ?
-            state.radius - singleArcWidth * (d.index + 1) : state.innerRadius); });
-        return function (d) {
-            var updated = $$.updateAngle(d);
-            if (updated) {
-                return (hasMultiArcGauge ? arc$1 : arc$1.innerRadius($$.getInnerRadius(d)))(updated);
+            state.radius - singleArcWidth * (d.index + 1) : $$.getRadius(d).innerRadius); })
+            .outerRadius(function (d) {
+            var radius;
+            if (hasMultiArcGauge) {
+                radius = state.radius - singleArcWidth * d.index + expandWidth;
             }
             else {
-                return "M 0 0";
+                var outerRadius = $$.getRadius(d).outerRadius;
+                var radiusExpanded = state.radiusExpanded;
+                if (state.radius !== outerRadius) {
+                    radiusExpanded -= Math.abs(state.radius - outerRadius);
+                }
+                radius = radiusExpanded * newRate;
             }
+            return radius;
+        });
+        return function (d) {
+            var updated = $$.updateAngle(d);
+            return updated ? arc$1(updated) : "M 0 0";
         };
     },
     getArc: function (d, withoutUpdate, force) {
@@ -14454,7 +14629,7 @@ var shapeArc = {
     },
     transformForArcLabel: function (d) {
         var $$ = this;
-        var config = $$.config, _a = $$.state, radius = _a.radius, radiusExpanded = _a.radiusExpanded;
+        var config = $$.config, radiusExpanded = $$.state.radiusExpanded;
         var updated = $$.updateAngle(d);
         var translate = "";
         if (updated) {
@@ -14465,6 +14640,7 @@ var shapeArc = {
                 translate = "translate(" + x + "," + y + ")";
             }
             else if (!$$.hasType("gauge") || $$.data.targets.length > 1) {
+                var outerRadius = $$.getRadius(d).outerRadius;
                 var c = this.svgArc.centroid(updated);
                 var x = isNaN(c[0]) ? 0 : c[0];
                 var y = isNaN(c[1]) ? 0 : c[1];
@@ -14472,10 +14648,10 @@ var shapeArc = {
                 var ratio = ($$.hasType("donut") && config.donut_label_ratio) ||
                     ($$.hasType("pie") && config.pie_label_ratio);
                 if (ratio) {
-                    ratio = isFunction(ratio) ? ratio.bind($$.api)(d, radius, h) : ratio;
+                    ratio = isFunction(ratio) ? ratio.bind($$.api)(d, outerRadius, h) : ratio;
                 }
                 else {
-                    ratio = radius && (h ? (36 / radius > 0.375 ? 1.175 - 36 / radius : 0.8) * radius / h : 0);
+                    ratio = outerRadius && (h ? (36 / outerRadius > 0.375 ? 1.175 - 36 / outerRadius : 0.8) * outerRadius / h : 0);
                 }
                 translate = "translate(" + x * ratio + "," + y * ratio + ")";
             }
@@ -14484,7 +14660,7 @@ var shapeArc = {
     },
     convertToArcData: function (d) {
         return this.addName({
-            id: d.data.id,
+            id: d.data ? d.data.id : d.id,
             value: d.value,
             ratio: this.getRatio("arc", d),
             index: d.index
@@ -14618,8 +14794,8 @@ var shapeArc = {
         var $$ = this;
         var $el = $$.$el;
         var hasGauge = $$.hasType("gauge");
-        var classChartArc = $$.classChartArc.bind($$);
-        var classArcs = $$.classArcs.bind($$);
+        var classChartArc = $$.getChartClass("Arc");
+        var classArcs = $$.getClass("arcs", true);
         var classFocus = $$.classFocus.bind($$);
         var chartArcs = $el.main.select("." + CLASS.chartArcs);
         var mainPieUpdate = chartArcs
@@ -14682,7 +14858,7 @@ var shapeArc = {
             .style("opacity", "0")
             .remove();
         mainArc = mainArc.enter().append("path")
-            .attr("class", $$.classArc.bind($$))
+            .attr("class", $$.getClass("arc", true))
             .style("fill", function (d) { return $$.color(d.data); })
             .style("cursor", function (d) { return (isSelectable && isSelectable.bind($$.api)(d) ? "pointer" : null); })
             .style("opacity", "0")
@@ -14736,7 +14912,7 @@ var shapeArc = {
                 config.data_colors[d.data.id] = color;
             }
             else {
-                color = $$.color(d.data.id);
+                color = $$.color(d.data);
             }
             return color;
         })
@@ -14753,7 +14929,52 @@ var shapeArc = {
         });
         // bind arc events
         hasInteraction && $$.bindArcEvent(mainArc);
+        $$.hasType("gauge") && $$.redrawBackgroundArcs();
         $$.redrawArcText(duration);
+    },
+    redrawBackgroundArcs: function () {
+        var $$ = this;
+        var config = $$.config, state = $$.state;
+        var hasMultiArcGauge = $$.hasMultiArcGauge();
+        var isFullCircle = config.gauge_fullCircle;
+        var startAngle = $$.getStartAngle();
+        var endAngle = isFullCircle ? startAngle + $$.getArcLength() : startAngle * -1;
+        var backgroundArc = $$.$el.arcs.select((hasMultiArcGauge ? "g" : "") + "." + CLASS.chartArcsBackground);
+        if (hasMultiArcGauge) {
+            var index_1 = 0;
+            backgroundArc = backgroundArc
+                .selectAll("path." + CLASS.chartArcsBackground)
+                .data($$.data.targets);
+            backgroundArc.enter()
+                .append("path")
+                .attr("class", function (d, i) { return CLASS.chartArcsBackground + " " + CLASS.chartArcsBackground + "-" + i; })
+                .merge(backgroundArc)
+                .style("fill", (config.gauge_background) || null)
+                .attr("d", function (_a) {
+                var id = _a.id;
+                if (state.hiddenTargetIds.indexOf(id) >= 0) {
+                    return "M 0 0";
+                }
+                var d = {
+                    data: [{ value: config.gauge_max }],
+                    startAngle: startAngle,
+                    endAngle: endAngle,
+                    index: index_1++
+                };
+                return $$.getArc(d, true, true);
+            });
+            backgroundArc.exit().remove();
+        }
+        else {
+            backgroundArc.attr("d", function () {
+                var d = {
+                    data: [{ value: config.gauge_max }],
+                    startAngle: startAngle,
+                    endAngle: endAngle
+                };
+                return $$.getArc(d, true, true);
+            });
+        }
     },
     bindArcEvent: function (arc) {
         var $$ = this;
@@ -14864,47 +15085,11 @@ var shapeArc = {
             .style("opacity", $$.hasType("donut") || hasGauge ? "1" : "0");
         if (hasGauge) {
             var isFullCircle = config.gauge_fullCircle;
-            var startAngle_1 = -1 * Math.PI / 2;
-            var endAngle_1 = (isFullCircle ? -4 : -1) * startAngle_1;
-            isFullCircle && text && text.attr("dy", "" + Math.round(state.radius / 14));
-            var backgroundArc = $$.$el.arcs.select((hasMultiArcGauge ? "g" : "") + "." + CLASS.chartArcsBackground);
-            if (hasMultiArcGauge) {
-                var index_1 = 0;
-                backgroundArc = backgroundArc
-                    .selectAll("path." + CLASS.chartArcsBackground)
-                    .data($$.data.targets);
-                backgroundArc.enter()
-                    .append("path")
-                    .attr("class", function (d, i) { return CLASS.chartArcsBackground + " " + CLASS.chartArcsBackground + "-" + i; })
-                    .merge(backgroundArc)
-                    .attr("d", function (d1) {
-                    if (state.hiddenTargetIds.indexOf(d1.id) >= 0) {
-                        return "M 0 0";
-                    }
-                    var d = {
-                        data: [{ value: config.gauge_max }],
-                        startAngle: startAngle_1,
-                        endAngle: endAngle_1,
-                        index: index_1++
-                    };
-                    return $$.getArc(d, true, true);
-                });
-                backgroundArc.exit().remove();
-            }
-            else {
-                backgroundArc.attr("d", function () {
-                    var d = {
-                        data: [{ value: config.gauge_max }],
-                        startAngle: startAngle_1,
-                        endAngle: endAngle_1
-                    };
-                    return $$.getArc(d, true, true);
-                });
-            }
-            arcs.select("." + CLASS.chartArcsGaugeUnit)
-                .attr("dy", ".75em")
-                .text(config.gauge_label_show ? config.gauge_units : "");
+            isFullCircle && text && text.attr("dy", "" + (hasMultiArcGauge ? 0 : Math.round(state.radius / 14)));
             if (config.gauge_label_show) {
+                arcs.select("." + CLASS.chartArcsGaugeUnit)
+                    .attr("dy", (isFullCircle ? 1.5 : 0.75) + "em")
+                    .text(config.gauge_units);
                 arcs.select("." + CLASS.chartArcsGaugeMin)
                     .attr("dx", -1 * (state.innerRadius + ((state.radius - state.innerRadius) / (isFullCircle ? 1 : 2))) + "px")
                     .attr("dy", "1.2em")
@@ -14929,7 +15114,7 @@ var shapeArea = {
         var config = $$.config;
         mainLine
             .insert("g", "." + CLASS[config.area_front ? "circles" : "lines"])
-            .attr("class", $$.classAreas.bind($$));
+            .attr("class", $$.getClass("areas", true));
     },
     updateAreaGradient: function () {
         var $$ = this;
@@ -14973,7 +15158,7 @@ var shapeArea = {
             .style("opacity", "0")
             .remove();
         $el.area = $el.area.enter().append("path")
-            .attr("class", $$.classArea.bind($$))
+            .attr("class", $$.getClass("area", true))
             .style("fill", $$.updateAreaColor.bind($$))
             .style("opacity", function () {
             state.orgAreaOpacity = select(this).style("opacity");
@@ -15092,8 +15277,8 @@ var shapeBar = {
     updateTargetsForBar: function (targets) {
         var $$ = this;
         var config = $$.config, $el = $$.$el;
-        var classChartBar = $$.classChartBar.bind($$);
-        var classBars = $$.classBars.bind($$);
+        var classChartBar = $$.getChartClass("Bar");
+        var classBars = $$.getClass("bars", true);
         var classFocus = $$.classFocus.bind($$);
         var isSelectable = config.interaction_enabled && config.data_selection_isselectable;
         if (!$el.bar) {
@@ -15116,7 +15301,7 @@ var shapeBar = {
         var $$ = this;
         var $el = $$.$el;
         var barData = $$.barData.bind($$);
-        var classBar = $$.classBar.bind($$);
+        var classBar = $$.getClass("bar", true);
         var initialOpacity = $$.initialOpacity.bind($$);
         $el.bar = $el.main.selectAll("." + CLASS.bars).selectAll("." + CLASS.bar)
             .data(barData);
@@ -15141,11 +15326,11 @@ var shapeBar = {
     },
     getBarW: function (axis, barTargetsNum) {
         var $$ = this;
-        var config = $$.config, scale = $$.scale;
+        var config = $$.config, org = $$.org, scale = $$.scale;
         var maxDataCount = $$.getMaxDataCount();
         var isGrouped = config.data_groups.length;
         var tickInterval = scale.zoom && !$$.axis.isCategorized() ?
-            (scale.subX.domain().map(function (v) { return scale.zoom(v); })
+            (org.xDomain.map(function (v) { return scale.zoom(v); })
                 .reduce(function (a, c) { return Math.abs(a) + c; }) / maxDataCount) : axis.tickInterval(maxDataCount);
         var getWidth = function (id) {
             var width = id ? config.bar_width[id] : config.bar_width;
@@ -15157,11 +15342,11 @@ var shapeBar = {
         };
         var result = getWidth();
         if (!isGrouped && isObjectType(config.bar_width)) {
-            result = { width: result, total: [] };
+            result = { _$width: result, _$total: [] };
             $$.filterTargetsToShow($$.data.targets).forEach(function (v) {
                 if (config.bar_width[v.id]) {
                     result[v.id] = getWidth(v.id);
-                    result.total.push(result[v.id] || result.width);
+                    result._$total.push(result[v.id] || result._$width);
                 }
             });
         }
@@ -15233,7 +15418,7 @@ var shapeBar = {
         return function (d, i) {
             var y0 = yScale.call($$, d.id, isSub)($$.getShapeYMin(d.id));
             var offset = barOffset(d, i) || y0; // offset is for stacked bar chart
-            var width = isNumber(barW) ? barW : barW[d.id] || barW.width;
+            var width = isNumber(barW) ? barW : barW[d.id] || barW._$width;
             var posX = barX(d);
             var posY = barY(d);
             // fix posY not to overflow opposite quadrant
@@ -15241,12 +15426,13 @@ var shapeBar = {
                 posY = y0;
             }
             posY -= (y0 - offset);
+            var startPosX = posX + width;
             // 4 points that make a bar
             return [
                 [posX, offset],
                 [posX, posY],
-                [posX + width, posY],
-                [posX + width, offset]
+                [startPosX, posY],
+                [startPosX, offset]
             ];
         };
     },
@@ -15284,8 +15470,10 @@ var shapeGauge = {
                 .style("pointer-events", "none");
         };
         if ($$.hasType("gauge")) {
-            arcs.append($$.hasMultiArcGauge() ? "g" : "path")
-                .attr("class", CLASS.chartArcsBackground);
+            var hasMulti = $$.hasMultiArcGauge();
+            arcs.append(hasMulti ? "g" : "path")
+                .attr("class", CLASS.chartArcsBackground)
+                .style("fill", (!hasMulti && config.gauge_background) || null);
             config.gauge_units && appendText(CLASS.chartArcsGaugeUnit);
             if (config.gauge_label_show) {
                 appendText(CLASS.chartArcsGaugeMin);
@@ -15441,8 +15629,8 @@ var shapeLine = {
     updateTargetsForLine: function (t) {
         var $$ = this;
         var _a = $$.$el, area = _a.area, line = _a.line, main = _a.main;
-        var classChartLine = $$.classChartLine.bind($$);
-        var classLines = $$.classLines.bind($$);
+        var classChartLine = $$.getChartClass("Line");
+        var classLines = $$.getClass("lines", true);
         var classFocus = $$.classFocus.bind($$);
         if (!line) {
             $$.initLine();
@@ -15460,8 +15648,8 @@ var shapeLine = {
         mainLineEnter.append("g")
             .attr("class", classLines);
         // Areas
-        if ($$.hasTypeOf("Area") && !area) {
-            $$.initArea(mainLineEnter.empty() ? mainLineUpdate : mainLineEnter);
+        if ($$.hasTypeOf("Area")) {
+            $$.initArea(!area && mainLineEnter.empty() ? mainLineUpdate : mainLineEnter);
         }
         $$.updateTargetForCircle(targets, mainLineEnter);
     },
@@ -15478,7 +15666,7 @@ var shapeLine = {
             .remove();
         $el.line = $el.line.enter()
             .append("path")
-            .attr("class", function (d) { return $$.classLine.bind($$)(d) + " " + (extraLineClasses(d) || ""); })
+            .attr("class", function (d) { return $$.getClass("line", true)(d) + " " + (extraLineClasses(d) || ""); })
             .style("stroke", $$.color)
             .merge($el.line)
             .style("opacity", $$.initialOpacity.bind($$))
@@ -15683,16 +15871,24 @@ var shapePoint = {
             isFunction(pointType.create) && isFunction(pointType.update);
     },
     initialOpacityForCircle: function (d) {
-        var withoutFadeIn = this.state.withoutFadeIn;
-        return this.getBaseValue(d) !== null &&
-            withoutFadeIn[d.id] ? this.opacityForCircle(d) : "0";
+        var _a = this, config = _a.config, withoutFadeIn = _a.state.withoutFadeIn;
+        var opacity = config.point_opacity;
+        if (isUndefined(opacity)) {
+            opacity = this.getBaseValue(d) !== null &&
+                withoutFadeIn[d.id] ? this.opacityForCircle(d) : "0";
+        }
+        return opacity;
     },
     opacityForCircle: function (d) {
         var config = this.config;
-        var opacity = config.point_show && !config.point_focus_only ? "1" : "0";
-        return isValue(this.getBaseValue(d)) ?
-            (this.isBubbleType(d) || this.isScatterType(d) ?
-                "0.5" : opacity) : "0";
+        var opacity = config.point_opacity;
+        if (isUndefined(opacity)) {
+            opacity = config.point_show && !config.point_focus_only ? "1" : "0";
+            opacity = isValue(this.getBaseValue(d)) ?
+                (this.isBubbleType(d) || this.isScatterType(d) ?
+                    "0.5" : opacity) : "0";
+        }
+        return opacity;
     },
     initCircle: function () {
         var $$ = this;
@@ -15710,7 +15906,7 @@ var shapePoint = {
         var config = $$.config, data = $$.data, $el = $$.$el;
         var selectionEnabled = config.interaction_enabled && config.data_selection_enabled;
         var isSelectable = selectionEnabled && config.data_selection_isselectable;
-        var classCircles = $$.classCircles.bind($$);
+        var classCircles = $$.getClass("circles", true);
         if (!config.point_show) {
             return;
         }
@@ -15973,12 +16169,12 @@ var shapePoint = {
         if (isObject(d) || circle) {
             pointClass = d === true ?
                 circle.each(function (d) {
-                    var className = $$.classCircle.bind($$)(d);
+                    var className = $$.getClass("circle", true)(d);
                     if (this.getAttribute("class").indexOf(CLASS.EXPANDED) > -1) {
                         className += " " + CLASS.EXPANDED;
                     }
                     this.setAttribute("class", className);
-                }) : $$.classCircle(d);
+                }) : $$.getClass("circle", true)(d);
         }
         return pointClass;
     },
@@ -16027,7 +16223,7 @@ var shapePoint = {
                     point = $$[point];
                 }
                 else if (!$$.hasValidPointDrawMethods(point)) {
-                    var pointId = datetimeId + "-point-" + id;
+                    var pointId = datetimeId + "-point" + id;
                     var pointFromDefs = $$.pointFromDefs(pointId);
                     if (pointFromDefs.size() < 1) {
                         $$.insertPointInfoDefs(point, pointId);
@@ -16407,7 +16603,7 @@ var shapeRadar = {
             .selectAll("polygon")
             .data(targets);
         var areasEnter = areas.enter().append("g")
-            .attr("class", $$.classChartRadar.bind($$));
+            .attr("class", $$.getChartClass("Radar"));
         areas.exit().transition()
             .duration(durationForExit)
             .remove();
@@ -16460,6 +16656,10 @@ var optPoint = {
      * @property {number} [point.focus.expand.r=point.r*1.75] The radius size of each point on focus.
      *  - **NOTE:** For 'bubble' type, the default is `bubbleSize*1.15`
      * @property {boolean} [point.focus.only=false] Show point only when is focused.
+     * @property {number|null} [point.opacity=undefined] Set point opacity value.
+     * - **NOTE:**
+     *	- `null` will make to not set inline 'opacity' css prop.
+     *	- when no value(or undefined) is set, it defaults to set opacity value according its chart types.
      * @property {number} [point.sensitivity=10] The senstivity value for interaction boundary.
      * @property {number} [point.select.r=point.r*4] The radius size of each point on selected.
      * @property {string} [point.type="circle"] The type of point to be drawn
@@ -16499,6 +16699,13 @@ var optPoint = {
      *          },
      *          only: true
      *      },
+     *
+     *      // do not set inline 'opacity' css prop setting
+     *      opacity: null,
+     *
+     *      // set every data point's opacity value
+     *      opacity: 0.7,
+     *
      *      select: {
      *          r: 3
      *      },
@@ -16523,6 +16730,7 @@ var optPoint = {
     point_focus_expand_enabled: true,
     point_focus_expand_r: undefined,
     point_focus_only: false,
+    point_opacity: undefined,
     point_pattern: [],
     point_select_r: undefined,
     point_type: "circle"
@@ -16870,7 +17078,7 @@ var optDonut = {
      * @property {number} [donut.expand.rate=0.98] Set expand rate.
      * @property {number} [donut.expand.duration=50] Set expand transition time in ms.
      * @property {number} [donut.width] Set width of donut chart.
-     * @property {string} [donut.title=""] Set title of donut chart. Use `\n` character to enter line break.
+     * @property {string} [donut.title=""] Set title of donut chart. Use `\n` character for line break.
      * @property {number} [donut.padAngle=0] Set padding between data.
      * @property {number} [donut.startingAngle=0] Set starting angle where data draws.
      * @example
@@ -16944,6 +17152,7 @@ var optGauge = {
      * @memberof Options
      * @type {object}
      * @property {object} gauge Gauge object
+     * @property {boolean} [gauge.background=""] Set background color. (The `.bb-chart-arcs-background` element)
      * @property {boolean} [gauge.fullCircle=false] Show full circle as donut. When set to 'true', the max label will not be showed due to start and end points are same location.
      * @property {boolean} [gauge.label.show=true] Show or hide label on gauge.
      * @property {Function} [gauge.label.format] Set formatter for the label on gauge. Label text can be multilined with `\n` character.
@@ -16955,7 +17164,24 @@ var optGauge = {
      * @property {number} [gauge.min=0] Set min value of the gauge.
      * @property {number} [gauge.max=100] Set max value of the gauge.
      * @property {number} [gauge.startingAngle=-1 * Math.PI / 2] Set starting angle where data draws.
-     * @property {string} [gauge.title=""] Set title of gauge chart. Use `\n` character to enter line break.
+     *
+     * **Limitations:**
+     * - when `gauge.fullCircle=false`:
+     *   - -1 * Math.PI / 2 <= startingAngle <= Math.PI / 2
+     *   - `startingAngle <= -1 * Math.PI / 2` defaults to `-1 * Math.PI / 2`
+     *   - `startingAngle >= Math.PI / 2` defaults to `Math.PI / 2`
+     * - when `gauge.fullCircle=true`:
+     *   - -1 * Math.PI < startingAngle < Math.PI
+     *   - `startingAngle < -1 * Math.PI` defaults to `Math.PI`
+     *   - `startingAngle >  Math.PI` defaults to `Math.PI`
+     * @property {number} [gauge.arcLength=100] Set the length of the arc to be drawn in percent from -100 to 100.<br>
+     * Negative value will draw the arc **counterclockwise**.
+     *
+     * **Limitations:**
+     * - -100 <= arcLength (in percent) <= 100
+     * - 'arcLength < -100' defaults to -100
+     * - 'arcLength > 100' defaults to 100
+     * @property {string} [gauge.title=""] Set title of gauge chart. Use `\n` character for line break.
      * @property {string} [gauge.units] Set units of the gauge.
      * @property {number} [gauge.width] Set width of gauge chart.
      * @property {string} [gauge.type="single"] Set type of gauge to be displayed.<br><br>
@@ -16963,8 +17189,11 @@ var optGauge = {
      * - single
      * - multi
      * @property {string} [gauge.arcs.minWidth=5] Set minimal width of gauge arcs until the innerRadius disappears.
+     * @see [Demo: archLength](https://naver.github.io/billboard.js/demo/#GaugeChartOptions.GaugeArcLength)
+     * @see [Demo: startingAngle](https://naver.github.io/billboard.js/demo/#GaugeChartOptions.GaugeStartingAngle)
      * @example
      *  gauge: {
+     *      background: "#eee", // will set 'fill' css prop for '.bb-chart-arcs-background' classed element.
      *      fullCircle: false,
      *      label: {
      *          show: false,
@@ -17001,11 +17230,14 @@ var optGauge = {
      *      title: "Title Text",
      *      units: "%",
      *      width: 10,
+     *      startingAngle: -1 * Math.PI / 2,
+     *      arcLength: 100,
      *      arcs: {
      *          minWidth: 5
      *      }
      *  }
      */
+    gauge_background: "",
     gauge_fullCircle: false,
     gauge_label_show: true,
     gauge_label_format: undefined,
@@ -17015,6 +17247,7 @@ var optGauge = {
     gauge_max: 100,
     gauge_type: "single",
     gauge_startingAngle: -1 * Math.PI / 2,
+    gauge_arcLength: 100,
     gauge_title: "",
     gauge_units: undefined,
     gauge_width: undefined,
@@ -17046,10 +17279,14 @@ var optPie = {
      * @property {number} [pie.expand.rate=0.98] Set expand rate.
      * @property {number} [pie.expand.duration=50] Set expand transition time in ms.
      * @property {number|object} [pie.innerRadius=0] Sets the inner radius of pie arc.
+     * @property {number|object|undefined} [pie.outerRadius=undefined] Sets the outer radius of pie arc.
      * @property {number} [pie.padAngle=0] Set padding between data.
      * @property {number} [pie.padding=0] Sets the gap between pie arcs.
-     * @property {object} donut Donut object
-     * @property {number} [donut.startingAngle=0] Set starting angle where data draws.
+     * @property {number} [pie.startingAngle=0] Set starting angle where data draws.
+     * @see [Demo: expand.rate](https://naver.github.io/billboard.js/demo/#PieChartOptions.ExpandRate)
+     * @see [Demo: innerRadius](https://naver.github.io/billboard.js/demo/#PieChartOptions.InnerRadius)
+     * @see [Demo: outerRadius](https://naver.github.io/billboard.js/demo/#PieChartOptions.OuterRadius)
+     * @see [Demo: startingAngle](https://naver.github.io/billboard.js/demo/#PieChartOptions.StartingAngle)
      * @example
      *  pie: {
      *      label: {
@@ -17091,6 +17328,14 @@ var optPie = {
      *      innerRadius: {
      *      	data1: 10,
      *      	data2: 0
+     *      },
+     *
+     *      outerRadius: 100,
+     *
+     *      // set different outerRadius for each data
+     *      outerRadius: {
+     *      	data1: 50,
+     *      	data2: 100
      *      }
      *
      *      padAngle: 0.1,
@@ -17106,6 +17351,7 @@ var optPie = {
     pie_expand_rate: 0.98,
     pie_expand_duration: 50,
     pie_innerRadius: 0,
+    pie_outerRadius: undefined,
     pie_padAngle: 0,
     pie_padding: 0,
     pie_startingAngle: 0
@@ -17135,7 +17381,7 @@ var optRadar = {
      * @property {boolean} [radar.direction.clockwise=false] Set the direction to be drawn.
      * @property {number} [radar.level.depth=3] Set the level depth.
      * @property {boolean} [radar.level.show=true] Show or hide level.
-     * @property {Function} [radar.level.text.format=(x) => (x % 1 === 0 ? x : x.toFixed(2))] Set format function for the level value.
+     * @property {Function} [radar.level.text.format] Set format function for the level value.<br>- Default value: `(x) => x % 1 === 0 ? x : x.toFixed(2)`
      * @property {boolean} [radar.level.text.show=true] Show or hide level text.
      * @property {number} [radar.size.ratio=0.87] Set size ratio.
      * @see [Demo](https://naver.github.io/billboard.js/demo/#Chart.RadarChart)
@@ -17410,32 +17656,32 @@ var zoom = function (domainValue) {
     var config = $$.config, scale = $$.scale;
     var domain = domainValue;
     var resultDomain;
-    if (config.zoom_enabled && domain && withinRange(domain, $$.getZoomDomain())) {
-        var isTimeSeries = $$.axis.isTimeSeries();
-        // hide any possible tooltip show before the zoom
-        $$.api.tooltip.hide();
-        if (isTimeSeries) {
-            var fn_1 = parseDate.bind($$);
-            domain = domain.map(function (x) { return fn_1(x); });
+    if (config.zoom_enabled && domain) {
+        if ($$.axis.isTimeSeries()) {
+            domain = domain.map(function (x) { return parseDate.bind($$)(x); });
         }
-        if (config.subchart_show) {
-            var xScale = scale.zoom || scale.x;
-            $$.brush.getSelection().call($$.brush.move, [xScale(domain[0]), xScale(domain[1])]);
-            resultDomain = domain;
+        if (withinRange(domain, $$.getZoomDomain())) {
+            // hide any possible tooltip show before the zoom
+            $$.api.tooltip.hide();
+            if (config.subchart_show) {
+                var xScale = scale.zoom || scale.x;
+                $$.brush.getSelection().call($$.brush.move, [xScale(domain[0]), xScale(domain[1])]);
+                resultDomain = domain;
+            }
+            else {
+                scale.x.domain(domain);
+                scale.zoom = scale.x;
+                $$.axis.x.scale(scale.zoom);
+                resultDomain = scale.zoom.orgDomain();
+            }
+            $$.redraw({
+                withTransition: true,
+                withY: config.zoom_rescale,
+                withDimension: false
+            });
+            $$.setZoomResetButton();
+            callFn(config.zoom_onzoom, $$.api, resultDomain);
         }
-        else {
-            scale.x.domain(domain);
-            scale.zoom = scale.x;
-            $$.axis.x.scale(scale.zoom);
-            resultDomain = scale.zoom.orgDomain();
-        }
-        $$.redraw({
-            withTransition: true,
-            withY: config.zoom_rescale,
-            withDimension: false
-        });
-        $$.setZoomResetButton();
-        callFn(config.zoom_onzoom, $$.api, resultDomain);
     }
     else {
         resultDomain = scale.zoom ?
@@ -17976,11 +18222,11 @@ var subchart = {
     updateTargetsForSubchart: function (targets) {
         var $$ = this;
         var config = $$.config, state = $$.state, main = $$.$el.subchart.main;
-        var classChartBar = $$.classChartBar.bind($$);
-        var classBars = $$.classBars.bind($$);
-        var classChartLine = $$.classChartLine.bind($$);
-        var classLines = $$.classLines.bind($$);
-        var classAreas = $$.classAreas.bind($$);
+        var classChartBar = $$.getChartClass("Bar");
+        var classBars = $$.getClass("bars", true);
+        var classChartLine = $$.getChartClass("Line");
+        var classLines = $$.getClass("lines", true);
+        var classAreas = $$.getClass("areas", true);
         if (config.subchart_show) {
             // -- Bar --//
             var barUpdate = main.select("." + CLASS.chartBars)
@@ -18034,7 +18280,7 @@ var subchart = {
         subchart.bar = subchart.bar
             .enter()
             .append("path")
-            .attr("class", $$.classBar.bind($$))
+            .attr("class", $$.getClass("bar", true))
             .style("stroke", "none")
             .style("fill", $$.color)
             .merge(subchart.bar)
@@ -18073,7 +18319,7 @@ var subchart = {
         subchart.line = subchart.line
             .enter()
             .append("path")
-            .attr("class", $$.classLine.bind($$))
+            .attr("class", $$.getClass("line", true))
             .style("stroke", $$.color)
             .merge(subchart.line)
             .style("opacity", $$.initialOpacity.bind($$));
@@ -18111,7 +18357,7 @@ var subchart = {
         subchart.area = subchart.area
             .enter()
             .append("path")
-            .attr("class", $$.classArea.bind($$))
+            .attr("class", $$.getClass("area", true))
             .style("fill", $$.color)
             .style("opacity", function () {
             $$.state.orgAreaOpacity = select(this).style("opacity");
@@ -18839,7 +19085,7 @@ var zoomModule = function () {
 var defaults = {};
 /**
  * @namespace bb
- * @version 2.1.4
+ * @version 2.2.3
  */
 var bb = {
     /**
@@ -18849,7 +19095,7 @@ var bb = {
      *    bb.version;  // "1.0.0"
      * @memberof bb
      */
-    version: "2.1.4",
+    version: "2.2.3",
     /**
      * Generate chart
      * - **NOTE:** Bear in mind for the possiblity of ***throwing an error***, during the generation when:

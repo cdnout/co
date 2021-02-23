@@ -77,7 +77,7 @@
     ;(function c(node, st, override) {
       var type = override || node.type;
       baseVisitor[type](node, st, c);
-      if (last != node) {
+      if (last !== node) {
         callback(node, st, type);
         last = node;
       }
@@ -94,7 +94,7 @@
       var isNew = node !== ancestors[ancestors.length - 1];
       if (isNew) { ancestors.push(node); }
       baseVisitor[type](node, st, c);
-      if (last != node) {
+      if (last !== node) {
         callback(node, st || ancestors, ancestors, type);
         last = node;
       }

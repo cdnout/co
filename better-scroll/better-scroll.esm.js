@@ -179,6 +179,11 @@ var propertiesConfig = [
 function warn(msg) {
     console.error("[BScroll warn]: " + msg);
 }
+function assert(condition, msg) {
+    if (!condition) {
+        throw new Error('[BScroll] ' + msg);
+    }
+}
 
 // ssr support
 var inBrowser = typeof window !== 'undefined';
@@ -352,6 +357,7 @@ var eventTypeMap = {
     touchstart: 1,
     touchmove: 1,
     touchend: 1,
+    touchcancel: 1,
     mousedown: 2,
     mousemove: 2,
     mouseup: 2,
@@ -466,6 +472,12 @@ function hasClass(el, className) {
 }
 function HTMLCollectionToArray(el) {
     return Array.prototype.slice.call(el, 0);
+}
+function getClientSize(el) {
+    return {
+        width: el.clientWidth,
+        height: el.clientHeight,
+    };
 }
 
 var ease = {
@@ -1337,7 +1349,7 @@ var Behavior = /** @class */ (function () {
             'computeBoundary',
             'momentum',
             'end',
-            'ignoreHasScroll',
+            'ignoreHasScroll'
         ]);
         this.refresh(content);
     }
@@ -1384,7 +1396,7 @@ var Behavior = /** @class */ (function () {
     };
     Behavior.prototype.end = function (duration) {
         var momentumInfo = {
-            duration: 0,
+            duration: 0
         };
         var absDist = Math.abs(this.currentPos - this.startPos);
         // start momentum animation if needed
@@ -1409,10 +1421,11 @@ var Behavior = /** @class */ (function () {
         var distance = current - start;
         var speed = Math.abs(distance) / time;
         var deceleration = options.deceleration, swipeBounceTime = options.swipeBounceTime, swipeTime = options.swipeTime;
+        var duration = Math.min(swipeTime, (speed * 2) / deceleration);
         var momentumData = {
-            destination: current + (speed / deceleration) * (distance < 0 ? -1 : 1),
-            duration: swipeTime,
-            rate: 15,
+            destination: current + ((speed * speed) / deceleration) * (distance < 0 ? -1 : 1),
+            duration: duration,
+            rate: 15
         };
         this.hooks.trigger(this.hooks.eventTypes.momentum, momentumData, distance);
         if (momentumData.destination < lowerMargin) {
@@ -1470,7 +1483,7 @@ var Behavior = /** @class */ (function () {
         this.hooks.trigger(this.hooks.eventTypes.beforeComputeBoundary);
         var boundary = {
             minScrollPos: 0,
-            maxScrollPos: this.wrapperSize - this.contentSize,
+            maxScrollPos: this.wrapperSize - this.contentSize
         };
         if (boundary.maxScrollPos < 0) {
             boundary.maxScrollPos -= this.relativeOffset;
@@ -1499,7 +1512,7 @@ var Behavior = /** @class */ (function () {
         var inBoundary = position === this.getCurrentPos();
         return {
             position: position,
-            inBoundary: inBoundary,
+            inBoundary: inBoundary
         };
     };
     // adjust position when out of boundary
@@ -2259,8 +2272,8 @@ var Scroller = /** @class */ (function () {
         this.scrollTo(x, y, time, easing);
         return true;
     };
+    /* istanbul ignore next */
     Scroller.prototype.reflow = function () {
-        /* istanbul ignore if  */
         this._reflow = this.content.offsetHeight;
     };
     Scroller.prototype.updatePositions = function (pos) {
@@ -2310,7 +2323,7 @@ var BScrollConstructor = /** @class */ (function (_super) {
             'scrollCancel',
             'touchEnd',
             'flick',
-            'destroy',
+            'destroy'
         ]) || this;
         var wrapper = getElement(el);
         if (!wrapper) {
@@ -2328,7 +2341,7 @@ var BScrollConstructor = /** @class */ (function (_super) {
             'disable',
             'destroy',
             'beforeInitialScrollTo',
-            'contentChanged',
+            'contentChanged'
         ]);
         _this.init(wrapper);
         return _this;
@@ -2342,15 +2355,11 @@ var BScrollConstructor = /** @class */ (function (_super) {
             warn("Plugin Class must specify plugin's name in static property by 'pluginName' field.");
             return BScrollConstructor;
         }
-        if (BScrollConstructor.pluginsMap[name]) {
-            warn("This plugin has been registered, maybe you need change plugin's name");
-            return BScrollConstructor;
-        }
         BScrollConstructor.pluginsMap[name] = true;
         BScrollConstructor.plugins.push({
             name: name,
             applyOrder: ctor.applyOrder,
-            ctor: ctor,
+            ctor: ctor
         });
         return BScrollConstructor;
     };
@@ -2370,7 +2379,7 @@ var BScrollConstructor = /** @class */ (function (_super) {
         }
         return {
             valid: valid,
-            contentChanged: contentChanged,
+            contentChanged: contentChanged
         };
     };
     BScrollConstructor.prototype.init = function (wrapper) {
@@ -2392,7 +2401,7 @@ var BScrollConstructor = /** @class */ (function (_super) {
         var _a = this.options, startX = _a.startX, startY = _a.startY;
         var position = {
             x: startX,
-            y: startY,
+            y: startY
         };
         // maybe plugins want to control scroll position
         if (this.hooks.trigger(this.hooks.eventTypes.beforeInitialScrollTo, position)) {
@@ -2442,7 +2451,7 @@ var BScrollConstructor = /** @class */ (function (_super) {
             this.eventTypes.scrollEnd,
             this.eventTypes.scrollCancel,
             this.eventTypes.touchEnd,
-            this.eventTypes.flick,
+            this.eventTypes.flick
         ]);
     };
     BScrollConstructor.prototype.refreshWithoutReset = function (content) {
@@ -3171,152 +3180,209 @@ var EventHandler = /** @class */ (function () {
     function EventHandler(indicator, options) {
         this.indicator = indicator;
         this.options = options;
-        this.bscroll = indicator.bscroll;
-        this.startEventRegister = new EventRegister(this.indicator.el, [
-            {
-                name: options.disableMouse ? 'touchstart' : 'mousedown',
-                handler: this._start.bind(this)
-            }
-        ]);
-        this.endEventRegister = new EventRegister(window, [
-            {
-                name: options.disableMouse ? 'touchend' : 'mouseup',
-                handler: this._end.bind(this)
-            }
-        ]);
         this.hooks = new EventEmitter(['touchStart', 'touchMove', 'touchEnd']);
+        this.registerEvents();
     }
-    EventHandler.prototype._start = function (e) {
-        if (!this.bscroll.scroller.actions.enabled) {
+    EventHandler.prototype.registerEvents = function () {
+        var _a = this.options, disableMouse = _a.disableMouse, disableTouch = _a.disableTouch;
+        var startEvents = [];
+        var moveEvents = [];
+        var endEvents = [];
+        if (!disableMouse) {
+            startEvents.push({
+                name: 'mousedown',
+                handler: this.start.bind(this),
+            });
+            moveEvents.push({
+                name: 'mousemove',
+                handler: this.move.bind(this),
+            });
+            endEvents.push({
+                name: 'mouseup',
+                handler: this.end.bind(this),
+            });
+        }
+        if (!disableTouch) {
+            startEvents.push({
+                name: 'touchstart',
+                handler: this.start.bind(this),
+            });
+            moveEvents.push({
+                name: 'touchmove',
+                handler: this.move.bind(this),
+            });
+            endEvents.push({
+                name: 'touchend',
+                handler: this.end.bind(this),
+            }, {
+                name: 'touchcancel',
+                handler: this.end.bind(this),
+            });
+        }
+        this.startEventRegister = new EventRegister(this.indicator.indicatorEl, startEvents);
+        this.moveEventRegister = new EventRegister(window, moveEvents);
+        this.endEventRegister = new EventRegister(window, endEvents);
+    };
+    EventHandler.prototype.BScrollIsDisabled = function () {
+        return !this.indicator.scroll.enabled;
+    };
+    EventHandler.prototype.start = function (e) {
+        if (this.BScrollIsDisabled()) {
             return;
         }
         var point = (e.touches ? e.touches[0] : e);
         e.preventDefault();
         e.stopPropagation();
         this.initiated = true;
-        this.moved = false;
-        this.lastPoint = point[this.indicator.keysMap.pointPos];
-        var disableMouse = this.bscroll.options.disableMouse;
-        this.moveEventRegister = new EventRegister(window, [
-            {
-                name: disableMouse ? 'touchmove' : 'mousemove',
-                handler: this._move.bind(this)
-            }
-        ]);
-        this.hooks.trigger('touchStart');
+        this.lastPoint = point[this.indicator.keysMap.point];
+        this.hooks.trigger(this.hooks.eventTypes.touchStart);
     };
-    EventHandler.prototype._move = function (e) {
+    EventHandler.prototype.move = function (e) {
+        if (!this.initiated) {
+            return;
+        }
         var point = (e.touches ? e.touches[0] : e);
-        var pointPos = point[this.indicator.keysMap.pointPos];
+        var pointPos = point[this.indicator.keysMap.point];
         e.preventDefault();
         e.stopPropagation();
         var delta = pointPos - this.lastPoint;
         this.lastPoint = pointPos;
-        if (!this.moved) {
-            this.hooks.trigger('touchMove', this.moved, delta);
-            this.moved = true;
-            return;
-        }
-        this.hooks.trigger('touchMove', this.moved, delta);
+        this.hooks.trigger(this.hooks.eventTypes.touchMove, delta);
     };
-    EventHandler.prototype._end = function (e) {
+    EventHandler.prototype.end = function (e) {
         if (!this.initiated) {
             return;
         }
         this.initiated = false;
         e.preventDefault();
         e.stopPropagation();
-        this.moveEventRegister.destroy();
-        this.hooks.trigger('touchEnd', this.moved);
+        this.hooks.trigger(this.hooks.eventTypes.touchEnd);
     };
     EventHandler.prototype.destroy = function () {
         this.startEventRegister.destroy();
-        this.moveEventRegister && this.moveEventRegister.destroy();
+        this.moveEventRegister.destroy();
         this.endEventRegister.destroy();
     };
     return EventHandler;
 }());
 
-var INDICATOR_MIN_LEN = 8;
 var Indicator = /** @class */ (function () {
-    function Indicator(bscroll, options) {
-        this.bscroll = bscroll;
+    function Indicator(scroll, options) {
+        this.scroll = scroll;
         this.options = options;
-        this.keyVals = {
-            sizeRatio: 1,
-            maxPos: 0,
-            initialSize: 0,
-        };
-        this.curPos = 0;
-        this.hooksHandlers = [];
+        this.hooksFn = [];
         this.wrapper = options.wrapper;
-        this.wrapperStyle = this.wrapper.style;
-        this.el = this.wrapper.children[0];
-        this.elStyle = this.el.style;
         this.direction = options.direction;
-        this.keysMap = this._getKeysMap();
-        if (options.fade) {
-            this.visible = 0;
-            this.wrapperStyle.opacity = '0';
-        }
-        else {
-            this.visible = 1;
-        }
-        this._listenHooks(options.fade, options.interactive);
-        this.refresh();
+        this.indicatorEl = this.wrapper.children[0];
+        this.keysMap = this.getKeysMap();
+        this.handleFade();
+        this.handleHooks();
     }
-    Indicator.prototype._listenHooks = function (fade, interactive) {
+    Indicator.prototype.handleFade = function () {
+        if (this.options.fade) {
+            this.wrapper.style.opacity = '0';
+        }
+    };
+    Indicator.prototype.handleHooks = function () {
         var _this = this;
-        var bscroll = this.bscroll;
-        var bscrollHooks = bscroll;
-        var translaterHooks = bscroll.scroller.translater.hooks;
-        var animaterHooks = bscroll.scroller.animater.hooks;
-        this._listen(bscrollHooks, 'refresh', this.refresh);
-        this._listen(translaterHooks, 'translate', this.updatePosAndSize);
-        this._listen(animaterHooks, 'time', function (time) {
-            _this.setTransitionTime(time);
+        var _a = this.options, fade = _a.fade, interactive = _a.interactive, scrollbarTrackClickable = _a.scrollbarTrackClickable;
+        var scroll = this.scroll;
+        var scrollHooks = scroll.hooks;
+        var translaterHooks = scroll.scroller.translater.hooks;
+        var animaterHooks = scroll.scroller.animater.hooks;
+        this.registerHooks(scrollHooks, scrollHooks.eventTypes.refresh, this.refresh);
+        this.registerHooks(translaterHooks, translaterHooks.eventTypes.translate, function (pos) {
+            var hasScrollKey = _this.keysMap.hasScroll;
+            if (_this.scroll[hasScrollKey]) {
+                _this.updatePosition(pos);
+            }
         });
-        this._listen(animaterHooks, 'timeFunction', function (ease) {
-            _this.setTransitionTimingFunction(ease);
-        });
+        this.registerHooks(animaterHooks, animaterHooks.eventTypes.time, this.transitionTime);
+        this.registerHooks(animaterHooks, animaterHooks.eventTypes.timeFunction, this.transitionTimingFunction);
         if (fade) {
-            this._listen(bscrollHooks, 'scrollEnd', function () {
+            this.registerHooks(scroll, scroll.eventTypes.scrollEnd, function () {
                 _this.fade();
             });
-            this._listen(bscrollHooks, 'scrollStart', function () {
+            this.registerHooks(scroll, scroll.eventTypes.scrollStart, function () {
                 _this.fade(true);
             });
             // for mousewheel event
-            if (bscroll.eventTypes.mousewheelStart &&
-                bscroll.eventTypes.mousewheelEnd) {
-                this._listen(bscrollHooks, 'mousewheelStart', function () {
+            if (scroll.eventTypes.mousewheelStart &&
+                scroll.eventTypes.mousewheelEnd) {
+                this.registerHooks(scroll, scroll.eventTypes.mousewheelStart, function () {
                     _this.fade(true);
                 });
-                this._listen(bscrollHooks, 'mousewheelEnd', function () {
+                this.registerHooks(scroll, scroll.eventTypes.mousewheelMove, function () {
+                    _this.fade(true);
+                });
+                this.registerHooks(scroll, scroll.eventTypes.mousewheelEnd, function () {
                     _this.fade();
                 });
             }
         }
         if (interactive) {
-            var disableMouse = this.bscroll.options.disableMouse;
-            this.eventHandler = new EventHandler(this, { disableMouse: disableMouse });
+            var _b = this.scroll.options, disableMouse = _b.disableMouse, disableTouch = _b.disableTouch;
+            this.eventHandler = new EventHandler(this, {
+                disableMouse: disableMouse,
+                disableTouch: disableTouch,
+            });
             var eventHandlerHooks = this.eventHandler.hooks;
-            this._listen(eventHandlerHooks, 'touchStart', this.startHandler);
-            this._listen(eventHandlerHooks, 'touchMove', this.moveHandler);
-            this._listen(eventHandlerHooks, 'touchEnd', this.endHandler);
+            this.registerHooks(eventHandlerHooks, eventHandlerHooks.eventTypes.touchStart, this.startHandler);
+            this.registerHooks(eventHandlerHooks, eventHandlerHooks.eventTypes.touchMove, this.moveHandler);
+            this.registerHooks(eventHandlerHooks, eventHandlerHooks.eventTypes.touchEnd, this.endHandler);
+        }
+        if (scrollbarTrackClickable) {
+            this.bindClick();
         }
     };
-    Indicator.prototype._getKeysMap = function () {
+    Indicator.prototype.registerHooks = function (hooks, name, handler) {
+        hooks.on(name, handler, this);
+        this.hooksFn.push([hooks, name, handler]);
+    };
+    Indicator.prototype.bindClick = function () {
+        var wrapper = this.wrapper;
+        this.clickEventRegister = new EventRegister(wrapper, [
+            {
+                name: 'click',
+                handler: this.handleClick.bind(this),
+            },
+        ]);
+    };
+    Indicator.prototype.handleClick = function (e) {
+        var newPos = this.calculateclickOffsetPos(e);
+        var _a = this.scroll, x = _a.x, y = _a.y;
+        x = this.direction === "horizontal" /* Horizontal */ ? newPos : x;
+        y = this.direction === "vertical" /* Vertical */ ? newPos : y;
+        this.scroll.scrollTo(x, y, this.options.scrollbarTrackOffsetTime);
+    };
+    Indicator.prototype.calculateclickOffsetPos = function (e) {
+        var _a = this.keysMap, poinKey = _a.point, domRectKey = _a.domRect;
+        var scrollbarTrackOffsetType = this.options.scrollbarTrackOffsetType;
+        var clickPointOffset = e[poinKey] - this.wrapperRect[domRectKey];
+        var scrollToWhere = clickPointOffset < this.currentPos ? -1 /* Up */ : 1 /* Down */;
+        var delta = 0;
+        var currentPos = this.currentPos;
+        if (scrollbarTrackOffsetType === "step" /* Step */) {
+            delta = this.scrollInfo.baseSize * scrollToWhere;
+        }
+        else {
+            delta = 0;
+            currentPos = clickPointOffset;
+        }
+        return this.newPos(currentPos, delta, this.scrollInfo);
+    };
+    Indicator.prototype.getKeysMap = function () {
         if (this.direction === "vertical" /* Vertical */) {
             return {
                 hasScroll: 'hasVerticalScroll',
                 size: 'height',
                 wrapperSize: 'clientHeight',
                 scrollerSize: 'scrollerHeight',
-                maxScroll: 'maxScrollY',
+                maxScrollPos: 'maxScrollY',
                 pos: 'y',
-                pointPos: 'pageY',
-                translate: 'translateY',
+                point: 'pageY',
+                translateProperty: 'translateY',
+                domRect: 'top',
             };
         }
         return {
@@ -3324,204 +3390,269 @@ var Indicator = /** @class */ (function () {
             size: 'width',
             wrapperSize: 'clientWidth',
             scrollerSize: 'scrollerWidth',
-            maxScroll: 'maxScrollX',
+            maxScrollPos: 'maxScrollX',
             pos: 'x',
-            pointPos: 'pageX',
-            translate: 'translateX',
+            point: 'pageX',
+            translateProperty: 'translateX',
+            domRect: 'left',
         };
     };
     Indicator.prototype.fade = function (visible) {
         var time = visible ? 250 : 500;
-        this.wrapperStyle[style.transitionDuration] = time + 'ms';
-        this.wrapperStyle.opacity = visible ? '1' : '0';
-        this.visible = visible ? 1 : 0;
+        var wrapper = this.wrapper;
+        wrapper.style[style.transitionDuration] = time + 'ms';
+        wrapper.style.opacity = visible ? '1' : '0';
     };
     Indicator.prototype.refresh = function () {
-        var hasScroll = this.keysMap.hasScroll;
-        if (this._setShowBy(this.bscroll[hasScroll])) {
-            var _a = this.keysMap, wrapperSize = _a.wrapperSize, scrollerSize = _a.scrollerSize, maxScroll = _a.maxScroll;
-            this.keyVals = this._refreshKeyValues(this.wrapper[wrapperSize], this.bscroll[scrollerSize], this.bscroll[maxScroll]);
-            this.updatePosAndSize({
-                x: this.bscroll.x,
-                y: this.bscroll.y,
+        var hasScrollKey = this.keysMap.hasScroll;
+        var scroll = this.scroll;
+        var x = scroll.x, y = scroll.y;
+        this.wrapperRect = this.wrapper.getBoundingClientRect();
+        if (this.canScroll(scroll[hasScrollKey])) {
+            var _a = this.keysMap, wrapperSizeKey = _a.wrapperSize, scrollerSizeKey = _a.scrollerSize, maxScrollPosKey = _a.maxScrollPos;
+            this.scrollInfo = this.refreshScrollInfo(this.wrapper[wrapperSizeKey], scroll[scrollerSizeKey], scroll[maxScrollPosKey], this.indicatorEl[wrapperSizeKey]);
+            this.updatePosition({
+                x: x,
+                y: y,
             });
         }
     };
-    Indicator.prototype._setShowBy = function (hasScroll) {
-        if (hasScroll) {
-            this.wrapper.style.display = '';
-            return true;
-        }
-        this.wrapper.style.display = 'none';
-        return false;
+    Indicator.prototype.transitionTime = function (time) {
+        if (time === void 0) { time = 0; }
+        this.indicatorEl.style[style.transitionDuration] = time + 'ms';
     };
-    Indicator.prototype._refreshKeyValues = function (wrapperSize, scrollerSize, maxScroll) {
-        var initialSize = Math.max(Math.round((wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)), INDICATOR_MIN_LEN);
-        var maxPos = wrapperSize - initialSize;
+    Indicator.prototype.transitionTimingFunction = function (easing) {
+        this.indicatorEl.style[style.transitionTimingFunction] = easing;
+    };
+    Indicator.prototype.canScroll = function (hasScroll) {
+        this.wrapper.style.display = hasScroll ? 'block' : 'none';
+        return hasScroll;
+    };
+    Indicator.prototype.refreshScrollInfo = function (wrapperSize, scrollerSize, maxScrollPos, indicatorElSize) {
+        var baseSize = Math.max(Math.round((wrapperSize * wrapperSize) / (scrollerSize || wrapperSize || 1)), this.options.minSize);
+        if (this.options.isCustom) {
+            baseSize = indicatorElSize;
+        }
+        var maxIndicatorScrollPos = wrapperSize - baseSize;
         // sizeRatio is negative
-        var sizeRatio = maxPos / maxScroll;
+        var sizeRatio = maxIndicatorScrollPos / maxScrollPos;
         return {
-            initialSize: initialSize,
-            maxPos: maxPos,
+            baseSize: baseSize,
+            maxScrollPos: maxIndicatorScrollPos,
+            minScrollPos: 0,
             sizeRatio: sizeRatio,
         };
     };
-    Indicator.prototype.updatePosAndSize = function (endPoint) {
-        var _a = this._refreshPosAndSizeValue(endPoint, this.keyVals), pos = _a.pos, size = _a.size;
-        this.curPos = pos;
-        this._refreshPosAndSizeStyle(size, pos);
+    Indicator.prototype.updatePosition = function (point) {
+        var _a = this.caculatePosAndSize(point, this.scrollInfo), pos = _a.pos, size = _a.size;
+        this.refreshStyle(size, pos);
+        this.currentPos = pos;
     };
-    Indicator.prototype._refreshPosAndSizeValue = function (endPoint, keyVals) {
+    Indicator.prototype.caculatePosAndSize = function (point, scrollInfo) {
         var posKey = this.keysMap.pos;
-        var sizeRatio = keyVals.sizeRatio, initialSize = keyVals.initialSize, maxPos = keyVals.maxPos;
-        var pos = Math.round(sizeRatio * endPoint[posKey]);
+        var sizeRatio = scrollInfo.sizeRatio, baseSize = scrollInfo.baseSize, maxScrollPos = scrollInfo.maxScrollPos, minScrollPos = scrollInfo.minScrollPos;
+        var minSize = this.options.minSize;
+        var pos = Math.round(sizeRatio * point[posKey]);
         var size;
-        if (pos < 0) {
-            size = Math.max(initialSize + pos * 3, INDICATOR_MIN_LEN);
-            pos = 0;
+        // when out of boundary, slow down size reduction
+        if (pos < minScrollPos) {
+            size = Math.max(baseSize + pos * 3, minSize);
+            pos = minScrollPos;
         }
-        else if (pos > maxPos) {
-            size = Math.max(initialSize - (pos - maxPos) * 3, INDICATOR_MIN_LEN);
-            pos = maxPos + initialSize - size;
+        else if (pos > maxScrollPos) {
+            size = Math.max(baseSize - (pos - maxScrollPos) * 3, minSize);
+            pos = maxScrollPos + baseSize - size;
         }
         else {
-            size = initialSize;
+            size = baseSize;
         }
         return {
             pos: pos,
             size: size,
         };
     };
-    Indicator.prototype._refreshPosAndSizeStyle = function (size, pos) {
-        var _a = this.keysMap, translate = _a.translate, sizeKey = _a.size;
-        this.elStyle[sizeKey] = size + "px";
-        this.elStyle[style.transform] = translate + "(" + pos + "px)" + this.bscroll.options.translateZ;
-    };
-    Indicator.prototype.setTransitionTime = function (time) {
-        if (time === void 0) { time = 0; }
-        this.elStyle[style.transitionDuration] = time + 'ms';
-    };
-    Indicator.prototype.setTransitionTimingFunction = function (easing) {
-        this.elStyle[style.transitionTimingFunction] = easing;
+    Indicator.prototype.refreshStyle = function (size, pos) {
+        var _a = this.keysMap, translatePropertyKey = _a.translateProperty, sizeKey = _a.size;
+        var translateZ = this.scroll.options.translateZ;
+        this.indicatorEl.style[sizeKey] = size + "px";
+        this.indicatorEl.style[style.transform] = translatePropertyKey + "(" + pos + "px)" + translateZ;
     };
     Indicator.prototype.startHandler = function () {
-        this.setTransitionTime();
-        this.bscroll.trigger('beforeScrollStart');
+        this.moved = false;
+        this.startTime = getNow();
+        this.transitionTime();
+        this.scroll.scroller.hooks.trigger(this.scroll.scroller.hooks.eventTypes.beforeScrollStart);
     };
-    Indicator.prototype.moveHandler = function (moved, delta) {
-        if (!moved) {
-            this.bscroll.trigger('scrollStart');
+    Indicator.prototype.moveHandler = function (delta) {
+        if (!this.moved && !this.indicatorNotMoved(delta)) {
+            this.moved = true;
+            this.scroll.scroller.hooks.trigger(this.scroll.scroller.hooks.eventTypes.scrollStart);
         }
-        var newScrollPos = this._calScrollDesPos(this.curPos, delta, this.keyVals);
-        // TODO freeScroll ？
-        if (this.direction === "vertical" /* Vertical */) {
-            this.bscroll.scrollTo(this.bscroll.x, newScrollPos);
+        if (this.moved) {
+            var newPos = this.newPos(this.currentPos, delta, this.scrollInfo);
+            this.syncBScroll(newPos);
         }
-        else {
-            this.bscroll.scrollTo(newScrollPos, this.bscroll.y);
-        }
-        this.bscroll.trigger('scroll', {
-            x: this.bscroll.x,
-            y: this.bscroll.y,
-        });
     };
-    Indicator.prototype._calScrollDesPos = function (curPos, delta, keyVals) {
-        var maxPos = keyVals.maxPos, sizeRatio = keyVals.sizeRatio;
-        var newPos = curPos + delta;
-        if (newPos < 0) {
-            newPos = 0;
-        }
-        else if (newPos > maxPos) {
-            newPos = maxPos;
-        }
-        return Math.round(newPos / sizeRatio);
-    };
-    Indicator.prototype.endHandler = function (moved) {
-        if (moved) {
-            this.bscroll.trigger('scrollEnd', {
-                x: this.bscroll.x,
-                y: this.bscroll.y,
+    Indicator.prototype.endHandler = function () {
+        if (this.moved) {
+            var _a = this.scroll, x = _a.x, y = _a.y;
+            this.scroll.scroller.hooks.trigger(this.scroll.scroller.hooks.eventTypes.scrollEnd, {
+                x: x,
+                y: y,
             });
         }
     };
+    Indicator.prototype.indicatorNotMoved = function (delta) {
+        var currentPos = this.currentPos;
+        var _a = this.scrollInfo, maxScrollPos = _a.maxScrollPos, minScrollPos = _a.minScrollPos;
+        var notMoved = (currentPos === minScrollPos && delta <= 0) ||
+            (currentPos === maxScrollPos && delta >= 0);
+        return notMoved;
+    };
+    Indicator.prototype.syncBScroll = function (newPos) {
+        var timestamp = getNow();
+        var _a = this.scroll, x = _a.x, y = _a.y, options = _a.options, scroller = _a.scroller, maxScrollY = _a.maxScrollY, minScrollY = _a.minScrollY, maxScrollX = _a.maxScrollX, minScrollX = _a.minScrollX;
+        var probeType = options.probeType, momentumLimitTime = options.momentumLimitTime;
+        var position = { x: x, y: y };
+        if (this.direction === "vertical" /* Vertical */) {
+            position.y = between(newPos, maxScrollY, minScrollY);
+        }
+        else {
+            position.x = between(newPos, maxScrollX, minScrollX);
+        }
+        scroller.translater.translate(position);
+        // dispatch scroll in interval time
+        if (timestamp - this.startTime > momentumLimitTime) {
+            this.startTime = timestamp;
+            if (probeType === 1 /* Throttle */) {
+                scroller.hooks.trigger(scroller.hooks.eventTypes.scroll, position);
+            }
+        }
+        // dispatch scroll all the time
+        if (probeType > 1 /* Throttle */) {
+            scroller.hooks.trigger(scroller.hooks.eventTypes.scroll, position);
+        }
+    };
+    Indicator.prototype.newPos = function (currentPos, delta, scrollInfo) {
+        var maxScrollPos = scrollInfo.maxScrollPos, sizeRatio = scrollInfo.sizeRatio, minScrollPos = scrollInfo.minScrollPos;
+        var newPos = currentPos + delta;
+        newPos = between(newPos, minScrollPos, maxScrollPos);
+        return Math.round(newPos / sizeRatio);
+    };
     Indicator.prototype.destroy = function () {
-        if (this.options.interactive) {
+        var _a = this.options, interactive = _a.interactive, scrollbarTrackClickable = _a.scrollbarTrackClickable, isCustom = _a.isCustom;
+        if (interactive) {
             this.eventHandler.destroy();
         }
-        this.wrapper.parentNode.removeChild(this.wrapper);
-        this.hooksHandlers.forEach(function (item) {
+        if (scrollbarTrackClickable) {
+            this.clickEventRegister.destroy();
+        }
+        if (!isCustom) {
+            this.wrapper.parentNode.removeChild(this.wrapper);
+        }
+        this.hooksFn.forEach(function (item) {
             var hooks = item[0];
             var hooksName = item[1];
             var handlerFn = item[2];
             hooks.off(hooksName, handlerFn);
         });
-        this.hooksHandlers.length = 0;
-    };
-    Indicator.prototype._listen = function (hooks, name, handler) {
-        hooks.on(name, handler, this);
-        this.hooksHandlers.push([hooks, name, handler]);
+        this.hooksFn.length = 0;
     };
     return Indicator;
 }());
 
 var ScrollBar = /** @class */ (function () {
     function ScrollBar(scroll) {
-        this.indicators = [];
-        this.indicators = this.createIndicators(scroll);
-        scroll.on(scroll.eventTypes.destroy, this.destroy, this);
+        this.scroll = scroll;
+        this.handleOptions();
+        this.createIndicators();
+        this.handleHooks();
     }
-    ScrollBar.prototype.createIndicators = function (bscroll) {
+    ScrollBar.prototype.handleHooks = function () {
         var _this = this;
-        var _a = bscroll.options
-            .scrollbar, _b = _a.fade, fade = _b === void 0 ? true : _b, _c = _a.interactive, interactive = _c === void 0 ? false : _c;
-        var indicatorOption;
-        var scrolls = {
-            scrollX: "horizontal" /* Horizontal */,
-            scrollY: "vertical" /* Vertical */,
-        };
-        var indicators = [];
-        Object.keys(scrolls).forEach(function (key) {
-            var direction = scrolls[key];
-            if (bscroll.options[key]) {
-                indicatorOption = {
-                    wrapper: _this.createIndicatorElement(direction),
-                    direction: direction,
-                    fade: fade,
-                    interactive: interactive,
-                };
-                bscroll.wrapper.appendChild(indicatorOption.wrapper);
-                indicators.push(new Indicator(bscroll, indicatorOption));
+        var scroll = this.scroll;
+        scroll.hooks.on(scroll.hooks.eventTypes.destroy, function () {
+            for (var _i = 0, _a = _this.indicators; _i < _a.length; _i++) {
+                var indicator = _a[_i];
+                indicator.destroy();
             }
         });
-        return indicators;
     };
-    ScrollBar.prototype.createIndicatorElement = function (direction) {
-        var scrollbarEl = document.createElement('div');
-        var indicatorEl = document.createElement('div');
-        scrollbarEl.style.cssText =
-            'position:absolute;z-index:9999;pointerEvents:none';
-        indicatorEl.style.cssText =
+    ScrollBar.prototype.handleOptions = function () {
+        var userOptions = (this.scroll.options.scrollbar === true
+            ? {}
+            : this.scroll.options.scrollbar);
+        var defaultOptions = {
+            fade: true,
+            interactive: false,
+            customElements: [],
+            minSize: 8,
+            scrollbarTrackClickable: false,
+            scrollbarTrackOffsetType: "step" /* Step */,
+            scrollbarTrackOffsetTime: 300,
+        };
+        this.options = extend(defaultOptions, userOptions);
+    };
+    ScrollBar.prototype.createIndicators = function () {
+        var indicatorOptions;
+        var scroll = this.scroll;
+        var indicators = [];
+        var scrollDirectionConfigKeys = ['scrollX', 'scrollY'];
+        var indicatorDirections = [
+            "horizontal" /* Horizontal */,
+            "vertical" /* Vertical */,
+        ];
+        var customScrollbarEls = this.options.customElements;
+        for (var i = 0; i < scrollDirectionConfigKeys.length; i++) {
+            var key = scrollDirectionConfigKeys[i];
+            // wanna scroll in specified direction
+            if (scroll.options[key]) {
+                var customElement = customScrollbarEls.shift();
+                var direction = indicatorDirections[i];
+                var isCustom = false;
+                var scrollbarWrapper = customElement
+                    ? customElement
+                    : this.createScrollbarElement(direction);
+                // internal scrollbar
+                if (scrollbarWrapper !== customElement) {
+                    scroll.wrapper.append(scrollbarWrapper);
+                }
+                else {
+                    // custom scrollbar passed by users
+                    isCustom = true;
+                }
+                indicatorOptions = __assign(__assign({ wrapper: scrollbarWrapper, direction: direction }, this.options), { isCustom: isCustom });
+                indicators.push(new Indicator(scroll, indicatorOptions));
+            }
+        }
+        this.indicators = indicators;
+    };
+    ScrollBar.prototype.createScrollbarElement = function (direction, scrollbarTrackClickable) {
+        if (scrollbarTrackClickable === void 0) { scrollbarTrackClickable = this.options.scrollbarTrackClickable; }
+        var scrollbarWrapperEl = document.createElement('div');
+        var scrollbarIndicatorEl = document.createElement('div');
+        scrollbarWrapperEl.style.cssText =
+            'position:absolute;z-index:9999;overflow:hidden;';
+        scrollbarIndicatorEl.style.cssText =
             'box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px;';
-        indicatorEl.className = 'bscroll-indicator';
-        if (direction === 'horizontal') {
-            scrollbarEl.style.cssText += ';height:7px;left:2px;right:2px;bottom:0';
-            indicatorEl.style.height = '100%';
-            scrollbarEl.className = 'bscroll-horizontal-scrollbar';
+        scrollbarIndicatorEl.className = 'bscroll-indicator';
+        if (direction === "horizontal" /* Horizontal */) {
+            scrollbarWrapperEl.style.cssText +=
+                'height:7px;left:2px;right:2px;bottom:0;';
+            scrollbarIndicatorEl.style.height = '100%';
+            scrollbarWrapperEl.className = 'bscroll-horizontal-scrollbar';
         }
         else {
-            scrollbarEl.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px';
-            indicatorEl.style.width = '100%';
-            scrollbarEl.className = 'bscroll-vertical-scrollbar';
+            scrollbarWrapperEl.style.cssText +=
+                'width:7px;bottom:2px;top:2px;right:1px;';
+            scrollbarIndicatorEl.style.width = '100%';
+            scrollbarWrapperEl.className = 'bscroll-vertical-scrollbar';
         }
-        scrollbarEl.style.cssText += ';overflow:hidden';
-        scrollbarEl.appendChild(indicatorEl);
-        return scrollbarEl;
-    };
-    ScrollBar.prototype.destroy = function () {
-        for (var _i = 0, _a = this.indicators; _i < _a.length; _i++) {
-            var indicator = _a[_i];
-            indicator.destroy();
+        if (!scrollbarTrackClickable) {
+            scrollbarWrapperEl.style.cssText += 'pointer-events:none;';
         }
+        scrollbarWrapperEl.appendChild(scrollbarIndicatorEl);
+        return scrollbarWrapperEl;
     };
     ScrollBar.pluginName = 'scrollbar';
     return ScrollBar;
@@ -4318,7 +4449,7 @@ var propertiesConfig$4 = propertiesMap$3.map(function (item) {
 
 var WHEEL_INDEX_CHANGED_EVENT_NAME = 'wheelIndexChanged';
 var CONSTANTS = {
-    rate: 4,
+    rate: 4
 };
 var Wheel = /** @class */ (function () {
     function Wheel(scroll) {
@@ -4347,7 +4478,7 @@ var Wheel = /** @class */ (function () {
             rotate: 25,
             adjustTime: 400,
             selectedIndex: 0,
-            wheelDisabledItemClass: 'wheel-disabled-item',
+            wheelDisabledItemClass: 'wheel-disabled-item'
         };
         this.options = extend(defaultOptions, userOptions);
     };
@@ -4439,15 +4570,9 @@ var Wheel = /** @class */ (function () {
             boundary.maxScrollPos = -_this.itemHeight * (_this.items.length - 1);
             boundary.minScrollPos = 0;
         });
-        scrollBehaviorY.hooks.on(scrollBehaviorY.hooks.eventTypes.momentum, function (momentumInfo, distance) {
+        scrollBehaviorY.hooks.on(scrollBehaviorY.hooks.eventTypes.momentum, function (momentumInfo) {
             momentumInfo.rate = CONSTANTS.rate;
             momentumInfo.destination = _this.findNearestValidWheel(momentumInfo.destination).y;
-            // TODO algorithm optimize
-            var maxDistance = 1000;
-            var minDuration = 800;
-            if (distance < maxDistance) {
-                momentumInfo.duration = Math.max(minDuration, (distance / maxDistance) * _this.scroll.options.swipeTime);
-            }
         });
         scrollBehaviorY.hooks.on(scrollBehaviorY.hooks.eventTypes.end, function (momentumInfo) {
             var validWheel = _this.findNearestValidWheel(scrollBehaviorY.currentPos);
@@ -4557,7 +4682,7 @@ var Wheel = /** @class */ (function () {
         // when all the items are disabled, selectedIndex should always be -1
         return {
             index: this.wheelItemsAllDisabled ? -1 : currentIndex,
-            y: -currentIndex * this.itemHeight,
+            y: -currentIndex * this.itemHeight
         };
     };
     Wheel.prototype.checkWheelAllDisabled = function () {
@@ -5058,9 +5183,12 @@ var enableScrollHander = function (scrolls) {
         scroll.enable();
     });
 };
-var disableScrollHander = function (scrolls) {
+var disableScrollHander = function (scrolls, currentScroll) {
     scrolls.forEach(function (scroll) {
-        scroll.disable();
+        if (scroll.hasHorizontalScroll === currentScroll.hasHorizontalScroll ||
+            scroll.hasVerticalScroll === currentScroll.hasVerticalScroll) {
+            scroll.disable();
+        }
     });
 };
 var syncTouchstartData = function (scrolls) {
@@ -5245,7 +5373,7 @@ var NestedScroll = /** @class */ (function () {
                     resetPositionHandler(currentScroll);
                 }
                 syncTouchstartData(ancestorScrolls);
-                disableScrollHander(ancestorScrolls);
+                disableScrollHander(ancestorScrolls, currentScroll);
             };
             var touchEndHandler = function () {
                 var ancestorScrolls = ancestors.map(function (_a) {
@@ -5271,15 +5399,15 @@ var NestedScroll = /** @class */ (function () {
                 var contentMoved = currentScroll.scroller.actions.contentMoved;
                 var isTopScroll = ancestorScrolls.length === 0;
                 if (contentMoved) {
-                    disableScrollHander(ancestorScrolls);
+                    disableScrollHander(ancestorScrolls, currentScroll);
                 }
                 else if (!isTopScroll) {
                     if (isOutOfBoundary(currentScroll)) {
-                        disableScrollHander([currentScroll]);
+                        disableScrollHander([currentScroll], currentScroll);
                         if (parentScroll) {
                             enableScrollHander([parentScroll]);
                         }
-                        disableScrollHander(otherAncestorScrolls);
+                        disableScrollHander(otherAncestorScrolls, currentScroll);
                         return true;
                     }
                 }
@@ -5982,6 +6110,314 @@ var ObserveImage = /** @class */ (function () {
     return ObserveImage;
 }());
 
+var resolveRatioOption = function (ratioConfig) {
+    var ret = {
+        ratioX: 0,
+        ratioY: 0,
+    };
+    /* istanbul ignore if  */
+    if (!ratioConfig) {
+        return ret;
+    }
+    if (typeof ratioConfig === 'number') {
+        ret.ratioX = ret.ratioY = ratioConfig;
+    }
+    else if (typeof ratioConfig === 'object' && ratioConfig) {
+        ret.ratioX = ratioConfig.x || 0;
+        ret.ratioY = ratioConfig.y || 0;
+    }
+    return ret;
+};
+var handleBubbleAndCancelable = function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+};
+var Indicator$1 = /** @class */ (function () {
+    function Indicator(scroll, options) {
+        this.scroll = scroll;
+        this.options = options;
+        this.currentPos = {
+            x: 0,
+            y: 0,
+        };
+        this.hooksFn = [];
+        this.handleDOM();
+        this.handleHooks();
+        this.handleInteractive();
+    }
+    Indicator.prototype.handleDOM = function () {
+        var _a = this.options, relationElement = _a.relationElement, _b = _a.relationElementHandleElementIndex, relationElementHandleElementIndex = _b === void 0 ? 0 : _b;
+        this.wrapper = relationElement;
+        this.indicatorEl = this.wrapper.children[relationElementHandleElementIndex];
+    };
+    Indicator.prototype.handleHooks = function () {
+        var _this = this;
+        var scroll = this.scroll;
+        var scrollHooks = scroll.hooks;
+        var translaterHooks = scroll.scroller.translater.hooks;
+        var animaterHooks = scroll.scroller.animater.hooks;
+        this.registerHooks(scrollHooks, scrollHooks.eventTypes.refresh, this.refresh);
+        this.registerHooks(translaterHooks, translaterHooks.eventTypes.translate, function (pos) {
+            _this.updatePosition(pos);
+        });
+        this.registerHooks(animaterHooks, animaterHooks.eventTypes.time, this.transitionTime);
+        this.registerHooks(animaterHooks, animaterHooks.eventTypes.timeFunction, this.transitionTimingFunction);
+    };
+    Indicator.prototype.transitionTime = function (time) {
+        if (time === void 0) { time = 0; }
+        this.indicatorEl.style[style.transitionDuration] = time + 'ms';
+    };
+    Indicator.prototype.transitionTimingFunction = function (easing) {
+        this.indicatorEl.style[style.transitionTimingFunction] = easing;
+    };
+    Indicator.prototype.handleInteractive = function () {
+        if (this.options.interactive !== false) {
+            this.registerEvents();
+        }
+    };
+    Indicator.prototype.registerHooks = function (hooks, name, handler) {
+        hooks.on(name, handler, this);
+        this.hooksFn.push([hooks, name, handler]);
+    };
+    Indicator.prototype.registerEvents = function () {
+        var _a = this.scroll.options, disableMouse = _a.disableMouse, disableTouch = _a.disableTouch;
+        var startEvents = [];
+        var moveEvents = [];
+        var endEvents = [];
+        if (!disableMouse) {
+            startEvents.push({
+                name: 'mousedown',
+                handler: this.start.bind(this),
+            });
+            moveEvents.push({
+                name: 'mousemove',
+                handler: this.move.bind(this),
+            });
+            endEvents.push({
+                name: 'mouseup',
+                handler: this.end.bind(this),
+            });
+        }
+        if (!disableTouch) {
+            startEvents.push({
+                name: 'touchstart',
+                handler: this.start.bind(this),
+            });
+            moveEvents.push({
+                name: 'touchmove',
+                handler: this.move.bind(this),
+            });
+            endEvents.push({
+                name: 'touchend',
+                handler: this.end.bind(this),
+            }, {
+                name: 'touchcancel',
+                handler: this.end.bind(this),
+            });
+        }
+        this.startEventRegister = new EventRegister(this.indicatorEl, startEvents);
+        this.moveEventRegister = new EventRegister(window, moveEvents);
+        this.endEventRegister = new EventRegister(window, endEvents);
+    };
+    Indicator.prototype.refresh = function () {
+        var _a = this.scroll, x = _a.x, y = _a.y, hasHorizontalScroll = _a.hasHorizontalScroll, hasVerticalScroll = _a.hasVerticalScroll, maxBScrollX = _a.maxScrollX, maxBScrollY = _a.maxScrollY;
+        var _b = resolveRatioOption(this.options.ratio), ratioX = _b.ratioX, ratioY = _b.ratioY;
+        var _c = getClientSize(this.wrapper), wrapperWidth = _c.width, wrapperHeight = _c.height;
+        var _d = getRect(this.indicatorEl), indicatorWidth = _d.width, indicatorHeight = _d.height;
+        if (hasHorizontalScroll) {
+            this.maxScrollX = wrapperWidth - indicatorWidth;
+            this.translateXSign =
+                this.maxScrollX > 0 ? -1 /* Positive */ : 1 /* NotPositive */;
+            this.minScrollX = 0;
+            // ensure positive
+            this.ratioX = ratioX ? ratioX : Math.abs(this.maxScrollX / maxBScrollX);
+        }
+        if (hasVerticalScroll) {
+            this.maxScrollY = wrapperHeight - indicatorHeight;
+            this.translateYSign =
+                this.maxScrollY > 0 ? -1 /* Positive */ : 1 /* NotPositive */;
+            this.minScrollY = 0;
+            this.ratioY = ratioY ? ratioY : Math.abs(this.maxScrollY / maxBScrollY);
+        }
+        this.updatePosition({
+            x: x,
+            y: y,
+        });
+    };
+    Indicator.prototype.start = function (e) {
+        if (this.BScrollIsDisabled()) {
+            return;
+        }
+        var point = (e.touches ? e.touches[0] : e);
+        handleBubbleAndCancelable(e);
+        this.initiated = true;
+        this.moved = false;
+        this.lastPointX = point.pageX;
+        this.lastPointY = point.pageY;
+        this.startTime = getNow();
+        this.scroll.scroller.hooks.trigger(this.scroll.scroller.hooks.eventTypes.beforeScrollStart);
+    };
+    Indicator.prototype.BScrollIsDisabled = function () {
+        return !this.scroll.enabled;
+    };
+    Indicator.prototype.move = function (e) {
+        if (!this.initiated) {
+            return;
+        }
+        var point = (e.touches ? e.touches[0] : e);
+        var pointX = point.pageX;
+        var pointY = point.pageY;
+        handleBubbleAndCancelable(e);
+        var deltaX = pointX - this.lastPointX;
+        var deltaY = pointY - this.lastPointY;
+        this.lastPointX = pointX;
+        this.lastPointY = pointY;
+        if (!this.moved && !this.indicatorNotMoved(deltaX, deltaY)) {
+            this.moved = true;
+            this.scroll.scroller.hooks.trigger(this.scroll.scroller.hooks.eventTypes.scrollStart);
+        }
+        if (this.moved) {
+            var newPos = this.getBScrollPosByRatio(this.currentPos, deltaX, deltaY);
+            this.syncBScroll(newPos);
+        }
+    };
+    Indicator.prototype.end = function (e) {
+        if (!this.initiated) {
+            return;
+        }
+        this.initiated = false;
+        handleBubbleAndCancelable(e);
+        if (this.moved) {
+            var _a = this.scroll, x = _a.x, y = _a.y;
+            this.scroll.scroller.hooks.trigger(this.scroll.scroller.hooks.eventTypes.scrollEnd, {
+                x: x,
+                y: y,
+            });
+        }
+    };
+    Indicator.prototype.getBScrollPosByRatio = function (currentPos, deltaX, deltaY) {
+        var currentX = currentPos.x, currentY = currentPos.y;
+        var _a = this.scroll, hasHorizontalScroll = _a.hasHorizontalScroll, hasVerticalScroll = _a.hasVerticalScroll, BScrollMinScrollX = _a.minScrollX, BScrollMaxScrollX = _a.maxScrollX, BScrollMinScrollY = _a.minScrollY, BScrollMaxScrollY = _a.maxScrollY;
+        var _b = this.scroll, x = _b.x, y = _b.y;
+        if (hasHorizontalScroll) {
+            var newPosX = between(currentX + deltaX, Math.min(this.minScrollX, this.maxScrollX), Math.max(this.minScrollX, this.maxScrollX));
+            var roundX = Math.round((newPosX / this.ratioX) * this.translateXSign);
+            x = between(roundX, BScrollMaxScrollX, BScrollMinScrollX);
+        }
+        if (hasVerticalScroll) {
+            var newPosY = between(currentY + deltaY, Math.min(this.minScrollY, this.maxScrollY), Math.max(this.minScrollY, this.maxScrollY));
+            var roundY = Math.round((newPosY / this.ratioY) * this.translateYSign);
+            y = between(roundY, BScrollMaxScrollY, BScrollMinScrollY);
+        }
+        return { x: x, y: y };
+    };
+    Indicator.prototype.indicatorNotMoved = function (deltaX, deltaY) {
+        var _a = this.currentPos, x = _a.x, y = _a.y;
+        var xNotMoved = (x === this.minScrollX && deltaX <= 0) ||
+            (x === this.maxScrollX && deltaX >= 0);
+        var yNotMoved = (y === this.minScrollY && deltaY <= 0) ||
+            (y === this.maxScrollY && deltaY >= 0);
+        return xNotMoved && yNotMoved;
+    };
+    Indicator.prototype.syncBScroll = function (newPos) {
+        var timestamp = getNow();
+        var _a = this.scroll, options = _a.options, scroller = _a.scroller;
+        var probeType = options.probeType, momentumLimitTime = options.momentumLimitTime;
+        scroller.translater.translate(newPos);
+        // dispatch scroll in interval time
+        if (timestamp - this.startTime > momentumLimitTime) {
+            this.startTime = timestamp;
+            if (probeType === 1 /* Throttle */) {
+                scroller.hooks.trigger(scroller.hooks.eventTypes.scroll, newPos);
+            }
+        }
+        // dispatch scroll all the time
+        if (probeType > 1 /* Throttle */) {
+            scroller.hooks.trigger(scroller.hooks.eventTypes.scroll, newPos);
+        }
+    };
+    Indicator.prototype.updatePosition = function (BScrollPos) {
+        var newIndicatorPos = this.getIndicatorPosByRatio(BScrollPos);
+        this.applyTransformProperty(newIndicatorPos);
+        this.currentPos = __assign({}, newIndicatorPos);
+    };
+    Indicator.prototype.applyTransformProperty = function (pos) {
+        var translateZ = this.scroll.options.translateZ;
+        var transformProperties = [
+            "translateX(" + pos.x + "px)",
+            "translateY(" + pos.y + "px)",
+            "" + translateZ,
+        ];
+        this.indicatorEl.style[style.transform] = transformProperties.join(' ');
+    };
+    Indicator.prototype.getIndicatorPosByRatio = function (BScrollPos) {
+        var x = BScrollPos.x, y = BScrollPos.y;
+        var _a = this.scroll, hasHorizontalScroll = _a.hasHorizontalScroll, hasVerticalScroll = _a.hasVerticalScroll;
+        var position = __assign({}, this.currentPos);
+        if (hasHorizontalScroll) {
+            var roundX = Math.round(this.ratioX * x * this.translateXSign);
+            // maybe maxScrollX is negative
+            position.x = between(roundX, Math.min(this.minScrollX, this.maxScrollX), Math.max(this.minScrollX, this.maxScrollX));
+        }
+        if (hasVerticalScroll) {
+            var roundY = Math.round(this.ratioY * y * this.translateYSign);
+            // maybe maxScrollY is negative
+            position.y = between(roundY, Math.min(this.minScrollY, this.maxScrollY), Math.max(this.minScrollY, this.maxScrollY));
+        }
+        return position;
+    };
+    Indicator.prototype.destroy = function () {
+        if (this.options.interactive !== false) {
+            this.startEventRegister.destroy();
+            this.moveEventRegister.destroy();
+            this.endEventRegister.destroy();
+        }
+        this.hooksFn.forEach(function (item) {
+            var hooks = item[0];
+            var hooksName = item[1];
+            var handlerFn = item[2];
+            hooks.off(hooksName, handlerFn);
+        });
+        this.hooksFn.length = 0;
+    };
+    return Indicator;
+}());
+
+var Indicators = /** @class */ (function () {
+    function Indicators(scroll) {
+        this.scroll = scroll;
+        this.options = [];
+        this.indicators = [];
+        this.handleOptions();
+        this.handleHooks();
+    }
+    Indicators.prototype.handleOptions = function () {
+        var UserIndicatorsOptions = this.scroll.options.indicators;
+        assert(Array.isArray(UserIndicatorsOptions), "'indicators' must be an array.");
+        for (var _i = 0, UserIndicatorsOptions_1 = UserIndicatorsOptions; _i < UserIndicatorsOptions_1.length; _i++) {
+            var indicatorOptions = UserIndicatorsOptions_1[_i];
+            assert(!!indicatorOptions.relationElement, "'relationElement' must be a HTMLElement.");
+            this.createIndicators(indicatorOptions);
+        }
+    };
+    Indicators.prototype.createIndicators = function (options) {
+        this.indicators.push(new Indicator$1(this.scroll, options));
+    };
+    Indicators.prototype.handleHooks = function () {
+        var _this = this;
+        var scrollHooks = this.scroll.hooks;
+        scrollHooks.on(scrollHooks.eventTypes.destroy, function () {
+            for (var _i = 0, _a = _this.indicators; _i < _a.length; _i++) {
+                var indicator = _a[_i];
+                indicator.destroy();
+            }
+            _this.indicators = [];
+        });
+    };
+    Indicators.pluginName = 'indicators';
+    return Indicators;
+}());
+
 BScroll.use(MouseWheel)
     .use(ObserveDOM)
     .use(PullDown)
@@ -5993,7 +6429,8 @@ BScroll.use(MouseWheel)
     .use(NestedScroll)
     .use(InfinityScroll)
     .use(Movable)
-    .use(ObserveImage);
+    .use(ObserveImage)
+    .use(Indicators);
 
 export default BScroll;
-export { Behavior, CustomOptions, InfinityScroll, MouseWheel, Movable, NestedScroll, ObserveDOM as ObserveDom, ObserveImage, PullDown as PullDownRefresh, PullUp as PullUpLoad, ScrollBar, Slide, Wheel, Zoom, createBScroll };
+export { Behavior, CustomOptions, Indicators, InfinityScroll, MouseWheel, Movable, NestedScroll, ObserveDOM as ObserveDom, ObserveImage, PullDown as PullDownRefresh, PullUp as PullUpLoad, ScrollBar, Slide, Wheel, Zoom, createBScroll };

@@ -1,5 +1,5 @@
 /*!
- * @alifd/next@1.22.1 (https://fusion.design)
+ * @alifd/next@1.22.8 (https://fusion.design)
  * Copyright 2018-present Alibaba Group,
  * Licensed under MIT (https://github.com/alibaba-fusion/next/blob/master/LICENSE)
  */
@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 476);
+/******/ 	return __webpack_require__(__webpack_require__.s = 475);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -513,6 +513,7 @@ var ConfigProvider = (_temp = _class = function (_Component) {
         var _props = this.props,
             prefix = _props.prefix,
             locale = _props.locale,
+            defaultPropsConfig = _props.defaultPropsConfig,
             pure = _props.pure,
             warning = _props.warning,
             rtl = _props.rtl,
@@ -521,6 +522,7 @@ var ConfigProvider = (_temp = _class = function (_Component) {
             errorBoundary = _props.errorBoundary;
         var _context = this.context,
             nextPrefix = _context.nextPrefix,
+            nextDefaultPropsConfig = _context.nextDefaultPropsConfig,
             nextLocale = _context.nextLocale,
             nextPure = _context.nextPure,
             nextRtl = _context.nextRtl,
@@ -531,6 +533,7 @@ var ConfigProvider = (_temp = _class = function (_Component) {
 
         return {
             nextPrefix: prefix || nextPrefix,
+            nextDefaultPropsConfig: defaultPropsConfig || nextDefaultPropsConfig,
             nextLocale: locale || nextLocale,
             nextPure: typeof pure === 'boolean' ? pure : nextPure,
             nextRtl: typeof rtl === 'boolean' ? rtl : nextRtl,
@@ -577,6 +580,10 @@ var ConfigProvider = (_temp = _class = function (_Component) {
      */
     locale: _propTypes2.default.object,
     /**
+     * 组件 API 的默认配置
+     */
+    defaultPropsConfig: _propTypes2.default.object,
+    /**
      * 是否开启错误捕捉 errorBoundary
      * 如需自定义参数，请传入对象 对象接受参数列表如下：
      *
@@ -614,6 +621,7 @@ var ConfigProvider = (_temp = _class = function (_Component) {
 }, _class.contextTypes = {
     nextPrefix: _propTypes2.default.string,
     nextLocale: _propTypes2.default.object,
+    nextDefaultPropsConfig: _propTypes2.default.object,
     nextPure: _propTypes2.default.bool,
     nextRtl: _propTypes2.default.bool,
     nextWarning: _propTypes2.default.bool,
@@ -623,6 +631,7 @@ var ConfigProvider = (_temp = _class = function (_Component) {
 }, _class.childContextTypes = {
     nextPrefix: _propTypes2.default.string,
     nextLocale: _propTypes2.default.object,
+    nextDefaultPropsConfig: _propTypes2.default.object,
     nextPure: _propTypes2.default.bool,
     nextRtl: _propTypes2.default.bool,
     nextWarning: _propTypes2.default.bool,
@@ -637,6 +646,7 @@ var ConfigProvider = (_temp = _class = function (_Component) {
     var _ref = childContextCache.root() || {},
         nextPrefix = _ref.nextPrefix,
         nextLocale = _ref.nextLocale,
+        nextDefaultPropsConfig = _ref.nextDefaultPropsConfig,
         nextPure = _ref.nextPure,
         nextRtl = _ref.nextRtl,
         nextWarning = _ref.nextWarning,
@@ -647,6 +657,7 @@ var ConfigProvider = (_temp = _class = function (_Component) {
     return {
         prefix: nextPrefix,
         locale: nextLocale,
+        defaultPropsConfig: nextDefaultPropsConfig,
         pure: nextPure,
         rtl: nextRtl,
         warning: nextWarning,
@@ -1554,7 +1565,7 @@ var setStickyStyle = exports.setStickyStyle = function setStickyStyle(lockChildr
         col.cellStyle = style;
     });
 
-    var setOffset = function setOffset(col, index, dir) {
+    var setOffset = function setOffset(col, index, dir, isBorder) {
         var _classnames2;
 
         var style = {
@@ -1566,21 +1577,46 @@ var setStickyStyle = exports.setStickyStyle = function setStickyStyle(lockChildr
             style[dir] = offset;
         }
 
-        col.className = (0, _classnames4.default)(col.className, (_classnames2 = {}, _classnames2[prefix + 'table-fix-' + dir] = true, _classnames2[prefix + 'table-fix-left-last'] = dir === 'left', _classnames2[prefix + 'table-fix-right-first'] = dir === 'right', _classnames2));
+        col.className = (0, _classnames4.default)(col.className, (_classnames2 = {}, _classnames2[prefix + 'table-fix-' + dir] = true, _classnames2[prefix + 'table-fix-left-last'] = dir === 'left' && isBorder, _classnames2[prefix + 'table-fix-right-first'] = dir === 'right' && isBorder, _classnames2));
         col.style = (0, _extends3.default)({}, col.style, style);
         col.cellStyle = style;
     };
 
+    // 查看当前元素的叶子结点数量
+    var getLeafNodes = function getLeafNodes(node) {
+        var nodesLen = 0;
+        var arrLen = Array.isArray(node && node.children) && node.children.length || 0;
+        if (arrLen > 0) {
+            nodesLen = node.children.reduce(function (ret, item, idx) {
+                return ret + getLeafNodes(item.children);
+            }, 0);
+        } else {
+            nodesLen = 1;
+        }
+        return nodesLen;
+    };
+
+    var getPreNodes = function getPreNodes(arr, idx) {
+        return arr.reduce(function (ret, item, i) {
+            if (i < idx) {
+                return ret + getLeafNodes(item);
+            }
+            return ret;
+        }, 0);
+    };
+
     // for multiple header
-    // const flatenlen = offsetArr.length;
+    // nodesLen 前序叶子结点数
     var loop = function loop(arr, i) {
         dir === 'right' && arr.reverse();
         arr.forEach(function (child, j) {
-            var p = dir === 'right' ? i - j : i + j;
+            var p = dir === 'right' ? i - getPreNodes(arr, j) : i + getPreNodes(arr, j);
             if (child.children) {
                 // 合并单元格的节点
                 loop(child.children, p);
-                setOffset(child, p, dir);
+                // 查询当前元素下的 前序叶子结点数 比如为n
+                // const isBorder = (dir === 'right' && j === 0) || (dir === 'left' && j === (arr.length - 1));
+                setOffset(child, p, dir, j === arr.length - 1);
             }
         });
         dir === 'right' && arr.reverse();
@@ -2831,7 +2867,9 @@ var Item = (_temp = _class = function (_Component) {
     };
 
     Item.prototype.componentDidUpdate = function componentDidUpdate() {
-        this.setFocus();
+        if (this.props.root.props.focusable) {
+            this.setFocus();
+        }
     };
 
     Item.prototype.focusable = function focusable() {
@@ -3516,7 +3554,7 @@ var SharedPT = {
         }
     },
     value: function value(props, propName, componentName) {
-        if (propName in props) {
+        if (props[propName]) {
             var value = props[propName];
 
             if (props.type === _constant.DATE_PICKER_TYPE.RANGE && !Array.isArray(value)) {
@@ -3526,7 +3564,7 @@ var SharedPT = {
             }
 
             if (!value.every(function (v) {
-                return (0, _util.datejs)(v).isValid();
+                return !v || (0, _util.datejs)(v).isValid();
             })) {
                 throw error(propName, componentName);
             }
@@ -9935,8 +9973,6 @@ var _calendar = __webpack_require__(469);
 
 var _calendar2 = _interopRequireDefault(_calendar);
 
-__webpack_require__(472);
-
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
@@ -10859,6 +10895,7 @@ var parseBoundary = function parseBoundary(input) {
 function getContextProps(props, context, displayName) {
     var prefix = props.prefix,
         locale = props.locale,
+        defaultPropsConfig = props.defaultPropsConfig,
         pure = props.pure,
         rtl = props.rtl,
         device = props.device,
@@ -10866,6 +10903,7 @@ function getContextProps(props, context, displayName) {
         errorBoundary = props.errorBoundary;
     var nextPrefix = context.nextPrefix,
         nextLocale = context.nextLocale,
+        nextDefaultPropsConfig = context.nextDefaultPropsConfig,
         nextPure = context.nextPure,
         nextWarning = context.nextWarning,
         nextRtl = context.nextRtl,
@@ -10908,6 +10946,7 @@ function getContextProps(props, context, displayName) {
         pure: newPure,
         rtl: newRtl,
         warning: nextWarning,
+        defaultPropsConfig: nextDefaultPropsConfig || {},
         device: device || nextDevice || undefined,
         popupContainer: popupContainer || nextPopupContainer,
         errorBoundary: newErrorBoundary
@@ -22995,7 +23034,7 @@ var ExpandedRow = (_temp = _class = function (_React$Component) {
 
             var expandedRowStyle = {
                 position: 'sticky',
-                width: tableOuterWidth,
+                width: (tableOuterWidth || 0) - 1,
                 left: 0
             };
             // 暴露给用户的index
@@ -26890,6 +26929,7 @@ var TimePanel = (_temp2 = _class = function (_React$PureComponent) {
             showSecond = _getShow.showSecond;
 
         return _react2.default.createElement('div', { dir: rtl ? 'rtl' : undefined, className: prefix + 'date-time-picker-wrapper ' + prefix + 'calendar2-panel' }, _react2.default.createElement('div', { className: prefix + 'calendar2-header' }, _react2.default.createElement('div', { className: prefix + 'calendar2-header-text-field' }, value ? this.formater(value) : null)), _react2.default.createElement(_panel2.default, (0, _extends3.default)({
+            prefix: prefix,
             locale: locale,
             onSelect: this.onSelect,
             showHour: showHour,
@@ -26922,7 +26962,7 @@ module.exports = exports['default'];
 
 var next = __webpack_require__(199);
 
-next.version = '1.22.1';
+next.version = '1.22.8';
 
 module.exports = next;
 
@@ -28930,7 +28970,7 @@ function escapeForId(text) {
 /* 244 */
 /***/ (function(module, exports, __webpack_require__) {
 
-!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define(e):t.dayjs_plugin_customParseFormat=e()}(this,function(){"use strict";var t,e={LTS:"h:mm:ss A",LT:"h:mm A",L:"MM/DD/YYYY",LL:"MMMM D, YYYY",LLL:"MMMM D, YYYY h:mm A",LLLL:"dddd, MMMM D, YYYY h:mm A"},n=function(t,n){return t.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g,function(t,r,i){var o=i&&i.toUpperCase();return r||n[i]||e[i]||n[o].replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g,function(t,e,n){return e||n.slice(1)})})},r=/(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?M?M?|Do|DD?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g,i=/\d\d/,o=/\d\d?/,s=/\d*[^\s\d-:/()]+/;var a=function(t){return function(e){this[t]=+e}},f=[/[+-]\d\d:?(\d\d)?/,function(t){(this.zone||(this.zone={})).offset=function(t){if(!t)return 0;var e=t.match(/([+-]|\d\d)/g),n=60*e[1]+(+e[2]||0);return 0===n?0:"+"===e[0]?-n:n}(t)}],u=function(e){var n=t[e];return n&&(n.indexOf?n:n.s.concat(n.f))},h=function(e,n){var r,i=t.meridiem;if(i){for(var o=1;o<=24;o+=1)if(e.indexOf(i(o,0,n))>-1){r=o>12;break}}else r=e===(n?"pm":"PM");return r},d={A:[s,function(t){this.afternoon=h(t,!1)}],a:[s,function(t){this.afternoon=h(t,!0)}],S:[/\d/,function(t){this.milliseconds=100*+t}],SS:[i,function(t){this.milliseconds=10*+t}],SSS:[/\d{3}/,function(t){this.milliseconds=+t}],s:[o,a("seconds")],ss:[o,a("seconds")],m:[o,a("minutes")],mm:[o,a("minutes")],H:[o,a("hours")],h:[o,a("hours")],HH:[o,a("hours")],hh:[o,a("hours")],D:[o,a("day")],DD:[i,a("day")],Do:[s,function(e){var n=t.ordinal,r=e.match(/\d+/);if(this.day=r[0],n)for(var i=1;i<=31;i+=1)n(i).replace(/\[|\]/g,"")===e&&(this.day=i)}],M:[o,a("month")],MM:[i,a("month")],MMM:[s,function(t){var e=u("months"),n=(u("monthsShort")||e.map(function(t){return t.substr(0,3)})).indexOf(t)+1;if(n<1)throw new Error;this.month=n%12||n}],MMMM:[s,function(t){var e=u("months").indexOf(t)+1;if(e<1)throw new Error;this.month=e%12||e}],Y:[/[+-]?\d+/,a("year")],YY:[i,function(t){t=+t,this.year=t+(t>68?1900:2e3)}],YYYY:[/\d{4}/,a("year")],Z:f,ZZ:f};var c=function(e,i,o){try{var s=function(e){for(var i=(e=n(e,t&&t.formats)).match(r),o=i.length,s=0;s<o;s+=1){var a=i[s],f=d[a],u=f&&f[0],h=f&&f[1];i[s]=h?{regex:u,parser:h}:a.replace(/^\[|\]$/g,"")}return function(t){for(var e={},n=0,r=0;n<o;n+=1){var s=i[n];if("string"==typeof s)r+=s.length;else{var a=s.regex,f=s.parser,u=t.substr(r),h=a.exec(u)[0];f.call(e,h),t=t.replace(h,"")}}return function(t){var e=t.afternoon;if(void 0!==e){var n=t.hours;e?n<12&&(t.hours+=12):12===n&&(t.hours=0),delete t.afternoon}}(e),e}}(i)(e),a=s.year,f=s.month,u=s.day,h=s.hours,c=s.minutes,m=s.seconds,l=s.milliseconds,M=s.zone,Y=new Date,v=u||(a||f?1:Y.getDate()),p=a||Y.getFullYear(),D=0;a&&!f||(D=f>0?f-1:Y.getMonth());var y=h||0,L=c||0,g=m||0,$=l||0;return M?new Date(Date.UTC(p,D,v,y,L,g,$+60*M.offset*1e3)):o?new Date(Date.UTC(p,D,v,y,L,g,$)):new Date(p,D,v,y,L,g,$)}catch(t){return new Date("")}};return function(e,n,r){r.p.customParseFormat=!0;var i=n.prototype,o=i.parse;i.parse=function(e){var n=e.date,i=e.utc,s=e.args;this.$u=i;var a=s[1];if("string"==typeof a){var f=!0===s[2],u=!0===s[3],h=f||u,d=s[2];u&&(d=s[2]),f||(t=d?r.Ls[d]:this.$locale()),this.$d=c(n,a,i),this.init(),d&&!0!==d&&(this.$L=this.locale(d).$L),h&&n!==this.format(a)&&(this.$d=new Date("")),t=void 0}else if(a instanceof Array)for(var m=a.length,l=1;l<=m;l+=1){s[1]=a[l-1];var M=r.apply(this,s);if(M.isValid()){this.$d=M.$d,this.$L=M.$L,this.init();break}l===m&&(this.$d=new Date(""))}else o.call(this,e)}}});
+!function(t,e){ true?module.exports=e():"function"==typeof define&&define.amd?define(e):t.dayjs_plugin_customParseFormat=e()}(this,function(){"use strict";var t={LTS:"h:mm:ss A",LT:"h:mm A",L:"MM/DD/YYYY",LL:"MMMM D, YYYY",LLL:"MMMM D, YYYY h:mm A",LLLL:"dddd, MMMM D, YYYY h:mm A"},e=function(e,n){return e.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g,function(e,r,i){var o=i&&i.toUpperCase();return r||n[i]||t[i]||n[o].replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g,function(t,e,n){return e||n.slice(1)})})},n=/(\[[^[]*\])|([-:/.()\s]+)|(A|a|YYYY|YY?|MM?M?M?|Do|DD?|hh?|HH?|mm?|ss?|S{1,3}|z|ZZ?)/g,r=/\d\d/,i=/\d\d?/,o=/\d*[^\s\d-_:/()]+/,s={};var a=function(t){return function(e){this[t]=+e}},f=[/[+-]\d\d:?(\d\d)?/,function(t){(this.zone||(this.zone={})).offset=function(t){if(!t)return 0;var e=t.match(/([+-]|\d\d)/g),n=60*e[1]+(+e[2]||0);return 0===n?0:"+"===e[0]?-n:n}(t)}],u=function(t){var e=s[t];return e&&(e.indexOf?e:e.s.concat(e.f))},h=function(t,e){var n,r=s.meridiem;if(r){for(var i=1;i<=24;i+=1)if(t.indexOf(r(i,0,e))>-1){n=i>12;break}}else n=t===(e?"pm":"PM");return n},d={A:[o,function(t){this.afternoon=h(t,!1)}],a:[o,function(t){this.afternoon=h(t,!0)}],S:[/\d/,function(t){this.milliseconds=100*+t}],SS:[r,function(t){this.milliseconds=10*+t}],SSS:[/\d{3}/,function(t){this.milliseconds=+t}],s:[i,a("seconds")],ss:[i,a("seconds")],m:[i,a("minutes")],mm:[i,a("minutes")],H:[i,a("hours")],h:[i,a("hours")],HH:[i,a("hours")],hh:[i,a("hours")],D:[i,a("day")],DD:[r,a("day")],Do:[o,function(t){var e=s.ordinal,n=t.match(/\d+/);if(this.day=n[0],e)for(var r=1;r<=31;r+=1)e(r).replace(/\[|\]/g,"")===t&&(this.day=r)}],M:[i,a("month")],MM:[r,a("month")],MMM:[o,function(t){var e=u("months"),n=(u("monthsShort")||e.map(function(t){return t.substr(0,3)})).indexOf(t)+1;if(n<1)throw new Error;this.month=n%12||n}],MMMM:[o,function(t){var e=u("months").indexOf(t)+1;if(e<1)throw new Error;this.month=e%12||e}],Y:[/[+-]?\d+/,a("year")],YY:[r,function(t){t=+t,this.year=t+(t>68?1900:2e3)}],YYYY:[/\d{4}/,a("year")],Z:f,ZZ:f};var c=function(t,r,i){try{var o=function(t){for(var r=(t=e(t,s&&s.formats)).match(n),i=r.length,o=0;o<i;o+=1){var a=r[o],f=d[a],u=f&&f[0],h=f&&f[1];r[o]=h?{regex:u,parser:h}:a.replace(/^\[|\]$/g,"")}return function(t){for(var e={},n=0,o=0;n<i;n+=1){var s=r[n];if("string"==typeof s)o+=s.length;else{var a=s.regex,f=s.parser,u=t.substr(o),h=a.exec(u)[0];f.call(e,h),t=t.replace(h,"")}}return function(t){var e=t.afternoon;if(void 0!==e){var n=t.hours;e?n<12&&(t.hours+=12):12===n&&(t.hours=0),delete t.afternoon}}(e),e}}(r)(t),a=o.year,f=o.month,u=o.day,h=o.hours,c=o.minutes,m=o.seconds,l=o.milliseconds,M=o.zone,Y=new Date,v=u||(a||f?1:Y.getDate()),p=a||Y.getFullYear(),D=0;a&&!f||(D=f>0?f-1:Y.getMonth());var y=h||0,L=c||0,g=m||0,$=l||0;return M?new Date(Date.UTC(p,D,v,y,L,g,$+60*M.offset*1e3)):i?new Date(Date.UTC(p,D,v,y,L,g,$)):new Date(p,D,v,y,L,g,$)}catch(t){return new Date("")}};return function(t,e,n){n.p.customParseFormat=!0;var r=e.prototype,i=r.parse;r.parse=function(t){var e=t.date,r=t.utc,o=t.args;this.$u=r;var a=o[1];if("string"==typeof a){var f=!0===o[2],u=!0===o[3],h=f||u,d=o[2];u&&(d=o[2]),s=this.$locale(),!f&&d&&(s=n.Ls[d]),this.$d=c(e,a,r),this.init(),d&&!0!==d&&(this.$L=this.locale(d).$L),h&&e!==this.format(a)&&(this.$d=new Date("")),s={}}else if(a instanceof Array)for(var m=a.length,l=1;l<=m;l+=1){o[1]=a[l-1];var M=n.apply(this,o);if(M.isValid()){this.$d=M.$d,this.$L=M.$L,this.init();break}l===m&&(this.$d=new Date(""))}else i.call(this,t)}}});
 
 
 /***/ }),
@@ -28958,7 +28998,7 @@ function escapeForId(text) {
 /* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
-!function(e,t){ true?module.exports=t():"function"==typeof define&&define.amd?define(t):e.dayjs_plugin_advancedFormat=t()}(this,function(){"use strict";return function(e,t,r){var n=t.prototype,a=n.format;r.en.ordinal=function(e){var t=["th","st","nd","rd"],r=e%100;return"["+e+(t[(r-20)%10]||t[r]||t[0])+"]"},n.format=function(e){var t=this,r=this.$locale(),n=this.$utils(),o=(e||"YYYY-MM-DDTHH:mm:ssZ").replace(/\[([^\]]+)]|Q|wo|ww|w|zzz|z|gggg|Do|X|x|k{1,2}|S/g,function(e){switch(e){case"Q":return Math.ceil((t.$M+1)/3);case"Do":return r.ordinal(t.$D);case"gggg":return t.weekYear();case"wo":return r.ordinal(t.week(),"W");case"w":case"ww":return n.s(t.week(),"w"===e?1:2,"0");case"k":case"kk":return n.s(String(0===t.$H?24:t.$H),"k"===e?1:2,"0");case"X":return Math.floor(t.$d.getTime()/1e3);case"x":return t.$d.getTime();case"z":return"["+t.offsetName()+"]";case"zzz":return"["+t.offsetName("long")+"]";default:return e}});return a.bind(this)(o)}}});
+!function(e,t){ true?module.exports=t():"function"==typeof define&&define.amd?define(t):e.dayjs_plugin_advancedFormat=t()}(this,function(){"use strict";return function(e,t,r){var n=t.prototype,a=n.format;r.en.ordinal=function(e){var t=["th","st","nd","rd"],r=e%100;return"["+e+(t[(r-20)%10]||t[r]||t[0])+"]"},n.format=function(e){var t=this,r=this.$locale(),n=this.$utils(),s=(e||"YYYY-MM-DDTHH:mm:ssZ").replace(/\[([^\]]+)]|Q|wo|ww|w|WW|W|zzz|z|gggg|GGGG|Do|X|x|k{1,2}|S/g,function(e){switch(e){case"Q":return Math.ceil((t.$M+1)/3);case"Do":return r.ordinal(t.$D);case"gggg":return t.weekYear();case"GGGG":return t.isoWeekYear();case"wo":return r.ordinal(t.week(),"W");case"w":case"ww":return n.s(t.week(),"w"===e?1:2,"0");case"W":case"WW":return n.s(t.isoWeek(),"W"===e?1:2,"0");case"k":case"kk":return n.s(String(0===t.$H?24:t.$H),"k"===e?1:2,"0");case"X":return Math.floor(t.$d.getTime()/1e3);case"x":return t.$d.getTime();case"z":return"["+t.offsetName()+"]";case"zzz":return"["+t.offsetName("long")+"]";default:return e}});return a.bind(this)(s)}}});
 
 
 /***/ }),
@@ -29158,16 +29198,19 @@ function config(Component) {
             var _props = this.props,
                 prefix = _props.prefix,
                 locale = _props.locale,
+                defaultPropsConfig = _props.defaultPropsConfig,
                 pure = _props.pure,
                 rtl = _props.rtl,
                 device = _props.device,
                 popupContainer = _props.popupContainer,
                 errorBoundary = _props.errorBoundary,
-                others = (0, _objectWithoutProperties3.default)(_props, ['prefix', 'locale', 'pure', 'rtl', 'device', 'popupContainer', 'errorBoundary']);
+                others = (0, _objectWithoutProperties3.default)(_props, ['prefix', 'locale', 'defaultPropsConfig', 'pure', 'rtl', 'device', 'popupContainer', 'errorBoundary']);
             var _context = this.context,
                 nextPrefix = _context.nextPrefix,
                 _context$nextLocale = _context.nextLocale,
                 nextLocale = _context$nextLocale === undefined ? {} : _context$nextLocale,
+                _context$nextDefaultP = _context.nextDefaultPropsConfig,
+                nextDefaultPropsConfig = _context$nextDefaultP === undefined ? {} : _context$nextDefaultP,
                 nextPure = _context.nextPure,
                 nextRtl = _context.nextRtl,
                 nextDevice = _context.nextDevice,
@@ -29178,6 +29221,7 @@ function config(Component) {
             var contextProps = (0, _getContextProps2.default)({
                 prefix: prefix,
                 locale: locale,
+                defaultPropsConfig: defaultPropsConfig,
                 pure: pure,
                 device: device,
                 popupContainer: popupContainer,
@@ -29186,6 +29230,7 @@ function config(Component) {
             }, {
                 nextPrefix: nextPrefix,
                 nextLocale: (0, _extends3.default)({}, currentGlobalLocale, nextLocale),
+                nextDefaultPropsConfig: nextDefaultPropsConfig,
                 nextPure: nextPure,
                 nextDevice: nextDevice,
                 nextPopupContainer: nextPopupContainer,
@@ -29207,7 +29252,7 @@ function config(Component) {
 
             var newOthers = options.transform ? options.transform(others, this._deprecated) : others;
 
-            var content = _react2.default.createElement(Component, (0, _extends3.default)({}, newOthers, newContextProps, {
+            var content = _react2.default.createElement(Component, (0, _extends3.default)({}, contextProps.defaultPropsConfig[displayName], newOthers, newContextProps, {
                 ref: _util.obj.isClassComponent(Component) ? this._getInstance : null
             }));
 
@@ -29222,6 +29267,7 @@ function config(Component) {
     }(_react2.default.Component), _class.propTypes = (0, _extends3.default)({}, Component.propTypes || {}, {
         prefix: _propTypes2.default.string,
         locale: _propTypes2.default.object,
+        defaultPropsConfig: _propTypes2.default.object,
         pure: _propTypes2.default.bool,
         rtl: _propTypes2.default.bool,
         device: _propTypes2.default.oneOf(['tablet', 'desktop', 'phone']),
@@ -29230,6 +29276,7 @@ function config(Component) {
     }), _class.contextTypes = (0, _extends3.default)({}, Component.contextTypes || {}, {
         nextPrefix: _propTypes2.default.string,
         nextLocale: _propTypes2.default.object,
+        nextDefaultPropsConfig: _propTypes2.default.object,
         nextPure: _propTypes2.default.bool,
         nextRtl: _propTypes2.default.bool,
         nextWarning: _propTypes2.default.bool,
@@ -31689,17 +31736,12 @@ function _getViewportSize(container) {
 
 var getContainer = function getContainer(_ref) {
     var container = _ref.container,
-        autoFit = _ref.autoFit,
         baseElement = _ref.baseElement;
 
     var calcContainer = (0, _findNode2.default)(container, baseElement);
 
     if (!calcContainer) {
         calcContainer = document.body;
-    }
-
-    if (!autoFit) {
-        return calcContainer;
     }
 
     while (_util.dom.getStyle(calcContainer, 'position') === 'static') {
@@ -31781,11 +31823,22 @@ var Position = (_temp = _class = function () {
             var left = baseElementOffset.left + baseElementPoints.x - pinElementParentOffset.left - pinElementPoints.x + pinElementParentScrollOffset.left;
             this._setPinElementPostion(pinElement, { left: left, top: top }, this.offset);
 
-            if (!firstPositionResult) {
-                firstPositionResult = { left: left, top: top };
-            }
             if (this._isInViewport(pinElement, align)) {
                 return align;
+            } else if (!firstPositionResult) {
+                if (this.needAdjust && !this.autoFit) {
+                    var _getViewportOffset2 = this._getViewportOffset(pinElement, align),
+                        right = _getViewportOffset2.right,
+                        bottom = _getViewportOffset2.bottom;
+
+                    firstPositionResult = {
+                        left: right < 0 ? left + right : left,
+                        top: top
+                        // top: bottom < 0 ? top + bottom : top,
+                    };
+                } else {
+                    firstPositionResult = { left: left, top: top };
+                }
             }
         }
 
@@ -32011,6 +32064,22 @@ var Position = (_temp = _class = function () {
         // Avoid animate problem that use offsetWidth instead of getBoundingClientRect.
         return elementRect.left >= 0 && elementRect.left + element.offsetWidth <= viewportWidth && elementRect.top >= 0 && elementRect.top + element.offsetHeight <= viewportHeight;
     };
+
+    Position.prototype._getViewportOffset = function _getViewportOffset(element, align) {
+        var viewportSize = _getViewportSize(this.container);
+        var elementRect = _getElementRect(element, this.container);
+
+        var viewportWidth = this._isRightAligned(align) ? viewportSize.width : viewportSize.width - 1;
+        var viewportHeight = this._isBottomAligned(align) ? viewportSize.height : viewportSize.height - 1;
+
+        return {
+            top: elementRect.top,
+            right: viewportWidth - (elementRect.left + element.offsetWidth),
+            bottom: viewportHeight - (elementRect.top + element.offsetHeight),
+            left: elementRect.left
+        };
+    };
+
     // 在这里做RTL判断 top-left 定位转化为等效的 top-right定位
 
 
@@ -32065,7 +32134,6 @@ var Position = (_temp = _class = function () {
                 offset[1] = -baseElementRect.top - (y === 't' ? baseElementRect.height : 0);
             }
         }
-
         return offset;
     };
 
@@ -34576,10 +34644,11 @@ var Select = (_temp = _class = function (_Base) {
 
     /**
      * Handle search input change event
+     * @param {String} value search text
      * @param {Event} e change Event
      */
 
-    Select.prototype.handleSearch = function handleSearch(value) {
+    Select.prototype.handleSearch = function handleSearch(value, e) {
         this.handleSearchValue(value);
 
         // inputing should trigger popup open
@@ -34587,7 +34656,7 @@ var Select = (_temp = _class = function (_Base) {
             this.setVisible(true);
         }
 
-        this.props.onSearch(value);
+        this.props.onSearch(value, e);
     };
 
     Select.prototype.handleSearchClear = function handleSearchClear(triggerType) {
@@ -38301,6 +38370,13 @@ var AutoComplete = (_temp = _class = function (_Base) {
                 });
             }
 
+            // 不自动高亮的情况下, highlightKey 根据value精确值走，也就是被选中元素自动高亮，这样也不会影响不在选项内的用户搜索操作
+            if (!_this.props.autoHighlightFirstItem) {
+                _this.setState({
+                    highlightKey: value
+                });
+            }
+
             _this.props.onChange(value, actionType, item);
 
             if (actionType === 'itemClick' || actionType === 'enter') {
@@ -40729,7 +40805,10 @@ var Cascader = (_temp = _class = function (_Component) {
             filteredPaths = _props6.filteredPaths;
         var focusedValue = this.state.focusedValue;
 
-        return _react2.default.createElement(_menu2.default, {
+        return _react2.default.createElement(_menu2.default
+        // 如果不设置为false， CascaderSelect 开启 showSearch后，弹窗展开时，光标无法到input上去，也无法输入
+
+        , { focusable: false,
             focusedKey: focusedValue,
             onItemFocus: this.handleFocus,
             className: prefix + 'cascader-filtered-list',
@@ -43111,14 +43190,15 @@ var DatePicker = (_temp = _class = function (_Component) {
     DatePicker.prototype.renderPreview = function renderPreview(others) {
         var _props = this.props,
             prefix = _props.prefix,
-            format = _props.format,
             className = _props.className,
             renderPreview = _props.renderPreview;
-        var value = this.state.value;
+        var _state = this.state,
+            value = _state.value,
+            dateTimeFormat = _state.dateTimeFormat;
 
         var previewCls = (0, _classnames7.default)(className, prefix + 'form-preview');
 
-        var label = value ? value.format(format) : '';
+        var label = value ? value.format(dateTimeFormat) : '';
 
         if (typeof renderPreview === 'function') {
             return _react2.default.createElement('div', (0, _extends3.default)({}, others, { className: previewCls }), renderPreview(value, this.props));
@@ -43165,16 +43245,16 @@ var DatePicker = (_temp = _class = function (_Component) {
             disableChangeMode = _props2.disableChangeMode,
             yearRange = _props2.yearRange,
             others = (0, _objectWithoutProperties3.default)(_props2, ['prefix', 'rtl', 'locale', 'label', 'state', 'defaultVisibleMonth', 'onVisibleMonthChange', 'showTime', 'disabledDate', 'footerRender', 'placeholder', 'size', 'disabled', 'hasClear', 'popupTriggerType', 'popupAlign', 'popupContainer', 'popupStyle', 'popupClassName', 'popupProps', 'popupComponent', 'popupContent', 'followTrigger', 'className', 'inputProps', 'dateCellRender', 'monthCellRender', 'yearCellRender', 'dateInputAriaLabel', 'timeInputAriaLabel', 'isPreview', 'disableChangeMode', 'yearRange']);
-        var _state = this.state,
-            visible = _state.visible,
-            value = _state.value,
-            dateInputStr = _state.dateInputStr,
-            timeInputStr = _state.timeInputStr,
-            panel = _state.panel,
-            inputing = _state.inputing,
-            format = _state.format,
-            timeFormat = _state.timeFormat,
-            dateTimeFormat = _state.dateTimeFormat;
+        var _state2 = this.state,
+            visible = _state2.visible,
+            value = _state2.value,
+            dateInputStr = _state2.dateInputStr,
+            timeInputStr = _state2.timeInputStr,
+            panel = _state2.panel,
+            inputing = _state2.inputing,
+            format = _state2.format,
+            timeFormat = _state2.timeFormat,
+            dateTimeFormat = _state2.dateTimeFormat;
 
         var datePickerCls = (0, _classnames7.default)((_classnames = {}, _classnames[prefix + 'date-picker'] = true, _classnames), className);
 
@@ -43291,18 +43371,13 @@ var DatePicker = (_temp = _class = function (_Component) {
             'aria-expanded': visible,
             readOnly: true,
             placeholder: placeholder || (showTime ? locale.datetimePlaceholder : locale.placeholder),
-            hint: _react2.default.createElement(_icon2.default, {
-                type: 'calendar',
-                className: prefix + 'date-picker-symbol-calendar-icon'
-            }),
+            hint: _react2.default.createElement(_icon2.default, { type: 'calendar', className: prefix + 'date-picker-symbol-calendar-icon' }),
             hasClear: allowClear,
             className: triggerInputCls
         })));
         var PopupComponent = popupComponent ? popupComponent : Popup;
 
-        return _react2.default.createElement('div', (0, _extends3.default)({}, _util.obj.pickOthers(DatePicker.propTypes, others), {
-            className: datePickerCls
-        }), _react2.default.createElement(PopupComponent, (0, _extends3.default)({
+        return _react2.default.createElement('div', (0, _extends3.default)({}, _util.obj.pickOthers(DatePicker.propTypes, others), { className: datePickerCls }), _react2.default.createElement(PopupComponent, (0, _extends3.default)({
             autoFocus: true,
             align: popupAlign
         }, popupProps, {
@@ -43315,9 +43390,7 @@ var DatePicker = (_temp = _class = function (_Component) {
             style: popupStyle,
             className: popupClassName,
             trigger: trigger
-        }), popupContent ? popupContent : _react2.default.createElement('div', { dir: others.dir, className: panelBodyClassName }, _react2.default.createElement('div', {
-            className: prefix + 'date-picker-panel-header'
-        }, dateInput, timeInput), panelBody, panelFooter)));
+        }), popupContent ? popupContent : _react2.default.createElement('div', { dir: others.dir, className: panelBodyClassName }, _react2.default.createElement('div', { className: prefix + 'date-picker-panel-header' }, dateInput, timeInput), panelBody, panelFooter)));
     };
 
     return DatePicker;
@@ -43572,10 +43645,10 @@ var DatePicker = (_temp = _class = function (_Component) {
     };
 
     this.onDateInputBlur = function () {
-        var _state2 = _this2.state,
-            dateInputStr = _state2.dateInputStr,
-            value = _state2.value,
-            format = _state2.format;
+        var _state3 = _this2.state,
+            dateInputStr = _state3.dateInputStr,
+            value = _state3.value,
+            format = _state3.format;
         var resetTime = _this2.props.resetTime;
 
         if (dateInputStr) {
@@ -43595,10 +43668,10 @@ var DatePicker = (_temp = _class = function (_Component) {
     };
 
     this.onTimeInputBlur = function () {
-        var _state3 = _this2.state,
-            value = _state3.value,
-            timeInputStr = _state3.timeInputStr,
-            timeFormat = _state3.timeFormat;
+        var _state4 = _this2.state,
+            value = _state4.value,
+            timeInputStr = _state4.timeInputStr,
+            timeFormat = _state4.timeFormat;
 
         if (timeInputStr) {
             var parsed = (0, _moment2.default)(timeInputStr, timeFormat, true);
@@ -43621,9 +43694,9 @@ var DatePicker = (_temp = _class = function (_Component) {
 
     this.onKeyDown = function (e) {
         var format = _this2.props.format;
-        var _state4 = _this2.state,
-            dateInputStr = _state4.dateInputStr,
-            value = _state4.value;
+        var _state5 = _this2.state,
+            dateInputStr = _state5.dateInputStr,
+            value = _state5.value;
 
         var dateStr = (0, _util2.onDateKeydown)(e, { format: format, dateInputStr: dateInputStr, value: value }, 'day');
         if (!dateStr) return;
@@ -43632,10 +43705,10 @@ var DatePicker = (_temp = _class = function (_Component) {
 
     this.onTimeKeyDown = function (e) {
         var showTime = _this2.props.showTime;
-        var _state5 = _this2.state,
-            timeInputStr = _state5.timeInputStr,
-            timeFormat = _state5.timeFormat,
-            value = _state5.value;
+        var _state6 = _this2.state,
+            timeInputStr = _state6.timeInputStr,
+            timeFormat = _state6.timeFormat,
+            value = _state6.value;
 
         var _ref = (typeof showTime === 'undefined' ? 'undefined' : (0, _typeof3.default)(showTime)) === 'object' ? showTime : {},
             disabledMinutes = _ref.disabledMinutes,
@@ -46259,10 +46332,7 @@ var WeekPicker = (_temp = _class = function (_Component) {
             'aria-expanded': visible,
             readOnly: true,
             placeholder: placeholder || locale.weekPlaceholder,
-            hint: _react2.default.createElement(_icon2.default, {
-                type: 'calendar',
-                className: prefix + 'date-picker-symbol-calendar-icon'
-            }),
+            hint: _react2.default.createElement(_icon2.default, { type: 'calendar', className: prefix + 'date-picker-symbol-calendar-icon' }),
             hasClear: value && hasClear,
             className: prefix + 'week-picker-input'
         })));
@@ -46283,10 +46353,7 @@ var WeekPicker = (_temp = _class = function (_Component) {
             style: popupStyle,
             className: popupClassName,
             trigger: trigger
-        }), popupContent ? popupContent : _react2.default.createElement('div', {
-            dir: others.dir,
-            className: prefix + 'week-picker-body'
-        }, _react2.default.createElement(_calendar2.default, {
+        }), popupContent ? popupContent : _react2.default.createElement('div', { dir: others.dir, className: prefix + 'week-picker-body' }, _react2.default.createElement(_calendar2.default, {
             shape: 'panel',
             value: value,
             format: format,
@@ -46442,7 +46509,7 @@ var WeekPicker = (_temp = _class = function (_Component) {
 }), _class.defaultProps = {
     prefix: 'next-',
     rtl: false,
-    format: 'YYYY-wo',
+    format: 'GGGG-wo',
     size: 'medium',
     disabledDate: function disabledDate() {
         return false;
@@ -52146,7 +52213,11 @@ var Item = (_temp = _class = function (_React$Component) {
     /**
      * 表示是否显示 label 后面的冒号
      */
-    colon: _propTypes2.default.bool
+    colon: _propTypes2.default.bool,
+    /**
+     * 子元素的 value 名称
+     */
+    valueName: _propTypes2.default.string
 }, _class.defaultProps = {
     prefix: 'next-',
     hasFeedback: false,
@@ -55031,14 +55102,9 @@ var Pagination = (_temp = _class = function (_Component) {
             onClick: this.onPageItemClick.bind(this, current - 1)
         };
 
-        var icon = _react2.default.createElement(_icon2.default, {
-            type: 'arrow-left',
-            className: prefix + 'pagination-icon-prev'
-        });
+        var icon = _react2.default.createElement(_icon2.default, { type: 'arrow-left', className: prefix + 'pagination-icon-prev' });
 
-        return _react2.default.createElement(_button2.default, (0, _extends3.default)({}, props, {
-            'aria-label': _util.str.template(locale.labelPrev, { current: current })
-        }), icon, shape === 'arrow-only' || shape === 'arrow-prev-only' || shape === 'no-border' ? '' : locale.prev);
+        return _react2.default.createElement(_button2.default, (0, _extends3.default)({}, props, { 'aria-label': _util.str.template(locale.labelPrev, { current: current }) }), icon, shape === 'arrow-only' || shape === 'arrow-prev-only' || shape === 'no-border' ? '' : locale.prev);
     };
 
     Pagination.prototype.renderPageLast = function renderPageLast(current, totalPage) {
@@ -55058,14 +55124,9 @@ var Pagination = (_temp = _class = function (_Component) {
             onClick: this.onPageItemClick.bind(this, current + 1)
         };
 
-        var icon = _react2.default.createElement(_icon2.default, {
-            type: 'arrow-right',
-            className: prefix + 'pagination-icon-next'
-        });
+        var icon = _react2.default.createElement(_icon2.default, { type: 'arrow-right', className: prefix + 'pagination-icon-next' });
 
-        return _react2.default.createElement(_button2.default, (0, _extends3.default)({}, props, {
-            'aria-label': _util.str.template(locale.labelNext, { current: current })
-        }), shape === 'arrow-only' || shape === 'no-border' ? '' : locale.next, icon);
+        return _react2.default.createElement(_button2.default, (0, _extends3.default)({}, props, { 'aria-label': _util.str.template(locale.labelNext, { current: current }) }), shape === 'arrow-only' || shape === 'no-border' ? '' : locale.next, icon);
     };
 
     Pagination.prototype.renderPageEllipsis = function renderPageEllipsis(idx) {
@@ -55101,11 +55162,7 @@ var Pagination = (_temp = _class = function (_Component) {
                     _this2.handleJump(e);
                 }
             }
-        }), _react2.default.createElement('span', { className: prefix + 'pagination-jump-text' }, locale.page), _react2.default.createElement(_button2.default, {
-            className: prefix + 'pagination-jump-go',
-            size: size,
-            onClick: this.handleJump
-        }, locale.go)];
+        }), _react2.default.createElement('span', { className: prefix + 'pagination-jump-text' }, locale.page), _react2.default.createElement(_button2.default, { className: prefix + 'pagination-jump-go', size: size, onClick: this.handleJump }, locale.go)];
         /* eslint-enable react/jsx-key */
     };
 
@@ -55220,7 +55277,6 @@ var Pagination = (_temp = _class = function (_Component) {
             prefix = _props10.prefix,
             size = _props10.size,
             pageSizeList = _props10.pageSizeList,
-            selectPopupContiner = _props10.selectPopupContiner,
             locale = _props10.locale,
             popupProps = _props10.popupProps;
         var currentPageSize = this.state.currentPageSize;
@@ -55228,7 +55284,6 @@ var Pagination = (_temp = _class = function (_Component) {
         return _react2.default.createElement(_select2.default, {
             className: prefix + 'pagination-size-selector-dropdown',
             popupClassName: prefix + 'pagination-size-selector-popup',
-            popupContainer: selectPopupContiner,
             popupProps: popupProps,
             'aria-label': locale.selectAriaLabel,
             autoWidth: true,
@@ -55281,9 +55336,8 @@ var Pagination = (_temp = _class = function (_Component) {
             pageNumberRender = _props11.pageNumberRender,
             link = _props11.link,
             onChange = _props11.onChange,
-            selectPopupContiner = _props11.selectPopupContiner,
             popupProps = _props11.popupProps,
-            others = (0, _objectWithoutProperties3.default)(_props11, ['prefix', 'pure', 'rtl', 'device', 'type', 'size', 'shape', 'className', 'total', 'totalRender', 'pageSize', 'pageSizeSelector', 'pageSizeList', 'pageSizePosition', 'useFloatLayout', 'onPageSizeChange', 'hideOnlyOnePage', 'showJump', 'locale', 'current', 'defaultCurrent', 'pageShowCount', 'pageNumberRender', 'link', 'onChange', 'selectPopupContiner', 'popupProps']);
+            others = (0, _objectWithoutProperties3.default)(_props11, ['prefix', 'pure', 'rtl', 'device', 'type', 'size', 'shape', 'className', 'total', 'totalRender', 'pageSize', 'pageSizeSelector', 'pageSizeList', 'pageSizePosition', 'useFloatLayout', 'onPageSizeChange', 'hideOnlyOnePage', 'showJump', 'locale', 'current', 'defaultCurrent', 'pageShowCount', 'pageNumberRender', 'link', 'onChange', 'popupProps']);
         /* eslint-enable */
 
         var _state2 = this.state,
@@ -55313,9 +55367,7 @@ var Pagination = (_temp = _class = function (_Component) {
                 coms[_key] = arguments[_key];
             }
 
-            return _react2.default.createElement('div', (0, _extends3.default)({
-                className: classes
-            }, _util.obj.pickOthers(Object.keys(Pagination.propTypes), others)), isStart && sizeSelector, totalRender ? _this4.renderPageTotal() : null, _react2.default.createElement('div', { className: prefix + 'pagination-pages' }, coms.map(function (com, index) {
+            return _react2.default.createElement('div', (0, _extends3.default)({ className: classes }, _util.obj.pickOthers(Object.keys(Pagination.propTypes), others)), isStart && sizeSelector, totalRender ? _this4.renderPageTotal() : null, _react2.default.createElement('div', { className: prefix + 'pagination-pages' }, coms.map(function (com, index) {
                 return com && _react2.default.cloneElement(com, { key: index });
             })), !isStart && sizeSelector);
         };
@@ -55437,7 +55489,6 @@ var Pagination = (_temp = _class = function (_Component) {
      * 设置页码按钮的跳转链接，它的值为一个包含 {page} 的模版字符串，如：https://www.taobao.com/{page}
      */
     link: _propTypes2.default.string,
-    selectPopupContiner: _propTypes2.default.any,
     /**
      * 弹层组件属性，透传给Popup
      */
@@ -55464,9 +55515,6 @@ var Pagination = (_temp = _class = function (_Component) {
     showJump: true,
     pageNumberRender: function pageNumberRender(index) {
         return index;
-    },
-    selectPopupContiner: function selectPopupContiner(node) {
-        return node.parentNode;
     }
 }, _temp);
 Pagination.displayName = 'Pagination';
@@ -58341,11 +58389,13 @@ function _interopRequireDefault(obj) {
 
 var Group = _input2.default.Group;
 var AutoComplete = _select2.default.AutoComplete;
+var noop = _util.func.noop;
 
 /**
  * Search
  * @description 输入框部分继承 Select.AutoComplete 的能力，可以直接用AutoComplete 的 api
  */
+
 var Search = (_temp = _class = function (_React$Component) {
     (0, _inherits3.default)(Search, _React$Component);
 
@@ -58624,7 +58674,11 @@ var Search = (_temp = _class = function (_React$Component) {
     /**
      * 是否自动高亮第一个元素
      */
-    autoHighlightFirstItem: _propTypes2.default.bool
+    autoHighlightFirstItem: _propTypes2.default.bool,
+    /**
+     * 上下箭头切换选项的回调
+     */
+    onToggleHighlightItem: _propTypes2.default.func
 }, _class.defaultProps = {
     prefix: 'next-',
     shape: 'normal',
@@ -58634,9 +58688,10 @@ var Search = (_temp = _class = function (_React$Component) {
     filter: [],
     locale: _zhCn2.default.Search,
     buttonProps: {},
-    onChange: _util.func.noop,
-    onSearch: _util.func.noop,
-    onFilterChange: _util.func.noop,
+    onChange: noop,
+    onSearch: noop,
+    onFilterChange: noop,
+    onToggleHighlightItem: noop,
     hasClear: false,
     disabled: false,
     icons: {},
@@ -58689,7 +58744,15 @@ var Search = (_temp = _class = function (_React$Component) {
     };
 
     this.onToggleHighlightItem = function (highlightKey) {
+        var _props3;
+
+        for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+            args[_key2 - 1] = arguments[_key2];
+        }
+
         _this2.highlightKey = highlightKey;
+
+        (_props3 = _this2.props).onToggleHighlightItem.apply(_props3, [highlightKey].concat(args));
     };
 
     this.onKeyDown = function (e) {
@@ -62295,7 +62358,8 @@ var Step = (_temp = _class = function (_Component) {
             animation = _props2.animation,
             itemRender = _props2.itemRender,
             rtl = _props2.rtl,
-            others = (0, _objectWithoutProperties3.default)(_props2, ['className', 'current', 'labelPlacement', 'shape', 'readOnly', 'animation', 'itemRender', 'rtl']);
+            stretch = _props2.stretch,
+            others = (0, _objectWithoutProperties3.default)(_props2, ['className', 'current', 'labelPlacement', 'shape', 'readOnly', 'animation', 'itemRender', 'rtl', 'stretch']);
         var _props3 = this.props,
             prefix = _props3.prefix,
             direction = _props3.direction,
@@ -62336,7 +62400,8 @@ var Step = (_temp = _class = function (_Component) {
                 itemRender: child.props.itemRender ? child.props.itemRender : itemRender, // 优先使用Item的itemRender
                 onResize: function onResize() {
                     _this2.step && _this2.adjustHeight();
-                }
+                },
+                stretch: stretch
             });
         });
 
@@ -62349,7 +62414,6 @@ var Step = (_temp = _class = function (_Component) {
         }
 
         // others.onKeyDown = makeChain(this.handleKeyDown, others.onKeyDown);
-
         return _react2.default.createElement('ol', (0, _extends3.default)({}, others, { className: stepCls, ref: this._stepRefHandler }), cloneChildren);
     };
 
@@ -62391,7 +62455,11 @@ var Step = (_temp = _class = function (_Component) {
      * @param {String} status  节点状态
      * @returns {Node} 节点的渲染结果
      */
-    itemRender: _propTypes2.default.func
+    itemRender: _propTypes2.default.func,
+    /**
+     * 宽度横向拉伸
+     */
+    stretch: _propTypes2.default.bool
 }, _class.defaultProps = {
     prefix: 'next-',
     current: 0,
@@ -62399,7 +62467,8 @@ var Step = (_temp = _class = function (_Component) {
     labelPlacement: 'ver',
     shape: 'circle',
     animation: true,
-    itemRender: null
+    itemRender: null,
+    stretch: false
 }, _class.contextTypes = {
     prefix: _propTypes2.default.string
 }, _temp);
@@ -62529,7 +62598,8 @@ var StepItem = (_temp = _class = function (_Component) {
             direction = _props.direction,
             labelPlacement = _props.labelPlacement,
             index = _props.index,
-            total = _props.total;
+            total = _props.total,
+            stretch = _props.stretch;
 
         this.body && this.ro.observe(_reactDom2.default.findDOMNode(this.body));
         if (shape === 'arrow') {
@@ -62543,6 +62613,9 @@ var StepItem = (_temp = _class = function (_Component) {
             // 调整横向Content
             this.adjustTail();
         }
+        if (stretch && (direction === 'horizontal' || direction === 'hoz')) {
+            this.adjustItemWidth();
+        }
     };
 
     StepItem.prototype.componentDidUpdate = function componentDidUpdate() {
@@ -62554,7 +62627,8 @@ var StepItem = (_temp = _class = function (_Component) {
             labelPlacement = _props2.labelPlacement,
             index = _props2.index,
             total = _props2.total,
-            rtl = _props2.rtl;
+            rtl = _props2.rtl,
+            stretch = _props2.stretch;
 
         if (shape === 'arrow') {
             return;
@@ -62582,6 +62656,9 @@ var StepItem = (_temp = _class = function (_Component) {
             } else {
                 resetTailStyle();
             }
+            if (stretch) {
+                this.adjustItemWidth();
+            }
         } else if (index !== total - 1) {
             resetTailStyle();
         }
@@ -62589,6 +62666,19 @@ var StepItem = (_temp = _class = function (_Component) {
 
     StepItem.prototype.componentWillUnmount = function componentWillUnmount() {
         this.eventHandler && this.eventHandler.off();
+    };
+
+    StepItem.prototype.adjustItemWidth = function adjustItemWidth() {
+        var _props3 = this.props,
+            index = _props3.index,
+            total = _props3.total,
+            labelPlacement = _props3.labelPlacement;
+
+        var lastNodeWidth = labelPlacement === 'horizontal' || labelPlacement === 'hoz' ? this.container.offsetWidth + this.body.offsetWidth : this.title.offsetWidth;
+        var width = total - 1 !== index ? 'calc((100% - ' + lastNodeWidth + 'px)/' + (total - 1) + ')' : 'auto';
+        _util.dom.setStyle(this.step, {
+            width: width
+        });
     };
 
     StepItem.prototype.adjustTail = function adjustTail() {
@@ -62615,14 +62705,14 @@ var StepItem = (_temp = _class = function (_Component) {
     };
 
     StepItem.prototype._getNode = function _getNode() {
-        var _props3 = this.props,
-            prefix = _props3.prefix,
-            index = _props3.index,
-            status = _props3.status,
-            icon = _props3.icon,
-            shape = _props3.shape,
-            percent = _props3.percent,
-            itemRender = _props3.itemRender;
+        var _props4 = this.props,
+            prefix = _props4.prefix,
+            index = _props4.index,
+            status = _props4.status,
+            icon = _props4.icon,
+            shape = _props4.shape,
+            percent = _props4.percent,
+            itemRender = _props4.itemRender;
 
         var nodeElement = icon;
         if (shape === 'dot') {
@@ -62639,14 +62729,14 @@ var StepItem = (_temp = _class = function (_Component) {
     };
 
     StepItem.prototype.getNode = function getNode(args) {
-        var _props4 = this.props,
-            prefix = _props4.prefix,
-            itemRender = _props4.itemRender,
-            index = _props4.index,
-            status = _props4.status,
-            title = _props4.title,
-            content = _props4.content,
-            shape = _props4.shape;
+        var _props5 = this.props,
+            prefix = _props5.prefix,
+            itemRender = _props5.itemRender,
+            index = _props5.index,
+            status = _props5.status,
+            title = _props5.title,
+            content = _props5.content,
+            shape = _props5.shape;
         var others = args.others,
             stepCls = args.stepCls,
             overlayCls = args.overlayCls;
@@ -62685,13 +62775,13 @@ var StepItem = (_temp = _class = function (_Component) {
     };
 
     StepItem.prototype.getStyle = function getStyle() {
-        var _props5 = this.props,
-            parentWidth = _props5.parentWidth,
-            parentHeight = _props5.parentHeight,
-            direction = _props5.direction,
-            total = _props5.total,
-            index = _props5.index,
-            shape = _props5.shape;
+        var _props6 = this.props,
+            parentWidth = _props6.parentWidth,
+            parentHeight = _props6.parentHeight,
+            direction = _props6.direction,
+            total = _props6.total,
+            index = _props6.index,
+            shape = _props6.shape;
 
         var width = 'auto';
 
@@ -62739,29 +62829,29 @@ var StepItem = (_temp = _class = function (_Component) {
         var _classNames;
 
         // eslint-disable-next-line
-        var _props6 = this.props,
-            prefix = _props6.prefix,
-            locale = _props6.locale,
-            className = _props6.className,
-            status = _props6.status,
-            title = _props6.title,
-            icon = _props6.icon,
-            index = _props6.index,
-            total = _props6.total,
-            shape = _props6.shape,
-            content = _props6.content,
-            direction = _props6.direction,
-            disabled = _props6.disabled,
-            onClick = _props6.onClick,
-            readOnly = _props6.readOnly,
-            animation = _props6.animation,
-            parentHeight = _props6.parentHeight,
-            itemRender = _props6.itemRender,
-            parentWidth = _props6.parentWidth,
-            labelPlacement = _props6.labelPlacement,
-            rtl = _props6.rtl,
-            onResize = _props6.onResize,
-            others = (0, _objectWithoutProperties3.default)(_props6, ['prefix', 'locale', 'className', 'status', 'title', 'icon', 'index', 'total', 'shape', 'content', 'direction', 'disabled', 'onClick', 'readOnly', 'animation', 'parentHeight', 'itemRender', 'parentWidth', 'labelPlacement', 'rtl', 'onResize']);
+        var _props7 = this.props,
+            prefix = _props7.prefix,
+            locale = _props7.locale,
+            className = _props7.className,
+            status = _props7.status,
+            title = _props7.title,
+            icon = _props7.icon,
+            index = _props7.index,
+            total = _props7.total,
+            shape = _props7.shape,
+            content = _props7.content,
+            direction = _props7.direction,
+            disabled = _props7.disabled,
+            onClick = _props7.onClick,
+            readOnly = _props7.readOnly,
+            animation = _props7.animation,
+            parentHeight = _props7.parentHeight,
+            itemRender = _props7.itemRender,
+            parentWidth = _props7.parentWidth,
+            labelPlacement = _props7.labelPlacement,
+            rtl = _props7.rtl,
+            onResize = _props7.onResize,
+            others = (0, _objectWithoutProperties3.default)(_props7, ['prefix', 'locale', 'className', 'status', 'title', 'icon', 'index', 'total', 'shape', 'content', 'direction', 'disabled', 'onClick', 'readOnly', 'animation', 'parentHeight', 'itemRender', 'parentWidth', 'labelPlacement', 'rtl', 'onResize']);
 
         var stepCls = (0, _classnames2.default)((_classNames = {}, _classNames[prefix + 'step-item'] = true, _classNames[prefix + 'step-item-' + status] = status, _classNames[prefix + 'step-item-first'] = index === 0, _classNames[prefix + 'step-item-last'] = index === total - 1, _classNames[prefix + 'step-item-disabled'] = disabled, _classNames[prefix + 'step-item-read-only'] = readOnly, _classNames[className] = className, _classNames));
 
@@ -62825,12 +62915,14 @@ var StepItem = (_temp = _class = function (_Component) {
      */
     className: _propTypes2.default.string,
     readOnly: _propTypes2.default.bool,
-    onResize: _propTypes2.default.func
+    onResize: _propTypes2.default.func,
+    stretch: _propTypes2.default.bool
 }, _class.defaultProps = {
     shape: 'circle',
     index: 0,
     total: 1,
-    onClick: function onClick() {}
+    onClick: function onClick() {},
+    stretch: false
 }, _temp);
 StepItem.displayName = 'StepItem';
 exports.default = _configProvider2.default.config(StepItem);
@@ -64241,6 +64333,18 @@ var Tab = (_temp = _class = function (_Component) {
         return {};
     };
 
+    Tab.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
+        if (prevProps.children.length !== 0 && this.props.children.length !== 0 && !('activeKey' in this.props) & !this.isActiveKeyExist(this.state.activeKey)) {
+            var activeKey = this.getDefaultActiveKey(this.props);
+            if (activeKey) {
+                // eslint-disable-next-line react/no-did-update-set-state
+                this.setState({
+                    activeKey: activeKey
+                });
+            }
+        }
+    };
+
     Tab.prototype.getDefaultActiveKey = function getDefaultActiveKey(props) {
         var activeKey = props.activeKey === undefined ? props.defaultActiveKey : props.activeKey;
 
@@ -64286,6 +64390,22 @@ var Tab = (_temp = _class = function (_Component) {
             }
         });
         return key;
+    };
+
+    Tab.prototype.isActiveKeyExist = function isActiveKeyExist(activeKey) {
+        var exist = false;
+        _react2.default.Children.forEach(this.props.children, function (child, index) {
+            if (exist) return;
+            if (_react2.default.isValidElement(child)) {
+                if (!child.props.disabled) {
+                    var key = child.key || index;
+                    if (activeKey === '' + key) {
+                        exist = true;
+                    }
+                }
+            }
+        });
+        return exist;
     };
 
     Tab.prototype.setActiveKey = function setActiveKey(key) {
@@ -64375,10 +64495,7 @@ var Tab = (_temp = _class = function (_Component) {
             tabChildren.reverse();
         }
 
-        return _react2.default.createElement('div', (0, _extends3.default)({
-            dir: rtl ? 'rtl' : undefined,
-            className: classNames
-        }, _util.obj.pickOthers(Tab.propTypes, others)), tabChildren);
+        return _react2.default.createElement('div', (0, _extends3.default)({ dir: rtl ? 'rtl' : undefined, className: classNames }, _util.obj.pickOthers(Tab.propTypes, others)), tabChildren);
     };
 
     return Tab;
@@ -64419,7 +64536,7 @@ var Tab = (_temp = _class = function (_Component) {
      */
     triggerType: _propTypes2.default.oneOf(['hover', 'click']),
     /**
-     * 是否延迟加载 TabPane 的内容, 默认开启, 即不提前渲染
+     * 是否延迟加载 TabItem 的内容, 默认开启, 即不提前渲染
      */
     lazyLoad: _propTypes2.default.bool,
     /**
@@ -64602,10 +64719,11 @@ var Nav = (_temp = _class = function (_React$Component) {
         };
 
         _this.defaultTabTemplateRender = function (key, _ref) {
-            var prefix = _ref.prefix,
-                title = _ref.title,
+            var title = _ref.title,
                 closeable = _ref.closeable;
-            var locale = _this.props.locale;
+            var _this$props = _this.props,
+                locale = _this$props.locale,
+                prefix = _this$props.prefix;
 
             var tail = closeable ? _react2.default.createElement(_icon2.default, {
                 'aria-label': locale.closeAriaLabel,
@@ -64619,7 +64737,7 @@ var Nav = (_temp = _class = function (_React$Component) {
                 },
                 className: prefix + 'tabs-tab-close'
             }) : null;
-            return _react2.default.createElement('div', { className: _this.props.prefix + 'tabs-tab-inner' }, title, tail);
+            return _react2.default.createElement('div', { className: prefix + 'tabs-tab-inner' }, title, tail);
         };
 
         _this.scrollToActiveTab = function () {
@@ -64629,7 +64747,8 @@ var Nav = (_temp = _class = function (_React$Component) {
                 var activeTabOffset = (0, _utils.getOffsetLT)(_this.activeTab);
                 var wrapperOffset = (0, _utils.getOffsetLT)(_this.wrapper);
                 var target = _this.offset;
-                if (activeTabOffset >= wrapperOffset + wrapperWH || activeTabOffset + activeTabWH <= wrapperOffset) {
+
+                if (activeTabOffset + activeTabWH >= wrapperOffset + wrapperWH || activeTabOffset < wrapperOffset) {
                     _this.setOffset(_this.offset + wrapperOffset - activeTabOffset, true, true);
                     return;
                 }
@@ -64648,9 +64767,9 @@ var Nav = (_temp = _class = function (_React$Component) {
         };
 
         _this.onSelectMenuItem = function (keys) {
-            var _this$props = _this.props,
-                onTriggerEvent = _this$props.onTriggerEvent,
-                triggerType = _this$props.triggerType;
+            var _this$props2 = _this.props,
+                onTriggerEvent = _this$props2.onTriggerEvent,
+                triggerType = _this$props2.triggerType;
 
             onTriggerEvent(triggerType, keys[0]);
         };
@@ -64973,7 +65092,9 @@ var Nav = (_temp = _class = function (_React$Component) {
                 };
             }
 
-            rst.push(_react2.default.createElement('li', (0, _extends3.default)({
+            var dataProps = _util.obj.pickAttrsWith(child.props, 'data-');
+
+            rst.push(_react2.default.createElement('li', (0, _extends3.default)({}, dataProps, {
                 role: 'tab',
                 key: child.key,
                 ref: active ? _this3.activeTabRefHandler : null,
@@ -65122,7 +65243,11 @@ var Nav = (_temp = _class = function (_React$Component) {
             singleMode: false,
             ref: this.navRefHandler,
             afterAppear: this.initialSettings.bind(this)
-        }, tabList) : _react2.default.createElement('ul', { role: 'tablist', className: navCls, ref: this.navRefHandler }, tabList))), prevButton, nextButton, restButton);
+        }, tabList) : _react2.default.createElement('ul', {
+            role: 'tablist',
+            className: navCls + ' ' + prefix + 'disable-animation',
+            ref: this.navRefHandler
+        }, tabList))), prevButton, nextButton, restButton);
 
         var navChildren = [container];
 
@@ -72002,19 +72127,25 @@ var Transfer = (_temp = _class = function (_Component) {
     Transfer.prototype.handlePanelChange = function handlePanelChange(position, value) {
         var _setState;
 
+        var _state = this.state,
+            leftCheckedValue = _state.leftCheckedValue,
+            rightCheckedValue = _state.rightCheckedValue;
+        var onSelect = this.props.onSelect;
+
         var valuePropName = position === 'left' ? 'leftCheckedValue' : 'rightCheckedValue';
         // inner state changed
         this.setState((_setState = {
             innerUpdate: true
         }, _setState[valuePropName] = value, _setState));
+        onSelect && onSelect(position === 'left' ? value : leftCheckedValue, position === 'left' ? rightCheckedValue : value, position === 'left' ? 'source' : 'target');
     };
 
     Transfer.prototype.handlePanelSort = function handlePanelSort(position, dragValue, referenceValue, dragGap) {
         var _this2 = this;
 
-        var _state = this.state,
-            value = _state.value,
-            leftValue = _state.leftValue;
+        var _state2 = this.state,
+            value = _state2.value,
+            leftValue = _state2.leftValue;
 
         var newValue = position === 'right' ? value : leftValue;
         var currentIndex = newValue.indexOf(dragValue);
@@ -72046,11 +72177,11 @@ var Transfer = (_temp = _class = function (_Component) {
         var movedValue = void 0;
         var valuePropName = void 0;
 
-        var _state2 = this.state,
-            value = _state2.value,
-            leftValue = _state2.leftValue,
-            leftCheckedValue = _state2.leftCheckedValue,
-            rightCheckedValue = _state2.rightCheckedValue;
+        var _state3 = this.state,
+            value = _state3.value,
+            leftValue = _state3.leftValue,
+            leftCheckedValue = _state3.leftCheckedValue,
+            rightCheckedValue = _state3.rightCheckedValue;
 
         if (direction === 'right') {
             rightValue = leftCheckedValue.concat(value);
@@ -72077,9 +72208,9 @@ var Transfer = (_temp = _class = function (_Component) {
         var rightValue = void 0;
         var newLeftValue = void 0;
 
-        var _state3 = this.state,
-            value = _state3.value,
-            leftValue = _state3.leftValue;
+        var _state4 = this.state,
+            value = _state4.value,
+            leftValue = _state4.leftValue;
 
         if (direction === 'right') {
             rightValue = [v].concat(value);
@@ -72102,9 +72233,9 @@ var Transfer = (_temp = _class = function (_Component) {
         var movedValue = void 0;
 
         var dataSource = this.props.dataSource;
-        var _state4 = this.state,
-            value = _state4.value,
-            leftValue = _state4.leftValue;
+        var _state5 = this.state,
+            value = _state5.value,
+            leftValue = _state5.leftValue;
 
         var disabledValue = dataSource.reduce(function (ret, item) {
             if (item.disabled) {
@@ -72184,15 +72315,11 @@ var Transfer = (_temp = _class = function (_Component) {
             leftDisabled = _props.leftDisabled,
             rightDisabled = _props.rightDisabled,
             locale = _props.locale;
-        var _state5 = this.state,
-            leftCheckedValue = _state5.leftCheckedValue,
-            rightCheckedValue = _state5.rightCheckedValue;
+        var _state6 = this.state,
+            leftCheckedValue = _state6.leftCheckedValue,
+            rightCheckedValue = _state6.rightCheckedValue;
 
-        return _react2.default.createElement('div', { className: prefix + 'transfer-operations' }, mode === 'simple' ? _react2.default.createElement(_icon2.default, {
-            className: prefix + 'transfer-move',
-            size: 'large',
-            type: 'switch'
-        }) : [_react2.default.createElement(_button2.default, {
+        return _react2.default.createElement('div', { className: prefix + 'transfer-operations' }, mode === 'simple' ? _react2.default.createElement(_icon2.default, { className: prefix + 'transfer-move', size: 'large', type: 'switch' }) : [_react2.default.createElement(_button2.default, {
             'aria-label': locale.moveToRight,
             key: 'l2r',
             className: prefix + 'transfer-operation',
@@ -72234,11 +72361,11 @@ var Transfer = (_temp = _class = function (_Component) {
             id = _props2.id,
             children = _props2.children,
             showCheckAll = _props2.showCheckAll;
-        var _state6 = this.state,
-            value = _state6.value,
-            leftValue = _state6.leftValue,
-            leftCheckedValue = _state6.leftCheckedValue,
-            rightCheckedValue = _state6.rightCheckedValue;
+        var _state7 = this.state,
+            value = _state7.value,
+            leftValue = _state7.leftValue,
+            leftCheckedValue = _state7.leftCheckedValue,
+            rightCheckedValue = _state7.rightCheckedValue;
 
         var itemValues = dataSource.map(function (item) {
             return item.value;
@@ -72272,10 +72399,7 @@ var Transfer = (_temp = _class = function (_Component) {
         if (rtl) {
             others.dir = 'rtl';
         }
-        return _react2.default.createElement('div', (0, _extends3.default)({
-            className: (0, _classnames2.default)(prefix + 'transfer', className),
-            id: id
-        }, others), _react2.default.createElement(_transferPanel2.default, (0, _extends3.default)({}, panelProps, {
+        return _react2.default.createElement('div', (0, _extends3.default)({ className: (0, _classnames2.default)(prefix + 'transfer', className), id: id }, others), _react2.default.createElement(_transferPanel2.default, (0, _extends3.default)({}, panelProps, {
             position: 'left',
             dataSource: leftDatasource,
             disabled: leftDisabled || disabled,
@@ -72326,6 +72450,13 @@ var Transfer = (_temp = _class = function (_Component) {
      * @param {String} extra.direction 移动的方向，值为'left'或'right'
      */
     onChange: _propTypes2.default.func,
+    /**
+     * Item 被选中的时候触发的回调函数
+     * @param {Array} sourceSelectedValue 源面板选中的 Item 列表
+     * @param {Array} targetSelectedValue 目标面板选中的 Item 列表
+     * @param {String} trigger 触发面板，值为'source'或'target'
+     */
+    onSelect: _propTypes2.default.func,
     /**
      * 是否禁用
      */
@@ -72621,13 +72752,23 @@ var TransferPanel = (_temp = _class = function (_Component) {
     TransferPanel.prototype.handleAllCheck = function handleAllCheck(allChecked) {
         var _props2 = this.props,
             position = _props2.position,
-            onChange = _props2.onChange;
+            onChange = _props2.onChange,
+            filter = _props2.filter;
+        var searchedValue = this.state.searchedValue;
 
         var newValue = void 0;
         if (allChecked) {
-            newValue = this.enabledDatasource.map(function (item) {
-                return item.value;
-            });
+            if (searchedValue) {
+                newValue = this.enabledDatasource.filter(function (item) {
+                    return filter(searchedValue, item);
+                }).map(function (item) {
+                    return item.value;
+                });
+            } else {
+                newValue = this.enabledDatasource.map(function (item) {
+                    return item.value;
+                });
+            }
         } else {
             newValue = [];
         }
@@ -72699,10 +72840,7 @@ var TransferPanel = (_temp = _class = function (_Component) {
             title = _props6.title,
             prefix = _props6.prefix;
 
-        return _react2.default.createElement('div', {
-            id: this.headerId,
-            className: prefix + 'transfer-panel-header'
-        }, title);
+        return _react2.default.createElement('div', { id: this.headerId, className: prefix + 'transfer-panel-header' }, title);
     };
 
     TransferPanel.prototype.renderSearch = function renderSearch() {
@@ -72734,11 +72872,7 @@ var TransferPanel = (_temp = _class = function (_Component) {
 
         var customerPanel = customerList && customerList(this.props);
         if (customerPanel) {
-            return _react2.default.createElement('div', {
-                className: newClassName,
-                style: listStyle,
-                ref: this.getListDOM
-            }, customerPanel);
+            return _react2.default.createElement('div', { className: newClassName, style: listStyle, ref: this.getListDOM }, customerPanel);
         }
 
         if (!dataSource.length) {
@@ -72746,21 +72880,14 @@ var TransferPanel = (_temp = _class = function (_Component) {
         }
 
         if (useVirtual) {
-            return _react2.default.createElement('div', {
-                className: newClassName,
-                style: (0, _extends3.default)({ position: 'relative' }, listStyle)
-            }, _react2.default.createElement(_virtualList2.default, {
+            return _react2.default.createElement('div', { className: newClassName, style: (0, _extends3.default)({ position: 'relative' }, listStyle) }, _react2.default.createElement(_virtualList2.default, {
                 itemsRenderer: function itemsRenderer(items, ref) {
                     return _react2.default.createElement(_menu2.default, { style: { border: 'none' }, ref: ref }, items);
                 }
             }, this.getListData(dataSource, true)));
         }
 
-        return _react2.default.createElement(_menu2.default, {
-            className: newClassName,
-            style: listStyle,
-            ref: this.getListDOM
-        }, this.getListData(dataSource));
+        return _react2.default.createElement(_menu2.default, { className: newClassName, style: listStyle, ref: this.getListDOM }, this.getListData(dataSource));
     };
 
     TransferPanel.prototype.renderNotFoundContent = function renderNotFoundContent() {
@@ -72786,21 +72913,32 @@ var TransferPanel = (_temp = _class = function (_Component) {
             var onMoveAll = this.props.onMoveAll;
 
             var classNames = (0, _classnames2.default)((_cx2 = {}, _cx2[prefix + 'transfer-panel-move-all'] = true, _cx2[prefix + 'disabled'] = disabled, _cx2));
-            return _react2.default.createElement('div', { className: prefix + 'transfer-panel-footer' }, _react2.default.createElement('a', {
-                className: classNames,
-                onClick: onMoveAll.bind(this, position === 'left' ? 'right' : 'left')
-            }, locale.moveAll));
+            return _react2.default.createElement('div', { className: prefix + 'transfer-panel-footer' }, _react2.default.createElement('a', { className: classNames, onClick: onMoveAll.bind(this, position === 'left' ? 'right' : 'left') }, locale.moveAll));
         }
 
         var _props11 = this.props,
             value = _props11.value,
+            showSearch = _props11.showSearch,
+            filter = _props11.filter,
             dataSource = _props11.dataSource;
+        var searchedValue = this.state.searchedValue;
 
-        var checkedCount = value.length;
         var totalCount = dataSource.length;
-        var totalEnabledCount = this.enabledDatasource.length;
+        var _dataSource = dataSource;
+        var checkedCount = value.length;
+        var _checkedCount = checkedCount;
+        if (showSearch && searchedValue) {
+            _dataSource = dataSource.filter(function (item) {
+                return filter(searchedValue, item);
+            });
+            totalCount = _dataSource.length;
+            _checkedCount = _dataSource.filter(function (item) {
+                return value.includes(item.value);
+            }).length;
+        }
+        var totalEnabledCount = Math.min(totalCount, this.enabledDatasource.length);
         var checked = checkedCount > 0 && checkedCount >= totalEnabledCount;
-        var indeterminate = checkedCount > 0 && checkedCount < totalEnabledCount;
+        var indeterminate = checkedCount > 0 && _checkedCount >= 0 && _checkedCount < totalEnabledCount;
         var items = totalCount > 1 ? locale.items : locale.item;
         var countLabel = checkedCount === 0 ? totalCount + ' ' + items : checkedCount + '/' + totalCount + ' ' + items;
 
@@ -72810,10 +72948,7 @@ var TransferPanel = (_temp = _class = function (_Component) {
             indeterminate: indeterminate,
             onChange: this.handleAllCheck,
             'aria-labelledby': this.footerId
-        }), _react2.default.createElement('span', {
-            className: prefix + 'transfer-panel-count',
-            id: this.footerId
-        }, countLabel));
+        }), _react2.default.createElement('span', { className: prefix + 'transfer-panel-count', id: this.footerId }, countLabel));
     };
 
     TransferPanel.prototype.render = function render() {
@@ -72821,20 +72956,21 @@ var TransferPanel = (_temp = _class = function (_Component) {
             prefix = _props12.prefix,
             title = _props12.title,
             showSearch = _props12.showSearch,
-            filter = _props12.filter;
+            filter = _props12.filter,
+            dataSource = _props12.dataSource;
         var searchedValue = this.state.searchedValue;
 
-        var dataSource = this.props.dataSource;
+        var _dataSource = this.props.dataSource;
         this.enabledDatasource = dataSource.filter(function (item) {
             return !item.disabled;
         });
         if (showSearch && searchedValue) {
-            dataSource = dataSource.filter(function (item) {
+            _dataSource = dataSource.filter(function (item) {
                 return filter(searchedValue, item);
             });
         }
 
-        return _react2.default.createElement('div', { className: prefix + 'transfer-panel' }, title ? this.renderHeader() : null, showSearch ? this.renderSearch() : null, this.renderList(dataSource), this.renderFooter());
+        return _react2.default.createElement('div', { className: prefix + 'transfer-panel' }, title ? this.renderHeader() : null, showSearch ? this.renderSearch() : null, this.renderList(_dataSource), this.renderFooter());
     };
 
     return TransferPanel;
@@ -78949,38 +79085,32 @@ var transform = function transform(props, deprecated) {
     return newProps;
 };
 
-var ConfigPicker = _configProvider2.default.config(_picker2.default, { componentName: 'DatePicker', transform: transform });
-
-var DatePicker2 = function DatePicker2(props) {
-    return _react2.default.createElement(ConfigPicker, props);
+var ConfigPicker = _configProvider2.default.config(_picker2.default, { transform: transform });
+var generatePicker = function generatePicker(mode) {
+    return _react2.default.forwardRef(function (props, ref) {
+        return _react2.default.createElement(ConfigPicker, (0, _extends3.default)({ ref: ref }, props, { mode: mode }));
+    });
 };
+
+var DatePicker2 = generatePicker();
 DatePicker2.displayName = 'DatePicker2';
 
-DatePicker2.MonthPicker = function (props) {
-    return _react2.default.createElement(ConfigPicker, (0, _extends3.default)({}, props, { mode: MONTH }));
-};
+DatePicker2.MonthPicker = generatePicker(MONTH);
 DatePicker2.MonthPicker.displayName = 'MonthPicker2';
 
-DatePicker2.YearPicker = function (props) {
-    return _react2.default.createElement(ConfigPicker, (0, _extends3.default)({}, props, { mode: YEAR }));
-};
+DatePicker2.YearPicker = generatePicker(YEAR);
 DatePicker2.YearPicker.displayName = 'YearPicker2';
 
-DatePicker2.WeekPicker = function (props) {
-    return _react2.default.createElement(ConfigPicker, (0, _extends3.default)({}, props, { mode: WEEK }));
-};
+DatePicker2.WeekPicker = generatePicker(WEEK);
 DatePicker2.WeekPicker.displayName = 'WeekPicker2';
 
-DatePicker2.QuarterPicker = function (props) {
-    return _react2.default.createElement(ConfigPicker, (0, _extends3.default)({}, props, { mode: QUARTER }));
-};
+DatePicker2.QuarterPicker = generatePicker(QUARTER);
 DatePicker2.QuarterPicker.displayName = 'QuarterPicker2';
 
-DatePicker2.RangePicker = function (props) {
-    return _react2.default.createElement(ConfigPicker, (0, _extends3.default)({}, props, { type: 'range' }));
-};
+DatePicker2.RangePicker = _react2.default.forwardRef(function (props, ref) {
+    return _react2.default.createElement(ConfigPicker, (0, _extends3.default)({ ref: ref }, props, { type: 'range' }));
+});
 DatePicker2.RangePicker.displayName = 'RangePicker2';
-
 exports.default = DatePicker2;
 module.exports = exports['default'];
 
@@ -78993,13 +79123,13 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _extends2 = __webpack_require__(2);
-
-var _extends3 = _interopRequireDefault(_extends2);
-
 var _objectWithoutProperties2 = __webpack_require__(8);
 
 var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
+
+var _extends2 = __webpack_require__(2);
+
+var _extends3 = _interopRequireDefault(_extends2);
 
 var _classCallCheck2 = __webpack_require__(1);
 
@@ -79045,6 +79175,8 @@ var _constant = __webpack_require__(43);
 
 var _overlay = __webpack_require__(15);
 
+var _overlay2 = _interopRequireDefault(_overlay);
+
 var _dateInput = __webpack_require__(467);
 
 var _dateInput2 = _interopRequireDefault(_dateInput);
@@ -79053,7 +79185,7 @@ var _datePanel = __webpack_require__(468);
 
 var _datePanel2 = _interopRequireDefault(_datePanel);
 
-var _rangePanel = __webpack_require__(473);
+var _rangePanel = __webpack_require__(472);
 
 var _rangePanel2 = _interopRequireDefault(_rangePanel);
 
@@ -79077,17 +79209,54 @@ function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : { default: obj };
 }
 
+var Popup = _overlay2.default.Popup;
 var renderNode = _util.func.renderNode;
 var pickProps = _util.obj.pickProps,
     pickOthers = _util.obj.pickOthers;
 
 function isValueChanged(newValue, oldValue) {
-    if (Array.isArray(newValue)) {
-        return newValue.some(function (val, idx) {
-            return val !== (oldValue && oldValue[idx]) && val && !val.isSame(oldValue && oldValue[idx]);
-        });
+    return Array.isArray(newValue) ? isValueChanged(newValue[0], oldValue && oldValue[0]) || isValueChanged(newValue[1], oldValue && oldValue[1]) : newValue !== oldValue && !(0, _util.datejs)(newValue).isSame(oldValue);
+}
+
+// 返回日期字符串
+function getInputValue(value, fmt) {
+    var formater = function formater(v, idx) {
+        if (Array.isArray(fmt)) {
+            fmt = fmt[idx];
+        }
+        return v ? typeof fmt === 'function' ? fmt(v) : v.format(fmt) : '';
+    };
+
+    return Array.isArray(value) ? value.map(function (v, idx) {
+        return formater(v, idx);
+    }) : formater(value);
+}
+
+function checkAndRectify(value, isRange) {
+    var check = function check(v) {
+        // 因为datejs(undefined) === datejs()
+        // 但是这里期望的是一个空值
+        if (v === undefined) {
+            v = null;
+        }
+        v = (0, _util.datejs)(v);
+        return v.isValid() ? v : null;
+    };
+
+    if (isRange) {
+        var _ref = Array.isArray(value) ? [0, 1].map(function (i) {
+            return check(value[i]);
+        }) : [null, null],
+            begin = _ref[0],
+            end = _ref[1];
+
+        if (begin && end && begin.isAfter(end)) {
+            return [null, null];
+        }
+
+        return [begin, end];
     } else {
-        return newValue !== oldValue && newValue && !newValue.isSame(oldValue);
+        return check(value);
     }
 }
 
@@ -79103,17 +79272,13 @@ var Picker = (_temp = _class = function (_React$Component) {
 
         _this.prefixCls = props.prefix + 'date-picker2';
 
-        var value = _this.checkAndRectify('value' in props ? props.value : 'defaultValue' in props ? props.defaultValue : props.type === _constant.DATE_PICKER_TYPE.RANGE ? [null, null] : null);
-
-        if ('value' in props) {
-            _this.controlledValue = value;
-        }
+        var isRange = props.type === _constant.DATE_PICKER_TYPE.RANGE;
+        var value = checkAndRectify('value' in props ? props.value : 'defaultValue' in props ? props.defaultValue : isRange ? [null, null] : null, isRange);
 
         _this.state = {
-            type: props.type,
             value: value,
             curValue: value, // 当前输入中的值
-            inputValue: _this.getInputValue(value),
+            inputValue: getInputValue(value, props.format),
             visible: 'defaultVisible' in props ? props.defaultVisible : false,
             inputType: _constant.DATE_INPUT_TYPE.BEGIN,
             justBeginInput: true,
@@ -79122,11 +79287,23 @@ var Picker = (_temp = _class = function (_React$Component) {
         return _this;
     }
 
-    Picker.getDerivedStateFromProps = function getDerivedStateFromProps(props) {
-        return {
-            isRange: props.type === _constant.DATE_PICKER_TYPE.RANGE,
-            showOk: !!(props.showOk || props.showTime)
-        };
+    Picker.getDerivedStateFromProps = function getDerivedStateFromProps(props, state) {
+        var isRange = props.type === _constant.DATE_PICKER_TYPE.RANGE;
+        var newState = { isRange: isRange, showOk: !!(props.showOk || props.showTime) };
+
+        if ('value' in props) {
+            var value = checkAndRectify(props.value, isRange);
+
+            if (isValueChanged(value, state.value)) {
+                newState = (0, _extends3.default)({}, newState, {
+                    value: value,
+                    curValue: value,
+                    inputValue: getInputValue(value, props.format)
+                });
+            }
+        }
+
+        return newState;
     };
 
     Picker.prototype.componentWillUnmount = function componentWillUnmount() {
@@ -79134,13 +79311,6 @@ var Picker = (_temp = _class = function (_React$Component) {
             return id && clearTimeout(id);
         });
     };
-
-    // 返回日期字符串
-
-
-    // 校验日期数据，范围选择模式下为数组
-    // 不合法的日期重置null值
-
 
     // 判断弹层是否显示
 
@@ -79223,18 +79393,8 @@ var Picker = (_temp = _class = function (_React$Component) {
             inputValue = _state2.inputValue,
             curValue = _state2.curValue;
 
-        // 受控
-
-        if ('value' in this.props) {
-            var value = this.checkAndRectify(this.props.value);
-            if (isValueChanged(value, this.controlledValue)) {
-                curValue = value;
-                inputValue = this.getInputValue(curValue);
-                this.controlledValue = value;
-            }
-        }
-
         // 预览态
+
         if (isPreview) {
             var previewCls = (0, _classnames3.default)(className, prefix + 'form-preview');
 
@@ -79245,7 +79405,6 @@ var Picker = (_temp = _class = function (_React$Component) {
         var allDisabled = isRange && Array.isArray(disabled) ? disabled.every(function (v) {
             return v;
         }) : disabled;
-
         var sharedProps = {
             rtl: rtl,
             prefix: prefix,
@@ -79321,7 +79480,7 @@ var Picker = (_temp = _class = function (_React$Component) {
             popupProps = _props2.popupProps;
 
         var popupCls = (0, _classnames3.default)(popupClassName || popupProps && popupProps.className, (_classnames = {}, _classnames[prefixCls + '-overlay'] = true, _classnames[prefixCls + '-' + (align || []).join('-')] = align, _classnames[prefixCls + '-overlay-range'] = isRange, _classnames));
-        var PopupComp = popupComponent || _overlay.Popup;
+        var PopupComp = popupComponent || Popup;
 
         return _react2.default.createElement('div', (0, _extends3.default)({}, pickOthers(Picker.propTypes, restProps), {
             dir: rtl ? 'rtl' : undefined,
@@ -79348,6 +79507,7 @@ var Picker = (_temp = _class = function (_React$Component) {
     rtl: PT.bool,
     prefix: PT.string,
     locale: PT.object,
+    name: PT.string,
 
     // calendar
     mode: _propTypes3.default.mode,
@@ -79415,50 +79575,6 @@ var Picker = (_temp = _class = function (_React$Component) {
     format: 'YYYY-MM-DD'
 }, _initialiseProps = function _initialiseProps() {
     var _this4 = this;
-
-    this.getInputValue = function (value) {
-        return Array.isArray(value) ? value.map(function (v, idx) {
-            return _this4.formater(v, idx);
-        }) : _this4.formater(value);
-    };
-
-    this.formater = function (v, idx) {
-        var fmt = _this4.props.format;
-
-        if (Array.isArray(fmt)) {
-            fmt = fmt[idx];
-        }
-
-        return v ? typeof fmt === 'function' ? fmt(v) : v.format(fmt) : '';
-    };
-
-    this.checkAndRectify = function (value) {
-        var check = function check(v) {
-            // 因为datejs(undefined) === datejs()
-            // 但是这里期望的是一个空值
-            if (v === undefined) {
-                v = null;
-            }
-            v = (0, _util.datejs)(v);
-            return v.isValid() ? v : null;
-        };
-
-        if (_this4.props.type === _constant.DATE_PICKER_TYPE.RANGE) {
-            var _ref = Array.isArray(value) ? [0, 1].map(function (i) {
-                return check(value[i]);
-            }) : [null, null],
-                begin = _ref[0],
-                end = _ref[1];
-
-            if (begin && end && begin.isAfter(end)) {
-                return [null, null];
-            }
-
-            return [begin, end];
-        } else {
-            return check(value);
-        }
-    };
 
     this.handleVisibleChange = function (visible, type) {
         if (type === 'docClick') {
@@ -79531,15 +79647,14 @@ var Picker = (_temp = _class = function (_React$Component) {
 
     this.handleChange = function (v, eventType) {
         var _state4 = _this4.state,
-            value = _state4.value,
             isRange = _state4.isRange,
             showOk = _state4.showOk;
 
-        v = _this4.checkAndRectify(v, value);
+        v = checkAndRectify(v, isRange);
 
         _this4.setState({
             curValue: v,
-            inputValue: _this4.getInputValue(v)
+            inputValue: getInputValue(v, _this4.props.format)
         });
 
         if (!showOk || ['KEYDOWN_ENTER', 'CLICK_OK', 'CLICK_PRESET', 'VISIBLE_CHANGE', 'INPUT_CLEAR'].includes(eventType)) {
@@ -79578,36 +79693,39 @@ var Picker = (_temp = _class = function (_React$Component) {
 
     this.onChange = function (v) {
         var value = _this4.state.value;
+        var format = _this4.props.format;
 
         if (isValueChanged(v, value)) {
+            // 受控
             if ('value' in _this4.props) {
                 _this4.setState({
                     curValue: value,
-                    inputValue: _this4.getInputValue(value)
+                    inputValue: getInputValue(value, format)
                 });
-            } else {
+            } else if (!('value' in _this4.props)) {
                 _this4.setState({
                     value: v
                 });
             }
-
-            _util.func.invoke(_this4.props, 'onChange', [v, _this4.getInputValue(v)]);
+            _util.func.invoke(_this4.props, 'onChange', [v, getInputValue(v, format)]);
         }
         _this4.onVisibleChange(false);
     };
 
     this.onOk = function () {
-        var inputValue = _this4.state.inputValue;
+        var _state5 = _this4.state,
+            inputValue = _state5.inputValue,
+            isRange = _state5.isRange;
 
-        var result = _util.func.invoke(_this4.props, 'onOk', [_this4.checkAndRectify(inputValue), inputValue]);
+        var result = _util.func.invoke(_this4.props, 'onOk', [checkAndRectify(inputValue, isRange), inputValue]);
 
         result !== false && _this4.handleChange(inputValue, 'CLICK_OK');
     };
 
     this.onInputTypeChange = function (v) {
-        var _state5 = _this4.state,
-            inputType = _state5.inputType,
-            visible = _state5.visible;
+        var _state6 = _this4.state,
+            inputType = _state6.inputType,
+            visible = _state6.visible;
 
         if (v !== inputType) {
             _this4.setState({
@@ -79618,9 +79736,9 @@ var Picker = (_temp = _class = function (_React$Component) {
     };
 
     this.onClick = function () {
-        var _state6 = _this4.state,
-            visible = _state6.visible,
-            inputType = _state6.inputType;
+        var _state7 = _this4.state,
+            visible = _state7.visible,
+            inputType = _state7.inputType;
 
         if (!visible) {
             _this4.onVisibleChange(true);
@@ -81300,12 +81418,6 @@ module.exports = exports['default'];
 
 /***/ }),
 /* 472 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -81835,9 +81947,9 @@ exports.default = (0, _reactLifecyclesCompat.polyfill)(RangePanel);
 module.exports = exports['default'];
 
 /***/ }),
+/* 473 */,
 /* 474 */,
-/* 475 */,
-/* 476 */
+/* 475 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -81846,19 +81958,19 @@ module.exports = exports['default'];
 var next = __webpack_require__(198);
 
 next.locales = {};
-next.locales['en-us'] = __webpack_require__(477);
-next.locales['ja-ja'] = __webpack_require__(478);
+next.locales['en-us'] = __webpack_require__(476);
+next.locales['ja-ja'] = __webpack_require__(477);
 next.locales['zh-cn'] = __webpack_require__(13);
-next.locales['zh-hk'] = __webpack_require__(479);
-next.locales['zh-tw'] = __webpack_require__(480);
-next.locales['vi-vn'] = __webpack_require__(481);
-next.locales['it-it'] = __webpack_require__(482);
-next.locales['pt-pt'] = __webpack_require__(483);
+next.locales['zh-hk'] = __webpack_require__(478);
+next.locales['zh-tw'] = __webpack_require__(479);
+next.locales['vi-vn'] = __webpack_require__(480);
+next.locales['it-it'] = __webpack_require__(481);
+next.locales['pt-pt'] = __webpack_require__(482);
 
 module.exports = next;
 
 /***/ }),
-/* 477 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82009,7 +82121,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 478 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82160,7 +82272,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 479 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82311,7 +82423,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 480 */
+/* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82462,7 +82574,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 481 */
+/* 480 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82614,7 +82726,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 482 */
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82766,7 +82878,7 @@ exports.default = {
 module.exports = exports['default'];
 
 /***/ }),
-/* 483 */
+/* 482 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

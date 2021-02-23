@@ -25138,9 +25138,7 @@ function graphicGL_nearestPowerOfTwo(val) {
     return Math.pow(2, Math.round(Math.log(val) / Math.LN2));
 }
 function graphicGL_convertTextureToPowerOfTwo(texture) {
-    if ((texture.wrapS === src_Texture.REPEAT || texture.wrapT === src_Texture.REPEAT)
-     && texture.image
-     ) {
+    if ((texture.wrapS === src_Texture.REPEAT || texture.wrapT === src_Texture.REPEAT) && texture.image) {
         // var canvas = document.createElement('canvas');
         var width = graphicGL_nearestPowerOfTwo(texture.width);
         var height = graphicGL_nearestPowerOfTwo(texture.height);
@@ -25278,6 +25276,7 @@ graphicGL.loadTexture = function (imgValue, api, textureOpts, cb) {
                     });
                     textureObj.callbacks = null;
                 };
+                originalImage.crossOrigin = 'Anonymous';
                 originalImage.src = imgValue;
                 // Use blank image as place holder.
                 texture.image = blankImage;
@@ -59156,7 +59155,7 @@ function isPointsNaN(pt) {
                 if (data.hasValue(i)) {
                     var rgbaArr = util_graphicGL.parseColor(getItemVisualColor(data, i));
                     var opacity = getItemVisualOpacity(data, i);
-                    rgbaArr[3] *= opacity;
+                    opacity != null && (rgbaArr[3] *= opacity);
                     if (rgbaArr[3] < 0.99) {
                         isTransparent = true;
                     }
@@ -59268,7 +59267,7 @@ function isPointsNaN(pt) {
                 uvArr[1] = Math.floor(i / column) / (row - 1);
                 var rgbaArr = util_graphicGL.parseColor(getItemVisualColor(data, i));
                 var opacity = getItemVisualOpacity(data, i);
-                rgbaArr[3] *= opacity;
+                opacity != null && (rgbaArr[3] *= opacity);
                 if (rgbaArr[3] < 0.99) {
                     isTransparent = true;
                 }

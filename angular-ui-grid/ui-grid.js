@@ -1,6 +1,6 @@
 /*!
- * ui-grid - v4.9.1 - 2020-10-26
- * Copyright (c) 2020 ; License: MIT 
+ * ui-grid - v4.10.0 - 2021-02-01
+ * Copyright (c) 2021 ; License: MIT 
  */
 
 (function() {
@@ -28958,6 +28958,7 @@ module.filter('px', function() {
        */
       createTree: function( grid, renderableRows ) {
         var currentLevel = -1,
+          parentsCache = {},
           parents = [],
           currentState;
 
@@ -28988,16 +28989,31 @@ module.filter('px', function() {
             }
           }
 
+          // If row header as parent exists in parentsCache
+          if (
+            typeof row.treeLevel !== 'undefined' &&
+            row.treeLevel !== null &&
+            row.treeLevel >= 0 &&
+            parentsCache.hasOwnProperty(row.uid)
+          ) {
+            parents.push(parentsCache[row.uid]);
+          }
+
           // aggregate if this is a leaf node
           if ( ( typeof(row.treeLevel) === 'undefined' || row.treeLevel === null || row.treeLevel < 0 ) && row.visible  ) {
             service.aggregate( grid, row, parents );
           }
 
           // add this node to the tree
-          service.addOrUseNode(grid, row, parents, aggregations);
+          if (!parentsCache.hasOwnProperty(row.uid)) {
+            service.addOrUseNode(grid, row, parents, aggregations);
+          }
 
           if ( typeof(row.treeLevel) !== 'undefined' && row.treeLevel !== null && row.treeLevel >= 0 ) {
-            parents.push(row);
+            if (!parentsCache.hasOwnProperty(row.uid)) {
+              parentsCache[row.uid] = row;
+              parents.push(row);
+            }
             currentLevel++;
             currentState = service.setCurrentState(parents);
           }
@@ -30496,7 +30512,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/expandableRowHeader',
-    "<div class=\"ui-grid-row-header-cell ui-grid-expandable-buttons-cell\"><div class=\"ui-grid-cell-contents\"><i class=\"clickable\" ng-if=\"!(row.groupHeader==true || row.entity.subGridOptions.disableRowExpandable)\" ng-class=\"{ 'ui-grid-icon-plus-squared' : !row.isExpanded, 'ui-grid-icon-minus-squared' : row.isExpanded }\" ng-click=\"grid.api.expandable.toggleRowExpansion(row.entity, $event)\"></i></div></div>"
+    "<div class=\"ui-grid-row-header-cell ui-grid-expandable-buttons-cell\"><div class=\"ui-grid-cell-contents\"><i class=\"clickable\" ng-if=\"!(row.groupHeader==true || row.entity.subGridOptions.disableRowExpandable)\" ng-class=\"{ 'ui-grid-icon-plus-squared' : !row.isExpanded, 'ui-grid-icon-minus-squared' : row.isExpanded }\" ng-click=\"grid.api.expandable.toggleRowExpansion(row.entity, $event)\" aria-expanded=\"{{!!row.isExpanded}}\"></i></div></div>"
   );
 
 
@@ -30506,7 +30522,7 @@ angular.module('ui.grid').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('ui-grid/expandableTopRowHeader',
-    "<div class=\"ui-grid-row-header-cell ui-grid-expandable-buttons-cell\"><div class=\"ui-grid-cell-contents\"><span class=\"ui-grid-cell-empty\" ng-if=\"!grid.options.showExpandAllButton\"></span> <button type=\"button\" class=\"ui-grid-icon-button clickable\" ng-if=\"grid.options.showExpandAllButton\" ng-class=\"{ 'ui-grid-icon-plus-squared' : !grid.expandable.expandedAll, 'ui-grid-icon-minus-squared' : grid.expandable.expandedAll }\" ng-click=\"grid.api.expandable.toggleAllRows()\"></button></div></div>"
+    "<div class=\"ui-grid-row-header-cell ui-grid-expandable-buttons-cell\"><div class=\"ui-grid-cell-contents\"><span class=\"ui-grid-cell-empty\" ng-if=\"!grid.options.showExpandAllButton\"></span> <button type=\"button\" class=\"ui-grid-icon-button clickable\" ng-if=\"grid.options.showExpandAllButton\" ng-class=\"{ 'ui-grid-icon-plus-squared' : !grid.expandable.expandedAll, 'ui-grid-icon-minus-squared' : grid.expandable.expandedAll }\" ng-click=\"grid.api.expandable.toggleAllRows()\" aria-expanded=\"{{grid.expandable.expandedAll}}\"></button></div></div>"
   );
 
 

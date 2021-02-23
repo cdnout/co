@@ -1,8 +1,8 @@
 /*!
  * css-vars-ponyfill
- * v2.4.2
+ * v2.4.3
  * https://jhildenbiddle.github.io/css-vars-ponyfill/
- * (c) 2018-2020 John Hildenbiddle <http://hildenbiddle.com>
+ * (c) 2018-2021 John Hildenbiddle <http://hildenbiddle.com>
  * MIT license
  */
 function _extends() {
@@ -22,9 +22,9 @@ function _extends() {
 
 /*!
  * get-css-data
- * v1.9.1
+ * v2.0.0
  * https://github.com/jhildenbiddle/get-css-data
- * (c) 2018-2020 John Hildenbiddle <http://hildenbiddle.com>
+ * (c) 2018-2021 John Hildenbiddle <http://hildenbiddle.com>
  * MIT license
  */ function getUrls(urls) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -94,7 +94,7 @@ function _extends() {
             settings.onBeforeSend(xhr, url, i);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
-                    if (xhr.status === 200 && isValidCss(xhr.responseText)) {
+                    if (xhr.status < 400 && isValidCss(xhr.responseText)) {
                         onSuccess(xhr.responseText, i);
                     } else if (xhr.status === 0 && isValidCss(xhr.responseText)) {
                         onSuccess(xhr.responseText, i);
@@ -195,6 +195,16 @@ function _extends() {
     function handleComplete() {
         var isComplete = cssArray.indexOf(null) === -1;
         if (isComplete) {
+            cssArray.reduce((function(skipIndices, value, i) {
+                if (value === "") {
+                    skipIndices.push(i);
+                }
+                return skipIndices;
+            }), []).reverse().forEach((function(skipIndex) {
+                return [ sourceNodes, cssArray ].forEach((function(arr) {
+                    return arr.splice(skipIndex, 1);
+                }));
+            }));
             var cssText = cssArray.join("");
             settings.onComplete(cssText, cssArray, sourceNodes);
         }
@@ -1115,7 +1125,7 @@ var isShadowDOMReady = false;
         }
         var srcNodes = Array.apply(null, settings.rootElement.querySelectorAll('[data-cssvars]:not([data-cssvars="out"])'));
         settings.__benchmark = getTimeStamp();
-        settings.exclude = [ cssVarsObserver ? '[data-cssvars]:not([data-cssvars=""])' : '[data-cssvars="out"]', "link[disabled]", settings.exclude ].filter((function(selector) {
+        settings.exclude = [ cssVarsObserver ? '[data-cssvars]:not([data-cssvars=""])' : '[data-cssvars="out"]', "link[disabled]:not([data-cssvars])", settings.exclude ].filter((function(selector) {
             return selector;
         })).join(",");
         settings.variables = fixVarNames(settings.variables);
@@ -1161,6 +1171,10 @@ var isShadowDOMReady = false;
                 exclude: settings.exclude,
                 skipDisabled: false,
                 onSuccess: function onSuccess(cssText, node, url) {
+                    var isUserDisabled = (node.sheet || {}).disabled && !node.__cssVars;
+                    if (isUserDisabled) {
+                        return false;
+                    }
                     cssText = cssText.replace(regex.cssComments, "").replace(regex.cssMediaQueries, "");
                     cssText = (cssText.match(regex.cssVarDeclRules) || []).join("");
                     return cssText || false;
@@ -1189,6 +1203,10 @@ var isShadowDOMReady = false;
                     handleError(errorMsg, node, xhr, responseUrl);
                 },
                 onSuccess: function onSuccess(cssText, node, url) {
+                    var isUserDisabled = (node.sheet || {}).disabled && !node.__cssVars;
+                    if (isUserDisabled) {
+                        return false;
+                    }
                     var isLink = node.nodeName.toLowerCase() === "link";
                     var isStyleImport = node.nodeName.toLowerCase() === "style" && cssText !== node.textContent;
                     var returnVal = settings.onSuccess(cssText, node, url);

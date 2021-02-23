@@ -4,7 +4,7 @@ name: @egjs/infinitegrid
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-infinitegrid
-version: 3.7.1
+version: 3.8.1
 */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :

@@ -5,7 +5,7 @@
  * billboard.js, JavaScript chart library
  * https://naver.github.io/billboard.js/
  * 
- * @version 2.1.4
+ * @version 2.2.3
  * @requires billboard.js
  * @summary billboard.js plugin
 */
@@ -48,8 +48,11 @@ function __extends(d, b) {
     this.constructor = d;
   }
 
+  if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + (b + "") + " is not a constructor or null");
   _extendStatics(d, b), d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
+/** @deprecated */
+
 function __spreadArrays() {
   for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
 
@@ -171,8 +174,10 @@ var CLASS = {
  * billboard.js project is licensed under the MIT license
  */
 var win = (function () {
-    var def = function (o) { return typeof o !== "undefined" && o; };
-    return def(self) || def(window) || def(global) || def(globalThis) || Function("return this")();
+    var root = (typeof globalThis === "object" && globalThis !== null && globalThis.Object === Object && globalThis) ||
+        (typeof global === "object" && global !== null && global.Object === Object && global) ||
+        (typeof self === "object" && self !== null && self.Object === Object && self);
+    return root || Function("return this")();
 })();
 /* eslint-enable no-new-func, no-undef */
 var doc = win && win.document;
@@ -250,7 +255,7 @@ var getRange = function (start, end, step) {
     return res;
 };
 // emulate event
-var emulateEvent = {
+({
     mouse: (function () {
         var getParams = function () { return ({
             bubbles: false, cancelable: false, screenX: 0, screenY: 0, clientX: 0, clientY: 0
@@ -293,7 +298,7 @@ var emulateEvent = {
             changedTouches: [touchObj]
         }));
     }
-};
+});
 /**
  * Get parsed date value
  * (It must be called in 'ChartInternal' context)
@@ -353,15 +358,6 @@ function loadConfig(config) {
             thisConfig[key] = read;
         }
     });
-}
-
-function _defineProperty(obj, key, value) {
-  return key in obj ? Object.defineProperty(obj, key, {
-    value: value,
-    enumerable: !0,
-    configurable: !0,
-    writable: !0
-  }) : obj[key] = value, obj;
 }
 
 /**
@@ -438,7 +434,7 @@ var Plugin = /*#__PURE__*/function () {
   }, Plugin;
 }();
 
-_defineProperty(Plugin, "version", "#2.1.4#");
+Plugin.version = "#2.2.3#";
 
 /**
  * Copyright (c) 2017 ~ present NAVER Corp.

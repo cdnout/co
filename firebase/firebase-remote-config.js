@@ -1,2 +1,1845 @@
-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(require("@firebase/app")):"function"==typeof define&&define.amd?define(["@firebase/app"],e):e((t="undefined"!=typeof globalThis?globalThis:t||self).firebase)}(this,function(re){"use strict";try{(function(){function t(t){return t&&"object"==typeof t&&"default"in t?t:{default:t}}var e=t(re),r=function(t,e){return(r=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var r in e)e.hasOwnProperty(r)&&(t[r]=e[r])})(t,e)};var s=function(){return(s=Object.assign||function(t){for(var e,r=1,n=arguments.length;r<n;r++)for(var i in e=arguments[r])Object.prototype.hasOwnProperty.call(e,i)&&(t[i]=e[i]);return t}).apply(this,arguments)};function f(t,s,a,u){return new(a=a||Promise)(function(r,e){function n(t){try{o(u.next(t))}catch(t){e(t)}}function i(t){try{o(u.throw(t))}catch(t){e(t)}}function o(t){var e;t.done?r(t.value):((e=t.value)instanceof a?e:new a(function(t){t(e)})).then(n,i)}o((u=u.apply(t,s||[])).next())})}function p(r,n){var i,o,s,a={label:0,sent:function(){if(1&s[0])throw s[1];return s[1]},trys:[],ops:[]},t={next:e(0),throw:e(1),return:e(2)};return"function"==typeof Symbol&&(t[Symbol.iterator]=function(){return this}),t;function e(e){return function(t){return function(e){if(i)throw new TypeError("Generator is already executing.");for(;a;)try{if(i=1,o&&(s=2&e[0]?o.return:e[0]?o.throw||((s=o.return)&&s.call(o),0):o.next)&&!(s=s.call(o,e[1])).done)return s;switch(o=0,s&&(e=[2&e[0],s.value]),e[0]){case 0:case 1:s=e;break;case 4:return a.label++,{value:e[1],done:!1};case 5:a.label++,o=e[1],e=[0];continue;case 7:e=a.ops.pop(),a.trys.pop();continue;default:if(!(s=0<(s=a.trys).length&&s[s.length-1])&&(6===e[0]||2===e[0])){a=0;continue}if(3===e[0]&&(!s||e[1]>s[0]&&e[1]<s[3])){a.label=e[1];break}if(6===e[0]&&a.label<s[1]){a.label=s[1],s=e;break}if(s&&a.label<s[2]){a.label=s[2],a.ops.push(e);break}s[2]&&a.ops.pop(),a.trys.pop();continue}e=n.call(r,a)}catch(t){e=[6,t],o=0}finally{i=s=0}if(5&e[0])throw e[1];return{value:e[0]?e[1]:void 0,done:!0}}([e,t])}}}function a(t){var e="function"==typeof Symbol&&Symbol.iterator,r=e&&t[e],n=0;if(r)return r.call(t);if(t&&"number"==typeof t.length)return{next:function(){return t&&n>=t.length&&(t=void 0),{value:t&&t[n++],done:!t}}};throw new TypeError(e?"Object is not iterable.":"Symbol.iterator is not defined.")}function n(){for(var t=[],e=0;e<arguments.length;e++)t=t.concat(function(t,e){var r="function"==typeof Symbol&&t[Symbol.iterator];if(!r)return t;var n,i,o=r.call(t),s=[];try{for(;(void 0===e||0<e--)&&!(n=o.next()).done;)s.push(n.value)}catch(t){i={error:t}}finally{try{n&&!n.done&&(r=o.return)&&r.call(o)}finally{if(i)throw i.error}}return s}(arguments[e]));return t}var i,o,u,c="FirebaseError",h=(i=Error,r(o=g,u=i),o.prototype=null===u?Object.create(u):(l.prototype=u.prototype,new l),g);function l(){this.constructor=o}function g(t,e,r){e=i.call(this,e)||this;return e.code=t,e.customData=r,e.name=c,Object.setPrototypeOf(e,g.prototype),Error.captureStackTrace&&Error.captureStackTrace(e,d.prototype.create),e}var d=(v.prototype.create=function(t){for(var e=[],r=1;r<arguments.length;r++)e[r-1]=arguments[r];var n,i=e[0]||{},o=this.service+"/"+t,t=this.errors[t],t=t?(n=i,t.replace(m,function(t,e){var r=n[e];return null!=r?String(r):"<"+e+"?>"})):"Error",t=this.serviceName+": "+t+" ("+o+").";return new h(o,t,i)},v);function v(t,e,r){this.service=t,this.serviceName=e,this.errors=r}var m=/\{\$([^}]+)}/g;var y=(b.prototype.setInstantiationMode=function(t){return this.instantiationMode=t,this},b.prototype.setMultipleInstances=function(t){return this.multipleInstances=t,this},b.prototype.setServiceProps=function(t){return this.serviceProps=t,this},b);function b(t,e,r){this.name=t,this.instanceFactory=e,this.type=r,this.multipleInstances=!1,this.serviceProps={},this.instantiationMode="LAZY"}function w(r){return new Promise(function(t,e){r.onsuccess=function(){t(r.result)},r.onerror=function(){e(r.error)}})}function _(r,n,i){var o,t=new Promise(function(t,e){w(o=r[n].apply(r,i)).then(t,e)});return t.request=o,t}function S(t,r,e){e.forEach(function(e){Object.defineProperty(t.prototype,e,{get:function(){return this[r][e]},set:function(t){this[r][e]=t}})})}function E(e,r,n,t){t.forEach(function(t){t in n.prototype&&(e.prototype[t]=function(){return _(this[r],t,arguments)})})}function C(e,r,n,t){t.forEach(function(t){t in n.prototype&&(e.prototype[t]=function(){return this[r][t].apply(this[r],arguments)})})}function T(t,n,e,r){r.forEach(function(r){r in e.prototype&&(t.prototype[r]=function(){return t=this[n],(e=_(t,r,arguments)).then(function(t){if(t)return new L(t,e.request)});var t,e})})}function I(t){this._index=t}function L(t,e){this._cursor=t,this._request=e}function P(t){this._store=t}function O(r){this._tx=r,this.complete=new Promise(function(t,e){r.oncomplete=function(){t()},r.onerror=function(){e(r.error)},r.onabort=function(){e(r.error)}})}function M(t,e,r){this._db=t,this.oldVersion=e,this.transaction=new O(r)}function k(t){this._db=t}S(I,"_index",["name","keyPath","multiEntry","unique"]),E(I,"_index",IDBIndex,["get","getKey","getAll","getAllKeys","count"]),T(I,"_index",IDBIndex,["openCursor","openKeyCursor"]),S(L,"_cursor",["direction","key","primaryKey","value"]),E(L,"_cursor",IDBCursor,["update","delete"]),["advance","continue","continuePrimaryKey"].forEach(function(r){r in IDBCursor.prototype&&(L.prototype[r]=function(){var e=this,t=arguments;return Promise.resolve().then(function(){return e._cursor[r].apply(e._cursor,t),w(e._request).then(function(t){if(t)return new L(t,e._request)})})})}),P.prototype.createIndex=function(){return new I(this._store.createIndex.apply(this._store,arguments))},P.prototype.index=function(){return new I(this._store.index.apply(this._store,arguments))},S(P,"_store",["name","keyPath","indexNames","autoIncrement"]),E(P,"_store",IDBObjectStore,["put","add","delete","clear","get","getAll","getKey","getAllKeys","count"]),T(P,"_store",IDBObjectStore,["openCursor","openKeyCursor"]),C(P,"_store",IDBObjectStore,["deleteIndex"]),O.prototype.objectStore=function(){return new P(this._tx.objectStore.apply(this._tx,arguments))},S(O,"_tx",["objectStoreNames","mode"]),C(O,"_tx",IDBTransaction,["abort"]),M.prototype.createObjectStore=function(){return new P(this._db.createObjectStore.apply(this._db,arguments))},S(M,"_db",["name","version","objectStoreNames"]),C(M,"_db",IDBDatabase,["deleteObjectStore","close"]),k.prototype.transaction=function(){return new O(this._db.transaction.apply(this._db,arguments))},S(k,"_db",["name","version","objectStoreNames"]),C(k,"_db",IDBDatabase,["close"]),["openCursor","openKeyCursor"].forEach(function(i){[P,I].forEach(function(t){i in t.prototype&&(t.prototype[i.replace("open","iterate")]=function(){var t=(r=arguments,Array.prototype.slice.call(r)),e=t[t.length-1],r=this._store||this._index,n=r[i].apply(r,t.slice(0,-1));n.onsuccess=function(){e(n.result)}})})}),[I,P].forEach(function(t){t.prototype.getAll||(t.prototype.getAll=function(t,r){var n=this,i=[];return new Promise(function(e){n.iterateCursor(t,function(t){t?(i.push(t.value),void 0===r||i.length!=r?t.continue():e(i)):e(i)})})})});var F="0.4.19",j=1e4,N="w:"+F,A="FIS_v2",D="https://firebaseinstallations.googleapis.com/v1",R=36e5,x=((x={})["missing-app-config-values"]='Missing App configuration value: "{$valueName}"',x["not-registered"]="Firebase Installation is not registered.",x["installation-not-found"]="Firebase Installation not found.",x["request-failed"]='{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',x["app-offline"]="Could not process request. Application offline.",x["delete-pending-registration"]="Can't delete installation while there is a pending registration request.",x),B=new d("installations","Installations",x);function q(t){return t instanceof h&&t.code.includes("request-failed")}function H(t){t=t.projectId;return D+"/projects/"+t+"/installations"}function K(t){return{token:t.token,requestStatus:2,expiresIn:(t=t.expiresIn,Number(t.replace("s","000"))),creationTime:Date.now()}}function V(r,n){return f(this,void 0,void 0,function(){var e;return p(this,function(t){switch(t.label){case 0:return[4,n.json()];case 1:return e=t.sent(),e=e.error,[2,B.create("request-failed",{requestName:r,serverCode:e.code,serverMessage:e.message,serverStatus:e.status})]}})})}function z(t){t=t.apiKey;return new Headers({"Content-Type":"application/json",Accept:"application/json","x-goog-api-key":t})}function U(t,e){e=e.refreshToken,t=z(t);return t.append("Authorization",A+" "+e),t}function $(r){return f(this,void 0,void 0,function(){var e;return p(this,function(t){switch(t.label){case 0:return[4,r()];case 1:return 500<=(e=t.sent()).status&&e.status<600?[2,r()]:[2,e]}})})}function G(e){return new Promise(function(t){setTimeout(t,e)})}var W=/^[cdef][\w-]{21}$/,J="";function Y(){try{var t=new Uint8Array(17);(self.crypto||self.msCrypto).getRandomValues(t),t[0]=112+t[0]%16;t=function(t){return btoa(String.fromCharCode.apply(String,n(t))).replace(/\+/g,"-").replace(/\//g,"_")}(t).substr(0,22);return W.test(t)?t:J}catch(t){return J}}function Z(t){return t.appName+"!"+t.appId}var Q=new Map;function X(t,e){t=Z(t);tt(t,e),function(t,e){var r=rt();r&&r.postMessage({key:t,fid:e});nt()}(t,e)}function tt(t,e){var r,n,i=Q.get(t);if(i)try{for(var o=a(i),s=o.next();!s.done;s=o.next()){(0,s.value)(e)}}catch(t){r={error:t}}finally{try{s&&!s.done&&(n=o.return)&&n.call(o)}finally{if(r)throw r.error}}}var et=null;function rt(){return!et&&"BroadcastChannel"in self&&((et=new BroadcastChannel("[Firebase] FID Change")).onmessage=function(t){tt(t.data.key,t.data.fid)}),et}function nt(){0===Q.size&&et&&(et.close(),et=null)}var it,ot,st="firebase-installations-database",at=1,ut="firebase-installations-store",ct=null;function lt(){var t,e,r;return ct||(t=at,e=function(t){0===t.oldVersion&&t.createObjectStore(ut)},(r=(t=_(indexedDB,"open",[st,t])).request)&&(r.onupgradeneeded=function(t){e&&e(new M(r.result,t.oldVersion,r.transaction))}),ct=t.then(function(t){return new k(t)})),ct}function ft(o,s){return f(this,void 0,void 0,function(){var e,r,n,i;return p(this,function(t){switch(t.label){case 0:return e=Z(o),[4,lt()];case 1:return n=t.sent(),r=n.transaction(ut,"readwrite"),[4,(n=r.objectStore(ut)).get(e)];case 2:return i=t.sent(),[4,n.put(s,e)];case 3:return t.sent(),[4,r.complete];case 4:return t.sent(),i&&i.fid===s.fid||X(o,s.fid),[2,s]}})})}function ht(n){return f(this,void 0,void 0,function(){var e,r;return p(this,function(t){switch(t.label){case 0:return e=Z(n),[4,lt()];case 1:return r=t.sent(),[4,(r=r.transaction(ut,"readwrite")).objectStore(ut).delete(e)];case 2:return t.sent(),[4,r.complete];case 3:return t.sent(),[2]}})})}function pt(s,a){return f(this,void 0,void 0,function(){var e,r,n,i,o;return p(this,function(t){switch(t.label){case 0:return e=Z(s),[4,lt()];case 1:return n=t.sent(),r=n.transaction(ut,"readwrite"),[4,(n=r.objectStore(ut)).get(e)];case 2:return i=t.sent(),void 0!==(o=a(i))?[3,4]:[4,n.delete(e)];case 3:return t.sent(),[3,6];case 4:return[4,n.put(o,e)];case 5:t.sent(),t.label=6;case 6:return[4,r.complete];case 7:return t.sent(),!o||i&&i.fid===o.fid||X(s,o.fid),[2,o]}})})}function gt(i){return f(this,void 0,void 0,function(){var e,r,n;return p(this,function(t){switch(t.label){case 0:return[4,pt(i,function(t){t=vt(t||{fid:Y(),registrationStatus:0}),t=function(t,e){{if(0!==e.registrationStatus)return 1===e.registrationStatus?{installationEntry:e,registrationPromise:function(i){return f(this,void 0,void 0,function(){var e,r,n;return p(this,function(t){switch(t.label){case 0:return[4,dt(i)];case 1:e=t.sent(),t.label=2;case 2:return 1!==e.registrationStatus?[3,5]:[4,G(100)];case 3:return t.sent(),[4,dt(i)];case 4:return e=t.sent(),[3,2];case 5:return 0!==e.registrationStatus?[3,7]:[4,gt(i)];case 6:return n=t.sent(),r=n.installationEntry,(n=n.registrationPromise)?[2,n]:[2,r];case 7:return[2,e]}})})}(t)}:{installationEntry:e};if(!navigator.onLine){var r=Promise.reject(B.create("app-offline"));return{installationEntry:e,registrationPromise:r}}e={fid:e.fid,registrationStatus:1,registrationTime:Date.now()},t=function(n,i){return f(this,void 0,void 0,function(){var e,r;return p(this,function(t){switch(t.label){case 0:return t.trys.push([0,2,,7]),[4,function(s,t){var a=t.fid;return f(this,void 0,void 0,function(){var e,r,n,i,o;return p(this,function(t){switch(t.label){case 0:return e=H(s),r=z(s),o={fid:a,authVersion:A,appId:s.appId,sdkVersion:N},n={method:"POST",headers:r,body:JSON.stringify(o)},[4,$(function(){return fetch(e,n)})];case 1:return(i=t.sent()).ok?[4,i.json()]:[3,3];case 2:return o=t.sent(),[2,{fid:o.fid||a,registrationStatus:2,refreshToken:o.refreshToken,authToken:K(o.authToken)}];case 3:return[4,V("Create Installation",i)];case 4:throw t.sent()}})})}(n,i)];case 1:return e=t.sent(),[2,ft(n,e)];case 2:return q(r=t.sent())&&409===r.customData.serverCode?[4,ht(n)]:[3,4];case 3:return t.sent(),[3,6];case 4:return[4,ft(n,{fid:i.fid,registrationStatus:0})];case 5:t.sent(),t.label=6;case 6:throw r;case 7:return[2]}})})}(t,e);return{installationEntry:e,registrationPromise:t}}}(i,t);return e=t.registrationPromise,t.installationEntry})];case 1:return(r=t.sent()).fid!==J?[3,3]:(n={},[4,e]);case 2:return[2,(n.installationEntry=t.sent(),n)];case 3:return[2,{installationEntry:r,registrationPromise:e}]}})})}function dt(t){return pt(t,function(t){if(!t)throw B.create("installation-not-found");return vt(t)})}function vt(t){return 1===(e=t).registrationStatus&&e.registrationTime+j<Date.now()?{fid:t.fid,registrationStatus:0}:t;var e}function mt(t,s){var a=t.appConfig,u=t.platformLoggerProvider;return f(this,void 0,void 0,function(){var e,r,n,i,o;return p(this,function(t){switch(t.label){case 0:return e=function(t,e){e=e.fid;return H(t)+"/"+e+"/authTokens:generate"}(a,s),r=U(a,s),(o=u.getImmediate({optional:!0}))&&r.append("x-firebase-client",o.getPlatformInfoString()),o={installation:{sdkVersion:N}},n={method:"POST",headers:r,body:JSON.stringify(o)},[4,$(function(){return fetch(e,n)})];case 1:return(i=t.sent()).ok?[4,i.json()]:[3,3];case 2:return o=t.sent(),[2,K(o)];case 3:return[4,V("Generate Auth Token",i)];case 4:throw t.sent()}})})}function yt(i,o){return void 0===o&&(o=!1),f(this,void 0,void 0,function(){var n,e,r;return p(this,function(t){switch(t.label){case 0:return[4,pt(i.appConfig,function(t){if(!wt(t))throw B.create("not-registered");var e,r=t.authToken;if(o||2!==(e=r).requestStatus||function(t){var e=Date.now();return e<t.creationTime||t.creationTime+t.expiresIn<e+R}(e)){if(1===r.requestStatus)return n=function(r,n){return f(this,void 0,void 0,function(){var e;return p(this,function(t){switch(t.label){case 0:return[4,bt(r.appConfig)];case 1:e=t.sent(),t.label=2;case 2:return 1!==e.authToken.requestStatus?[3,5]:[4,G(100)];case 3:return t.sent(),[4,bt(r.appConfig)];case 4:return e=t.sent(),[3,2];case 5:return 0===(e=e.authToken).requestStatus?[2,yt(r,n)]:[2,e]}})})}(i,o),t;if(!navigator.onLine)throw B.create("app-offline");r=(e=t,r={requestStatus:1,requestTime:Date.now()},s(s({},e),{authToken:r}));return n=function(i,o){return f(this,void 0,void 0,function(){var e,r,n;return p(this,function(t){switch(t.label){case 0:return t.trys.push([0,3,,8]),[4,mt(i,o)];case 1:return e=t.sent(),n=s(s({},o),{authToken:e}),[4,ft(i.appConfig,n)];case 2:return t.sent(),[2,e];case 3:return!q(r=t.sent())||401!==r.customData.serverCode&&404!==r.customData.serverCode?[3,5]:[4,ht(i.appConfig)];case 4:return t.sent(),[3,7];case 5:return n=s(s({},o),{authToken:{requestStatus:0}}),[4,ft(i.appConfig,n)];case 6:t.sent(),t.label=7;case 7:throw r;case 8:return[2]}})})}(i,r),r}return t})];case 1:return e=t.sent(),n?[4,n]:[3,3];case 2:return r=t.sent(),[3,4];case 3:r=e.authToken,t.label=4;case 4:return[2,r]}})})}function bt(t){return pt(t,function(t){if(!wt(t))throw B.create("not-registered");var e=t.authToken;return 1===(e=e).requestStatus&&e.requestTime+j<Date.now()?s(s({},t),{authToken:{requestStatus:0}}):t})}function wt(t){return void 0!==t&&2===t.registrationStatus}function _t(e,r){return void 0===r&&(r=!1),f(this,void 0,void 0,function(){return p(this,function(t){switch(t.label){case 0:return[4,function(r){return f(this,void 0,void 0,function(){var e;return p(this,function(t){switch(t.label){case 0:return[4,gt(r)];case 1:return(e=t.sent().registrationPromise)?[4,e]:[3,3];case 2:t.sent(),t.label=3;case 3:return[2]}})})}(e.appConfig)];case 1:return t.sent(),[4,yt(e,r)];case 2:return[2,t.sent().token]}})})}function St(i,o){return f(this,void 0,void 0,function(){var e,r,n;return p(this,function(t){switch(t.label){case 0:return e=function(t,e){e=e.fid;return H(t)+"/"+e}(i,o),n=U(i,o),r={method:"DELETE",headers:n},[4,$(function(){return fetch(e,r)})];case 1:return(n=t.sent()).ok?[3,3]:[4,V("Delete Installation",n)];case 2:throw t.sent();case 3:return[2]}})})}function Et(t,n){var i=t.appConfig;return function(t,e){rt();var r=Z(t);(t=Q.get(r))||(t=new Set,Q.set(r,t)),t.add(e)}(i,n),function(){var t,e,r;e=n,r=Z(t=i),(t=Q.get(r))&&(t.delete(e),0===t.size&&Q.delete(r),nt())}}function Ct(t){return B.create("missing-app-config-values",{valueName:t})}function Tt(){for(var t=0,e=0,r=arguments.length;e<r;e++)t+=arguments[e].length;for(var n=Array(t),i=0,e=0;e<r;e++)for(var o=arguments[e],s=0,a=o.length;s<a;s++,i++)n[i]=o[s];return n}(it=e.default).INTERNAL.registerComponent(new y("installations",function(t){var e=t.getProvider("app").getImmediate(),r={appConfig:function(t){var e,r;if(!t||!t.options)throw Ct("App Configuration");if(!t.name)throw Ct("App Name");try{for(var n=a(["projectId","apiKey","appId"]),i=n.next();!i.done;i=n.next()){var o=i.value;if(!t.options[o])throw Ct(o)}}catch(t){e={error:t}}finally{try{i&&!i.done&&(r=n.return)&&r.call(n)}finally{if(e)throw e.error}}return{appName:t.name,projectId:t.options.projectId,apiKey:t.options.apiKey,appId:t.options.appId}}(e),platformLoggerProvider:t.getProvider("platform-logger")};return{app:e,getId:function(){return function(n){return f(this,void 0,void 0,function(){var e,r;return p(this,function(t){switch(t.label){case 0:return[4,gt(n.appConfig)];case 1:return e=t.sent(),r=e.installationEntry,(e.registrationPromise||yt(n)).catch(console.error),[2,r.fid]}})})}(r)},getToken:function(t){return _t(r,t)},delete:function(){return function(n){return f(this,void 0,void 0,function(){var e,r;return p(this,function(t){switch(t.label){case 0:return[4,pt(e=n.appConfig,function(t){if(!t||0!==t.registrationStatus)return t})];case 1:if(!(r=t.sent()))return[3,6];if(1!==r.registrationStatus)return[3,2];throw B.create("delete-pending-registration");case 2:if(2!==r.registrationStatus)return[3,6];if(navigator.onLine)return[3,3];throw B.create("app-offline");case 3:return[4,St(e,r)];case 4:return t.sent(),[4,ht(e)];case 5:t.sent(),t.label=6;case 6:return[2]}})})}(r)},onIdChange:function(t){return Et(r,t)}}},"PUBLIC")),it.registerVersion("@firebase/installations",F),(x=ot=ot||{})[x.DEBUG=0]="DEBUG",x[x.VERBOSE=1]="VERBOSE",x[x.INFO=2]="INFO",x[x.WARN=3]="WARN",x[x.ERROR=4]="ERROR",x[x.SILENT=5]="SILENT";function It(t,e){for(var r=[],n=2;n<arguments.length;n++)r[n-2]=arguments[n];if(!(e<t.logLevel)){var i=(new Date).toISOString(),o=Ot[e];if(!o)throw new Error("Attempted to log a message with an invalid logType (value: "+e+")");console[o].apply(console,Tt(["["+i+"]  "+t.name+":"],r))}}var Lt={debug:ot.DEBUG,verbose:ot.VERBOSE,info:ot.INFO,warn:ot.WARN,error:ot.ERROR,silent:ot.SILENT},Pt=ot.INFO,Ot=((x={})[ot.DEBUG]="log",x[ot.VERBOSE]="log",x[ot.INFO]="info",x[ot.WARN]="warn",x[ot.ERROR]="error",x),Mt=(Object.defineProperty(kt.prototype,"logLevel",{get:function(){return this._logLevel},set:function(t){if(!(t in ot))throw new TypeError('Invalid value "'+t+'" assigned to `logLevel`');this._logLevel=t},enumerable:!1,configurable:!0}),kt.prototype.setLogLevel=function(t){this._logLevel="string"==typeof t?Lt[t]:t},Object.defineProperty(kt.prototype,"logHandler",{get:function(){return this._logHandler},set:function(t){if("function"!=typeof t)throw new TypeError("Value assigned to `logHandler` must be a function");this._logHandler=t},enumerable:!1,configurable:!0}),Object.defineProperty(kt.prototype,"userLogHandler",{get:function(){return this._userLogHandler},set:function(t){this._userLogHandler=t},enumerable:!1,configurable:!0}),kt.prototype.debug=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];this._userLogHandler&&this._userLogHandler.apply(this,Tt([this,ot.DEBUG],t)),this._logHandler.apply(this,Tt([this,ot.DEBUG],t))},kt.prototype.log=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];this._userLogHandler&&this._userLogHandler.apply(this,Tt([this,ot.VERBOSE],t)),this._logHandler.apply(this,Tt([this,ot.VERBOSE],t))},kt.prototype.info=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];this._userLogHandler&&this._userLogHandler.apply(this,Tt([this,ot.INFO],t)),this._logHandler.apply(this,Tt([this,ot.INFO],t))},kt.prototype.warn=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];this._userLogHandler&&this._userLogHandler.apply(this,Tt([this,ot.WARN],t)),this._logHandler.apply(this,Tt([this,ot.WARN],t))},kt.prototype.error=function(){for(var t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];this._userLogHandler&&this._userLogHandler.apply(this,Tt([this,ot.ERROR],t)),this._logHandler.apply(this,Tt([this,ot.ERROR],t))},kt);function kt(t){this.name=t,this._logLevel=Pt,this._logHandler=It,this._userLogHandler=null}var Ft=(jt.prototype.isCachedDataFresh=function(t,e){if(!e)return this.logger.debug("Config fetch cache check. Cache unpopulated."),!1;var r=Date.now()-e,e=r<=t;return this.logger.debug("Config fetch cache check. Cache age millis: "+r+". Cache max age millis (minimumFetchIntervalMillis setting): "+t+". Is cache hit: "+e+"."),e},jt.prototype.fetch=function(i){return f(this,void 0,void 0,function(){var e,r,n;return p(this,function(t){switch(t.label){case 0:return[4,Promise.all([this.storage.getLastSuccessfulFetchTimestampMillis(),this.storage.getLastSuccessfulFetchResponse()])];case 1:return(n=t.sent(),e=n[0],(n=n[1])&&this.isCachedDataFresh(i.cacheMaxAgeMillis,e))?[2,n]:(i.eTag=n&&n.eTag,[4,this.client.fetch(i)]);case 2:return r=t.sent(),n=[this.storageCache.setLastSuccessfulFetchTimestampMillis(Date.now())],200===r.status&&n.push(this.storage.setLastSuccessfulFetchResponse(r)),[4,Promise.all(n)];case 3:return t.sent(),[2,r]}})})},jt);function jt(t,e,r,n){this.client=t,this.storage=e,this.storageCache=r,this.logger=n}var x=((x={})["registration-window"]="Undefined window object. This SDK only supports usage in a browser environment.",x["registration-project-id"]="Undefined project identifier. Check Firebase app initialization.",x["registration-api-key"]="Undefined API key. Check Firebase app initialization.",x["registration-app-id"]="Undefined app identifier. Check Firebase app initialization.",x["storage-open"]="Error thrown when opening storage. Original error: {$originalErrorMessage}.",x["storage-get"]="Error thrown when reading from storage. Original error: {$originalErrorMessage}.",x["storage-set"]="Error thrown when writing to storage. Original error: {$originalErrorMessage}.",x["storage-delete"]="Error thrown when deleting from storage. Original error: {$originalErrorMessage}.",x["fetch-client-network"]="Fetch client failed to connect to a network. Check Internet connection. Original error: {$originalErrorMessage}.",x["fetch-timeout"]='The config fetch request timed out.  Configure timeout using "fetchTimeoutMillis" SDK setting.',x["fetch-throttle"]='The config fetch request timed out while in an exponential backoff state. Configure timeout using "fetchTimeoutMillis" SDK setting. Unix timestamp in milliseconds when fetch request throttling ends: {$throttleEndTimeMillis}.',x["fetch-client-parse"]="Fetch client could not parse response. Original error: {$originalErrorMessage}.",x["fetch-status"]="Fetch server returned an HTTP error status. HTTP status: {$httpStatus}.",x),Nt=new d("remoteconfig","Remote Config",x);var At=(Dt.prototype.fetch=function(h){return f(this,void 0,void 0,function(){var r,n,i,o,s,a,u,c,l,f;return p(this,function(t){switch(t.label){case 0:return[4,Promise.all([this.firebaseInstallations.getId(),this.firebaseInstallations.getToken()])];case 1:o=t.sent(),r=o[0],i=o[1],n=window.FIREBASE_REMOTE_CONFIG_URL_BASE||"https://firebaseremoteconfig.googleapis.com",o=n+"/v1/projects/"+this.projectId+"/namespaces/"+this.namespace+":fetch?key="+this.apiKey,n={"Content-Type":"application/json","Content-Encoding":"gzip","If-None-Match":h.eTag||"*"},i={sdk_version:this.sdkVersion,app_instance_id:r,app_instance_id_token:i,app_id:this.appId,language_code:(void 0===e&&(e=navigator),e.languages&&e.languages[0]||e.language)},i={method:"POST",headers:n,body:JSON.stringify(i)},o=fetch(o,i),i=new Promise(function(t,e){h.signal.addEventListener(function(){var t=new Error("The operation was aborted.");t.name="AbortError",e(t)})}),t.label=2;case 2:return t.trys.push([2,5,,6]),[4,Promise.race([o,i])];case 3:return t.sent(),[4,o];case 4:return f=t.sent(),[3,6];case 5:throw i=t.sent(),o="fetch-client-network","AbortError"===i.name&&(o="fetch-timeout"),Nt.create(o,{originalErrorMessage:i.message});case 6:if(s=f.status,a=f.headers.get("ETag")||void 0,200!==f.status)return[3,11];l=void 0,t.label=7;case 7:return t.trys.push([7,9,,10]),[4,f.json()];case 8:return l=t.sent(),[3,10];case 9:throw f=t.sent(),Nt.create("fetch-client-parse",{originalErrorMessage:f.message});case 10:u=l.entries,c=l.state,t.label=11;case 11:if("INSTANCE_STATE_UNSPECIFIED"===c?s=500:"NO_CHANGE"===c?s=304:"NO_TEMPLATE"!==c&&"EMPTY_CONFIG"!==c||(u={}),304!==s&&200!==s)throw Nt.create("fetch-status",{httpStatus:s});return[2,{status:s,eTag:a,config:u}]}var e})})},Dt);function Dt(t,e,r,n,i,o){this.firebaseInstallations=t,this.sdkVersion=e,this.namespace=r,this.projectId=n,this.apiKey=i,this.appId=o}var Rt=(xt.prototype.addEventListener=function(t){this.listeners.push(t)},xt.prototype.abort=function(){this.listeners.forEach(function(t){return t()})},xt);function xt(){this.listeners=[]}var Bt=["1","true","t","yes","y","on"],qt=(Ht.prototype.asString=function(){return this._value},Ht.prototype.asBoolean=function(){return"static"!==this._source&&0<=Bt.indexOf(this._value.toLowerCase())},Ht.prototype.asNumber=function(){if("static"===this._source)return 0;var t=Number(this._value);return isNaN(t)&&(t=0),t},Ht.prototype.getSource=function(){return this._source},Ht);function Ht(t,e){void 0===e&&(e=""),this._source=t,this._value=e}var Kt=(Vt.prototype.setLogLevel=function(t){switch(t){case"debug":this._logger.logLevel=ot.DEBUG;break;case"silent":this._logger.logLevel=ot.SILENT;break;default:this._logger.logLevel=ot.ERROR}},Object.defineProperty(Vt.prototype,"fetchTimeMillis",{get:function(){return this._storageCache.getLastSuccessfulFetchTimestampMillis()||-1},enumerable:!1,configurable:!0}),Object.defineProperty(Vt.prototype,"lastFetchStatus",{get:function(){return this._storageCache.getLastFetchStatus()||"no-fetch-yet"},enumerable:!1,configurable:!0}),Vt.prototype.activate=function(){return f(this,void 0,void 0,function(){var e,r;return p(this,function(t){switch(t.label){case 0:return[4,Promise.all([this._storage.getLastSuccessfulFetchResponse(),this._storage.getActiveConfigEtag()])];case 1:return r=t.sent(),e=r[0],r=r[1],e&&e.config&&e.eTag&&e.eTag!==r?[4,Promise.all([this._storageCache.setActiveConfig(e.config),this._storage.setActiveConfigEtag(e.eTag)])]:[2,!1];case 2:return t.sent(),[2,!0]}})})},Vt.prototype.ensureInitialized=function(){var t=this;return this._initializePromise||(this._initializePromise=this._storageCache.loadFromStorage().then(function(){t._isInitializationComplete=!0})),this._initializePromise},Vt.prototype.fetch=function(){return f(this,void 0,void 0,function(){var n,i,o,s=this;return p(this,function(t){switch(t.label){case 0:n=new Rt,setTimeout(function(){return f(s,void 0,void 0,function(){return p(this,function(t){return n.abort(),[2]})})},this.settings.fetchTimeoutMillis),t.label=1;case 1:return t.trys.push([1,4,,6]),[4,this._client.fetch({cacheMaxAgeMillis:this.settings.minimumFetchIntervalMillis,signal:n})];case 2:return t.sent(),[4,this._storageCache.setLastFetchStatus("success")];case 3:return t.sent(),[3,6];case 4:return i=t.sent(),r="fetch-throttle",o=(e=i)instanceof h&&-1!==e.code.indexOf(r)?"throttle":"failure",[4,this._storageCache.setLastFetchStatus(o)];case 5:throw t.sent(),i;case 6:return[2]}var e,r})})},Vt.prototype.fetchAndActivate=function(){return f(this,void 0,void 0,function(){return p(this,function(t){switch(t.label){case 0:return[4,this.fetch()];case 1:return t.sent(),[2,this.activate()]}})})},Vt.prototype.getAll=function(){var r=this;return function(t,e){void 0===t&&(t={});void 0===e&&(e={});return Object.keys(s(s({},t),e))}(this._storageCache.getActiveConfig(),this.defaultConfig).reduce(function(t,e){return t[e]=r.getValue(e),t},{})},Vt.prototype.getBoolean=function(t){return this.getValue(t).asBoolean()},Vt.prototype.getNumber=function(t){return this.getValue(t).asNumber()},Vt.prototype.getString=function(t){return this.getValue(t).asString()},Vt.prototype.getValue=function(t){this._isInitializationComplete||this._logger.debug('A value was requested for key "'+t+'" before SDK initialization completed. Await on ensureInitialized if the intent was to get a previously activated value.');var e=this._storageCache.getActiveConfig();return e&&void 0!==e[t]?new qt("remote",e[t]):this.defaultConfig&&void 0!==this.defaultConfig[t]?new qt("default",String(this.defaultConfig[t])):(this._logger.debug('Returning static value for key "'+t+'". Define a default or remote value if this is unintentional.'),new qt("static"))},Vt);function Vt(t,e,r,n,i){this.app=t,this._client=e,this._storageCache=r,this._storage=n,this._logger=i,this._isInitializationComplete=!1,this.settings={fetchTimeoutMillis:6e4,minimumFetchIntervalMillis:432e5},this.defaultConfig={}}function zt(t,e){t=t.target.error||void 0;return Nt.create(e,{originalErrorMessage:t&&t.message})}var Ut="app_namespace_store",$t="firebase_remote_config",Gt=1;var Wt=(Jt.prototype.getLastFetchStatus=function(){return this.get("last_fetch_status")},Jt.prototype.setLastFetchStatus=function(t){return this.set("last_fetch_status",t)},Jt.prototype.getLastSuccessfulFetchTimestampMillis=function(){return this.get("last_successful_fetch_timestamp_millis")},Jt.prototype.setLastSuccessfulFetchTimestampMillis=function(t){return this.set("last_successful_fetch_timestamp_millis",t)},Jt.prototype.getLastSuccessfulFetchResponse=function(){return this.get("last_successful_fetch_response")},Jt.prototype.setLastSuccessfulFetchResponse=function(t){return this.set("last_successful_fetch_response",t)},Jt.prototype.getActiveConfig=function(){return this.get("active_config")},Jt.prototype.setActiveConfig=function(t){return this.set("active_config",t)},Jt.prototype.getActiveConfigEtag=function(){return this.get("active_config_etag")},Jt.prototype.setActiveConfigEtag=function(t){return this.set("active_config_etag",t)},Jt.prototype.getThrottleMetadata=function(){return this.get("throttle_metadata")},Jt.prototype.setThrottleMetadata=function(t){return this.set("throttle_metadata",t)},Jt.prototype.deleteThrottleMetadata=function(){return this.delete("throttle_metadata")},Jt.prototype.get=function(a){return f(this,void 0,void 0,function(){var o,s=this;return p(this,function(t){switch(t.label){case 0:return[4,this.openDbPromise];case 1:return o=t.sent(),[2,new Promise(function(e,r){var t=o.transaction([Ut],"readonly").objectStore(Ut),n=s.createCompositeKey(a);try{var i=t.get(n);i.onerror=function(t){r(zt(t,"storage-get"))},i.onsuccess=function(t){t=t.target.result;e(t?t.value:void 0)}}catch(t){r(Nt.create("storage-get",{originalErrorMessage:t&&t.message}))}})]}})})},Jt.prototype.set=function(a,u){return f(this,void 0,void 0,function(){var o,s=this;return p(this,function(t){switch(t.label){case 0:return[4,this.openDbPromise];case 1:return o=t.sent(),[2,new Promise(function(t,e){var r=o.transaction([Ut],"readwrite").objectStore(Ut),n=s.createCompositeKey(a);try{var i=r.put({compositeKey:n,value:u});i.onerror=function(t){e(zt(t,"storage-set"))},i.onsuccess=function(){t()}}catch(t){e(Nt.create("storage-set",{originalErrorMessage:t&&t.message}))}})]}})})},Jt.prototype.delete=function(a){return f(this,void 0,void 0,function(){var o,s=this;return p(this,function(t){switch(t.label){case 0:return[4,this.openDbPromise];case 1:return o=t.sent(),[2,new Promise(function(t,e){var r=o.transaction([Ut],"readwrite").objectStore(Ut),n=s.createCompositeKey(a);try{var i=r.delete(n);i.onerror=function(t){e(zt(t,"storage-delete"))},i.onsuccess=function(){t()}}catch(t){e(Nt.create("storage-delete",{originalErrorMessage:t&&t.message}))}})]}})})},Jt.prototype.createCompositeKey=function(t){return[this.appId,this.appName,this.namespace,t].join()},Jt);function Jt(t,e,r,n){void 0===n&&(n=new Promise(function(e,r){var t=indexedDB.open($t,Gt);t.onerror=function(t){r(zt(t,"storage-open"))},t.onsuccess=function(t){e(t.target.result)},t.onupgradeneeded=function(t){var e=t.target.result;0===t.oldVersion&&e.createObjectStore(Ut,{keyPath:"compositeKey"})}})),this.appId=t,this.appName=e,this.namespace=r,this.openDbPromise=n}var Yt=(Zt.prototype.getLastFetchStatus=function(){return this.lastFetchStatus},Zt.prototype.getLastSuccessfulFetchTimestampMillis=function(){return this.lastSuccessfulFetchTimestampMillis},Zt.prototype.getActiveConfig=function(){return this.activeConfig},Zt.prototype.loadFromStorage=function(){return f(this,void 0,void 0,function(){var e,r,n;return p(this,function(t){switch(t.label){case 0:return e=this.storage.getLastFetchStatus(),r=this.storage.getLastSuccessfulFetchTimestampMillis(),n=this.storage.getActiveConfig(),[4,e];case 1:return(e=t.sent())&&(this.lastFetchStatus=e),[4,r];case 2:return(r=t.sent())&&(this.lastSuccessfulFetchTimestampMillis=r),[4,n];case 3:return(n=t.sent())&&(this.activeConfig=n),[2]}})})},Zt.prototype.setLastFetchStatus=function(t){return this.lastFetchStatus=t,this.storage.setLastFetchStatus(t)},Zt.prototype.setLastSuccessfulFetchTimestampMillis=function(t){return this.lastSuccessfulFetchTimestampMillis=t,this.storage.setLastSuccessfulFetchTimestampMillis(t)},Zt.prototype.setActiveConfig=function(t){return this.activeConfig=t,this.storage.setActiveConfig(t)},Zt);function Zt(t){this.storage=t}var Qt=(Xt.prototype.fetch=function(r){return f(this,void 0,void 0,function(){var e;return p(this,function(t){switch(t.label){case 0:return[4,this.storage.getThrottleMetadata()];case 1:return e=t.sent()||{backoffCount:0,throttleEndTimeMillis:Date.now()},[2,this.attemptFetch(r,e)]}})})},Xt.prototype.attemptFetch=function(u,t){var c=t.throttleEndTimeMillis,l=t.backoffCount;return f(this,void 0,void 0,function(){var s,a;return p(this,function(t){switch(t.label){case 0:return[4,(i=u.signal,o=c,new Promise(function(t,e){var r=Math.max(o-Date.now(),0),n=setTimeout(t,r);i.addEventListener(function(){clearTimeout(n),e(Nt.create("fetch-throttle",{throttleEndTimeMillis:o}))})}))];case 1:t.sent(),t.label=2;case 2:return t.trys.push([2,5,,7]),[4,this.client.fetch(u)];case 3:return s=t.sent(),[4,this.storage.deleteThrottleMetadata()];case 4:return t.sent(),[2,s];case 5:if(!function(t){if(t instanceof h&&t.customData){t=Number(t.customData.httpStatus);return 429===t||500===t||503===t||504===t}}(a=t.sent()))throw a;return a={throttleEndTimeMillis:Date.now()+(e=l,void 0===r&&(r=1e3),void 0===n&&(n=2),n=r*Math.pow(n,e),e=Math.round(.5*n*(Math.random()-.5)*2),Math.min(144e5,n+e)),backoffCount:l+1},[4,this.storage.setThrottleMetadata(a)];case 6:return t.sent(),[2,this.attemptFetch(u,a)];case 7:return[2]}var e,r,n,i,o})})},Xt);function Xt(t,e){this.client=t,this.storage=e}var te,ee="@firebase/remote-config";(te=e.default).INTERNAL.registerComponent(new y("remoteConfig",function(t,e){var r=t.getProvider("app").getImmediate(),n=t.getProvider("installations").getImmediate();if("undefined"==typeof window)throw Nt.create("registration-window");var i=r.options,o=i.projectId,s=i.apiKey,a=i.appId;if(!o)throw Nt.create("registration-project-id");if(!s)throw Nt.create("registration-api-key");if(!a)throw Nt.create("registration-app-id");e=e||"firebase";var u=new Wt(a,r.name,e),t=new Yt(u),i=new Mt(ee);i.logLevel=ot.ERROR;a=new At(n,te.SDK_VERSION,e,o,s,a),a=new Qt(a,u),a=new Ft(a,u,t,i),i=new Kt(r,a,t,u,i);return i.ensureInitialized(),i},"PUBLIC").setMultipleInstances(!0)),te.registerVersion(ee,"0.1.30")}).apply(this,arguments)}catch(t){throw console.error(t),new Error("Cannot instantiate firebase-remote-config.js - be sure to load firebase-app.js first.")}});
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@firebase/app')) :
+    typeof define === 'function' && define.amd ? define(['exports', '@firebase/app'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.firebase = global.firebase || {}, global.firebase['remote-config'] = global.firebase['remote-config'] || {}), global.firebase.app));
+}(this, (function (exports, app) { 'use strict';
+
+    try {
+                (function() {
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    function __awaiter(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
+
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var ERROR_NAME = 'FirebaseError';
+    // Based on code from:
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Custom_Error_Types
+    var FirebaseError = /** @class */ (function (_super) {
+        __extends(FirebaseError, _super);
+        function FirebaseError(code, message, customData) {
+            var _this = _super.call(this, message) || this;
+            _this.code = code;
+            _this.customData = customData;
+            _this.name = ERROR_NAME;
+            // Fix For ES5
+            // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+            Object.setPrototypeOf(_this, FirebaseError.prototype);
+            // Maintains proper stack trace for where our error was thrown.
+            // Only available on V8.
+            if (Error.captureStackTrace) {
+                Error.captureStackTrace(_this, ErrorFactory.prototype.create);
+            }
+            return _this;
+        }
+        return FirebaseError;
+    }(Error));
+    var ErrorFactory = /** @class */ (function () {
+        function ErrorFactory(service, serviceName, errors) {
+            this.service = service;
+            this.serviceName = serviceName;
+            this.errors = errors;
+        }
+        ErrorFactory.prototype.create = function (code) {
+            var data = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                data[_i - 1] = arguments[_i];
+            }
+            var customData = data[0] || {};
+            var fullCode = this.service + "/" + code;
+            var template = this.errors[code];
+            var message = template ? replaceTemplate(template, customData) : 'Error';
+            // Service Name: Error message (service/code).
+            var fullMessage = this.serviceName + ": " + message + " (" + fullCode + ").";
+            var error = new FirebaseError(fullCode, fullMessage, customData);
+            return error;
+        };
+        return ErrorFactory;
+    }());
+    function replaceTemplate(template, data) {
+        return template.replace(PATTERN, function (_, key) {
+            var value = data[key];
+            return value != null ? String(value) : "<" + key + "?>";
+        });
+    }
+    var PATTERN = /\{\$([^}]+)}/g;
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * The amount of milliseconds to exponentially increase.
+     */
+    var DEFAULT_INTERVAL_MILLIS = 1000;
+    /**
+     * The factor to backoff by.
+     * Should be a number greater than 1.
+     */
+    var DEFAULT_BACKOFF_FACTOR = 2;
+    /**
+     * The maximum milliseconds to increase to.
+     *
+     * <p>Visible for testing
+     */
+    var MAX_VALUE_MILLIS = 4 * 60 * 60 * 1000; // Four hours, like iOS and Android.
+    /**
+     * The percentage of backoff time to randomize by.
+     * See
+     * http://go/safe-client-behavior#step-1-determine-the-appropriate-retry-interval-to-handle-spike-traffic
+     * for context.
+     *
+     * <p>Visible for testing
+     */
+    var RANDOM_FACTOR = 0.5;
+    /**
+     * Based on the backoff method from
+     * https://github.com/google/closure-library/blob/master/closure/goog/math/exponentialbackoff.js.
+     * Extracted here so we don't need to pass metadata and a stateful ExponentialBackoff object around.
+     */
+    function calculateBackoffMillis(backoffCount, intervalMillis, backoffFactor) {
+        if (intervalMillis === void 0) { intervalMillis = DEFAULT_INTERVAL_MILLIS; }
+        if (backoffFactor === void 0) { backoffFactor = DEFAULT_BACKOFF_FACTOR; }
+        // Calculates an exponentially increasing value.
+        // Deviation: calculates value from count and a constant interval, so we only need to save value
+        // and count to restore state.
+        var currBaseValue = intervalMillis * Math.pow(backoffFactor, backoffCount);
+        // A random "fuzz" to avoid waves of retries.
+        // Deviation: randomFactor is required.
+        var randomWait = Math.round(
+        // A fraction of the backoff value to add/subtract.
+        // Deviation: changes multiplication order to improve readability.
+        RANDOM_FACTOR *
+            currBaseValue *
+            // A random float (rounded to int by Math.round above) in the range [-1, 1]. Determines
+            // if we add or subtract.
+            (Math.random() - 0.5) *
+            2);
+        // Limits backoff to max to avoid effectively permanent backoff.
+        return Math.min(MAX_VALUE_MILLIS, currBaseValue + randomWait);
+    }
+
+    /**
+     * Component for service name T, e.g. `auth`, `auth-internal`
+     */
+    var Component = /** @class */ (function () {
+        /**
+         *
+         * @param name The public service name, e.g. app, auth, firestore, database
+         * @param instanceFactory Service factory responsible for creating the public interface
+         * @param type whether the service provided by the component is public or private
+         */
+        function Component(name, instanceFactory, type) {
+            this.name = name;
+            this.instanceFactory = instanceFactory;
+            this.type = type;
+            this.multipleInstances = false;
+            /**
+             * Properties to be added to the service namespace
+             */
+            this.serviceProps = {};
+            this.instantiationMode = "LAZY" /* LAZY */;
+        }
+        Component.prototype.setInstantiationMode = function (mode) {
+            this.instantiationMode = mode;
+            return this;
+        };
+        Component.prototype.setMultipleInstances = function (multipleInstances) {
+            this.multipleInstances = multipleInstances;
+            return this;
+        };
+        Component.prototype.setServiceProps = function (props) {
+            this.serviceProps = props;
+            return this;
+        };
+        return Component;
+    }());
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    function __spreadArrays() {
+        for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+        for (var r = Array(s), k = 0, i = 0; i < il; i++)
+            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+                r[k] = a[j];
+        return r;
+    }
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _a;
+    /**
+     * The JS SDK supports 5 log levels and also allows a user the ability to
+     * silence the logs altogether.
+     *
+     * The order is a follows:
+     * DEBUG < VERBOSE < INFO < WARN < ERROR
+     *
+     * All of the log types above the current log level will be captured (i.e. if
+     * you set the log level to `INFO`, errors will still be logged, but `DEBUG` and
+     * `VERBOSE` logs will not)
+     */
+    var LogLevel;
+    (function (LogLevel) {
+        LogLevel[LogLevel["DEBUG"] = 0] = "DEBUG";
+        LogLevel[LogLevel["VERBOSE"] = 1] = "VERBOSE";
+        LogLevel[LogLevel["INFO"] = 2] = "INFO";
+        LogLevel[LogLevel["WARN"] = 3] = "WARN";
+        LogLevel[LogLevel["ERROR"] = 4] = "ERROR";
+        LogLevel[LogLevel["SILENT"] = 5] = "SILENT";
+    })(LogLevel || (LogLevel = {}));
+    var levelStringToEnum = {
+        'debug': LogLevel.DEBUG,
+        'verbose': LogLevel.VERBOSE,
+        'info': LogLevel.INFO,
+        'warn': LogLevel.WARN,
+        'error': LogLevel.ERROR,
+        'silent': LogLevel.SILENT
+    };
+    /**
+     * The default log level
+     */
+    var defaultLogLevel = LogLevel.INFO;
+    /**
+     * By default, `console.debug` is not displayed in the developer console (in
+     * chrome). To avoid forcing users to have to opt-in to these logs twice
+     * (i.e. once for firebase, and once in the console), we are sending `DEBUG`
+     * logs to the `console.log` function.
+     */
+    var ConsoleMethod = (_a = {},
+        _a[LogLevel.DEBUG] = 'log',
+        _a[LogLevel.VERBOSE] = 'log',
+        _a[LogLevel.INFO] = 'info',
+        _a[LogLevel.WARN] = 'warn',
+        _a[LogLevel.ERROR] = 'error',
+        _a);
+    /**
+     * The default log handler will forward DEBUG, VERBOSE, INFO, WARN, and ERROR
+     * messages on to their corresponding console counterparts (if the log method
+     * is supported by the current log level)
+     */
+    var defaultLogHandler = function (instance, logType) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        if (logType < instance.logLevel) {
+            return;
+        }
+        var now = new Date().toISOString();
+        var method = ConsoleMethod[logType];
+        if (method) {
+            console[method].apply(console, __spreadArrays(["[" + now + "]  " + instance.name + ":"], args));
+        }
+        else {
+            throw new Error("Attempted to log a message with an invalid logType (value: " + logType + ")");
+        }
+    };
+    var Logger = /** @class */ (function () {
+        /**
+         * Gives you an instance of a Logger to capture messages according to
+         * Firebase's logging scheme.
+         *
+         * @param name The name that the logs will be associated with
+         */
+        function Logger(name) {
+            this.name = name;
+            /**
+             * The log level of the given Logger instance.
+             */
+            this._logLevel = defaultLogLevel;
+            /**
+             * The main (internal) log handler for the Logger instance.
+             * Can be set to a new function in internal package code but not by user.
+             */
+            this._logHandler = defaultLogHandler;
+            /**
+             * The optional, additional, user-defined log handler for the Logger instance.
+             */
+            this._userLogHandler = null;
+        }
+        Object.defineProperty(Logger.prototype, "logLevel", {
+            get: function () {
+                return this._logLevel;
+            },
+            set: function (val) {
+                if (!(val in LogLevel)) {
+                    throw new TypeError("Invalid value \"" + val + "\" assigned to `logLevel`");
+                }
+                this._logLevel = val;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        // Workaround for setter/getter having to be the same type.
+        Logger.prototype.setLogLevel = function (val) {
+            this._logLevel = typeof val === 'string' ? levelStringToEnum[val] : val;
+        };
+        Object.defineProperty(Logger.prototype, "logHandler", {
+            get: function () {
+                return this._logHandler;
+            },
+            set: function (val) {
+                if (typeof val !== 'function') {
+                    throw new TypeError('Value assigned to `logHandler` must be a function');
+                }
+                this._logHandler = val;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Logger.prototype, "userLogHandler", {
+            get: function () {
+                return this._userLogHandler;
+            },
+            set: function (val) {
+                this._userLogHandler = val;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * The functions below are all based on the `console` interface
+         */
+        Logger.prototype.debug = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays([this, LogLevel.DEBUG], args));
+            this._logHandler.apply(this, __spreadArrays([this, LogLevel.DEBUG], args));
+        };
+        Logger.prototype.log = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays([this, LogLevel.VERBOSE], args));
+            this._logHandler.apply(this, __spreadArrays([this, LogLevel.VERBOSE], args));
+        };
+        Logger.prototype.info = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays([this, LogLevel.INFO], args));
+            this._logHandler.apply(this, __spreadArrays([this, LogLevel.INFO], args));
+        };
+        Logger.prototype.warn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays([this, LogLevel.WARN], args));
+            this._logHandler.apply(this, __spreadArrays([this, LogLevel.WARN], args));
+        };
+        Logger.prototype.error = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays([this, LogLevel.ERROR], args));
+            this._logHandler.apply(this, __spreadArrays([this, LogLevel.ERROR], args));
+        };
+        return Logger;
+    }());
+
+    var name = "@firebase/remote-config-exp";
+    var version = "0.0.900";
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Shims a minimal AbortSignal.
+     *
+     * <p>AbortController's AbortSignal conveniently decouples fetch timeout logic from other aspects
+     * of networking, such as retries. Firebase doesn't use AbortController enough to justify a
+     * polyfill recommendation, like we do with the Fetch API, but this minimal shim can easily be
+     * swapped out if/when we do.
+     */
+    var RemoteConfigAbortSignal = /** @class */ (function () {
+        function RemoteConfigAbortSignal() {
+            this.listeners = [];
+        }
+        RemoteConfigAbortSignal.prototype.addEventListener = function (listener) {
+            this.listeners.push(listener);
+        };
+        RemoteConfigAbortSignal.prototype.abort = function () {
+            this.listeners.forEach(function (listener) { return listener(); });
+        };
+        return RemoteConfigAbortSignal;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var RC_COMPONENT_NAME = 'remote-config-exp';
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _a$1;
+    var ERROR_DESCRIPTION_MAP = (_a$1 = {},
+        _a$1["registration-window" /* REGISTRATION_WINDOW */] = 'Undefined window object. This SDK only supports usage in a browser environment.',
+        _a$1["registration-project-id" /* REGISTRATION_PROJECT_ID */] = 'Undefined project identifier. Check Firebase app initialization.',
+        _a$1["registration-api-key" /* REGISTRATION_API_KEY */] = 'Undefined API key. Check Firebase app initialization.',
+        _a$1["registration-app-id" /* REGISTRATION_APP_ID */] = 'Undefined app identifier. Check Firebase app initialization.',
+        _a$1["storage-open" /* STORAGE_OPEN */] = 'Error thrown when opening storage. Original error: {$originalErrorMessage}.',
+        _a$1["storage-get" /* STORAGE_GET */] = 'Error thrown when reading from storage. Original error: {$originalErrorMessage}.',
+        _a$1["storage-set" /* STORAGE_SET */] = 'Error thrown when writing to storage. Original error: {$originalErrorMessage}.',
+        _a$1["storage-delete" /* STORAGE_DELETE */] = 'Error thrown when deleting from storage. Original error: {$originalErrorMessage}.',
+        _a$1["fetch-client-network" /* FETCH_NETWORK */] = 'Fetch client failed to connect to a network. Check Internet connection.' +
+            ' Original error: {$originalErrorMessage}.',
+        _a$1["fetch-timeout" /* FETCH_TIMEOUT */] = 'The config fetch request timed out. ' +
+            ' Configure timeout using "fetchTimeoutMillis" SDK setting.',
+        _a$1["fetch-throttle" /* FETCH_THROTTLE */] = 'The config fetch request timed out while in an exponential backoff state.' +
+            ' Configure timeout using "fetchTimeoutMillis" SDK setting.' +
+            ' Unix timestamp in milliseconds when fetch request throttling ends: {$throttleEndTimeMillis}.',
+        _a$1["fetch-client-parse" /* FETCH_PARSE */] = 'Fetch client could not parse response.' +
+            ' Original error: {$originalErrorMessage}.',
+        _a$1["fetch-status" /* FETCH_STATUS */] = 'Fetch server returned an HTTP error status. HTTP status: {$httpStatus}.',
+        _a$1);
+    var ERROR_FACTORY = new ErrorFactory('remoteconfig' /* service */, 'Remote Config' /* service name */, ERROR_DESCRIPTION_MAP);
+    // Note how this is like typeof/instanceof, but for ErrorCode.
+    function hasErrorCode(e, errorCode) {
+        return e instanceof FirebaseError && e.code.indexOf(errorCode) !== -1;
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var DEFAULT_VALUE_FOR_BOOLEAN = false;
+    var DEFAULT_VALUE_FOR_STRING = '';
+    var DEFAULT_VALUE_FOR_NUMBER = 0;
+    var BOOLEAN_TRUTHY_VALUES = ['1', 'true', 't', 'yes', 'y', 'on'];
+    var Value = /** @class */ (function () {
+        function Value(_source, _value) {
+            if (_value === void 0) { _value = DEFAULT_VALUE_FOR_STRING; }
+            this._source = _source;
+            this._value = _value;
+        }
+        Value.prototype.asString = function () {
+            return this._value;
+        };
+        Value.prototype.asBoolean = function () {
+            if (this._source === 'static') {
+                return DEFAULT_VALUE_FOR_BOOLEAN;
+            }
+            return BOOLEAN_TRUTHY_VALUES.indexOf(this._value.toLowerCase()) >= 0;
+        };
+        Value.prototype.asNumber = function () {
+            if (this._source === 'static') {
+                return DEFAULT_VALUE_FOR_NUMBER;
+            }
+            var num = Number(this._value);
+            if (isNaN(num)) {
+                num = DEFAULT_VALUE_FOR_NUMBER;
+            }
+            return num;
+        };
+        Value.prototype.getSource = function () {
+            return this._source;
+        };
+        return Value;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     *
+     * @param app - the firebase app instance
+     * @returns a remote config instance
+     *
+     * @public
+     */
+    function getRemoteConfig(app$1) {
+        var rcProvider = app._getProvider(app$1, RC_COMPONENT_NAME);
+        return rcProvider.getImmediate();
+    }
+    /**
+     * Makes the last fetched config available to the getters.
+     * @param remoteConfig - the remote config instance
+     * @returns A promise which resolves to true if the current call activated the fetched configs.
+     * If the fetched configs were already activated, the promise will resolve to false.
+     *
+     * @public
+     */
+    function activate(remoteConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rc, _a, lastSuccessfulFetchResponse, activeConfigEtag;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        rc = remoteConfig;
+                        return [4 /*yield*/, Promise.all([
+                                rc._storage.getLastSuccessfulFetchResponse(),
+                                rc._storage.getActiveConfigEtag()
+                            ])];
+                    case 1:
+                        _a = _b.sent(), lastSuccessfulFetchResponse = _a[0], activeConfigEtag = _a[1];
+                        if (!lastSuccessfulFetchResponse ||
+                            !lastSuccessfulFetchResponse.config ||
+                            !lastSuccessfulFetchResponse.eTag ||
+                            lastSuccessfulFetchResponse.eTag === activeConfigEtag) {
+                            // Either there is no successful fetched config, or is the same as current active
+                            // config.
+                            return [2 /*return*/, false];
+                        }
+                        return [4 /*yield*/, Promise.all([
+                                rc._storageCache.setActiveConfig(lastSuccessfulFetchResponse.config),
+                                rc._storage.setActiveConfigEtag(lastSuccessfulFetchResponse.eTag)
+                            ])];
+                    case 2:
+                        _b.sent();
+                        return [2 /*return*/, true];
+                }
+            });
+        });
+    }
+    /**
+     * Ensures the last activated config are available to the getters.
+     * @param remoteConfig - the remote config instance
+     *
+     * @returns A promise that resolves when the last activated config is available to the getters
+     * @public
+     */
+    function ensureInitialized(remoteConfig) {
+        var rc = remoteConfig;
+        if (!rc._initializePromise) {
+            rc._initializePromise = rc._storageCache.loadFromStorage().then(function () {
+                rc._isInitializationComplete = true;
+            });
+        }
+        return rc._initializePromise;
+    }
+    /**
+     * Fetches and caches configuration from the Remote Config service.
+     * @param remoteConfig - the remote config instance
+     * @public
+     */
+    function fetchConfig(remoteConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rc, abortSignal, e_1, lastFetchStatus;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        rc = remoteConfig;
+                        abortSignal = new RemoteConfigAbortSignal();
+                        setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                // Note a very low delay, eg < 10ms, can elapse before listeners are initialized.
+                                abortSignal.abort();
+                                return [2 /*return*/];
+                            });
+                        }); }, rc.settings.fetchTimeoutMillis);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, , 6]);
+                        return [4 /*yield*/, rc._client.fetch({
+                                cacheMaxAgeMillis: rc.settings.minimumFetchIntervalMillis,
+                                signal: abortSignal
+                            })];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, rc._storageCache.setLastFetchStatus('success')];
+                    case 3:
+                        _a.sent();
+                        return [3 /*break*/, 6];
+                    case 4:
+                        e_1 = _a.sent();
+                        lastFetchStatus = hasErrorCode(e_1, "fetch-throttle" /* FETCH_THROTTLE */)
+                            ? 'throttle'
+                            : 'failure';
+                        return [4 /*yield*/, rc._storageCache.setLastFetchStatus(lastFetchStatus)];
+                    case 5:
+                        _a.sent();
+                        throw e_1;
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Gets all config.
+     *
+     * @param remoteConfig - the remote config instance
+     * @returns all config
+     *
+     * @public
+     */
+    function getAll(remoteConfig) {
+        var rc = remoteConfig;
+        return getAllKeys(rc._storageCache.getActiveConfig(), rc.defaultConfig).reduce(function (allConfigs, key) {
+            allConfigs[key] = getValue(remoteConfig, key);
+            return allConfigs;
+        }, {});
+    }
+    /**
+     * Gets the value for the given key as a boolean.
+     *
+     * Convenience method for calling <code>remoteConfig.getValue(key).asBoolean()</code>.
+     *
+     * @param remoteConfig - the remote config instance
+     * @param key - the name of the parameter
+     *
+     * @returns the value for the given key as a boolean
+     * @public
+     */
+    function getBoolean(remoteConfig, key) {
+        return getValue(remoteConfig, key).asBoolean();
+    }
+    /**
+     * Gets the value for the given key as a number.
+     *
+     * Convenience method for calling <code>remoteConfig.getValue(key).asNumber()</code>.
+     *
+     * @param remoteConfig - the remote config instance
+     * @param key - the name of the parameter
+     *
+     * @returns the value for the given key as a number
+     *
+     * @public
+     */
+    function getNumber(remoteConfig, key) {
+        return getValue(remoteConfig, key).asNumber();
+    }
+    /**
+     * Gets the value for the given key as a String.
+     * Convenience method for calling <code>remoteConfig.getValue(key).asString()</code>.
+     *
+     * @param remoteConfig - the remote config instance
+     * @param key - the name of the parameter
+     *
+     * @returns the value for the given key as a String
+     *
+     * @public
+     */
+    function getString(remoteConfig, key) {
+        return getValue(remoteConfig, key).asString();
+    }
+    /**
+     * Gets the {@link @firebase/remote-config-types#Value} for the given key.
+     *
+     * @param remoteConfig - the remote config instance
+     * @param key - the name of the parameter
+     *
+     * @returns the value for the given key
+     *
+     * @public
+     */
+    function getValue(remoteConfig, key) {
+        var rc = remoteConfig;
+        if (!rc._isInitializationComplete) {
+            rc._logger.debug("A value was requested for key \"" + key + "\" before SDK initialization completed." +
+                ' Await on ensureInitialized if the intent was to get a previously activated value.');
+        }
+        var activeConfig = rc._storageCache.getActiveConfig();
+        if (activeConfig && activeConfig[key] !== undefined) {
+            return new Value('remote', activeConfig[key]);
+        }
+        else if (rc.defaultConfig && rc.defaultConfig[key] !== undefined) {
+            return new Value('default', String(rc.defaultConfig[key]));
+        }
+        rc._logger.debug("Returning static value for key \"" + key + "\"." +
+            ' Define a default or remote value if this is unintentional.');
+        return new Value('static');
+    }
+    /**
+     * Defines the log level to use.
+     *
+     * @param remoteConfig - the remote config instance
+     * @param logLevel - the log level to set
+     *
+     * @public
+     */
+    function setLogLevel(remoteConfig, logLevel) {
+        var rc = remoteConfig;
+        switch (logLevel) {
+            case 'debug':
+                rc._logger.logLevel = LogLevel.DEBUG;
+                break;
+            case 'silent':
+                rc._logger.logLevel = LogLevel.SILENT;
+                break;
+            default:
+                rc._logger.logLevel = LogLevel.ERROR;
+        }
+    }
+    /**
+     * Dedupes and returns an array of all the keys of the received objects.
+     */
+    function getAllKeys(obj1, obj2) {
+        if (obj1 === void 0) { obj1 = {}; }
+        if (obj2 === void 0) { obj2 = {}; }
+        return Object.keys(__assign(__assign({}, obj1), obj2));
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Implements the {@link RemoteConfigClient} abstraction with success response caching.
+     *
+     * <p>Comparable to the browser's Cache API for responses, but the Cache API requires a Service
+     * Worker, which requires HTTPS, which would significantly complicate SDK installation. Also, the
+     * Cache API doesn't support matching entries by time.
+     */
+    var CachingClient = /** @class */ (function () {
+        function CachingClient(client, storage, storageCache, logger) {
+            this.client = client;
+            this.storage = storage;
+            this.storageCache = storageCache;
+            this.logger = logger;
+        }
+        /**
+         * Returns true if the age of the cached fetched configs is less than or equal to
+         * {@link Settings#minimumFetchIntervalInSeconds}.
+         *
+         * <p>This is comparable to passing `headers = { 'Cache-Control': max-age <maxAge> }` to the
+         * native Fetch API.
+         *
+         * <p>Visible for testing.
+         */
+        CachingClient.prototype.isCachedDataFresh = function (cacheMaxAgeMillis, lastSuccessfulFetchTimestampMillis) {
+            // Cache can only be fresh if it's populated.
+            if (!lastSuccessfulFetchTimestampMillis) {
+                this.logger.debug('Config fetch cache check. Cache unpopulated.');
+                return false;
+            }
+            // Calculates age of cache entry.
+            var cacheAgeMillis = Date.now() - lastSuccessfulFetchTimestampMillis;
+            var isCachedDataFresh = cacheAgeMillis <= cacheMaxAgeMillis;
+            this.logger.debug('Config fetch cache check.' +
+                (" Cache age millis: " + cacheAgeMillis + ".") +
+                (" Cache max age millis (minimumFetchIntervalMillis setting): " + cacheMaxAgeMillis + ".") +
+                (" Is cache hit: " + isCachedDataFresh + "."));
+            return isCachedDataFresh;
+        };
+        CachingClient.prototype.fetch = function (request) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a, lastSuccessfulFetchTimestampMillis, lastSuccessfulFetchResponse, response, storageOperations;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, Promise.all([
+                                this.storage.getLastSuccessfulFetchTimestampMillis(),
+                                this.storage.getLastSuccessfulFetchResponse()
+                            ])];
+                        case 1:
+                            _a = _b.sent(), lastSuccessfulFetchTimestampMillis = _a[0], lastSuccessfulFetchResponse = _a[1];
+                            // Exits early on cache hit.
+                            if (lastSuccessfulFetchResponse &&
+                                this.isCachedDataFresh(request.cacheMaxAgeMillis, lastSuccessfulFetchTimestampMillis)) {
+                                return [2 /*return*/, lastSuccessfulFetchResponse];
+                            }
+                            // Deviates from pure decorator by not honoring a passed ETag since we don't have a public API
+                            // that allows the caller to pass an ETag.
+                            request.eTag =
+                                lastSuccessfulFetchResponse && lastSuccessfulFetchResponse.eTag;
+                            return [4 /*yield*/, this.client.fetch(request)];
+                        case 2:
+                            response = _b.sent();
+                            storageOperations = [
+                                // Uses write-through cache for consistency with synchronous public API.
+                                this.storageCache.setLastSuccessfulFetchTimestampMillis(Date.now())
+                            ];
+                            if (response.status === 200) {
+                                // Caches response only if it has changed, ie non-304 responses.
+                                storageOperations.push(this.storage.setLastSuccessfulFetchResponse(response));
+                            }
+                            return [4 /*yield*/, Promise.all(storageOperations)];
+                        case 3:
+                            _b.sent();
+                            return [2 /*return*/, response];
+                    }
+                });
+            });
+        };
+        return CachingClient;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Attempts to get the most accurate browser language setting.
+     *
+     * <p>Adapted from getUserLanguage in packages/auth/src/utils.js for TypeScript.
+     *
+     * <p>Defers default language specification to server logic for consistency.
+     *
+     * @param navigatorLanguage Enables tests to override read-only {@link NavigatorLanguage}.
+     */
+    function getUserLanguage(navigatorLanguage) {
+        if (navigatorLanguage === void 0) { navigatorLanguage = navigator; }
+        return (
+        // Most reliable, but only supported in Chrome/Firefox.
+        (navigatorLanguage.languages && navigatorLanguage.languages[0]) ||
+            // Supported in most browsers, but returns the language of the browser
+            // UI, not the language set in browser settings.
+            navigatorLanguage.language
+        // Polyfill otherwise.
+        );
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Implements the Client abstraction for the Remote Config REST API.
+     */
+    var RestClient = /** @class */ (function () {
+        function RestClient(firebaseInstallations, sdkVersion, namespace, projectId, apiKey, appId) {
+            this.firebaseInstallations = firebaseInstallations;
+            this.sdkVersion = sdkVersion;
+            this.namespace = namespace;
+            this.projectId = projectId;
+            this.apiKey = apiKey;
+            this.appId = appId;
+        }
+        /**
+         * Fetches from the Remote Config REST API.
+         *
+         * @throws a {@link ErrorCode.FETCH_NETWORK} error if {@link GlobalFetch#fetch} can't
+         * connect to the network.
+         * @throws a {@link ErrorCode.FETCH_PARSE} error if {@link Response#json} can't parse the
+         * fetch response.
+         * @throws a {@link ErrorCode.FETCH_STATUS} error if the service returns an HTTP error status.
+         */
+        RestClient.prototype.fetch = function (request) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a, installationId, installationToken, urlBase, url, headers, requestBody, options, fetchPromise, timeoutPromise, response, originalError_1, errorCode, status, responseEtag, config, state, responseBody, originalError_2;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, Promise.all([
+                                this.firebaseInstallations.getId(),
+                                this.firebaseInstallations.getToken()
+                            ])];
+                        case 1:
+                            _a = _b.sent(), installationId = _a[0], installationToken = _a[1];
+                            urlBase = window.FIREBASE_REMOTE_CONFIG_URL_BASE ||
+                                'https://firebaseremoteconfig.googleapis.com';
+                            url = urlBase + "/v1/projects/" + this.projectId + "/namespaces/" + this.namespace + ":fetch?key=" + this.apiKey;
+                            headers = {
+                                'Content-Type': 'application/json',
+                                'Content-Encoding': 'gzip',
+                                // Deviates from pure decorator by not passing max-age header since we don't currently have
+                                // service behavior using that header.
+                                'If-None-Match': request.eTag || '*'
+                            };
+                            requestBody = {
+                                /* eslint-disable camelcase */
+                                sdk_version: this.sdkVersion,
+                                app_instance_id: installationId,
+                                app_instance_id_token: installationToken,
+                                app_id: this.appId,
+                                language_code: getUserLanguage()
+                                /* eslint-enable camelcase */
+                            };
+                            options = {
+                                method: 'POST',
+                                headers: headers,
+                                body: JSON.stringify(requestBody)
+                            };
+                            fetchPromise = fetch(url, options);
+                            timeoutPromise = new Promise(function (_resolve, reject) {
+                                // Maps async event listener to Promise API.
+                                request.signal.addEventListener(function () {
+                                    // Emulates https://heycam.github.io/webidl/#aborterror
+                                    var error = new Error('The operation was aborted.');
+                                    error.name = 'AbortError';
+                                    reject(error);
+                                });
+                            });
+                            _b.label = 2;
+                        case 2:
+                            _b.trys.push([2, 5, , 6]);
+                            return [4 /*yield*/, Promise.race([fetchPromise, timeoutPromise])];
+                        case 3:
+                            _b.sent();
+                            return [4 /*yield*/, fetchPromise];
+                        case 4:
+                            response = _b.sent();
+                            return [3 /*break*/, 6];
+                        case 5:
+                            originalError_1 = _b.sent();
+                            errorCode = "fetch-client-network" /* FETCH_NETWORK */;
+                            if (originalError_1.name === 'AbortError') {
+                                errorCode = "fetch-timeout" /* FETCH_TIMEOUT */;
+                            }
+                            throw ERROR_FACTORY.create(errorCode, {
+                                originalErrorMessage: originalError_1.message
+                            });
+                        case 6:
+                            status = response.status;
+                            responseEtag = response.headers.get('ETag') || undefined;
+                            if (!(response.status === 200)) return [3 /*break*/, 11];
+                            responseBody = void 0;
+                            _b.label = 7;
+                        case 7:
+                            _b.trys.push([7, 9, , 10]);
+                            return [4 /*yield*/, response.json()];
+                        case 8:
+                            responseBody = _b.sent();
+                            return [3 /*break*/, 10];
+                        case 9:
+                            originalError_2 = _b.sent();
+                            throw ERROR_FACTORY.create("fetch-client-parse" /* FETCH_PARSE */, {
+                                originalErrorMessage: originalError_2.message
+                            });
+                        case 10:
+                            config = responseBody['entries'];
+                            state = responseBody['state'];
+                            _b.label = 11;
+                        case 11:
+                            // Normalizes based on legacy state.
+                            if (state === 'INSTANCE_STATE_UNSPECIFIED') {
+                                status = 500;
+                            }
+                            else if (state === 'NO_CHANGE') {
+                                status = 304;
+                            }
+                            else if (state === 'NO_TEMPLATE' || state === 'EMPTY_CONFIG') {
+                                // These cases can be fixed remotely, so normalize to safe value.
+                                config = {};
+                            }
+                            // Normalize to exception-based control flow for non-success cases.
+                            // Encapsulates HTTP specifics in this class as much as possible. Status is still the best for
+                            // differentiating success states (200 from 304; the state body param is undefined in a
+                            // standard 304).
+                            if (status !== 304 && status !== 200) {
+                                throw ERROR_FACTORY.create("fetch-status" /* FETCH_STATUS */, {
+                                    httpStatus: status
+                                });
+                            }
+                            return [2 /*return*/, { status: status, eTag: responseEtag, config: config }];
+                    }
+                });
+            });
+        };
+        return RestClient;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Supports waiting on a backoff by:
+     *
+     * <ul>
+     *   <li>Promisifying setTimeout, so we can set a timeout in our Promise chain</li>
+     *   <li>Listening on a signal bus for abort events, just like the Fetch API</li>
+     *   <li>Failing in the same way the Fetch API fails, so timing out a live request and a throttled
+     *       request appear the same.</li>
+     * </ul>
+     *
+     * <p>Visible for testing.
+     */
+    function setAbortableTimeout(signal, throttleEndTimeMillis) {
+        return new Promise(function (resolve, reject) {
+            // Derives backoff from given end time, normalizing negative numbers to zero.
+            var backoffMillis = Math.max(throttleEndTimeMillis - Date.now(), 0);
+            var timeout = setTimeout(resolve, backoffMillis);
+            // Adds listener, rather than sets onabort, because signal is a shared object.
+            signal.addEventListener(function () {
+                clearTimeout(timeout);
+                // If the request completes before this timeout, the rejection has no effect.
+                reject(ERROR_FACTORY.create("fetch-throttle" /* FETCH_THROTTLE */, {
+                    throttleEndTimeMillis: throttleEndTimeMillis
+                }));
+            });
+        });
+    }
+    /**
+     * Returns true if the {@link Error} indicates a fetch request may succeed later.
+     */
+    function isRetriableError(e) {
+        if (!(e instanceof FirebaseError) || !e.customData) {
+            return false;
+        }
+        // Uses string index defined by ErrorData, which FirebaseError implements.
+        var httpStatus = Number(e.customData['httpStatus']);
+        return (httpStatus === 429 ||
+            httpStatus === 500 ||
+            httpStatus === 503 ||
+            httpStatus === 504);
+    }
+    /**
+     * Decorates a Client with retry logic.
+     *
+     * <p>Comparable to CachingClient, but uses backoff logic instead of cache max age and doesn't cache
+     * responses (because the SDK has no use for error responses).
+     */
+    var RetryingClient = /** @class */ (function () {
+        function RetryingClient(client, storage) {
+            this.client = client;
+            this.storage = storage;
+        }
+        RetryingClient.prototype.fetch = function (request) {
+            return __awaiter(this, void 0, void 0, function () {
+                var throttleMetadata;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.storage.getThrottleMetadata()];
+                        case 1:
+                            throttleMetadata = (_a.sent()) || {
+                                backoffCount: 0,
+                                throttleEndTimeMillis: Date.now()
+                            };
+                            return [2 /*return*/, this.attemptFetch(request, throttleMetadata)];
+                    }
+                });
+            });
+        };
+        /**
+         * A recursive helper for attempting a fetch request repeatedly.
+         *
+         * @throws any non-retriable errors.
+         */
+        RetryingClient.prototype.attemptFetch = function (request, _a) {
+            var throttleEndTimeMillis = _a.throttleEndTimeMillis, backoffCount = _a.backoffCount;
+            return __awaiter(this, void 0, void 0, function () {
+                var response, e_1, throttleMetadata;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: 
+                        // Starts with a (potentially zero) timeout to support resumption from stored state.
+                        // Ensures the throttle end time is honored if the last attempt timed out.
+                        // Note the SDK will never make a request if the fetch timeout expires at this point.
+                        return [4 /*yield*/, setAbortableTimeout(request.signal, throttleEndTimeMillis)];
+                        case 1:
+                            // Starts with a (potentially zero) timeout to support resumption from stored state.
+                            // Ensures the throttle end time is honored if the last attempt timed out.
+                            // Note the SDK will never make a request if the fetch timeout expires at this point.
+                            _b.sent();
+                            _b.label = 2;
+                        case 2:
+                            _b.trys.push([2, 5, , 7]);
+                            return [4 /*yield*/, this.client.fetch(request)];
+                        case 3:
+                            response = _b.sent();
+                            // Note the SDK only clears throttle state if response is success or non-retriable.
+                            return [4 /*yield*/, this.storage.deleteThrottleMetadata()];
+                        case 4:
+                            // Note the SDK only clears throttle state if response is success or non-retriable.
+                            _b.sent();
+                            return [2 /*return*/, response];
+                        case 5:
+                            e_1 = _b.sent();
+                            if (!isRetriableError(e_1)) {
+                                throw e_1;
+                            }
+                            throttleMetadata = {
+                                throttleEndTimeMillis: Date.now() + calculateBackoffMillis(backoffCount),
+                                backoffCount: backoffCount + 1
+                            };
+                            // Persists state.
+                            return [4 /*yield*/, this.storage.setThrottleMetadata(throttleMetadata)];
+                        case 6:
+                            // Persists state.
+                            _b.sent();
+                            return [2 /*return*/, this.attemptFetch(request, throttleMetadata)];
+                        case 7: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        return RetryingClient;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var DEFAULT_FETCH_TIMEOUT_MILLIS = 60 * 1000; // One minute
+    var DEFAULT_CACHE_MAX_AGE_MILLIS = 12 * 60 * 60 * 1000; // Twelve hours.
+    /**
+     * Encapsulates business logic mapping network and storage dependencies to the public SDK API.
+     *
+     * See {@link https://github.com/FirebasePrivate/firebase-js-sdk/blob/master/packages/firebase/index.d.ts|interface documentation} for method descriptions.
+     */
+    var RemoteConfig = /** @class */ (function () {
+        function RemoteConfig(
+        // Required by FirebaseServiceFactory interface.
+        app, 
+        // JS doesn't support private yet
+        // (https://github.com/tc39/proposal-class-fields#private-fields), so we hint using an
+        // underscore prefix.
+        /**
+         * @internal
+         */
+        _client, 
+        /**
+         * @internal
+         */
+        _storageCache, 
+        /**
+         * @internal
+         */
+        _storage, 
+        /**
+         * @internal
+         */
+        _logger) {
+            this.app = app;
+            this._client = _client;
+            this._storageCache = _storageCache;
+            this._storage = _storage;
+            this._logger = _logger;
+            /**
+             * Tracks completion of initialization promise.
+             * @internal
+             */
+            this._isInitializationComplete = false;
+            this.settings = {
+                fetchTimeoutMillis: DEFAULT_FETCH_TIMEOUT_MILLIS,
+                minimumFetchIntervalMillis: DEFAULT_CACHE_MAX_AGE_MILLIS
+            };
+            this.defaultConfig = {};
+        }
+        Object.defineProperty(RemoteConfig.prototype, "fetchTimeMillis", {
+            get: function () {
+                return this._storageCache.getLastSuccessfulFetchTimestampMillis() || -1;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(RemoteConfig.prototype, "lastFetchStatus", {
+            get: function () {
+                return this._storageCache.getLastFetchStatus() || 'no-fetch-yet';
+            },
+            enumerable: false,
+            configurable: true
+        });
+        return RemoteConfig;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Converts an error event associated with a {@link IDBRequest} to a {@link FirebaseError}.
+     */
+    function toFirebaseError(event, errorCode) {
+        var originalError = event.target.error || undefined;
+        return ERROR_FACTORY.create(errorCode, {
+            originalErrorMessage: originalError && originalError.message
+        });
+    }
+    /**
+     * A general-purpose store keyed by app + namespace + {@link
+     * ProjectNamespaceKeyFieldValue}.
+     *
+     * <p>The Remote Config SDK can be used with multiple app installations, and each app can interact
+     * with multiple namespaces, so this store uses app (ID + name) and namespace as common parent keys
+     * for a set of key-value pairs. See {@link Storage#createCompositeKey}.
+     *
+     * <p>Visible for testing.
+     */
+    var APP_NAMESPACE_STORE = 'app_namespace_store';
+    var DB_NAME = 'firebase_remote_config';
+    var DB_VERSION = 1;
+    // Visible for testing.
+    function openDatabase() {
+        return new Promise(function (resolve, reject) {
+            var request = indexedDB.open(DB_NAME, DB_VERSION);
+            request.onerror = function (event) {
+                reject(toFirebaseError(event, "storage-open" /* STORAGE_OPEN */));
+            };
+            request.onsuccess = function (event) {
+                resolve(event.target.result);
+            };
+            request.onupgradeneeded = function (event) {
+                var db = event.target.result;
+                // We don't use 'break' in this switch statement, the fall-through
+                // behavior is what we want, because if there are multiple versions between
+                // the old version and the current version, we want ALL the migrations
+                // that correspond to those versions to run, not only the last one.
+                // eslint-disable-next-line default-case
+                switch (event.oldVersion) {
+                    case 0:
+                        db.createObjectStore(APP_NAMESPACE_STORE, {
+                            keyPath: 'compositeKey'
+                        });
+                }
+            };
+        });
+    }
+    /**
+     * Abstracts data persistence.
+     */
+    var Storage = /** @class */ (function () {
+        /**
+         * @param appId enables storage segmentation by app (ID + name).
+         * @param appName enables storage segmentation by app (ID + name).
+         * @param namespace enables storage segmentation by namespace.
+         */
+        function Storage(appId, appName, namespace, openDbPromise) {
+            if (openDbPromise === void 0) { openDbPromise = openDatabase(); }
+            this.appId = appId;
+            this.appName = appName;
+            this.namespace = namespace;
+            this.openDbPromise = openDbPromise;
+        }
+        Storage.prototype.getLastFetchStatus = function () {
+            return this.get('last_fetch_status');
+        };
+        Storage.prototype.setLastFetchStatus = function (status) {
+            return this.set('last_fetch_status', status);
+        };
+        // This is comparable to a cache entry timestamp. If we need to expire other data, we could
+        // consider adding timestamp to all storage records and an optional max age arg to getters.
+        Storage.prototype.getLastSuccessfulFetchTimestampMillis = function () {
+            return this.get('last_successful_fetch_timestamp_millis');
+        };
+        Storage.prototype.setLastSuccessfulFetchTimestampMillis = function (timestamp) {
+            return this.set('last_successful_fetch_timestamp_millis', timestamp);
+        };
+        Storage.prototype.getLastSuccessfulFetchResponse = function () {
+            return this.get('last_successful_fetch_response');
+        };
+        Storage.prototype.setLastSuccessfulFetchResponse = function (response) {
+            return this.set('last_successful_fetch_response', response);
+        };
+        Storage.prototype.getActiveConfig = function () {
+            return this.get('active_config');
+        };
+        Storage.prototype.setActiveConfig = function (config) {
+            return this.set('active_config', config);
+        };
+        Storage.prototype.getActiveConfigEtag = function () {
+            return this.get('active_config_etag');
+        };
+        Storage.prototype.setActiveConfigEtag = function (etag) {
+            return this.set('active_config_etag', etag);
+        };
+        Storage.prototype.getThrottleMetadata = function () {
+            return this.get('throttle_metadata');
+        };
+        Storage.prototype.setThrottleMetadata = function (metadata) {
+            return this.set('throttle_metadata', metadata);
+        };
+        Storage.prototype.deleteThrottleMetadata = function () {
+            return this.delete('throttle_metadata');
+        };
+        Storage.prototype.get = function (key) {
+            return __awaiter(this, void 0, void 0, function () {
+                var db;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.openDbPromise];
+                        case 1:
+                            db = _a.sent();
+                            return [2 /*return*/, new Promise(function (resolve, reject) {
+                                    var transaction = db.transaction([APP_NAMESPACE_STORE], 'readonly');
+                                    var objectStore = transaction.objectStore(APP_NAMESPACE_STORE);
+                                    var compositeKey = _this.createCompositeKey(key);
+                                    try {
+                                        var request = objectStore.get(compositeKey);
+                                        request.onerror = function (event) {
+                                            reject(toFirebaseError(event, "storage-get" /* STORAGE_GET */));
+                                        };
+                                        request.onsuccess = function (event) {
+                                            var result = event.target.result;
+                                            if (result) {
+                                                resolve(result.value);
+                                            }
+                                            else {
+                                                resolve(undefined);
+                                            }
+                                        };
+                                    }
+                                    catch (e) {
+                                        reject(ERROR_FACTORY.create("storage-get" /* STORAGE_GET */, {
+                                            originalErrorMessage: e && e.message
+                                        }));
+                                    }
+                                })];
+                    }
+                });
+            });
+        };
+        Storage.prototype.set = function (key, value) {
+            return __awaiter(this, void 0, void 0, function () {
+                var db;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.openDbPromise];
+                        case 1:
+                            db = _a.sent();
+                            return [2 /*return*/, new Promise(function (resolve, reject) {
+                                    var transaction = db.transaction([APP_NAMESPACE_STORE], 'readwrite');
+                                    var objectStore = transaction.objectStore(APP_NAMESPACE_STORE);
+                                    var compositeKey = _this.createCompositeKey(key);
+                                    try {
+                                        var request = objectStore.put({
+                                            compositeKey: compositeKey,
+                                            value: value
+                                        });
+                                        request.onerror = function (event) {
+                                            reject(toFirebaseError(event, "storage-set" /* STORAGE_SET */));
+                                        };
+                                        request.onsuccess = function () {
+                                            resolve();
+                                        };
+                                    }
+                                    catch (e) {
+                                        reject(ERROR_FACTORY.create("storage-set" /* STORAGE_SET */, {
+                                            originalErrorMessage: e && e.message
+                                        }));
+                                    }
+                                })];
+                    }
+                });
+            });
+        };
+        Storage.prototype.delete = function (key) {
+            return __awaiter(this, void 0, void 0, function () {
+                var db;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.openDbPromise];
+                        case 1:
+                            db = _a.sent();
+                            return [2 /*return*/, new Promise(function (resolve, reject) {
+                                    var transaction = db.transaction([APP_NAMESPACE_STORE], 'readwrite');
+                                    var objectStore = transaction.objectStore(APP_NAMESPACE_STORE);
+                                    var compositeKey = _this.createCompositeKey(key);
+                                    try {
+                                        var request = objectStore.delete(compositeKey);
+                                        request.onerror = function (event) {
+                                            reject(toFirebaseError(event, "storage-delete" /* STORAGE_DELETE */));
+                                        };
+                                        request.onsuccess = function () {
+                                            resolve();
+                                        };
+                                    }
+                                    catch (e) {
+                                        reject(ERROR_FACTORY.create("storage-delete" /* STORAGE_DELETE */, {
+                                            originalErrorMessage: e && e.message
+                                        }));
+                                    }
+                                })];
+                    }
+                });
+            });
+        };
+        // Facilitates composite key functionality (which is unsupported in IE).
+        Storage.prototype.createCompositeKey = function (key) {
+            return [this.appId, this.appName, this.namespace, key].join();
+        };
+        return Storage;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * A memory cache layer over storage to support the SDK's synchronous read requirements.
+     */
+    var StorageCache = /** @class */ (function () {
+        function StorageCache(storage) {
+            this.storage = storage;
+        }
+        /**
+         * Memory-only getters
+         */
+        StorageCache.prototype.getLastFetchStatus = function () {
+            return this.lastFetchStatus;
+        };
+        StorageCache.prototype.getLastSuccessfulFetchTimestampMillis = function () {
+            return this.lastSuccessfulFetchTimestampMillis;
+        };
+        StorageCache.prototype.getActiveConfig = function () {
+            return this.activeConfig;
+        };
+        /**
+         * Read-ahead getter
+         */
+        StorageCache.prototype.loadFromStorage = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var lastFetchStatusPromise, lastSuccessfulFetchTimestampMillisPromise, activeConfigPromise, lastFetchStatus, lastSuccessfulFetchTimestampMillis, activeConfig;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            lastFetchStatusPromise = this.storage.getLastFetchStatus();
+                            lastSuccessfulFetchTimestampMillisPromise = this.storage.getLastSuccessfulFetchTimestampMillis();
+                            activeConfigPromise = this.storage.getActiveConfig();
+                            return [4 /*yield*/, lastFetchStatusPromise];
+                        case 1:
+                            lastFetchStatus = _a.sent();
+                            if (lastFetchStatus) {
+                                this.lastFetchStatus = lastFetchStatus;
+                            }
+                            return [4 /*yield*/, lastSuccessfulFetchTimestampMillisPromise];
+                        case 2:
+                            lastSuccessfulFetchTimestampMillis = _a.sent();
+                            if (lastSuccessfulFetchTimestampMillis) {
+                                this.lastSuccessfulFetchTimestampMillis = lastSuccessfulFetchTimestampMillis;
+                            }
+                            return [4 /*yield*/, activeConfigPromise];
+                        case 3:
+                            activeConfig = _a.sent();
+                            if (activeConfig) {
+                                this.activeConfig = activeConfig;
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        /**
+         * Write-through setters
+         */
+        StorageCache.prototype.setLastFetchStatus = function (status) {
+            this.lastFetchStatus = status;
+            return this.storage.setLastFetchStatus(status);
+        };
+        StorageCache.prototype.setLastSuccessfulFetchTimestampMillis = function (timestampMillis) {
+            this.lastSuccessfulFetchTimestampMillis = timestampMillis;
+            return this.storage.setLastSuccessfulFetchTimestampMillis(timestampMillis);
+        };
+        StorageCache.prototype.setActiveConfig = function (activeConfig) {
+            this.activeConfig = activeConfig;
+            return this.storage.setActiveConfig(activeConfig);
+        };
+        return StorageCache;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function registerRemoteConfig() {
+        app._registerComponent(new Component(RC_COMPONENT_NAME, remoteConfigFactory, "PUBLIC" /* PUBLIC */).setMultipleInstances(true));
+        app.registerVersion(name, version);
+        function remoteConfigFactory(container, namespace) {
+            /* Dependencies */
+            // getImmediate for FirebaseApp will always succeed
+            var app$1 = container.getProvider('app-exp').getImmediate();
+            // The following call will always succeed because rc has `import '@firebase/installations'`
+            var installations = container
+                .getProvider('installations-exp-internal')
+                .getImmediate();
+            // Guards against the SDK being used in non-browser environments.
+            if (typeof window === 'undefined') {
+                throw ERROR_FACTORY.create("registration-window" /* REGISTRATION_WINDOW */);
+            }
+            // Normalizes optional inputs.
+            var _a = app$1.options, projectId = _a.projectId, apiKey = _a.apiKey, appId = _a.appId;
+            if (!projectId) {
+                throw ERROR_FACTORY.create("registration-project-id" /* REGISTRATION_PROJECT_ID */);
+            }
+            if (!apiKey) {
+                throw ERROR_FACTORY.create("registration-api-key" /* REGISTRATION_API_KEY */);
+            }
+            if (!appId) {
+                throw ERROR_FACTORY.create("registration-app-id" /* REGISTRATION_APP_ID */);
+            }
+            namespace = namespace || 'firebase';
+            var storage = new Storage(appId, app$1.name, namespace);
+            var storageCache = new StorageCache(storage);
+            var logger = new Logger(name);
+            // Sets ERROR as the default log level.
+            // See RemoteConfig#setLogLevel for corresponding normalization to ERROR log level.
+            logger.logLevel = LogLevel.ERROR;
+            var restClient = new RestClient(installations, 
+            // Uses the JS SDK version, by which the RC package version can be deduced, if necessary.
+            app.SDK_VERSION, namespace, projectId, apiKey, appId);
+            var retryingClient = new RetryingClient(restClient, storage);
+            var cachingClient = new CachingClient(retryingClient, storage, storageCache, logger);
+            var remoteConfigInstance = new RemoteConfig(app$1, cachingClient, storageCache, storage, logger);
+            // Starts warming cache.
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            ensureInitialized(remoteConfigInstance);
+            return remoteConfigInstance;
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // This API is put in a separate file, so we can stub fetchConfig and activate in tests.
+    // It's not possible to stub standalone functions from the same module.
+    /**
+     *
+     * Performs fetch and activate operations, as a convenience.
+     *
+     * @param remoteConfig - the remote config instance
+     *
+     * @returns A promise which resolves to true if the current call activated the fetched configs.
+     * If the fetched configs were already activated, the promise will resolve to false.
+     *
+     * @public
+     */
+    function fetchAndActivate(remoteConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, fetchConfig(remoteConfig)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, activate(remoteConfig)];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /** register component and version */
+    registerRemoteConfig();
+
+    exports.activate = activate;
+    exports.ensureInitialized = ensureInitialized;
+    exports.fetchAndActivate = fetchAndActivate;
+    exports.fetchConfig = fetchConfig;
+    exports.getAll = getAll;
+    exports.getBoolean = getBoolean;
+    exports.getNumber = getNumber;
+    exports.getRemoteConfig = getRemoteConfig;
+    exports.getString = getString;
+    exports.getValue = getValue;
+    exports.setLogLevel = setLogLevel;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+
+              }).apply(this, arguments);
+            } catch(err) {
+                console.error(err);
+                throw new Error(
+                  'Cannot instantiate firebase-remote-config.js - ' +
+                  'be sure to load firebase-app.js first.'
+                );
+              }
+
+})));
 //# sourceMappingURL=firebase-remote-config.js.map

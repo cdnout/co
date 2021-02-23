@@ -1958,7 +1958,7 @@ __webpack_require__.r(__webpack_exports__);
 // Do not modify this file; it is generated as part of publish.
 // The checked in version is a placeholder only and will not be updated.
 
-Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/foundation', '7.9.21');
+Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/foundation', '7.9.24');
 
 
 /***/ }),
@@ -4481,7 +4481,7 @@ __webpack_require__.r(__webpack_exports__);
 // Do not modify this file; it is generated as part of publish.
 // The checked in version is a placeholder only and will not be updated.
 
-Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/icons', '7.5.18');
+Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/icons', '7.5.21');
 
 
 /***/ }),
@@ -7501,6 +7501,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getScreenSelector", function() { return _uifabric_styling__WEBPACK_IMPORTED_MODULE_1__["getScreenSelector"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHighContrastNoAdjustStyle", function() { return _uifabric_styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEdgeChromiumNoHighContrastAdjustSelector", function() { return _uifabric_styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalize", function() { return _uifabric_styling__WEBPACK_IMPORTED_MODULE_1__["normalize"]; });
@@ -9002,16 +9004,17 @@ var BreadcrumbBase = /** @class */ (function (_super) {
                     react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("ol", { className: _this._classNames.list }, itemElements))));
         };
         _this._onRenderItem = function (item) {
-            if (item.onClick || item.href) {
-                return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_Link__WEBPACK_IMPORTED_MODULE_4__["Link"], { as: item.as, className: _this._classNames.itemLink, href: item.href, "aria-current": item.isCurrentItem ? 'page' : undefined, 
+            var as = item.as, href = item.href, onClick = item.onClick, isCurrentItem = item.isCurrentItem, text = item.text, additionalProps = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(item, ["as", "href", "onClick", "isCurrentItem", "text"]);
+            if (onClick || href) {
+                return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_Link__WEBPACK_IMPORTED_MODULE_4__["Link"], Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, additionalProps, { as: as, className: _this._classNames.itemLink, href: href, "aria-current": isCurrentItem ? 'page' : undefined, 
                     // eslint-disable-next-line react/jsx-no-bind
-                    onClick: _this._onBreadcrumbClicked.bind(_this, item), role: item.role },
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipHost"], Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ content: item.text, overflowMode: _Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipOverflowMode"].Parent }, _this.props.tooltipHostProps), item.text)));
+                    onClick: _this._onBreadcrumbClicked.bind(_this, item) }),
+                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipHost"], Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ content: text, overflowMode: _Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipOverflowMode"].Parent }, _this.props.tooltipHostProps), text)));
             }
             else {
-                var Tag = item.as || 'span';
-                return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"](Tag, { className: _this._classNames.item },
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipHost"], Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ content: item.text, overflowMode: _Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipOverflowMode"].Parent }, _this.props.tooltipHostProps), item.text)));
+                var Tag = as || 'span';
+                return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"](Tag, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, additionalProps, { className: _this._classNames.item }),
+                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipHost"], Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ content: text, overflowMode: _Tooltip__WEBPACK_IMPORTED_MODULE_9__["TooltipOverflowMode"].Parent }, _this.props.tooltipHostProps), text)));
             }
         };
         _this._onBreadcrumbClicked = function (item, ev) {
@@ -9210,10 +9213,7 @@ var getStyles = function (props) {
                 color: chevronButtonColor,
                 fontSize: fonts.small.fontSize,
                 selectors: (_b = {},
-                    _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                        color: 'WindowText',
-                        MsHighContrastAdjust: 'none',
-                    },
+                    _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                     _b[MediumScreenSelector] = {
                         fontSize: chevronSmallFontSize,
                     },
@@ -10389,8 +10389,10 @@ function standardStyles(theme) {
     var buttonBackground = s.buttonBackground;
     var buttonBackgroundPressed = s.buttonBackgroundPressed;
     var buttonBackgroundHovered = s.buttonBackgroundHovered;
+    var buttonBackgroundDisabled = s.buttonBackgroundDisabled;
     var buttonText = s.buttonText;
     var buttonTextHovered = s.buttonTextHovered;
+    var buttonTextDisabled = s.buttonTextDisabled;
     var buttonTextChecked = s.buttonTextChecked;
     var buttonTextCheckedHovered = s.buttonTextCheckedHovered;
     return {
@@ -10425,6 +10427,8 @@ function standardStyles(theme) {
             color: buttonTextCheckedHovered,
         },
         rootDisabled: {
+            color: buttonTextDisabled,
+            backgroundColor: buttonBackgroundDisabled,
             selectors: (_b = {},
                 _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     color: 'GrayText',
@@ -10504,12 +10508,7 @@ function primaryStyles(theme) {
             border: "1px solid " + s.primaryButtonBackground,
             color: s.primaryButtonText,
             selectors: (_a = {},
-                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: 'Window',
-                    backgroundColor: 'WindowText',
-                    borderColor: 'WindowText',
-                    MsHighContrastAdjust: 'none',
-                },
+                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'Window', backgroundColor: 'WindowText', borderColor: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _a["." + _Utilities__WEBPACK_IMPORTED_MODULE_2__["IsFocusVisibleClassName"] + " &:focus"] = {
                     selectors: {
                         ':after': {
@@ -10537,12 +10536,7 @@ function primaryStyles(theme) {
             border: "1px solid " + s.primaryButtonBackgroundPressed,
             color: s.primaryButtonTextPressed,
             selectors: (_c = {},
-                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: 'Window',
-                    backgroundColor: 'WindowText',
-                    borderColor: 'WindowText',
-                    MsHighContrastAdjust: 'none',
-                },
+                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'Window', backgroundColor: 'WindowText', borderColor: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _c),
         },
         rootExpanded: {
@@ -10558,6 +10552,8 @@ function primaryStyles(theme) {
             color: s.primaryButtonTextPressed,
         },
         rootDisabled: {
+            color: s.primaryButtonTextDisabled,
+            backgroundColor: s.primaryButtonBackgroundDisabled,
             selectors: (_d = {},
                 _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     color: 'GrayText',
@@ -10795,17 +10791,15 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
         },
         rootDisabled: {
             backgroundColor: p.white,
-            selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_g = {}, _g["." + _BaseButton_classNames__WEBPACK_IMPORTED_MODULE_5__["ButtonGlobalClassNames"].msButtonIcon] = {
-                color: semanticColors.disabledBodySubtext,
-                selectors: (_h = {},
-                    _h[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                        color: 'GrayText',
-                    },
-                    _h),
-            }, _g[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                color: 'GrayText',
-                backgroundColor: 'Window',
-            }, _g), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+            selectors: (_g = {},
+                _g["." + _BaseButton_classNames__WEBPACK_IMPORTED_MODULE_5__["ButtonGlobalClassNames"].msButtonIcon] = {
+                    color: semanticColors.disabledBodySubtext,
+                    selectors: (_h = {},
+                        _h[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                        _h),
+                },
+                _g[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText', backgroundColor: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                _g),
         },
         // Split button styles
         splitButtonContainer: {
@@ -10855,13 +10849,12 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
                 },
             },
         },
-        splitButtonMenuButtonDisabled: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: p.white, selectors: (_o = {},
-                _o[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: 'GrayText',
-                    border: 'none',
-                    backgroundColor: 'Window',
-                },
-                _o) }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+        splitButtonMenuButtonDisabled: {
+            backgroundColor: p.white,
+            selectors: (_o = {},
+                _o[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText', border: 'none', backgroundColor: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                _o),
+        },
         splitButtonMenuButtonChecked: {
             backgroundColor: p.neutralLight,
             color: p.neutralDark,
@@ -10967,21 +10960,23 @@ var CompoundButton = /** @class */ (function (_super) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
-/* harmony import */ var _BaseButton_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/BaseButton.styles.js");
-/* harmony import */ var _SplitButton_SplitButton_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/SplitButton/SplitButton.styles.js");
-/* harmony import */ var _ButtonThemes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/ButtonThemes.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
+/* harmony import */ var _BaseButton_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/BaseButton.styles.js");
+/* harmony import */ var _SplitButton_SplitButton_styles__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/SplitButton/SplitButton.styles.js");
+/* harmony import */ var _ButtonThemes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/ButtonThemes.js");
 
 
 
 
 
-var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_1__["memoizeFunction"])(function (theme, customStyles, primary) {
+
+var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"])(function (theme, customStyles, primary) {
     var _a, _b, _c, _d, _e;
     var fonts = theme.fonts, palette = theme.palette;
-    var baseButtonStyles = Object(_BaseButton_styles__WEBPACK_IMPORTED_MODULE_2__["getStyles"])(theme);
-    var splitButtonStyles = Object(_SplitButton_SplitButton_styles__WEBPACK_IMPORTED_MODULE_3__["getStyles"])(theme);
+    var baseButtonStyles = Object(_BaseButton_styles__WEBPACK_IMPORTED_MODULE_3__["getStyles"])(theme);
+    var splitButtonStyles = Object(_SplitButton_SplitButton_styles__WEBPACK_IMPORTED_MODULE_4__["getStyles"])(theme);
     var compoundButtonStyles = {
         root: {
             maxWidth: '280px',
@@ -11009,7 +11004,7 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_1__["memoizeFunction"
         label: {
             margin: '0 0 5px',
             lineHeight: '100%',
-            fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_0__["FontWeights"].semibold,
+            fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_1__["FontWeights"].semibold,
         },
         description: [
             fonts.small,
@@ -11039,17 +11034,13 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_1__["memoizeFunction"
         description: {
             color: palette.white,
             selectors: (_a = {},
-                _a[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                    backgroundColor: 'WindowText',
-                    color: 'Window',
-                    MsHighContrastAdjust: 'none',
-                },
+                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: 'WindowText', color: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _a),
         },
         descriptionHovered: {
             color: palette.white,
             selectors: (_b = {},
-                _b[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     backgroundColor: 'Highlight',
                     color: 'Window',
                 },
@@ -11058,33 +11049,25 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_1__["memoizeFunction"
         descriptionPressed: {
             color: 'inherit',
             selectors: (_c = {},
-                _c[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                    color: 'Window',
-                    backgroundColor: 'WindowText',
-                    MsHighContrastAdjust: 'none',
-                },
+                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'Window', backgroundColor: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _c),
         },
         descriptionChecked: {
             color: 'inherit',
             selectors: (_d = {},
-                _d[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                    color: 'Window',
-                    backgroundColor: 'WindowText',
-                    MsHighContrastAdjust: 'none',
-                },
+                _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'Window', backgroundColor: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _d),
         },
         descriptionDisabled: {
             color: 'inherit',
             selectors: (_e = {},
-                _e[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     color: 'inherit',
                 },
                 _e),
         },
     };
-    return Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["concatStyleSets"])(baseButtonStyles, compoundButtonStyles, primary ? Object(_ButtonThemes__WEBPACK_IMPORTED_MODULE_4__["primaryStyles"])(theme) : Object(_ButtonThemes__WEBPACK_IMPORTED_MODULE_4__["standardStyles"])(theme), primary ? primaryCompoundTheme : standardCompoundTheme, splitButtonStyles, customStyles);
+    return Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["concatStyleSets"])(baseButtonStyles, compoundButtonStyles, primary ? Object(_ButtonThemes__WEBPACK_IMPORTED_MODULE_5__["primaryStyles"])(theme) : Object(_ButtonThemes__WEBPACK_IMPORTED_MODULE_5__["standardStyles"])(theme), primary ? primaryCompoundTheme : standardCompoundTheme, splitButtonStyles, customStyles);
 });
 
 
@@ -11429,7 +11412,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"])(function (theme, customStyles) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     var effects = theme.effects, palette = theme.palette, semanticColors = theme.semanticColors;
     var buttonHighContrastFocus = {
         left: -2,
@@ -11461,13 +11444,7 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
                         borderBottomRightRadius: '0',
                         border: 'none',
                         selectors: (_a = {},
-                            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                                color: 'WindowText',
-                                backgroundColor: 'Window',
-                                border: '1px solid WindowText',
-                                borderRightWidth: '0',
-                                MsHighContrastAdjust: 'none',
-                            },
+                            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'WindowText', backgroundColor: 'Window', border: '1px solid WindowText', borderRightWidth: '0' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                             _a),
                     },
                     '.ms-Button--primary + .ms-Button': {
@@ -11508,11 +11485,7 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
             selectors: {
                 '.ms-Button--primary': {
                     selectors: (_e = {},
-                        _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                            color: 'Window',
-                            backgroundColor: 'WindowText',
-                            MsHighContrastAdjust: 'none',
-                        },
+                        _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'Window', backgroundColor: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                         _e),
                 },
             },
@@ -11521,11 +11494,7 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
             selectors: {
                 '.ms-Button--primary': {
                     selectors: (_f = {},
-                        _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                            color: 'Window',
-                            backgroundColor: 'WindowText',
-                            MsHighContrastAdjust: 'none',
-                        },
+                        _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'Window', backgroundColor: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                         _f),
                 },
             },
@@ -11533,68 +11502,74 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
         splitButtonContainerFocused: {
             outline: 'none!important',
         },
-        splitButtonMenuButton: {
-            padding: 6,
-            height: 'auto',
-            boxSizing: 'border-box',
-            borderRadius: 0,
-            borderTopRightRadius: effects.roundedCorner2,
-            borderBottomRightRadius: effects.roundedCorner2,
-            border: "1px solid " + palette.neutralSecondaryAlt,
-            borderLeft: 'none',
-            outline: 'transparent',
-            userSelect: 'none',
-            display: 'inline-block',
-            textDecoration: 'none',
-            textAlign: 'center',
-            cursor: 'pointer',
-            verticalAlign: 'top',
-            width: 32,
-            marginLeft: -1,
-            marginTop: 0,
-            marginRight: 0,
-            marginBottom: 0,
-        },
-        splitButtonDivider: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, splitButtonDividerBaseStyles), { selectors: (_g = {},
-                _g[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+        splitButtonMenuButton: (_g = {
+                padding: 6,
+                height: 'auto',
+                boxSizing: 'border-box',
+                borderRadius: 0,
+                borderTopRightRadius: effects.roundedCorner2,
+                borderBottomRightRadius: effects.roundedCorner2,
+                border: "1px solid " + palette.neutralSecondaryAlt,
+                borderLeft: 'none',
+                outline: 'transparent',
+                userSelect: 'none',
+                display: 'inline-block',
+                textDecoration: 'none',
+                textAlign: 'center',
+                cursor: 'pointer',
+                verticalAlign: 'top',
+                width: 32,
+                marginLeft: -1,
+                marginTop: 0,
+                marginRight: 0,
+                marginBottom: 0
+            },
+            _g[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                '.ms-Button-menuIcon': {
+                    color: 'WindowText',
+                },
+            },
+            _g),
+        splitButtonDivider: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, splitButtonDividerBaseStyles), { selectors: (_h = {},
+                _h[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     backgroundColor: 'WindowText',
                 },
-                _g) }),
-        splitButtonDividerDisabled: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, splitButtonDividerBaseStyles), { selectors: (_h = {},
-                _h[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                _h) }),
+        splitButtonDividerDisabled: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, splitButtonDividerBaseStyles), { selectors: (_j = {},
+                _j[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     backgroundColor: 'GrayText',
                 },
-                _h) }),
+                _j) }),
         splitButtonMenuButtonDisabled: {
             pointerEvents: 'none',
             border: 'none',
-            selectors: (_j = {
+            selectors: (_k = {
                     ':hover': {
                         cursor: 'default',
                     },
                     '.ms-Button--primary': {
-                        selectors: (_k = {},
-                            _k[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                        selectors: (_l = {},
+                            _l[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                                 color: 'GrayText',
                                 borderColor: 'GrayText',
                                 backgroundColor: 'Window',
                             },
-                            _k),
+                            _l),
                     },
                     '.ms-Button-menuIcon': {
-                        selectors: (_l = {},
-                            _l[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                        selectors: (_m = {},
+                            _m[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                                 color: 'GrayText',
                             },
-                            _l),
+                            _m),
                     }
                 },
-                _j[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                _k[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     color: 'GrayText',
                     border: '1px solid GrayText',
                     backgroundColor: 'Window',
                 },
-                _j),
+                _k),
         },
         splitButtonFlexContainer: {
             display: 'flex',
@@ -11606,11 +11581,9 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
         splitButtonContainerDisabled: {
             outline: 'none',
             border: 'none',
-            selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_m = {}, _m[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                color: 'GrayText',
-                borderColor: 'GrayText',
-                backgroundColor: 'Window',
-            }, _m), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+            selectors: (_o = {},
+                _o[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText', borderColor: 'GrayText', backgroundColor: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                _o),
         },
     };
     return Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["concatStyleSets"])(splitButtonStyles, customStyles);
@@ -12029,91 +12002,91 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".root_29dcb39d{-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-box-shadow:none;box-shadow:none;margin:0;padding:0}.root_29dcb39d *{overflow:visible}.root_29dcb39d ::-moz-focus-inner{border:0}.root_29dcb39d *{outline:transparent}.root_29dcb39d *{position:relative}.ms-Fabric--isFocusVisible .root_29dcb39d :focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.picker_29dcb39d{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";font-size:14px;position:relative}html[dir=ltr] .picker_29dcb39d{text-align:left}html[dir=rtl] .picker_29dcb39d{text-align:right}.holder_29dcb39d{-webkit-overflow-scrolling:touch;-webkit-box-sizing:border-box;box-sizing:border-box;display:none}.picker_29dcb39d.pickerIsOpened_29dcb39d .holder_29dcb39d{-webkit-box-sizing:border-box;box-sizing:border-box;display:inline-block}.pickerIsOpened_29dcb39d{position:relative}.frame_29dcb39d{position:relative}.wrap_29dcb39d{min-height:212px;padding:12px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-sizing:content-box;box-sizing:content-box}.wrap_29dcb39d.goTodaySpacing_29dcb39d{min-height:228px}.dayPicker_29dcb39d{display:block}.header_29dcb39d{position:relative;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;height:28px;line-height:44px;width:100%}.divider_29dcb39d{top:0;margin-top:-12px;margin-bottom:-12px}html[dir=ltr] .divider_29dcb39d{border-right:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}html[dir=rtl] .divider_29dcb39d{border-left:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.decade_29dcb39d,.monthAndYear_29dcb39d,.year_29dcb39d{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;font-size:14px;font-weight:400;font-weight:600;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";padding:0 5px}.currentDecade_29dcb39d:hover,.currentYear_29dcb39d:hover,.monthAndYear_29dcb39d:hover{cursor:default}.table_29dcb39d{text-align:center;border-collapse:collapse;border-spacing:0;table-layout:fixed;font-size:inherit;margin-top:4px;width:197px}.table_29dcb39d td{margin:0;padding:0}.dayWrapper_29dcb39d,.weekday_29dcb39d{width:28px;height:28px;padding:0;line-height:28px;font-size:12px;font-size:15px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;cursor:default}.dayWrapper_29dcb39d ::-moz-focus-inner,.weekday_29dcb39d ::-moz-focus-inner{border:0}.dayWrapper_29dcb39d *,.weekday_29dcb39d *{outline:transparent}.dayWrapper_29dcb39d *,.weekday_29dcb39d *{position:relative}.ms-Fabric--isFocusVisible .dayWrapper_29dcb39d :focus:after,.ms-Fabric--isFocusVisible .weekday_29dcb39d :focus:after{content:'';position:absolute;top:-2px;right:-2px;bottom:-2px;left:-2px;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.day_29dcb39d{width:24px;height:24px;border-radius:2px;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;border:none;padding:0;background-color:transparent;line-height:100%;color:inherit;font-size:inherit;font-weight:inherit;font-family:inherit}@media screen and (-ms-high-contrast:active){.daySelection_29dcb39d .day_29dcb39d:active,.daySelection_29dcb39d .day_29dcb39d:hover{outline:1px solid Highlight;-ms-high-contrast-adjust:none}}@media screen and (-ms-high-contrast:active){.daySelection_29dcb39d .day_29dcb39d:active{color:Highlight;-ms-high-contrast-adjust:none}}.dayIsToday_29dcb39d{border-radius:100%}.dayIsToday_29dcb39d,.dayIsToday_29dcb39d:hover{position:relative;background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.dayIsToday_29dcb39d,.dayIsToday_29dcb39d:hover{background-color:Highlight;-ms-high-contrast-adjust:none}}.dayIsToday_29dcb39d:hover,.dayIsToday_29dcb39d:hover:hover{border-radius:100%}.dayIsDisabled_29dcb39d:before{border-top-color:" }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": "}.dayIsUnfocused_29dcb39d{color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": ";font-weight:400}.dayIsFocused_29dcb39d:hover,.dayIsUnfocused_29dcb39d:hover{cursor:pointer;background:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.daySelection_29dcb39d.dayIsHighlighted_29dcb39d:hover,.pickerIsFocused_29dcb39d .dayIsHighlighted_29dcb39d.daySelection_29dcb39d{cursor:pointer;background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";border-radius:2px}@media screen and (-ms-high-contrast:active){.daySelection_29dcb39d.dayIsHighlighted_29dcb39d:hover,.pickerIsFocused_29dcb39d .dayIsHighlighted_29dcb39d.daySelection_29dcb39d{outline:2px solid Highlight}.daySelection_29dcb39d.dayIsHighlighted_29dcb39d:hover :not(.dayIsToday_29dcb39d) span,.pickerIsFocused_29dcb39d .dayIsHighlighted_29dcb39d.daySelection_29dcb39d :not(.dayIsToday_29dcb39d) span{color:Highlight;-ms-high-contrast-adjust:none}}@media screen and (-ms-high-contrast:active){.dayIsHighlighted_29dcb39d button.dayIsToday_29dcb39d{border-radius:100%}}@media screen and (-ms-high-contrast:active){.dayIsHighlighted_29dcb39d button.dayIsToday_29dcb39d span{color:Window;-ms-high-contrast-adjust:none}}.dayIsFocused_29dcb39d:active,.dayIsHighlighted_29dcb39d{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.dayIsFocused_29dcb39d:active.day_29dcb39d,.dayIsHighlighted_29dcb39d.day_29dcb39d{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.dayIsHighlighted_29dcb39d.dayDisabled_29dcb39d,.dayIsHighlighted_29dcb39d.dayDisabled_29dcb39d:hover{background:" }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": "}.dayBackground_29dcb39d,.dayBackground_29dcb39d:active,.dayBackground_29dcb39d:hover{border-radius:2px}.dayHover_29dcb39d,.dayHover_29dcb39d:hover{cursor:pointer;background:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.dayPress_29dcb39d,.dayPress_29dcb39d:hover{cursor:pointer;color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.dayPress_29dcb39d .dayIsToday_29dcb39d,.dayPress_29dcb39d:hover .dayIsToday_29dcb39d{background:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";border-radius:100%}.dayIsFocused_29dcb39d:active,.dayIsHighlighted_29dcb39d,.dayIsHighlighted_29dcb39d:active,.dayIsHighlighted_29dcb39d:hover,.dayIsUnfocused_29dcb39d:active,.weekBackground_29dcb39d,.weekBackground_29dcb39d:active,.weekBackground_29dcb39d:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.dayIsToday_29dcb39d,.dayIsToday_29dcb39d.day_29dcb39d:active,.pickerIsFocused_29dcb39d .dayIsToday_29dcb39d{position:relative;color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";font-weight:600;background:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";border-radius:100%}@media screen and (-ms-high-contrast:active){.dayIsToday_29dcb39d,.dayIsToday_29dcb39d.day_29dcb39d:active,.pickerIsFocused_29dcb39d .dayIsToday_29dcb39d{background-color:Highlight;color:HighlightText;-ms-high-contrast-adjust:none}}.showWeekNumbers_29dcb39d .weekNumbers_29dcb39d{border-right:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";-webkit-box-sizing:border-box;box-sizing:border-box;width:28px;padding:0}.showWeekNumbers_29dcb39d .weekNumbers_29dcb39d .dayWrapper_29dcb39d{color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.showWeekNumbers_29dcb39d .weekNumbers_29dcb39d .dayWrapper_29dcb39d.weekIsHighlighted_29dcb39d{color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}.showWeekNumbers_29dcb39d .table_29dcb39d{width:225px}.showWeekNumbers_29dcb39d .table_29dcb39d .dayWrapper_29dcb39d,.showWeekNumbers_29dcb39d .table_29dcb39d .weekday_29dcb39d{width:30px}.showWeekNumbersRTL_29dcb39d .weekNumbers_29dcb39d{border-left:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";-webkit-box-sizing:border-box;box-sizing:border-box}.showWeekNumbersRTL_29dcb39d .weekNumbers_29dcb39d .dayWrapper_29dcb39d{color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.showWeekNumbersRTL_29dcb39d .weekNumbers_29dcb39d .dayWrapper_29dcb39d.weekIsHighlighted_29dcb39d{color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}.showWeekNumbersRTL_29dcb39d .table_29dcb39d{width:225px}.showWeekNumbersRTL_29dcb39d .table_29dcb39d .dayWrapper_29dcb39d,.showWeekNumbersRTL_29dcb39d .table_29dcb39d .weekday_29dcb39d{width:30px}.decadeComponents_29dcb39d,.monthComponents_29dcb39d,.yearComponents_29dcb39d{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-ms-flex-item-align:end;align-self:flex-end}.closeButton_29dcb39d,.nextDecade_29dcb39d,.nextMonth_29dcb39d,.nextYear_29dcb39d,.prevDecade_29dcb39d,.prevMonth_29dcb39d,.prevYear_29dcb39d{font-family:inherit;width:28px;height:28px;display:block;text-align:center;line-height:28px;text-align:center;font-size:12px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";border-radius:2px;position:relative;background-color:transparent;border:none;padding:0}.closeButton_29dcb39d:hover,.nextDecade_29dcb39d:hover,.nextMonth_29dcb39d:hover,.nextYear_29dcb39d:hover,.prevDecade_29dcb39d:hover,.prevMonth_29dcb39d:hover,.prevYear_29dcb39d:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";cursor:pointer;outline:1px solid transparent}.nextDecadeIsDisabled_29dcb39d,.nextMonthIsDisabled_29dcb39d,.nextYearIsDisabled_29dcb39d,.prevDecadeIsDisabled_29dcb39d,.prevMonthIsDisabled_29dcb39d,.prevYearIsDisabled_29dcb39d{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";pointer-events:none}.headerToggleView_29dcb39d{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;padding:4px 8px}.headerToggleView_29dcb39d:hover{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";cursor:pointer}@media screen and (-ms-high-contrast:active){.headerToggleView_29dcb39d:hover{outline:1px solid highlight}}@media screen and (-ms-high-contrast:active){.headerToggleView_29dcb39d:hover:active{color:highlight}}.currentDecade_29dcb39d,.currentYear_29dcb39d{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding:0 5px;font-size:14px;font-weight:400;font-weight:600;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";height:28px;line-height:28px}html[dir=ltr] .currentDecade_29dcb39d,html[dir=ltr] .currentYear_29dcb39d{margin-left:5px}html[dir=rtl] .currentDecade_29dcb39d,html[dir=rtl] .currentYear_29dcb39d{margin-right:5px}.optionGrid_29dcb39d{position:relative;height:210px;width:196px;margin:4px 0 0 0}html[dir=rtl] .optionGrid_29dcb39d{margin:4px 0 0 0}.monthOption_29dcb39d,.yearOption_29dcb39d{width:60px;height:60px;line-height:100%;cursor:pointer;margin:0 10px 10px 0;font-size:13px;font-weight:400;font-family:inherit;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";text-align:center;border:none;padding:0;background-color:transparent;border-radius:2px}html[dir=ltr] .monthOption_29dcb39d,html[dir=ltr] .yearOption_29dcb39d{float:left}html[dir=rtl] .monthOption_29dcb39d,html[dir=rtl] .yearOption_29dcb39d{float:right}html[dir=rtl] .monthOption_29dcb39d,html[dir=rtl] .yearOption_29dcb39d{margin:0 0 10px 10px}.monthOption_29dcb39d:hover,.yearOption_29dcb39d:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";outline:1px solid transparent}@media screen and (-ms-high-contrast:active){.monthOption_29dcb39d:hover,.yearOption_29dcb39d:hover{outline-color:highlight}}@media screen and (-ms-high-contrast:active){.monthOption_29dcb39d:active,.yearOption_29dcb39d:active{color:highlight}}.monthOption_29dcb39d.isHighlighted_29dcb39d,.yearOption_29dcb39d.isHighlighted_29dcb39d{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.dayIsDisabled_29dcb39d,.monthOptionIsDisabled_29dcb39d,.yearOptionIsDisabled_29dcb39d{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";pointer-events:none}.goToday_29dcb39d{bottom:0;color:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";cursor:pointer;font-size:12px;font-weight:400;font-family:inherit;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";height:30px;line-height:30px;padding:0 10px;background-color:transparent;border:none;position:absolute!important;-webkit-box-sizing:content-box;box-sizing:content-box}[dir=ltr] .goToday_29dcb39d{right:13px}[dir=rtl] .goToday_29dcb39d{left:13px}.goToday_29dcb39d:hover{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";outline:1px solid transparent}@media screen and (-ms-high-contrast:active){.goToday_29dcb39d:hover{outline-color:highlight}}.goToday_29dcb39d:active{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.goToday_29dcb39d:active{color:highlight}}.goToTodayIsDisabled_29dcb39d{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";pointer-events:none}.goTodayInlineMonth_29dcb39d{top:212px}.wrap_29dcb39d.goTodaySpacing_29dcb39d{padding-bottom:28px}.root_29dcb39d.isPickingYears_29dcb39d .dayPicker_29dcb39d,.root_29dcb39d.isPickingYears_29dcb39d .monthComponents_29dcb39d{display:none}.root_29dcb39d.isPickingYears_29dcb39d .monthPicker_29dcb39d{display:none}.root_29dcb39d.isPickingYears_29dcb39d .yearPicker_29dcb39d{display:block}@media (min-device-width:460px){.wrap_29dcb39d{padding:12px}.dayPicker_29dcb39d,.monthPicker_29dcb39d{min-height:200px}.header_29dcb39d{height:28px;line-height:28px;width:100%}.dayWrapper_29dcb39d,.weekday_29dcb39d{width:28px;height:28px;line-height:28px;font-size:12px}.closeButton_29dcb39d,.nextDecade_29dcb39d,.nextMonth_29dcb39d,.nextYear_29dcb39d,.prevDecade_29dcb39d,.prevMonth_29dcb39d,.prevYear_29dcb39d{font-size:12px;width:28px;height:28px;line-height:28px}.holder_29dcb39d{display:inline-block;height:auto;overflow:hidden}.decade_29dcb39d,.monthAndYear_29dcb39d,.year_29dcb39d{font-size:14px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}.yearComponents_29dcb39d{margin-left:1px}.goToday_29dcb39d{padding:0 3px}[dir=ltr] .goToday_29dcb39d{right:20px}[dir=rtl] .goToday_29dcb39d{left:20px}.showWeekNumbers_29dcb39d .table_29dcb39d .dayWrapper_29dcb39d,.showWeekNumbers_29dcb39d .table_29dcb39d .weekday_29dcb39d{width:28px}.showWeekNumbersRTL_29dcb39d .table_29dcb39d .dayWrapper_29dcb39d,.showWeekNumbersRTL_29dcb39d .table_29dcb39d .weekday_29dcb39d{width:28px}.monthPickerVisible_29dcb39d .wrap_29dcb39d{padding:12px}.monthPickerVisible_29dcb39d .dayPicker_29dcb39d{margin:-10px 0;padding:10px 0}.monthPickerVisible_29dcb39d .dayPicker_29dcb39d{-webkit-box-sizing:border-box;box-sizing:border-box;width:212px;min-height:200px}.monthPickerVisible_29dcb39d .monthPicker_29dcb39d{display:block}.monthPickerVisible_29dcb39d .optionGrid_29dcb39d{height:150px;width:196px}.monthPickerVisible_29dcb39d .toggleMonthView_29dcb39d{display:none}.monthPickerVisible_29dcb39d .currentDecade_29dcb39d,.monthPickerVisible_29dcb39d .currentYear_29dcb39d{font-size:14px;margin:0;height:28px;line-height:28px;display:inline-block}.monthPickerVisible_29dcb39d .monthOption_29dcb39d,.monthPickerVisible_29dcb39d .yearOption_29dcb39d{width:40px;height:40px;line-height:100%;font-size:12px;margin:0 12px 16px 0}html[dir=rtl] .monthPickerVisible_29dcb39d .monthOption_29dcb39d,html[dir=rtl] .monthPickerVisible_29dcb39d .yearOption_29dcb39d{margin:0 0 16px 12px}.monthPickerVisible_29dcb39d .monthOption_29dcb39d:hover,.monthPickerVisible_29dcb39d .yearOption_29dcb39d:hover{outline:1px solid transparent}.monthPickerVisible_29dcb39d .monthOption_29dcb39d:nth-child(4n+4),.monthPickerVisible_29dcb39d .yearOption_29dcb39d:nth-child(4n+4){margin:0 0 16px 0}html[dir=rtl] .monthPickerVisible_29dcb39d .monthOption_29dcb39d:nth-child(4n+4),html[dir=rtl] .monthPickerVisible_29dcb39d .yearOption_29dcb39d:nth-child(4n+4){margin:0 0 16px 0}.monthPickerVisible_29dcb39d .goToday_29dcb39d{font-size:12px;height:28px;line-height:28px;padding:0 10px}[dir=ltr] .monthPickerVisible_29dcb39d .goToday_29dcb39d{right:8px}[dir=rtl] .monthPickerVisible_29dcb39d .goToday_29dcb39d{left:8px}html[dir=ltr] .monthPickerVisible_29dcb39d .goToday_29dcb39d{text-align:right}html[dir=rtl] .monthPickerVisible_29dcb39d .goToday_29dcb39d{text-align:left}.monthPickerVisible_29dcb39d .root_29dcb39d.isPickingYears_29dcb39d .dayPicker_29dcb39d,.monthPickerVisible_29dcb39d .root_29dcb39d.isPickingYears_29dcb39d .monthComponents_29dcb39d{display:block}.monthPickerVisible_29dcb39d .root_29dcb39d.isPickingYears_29dcb39d .monthPicker_29dcb39d{display:none}.monthPickerVisible_29dcb39d .root_29dcb39d.isPickingYears_29dcb39d .yearPicker_29dcb39d{display:block}.calendarsInline_29dcb39d .wrap_29dcb39d{padding:12px}.calendarsInline_29dcb39d .holder_29dcb39d{height:auto}html[dir=ltr] .calendarsInline_29dcb39d .table_29dcb39d{margin-right:12px}html[dir=rtl] .calendarsInline_29dcb39d .table_29dcb39d{margin-left:12px}.calendarsInline_29dcb39d .dayPicker_29dcb39d{width:auto}html[dir=ltr] .calendarsInline_29dcb39d .monthPicker_29dcb39d{margin-left:12px}html[dir=rtl] .calendarsInline_29dcb39d .monthPicker_29dcb39d{margin-right:12px}html[dir=ltr] .calendarsInline_29dcb39d .yearPicker_29dcb39d{margin-left:12px}html[dir=rtl] .calendarsInline_29dcb39d .yearPicker_29dcb39d{margin-right:12px}.calendarsInline_29dcb39d .goToday_29dcb39d{padding:0 10px}[dir=ltr] .calendarsInline_29dcb39d .goToday_29dcb39d{right:14px}[dir=rtl] .calendarsInline_29dcb39d .goToday_29dcb39d{left:14px}html[dir=ltr] .calendarsInline_29dcb39d .monthComponents_29dcb39d{margin-right:12px}html[dir=rtl] .calendarsInline_29dcb39d .monthComponents_29dcb39d{margin-left:12px}.monthPickerOnly_29dcb39d .wrap_29dcb39d{padding:12px}.monthPickerAsOverlay_29dcb39d .wrap_29dcb39d{padding-bottom:28px;margin-bottom:6px}.monthPickerAsOverlay_29dcb39d .holder_29dcb39d{height:240px;min-height:240px}.monthPickerAsOverlay_29dcb39d .holderWithButton_29dcb39d{padding-top:6px;height:auto}}@media (max-device-width:459px){.calendarsInline_29dcb39d .monthPicker_29dcb39d,.calendarsInline_29dcb39d .yearPicker_29dcb39d{display:none}.yearComponents_29dcb39d{margin-top:2px}}.goToday_29dcb39d{width:auto}.closeButton_29dcb39d,.nextDecade_29dcb39d,.nextMonth_29dcb39d,.nextYear_29dcb39d,.prevDecade_29dcb39d,.prevMonth_29dcb39d,.prevYear_29dcb39d{display:inline-block}.closeButton_29dcb39d:hover,.nextDecade_29dcb39d:hover,.nextMonth_29dcb39d:hover,.nextYear_29dcb39d:hover,.prevDecade_29dcb39d:hover,.prevMonth_29dcb39d:hover,.prevYear_29dcb39d:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.closeButton_29dcb39d:hover,.nextDecade_29dcb39d:hover,.nextMonth_29dcb39d:hover,.nextYear_29dcb39d:hover,.prevDecade_29dcb39d:hover,.prevMonth_29dcb39d:hover,.prevYear_29dcb39d:hover{outline:1px solid Highlight}}.closeButton_29dcb39d:active,.nextDecade_29dcb39d:active,.nextMonth_29dcb39d:active,.nextYear_29dcb39d:active,.prevDecade_29dcb39d:active,.prevMonth_29dcb39d:active,.prevYear_29dcb39d:active{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.closeButton_29dcb39d:active,.nextDecade_29dcb39d:active,.nextMonth_29dcb39d:active,.nextYear_29dcb39d:active,.prevDecade_29dcb39d:active,.prevMonth_29dcb39d:active,.prevYear_29dcb39d:active{color:highlight}}.monthIsHighlighted_29dcb39d{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.monthIsHighlighted_29dcb39d.monthOption_29dcb39d:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.monthIsHighlighted_29dcb39d{color:highlight;border:2px solid highlight;border-radius:2px}.monthIsHighlighted_29dcb39d:hover{outline:0!important}}.monthIsCurrentMonth_29dcb39d{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.monthIsCurrentMonth_29dcb39d.monthOption_29dcb39d:hover{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.monthOption_29dcb39d:active{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.yearIsHighlighted_29dcb39d{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.yearIsHighlighted_29dcb39d.yearOption_29dcb39d:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.yearIsCurrentYear_29dcb39d{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.yearIsCurrentYear_29dcb39d.yearOption_29dcb39d:hover{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.yearOption_29dcb39d:active{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.topLeftCornerDate_29dcb39d{border-top-left-radius:2px}.topRightCornerDate_29dcb39d{border-top-right-radius:2px}.bottomLeftCornerDate_29dcb39d{border-bottom-left-radius:2px}.bottomRightCornerDate_29dcb39d{border-bottom-right-radius:2px}@media screen and (-ms-high-contrast:active){.weekBackground_29dcb39d{border-top:1px solid highlight;border-bottom:1px solid highlight}.weekBackground_29dcb39d.bottomRightCornerDate_29dcb39d.topRightCornerDate_29dcb39d{border-right:1px solid highlight;border-left:none;padding-left:1px}.weekBackground_29dcb39d.bottomLeftCornerDate_29dcb39d.topLeftCornerDate_29dcb39d{border-left:1px solid highlight;border-right:none;padding-right:1px}.weekBackground_29dcb39d :not(.dayIsToday_29dcb39d) span{color:highlight}.weekSelection_29dcb39d.dayHover_29dcb39d{border-top:1px solid highlight;border-bottom:1px solid highlight}.weekSelection_29dcb39d.dayHover_29dcb39d.bottomLeftCornerDate_29dcb39d.topLeftCornerDate_29dcb39d{border-left:1px solid highlight;padding-right:1px}.weekSelection_29dcb39d.dayHover_29dcb39d.bottomRightCornerDate_29dcb39d.topRightCornerDate_29dcb39d{border-right:1px solid highlight;padding-left:1px}.weekSelection_29dcb39d.dayHover_29dcb39d.dayPress_29dcb39d :not(.dayIsToday_29dcb39d) span{color:highlight}.monthSelection_29dcb39d.dayHover_29dcb39d.bottomLeftCornerDate_29dcb39d,.monthSelection_29dcb39d.dayHover_29dcb39d.topLeftCornerDate_29dcb39d{border-left:1px solid highlight;padding-right:1px}.monthSelection_29dcb39d.dayHover_29dcb39d.bottomRightCornerDate_29dcb39d,.monthSelection_29dcb39d.dayHover_29dcb39d.topRightCornerDate_29dcb39d{border-right:1px solid highlight;padding-left:1px}.monthSelection_29dcb39d.dayIsFocused_29dcb39d.dayHover_29dcb39d.topDate_29dcb39d,.monthSelection_29dcb39d.dayIsUnfocused_29dcb39d.dayHover_29dcb39d.topDate_29dcb39d{border-top:1px solid highlight;padding-bottom:1px}.monthSelection_29dcb39d.dayIsFocused_29dcb39d.dayHover_29dcb39d.rightDate_29dcb39d,.monthSelection_29dcb39d.dayIsUnfocused_29dcb39d.dayHover_29dcb39d.rightDate_29dcb39d{border-right:1px solid highlight;padding-left:1px}.monthSelection_29dcb39d.dayIsFocused_29dcb39d.dayHover_29dcb39d.bottomDate_29dcb39d,.monthSelection_29dcb39d.dayIsUnfocused_29dcb39d.dayHover_29dcb39d.bottomDate_29dcb39d{border-bottom:1px solid highlight;padding-top:1px}.monthSelection_29dcb39d.dayIsFocused_29dcb39d.dayHover_29dcb39d.leftdate_29dcb39d,.monthSelection_29dcb39d.dayIsUnfocused_29dcb39d.dayHover_29dcb39d.leftdate_29dcb39d{border-left:1px solid highlight;padding-right:1px}.monthSelection_29dcb39d.dayIsFocused_29dcb39d.dayHover_29dcb39d.dayPress_29dcb39d :not(.dayIsToday_29dcb39d) span,.monthSelection_29dcb39d.dayIsUnfocused_29dcb39d.dayHover_29dcb39d.dayPress_29dcb39d :not(.dayIsToday_29dcb39d) span{color:highlight}}" }]);
-var root = "root_29dcb39d";
-var picker = "picker_29dcb39d";
-var holder = "holder_29dcb39d";
-var pickerIsOpened = "pickerIsOpened_29dcb39d";
-var frame = "frame_29dcb39d";
-var wrap = "wrap_29dcb39d";
-var goTodaySpacing = "goTodaySpacing_29dcb39d";
-var dayPicker = "dayPicker_29dcb39d";
-var header = "header_29dcb39d";
-var divider = "divider_29dcb39d";
-var monthAndYear = "monthAndYear_29dcb39d";
-var year = "year_29dcb39d";
-var decade = "decade_29dcb39d";
-var currentYear = "currentYear_29dcb39d";
-var currentDecade = "currentDecade_29dcb39d";
-var table = "table_29dcb39d";
-var dayWrapper = "dayWrapper_29dcb39d";
-var weekday = "weekday_29dcb39d";
-var day = "day_29dcb39d";
-var daySelection = "daySelection_29dcb39d";
-var dayIsToday = "dayIsToday_29dcb39d";
-var dayIsDisabled = "dayIsDisabled_29dcb39d";
-var dayIsUnfocused = "dayIsUnfocused_29dcb39d";
-var dayIsFocused = "dayIsFocused_29dcb39d";
-var dayIsHighlighted = "dayIsHighlighted_29dcb39d";
-var pickerIsFocused = "pickerIsFocused_29dcb39d";
-var dayDisabled = "dayDisabled_29dcb39d";
-var dayBackground = "dayBackground_29dcb39d";
-var dayHover = "dayHover_29dcb39d";
-var dayPress = "dayPress_29dcb39d";
-var weekBackground = "weekBackground_29dcb39d";
-var showWeekNumbers = "showWeekNumbers_29dcb39d";
-var weekNumbers = "weekNumbers_29dcb39d";
-var weekIsHighlighted = "weekIsHighlighted_29dcb39d";
-var showWeekNumbersRTL = "showWeekNumbersRTL_29dcb39d";
-var monthComponents = "monthComponents_29dcb39d";
-var yearComponents = "yearComponents_29dcb39d";
-var decadeComponents = "decadeComponents_29dcb39d";
-var closeButton = "closeButton_29dcb39d";
-var prevMonth = "prevMonth_29dcb39d";
-var nextMonth = "nextMonth_29dcb39d";
-var prevYear = "prevYear_29dcb39d";
-var nextYear = "nextYear_29dcb39d";
-var prevDecade = "prevDecade_29dcb39d";
-var nextDecade = "nextDecade_29dcb39d";
-var prevMonthIsDisabled = "prevMonthIsDisabled_29dcb39d";
-var nextMonthIsDisabled = "nextMonthIsDisabled_29dcb39d";
-var prevYearIsDisabled = "prevYearIsDisabled_29dcb39d";
-var nextYearIsDisabled = "nextYearIsDisabled_29dcb39d";
-var prevDecadeIsDisabled = "prevDecadeIsDisabled_29dcb39d";
-var nextDecadeIsDisabled = "nextDecadeIsDisabled_29dcb39d";
-var headerToggleView = "headerToggleView_29dcb39d";
-var optionGrid = "optionGrid_29dcb39d";
-var monthOption = "monthOption_29dcb39d";
-var yearOption = "yearOption_29dcb39d";
-var isHighlighted = "isHighlighted_29dcb39d";
-var monthOptionIsDisabled = "monthOptionIsDisabled_29dcb39d";
-var yearOptionIsDisabled = "yearOptionIsDisabled_29dcb39d";
-var goToday = "goToday_29dcb39d";
-var goToTodayIsDisabled = "goToTodayIsDisabled_29dcb39d";
-var goTodayInlineMonth = "goTodayInlineMonth_29dcb39d";
-var isPickingYears = "isPickingYears_29dcb39d";
-var monthPicker = "monthPicker_29dcb39d";
-var yearPicker = "yearPicker_29dcb39d";
-var monthPickerVisible = "monthPickerVisible_29dcb39d";
-var toggleMonthView = "toggleMonthView_29dcb39d";
-var calendarsInline = "calendarsInline_29dcb39d";
-var monthPickerOnly = "monthPickerOnly_29dcb39d";
-var monthPickerAsOverlay = "monthPickerAsOverlay_29dcb39d";
-var holderWithButton = "holderWithButton_29dcb39d";
-var monthIsHighlighted = "monthIsHighlighted_29dcb39d";
-var monthIsCurrentMonth = "monthIsCurrentMonth_29dcb39d";
-var yearIsHighlighted = "yearIsHighlighted_29dcb39d";
-var yearIsCurrentYear = "yearIsCurrentYear_29dcb39d";
-var topLeftCornerDate = "topLeftCornerDate_29dcb39d";
-var topRightCornerDate = "topRightCornerDate_29dcb39d";
-var bottomLeftCornerDate = "bottomLeftCornerDate_29dcb39d";
-var bottomRightCornerDate = "bottomRightCornerDate_29dcb39d";
-var weekSelection = "weekSelection_29dcb39d";
-var monthSelection = "monthSelection_29dcb39d";
-var topDate = "topDate_29dcb39d";
-var rightDate = "rightDate_29dcb39d";
-var bottomDate = "bottomDate_29dcb39d";
-var leftdate = "leftdate_29dcb39d";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".root_daf01a6e{-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-box-shadow:none;box-shadow:none;margin:0;padding:0}.root_daf01a6e *{overflow:visible}.root_daf01a6e ::-moz-focus-inner{border:0}.root_daf01a6e *{outline:transparent}.root_daf01a6e *{position:relative}.ms-Fabric--isFocusVisible .root_daf01a6e :focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.picker_daf01a6e{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";font-size:14px;position:relative}html[dir=ltr] .picker_daf01a6e{text-align:left}html[dir=rtl] .picker_daf01a6e{text-align:right}.holder_daf01a6e{-webkit-overflow-scrolling:touch;-webkit-box-sizing:border-box;box-sizing:border-box;display:none}.picker_daf01a6e.pickerIsOpened_daf01a6e .holder_daf01a6e{-webkit-box-sizing:border-box;box-sizing:border-box;display:inline-block}.pickerIsOpened_daf01a6e{position:relative}.frame_daf01a6e{position:relative}.wrap_daf01a6e{min-height:212px;padding:12px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-sizing:content-box;box-sizing:content-box}.wrap_daf01a6e.goTodaySpacing_daf01a6e{min-height:228px}.dayPicker_daf01a6e{display:block}.header_daf01a6e{position:relative;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;height:28px;line-height:44px;width:100%}.divider_daf01a6e{top:0;margin-top:-12px;margin-bottom:-12px}html[dir=ltr] .divider_daf01a6e{border-right:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}html[dir=rtl] .divider_daf01a6e{border-left:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.decade_daf01a6e,.monthAndYear_daf01a6e,.year_daf01a6e{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;font-size:14px;font-weight:400;font-weight:600;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";padding:0 5px}.currentDecade_daf01a6e:hover,.currentYear_daf01a6e:hover,.monthAndYear_daf01a6e:hover{cursor:default}.table_daf01a6e{text-align:center;border-collapse:collapse;border-spacing:0;table-layout:fixed;font-size:inherit;margin-top:4px;width:197px}.table_daf01a6e td{margin:0;padding:0}.dayWrapper_daf01a6e,.weekday_daf01a6e{width:28px;height:28px;padding:0;line-height:28px;font-size:12px;font-size:15px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;cursor:default}.dayWrapper_daf01a6e ::-moz-focus-inner,.weekday_daf01a6e ::-moz-focus-inner{border:0}.dayWrapper_daf01a6e *,.weekday_daf01a6e *{outline:transparent}.dayWrapper_daf01a6e *,.weekday_daf01a6e *{position:relative}.ms-Fabric--isFocusVisible .dayWrapper_daf01a6e :focus:after,.ms-Fabric--isFocusVisible .weekday_daf01a6e :focus:after{content:'';position:absolute;top:-2px;right:-2px;bottom:-2px;left:-2px;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.day_daf01a6e{width:24px;height:24px;border-radius:2px;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;border:none;padding:0;background-color:transparent;line-height:100%;color:inherit;font-size:inherit;font-weight:inherit;font-family:inherit}@media screen and (-ms-high-contrast:active){.daySelection_daf01a6e .day_daf01a6e:active,.daySelection_daf01a6e .day_daf01a6e:hover{outline:1px solid Highlight;-ms-high-contrast-adjust:none}}@media screen and (-ms-high-contrast:active){.daySelection_daf01a6e .day_daf01a6e:active{color:Highlight;-ms-high-contrast-adjust:none}}.dayIsToday_daf01a6e{border-radius:100%}.dayIsToday_daf01a6e,.dayIsToday_daf01a6e:hover{position:relative;background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.dayIsToday_daf01a6e,.dayIsToday_daf01a6e:hover{background-color:Highlight;-ms-high-contrast-adjust:none}}.dayIsToday_daf01a6e:hover,.dayIsToday_daf01a6e:hover:hover{border-radius:100%}.dayIsDisabled_daf01a6e:before{border-top-color:" }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": "}.dayIsUnfocused_daf01a6e{color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": ";font-weight:400}.dayIsFocused_daf01a6e:hover,.dayIsUnfocused_daf01a6e:hover{cursor:pointer;background:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.daySelection_daf01a6e.dayIsHighlighted_daf01a6e:hover,.pickerIsFocused_daf01a6e .dayIsHighlighted_daf01a6e.daySelection_daf01a6e{cursor:pointer;background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";border-radius:2px}@media screen and (-ms-high-contrast:active){.daySelection_daf01a6e.dayIsHighlighted_daf01a6e:hover,.pickerIsFocused_daf01a6e .dayIsHighlighted_daf01a6e.daySelection_daf01a6e{outline:2px solid Highlight}.daySelection_daf01a6e.dayIsHighlighted_daf01a6e:hover :not(.dayIsToday_daf01a6e) span,.pickerIsFocused_daf01a6e .dayIsHighlighted_daf01a6e.daySelection_daf01a6e :not(.dayIsToday_daf01a6e) span{color:Highlight;-ms-high-contrast-adjust:none}}@media screen and (-ms-high-contrast:active){.dayIsHighlighted_daf01a6e button.dayIsToday_daf01a6e{border-radius:100%}}@media screen and (-ms-high-contrast:active){.dayIsHighlighted_daf01a6e button.dayIsToday_daf01a6e span{color:Window;-ms-high-contrast-adjust:none}}.dayIsFocused_daf01a6e:active,.dayIsHighlighted_daf01a6e{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.dayIsFocused_daf01a6e:active.day_daf01a6e,.dayIsHighlighted_daf01a6e.day_daf01a6e{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.dayIsHighlighted_daf01a6e.dayDisabled_daf01a6e,.dayIsHighlighted_daf01a6e.dayDisabled_daf01a6e:hover{background:" }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": "}.dayBackground_daf01a6e,.dayBackground_daf01a6e:active,.dayBackground_daf01a6e:hover{border-radius:2px}.dayHover_daf01a6e,.dayHover_daf01a6e:hover{cursor:pointer;background:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.dayPress_daf01a6e,.dayPress_daf01a6e:hover{cursor:pointer;color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.dayPress_daf01a6e .dayIsToday_daf01a6e,.dayPress_daf01a6e:hover .dayIsToday_daf01a6e{background:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";border-radius:100%}.dayIsFocused_daf01a6e:active,.dayIsHighlighted_daf01a6e,.dayIsHighlighted_daf01a6e:active,.dayIsHighlighted_daf01a6e:hover,.dayIsUnfocused_daf01a6e:active,.weekBackground_daf01a6e,.weekBackground_daf01a6e:active,.weekBackground_daf01a6e:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.dayIsToday_daf01a6e,.dayIsToday_daf01a6e.day_daf01a6e:active,.pickerIsFocused_daf01a6e .dayIsToday_daf01a6e{position:relative;color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";font-weight:600;background:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";border-radius:100%}@media screen and (-ms-high-contrast:active){.dayIsToday_daf01a6e,.dayIsToday_daf01a6e.day_daf01a6e:active,.pickerIsFocused_daf01a6e .dayIsToday_daf01a6e{background-color:Highlight;color:HighlightText;-ms-high-contrast-adjust:none}}.showWeekNumbers_daf01a6e .weekNumbers_daf01a6e{border-right:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";-webkit-box-sizing:border-box;box-sizing:border-box;width:28px;padding:0}.showWeekNumbers_daf01a6e .weekNumbers_daf01a6e .dayWrapper_daf01a6e{color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.showWeekNumbers_daf01a6e .weekNumbers_daf01a6e .dayWrapper_daf01a6e.weekIsHighlighted_daf01a6e{color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}.showWeekNumbers_daf01a6e .table_daf01a6e{width:225px}.showWeekNumbers_daf01a6e .table_daf01a6e .dayWrapper_daf01a6e,.showWeekNumbers_daf01a6e .table_daf01a6e .weekday_daf01a6e{width:30px}.showWeekNumbersRTL_daf01a6e .weekNumbers_daf01a6e{border-left:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";-webkit-box-sizing:border-box;box-sizing:border-box}.showWeekNumbersRTL_daf01a6e .weekNumbers_daf01a6e .dayWrapper_daf01a6e{color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.showWeekNumbersRTL_daf01a6e .weekNumbers_daf01a6e .dayWrapper_daf01a6e.weekIsHighlighted_daf01a6e{color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}.showWeekNumbersRTL_daf01a6e .table_daf01a6e{width:225px}.showWeekNumbersRTL_daf01a6e .table_daf01a6e .dayWrapper_daf01a6e,.showWeekNumbersRTL_daf01a6e .table_daf01a6e .weekday_daf01a6e{width:30px}.decadeComponents_daf01a6e,.monthComponents_daf01a6e,.yearComponents_daf01a6e{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-ms-flex-item-align:end;align-self:flex-end}.closeButton_daf01a6e,.nextDecade_daf01a6e,.nextMonth_daf01a6e,.nextYear_daf01a6e,.prevDecade_daf01a6e,.prevMonth_daf01a6e,.prevYear_daf01a6e{font-family:inherit;width:28px;height:28px;display:block;text-align:center;line-height:28px;text-align:center;font-size:12px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";border-radius:2px;position:relative;background-color:transparent;border:none;padding:0}.closeButton_daf01a6e:hover,.nextDecade_daf01a6e:hover,.nextMonth_daf01a6e:hover,.nextYear_daf01a6e:hover,.prevDecade_daf01a6e:hover,.prevMonth_daf01a6e:hover,.prevYear_daf01a6e:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";cursor:pointer;outline:1px solid transparent}.nextDecadeIsDisabled_daf01a6e,.nextMonthIsDisabled_daf01a6e,.nextYearIsDisabled_daf01a6e,.prevDecadeIsDisabled_daf01a6e,.prevMonthIsDisabled_daf01a6e,.prevYearIsDisabled_daf01a6e{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";pointer-events:none}.headerToggleView_daf01a6e{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;padding:4px 8px}.headerToggleView_daf01a6e:hover{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";cursor:pointer}@media screen and (-ms-high-contrast:active){.headerToggleView_daf01a6e:hover{outline:1px solid highlight}}@media screen and (-ms-high-contrast:active){.headerToggleView_daf01a6e:hover:active{color:highlight}}.currentDecade_daf01a6e,.currentYear_daf01a6e{display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;padding:0 5px;font-size:14px;font-weight:400;font-weight:600;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";height:28px;line-height:28px}html[dir=ltr] .currentDecade_daf01a6e,html[dir=ltr] .currentYear_daf01a6e{margin-left:5px}html[dir=rtl] .currentDecade_daf01a6e,html[dir=rtl] .currentYear_daf01a6e{margin-right:5px}.optionGrid_daf01a6e{position:relative;height:210px;width:196px;margin:4px 0 0 0}html[dir=rtl] .optionGrid_daf01a6e{margin:4px 0 0 0}.monthOption_daf01a6e,.yearOption_daf01a6e{width:60px;height:60px;line-height:100%;cursor:pointer;margin:0 10px 10px 0;font-size:13px;font-weight:400;font-family:inherit;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";text-align:center;border:none;padding:0;background-color:transparent;border-radius:2px}html[dir=ltr] .monthOption_daf01a6e,html[dir=ltr] .yearOption_daf01a6e{float:left}html[dir=rtl] .monthOption_daf01a6e,html[dir=rtl] .yearOption_daf01a6e{float:right}html[dir=rtl] .monthOption_daf01a6e,html[dir=rtl] .yearOption_daf01a6e{margin:0 0 10px 10px}.monthOption_daf01a6e:hover,.yearOption_daf01a6e:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";outline:1px solid transparent}@media screen and (-ms-high-contrast:active){.monthOption_daf01a6e:hover,.yearOption_daf01a6e:hover{outline-color:highlight}}@media screen and (-ms-high-contrast:active){.monthOption_daf01a6e:active,.yearOption_daf01a6e:active{color:highlight}}.monthOption_daf01a6e.isHighlighted_daf01a6e,.yearOption_daf01a6e.isHighlighted_daf01a6e{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.dayIsDisabled_daf01a6e,.monthOptionIsDisabled_daf01a6e,.yearOptionIsDisabled_daf01a6e{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";pointer-events:none}.goToday_daf01a6e{bottom:0;color:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";cursor:pointer;font-size:12px;font-weight:400;font-family:inherit;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": ";height:30px;line-height:30px;padding:0 10px;background-color:transparent;border:none;position:absolute!important;-webkit-box-sizing:content-box;box-sizing:content-box}[dir=ltr] .goToday_daf01a6e{right:13px}[dir=rtl] .goToday_daf01a6e{left:13px}.goToday_daf01a6e:hover{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";outline:1px solid transparent}@media screen and (-ms-high-contrast:active){.goToday_daf01a6e:hover{outline-color:highlight}}.goToday_daf01a6e:active{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.goToday_daf01a6e:active{color:highlight}}.goToTodayIsDisabled_daf01a6e{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";pointer-events:none}.goTodayInlineMonth_daf01a6e{top:212px}.wrap_daf01a6e.goTodaySpacing_daf01a6e{padding-bottom:28px}.root_daf01a6e.isPickingYears_daf01a6e .dayPicker_daf01a6e,.root_daf01a6e.isPickingYears_daf01a6e .monthComponents_daf01a6e{display:none}.root_daf01a6e.isPickingYears_daf01a6e .monthPicker_daf01a6e{display:none}.root_daf01a6e.isPickingYears_daf01a6e .yearPicker_daf01a6e{display:block}@media (min-device-width:460px){.wrap_daf01a6e{padding:12px}.dayPicker_daf01a6e,.monthPicker_daf01a6e{min-height:200px}.header_daf01a6e{height:28px;line-height:28px;width:100%}.dayWrapper_daf01a6e,.weekday_daf01a6e{width:28px;height:28px;line-height:28px;font-size:12px}.closeButton_daf01a6e,.nextDecade_daf01a6e,.nextMonth_daf01a6e,.nextYear_daf01a6e,.prevDecade_daf01a6e,.prevMonth_daf01a6e,.prevYear_daf01a6e{font-size:12px;width:28px;height:28px;line-height:28px}.holder_daf01a6e{display:inline-block;height:auto;overflow:hidden}.decade_daf01a6e,.monthAndYear_daf01a6e,.year_daf01a6e{font-size:14px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}.yearComponents_daf01a6e{margin-left:1px}.goToday_daf01a6e{padding:0 3px}[dir=ltr] .goToday_daf01a6e{right:20px}[dir=rtl] .goToday_daf01a6e{left:20px}.showWeekNumbers_daf01a6e .table_daf01a6e .dayWrapper_daf01a6e,.showWeekNumbers_daf01a6e .table_daf01a6e .weekday_daf01a6e{width:28px}.showWeekNumbersRTL_daf01a6e .table_daf01a6e .dayWrapper_daf01a6e,.showWeekNumbersRTL_daf01a6e .table_daf01a6e .weekday_daf01a6e{width:28px}.monthPickerVisible_daf01a6e .wrap_daf01a6e{padding:12px}.monthPickerVisible_daf01a6e .dayPicker_daf01a6e{margin:-10px 0;padding:10px 0}.monthPickerVisible_daf01a6e .dayPicker_daf01a6e{-webkit-box-sizing:border-box;box-sizing:border-box;width:212px;min-height:200px}.monthPickerVisible_daf01a6e .monthPicker_daf01a6e{display:block}.monthPickerVisible_daf01a6e .optionGrid_daf01a6e{height:150px;width:196px}.monthPickerVisible_daf01a6e .toggleMonthView_daf01a6e{display:none}.monthPickerVisible_daf01a6e .currentDecade_daf01a6e,.monthPickerVisible_daf01a6e .currentYear_daf01a6e{font-size:14px;margin:0;height:28px;line-height:28px;display:inline-block}.monthPickerVisible_daf01a6e .monthOption_daf01a6e,.monthPickerVisible_daf01a6e .yearOption_daf01a6e{width:40px;height:40px;line-height:100%;font-size:12px;margin:0 12px 16px 0}html[dir=rtl] .monthPickerVisible_daf01a6e .monthOption_daf01a6e,html[dir=rtl] .monthPickerVisible_daf01a6e .yearOption_daf01a6e{margin:0 0 16px 12px}.monthPickerVisible_daf01a6e .monthOption_daf01a6e:hover,.monthPickerVisible_daf01a6e .yearOption_daf01a6e:hover{outline:1px solid transparent}.monthPickerVisible_daf01a6e .monthOption_daf01a6e:nth-child(4n+4),.monthPickerVisible_daf01a6e .yearOption_daf01a6e:nth-child(4n+4){margin:0 0 16px 0}html[dir=rtl] .monthPickerVisible_daf01a6e .monthOption_daf01a6e:nth-child(4n+4),html[dir=rtl] .monthPickerVisible_daf01a6e .yearOption_daf01a6e:nth-child(4n+4){margin:0 0 16px 0}.monthPickerVisible_daf01a6e .goToday_daf01a6e{font-size:12px;height:28px;line-height:28px;padding:0 10px}[dir=ltr] .monthPickerVisible_daf01a6e .goToday_daf01a6e{right:8px}[dir=rtl] .monthPickerVisible_daf01a6e .goToday_daf01a6e{left:8px}html[dir=ltr] .monthPickerVisible_daf01a6e .goToday_daf01a6e{text-align:right}html[dir=rtl] .monthPickerVisible_daf01a6e .goToday_daf01a6e{text-align:left}.monthPickerVisible_daf01a6e .root_daf01a6e.isPickingYears_daf01a6e .dayPicker_daf01a6e,.monthPickerVisible_daf01a6e .root_daf01a6e.isPickingYears_daf01a6e .monthComponents_daf01a6e{display:block}.monthPickerVisible_daf01a6e .root_daf01a6e.isPickingYears_daf01a6e .monthPicker_daf01a6e{display:none}.monthPickerVisible_daf01a6e .root_daf01a6e.isPickingYears_daf01a6e .yearPicker_daf01a6e{display:block}.calendarsInline_daf01a6e .wrap_daf01a6e{padding:12px}.calendarsInline_daf01a6e .holder_daf01a6e{height:auto}html[dir=ltr] .calendarsInline_daf01a6e .table_daf01a6e{margin-right:12px}html[dir=rtl] .calendarsInline_daf01a6e .table_daf01a6e{margin-left:12px}.calendarsInline_daf01a6e .dayPicker_daf01a6e{width:auto}html[dir=ltr] .calendarsInline_daf01a6e .monthPicker_daf01a6e{margin-left:12px}html[dir=rtl] .calendarsInline_daf01a6e .monthPicker_daf01a6e{margin-right:12px}html[dir=ltr] .calendarsInline_daf01a6e .yearPicker_daf01a6e{margin-left:12px}html[dir=rtl] .calendarsInline_daf01a6e .yearPicker_daf01a6e{margin-right:12px}.calendarsInline_daf01a6e .goToday_daf01a6e{padding:0 10px}[dir=ltr] .calendarsInline_daf01a6e .goToday_daf01a6e{right:14px}[dir=rtl] .calendarsInline_daf01a6e .goToday_daf01a6e{left:14px}html[dir=ltr] .calendarsInline_daf01a6e .monthComponents_daf01a6e{margin-right:12px}html[dir=rtl] .calendarsInline_daf01a6e .monthComponents_daf01a6e{margin-left:12px}.monthPickerOnly_daf01a6e .wrap_daf01a6e{padding:12px}.monthPickerAsOverlay_daf01a6e .wrap_daf01a6e{padding-bottom:28px;margin-bottom:6px}.monthPickerAsOverlay_daf01a6e .holder_daf01a6e{height:240px;min-height:240px}.monthPickerAsOverlay_daf01a6e .holderWithButton_daf01a6e{padding-top:6px;height:auto}}@media (max-device-width:459px){.calendarsInline_daf01a6e .monthPicker_daf01a6e,.calendarsInline_daf01a6e .yearPicker_daf01a6e{display:none}.yearComponents_daf01a6e{margin-top:2px}}.goToday_daf01a6e{width:auto}.closeButton_daf01a6e,.nextDecade_daf01a6e,.nextMonth_daf01a6e,.nextYear_daf01a6e,.prevDecade_daf01a6e,.prevMonth_daf01a6e,.prevYear_daf01a6e{display:inline-block}.closeButton_daf01a6e:hover,.nextDecade_daf01a6e:hover,.nextMonth_daf01a6e:hover,.nextYear_daf01a6e:hover,.prevDecade_daf01a6e:hover,.prevMonth_daf01a6e:hover,.prevYear_daf01a6e:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.closeButton_daf01a6e:hover,.nextDecade_daf01a6e:hover,.nextMonth_daf01a6e:hover,.nextYear_daf01a6e:hover,.prevDecade_daf01a6e:hover,.prevMonth_daf01a6e:hover,.prevYear_daf01a6e:hover{outline:1px solid Highlight}}.closeButton_daf01a6e:active,.nextDecade_daf01a6e:active,.nextMonth_daf01a6e:active,.nextYear_daf01a6e:active,.prevDecade_daf01a6e:active,.prevMonth_daf01a6e:active,.prevYear_daf01a6e:active{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.closeButton_daf01a6e:active,.nextDecade_daf01a6e:active,.nextMonth_daf01a6e:active,.nextYear_daf01a6e:active,.prevDecade_daf01a6e:active,.prevMonth_daf01a6e:active,.prevYear_daf01a6e:active{color:highlight}}.monthIsHighlighted_daf01a6e{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.monthIsHighlighted_daf01a6e.monthOption_daf01a6e:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.monthIsHighlighted_daf01a6e{color:highlight;border:2px solid highlight;border-radius:2px}.monthIsHighlighted_daf01a6e:hover{outline:0!important}}.monthIsCurrentMonth_daf01a6e{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.monthIsCurrentMonth_daf01a6e.monthOption_daf01a6e:hover{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.monthOption_daf01a6e:active{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.yearIsHighlighted_daf01a6e{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.yearIsHighlighted_daf01a6e.yearOption_daf01a6e:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.yearIsCurrentYear_daf01a6e{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.yearIsCurrentYear_daf01a6e.yearOption_daf01a6e:hover{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.yearOption_daf01a6e:active{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.topLeftCornerDate_daf01a6e{border-top-left-radius:2px}.topRightCornerDate_daf01a6e{border-top-right-radius:2px}.bottomLeftCornerDate_daf01a6e{border-bottom-left-radius:2px}.bottomRightCornerDate_daf01a6e{border-bottom-right-radius:2px}@media screen and (-ms-high-contrast:active){.weekBackground_daf01a6e{border-top:1px solid highlight;border-bottom:1px solid highlight}.weekBackground_daf01a6e.bottomRightCornerDate_daf01a6e.topRightCornerDate_daf01a6e{border-right:1px solid highlight;border-left:none;padding-left:1px}.weekBackground_daf01a6e.bottomLeftCornerDate_daf01a6e.topLeftCornerDate_daf01a6e{border-left:1px solid highlight;border-right:none;padding-right:1px}.weekBackground_daf01a6e :not(.dayIsToday_daf01a6e) span{color:highlight}.weekSelection_daf01a6e.dayHover_daf01a6e{border-top:1px solid highlight;border-bottom:1px solid highlight}.weekSelection_daf01a6e.dayHover_daf01a6e.bottomLeftCornerDate_daf01a6e.topLeftCornerDate_daf01a6e{border-left:1px solid highlight;padding-right:1px}.weekSelection_daf01a6e.dayHover_daf01a6e.bottomRightCornerDate_daf01a6e.topRightCornerDate_daf01a6e{border-right:1px solid highlight;padding-left:1px}.weekSelection_daf01a6e.dayHover_daf01a6e.dayPress_daf01a6e :not(.dayIsToday_daf01a6e) span{color:highlight}.monthSelection_daf01a6e.dayHover_daf01a6e.bottomLeftCornerDate_daf01a6e,.monthSelection_daf01a6e.dayHover_daf01a6e.topLeftCornerDate_daf01a6e{border-left:1px solid highlight;padding-right:1px}.monthSelection_daf01a6e.dayHover_daf01a6e.bottomRightCornerDate_daf01a6e,.monthSelection_daf01a6e.dayHover_daf01a6e.topRightCornerDate_daf01a6e{border-right:1px solid highlight;padding-left:1px}.monthSelection_daf01a6e.dayIsFocused_daf01a6e.dayHover_daf01a6e.topDate_daf01a6e,.monthSelection_daf01a6e.dayIsUnfocused_daf01a6e.dayHover_daf01a6e.topDate_daf01a6e{border-top:1px solid highlight;padding-bottom:1px}.monthSelection_daf01a6e.dayIsFocused_daf01a6e.dayHover_daf01a6e.rightDate_daf01a6e,.monthSelection_daf01a6e.dayIsUnfocused_daf01a6e.dayHover_daf01a6e.rightDate_daf01a6e{border-right:1px solid highlight;padding-left:1px}.monthSelection_daf01a6e.dayIsFocused_daf01a6e.dayHover_daf01a6e.bottomDate_daf01a6e,.monthSelection_daf01a6e.dayIsUnfocused_daf01a6e.dayHover_daf01a6e.bottomDate_daf01a6e{border-bottom:1px solid highlight;padding-top:1px}.monthSelection_daf01a6e.dayIsFocused_daf01a6e.dayHover_daf01a6e.leftdate_daf01a6e,.monthSelection_daf01a6e.dayIsUnfocused_daf01a6e.dayHover_daf01a6e.leftdate_daf01a6e{border-left:1px solid highlight;padding-right:1px}.monthSelection_daf01a6e.dayIsFocused_daf01a6e.dayHover_daf01a6e.dayPress_daf01a6e :not(.dayIsToday_daf01a6e) span,.monthSelection_daf01a6e.dayIsUnfocused_daf01a6e.dayHover_daf01a6e.dayPress_daf01a6e :not(.dayIsToday_daf01a6e) span{color:highlight}}" }]);
+var root = "root_daf01a6e";
+var picker = "picker_daf01a6e";
+var holder = "holder_daf01a6e";
+var pickerIsOpened = "pickerIsOpened_daf01a6e";
+var frame = "frame_daf01a6e";
+var wrap = "wrap_daf01a6e";
+var goTodaySpacing = "goTodaySpacing_daf01a6e";
+var dayPicker = "dayPicker_daf01a6e";
+var header = "header_daf01a6e";
+var divider = "divider_daf01a6e";
+var monthAndYear = "monthAndYear_daf01a6e";
+var year = "year_daf01a6e";
+var decade = "decade_daf01a6e";
+var currentYear = "currentYear_daf01a6e";
+var currentDecade = "currentDecade_daf01a6e";
+var table = "table_daf01a6e";
+var dayWrapper = "dayWrapper_daf01a6e";
+var weekday = "weekday_daf01a6e";
+var day = "day_daf01a6e";
+var daySelection = "daySelection_daf01a6e";
+var dayIsToday = "dayIsToday_daf01a6e";
+var dayIsDisabled = "dayIsDisabled_daf01a6e";
+var dayIsUnfocused = "dayIsUnfocused_daf01a6e";
+var dayIsFocused = "dayIsFocused_daf01a6e";
+var dayIsHighlighted = "dayIsHighlighted_daf01a6e";
+var pickerIsFocused = "pickerIsFocused_daf01a6e";
+var dayDisabled = "dayDisabled_daf01a6e";
+var dayBackground = "dayBackground_daf01a6e";
+var dayHover = "dayHover_daf01a6e";
+var dayPress = "dayPress_daf01a6e";
+var weekBackground = "weekBackground_daf01a6e";
+var showWeekNumbers = "showWeekNumbers_daf01a6e";
+var weekNumbers = "weekNumbers_daf01a6e";
+var weekIsHighlighted = "weekIsHighlighted_daf01a6e";
+var showWeekNumbersRTL = "showWeekNumbersRTL_daf01a6e";
+var monthComponents = "monthComponents_daf01a6e";
+var yearComponents = "yearComponents_daf01a6e";
+var decadeComponents = "decadeComponents_daf01a6e";
+var closeButton = "closeButton_daf01a6e";
+var prevMonth = "prevMonth_daf01a6e";
+var nextMonth = "nextMonth_daf01a6e";
+var prevYear = "prevYear_daf01a6e";
+var nextYear = "nextYear_daf01a6e";
+var prevDecade = "prevDecade_daf01a6e";
+var nextDecade = "nextDecade_daf01a6e";
+var prevMonthIsDisabled = "prevMonthIsDisabled_daf01a6e";
+var nextMonthIsDisabled = "nextMonthIsDisabled_daf01a6e";
+var prevYearIsDisabled = "prevYearIsDisabled_daf01a6e";
+var nextYearIsDisabled = "nextYearIsDisabled_daf01a6e";
+var prevDecadeIsDisabled = "prevDecadeIsDisabled_daf01a6e";
+var nextDecadeIsDisabled = "nextDecadeIsDisabled_daf01a6e";
+var headerToggleView = "headerToggleView_daf01a6e";
+var optionGrid = "optionGrid_daf01a6e";
+var monthOption = "monthOption_daf01a6e";
+var yearOption = "yearOption_daf01a6e";
+var isHighlighted = "isHighlighted_daf01a6e";
+var monthOptionIsDisabled = "monthOptionIsDisabled_daf01a6e";
+var yearOptionIsDisabled = "yearOptionIsDisabled_daf01a6e";
+var goToday = "goToday_daf01a6e";
+var goToTodayIsDisabled = "goToTodayIsDisabled_daf01a6e";
+var goTodayInlineMonth = "goTodayInlineMonth_daf01a6e";
+var isPickingYears = "isPickingYears_daf01a6e";
+var monthPicker = "monthPicker_daf01a6e";
+var yearPicker = "yearPicker_daf01a6e";
+var monthPickerVisible = "monthPickerVisible_daf01a6e";
+var toggleMonthView = "toggleMonthView_daf01a6e";
+var calendarsInline = "calendarsInline_daf01a6e";
+var monthPickerOnly = "monthPickerOnly_daf01a6e";
+var monthPickerAsOverlay = "monthPickerAsOverlay_daf01a6e";
+var holderWithButton = "holderWithButton_daf01a6e";
+var monthIsHighlighted = "monthIsHighlighted_daf01a6e";
+var monthIsCurrentMonth = "monthIsCurrentMonth_daf01a6e";
+var yearIsHighlighted = "yearIsHighlighted_daf01a6e";
+var yearIsCurrentYear = "yearIsCurrentYear_daf01a6e";
+var topLeftCornerDate = "topLeftCornerDate_daf01a6e";
+var topRightCornerDate = "topRightCornerDate_daf01a6e";
+var bottomLeftCornerDate = "bottomLeftCornerDate_daf01a6e";
+var bottomRightCornerDate = "bottomRightCornerDate_daf01a6e";
+var weekSelection = "weekSelection_daf01a6e";
+var monthSelection = "monthSelection_daf01a6e";
+var topDate = "topDate_daf01a6e";
+var rightDate = "rightDate_daf01a6e";
+var bottomDate = "bottomDate_daf01a6e";
+var leftdate = "leftdate_daf01a6e";
 
 
 /***/ }),
@@ -14010,8 +13983,10 @@ var Check = Object(_Utilities__WEBPACK_IMPORTED_MODULE_0__["styled"])(_Check_bas
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CheckGlobalClassNames", function() { return CheckGlobalClassNames; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
+
 
 
 var CheckGlobalClassNames = {
@@ -14026,8 +14001,8 @@ var getStyles = function (props) {
     // eslint-disable-next-line deprecation/deprecation
     var _f = props.height, height = _f === void 0 ? props.checkBoxHeight || '18px' : _f, checked = props.checked, className = props.className, theme = props.theme;
     var palette = theme.palette, semanticColors = theme.semanticColors, fonts = theme.fonts;
-    var isRTL = Object(_Utilities__WEBPACK_IMPORTED_MODULE_1__["getRTL"])(theme);
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(CheckGlobalClassNames, theme);
+    var isRTL = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["getRTL"])(theme);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(CheckGlobalClassNames, theme);
     var sharedCircleCheck = {
         fontSize: height,
         position: 'absolute',
@@ -14076,7 +14051,7 @@ var getStyles = function (props) {
                             background: palette.themePrimary,
                             opacity: 1,
                             selectors: (_b = {},
-                                _b[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                                _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                                     background: 'Window',
                                 },
                                 _b),
@@ -14092,7 +14067,7 @@ var getStyles = function (props) {
             {
                 color: palette.neutralSecondary,
                 selectors: (_c = {},
-                    _c[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                    _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                         color: 'WindowText',
                     },
                     _c),
@@ -14107,16 +14082,14 @@ var getStyles = function (props) {
             {
                 opacity: 0,
                 color: palette.neutralSecondary,
-                fontSize: _Styling__WEBPACK_IMPORTED_MODULE_0__["IconFontSizes"].medium,
+                fontSize: _Styling__WEBPACK_IMPORTED_MODULE_1__["IconFontSizes"].medium,
                 left: isRTL ? '-0.5px' : '.5px',
                 selectors: (_d = {
                         ':hover': {
                             opacity: 1,
                         }
                     },
-                    _d[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                        MsHighContrastAdjust: 'none',
-                    },
+                    _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                     _d),
             },
             checked && {
@@ -14124,7 +14097,7 @@ var getStyles = function (props) {
                 color: palette.white,
                 fontWeight: 900,
                 selectors: (_e = {},
-                    _e[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                    _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                         border: 'none',
                         color: 'WindowText',
                     },
@@ -14488,7 +14461,7 @@ var getStyles = function (props) {
                     outlineOffset: '2px'
                 },
                 _m[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    outline: '1px solid ActiveBorder',
+                    outline: '1px solid WindowText',
                 },
                 _m),
             _l),
@@ -14520,11 +14493,26 @@ var getStyles = function (props) {
         ],
         checkbox: [
             classNames.checkbox,
-            Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_o = { position: 'relative', display: 'flex', flexShrink: 0, alignItems: 'center', justifyContent: 'center', height: MS_CHECKBOX_LABEL_SIZE, width: MS_CHECKBOX_LABEL_SIZE, border: "1px solid " + checkboxBorderColor, borderRadius: effects.roundedCorner2, boxSizing: 'border-box', transitionProperty: 'background, border, border-color', transitionDuration: MS_CHECKBOX_TRANSITION_DURATION, transitionTimingFunction: MS_CHECKBOX_TRANSITION_TIMING, 
+            (_o = {
+                    position: 'relative',
+                    display: 'flex',
+                    flexShrink: 0,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: MS_CHECKBOX_LABEL_SIZE,
+                    width: MS_CHECKBOX_LABEL_SIZE,
+                    border: "1px solid " + checkboxBorderColor,
+                    borderRadius: effects.roundedCorner2,
+                    boxSizing: 'border-box',
+                    transitionProperty: 'background, border, border-color',
+                    transitionDuration: MS_CHECKBOX_TRANSITION_DURATION,
+                    transitionTimingFunction: MS_CHECKBOX_TRANSITION_TIMING,
                     /* in case the icon is bigger than the box */
-                    overflow: 'hidden', ':after': indeterminate ? indeterminateDotStyles : null }, _o[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                borderColor: 'WindowText',
-            }, _o), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                    overflow: 'hidden',
+                    ':after': indeterminate ? indeterminateDotStyles : null
+                },
+                _o[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderColor: 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                _o),
             indeterminate && {
                 borderColor: checkboxBorderIndeterminateColor,
             },
@@ -14573,17 +14561,18 @@ var getStyles = function (props) {
                     opacity: checked ? '1' : '0',
                     color: checkmarkFontColor
                 },
-                _s[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: disabled ? 'GrayText' : 'Window',
-                    MsHighContrastAdjust: 'none',
-                },
+                _s[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: disabled ? 'GrayText' : 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _s),
         ],
         text: [
             classNames.text,
-            Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_t = { color: disabled ? checkboxTextColorDisabled : checkboxTextColor, fontSize: fonts.medium.fontSize, lineHeight: '20px' }, _t[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                color: disabled ? 'GrayText' : 'WindowText',
-            }, _t), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+            (_t = {
+                    color: disabled ? checkboxTextColorDisabled : checkboxTextColor,
+                    fontSize: fonts.medium.fontSize,
+                    lineHeight: '20px'
+                },
+                _t[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: disabled ? 'GrayText' : 'WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                _t),
             !reversed
                 ? {
                     marginLeft: 4,
@@ -14723,6 +14712,7 @@ var ChoiceGroupBase = /** @class */ (function (_super) {
         var elementToFocus = optionToFocus && document.getElementById(this._getOptionId(optionToFocus));
         if (elementToFocus) {
             elementToFocus.focus();
+            Object(_Utilities__WEBPACK_IMPORTED_MODULE_3__["setFocusVisibility"])(true, elementToFocus);
         }
     };
     ChoiceGroupBase.prototype._onFocus = function (key) {
@@ -15145,17 +15135,19 @@ var getStyles = function (props) {
         },
         disabled && {
             borderColor: circleDisabledBorderColor,
-            selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_a = {}, _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                borderColor: 'GrayText',
-                background: 'Window',
-            }, _a), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+            selectors: (_a = {},
+                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderColor: 'GrayText', background: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                _a),
         },
         checked && {
             borderColor: disabled ? circleDisabledBorderColor : circleCheckedBorderColor,
-            selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_b = {}, _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                borderColor: 'Highlight',
-                background: 'Window',
-            }, _b), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+            selectors: (_b = {},
+                _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                    borderColor: 'Highlight',
+                    background: 'Window',
+                    forcedColorAdjust: 'none',
+                },
+                _b),
         },
         (hasIcon || hasImage) && {
             top: radioButtonSpacing,
@@ -15186,9 +15178,12 @@ var getStyles = function (props) {
             top: 5,
             width: 10,
             height: 10,
-            selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_c = {}, _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                borderColor: 'Highlight',
-            }, _c), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+            selectors: (_c = {},
+                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                    borderColor: 'Highlight',
+                    forcedColorAdjust: 'none',
+                },
+                _c),
         },
         checked &&
             (hasIcon || hasImage) && {
@@ -15305,9 +15300,9 @@ var getStyles = function (props) {
                 selectors: {
                     '.ms-ChoiceFieldLabel': {
                         color: semanticColors.disabledBodyText,
-                        selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_d = {}, _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                            color: 'GrayText',
-                        }, _d), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                        selectors: (_d = {},
+                            _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                            _d),
                     },
                 },
             },
@@ -17326,9 +17321,11 @@ var ColorRectangle = Object(_Utilities__WEBPACK_IMPORTED_MODULE_0__["styled"])(_
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
-/* harmony import */ var _uifabric_styling__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../styling/lib/index.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
+/* harmony import */ var _uifabric_styling__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../styling/lib/index.js");
+
 
 
 
@@ -17348,10 +17345,8 @@ var getStyles = function (props) {
                 minHeight: minSize,
                 outline: 'none',
                 selectors: (_a = {},
-                    _a[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                        MsHighContrastAdjust: 'none',
-                    },
-                    _a["." + _Utilities__WEBPACK_IMPORTED_MODULE_1__["IsFocusVisibleClassName"] + " &:focus"] = {
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                    _a["." + _Utilities__WEBPACK_IMPORTED_MODULE_2__["IsFocusVisibleClassName"] + " &:focus"] = {
                         outline: "1px solid " + palette.neutralSecondary,
                     },
                     _a),
@@ -17408,7 +17403,7 @@ var getStyles = function (props) {
                 },
             },
         ],
-        description: _uifabric_styling__WEBPACK_IMPORTED_MODULE_2__["hiddenContentStyle"],
+        description: _uifabric_styling__WEBPACK_IMPORTED_MODULE_3__["hiddenContentStyle"],
     };
 };
 
@@ -19491,21 +19486,12 @@ var getDisabledStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeF
 });
 var listOptionHighContrastStyles = {
     selectors: (_a = {},
-        _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-            backgroundColor: 'Highlight',
-            borderColor: 'Highlight',
-            color: 'HighlightText',
-            MsHighContrastAdjust: 'none',
-        },
+        _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: 'Highlight', borderColor: 'Highlight', color: 'HighlightText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
         _a),
 };
 var inputHighContrastStyles = {
     selectors: (_b = {},
-        _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-            color: 'WindowText',
-            backgroundColor: 'Window',
-            MsHighContrastAdjust: 'none',
-        },
+        _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'WindowText', backgroundColor: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
         _b),
 };
 var getOptionStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"])(function (theme, customStylesForAllOptions, customOptionStylesForCurrentOption, isPending, isHidden) {
@@ -19614,12 +19600,7 @@ var getCaretDownButtonStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["m
     };
     var buttonHighContrastStyles = {
         selectors: (_a = {},
-            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                backgroundColor: 'Highlight',
-                borderColor: 'Highlight',
-                color: 'HighlightText',
-                MsHighContrastAdjust: 'none',
-            },
+            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: 'Highlight', borderColor: 'Highlight', color: 'HighlightText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
             _a),
     };
     var styles = {
@@ -19634,12 +19615,7 @@ var getCaretDownButtonStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["m
             textAlign: 'center',
             cursor: 'default',
             selectors: (_b = {},
-                _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    backgroundColor: 'ButtonFace',
-                    borderColor: 'ButtonText',
-                    color: 'ButtonText',
-                    MsHighContrastAdjust: 'none',
-                },
+                _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: 'ButtonFace', borderColor: 'ButtonText', color: 'ButtonText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _b),
         },
         icon: {
@@ -19725,16 +19701,11 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
         },
         placeholderHighContrastStyles,
     ];
-    var ComboBoxRootHighContrastFocused = {
-        color: 'HighlightText',
-        backgroundColor: 'Window',
-        MsHighContrastAdjust: 'none',
-        selectors: {
+    var ComboBoxRootHighContrastFocused = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'HighlightText', backgroundColor: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { selectors: {
             ':after': {
                 borderColor: 'Highlight',
             },
-        },
-    };
+        } });
     var focusBorderStyles = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getInputFocusStyle"])(root.borderPressedColor, effects.roundedCorner2, 'border', 0);
     var styles = {
         container: {},
@@ -19799,16 +19770,11 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
                         inputHighContrastStyles,
                     ]
                 },
-                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: 'HighlightText',
-                    backgroundColor: 'Window',
-                    MsHighContrastAdjust: 'none',
-                    selectors: {
+                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'HighlightText', backgroundColor: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { selectors: {
                         ':after': {
                             borderColor: 'Highlight',
                         },
-                    },
-                },
+                    } }),
                 _c),
         },
         rootPressed: [
@@ -19898,9 +19864,9 @@ var getStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"
                 padding: '0 8px',
                 userSelect: 'none',
                 textAlign: 'left',
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_f = {}, _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: 'GrayText',
-                }, _f), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_f = {},
+                    _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                    _f),
             },
         ],
         divider: {
@@ -20336,7 +20302,7 @@ function canAnyMenuItemsCheck(items) {
         return false;
     });
 }
-var NavigationIdleDelay = 250 /* ms */;
+var NavigationIdleDelay = 250; /* ms */
 var COMPONENT_NAME = 'ContextualMenu';
 var _getMenuItemStylesFunction = Object(_Utilities__WEBPACK_IMPORTED_MODULE_5__["memoizeFunction"])(function () {
     var styles = [];
@@ -20842,7 +20808,7 @@ var ContextualMenuBase = /** @class */ (function (_super) {
         var targetAsHtmlElement = this._target;
         if ((useTargetWidth || useTargetAsMinWidth) && targetAsHtmlElement && targetAsHtmlElement.offsetWidth) {
             var targetBoundingRect = targetAsHtmlElement.getBoundingClientRect();
-            var targetWidth = targetBoundingRect.width - 2 /* Accounts for 1px border */;
+            var targetWidth = targetBoundingRect.width - 2; /* Accounts for 1px border */
             if (useTargetWidth) {
                 contextMenuStyle = {
                     width: targetWidth,
@@ -20980,7 +20946,7 @@ var ContextualMenuBase = /** @class */ (function (_super) {
         if (sectionProps.items && sectionProps.items.length > 0) {
             return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("li", { role: "presentation", key: sectionProps.key || sectionItem.key || "section-" + index },
                 react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, groupProps),
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("ul", { className: this._classNames.list },
+                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("ul", { className: this._classNames.list, role: "menu" },
                         sectionProps.topDivider && this._renderSeparator(index, menuClassNames, true, true),
                         headerItem &&
                             this._renderListItem(headerItem, sectionItem.key || index, menuClassNames, sectionItem.title),
@@ -21417,12 +21383,7 @@ var getItemHighContrastStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["
     var _a;
     return {
         selectors: (_a = {},
-            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                backgroundColor: 'Highlight',
-                borderColor: 'Highlight',
-                color: 'HighlightText',
-                MsHighContrastAdjust: 'none',
-            },
+            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: 'Highlight', borderColor: 'Highlight', color: 'HighlightText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
             _a),
     };
 });
@@ -21468,10 +21429,9 @@ var getMenuItemStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeF
             color: semanticColors.disabledBodyText,
             cursor: 'default',
             pointerEvents: 'none',
-            selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_a = {}, _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                color: 'GrayText',
-                opacity: 1,
-            }, _a), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+            selectors: (_a = {},
+                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText', opacity: 1 }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                _a),
         },
         rootHovered: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: ContextualMenuItemBackgroundHoverColor, color: ContextualMenuItemTextHoverColor, selectors: {
                 '.ms-ContextualMenu-icon': {
@@ -23269,7 +23229,7 @@ var getStyles = function (props) {
         iconForegroundColor: semanticColors.bodySubtext,
         headerForegroundColor: semanticColors.bodyText,
         headerBackgroundColor: semanticColors.bodyBackground,
-        dropdownChevronForegroundColor: palette.neutralTertiary,
+        dropdownChevronForegroundColor: palette.neutralSecondary,
         resizerColor: palette.neutralTertiaryAlt,
     };
     var nearIconStyle = {
@@ -24073,10 +24033,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HEADER_HEIGHT", function() { return HEADER_HEIGHT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCellStyles", function() { return getCellStyles; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
-/* harmony import */ var _DetailsRow_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/components/DetailsList/DetailsRow.styles.js");
-/* harmony import */ var _GroupedList_GroupSpacer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../office-ui-fabric-react/lib/components/GroupedList/GroupSpacer.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
+/* harmony import */ var _DetailsRow_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../office-ui-fabric-react/lib/components/DetailsList/DetailsRow.styles.js");
+/* harmony import */ var _GroupedList_GroupSpacer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../office-ui-fabric-react/lib/components/GroupedList/GroupSpacer.js");
+
 
 
 
@@ -24106,12 +24068,12 @@ var GlobalClassNames = {
 };
 var HEADER_HEIGHT = 42;
 var getCellStyles = function (props) {
-    var theme = props.theme, _a = props.cellStyleProps, cellStyleProps = _a === void 0 ? _DetailsRow_styles__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_CELL_STYLE_PROPS"] : _a;
+    var theme = props.theme, _a = props.cellStyleProps, cellStyleProps = _a === void 0 ? _DetailsRow_styles__WEBPACK_IMPORTED_MODULE_3__["DEFAULT_CELL_STYLE_PROPS"] : _a;
     var semanticColors = theme.semanticColors;
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(GlobalClassNames, theme);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(GlobalClassNames, theme);
     return [
         classNames.cell,
-        Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getFocusStyle"])(theme),
+        Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getFocusStyle"])(theme),
         {
             color: semanticColors.bodyText,
             position: 'relative',
@@ -24130,14 +24092,13 @@ var getCellStyles = function (props) {
 };
 var getStyles = function (props) {
     var _a, _b, _c, _d;
-    var theme = props.theme, className = props.className, isAllSelected = props.isAllSelected, isResizingColumn = props.isResizingColumn, isSizing = props.isSizing, isAllCollapsed = props.isAllCollapsed, _e = props.cellStyleProps, cellStyleProps = _e === void 0 ? _DetailsRow_styles__WEBPACK_IMPORTED_MODULE_2__["DEFAULT_CELL_STYLE_PROPS"] : _e;
+    var theme = props.theme, className = props.className, isAllSelected = props.isAllSelected, isResizingColumn = props.isResizingColumn, isSizing = props.isSizing, isAllCollapsed = props.isAllCollapsed, _e = props.cellStyleProps, cellStyleProps = _e === void 0 ? _DetailsRow_styles__WEBPACK_IMPORTED_MODULE_3__["DEFAULT_CELL_STYLE_PROPS"] : _e;
     var semanticColors = theme.semanticColors, palette = theme.palette, fonts = theme.fonts;
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(GlobalClassNames, theme);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(GlobalClassNames, theme);
     var colors = {
         iconForegroundColor: semanticColors.bodySubtext,
         headerForegroundColor: semanticColors.bodyText,
         headerBackgroundColor: semanticColors.bodyBackground,
-        dropdownChevronForegroundColor: palette.neutralTertiary,
         resizerColor: palette.neutralTertiaryAlt,
     };
     var cellSizerFadeInStyles = {
@@ -24184,7 +24145,7 @@ var getStyles = function (props) {
             },
             {
                 selectors: (_b = {},
-                    _b["." + _Utilities__WEBPACK_IMPORTED_MODULE_1__["IsFocusVisibleClassName"] + " &:focus"] = {
+                    _b["." + _Utilities__WEBPACK_IMPORTED_MODULE_2__["IsFocusVisibleClassName"] + " &:focus"] = {
                         opacity: 1,
                     },
                     _b),
@@ -24217,7 +24178,7 @@ var getStyles = function (props) {
                 fontSize: fonts.small.fontSize,
                 padding: 0,
                 border: 'none',
-                width: _GroupedList_GroupSpacer__WEBPACK_IMPORTED_MODULE_3__["SPACER_WIDTH"],
+                width: _GroupedList_GroupSpacer__WEBPACK_IMPORTED_MODULE_4__["SPACER_WIDTH"],
                 color: palette.neutralSecondary,
                 selectors: {
                     ':hover': {
@@ -24245,7 +24206,7 @@ var getStyles = function (props) {
         },
         cellSizer: [
             classNames.cellSizer,
-            Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["focusClear"])(),
+            Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["focusClear"])(),
             {
                 display: 'inline-block',
                 position: 'relative',
@@ -24302,7 +24263,7 @@ var getStyles = function (props) {
                     },
                 ]
                 : {
-                    transform: Object(_Utilities__WEBPACK_IMPORTED_MODULE_1__["getRTL"])(theme) ? 'rotate(-90deg)' : 'rotate(90deg)',
+                    transform: Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["getRTL"])(theme) ? 'rotate(-90deg)' : 'rotate(90deg)',
                 },
         ],
         checkTooltip: classNames.checkTooltip,
@@ -24315,13 +24276,10 @@ var getStyles = function (props) {
             cursor: 'ew-resize',
             background: 'rgba(255, 255, 255, 0)',
             selectors: (_d = {},
-                _d[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                    background: 'transparent',
-                    MsHighContrastAdjust: 'none',
-                },
+                _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ background: 'transparent' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                 _d),
         },
-        accessibleLabel: _Styling__WEBPACK_IMPORTED_MODULE_0__["hiddenContentStyle"],
+        accessibleLabel: _Styling__WEBPACK_IMPORTED_MODULE_1__["hiddenContentStyle"],
         dropHintCircleStyle: [
             classNames.dropHintCircleStyle,
             {
@@ -25906,16 +25864,11 @@ var getDetailsRowStyles = function (props) {
                             _d),
                     }
                 },
-                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    background: 'Highlight',
-                    color: 'HighlightText',
-                    MsHighContrastAdjust: 'none',
-                    selectors: {
+                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ background: 'Highlight', color: 'HighlightText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { selectors: {
                         a: {
                             color: 'HighlightText',
                         },
-                    },
-                },
+                    } }),
                 // Focus and hover state
                 _a['&:focus:hover'] = {
                     background: colors.focusHoverBackground,
@@ -25965,16 +25918,11 @@ var getDetailsRowStyles = function (props) {
         },
         isSelected && {
             selectors: (_h = {},
-                _h[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    background: 'Highlight',
-                    color: 'HighlightText',
-                    MsHighContrastAdjust: 'none',
-                    selectors: {
+                _h[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ background: 'Highlight', color: 'HighlightText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { selectors: {
                         a: {
                             color: 'HighlightText',
                         },
-                    },
-                },
+                    } }),
                 _h),
         },
         compact && cellCompactStyles,
@@ -29862,9 +29810,7 @@ var GlobalClassNames = {
 var DROPDOWN_HEIGHT = 32;
 var DROPDOWN_ITEM_HEIGHT = 36;
 var highContrastAdjustMixin = (_a = {},
-    _a[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"] + ", " + _Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelectorWhite"].replace('@media ', '')] = {
-        MsHighContrastAdjust: 'none',
-    },
+    _a[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"] + ", " + _Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelectorWhite"].replace('@media ', '')] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["getHighContrastNoAdjustStyle"])()),
     _a);
 var highContrastItemAndTitleStateMixin = {
     selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_b = {}, _b[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"]] = {
@@ -30098,11 +30044,9 @@ var getStyles = function (props) {
                 border: 'none',
                 color: semanticColors.disabledText,
                 cursor: 'default',
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_g = {}, _g[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"]] = {
-                    border: '1px solid GrayText',
-                    color: 'GrayText',
-                    backgroundColor: 'Window',
-                }, _g), Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_g = {},
+                    _g[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ border: '1px solid GrayText', color: 'GrayText', backgroundColor: 'Window' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["getHighContrastNoAdjustStyle"])()),
+                    _g),
             },
         ],
         caretDownWrapper: [
@@ -30123,7 +30067,9 @@ var getStyles = function (props) {
             { color: palette.neutralSecondary, fontSize: fonts.small.fontSize, pointerEvents: 'none' },
             disabled && {
                 color: semanticColors.disabledText,
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_h = {}, _h[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"]] = { color: 'GrayText' }, _h), Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_h = {},
+                    _h[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["getHighContrastNoAdjustStyle"])()),
+                    _h),
             },
         ],
         errorMessage: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: semanticColors.errorText }, theme.fonts.small), { paddingTop: 5 }),
@@ -30161,9 +30107,9 @@ var getStyles = function (props) {
         ],
         dropdownItemHeader: [
             globalClassnames.dropdownItemHeader,
-            Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, fonts.medium), { fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_3__["FontWeights"].semibold, color: semanticColors.menuHeader, background: 'none', backgroundColor: 'transparent', border: 'none', height: DROPDOWN_ITEM_HEIGHT, lineHeight: DROPDOWN_ITEM_HEIGHT, cursor: 'default', padding: '0 8px', userSelect: 'none', textAlign: 'left', selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_k = {}, _k[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"]] = {
-                    color: 'GrayText',
-                }, _k), Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["getEdgeChromiumNoHighContrastAdjustSelector"])()) }),
+            Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, fonts.medium), { fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_3__["FontWeights"].semibold, color: semanticColors.menuHeader, background: 'none', backgroundColor: 'transparent', border: 'none', height: DROPDOWN_ITEM_HEIGHT, lineHeight: DROPDOWN_ITEM_HEIGHT, cursor: 'default', padding: '0 8px', userSelect: 'none', textAlign: 'left', selectors: (_k = {},
+                    _k[_Styling__WEBPACK_IMPORTED_MODULE_3__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["getHighContrastNoAdjustStyle"])()),
+                    _k) }),
         ],
         subComponentStyles: {
             label: { root: { display: 'inline-block' } },
@@ -30592,9 +30538,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".pickerText_8207e7dc{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid " }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": ";min-width:180px;padding:1px;min-height:32px}.pickerText_8207e7dc:hover{border-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.pickerInput_8207e7dc{height:34px;border:none;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;outline:0;padding:0 6px 0;margin:1px}.pickerInput_8207e7dc::-ms-clear{display:none}" }]);
-var pickerText = "pickerText_8207e7dc";
-var pickerInput = "pickerInput_8207e7dc";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".pickerText_7e3a9a8e{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid " }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": ";min-width:180px;padding:1px;min-height:32px}.pickerText_7e3a9a8e:hover{border-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.pickerInput_7e3a9a8e{height:34px;border:none;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;outline:0;padding:0 6px 0;margin:1px}.pickerInput_7e3a9a8e::-ms-clear{display:none}" }]);
+var pickerText = "pickerText_7e3a9a8e";
+var pickerInput = "pickerInput_7e3a9a8e";
 
 
 /***/ }),
@@ -30651,12 +30597,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".resultContent_274bd981{display:table-row}.resultContent_274bd981 .resultItem_274bd981{display:table-cell;vertical-align:bottom}.peoplePickerPersona_274bd981{width:180px}.peoplePickerPersona_274bd981 .ms-Persona-details{width:100%}.peoplePicker_274bd981 .ms-BasePicker-text{min-height:40px}.peoplePickerPersonaContent_274bd981{display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center}" }]);
-var resultContent = "resultContent_274bd981";
-var resultItem = "resultItem_274bd981";
-var peoplePickerPersona = "peoplePickerPersona_274bd981";
-var peoplePicker = "peoplePicker_274bd981";
-var peoplePickerPersonaContent = "peoplePickerPersonaContent_274bd981";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".resultContent_c2e1475d{display:table-row}.resultContent_c2e1475d .resultItem_c2e1475d{display:table-cell;vertical-align:bottom}.peoplePickerPersona_c2e1475d{width:180px}.peoplePickerPersona_c2e1475d .ms-Persona-details{width:100%}.peoplePicker_c2e1475d .ms-BasePicker-text{min-height:40px}.peoplePickerPersonaContent_c2e1475d{display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center}" }]);
+var resultContent = "resultContent_c2e1475d";
+var resultItem = "resultItem_c2e1475d";
+var peoplePickerPersona = "peoplePickerPersona_c2e1475d";
+var peoplePicker = "peoplePicker_c2e1475d";
+var peoplePickerPersonaContent = "peoplePickerPersonaContent_c2e1475d";
 
 
 /***/ }),
@@ -31615,8 +31561,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".callout_1835d737 .ms-Suggestions-itemButton{padding:0;border:none}.callout_1835d737 .ms-Suggestions{min-width:300px}" }]);
-var callout = "callout_1835d737";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".callout_23df380a .ms-Suggestions-itemButton{padding:0;border:none}.callout_23df380a .ms-Suggestions{min-width:300px}" }]);
+var callout = "callout_23df380a";
 
 
 /***/ }),
@@ -31693,12 +31639,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".resultContent_76ba980e{display:table-row}.resultContent_76ba980e .resultItem_76ba980e{display:table-cell;vertical-align:bottom}.peoplePickerPersona_76ba980e{width:180px}.peoplePickerPersona_76ba980e .ms-Persona-details{width:100%}.peoplePicker_76ba980e .ms-BasePicker-text{min-height:40px}.peoplePickerPersonaContent_76ba980e{display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;padding:7px 12px}" }]);
-var resultContent = "resultContent_76ba980e";
-var resultItem = "resultItem_76ba980e";
-var peoplePickerPersona = "peoplePickerPersona_76ba980e";
-var peoplePicker = "peoplePicker_76ba980e";
-var peoplePickerPersonaContent = "peoplePickerPersonaContent_76ba980e";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".resultContent_05bff9b3{display:table-row}.resultContent_05bff9b3 .resultItem_05bff9b3{display:table-cell;vertical-align:bottom}.peoplePickerPersona_05bff9b3{width:180px}.peoplePickerPersona_05bff9b3 .ms-Persona-details{width:100%}.peoplePicker_05bff9b3 .ms-BasePicker-text{min-height:40px}.peoplePickerPersonaContent_05bff9b3{display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;-webkit-box-align:center;-ms-flex-align:center;align-items:center;padding:7px 12px}" }]);
+var resultContent = "resultContent_05bff9b3";
+var resultItem = "resultItem_05bff9b3";
+var peoplePickerPersona = "peoplePickerPersona_05bff9b3";
+var peoplePicker = "peoplePicker_05bff9b3";
+var peoplePickerPersonaContent = "peoplePickerPersonaContent_05bff9b3";
 
 
 /***/ }),
@@ -32154,14 +32100,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".root_3a726641{min-width:260px}.actionButton_3a726641{background:0 0;background-color:transparent;border:0;cursor:pointer;margin:0;padding:0;position:relative;width:100%;font-size:12px}html[dir=ltr] .actionButton_3a726641{text-align:left}html[dir=rtl] .actionButton_3a726641{text-align:right}.actionButton_3a726641:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";cursor:pointer}.actionButton_3a726641:active,.actionButton_3a726641:focus{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.actionButton_3a726641 .ms-Button-icon{font-size:16px;width:25px}.actionButton_3a726641 .ms-Button-label{margin:0 4px 0 9px}html[dir=rtl] .actionButton_3a726641 .ms-Button-label{margin:0 9px 0 4px}.buttonSelected_3a726641{background-color:" }, { "theme": "themeLighter", "defaultValue": "#deecf9" }, { "rawString": "}.buttonSelected_3a726641:hover{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": ";cursor:pointer}.suggestionsTitle_3a726641{font-size:12px}.suggestionsSpinner_3a726641{margin:5px 0;white-space:nowrap;line-height:20px;font-size:12px}html[dir=ltr] .suggestionsSpinner_3a726641{padding-left:14px}html[dir=rtl] .suggestionsSpinner_3a726641{padding-right:14px}html[dir=ltr] .suggestionsSpinner_3a726641{text-align:left}html[dir=rtl] .suggestionsSpinner_3a726641{text-align:right}.suggestionsSpinner_3a726641 .ms-Spinner-circle{display:inline-block;vertical-align:middle}.suggestionsSpinner_3a726641 .ms-Spinner-label{display:inline-block;margin:0 10px 0 16px;vertical-align:middle}html[dir=rtl] .suggestionsSpinner_3a726641 .ms-Spinner-label{margin:0 16px 0 10px}.itemButton_3a726641{height:100%;width:100%;padding:7px 12px}@media screen and (-ms-high-contrast:active){.itemButton_3a726641{color:WindowText}}.screenReaderOnly_3a726641{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}" }]);
-var root = "root_3a726641";
-var actionButton = "actionButton_3a726641";
-var buttonSelected = "buttonSelected_3a726641";
-var suggestionsTitle = "suggestionsTitle_3a726641";
-var suggestionsSpinner = "suggestionsSpinner_3a726641";
-var itemButton = "itemButton_3a726641";
-var screenReaderOnly = "screenReaderOnly_3a726641";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".root_dffe64b5{min-width:260px}.actionButton_dffe64b5{background:0 0;background-color:transparent;border:0;cursor:pointer;margin:0;padding:0;position:relative;width:100%;font-size:12px}html[dir=ltr] .actionButton_dffe64b5{text-align:left}html[dir=rtl] .actionButton_dffe64b5{text-align:right}.actionButton_dffe64b5:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";cursor:pointer}.actionButton_dffe64b5:active,.actionButton_dffe64b5:focus{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.actionButton_dffe64b5 .ms-Button-icon{font-size:16px;width:25px}.actionButton_dffe64b5 .ms-Button-label{margin:0 4px 0 9px}html[dir=rtl] .actionButton_dffe64b5 .ms-Button-label{margin:0 9px 0 4px}.buttonSelected_dffe64b5{background-color:" }, { "theme": "themeLighter", "defaultValue": "#deecf9" }, { "rawString": "}.buttonSelected_dffe64b5:hover{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": ";cursor:pointer}@media screen and (-ms-high-contrast:active){.buttonSelected_dffe64b5:hover{background-color:Highlight;color:HighlightText}}@media screen and (-ms-high-contrast:active){.buttonSelected_dffe64b5{background-color:Highlight;color:HighlightText;-ms-high-contrast-adjust:none}}.suggestionsTitle_dffe64b5{font-size:12px}.suggestionsSpinner_dffe64b5{margin:5px 0;white-space:nowrap;line-height:20px;font-size:12px}html[dir=ltr] .suggestionsSpinner_dffe64b5{padding-left:14px}html[dir=rtl] .suggestionsSpinner_dffe64b5{padding-right:14px}html[dir=ltr] .suggestionsSpinner_dffe64b5{text-align:left}html[dir=rtl] .suggestionsSpinner_dffe64b5{text-align:right}.suggestionsSpinner_dffe64b5 .ms-Spinner-circle{display:inline-block;vertical-align:middle}.suggestionsSpinner_dffe64b5 .ms-Spinner-label{display:inline-block;margin:0 10px 0 16px;vertical-align:middle}html[dir=rtl] .suggestionsSpinner_dffe64b5 .ms-Spinner-label{margin:0 16px 0 10px}.itemButton_dffe64b5{height:100%;width:100%;padding:7px 12px}@media screen and (-ms-high-contrast:active){.itemButton_dffe64b5{color:WindowText}}.screenReaderOnly_dffe64b5{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}" }]);
+var root = "root_dffe64b5";
+var actionButton = "actionButton_dffe64b5";
+var buttonSelected = "buttonSelected_dffe64b5";
+var suggestionsTitle = "suggestionsTitle_dffe64b5";
+var suggestionsSpinner = "suggestionsSpinner_dffe64b5";
+var itemButton = "itemButton_dffe64b5";
+var screenReaderOnly = "screenReaderOnly_dffe64b5";
 
 
 /***/ }),
@@ -32332,8 +32278,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".suggestionsContainer_c9ed0077{overflow-y:auto;overflow-x:hidden;max-height:300px}.suggestionsContainer_c9ed0077 .ms-Suggestion-item:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";cursor:pointer}.suggestionsContainer_c9ed0077 .is-suggested{background-color:" }, { "theme": "themeLighter", "defaultValue": "#deecf9" }, { "rawString": "}.suggestionsContainer_c9ed0077 .is-suggested:hover{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": ";cursor:pointer}" }]);
-var suggestionsContainer = "suggestionsContainer_c9ed0077";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".suggestionsContainer_b53ad707{overflow-y:auto;overflow-x:hidden;max-height:300px}.suggestionsContainer_b53ad707 .ms-Suggestion-item:hover{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": ";cursor:pointer}.suggestionsContainer_b53ad707 .is-suggested{background-color:" }, { "theme": "themeLighter", "defaultValue": "#deecf9" }, { "rawString": "}.suggestionsContainer_b53ad707 .is-suggested:hover{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": ";cursor:pointer}" }]);
+var suggestionsContainer = "suggestionsContainer_b53ad707";
 
 
 /***/ }),
@@ -35741,12 +35687,21 @@ __webpack_require__.r(__webpack_exports__);
  * Hook that creates attributes for components which are enabled with Keytip.
  */
 function useKeytipData(options) {
-    var _a, _b;
     var uniqueId = react__WEBPACK_IMPORTED_MODULE_1__["useRef"]();
     var keytipProps = options.keytipProps
         ? Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ disabled: options.disabled }, options.keytipProps) : undefined;
     var keytipManager = Object(_uifabric_react_hooks__WEBPACK_IMPORTED_MODULE_2__["useConst"])(_utilities_keytips_index__WEBPACK_IMPORTED_MODULE_4__["KeytipManager"].getInstance());
-    react__WEBPACK_IMPORTED_MODULE_1__["useEffect"](function () {
+    var prevOptions = Object(_uifabric_react_hooks__WEBPACK_IMPORTED_MODULE_2__["usePrevious"])(options);
+    // useLayoutEffect used to strictly emulate didUpdate/didMount behavior
+    react__WEBPACK_IMPORTED_MODULE_1__["useLayoutEffect"](function () {
+        var _a, _b;
+        if (uniqueId.current &&
+            keytipProps &&
+            (((_a = prevOptions) === null || _a === void 0 ? void 0 : _a.keytipProps) !== options.keytipProps || ((_b = prevOptions) === null || _b === void 0 ? void 0 : _b.disabled) !== options.disabled)) {
+            keytipManager.update(keytipProps, uniqueId.current);
+        }
+    });
+    react__WEBPACK_IMPORTED_MODULE_1__["useLayoutEffect"](function () {
         // Register Keytip in KeytipManager
         if (keytipProps) {
             uniqueId.current = keytipManager.register(keytipProps);
@@ -35758,12 +35713,6 @@ function useKeytipData(options) {
         // this is meant to run only at mount, and updates are handled separately
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    var prevOptions = Object(_uifabric_react_hooks__WEBPACK_IMPORTED_MODULE_2__["usePrevious"])(options);
-    if (uniqueId.current &&
-        keytipProps &&
-        (((_a = prevOptions) === null || _a === void 0 ? void 0 : _a.keytipProps) !== options.keytipProps || ((_b = prevOptions) === null || _b === void 0 ? void 0 : _b.disabled) !== options.disabled)) {
-        keytipManager.update(keytipProps, uniqueId.current);
-    }
     var nativeKeytipProps = {
         ariaDescribedBy: undefined,
         keytipId: undefined,
@@ -35978,6 +35927,28 @@ var KeytipLayerBase = /** @class */ (function (_super) {
                     }
                 }
             }
+            _this._persistedKeytipChecks(keytipProps);
+        };
+        _this._onKeytipUpdated = function (eventArgs) {
+            var _a;
+            var keytipProps = eventArgs.keytip;
+            var uniqueID = eventArgs.uniqueID;
+            _this._keytipTree.updateNode(keytipProps, uniqueID);
+            _this._setKeytips();
+            if (_this._keytipTree.isCurrentKeytipParent(keytipProps)) {
+                // Ensure existing children are still shown.
+                _this._delayedKeytipQueue = _this._delayedKeytipQueue.concat(((_a = _this._keytipTree.currentKeytip) === null || _a === void 0 ? void 0 : _a.children) || []);
+                _this._addKeytipToQueue(Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(keytipProps.keySequences));
+            }
+            _this._persistedKeytipChecks(keytipProps);
+        };
+        /**
+         * Helper function to do checks related to persisted/overflow keytips
+         * Done on keytip added and keytip updated
+         *
+         * @param keytipProps - Keytip props
+         */
+        _this._persistedKeytipChecks = function (keytipProps) {
             if (_this._newCurrentKeytipSequences && Object(_Utilities__WEBPACK_IMPORTED_MODULE_5__["arraysEqual"])(keytipProps.keySequences, _this._newCurrentKeytipSequences)) {
                 _this._triggerKeytipImmediately(keytipProps);
             }
@@ -35987,15 +35958,6 @@ var KeytipLayerBase = /** @class */ (function (_super) {
                     keytipSequence = Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["mergeOverflows"])(keytipSequence, keytipProps.overflowSetSequence);
                 }
                 _this._keytipTree.currentKeytip = _this._keytipTree.getNode(Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(keytipSequence));
-            }
-        };
-        _this._onKeytipUpdated = function (eventArgs) {
-            var keytipProps = eventArgs.keytip;
-            var uniqueID = eventArgs.uniqueID;
-            _this._keytipTree.updateNode(keytipProps, uniqueID);
-            _this._setKeytips();
-            if (_this._keytipTree.isCurrentKeytipParent(keytipProps)) {
-                _this._addKeytipToQueue(Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(keytipProps.keySequences));
             }
         };
         _this._onKeytipRemoved = function (eventArgs) {
@@ -36218,12 +36180,11 @@ var KeytipLayerBase = /** @class */ (function (_super) {
         for (var _i = 0, _a = this._keytipManager.getKeytips(); _i < _a.length; _i++) {
             var keytip = _a[_i];
             var keytipId = Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(keytip.keySequences);
-            if (ids.indexOf(keytipId) >= 0) {
-                keytip.visible = true;
-            }
-            else if (keytip.overflowSetSequence &&
-                ids.indexOf(Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["mergeOverflows"])(keytip.keySequences, keytip.overflowSetSequence))) >= 0) {
+            if (keytip.overflowSetSequence) {
                 // Check if the ID with the overflow is the keytip we're looking for
+                keytipId = Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["mergeOverflows"])(keytip.keySequences, keytip.overflowSetSequence));
+            }
+            if (ids.indexOf(keytipId) >= 0) {
                 keytip.visible = true;
             }
             else {
@@ -36310,6 +36271,10 @@ var KeytipLayerBase = /** @class */ (function (_super) {
         var seenIds = {};
         return keytips.filter(function (keytip) {
             var keytipId = Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(keytip.keySequences);
+            if (keytip.overflowSetSequence) {
+                // Account for overflow set sequences when checking for duplicates
+                keytipId = Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["sequencesToID"])(Object(_utilities_keytips_KeytipUtils__WEBPACK_IMPORTED_MODULE_8__["mergeOverflows"])(keytip.keySequences, keytip.overflowSetSequence));
+            }
             seenIds[keytipId] = seenIds[keytipId] ? seenIds[keytipId] + 1 : 1;
             return keytip.visible && seenIds[keytipId] === 1;
         });
@@ -36878,9 +36843,9 @@ var getStyles = function (props) {
             },
             disabled && {
                 color: labelDisabledColor,
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_a = {}, _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: 'GrayText',
-                }, _a), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_a = {},
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ color: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                    _a),
             },
             required && {
                 selectors: {
@@ -37328,11 +37293,12 @@ var LinkBase = /** @class */ (function (_super) {
         _this._link = react__WEBPACK_IMPORTED_MODULE_1__["createRef"]();
         _this._renderContent = function (keytipAttributes) {
             if (keytipAttributes === void 0) { keytipAttributes = {}; }
-            var _a = _this.props, disabled = _a.disabled, children = _a.children, className = _a.className, href = _a.href, theme = _a.theme, styles = _a.styles;
+            var _a = _this.props, disabled = _a.disabled, children = _a.children, className = _a.className, href = _a.href, underline = _a.underline, theme = _a.theme, styles = _a.styles;
             var classNames = getClassNames(styles, {
                 className: className,
                 isButton: !href,
                 isDisabled: disabled,
+                isUnderlined: underline,
                 theme: theme,
             });
             var RootType = _this._getRootType(_this.props);
@@ -37368,7 +37334,7 @@ var LinkBase = /** @class */ (function (_super) {
         // Deconstruct the props so we remove props like `as`, `theme` and `styles`
         // as those will always be removed. We also take some props that are optional
         // based on the RootType.
-        var children = props.children, as = props.as, disabled = props.disabled, target = props.target, href = props.href, theme = props.theme, getStyles = props.getStyles, styles = props.styles, componentRef = props.componentRef, keytipProps = props.keytipProps, restProps = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(props, ["children", "as", "disabled", "target", "href", "theme", "getStyles", "styles", "componentRef", "keytipProps"]);
+        var children = props.children, as = props.as, disabled = props.disabled, target = props.target, href = props.href, theme = props.theme, getStyles = props.getStyles, styles = props.styles, componentRef = props.componentRef, keytipProps = props.keytipProps, underline = props.underline, restProps = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__rest"])(props, ["children", "as", "disabled", "target", "href", "theme", "getStyles", "styles", "componentRef", "keytipProps", "underline"]);
         // RootType will be a string if we're dealing with an html component
         if (typeof RootType === 'string') {
             // Remove the disabled prop for anchor elements
@@ -37426,23 +37392,21 @@ var Link = Object(_Utilities__WEBPACK_IMPORTED_MODULE_0__["styled"])(_Link_base_
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
 
 var GlobalClassNames = {
     root: 'ms-Link',
 };
 var getStyles = function (props) {
     var _a, _b, _c, _d, _e, _f;
-    var className = props.className, isButton = props.isButton, isDisabled = props.isDisabled, theme = props.theme;
+    var className = props.className, isButton = props.isButton, isDisabled = props.isDisabled, isUnderlined = props.isUnderlined, theme = props.theme;
     var semanticColors = theme.semanticColors;
     // Tokens
     var linkColor = semanticColors.link;
     var linkInteractedColor = semanticColors.linkHovered;
     var linkDisabledColor = semanticColors.disabledText;
     var focusBorderColor = semanticColors.focusBorder;
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(GlobalClassNames, theme);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(GlobalClassNames, theme);
     return {
         root: [
             classNames.root,
@@ -37452,7 +37416,7 @@ var getStyles = function (props) {
                 outline: 'none',
                 fontSize: 'inherit',
                 fontWeight: 'inherit',
-                textDecoration: 'none',
+                textDecoration: isUnderlined ? 'underline' : 'none',
                 selectors: (_a = {
                         '.ms-Fabric--isFocusVisible &:focus': {
                             // Can't use getFocusStyle because it doesn't support wrapping links
@@ -37462,13 +37426,13 @@ var getStyles = function (props) {
                             boxShadow: "0 0 0 1px " + focusBorderColor + " inset",
                             outline: "1px auto " + focusBorderColor,
                             selectors: (_b = {},
-                                _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                                _b[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
                                     outline: '1px solid WindowText',
                                 },
                                 _b),
                         }
                     },
-                    _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
                         // For IE high contrast mode
                         borderBottom: 'none',
                     },
@@ -37487,15 +37451,19 @@ var getStyles = function (props) {
                 textOverflow: 'inherit',
                 userSelect: 'text',
                 borderBottom: '1px solid transparent',
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_c = {}, _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    color: 'LinkText',
-                }, _c), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_c = {},
+                    _c[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                        color: 'LinkText',
+                        forcedColorAdjust: 'none',
+                    },
+                    _c),
             },
             !isButton && {
                 selectors: (_d = {},
-                    _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                    _d[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
                         // This is mainly for MessageBar, which sets MsHighContrastAdjust: none by default
                         MsHighContrastAdjust: 'auto',
+                        forcedColorAdjust: 'auto',
                     },
                     _d),
             },
@@ -37519,7 +37487,7 @@ var getStyles = function (props) {
                         color: linkInteractedColor,
                         textDecoration: 'underline',
                         selectors: (_e = {},
-                            _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                            _e[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
                                 color: 'LinkText',
                             },
                             _e),
@@ -37527,7 +37495,7 @@ var getStyles = function (props) {
                     '&:focus': {
                         color: linkColor,
                         selectors: (_f = {},
-                            _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                            _f[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
                                 color: 'LinkText',
                             },
                             _f),
@@ -39157,10 +39125,7 @@ var getStyles = function (props) {
         lineHeight: '10px',
         color: semanticColors.messageText,
         selectors: (_a = {},
-            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                MsHighContrastAdjust: 'none',
-                color: 'WindowText',
-            },
+            _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { color: 'WindowText' }),
             _a),
     };
     var dismissalAndExpandStyle = [
@@ -39217,12 +39182,7 @@ var getStyles = function (props) {
                             },
                         }
                     },
-                    _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                        MsHighContrastAdjust: 'none',
-                        background: highContrastBackgroundColor[messageBarType],
-                        border: '1px solid WindowText',
-                        color: 'WindowText',
-                    },
+                    _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { background: highContrastBackgroundColor[messageBarType], border: '1px solid WindowText', color: 'WindowText' }),
                     _b),
             },
             isMultiline && {
@@ -39252,18 +39212,13 @@ var getStyles = function (props) {
         icon: {
             color: semanticColors[iconColor[messageBarType]],
             selectors: (_c = {},
-                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    MsHighContrastAdjust: 'none',
-                    color: 'WindowText',
-                },
+                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { color: 'WindowText' }),
                 _c),
         },
         text: [
             classNames.text,
             Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ minWidth: 0, display: 'flex', flexGrow: 1, margin: 8 }, fonts.small), { selectors: (_d = {},
-                    _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                        MsHighContrastAdjust: 'none',
-                    },
+                    _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                     _d) }),
             !onDismiss && {
                 marginRight: 12,
@@ -39433,13 +39388,16 @@ var ModalBase = /** @class */ (function (_super) {
         _this._focusTrapZone = react__WEBPACK_IMPORTED_MODULE_1__["createRef"]();
         _this._registerInitialModalPosition = function () {
             var _a;
-            if (((_a = _this.props.dragOptions) === null || _a === void 0 ? void 0 : _a.keepInBounds) && !_this._minClampedPosition && !_this._maxClampedPosition) {
-                var dialogMain = document.querySelector("[data-id=" + _this.state.id + "]");
-                if (dialogMain) {
-                    var modalRectangle = dialogMain.getBoundingClientRect();
+            var dialogMain = document.querySelector("[data-id=" + _this.state.id + "]");
+            if (dialogMain) {
+                var modalRectangle = dialogMain.getBoundingClientRect();
+                if (((_a = _this.props.dragOptions) === null || _a === void 0 ? void 0 : _a.keepInBounds) && !_this._minClampedPosition && !_this._maxClampedPosition) {
                     _this._minClampedPosition = { x: -modalRectangle.x, y: -modalRectangle.y };
                     _this._maxClampedPosition = { x: modalRectangle.x, y: modalRectangle.y };
                 }
+                _this.setState({
+                    modalRectangleTop: modalRectangle.top,
+                });
             }
         };
         // Allow the user to scroll within the modal but not on the body
@@ -39628,16 +39586,6 @@ var ModalBase = /** @class */ (function (_super) {
                     hasBeenOpened: true,
                     isVisible: true,
                 });
-                if (newProps.topOffsetFixed) {
-                    var dialogMain = document.getElementsByClassName('ms-Dialog-main');
-                    var modalRectangle = void 0;
-                    if (dialogMain.length > 0) {
-                        modalRectangle = dialogMain[0].getBoundingClientRect();
-                        this.setState({
-                            modalRectangleTop: modalRectangle.top,
-                        });
-                    }
-                }
             }
         }
         // Closing the dialog
@@ -39649,11 +39597,12 @@ var ModalBase = /** @class */ (function (_super) {
         }
     };
     ModalBase.prototype.componentDidMount = function () {
+        var _this = this;
         // Not all modals show just by updating their props. Some only render when they are mounted and pass in
         // isOpen as true. We need to add the keyUp handler in componentDidMount if we are in that case.
         if (this.state.isOpen && this.state.isVisible) {
             this._registerForKeyUp();
-            this._registerInitialModalPosition();
+            requestAnimationFrame(function () { return setTimeout(_this._registerInitialModalPosition, 0); });
         }
     };
     ModalBase.prototype.componentDidUpdate = function (prevProps, prevState) {
@@ -39837,6 +39786,7 @@ var getStyles = function (props) {
                 transition: "opacity " + animationDuration,
             },
             topOffsetFixed &&
+                typeof modalRectangleTop === 'number' &&
                 hasBeenOpened && {
                 alignItems: 'flex-start',
             },
@@ -39865,6 +39815,7 @@ var getStyles = function (props) {
                 zIndex: isModeless ? _Styling__WEBPACK_IMPORTED_MODULE_0__["ZIndexes"].Layer : undefined,
             },
             topOffsetFixed &&
+                typeof modalRectangleTop === 'number' &&
                 hasBeenOpened && {
                 top: modalRectangleTop,
             },
@@ -41206,8 +41157,7 @@ var PanelBase = /** @class */ (function (_super) {
         if (this.isActive && panel && !ev.defaultPrevented) {
             if (!Object(_Utilities__WEBPACK_IMPORTED_MODULE_6__["elementContains"])(panel, ev.target)) {
                 if (this.props.onOuterClick) {
-                    this.props.onOuterClick();
-                    ev.preventDefault();
+                    this.props.onOuterClick(ev);
                 }
                 else {
                     this.dismiss(ev);
@@ -41737,7 +41687,7 @@ var PersonaBase = /** @class */ (function (_super) {
         var _a = this.props, hidePersonaDetails = _a.hidePersonaDetails, _b = _a.onRenderOptionalText, onRenderOptionalText = _b === void 0 ? _onRenderOptionalText : _b, _c = _a.onRenderPrimaryText, onRenderPrimaryText = _c === void 0 ? _onRenderPrimaryText : _c, _d = _a.onRenderSecondaryText, onRenderSecondaryText = _d === void 0 ? _onRenderSecondaryText : _d, _e = _a.onRenderTertiaryText, onRenderTertiaryText = _e === void 0 ? _onRenderTertiaryText : _e, _f = _a.onRenderPersonaCoin, onRenderPersonaCoin = _f === void 0 ? this._onRenderPersonaCoin : _f;
         var size = this.props.size;
         // These properties are to be explicitly passed into PersonaCoin because they are the only props directly used
-        var _g = this.props, allowPhoneInitials = _g.allowPhoneInitials, className = _g.className, coinProps = _g.coinProps, showUnknownPersonaCoin = _g.showUnknownPersonaCoin, coinSize = _g.coinSize, styles = _g.styles, imageAlt = _g.imageAlt, imageInitials = _g.imageInitials, imageShouldFadeIn = _g.imageShouldFadeIn, imageShouldStartVisible = _g.imageShouldStartVisible, imageUrl = _g.imageUrl, initialsColor = _g.initialsColor, isOutOfOffice = _g.isOutOfOffice, onPhotoLoadingStateChange = _g.onPhotoLoadingStateChange, 
+        var _g = this.props, allowPhoneInitials = _g.allowPhoneInitials, className = _g.className, coinProps = _g.coinProps, showUnknownPersonaCoin = _g.showUnknownPersonaCoin, coinSize = _g.coinSize, styles = _g.styles, imageAlt = _g.imageAlt, imageInitials = _g.imageInitials, imageShouldFadeIn = _g.imageShouldFadeIn, imageShouldStartVisible = _g.imageShouldStartVisible, imageUrl = _g.imageUrl, initialsColor = _g.initialsColor, initialsTextColor = _g.initialsTextColor, isOutOfOffice = _g.isOutOfOffice, onPhotoLoadingStateChange = _g.onPhotoLoadingStateChange, 
         // eslint-disable-next-line deprecation/deprecation
         onRenderCoin = _g.onRenderCoin, onRenderInitials = _g.onRenderInitials, presence = _g.presence, presenceTitle = _g.presenceTitle, presenceColors = _g.presenceColors, showInitialsUntilImageLoads = _g.showInitialsUntilImageLoads, showSecondaryText = _g.showSecondaryText, theme = _g.theme;
         var personaCoinProps = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ allowPhoneInitials: allowPhoneInitials,
@@ -41749,6 +41699,7 @@ var PersonaBase = /** @class */ (function (_super) {
             imageShouldStartVisible: imageShouldStartVisible,
             imageUrl: imageUrl,
             initialsColor: initialsColor,
+            initialsTextColor: initialsTextColor,
             onPhotoLoadingStateChange: onPhotoLoadingStateChange,
             onRenderCoin: onRenderCoin,
             onRenderInitials: onRenderInitials,
@@ -42324,6 +42275,12 @@ var getClassNames = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["classNamesFu
     // Therefore setting a larger cache size.
     cacheSize: 100,
 });
+var getInitialsStyles = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["memoizeFunction"])(function (className, initialsColor, initialsTextColor, text, primaryText, showUnknownPersonaCoin) {
+    return Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["mergeStyles"])(className, !showUnknownPersonaCoin && {
+        backgroundColor: Object(_PersonaInitialsColor__WEBPACK_IMPORTED_MODULE_8__["getPersonaInitialsColor"])({ text: text, initialsColor: initialsColor, primaryText: primaryText }),
+        color: initialsTextColor,
+    });
+});
 /**
  * PersonaCoin with no default styles.
  * [Use the `getStyles` API to add your own styles.](https://github.com/microsoft/fluentui/wiki/Styling)
@@ -42382,7 +42339,7 @@ var PersonaCoinBase = /** @class */ (function (_super) {
         }
     };
     PersonaCoinBase.prototype.render = function () {
-        var _a = this.props, className = _a.className, coinProps = _a.coinProps, showUnknownPersonaCoin = _a.showUnknownPersonaCoin, coinSize = _a.coinSize, styles = _a.styles, imageUrl = _a.imageUrl, isOutOfOffice = _a.isOutOfOffice, 
+        var _a = this.props, className = _a.className, coinProps = _a.coinProps, showUnknownPersonaCoin = _a.showUnknownPersonaCoin, coinSize = _a.coinSize, styles = _a.styles, imageUrl = _a.imageUrl, initialsColor = _a.initialsColor, initialsTextColor = _a.initialsTextColor, isOutOfOffice = _a.isOutOfOffice, 
         /* eslint-disable deprecation/deprecation */
         _b = _a.onRenderCoin, 
         /* eslint-disable deprecation/deprecation */
@@ -42390,7 +42347,9 @@ var PersonaCoinBase = /** @class */ (function (_super) {
         /* eslint-enable deprecation/deprecation */
         _d = _a.onRenderInitials, 
         /* eslint-enable deprecation/deprecation */
-        onRenderInitials = _d === void 0 ? this._onRenderInitials : _d, presence = _a.presence, presenceTitle = _a.presenceTitle, presenceColors = _a.presenceColors, showInitialsUntilImageLoads = _a.showInitialsUntilImageLoads, theme = _a.theme;
+        onRenderInitials = _d === void 0 ? this._onRenderInitials : _d, presence = _a.presence, presenceTitle = _a.presenceTitle, presenceColors = _a.presenceColors, 
+        // eslint-disable-next-line deprecation/deprecation
+        primaryText = _a.primaryText, showInitialsUntilImageLoads = _a.showInitialsUntilImageLoads, text = _a.text, theme = _a.theme;
         var size = this.props.size;
         var divProps = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["getNativeProps"])(this.props, _Utilities__WEBPACK_IMPORTED_MODULE_2__["divProperties"]);
         var divCoinProps = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["getNativeProps"])(coinProps || {}, _Utilities__WEBPACK_IMPORTED_MODULE_2__["divProperties"]);
@@ -42418,7 +42377,7 @@ var PersonaCoinBase = /** @class */ (function (_super) {
         return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ role: "presentation" }, divProps, { className: classNames.coin }),
             // eslint-disable-next-line deprecation/deprecation
             size !== _Persona_types__WEBPACK_IMPORTED_MODULE_7__["PersonaSize"].size8 && size !== _Persona_types__WEBPACK_IMPORTED_MODULE_7__["PersonaSize"].size10 && size !== _Persona_types__WEBPACK_IMPORTED_MODULE_7__["PersonaSize"].tiny ? (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ role: "presentation" }, divCoinProps, { className: classNames.imageArea, style: coinSizeStyle }),
-                shouldRenderInitials && (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { className: Object(_Styling__WEBPACK_IMPORTED_MODULE_3__["mergeStyles"])(classNames.initials, !showUnknownPersonaCoin && { backgroundColor: Object(_PersonaInitialsColor__WEBPACK_IMPORTED_MODULE_8__["getPersonaInitialsColor"])(this.props) }), style: coinSizeStyle, "aria-hidden": "true" }, onRenderInitials(this.props, this._onRenderInitials))),
+                shouldRenderInitials && (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { className: getInitialsStyles(classNames.initials, initialsColor, initialsTextColor, text, primaryText, showUnknownPersonaCoin), style: coinSizeStyle, "aria-hidden": "true" }, onRenderInitials(this.props, this._onRenderInitials))),
                 !hideImage && onRenderPersonaCoin(this.props, this._onRenderCoin),
                 react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_PersonaPresence_index__WEBPACK_IMPORTED_MODULE_4__["PersonaPresence"], Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, personaPresenceProps)))) : // Otherwise, render just PersonaPresence.
                 this.props.presence ? (react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_PersonaPresence_index__WEBPACK_IMPORTED_MODULE_4__["PersonaPresence"], Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, personaPresenceProps))) : (
@@ -42473,8 +42432,10 @@ var PersonaCoin = Object(_Utilities__WEBPACK_IMPORTED_MODULE_0__["styled"])(_Per
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-/* harmony import */ var _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/components/Persona/PersonaConsts.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/components/Persona/PersonaConsts.js");
+
 
 
 var GlobalClassNames = {
@@ -42499,12 +42460,12 @@ var getStyles = function (props) {
     var _a;
     var className = props.className, theme = props.theme, coinSize = props.coinSize;
     var palette = theme.palette, fonts = theme.fonts;
-    var size = Object(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["sizeBoolean"])(props.size);
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(GlobalClassNames, theme);
+    var size = Object(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["sizeBoolean"])(props.size);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(GlobalClassNames, theme);
     // Static colors used when displaying 'unknown persona' coin
     var unknownPersonaBackgroundColor = 'rgb(234, 234, 234)';
     var unknownPersonaFontColor = 'rgb(168, 0, 0)';
-    var dimension = coinSize || (props.size && _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["sizeToPixels"][props.size]) || 48;
+    var dimension = coinSize || (props.size && _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["sizeToPixels"][props.size]) || 48;
     return {
         coin: [
             classNames.coin,
@@ -42576,20 +42537,14 @@ var getStyles = function (props) {
                 borderRadius: '50%',
                 color: props.showUnknownPersonaCoin ? unknownPersonaFontColor : palette.white,
                 fontSize: fonts.large.fontSize,
-                fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_0__["FontWeights"].semibold,
+                fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_1__["FontWeights"].semibold,
                 // copying the logic for the dimensions; defaulted to 46 for size48
                 lineHeight: dimension === 48 ? 46 : dimension,
                 height: dimension,
                 selectors: (_a = {},
-                    _a[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                        border: '1px solid WindowText',
-                        MsHighContrastAdjust: 'none',
-                        color: 'WindowText',
-                        boxSizing: 'border-box',
-                        backgroundColor: 'Window !important',
-                    },
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ border: '1px solid WindowText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { color: 'WindowText', boxSizing: 'border-box', backgroundColor: 'Window !important' }),
                     _a.i = {
-                        fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_0__["FontWeights"].semibold,
+                        fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_1__["FontWeights"].semibold,
                     },
                     _a),
             },
@@ -43003,8 +42958,10 @@ var PersonaPresence = Object(_Utilities__WEBPACK_IMPORTED_MODULE_0__["styled"])(
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-/* harmony import */ var _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/components/Persona/PersonaConsts.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/components/Persona/PersonaConsts.js");
+
 
 
 var GlobalClassNames = {
@@ -43015,9 +42972,9 @@ var getStyles = function (props) {
     var _a, _b, _c, _d, _e, _f;
     var theme = props.theme, presenceColors = props.presenceColors;
     var semanticColors = theme.semanticColors, fonts = theme.fonts;
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(GlobalClassNames, theme);
-    var size = Object(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["sizeBoolean"])(props.size);
-    var presence = Object(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["presenceBoolean"])(props.presence);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(GlobalClassNames, theme);
+    var size = Object(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["sizeBoolean"])(props.size);
+    var presence = Object(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["presenceBoolean"])(props.presence);
     // Presence colors
     var presenceColorAvailable = (presenceColors && presenceColors.available) || '#6BB700';
     var presenceColorAway = (presenceColors && presenceColors.away) || '#FFAA44';
@@ -43034,54 +42991,40 @@ var getStyles = function (props) {
     return {
         presence: [
             classNames.presence,
-            {
-                position: 'absolute',
-                height: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size12,
-                width: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size12,
-                borderRadius: '50%',
-                top: 'auto',
-                right: '-2px',
-                bottom: '-2px',
-                border: "2px solid " + presenceColorBackground,
-                textAlign: 'center',
-                boxSizing: 'content-box',
-                backgroundClip: 'content-box',
-                MsHighContrastAdjust: 'none',
-                selectors: (_a = {},
-                    _a[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+            Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ position: 'absolute', height: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size12, width: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size12, borderRadius: '50%', top: 'auto', right: '-2px', bottom: '-2px', border: "2px solid " + presenceColorBackground, textAlign: 'center', boxSizing: 'content-box', backgroundClip: 'content-box' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()), { selectors: (_a = {},
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                         borderColor: 'Window',
                         backgroundColor: 'WindowText',
                     },
-                    _a),
-            },
+                    _a) }),
             (size.isSize8 || size.isSize10) && {
                 right: 'auto',
                 top: '7px',
                 left: 0,
                 border: 0,
                 selectors: (_b = {},
-                    _b[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                    _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                         top: '9px',
                         border: '1px solid WindowText',
                     },
                     _b),
             },
             (size.isSize8 || size.isSize10 || size.isSize24 || size.isSize28 || size.isSize32) &&
-                makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size8),
-            (size.isSize40 || size.isSize48) && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size12),
+                makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size8),
+            (size.isSize40 || size.isSize48) && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size12),
             size.isSize16 && {
-                height: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size6,
-                width: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size6,
+                height: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size6,
+                width: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size6,
                 borderWidth: '1.5px',
             },
-            size.isSize56 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size16),
-            size.isSize72 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size20),
-            size.isSize100 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size28),
-            size.isSize120 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size32),
+            size.isSize56 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size16),
+            size.isSize72 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size20),
+            size.isSize100 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size28),
+            size.isSize120 && makeSizeStyle(_PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size32),
             presence.isAvailable && {
                 backgroundColor: presenceColorAvailable,
                 selectors: (_c = {},
-                    _c[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = backgroundColor('Highlight'),
+                    _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = backgroundColor('Highlight'),
                     _c),
             },
             presence.isAway && backgroundColor(presenceColorAway),
@@ -43102,7 +43045,7 @@ var getStyles = function (props) {
                                 }
                                 : undefined
                         },
-                        _d[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                        _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                             selectors: {
                                 ':after': {
                                     width: "calc(100% - 4px)",
@@ -43133,7 +43076,7 @@ var getStyles = function (props) {
                                 boxSizing: 'border-box',
                             }
                         },
-                        _e[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                        _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                             backgroundColor: 'WindowText',
                             selectors: {
                                 ':before': {
@@ -43163,29 +43106,29 @@ var getStyles = function (props) {
             {
                 color: presenceColorBackground,
                 fontSize: '6px',
-                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size12,
+                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size12,
                 verticalAlign: 'top',
                 selectors: (_f = {},
-                    _f[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                    _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                         color: 'Window',
                     },
                     _f),
             },
             size.isSize56 && {
                 fontSize: '8px',
-                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size16,
+                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size16,
             },
             size.isSize72 && {
                 fontSize: fonts.small.fontSize,
-                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size20,
+                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size20,
             },
             size.isSize100 && {
                 fontSize: fonts.medium.fontSize,
-                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size28,
+                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size28,
             },
             size.isSize120 && {
                 fontSize: fonts.medium.fontSize,
-                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_1__["personaPresenceSize"].size32,
+                lineHeight: _PersonaConsts__WEBPACK_IMPORTED_MODULE_2__["personaPresenceSize"].size32,
             },
             presence.isAway && {
                 position: 'relative',
@@ -43784,12 +43727,7 @@ var getStyles = function (props) {
                             color: semanticColors.primaryButtonText,
                         }
                     },
-                    _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                        fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_1__["FontWeights"].semibold,
-                        color: 'HighlightText',
-                        background: 'Highlight',
-                        MsHighContrastAdjust: 'none',
-                    },
+                    _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ fontWeight: _Styling__WEBPACK_IMPORTED_MODULE_1__["FontWeights"].semibold, color: 'HighlightText', background: 'Highlight' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                     _c),
             },
         ]),
@@ -44292,9 +44230,9 @@ var getStyles = function (props) {
                 position: 'absolute',
                 transition: 'width .3s ease',
                 width: 0,
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_b = {}, _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    backgroundColor: 'highlight',
-                }, _b), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_b = {},
+                    _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: 'highlight' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                    _b),
             },
             indeterminate
                 ? {
@@ -45488,10 +45426,10 @@ var ScrollablePaneBase = /** @class */ (function (_super) {
             scrollbarVisibility: this.props.scrollbarVisibility,
         });
         return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["getNativeProps"])(this.props, _Utilities__WEBPACK_IMPORTED_MODULE_2__["divProperties"]), { ref: this._root, className: classNames.root }),
-            react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { "aria-hidden": "true", ref: this._stickyAboveRef, className: classNames.stickyAbove, style: this._getStickyContainerStyle(stickyTopHeight, true) }),
+            react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._stickyAboveRef, className: classNames.stickyAbove, style: this._getStickyContainerStyle(stickyTopHeight, true) }),
             react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._contentContainer, className: classNames.contentContainer, "data-is-scrollable": true },
                 react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_ScrollablePane_types__WEBPACK_IMPORTED_MODULE_3__["ScrollablePaneContext"].Provider, { value: this._getScrollablePaneContext() }, this.props.children)),
-            react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { "aria-hidden": "true", className: classNames.stickyBelow, style: this._getStickyContainerStyle(stickyBottomHeight, false) },
+            react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { className: classNames.stickyBelow, style: this._getStickyContainerStyle(stickyBottomHeight, false) },
                 react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._stickyBelowRef, className: classNames.stickyBelowItems }))));
     };
     ScrollablePaneBase.prototype.setStickiesDistanceFromTop = function () {
@@ -46552,18 +46490,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".personaContainer_536a24c5{border-radius:15px;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:" }, { "theme": "themeLighterAlt", "defaultValue": "#eff6fc" }, { "rawString": ";margin:4px;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;vertical-align:middle;position:relative}.personaContainer_536a24c5::-moz-focus-inner{border:0}.personaContainer_536a24c5{outline:transparent}.personaContainer_536a24c5{position:relative}.ms-Fabric--isFocusVisible .personaContainer_536a24c5:focus:after{content:'';position:absolute;top:-2px;right:-2px;bottom:-2px;left:-2px;pointer-events:none;border:1px solid " }, { "theme": "focusBorder", "defaultValue": "#605e5c" }, { "rawString": "}.personaContainer_536a24c5 .ms-Persona-primaryText{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";font-size:14px;font-weight:400}.personaContainer_536a24c5 .ms-Persona-primaryText.hover_536a24c5{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_536a24c5 .ms-Persona-primaryText{color:HighlightText}}.personaContainer_536a24c5 .actionButton_536a24c5:hover{background:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.personaContainer_536a24c5 .actionButton_536a24c5 .ms-Button-icon{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_536a24c5 .actionButton_536a24c5 .ms-Button-icon{color:HighlightText}}.personaContainer_536a24c5:hover{background:" }, { "theme": "themeLighter", "defaultValue": "#deecf9" }, { "rawString": "}.personaContainer_536a24c5:hover .ms-Persona-primaryText{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";font-size:14px;font-weight:400}@media screen and (-ms-high-contrast:active){.personaContainer_536a24c5:hover .ms-Persona-primaryText{color:HighlightText}}.personaContainer_536a24c5.personaContainerIsSelected_536a24c5{background:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": "}.personaContainer_536a24c5.personaContainerIsSelected_536a24c5 .ms-Persona-primaryText{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_536a24c5.personaContainerIsSelected_536a24c5 .ms-Persona-primaryText{color:HighlightText}}.personaContainer_536a24c5.personaContainerIsSelected_536a24c5 .actionButton_536a24c5{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.personaContainer_536a24c5.personaContainerIsSelected_536a24c5 .actionButton_536a24c5 .ms-Button-icon{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}.personaContainer_536a24c5.personaContainerIsSelected_536a24c5 .actionButton_536a24c5 .ms-Button-icon:hover{background:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_536a24c5.personaContainerIsSelected_536a24c5 .actionButton_536a24c5 .ms-Button-icon{color:HighlightText}}@media screen and (-ms-high-contrast:active){.personaContainer_536a24c5.personaContainerIsSelected_536a24c5{border-color:Highlight;background:Highlight;-ms-high-contrast-adjust:none}}.personaContainer_536a24c5.validationError_536a24c5 .ms-Persona-primaryText{color:" }, { "theme": "red", "defaultValue": "#e81123" }, { "rawString": "}.personaContainer_536a24c5.validationError_536a24c5 .ms-Persona-initials{font-size:20px}@media screen and (-ms-high-contrast:active){.personaContainer_536a24c5{border:1px solid WindowText}}.personaContainer_536a24c5 .itemContent_536a24c5{-webkit-box-flex:0;-ms-flex:0 1 auto;flex:0 1 auto;min-width:0;max-width:100%}.personaContainer_536a24c5 .removeButton_536a24c5{border-radius:15px;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;width:33px;height:33px;-ms-flex-preferred-size:32px;flex-basis:32px}.personaContainer_536a24c5 .expandButton_536a24c5{border-radius:15px 0 0 15px;height:33px;width:44px;padding-right:16px;position:inherit;display:-webkit-box;display:-ms-flexbox;display:flex;margin-right:-17px}.personaContainer_536a24c5 .personaWrapper_536a24c5{position:relative;display:inherit}.personaContainer_536a24c5 .personaWrapper_536a24c5 .ms-Persona-details{padding:0 8px}.personaContainer_536a24c5 .personaDetails_536a24c5{-webkit-box-flex:0;-ms-flex:0 1 auto;flex:0 1 auto}.itemContainer_536a24c5{display:inline-block;vertical-align:top}" }]);
-var personaContainer = "personaContainer_536a24c5";
-var hover = "hover_536a24c5";
-var actionButton = "actionButton_536a24c5";
-var personaContainerIsSelected = "personaContainerIsSelected_536a24c5";
-var validationError = "validationError_536a24c5";
-var itemContent = "itemContent_536a24c5";
-var removeButton = "removeButton_536a24c5";
-var expandButton = "expandButton_536a24c5";
-var personaWrapper = "personaWrapper_536a24c5";
-var personaDetails = "personaDetails_536a24c5";
-var itemContainer = "itemContainer_536a24c5";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".personaContainer_2d8896ae{border-radius:15px;display:-webkit-inline-box;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;background:" }, { "theme": "themeLighterAlt", "defaultValue": "#eff6fc" }, { "rawString": ";margin:4px;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;vertical-align:middle;position:relative}.personaContainer_2d8896ae::-moz-focus-inner{border:0}.personaContainer_2d8896ae{outline:transparent}.personaContainer_2d8896ae{position:relative}.ms-Fabric--isFocusVisible .personaContainer_2d8896ae:focus:after{content:'';position:absolute;top:-2px;right:-2px;bottom:-2px;left:-2px;pointer-events:none;border:1px solid " }, { "theme": "focusBorder", "defaultValue": "#605e5c" }, { "rawString": "}.personaContainer_2d8896ae .ms-Persona-primaryText{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";font-size:14px;font-weight:400}.personaContainer_2d8896ae .ms-Persona-primaryText.hover_2d8896ae{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_2d8896ae .ms-Persona-primaryText{color:HighlightText}}.personaContainer_2d8896ae .actionButton_2d8896ae:hover{background:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.personaContainer_2d8896ae .actionButton_2d8896ae .ms-Button-icon{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_2d8896ae .actionButton_2d8896ae .ms-Button-icon{color:HighlightText}}.personaContainer_2d8896ae:hover{background:" }, { "theme": "themeLighter", "defaultValue": "#deecf9" }, { "rawString": "}.personaContainer_2d8896ae:hover .ms-Persona-primaryText{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";font-size:14px;font-weight:400}@media screen and (-ms-high-contrast:active){.personaContainer_2d8896ae:hover .ms-Persona-primaryText{color:HighlightText}}.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae{background:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": "}.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae .ms-Persona-primaryText{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae .ms-Persona-primaryText{color:HighlightText}}.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae .actionButton_2d8896ae{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae .actionButton_2d8896ae .ms-Button-icon{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae .actionButton_2d8896ae .ms-Button-icon:hover{background:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae .actionButton_2d8896ae .ms-Button-icon{color:HighlightText}}@media screen and (-ms-high-contrast:active){.personaContainer_2d8896ae.personaContainerIsSelected_2d8896ae{border-color:Highlight;background:Highlight;-ms-high-contrast-adjust:none}}.personaContainer_2d8896ae.validationError_2d8896ae .ms-Persona-primaryText{color:" }, { "theme": "red", "defaultValue": "#e81123" }, { "rawString": "}.personaContainer_2d8896ae.validationError_2d8896ae .ms-Persona-initials{font-size:20px}@media screen and (-ms-high-contrast:active){.personaContainer_2d8896ae{border:1px solid WindowText}}.personaContainer_2d8896ae .itemContent_2d8896ae{-webkit-box-flex:0;-ms-flex:0 1 auto;flex:0 1 auto;min-width:0;max-width:100%}.personaContainer_2d8896ae .removeButton_2d8896ae{border-radius:15px;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;width:33px;height:33px;-ms-flex-preferred-size:32px;flex-basis:32px}.personaContainer_2d8896ae .expandButton_2d8896ae{border-radius:15px 0 0 15px;height:33px;width:44px;padding-right:16px;position:inherit;display:-webkit-box;display:-ms-flexbox;display:flex;margin-right:-17px}.personaContainer_2d8896ae .personaWrapper_2d8896ae{position:relative;display:inherit}.personaContainer_2d8896ae .personaWrapper_2d8896ae .ms-Persona-details{padding:0 8px}.personaContainer_2d8896ae .personaDetails_2d8896ae{-webkit-box-flex:0;-ms-flex:0 1 auto;flex:0 1 auto}.itemContainer_2d8896ae{display:inline-block;vertical-align:top}" }]);
+var personaContainer = "personaContainer_2d8896ae";
+var hover = "hover_2d8896ae";
+var actionButton = "actionButton_2d8896ae";
+var personaContainerIsSelected = "personaContainerIsSelected_2d8896ae";
+var validationError = "validationError_2d8896ae";
+var itemContent = "itemContent_2d8896ae";
+var removeButton = "removeButton_2d8896ae";
+var expandButton = "expandButton_2d8896ae";
+var personaWrapper = "personaWrapper_2d8896ae";
+var personaDetails = "personaDetails_2d8896ae";
+var itemContainer = "itemContainer_2d8896ae";
 
 
 /***/ }),
@@ -46821,7 +46759,10 @@ Separator.displayName = 'Separator';
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
+/* harmony import */ var _uifabric_styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../styling/lib/index.js");
+
 var getStyles = function (props) {
+    var _a, _b;
     var theme = props.theme, alignContent = props.alignContent, vertical = props.vertical, className = props.className;
     var alignStart = alignContent === 'start';
     var alignCenter = alignContent === 'center';
@@ -46856,33 +46797,41 @@ var getStyles = function (props) {
                 display: 'table-cell',
                 zIndex: 1,
                 selectors: {
-                    ':after': {
-                        backgroundColor: theme.palette.neutralLighter,
-                        width: '1px',
-                        content: '""',
-                        position: 'absolute',
-                        top: '0',
-                        bottom: '0',
-                        left: '50%',
-                        right: '0',
-                        zIndex: -1,
-                    },
+                    ':after': (_a = {
+                            backgroundColor: theme.palette.neutralLighter,
+                            width: '1px',
+                            content: '""',
+                            position: 'absolute',
+                            top: '0',
+                            bottom: '0',
+                            left: '50%',
+                            right: '0',
+                            zIndex: -1
+                        },
+                        _a[_uifabric_styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                            backgroundColor: 'WindowText',
+                        },
+                        _a),
                 },
             },
             !vertical && {
                 padding: '4px 0',
                 selectors: {
-                    ':before': {
-                        backgroundColor: theme.palette.neutralLighter,
-                        height: '1px',
-                        content: '""',
-                        display: 'block',
-                        position: 'absolute',
-                        top: '50%',
-                        bottom: '0',
-                        left: '0',
-                        right: '0',
-                    },
+                    ':before': (_b = {
+                            backgroundColor: theme.palette.neutralLighter,
+                            height: '1px',
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: '50%',
+                            bottom: '0',
+                            left: '0',
+                            right: '0'
+                        },
+                        _b[_uifabric_styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                            backgroundColor: 'WindowText',
+                        },
+                        _b),
                 },
             },
             className,
@@ -47089,11 +47038,13 @@ function getStyles(props) {
                 transform: 'translateZ(0)',
                 backgroundColor: shimmerColor || semanticColors.disabledBackground,
                 transition: "opacity " + transitionAnimationInterval + "ms",
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_a = { '> *': {
+                selectors: (_a = {
+                        '> *': {
                             transform: 'translateZ(0)',
-                        } }, _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    background: "WindowText\n                        linear-gradient(\n                          to right,\n                          transparent 0%,\n                          Window 50%,\n                          transparent 100%)\n                        0 0 / 90% 100%\n                        no-repeat",
-                }, _a), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                        }
+                    },
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ background: "WindowText\n                        linear-gradient(\n                          to right,\n                          transparent 0%,\n                          Window 50%,\n                          transparent 100%)\n                        0 0 / 90% 100%\n                        no-repeat" }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                    _a),
             },
             isDataLoaded && {
                 opacity: '0',
@@ -48206,7 +48157,19 @@ var getStyles = function (props) {
                 lineHeight: 28,
                 display: 'flex',
                 alignItems: 'center',
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_f = {}, _f[":active ." + classNames.activeSection] = slideBoxActiveSectionStyles, _f[":hover ." + classNames.activeSection] = slideHoverSectionStyles, _f[":active ." + classNames.inactiveSection] = slideBoxInactiveSectionStyles, _f[":hover ." + classNames.inactiveSection] = slideBoxInactiveSectionStyles, _f[":active ." + classNames.thumb] = slideBoxActiveThumbStyles, _f[":hover ." + classNames.thumb] = slideBoxActiveThumbStyles, _f[":active ." + classNames.zeroTick] = slideBoxActiveZeroTickStyles, _f[":hover ." + classNames.zeroTick] = slideBoxActiveZeroTickStyles, _f), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_f = {},
+                    _f[":active ." + classNames.activeSection] = slideBoxActiveSectionStyles,
+                    _f[":hover ." + classNames.activeSection] = slideHoverSectionStyles,
+                    _f[":active ." + classNames.inactiveSection] = slideBoxInactiveSectionStyles,
+                    _f[":hover ." + classNames.inactiveSection] = slideBoxInactiveSectionStyles,
+                    _f[":active ." + classNames.thumb] = slideBoxActiveThumbStyles,
+                    _f[":hover ." + classNames.thumb] = slideBoxActiveThumbStyles,
+                    _f[":active ." + classNames.zeroTick] = slideBoxActiveZeroTickStyles,
+                    _f[":hover ." + classNames.zeroTick] = slideBoxActiveZeroTickStyles,
+                    _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
+                        forcedColorAdjust: 'none',
+                    },
+                    _f),
             },
             vertical
                 ? {
@@ -49266,9 +49229,9 @@ var getStyles = function (props) {
                 animationDuration: '1.3s',
                 animationIterationCount: 'infinite',
                 animationTimingFunction: 'cubic-bezier(.53,.21,.29,.67)',
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_a = {}, _a[_Styling__WEBPACK_IMPORTED_MODULE_2__["HighContrastSelector"]] = {
-                    borderTopColor: 'Highlight',
-                }, _a), Object(_Styling__WEBPACK_IMPORTED_MODULE_2__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_a = {},
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_2__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderTopColor: 'Highlight' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_2__["getHighContrastNoAdjustStyle"])()),
+                    _a),
             },
             size === _Spinner_types__WEBPACK_IMPORTED_MODULE_1__["SpinnerSize"].xSmall && [
                 'ms-Spinner--xSmall',
@@ -49635,27 +49598,32 @@ var styles = function (props, theme, tokens) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StackItem", function() { return StackItem; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Foundation__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Foundation.js");
-/* harmony import */ var _StackItem_styles__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/components/Stack/StackItem/StackItem.styles.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Foundation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/Foundation.js");
+/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("../office-ui-fabric-react/lib/Utilities.js");
+/* harmony import */ var _StackItem_styles__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("../office-ui-fabric-react/lib/components/Stack/StackItem/StackItem.styles.js");
+
 /** @jsx withSlots */
+
 
 
 
 var StackItemView = function (props) {
     var children = props.children;
-    if (react__WEBPACK_IMPORTED_MODULE_0__["Children"].count(children) < 1) {
+    var nativeProps = Object(_Utilities__WEBPACK_IMPORTED_MODULE_3__["getNativeProps"])(props, _Utilities__WEBPACK_IMPORTED_MODULE_3__["htmlElementProperties"]);
+    if (react__WEBPACK_IMPORTED_MODULE_1__["Children"].count(children) < 1) {
         return null;
     }
-    var Slots = Object(_Foundation__WEBPACK_IMPORTED_MODULE_1__["getSlots"])(props, {
+    var Slots = Object(_Foundation__WEBPACK_IMPORTED_MODULE_2__["getSlots"])(props, {
         root: 'div',
     });
-    return Object(_Foundation__WEBPACK_IMPORTED_MODULE_1__["withSlots"])(Slots.root, null, children);
+    return Object(_Foundation__WEBPACK_IMPORTED_MODULE_2__["withSlots"])(Slots.root, Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, nativeProps), children);
 };
-var StackItem = Object(_Foundation__WEBPACK_IMPORTED_MODULE_1__["createComponent"])(StackItemView, {
+var StackItem = Object(_Foundation__WEBPACK_IMPORTED_MODULE_2__["createComponent"])(StackItemView, {
     displayName: 'StackItem',
-    styles: _StackItem_styles__WEBPACK_IMPORTED_MODULE_2__["StackItemStyles"],
+    styles: _StackItem_styles__WEBPACK_IMPORTED_MODULE_4__["StackItemStyles"],
 });
 /* harmony default export */ __webpack_exports__["default"] = (StackItem);
 
@@ -50054,13 +50022,13 @@ var Sticky = /** @class */ (function (_super) {
             return react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", null, this.props.children);
         }
         return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._root },
-            this.canStickyTop && (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._stickyContentTop, "aria-hidden": !isStickyTop, style: { pointerEvents: isStickyTop ? 'auto' : 'none' } },
+            this.canStickyTop && (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._stickyContentTop, style: { pointerEvents: isStickyTop ? 'auto' : 'none' } },
                 react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { style: this._getStickyPlaceholderHeight(isStickyTop) }))),
-            this.canStickyBottom && (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._stickyContentBottom, "aria-hidden": !isStickyBottom, style: { pointerEvents: isStickyBottom ? 'auto' : 'none' } },
+            this.canStickyBottom && (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._stickyContentBottom, style: { pointerEvents: isStickyBottom ? 'auto' : 'none' } },
                 react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { style: this._getStickyPlaceholderHeight(isStickyBottom) }))),
             react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { style: this._getNonStickyPlaceholderHeightAndWidth(), ref: this._placeHolder },
                 (isStickyTop || isStickyBottom) && react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("span", { style: _Styling__WEBPACK_IMPORTED_MODULE_3__["hiddenContentStyle"] }, children),
-                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { "aria-hidden": isStickyTop || isStickyBottom, ref: this._nonStickyContent, className: isStickyTop || isStickyBottom ? stickyClassName : undefined, style: this._getContentStyles(isStickyTop || isStickyBottom) }, children))));
+                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this._nonStickyContent, className: isStickyTop || isStickyBottom ? stickyClassName : undefined, style: this._getContentStyles(isStickyTop || isStickyBottom) }, children))));
     };
     Sticky.prototype.addSticky = function (stickyContent) {
         if (this.nonStickyContent) {
@@ -52634,17 +52602,17 @@ function getStyles(props) {
                 },
                 disabled && {
                     borderBottomColor: semanticColors.disabledBackground,
-                    selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_d = {}, _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                        borderColor: 'GrayText',
-                    }, _d), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                    selectors: (_d = {},
+                        _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderColor: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                        _d),
                 },
                 !disabled && {
                     selectors: {
                         ':hover': {
                             borderBottomColor: !hasErrorMessage ? semanticColors.inputBorderHovered : semanticColors.errorText,
-                            selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_e = {}, _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                                borderBottomColor: 'Highlight',
-                            }, _e), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                            selectors: (_e = {},
+                                _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderBottomColor: 'Highlight' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                                _e),
                         },
                     },
                 },
@@ -52680,9 +52648,9 @@ function getStyles(props) {
                 selectors: {
                     ':hover': {
                         borderColor: semanticColors.inputBorderHovered,
-                        selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_f = {}, _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                            borderColor: 'Highlight',
-                        }, _f), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                        selectors: (_f = {},
+                            _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderColor: 'Highlight' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                            _f),
                     },
                 },
             },
@@ -52691,9 +52659,9 @@ function getStyles(props) {
                 Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getInputFocusStyle"])(!hasErrorMessage ? semanticColors.inputFocusBorderAlt : semanticColors.errorText, effects.roundedCorner2),
             disabled && {
                 borderColor: semanticColors.disabledBackground,
-                selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_g = {}, _g[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                    borderColor: 'GrayText',
-                }, _g), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                selectors: (_g = {},
+                    _g[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderColor: 'GrayText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                    _g),
                 cursor: 'default',
             },
             borderless && {
@@ -53671,7 +53639,8 @@ var getStyles = function (props) {
                         justifyContent: 'flex-end',
                     },
                     {
-                        selectors: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])((_c = { ':hover': [
+                        selectors: (_c = {
+                                ':hover': [
                                     {
                                         backgroundColor: pillCheckedHoveredBackground,
                                         borderColor: 'transparent',
@@ -53681,9 +53650,10 @@ var getStyles = function (props) {
                                             },
                                             _d),
                                     },
-                                ] }, _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
-                            backgroundColor: 'Highlight',
-                        }, _c), Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"])()),
+                                ]
+                            },
+                            _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ backgroundColor: 'Highlight' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
+                            _c),
                     },
                 ],
             ],
@@ -54768,6 +54738,7 @@ var BasePicker = /** @class */ (function (_super) {
             ? this._ariaMap.selectedSuggestionAlert
             : '';
         var suggestionsAvailable = this.state.suggestionsVisible ? this._ariaMap.suggestionList : '';
+        var canAddItems = this.canAddItems();
         // TODO
         // Clean this up by leaving only the first part after removing support for SASS.
         // Currently we can not remove the SASS styles from BasePicker class because it
@@ -54793,7 +54764,7 @@ var BasePicker = /** @class */ (function (_super) {
                 screenReaderText: legacyStyles.screenReaderOnly,
             };
         return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { ref: this.root, className: classNames.root, onKeyDown: this.onKeyDown, onBlur: this.onBlur },
-            react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_FocusZone__WEBPACK_IMPORTED_MODULE_3__["FocusZone"], { componentRef: this.focusZone, direction: _FocusZone__WEBPACK_IMPORTED_MODULE_3__["FocusZoneDirection"].bidirectional, shouldEnterInnerZone: this._shouldFocusZoneEnterInnerZone, role: 'combobox', id: this._ariaMap.combobox, "aria-label": this.props['aria-label'], "aria-expanded": !!this.state.suggestionsVisible, "aria-owns": suggestionsAvailable || undefined, "aria-haspopup": suggestionsAvailable && this.suggestionStore.suggestions.length > 0 ? 'listbox' : 'dialog' },
+            react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_FocusZone__WEBPACK_IMPORTED_MODULE_3__["FocusZone"], { componentRef: this.focusZone, direction: _FocusZone__WEBPACK_IMPORTED_MODULE_3__["FocusZoneDirection"].bidirectional, shouldEnterInnerZone: this._shouldFocusZoneEnterInnerZone, role: canAddItems ? 'combobox' : undefined, id: canAddItems ? this._ariaMap.combobox : undefined, "aria-label": canAddItems ? this.props['aria-label'] : undefined, "aria-expanded": canAddItems ? !!this.state.suggestionsVisible : undefined, "aria-owns": canAddItems ? suggestionsAvailable || undefined : undefined, "aria-haspopup": suggestionsAvailable && this.suggestionStore.suggestions.length > 0 ? 'listbox' : 'dialog' },
                 this.getSuggestionsAlert(classNames.screenReaderText),
                 react__WEBPACK_IMPORTED_MODULE_1__["createElement"](_utilities_selection_index__WEBPACK_IMPORTED_MODULE_5__["SelectionZone"], { selection: this.selection, selectionMode: _utilities_selection_index__WEBPACK_IMPORTED_MODULE_5__["SelectionMode"].multiple },
                     react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { className: classNames.text },
@@ -55106,12 +55077,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".pickerText_15372e87{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid " }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": ";min-width:180px;min-height:30px}.pickerText_15372e87:hover{border-color:" }, { "theme": "inputBorderHovered", "defaultValue": "#323130" }, { "rawString": "}.pickerText_15372e87.inputFocused_15372e87{position:relative;border-color:" }, { "theme": "inputFocusBorderAlt", "defaultValue": "#0078d4" }, { "rawString": "}.pickerText_15372e87.inputFocused_15372e87:after{pointer-events:none;content:'';position:absolute;left:-1px;top:-1px;bottom:-1px;right:-1px;border:2px solid " }, { "theme": "inputFocusBorderAlt", "defaultValue": "#0078d4" }, { "rawString": "}.pickerInput_15372e87{height:34px;border:none;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;outline:0;padding:0 6px 0;-ms-flex-item-align:end;align-self:flex-end}.pickerItems_15372e87{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;max-width:100%}.screenReaderOnly_15372e87{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}" }]);
-var pickerText = "pickerText_15372e87";
-var inputFocused = "inputFocused_15372e87";
-var pickerInput = "pickerInput_15372e87";
-var pickerItems = "pickerItems_15372e87";
-var screenReaderOnly = "screenReaderOnly_15372e87";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".pickerText_2cd287da{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-sizing:border-box;box-sizing:border-box;border:1px solid " }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": ";min-width:180px;min-height:30px}.pickerText_2cd287da:hover{border-color:" }, { "theme": "inputBorderHovered", "defaultValue": "#323130" }, { "rawString": "}.pickerText_2cd287da.inputFocused_2cd287da{position:relative;border-color:" }, { "theme": "inputFocusBorderAlt", "defaultValue": "#0078d4" }, { "rawString": "}.pickerText_2cd287da.inputFocused_2cd287da:after{pointer-events:none;content:'';position:absolute;left:-1px;top:-1px;bottom:-1px;right:-1px;border:2px solid " }, { "theme": "inputFocusBorderAlt", "defaultValue": "#0078d4" }, { "rawString": "}.pickerInput_2cd287da{height:34px;border:none;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;outline:0;padding:0 6px 0;-ms-flex-item-align:end;align-self:flex-end}.pickerItems_2cd287da{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;max-width:100%}.screenReaderOnly_2cd287da{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}" }]);
+var pickerText = "pickerText_2cd287da";
+var inputFocused = "inputFocused_2cd287da";
+var pickerInput = "pickerInput_2cd287da";
+var pickerItems = "pickerItems_2cd287da";
+var screenReaderOnly = "screenReaderOnly_2cd287da";
 
 
 /***/ }),
@@ -55442,8 +55413,10 @@ var PeoplePickerItem = Object(_Utilities__WEBPACK_IMPORTED_MODULE_2__["styled"])
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
-/* harmony import */ var _Button_BaseButton_classNames__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/BaseButton.classNames.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var _Button_BaseButton_classNames__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("../office-ui-fabric-react/lib/components/Button/BaseButton.classNames.js");
+
 
 
 var GlobalClassNames = {
@@ -55458,7 +55431,7 @@ function getStyles(props) {
     var _a, _b, _c, _d, _e, _f, _g;
     var className = props.className, theme = props.theme, selected = props.selected, invalid = props.invalid, disabled = props.disabled;
     var palette = theme.palette, semanticColors = theme.semanticColors, fonts = theme.fonts;
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(GlobalClassNames, theme);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(GlobalClassNames, theme);
     var personaPrimaryTextStyles = [
         selected &&
             !invalid &&
@@ -55469,7 +55442,7 @@ function getStyles(props) {
                         color: palette.white,
                     }
                 },
-                _a[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     color: 'HighlightText',
                 },
                 _a),
@@ -55492,7 +55465,7 @@ function getStyles(props) {
         },
         disabled && {
             selectors: (_c = {},
-                _c[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                     color: 'GrayText',
                 },
                 _c),
@@ -55506,7 +55479,7 @@ function getStyles(props) {
     return {
         root: [
             classNames.root,
-            Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getFocusStyle"])(theme, { inset: -2 }),
+            Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getFocusStyle"])(theme, { inset: -2 }),
             {
                 borderRadius: 15,
                 display: 'inline-flex',
@@ -55523,7 +55496,7 @@ function getStyles(props) {
                             background: !selected && !disabled ? palette.neutralLight : '',
                         }
                     },
-                    _d[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = [{ border: '1px solid WindowText' }, disabled && { borderColor: 'GrayText' }],
+                    _d[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = [{ border: '1px solid WindowText' }, disabled && { borderColor: 'GrayText' }],
                     _d),
             },
             selected &&
@@ -55532,11 +55505,7 @@ function getStyles(props) {
                 {
                     background: palette.themePrimary,
                     selectors: (_e = {},
-                        _e[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                            borderColor: 'HighLight',
-                            background: 'Highlight',
-                            MsHighContrastAdjust: 'none',
-                        },
+                        _e[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ borderColor: 'HighLight', background: 'Highlight' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                         _e),
                 },
             ],
@@ -55587,7 +55556,7 @@ function getStyles(props) {
                                 background: palette.themeDarker,
                             }
                         },
-                        _f[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                        _f[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                             color: 'HighlightText',
                         },
                         _f),
@@ -55605,7 +55574,7 @@ function getStyles(props) {
             ],
             disabled && {
                 selectors: (_g = {},
-                    _g["." + _Button_BaseButton_classNames__WEBPACK_IMPORTED_MODULE_1__["ButtonGlobalClassNames"].msButtonIcon] = {
+                    _g["." + _Button_BaseButton_classNames__WEBPACK_IMPORTED_MODULE_2__["ButtonGlobalClassNames"].msButtonIcon] = {
                         color: semanticColors.buttonText,
                     },
                     _g),
@@ -56067,19 +56036,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/@microsoft/load-themed-styles/lib-es6/index.js");
 /* eslint-disable */
 
-Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".root_a2c34ca6{min-width:260px}.suggestionsItem_a2c34ca6{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:stretch;-ms-flex-align:stretch;align-items:stretch;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;position:relative;overflow:hidden}.suggestionsItem_a2c34ca6:hover{background:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.suggestionsItem_a2c34ca6:hover .closeButton_a2c34ca6{display:block}.suggestionsItem_a2c34ca6.suggestionsItemIsSuggested_a2c34ca6{background:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.suggestionsItem_a2c34ca6.suggestionsItemIsSuggested_a2c34ca6:hover{background:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.suggestionsItem_a2c34ca6.suggestionsItemIsSuggested_a2c34ca6:hover{background:Highlight;color:HighlightText}}@media screen and (-ms-high-contrast:active){.suggestionsItem_a2c34ca6.suggestionsItemIsSuggested_a2c34ca6{background:Highlight;color:HighlightText;-ms-high-contrast-adjust:none}}.suggestionsItem_a2c34ca6.suggestionsItemIsSuggested_a2c34ca6 .closeButton_a2c34ca6:hover{background:" }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": ";color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.suggestionsItem_a2c34ca6.suggestionsItemIsSuggested_a2c34ca6 .itemButton_a2c34ca6{color:HighlightText}}.suggestionsItem_a2c34ca6 .closeButton_a2c34ca6{display:none;color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.suggestionsItem_a2c34ca6 .closeButton_a2c34ca6:hover{background:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.actionButton_a2c34ca6{background-color:transparent;border:0;cursor:pointer;margin:0;position:relative;border-top:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";height:40px;width:100%;font-size:12px}[dir=ltr] .actionButton_a2c34ca6{padding-left:8px}[dir=rtl] .actionButton_a2c34ca6{padding-right:8px}html[dir=ltr] .actionButton_a2c34ca6{text-align:left}html[dir=rtl] .actionButton_a2c34ca6{text-align:right}.actionButton_a2c34ca6:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";cursor:pointer}.actionButton_a2c34ca6:active,.actionButton_a2c34ca6:focus{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.actionButton_a2c34ca6 .ms-Button-icon{font-size:16px;width:25px}.actionButton_a2c34ca6 .ms-Button-label{margin:0 4px 0 9px}html[dir=rtl] .actionButton_a2c34ca6 .ms-Button-label{margin:0 9px 0 4px}.buttonSelected_a2c34ca6{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.suggestionsTitle_a2c34ca6{padding:0 12px;color:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";font-size:12px;line-height:40px;border-bottom:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.suggestionsContainer_a2c34ca6{overflow-y:auto;overflow-x:hidden;max-height:300px;border-bottom:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.suggestionsNone_a2c34ca6{text-align:center;color:#797775;font-size:12px;line-height:30px}.suggestionsSpinner_a2c34ca6{margin:5px 0;white-space:nowrap;line-height:20px;font-size:12px}html[dir=ltr] .suggestionsSpinner_a2c34ca6{padding-left:14px}html[dir=rtl] .suggestionsSpinner_a2c34ca6{padding-right:14px}html[dir=ltr] .suggestionsSpinner_a2c34ca6{text-align:left}html[dir=rtl] .suggestionsSpinner_a2c34ca6{text-align:right}.suggestionsSpinner_a2c34ca6 .ms-Spinner-circle{display:inline-block;vertical-align:middle}.suggestionsSpinner_a2c34ca6 .ms-Spinner-label{display:inline-block;margin:0 10px 0 16px;vertical-align:middle}html[dir=rtl] .suggestionsSpinner_a2c34ca6 .ms-Spinner-label{margin:0 16px 0 10px}.itemButton_a2c34ca6.itemButton_a2c34ca6{width:100%;padding:0;min-width:0;height:100%}@media screen and (-ms-high-contrast:active){.itemButton_a2c34ca6.itemButton_a2c34ca6{color:WindowText}}.itemButton_a2c34ca6.itemButton_a2c34ca6:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.closeButton_a2c34ca6.closeButton_a2c34ca6{padding:0 4px;height:auto;width:32px}@media screen and (-ms-high-contrast:active){.closeButton_a2c34ca6.closeButton_a2c34ca6{color:WindowText}}.closeButton_a2c34ca6.closeButton_a2c34ca6:hover{background:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.suggestionsAvailable_a2c34ca6{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}" }]);
-var root = "root_a2c34ca6";
-var suggestionsItem = "suggestionsItem_a2c34ca6";
-var closeButton = "closeButton_a2c34ca6";
-var suggestionsItemIsSuggested = "suggestionsItemIsSuggested_a2c34ca6";
-var itemButton = "itemButton_a2c34ca6";
-var actionButton = "actionButton_a2c34ca6";
-var buttonSelected = "buttonSelected_a2c34ca6";
-var suggestionsTitle = "suggestionsTitle_a2c34ca6";
-var suggestionsContainer = "suggestionsContainer_a2c34ca6";
-var suggestionsNone = "suggestionsNone_a2c34ca6";
-var suggestionsSpinner = "suggestionsSpinner_a2c34ca6";
-var suggestionsAvailable = "suggestionsAvailable_a2c34ca6";
+Object(_microsoft_load_themed_styles__WEBPACK_IMPORTED_MODULE_0__["loadStyles"])([{ "rawString": ".root_daa93819{min-width:260px}.suggestionsItem_daa93819{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:stretch;-ms-flex-align:stretch;align-items:stretch;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;position:relative;overflow:hidden}.suggestionsItem_daa93819:hover{background:" }, { "theme": "neutralLighter", "defaultValue": "#f3f2f1" }, { "rawString": "}.suggestionsItem_daa93819:hover .closeButton_daa93819{display:block}.suggestionsItem_daa93819.suggestionsItemIsSuggested_daa93819{background:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.suggestionsItem_daa93819.suggestionsItemIsSuggested_daa93819:hover{background:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.suggestionsItem_daa93819.suggestionsItemIsSuggested_daa93819:hover{background:Highlight;color:HighlightText}}@media screen and (-ms-high-contrast:active){.suggestionsItem_daa93819.suggestionsItemIsSuggested_daa93819{background:Highlight;color:HighlightText;-ms-high-contrast-adjust:none}}.suggestionsItem_daa93819.suggestionsItemIsSuggested_daa93819 .closeButton_daa93819:hover{background:" }, { "theme": "neutralTertiary", "defaultValue": "#a19f9d" }, { "rawString": ";color:" }, { "theme": "neutralPrimary", "defaultValue": "#323130" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.suggestionsItem_daa93819.suggestionsItemIsSuggested_daa93819 .itemButton_daa93819{color:HighlightText}}.suggestionsItem_daa93819 .closeButton_daa93819{display:none;color:" }, { "theme": "neutralSecondary", "defaultValue": "#605e5c" }, { "rawString": "}.suggestionsItem_daa93819 .closeButton_daa93819:hover{background:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.actionButton_daa93819{background-color:transparent;border:0;cursor:pointer;margin:0;position:relative;border-top:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";height:40px;width:100%;font-size:12px}[dir=ltr] .actionButton_daa93819{padding-left:8px}[dir=rtl] .actionButton_daa93819{padding-right:8px}html[dir=ltr] .actionButton_daa93819{text-align:left}html[dir=rtl] .actionButton_daa93819{text-align:right}.actionButton_daa93819:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": ";cursor:pointer}.actionButton_daa93819:active,.actionButton_daa93819:focus{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.actionButton_daa93819 .ms-Button-icon{font-size:16px;width:25px}.actionButton_daa93819 .ms-Button-label{margin:0 4px 0 9px}html[dir=rtl] .actionButton_daa93819 .ms-Button-label{margin:0 9px 0 4px}.buttonSelected_daa93819{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.suggestionsTitle_daa93819{padding:0 12px;color:" }, { "theme": "themePrimary", "defaultValue": "#0078d4" }, { "rawString": ";font-size:12px;line-height:40px;border-bottom:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.suggestionsContainer_daa93819{overflow-y:auto;overflow-x:hidden;max-height:300px;border-bottom:1px solid " }, { "theme": "neutralLight", "defaultValue": "#edebe9" }, { "rawString": "}.suggestionsNone_daa93819{text-align:center;color:#797775;font-size:12px;line-height:30px}.suggestionsSpinner_daa93819{margin:5px 0;white-space:nowrap;line-height:20px;font-size:12px}html[dir=ltr] .suggestionsSpinner_daa93819{padding-left:14px}html[dir=rtl] .suggestionsSpinner_daa93819{padding-right:14px}html[dir=ltr] .suggestionsSpinner_daa93819{text-align:left}html[dir=rtl] .suggestionsSpinner_daa93819{text-align:right}.suggestionsSpinner_daa93819 .ms-Spinner-circle{display:inline-block;vertical-align:middle}.suggestionsSpinner_daa93819 .ms-Spinner-label{display:inline-block;margin:0 10px 0 16px;vertical-align:middle}html[dir=rtl] .suggestionsSpinner_daa93819 .ms-Spinner-label{margin:0 16px 0 10px}.itemButton_daa93819.itemButton_daa93819{width:100%;padding:0;min-width:0;height:100%}@media screen and (-ms-high-contrast:active){.itemButton_daa93819.itemButton_daa93819{color:WindowText}}.itemButton_daa93819.itemButton_daa93819:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.closeButton_daa93819.closeButton_daa93819{padding:0 4px;height:auto;width:32px}@media screen and (-ms-high-contrast:active){.closeButton_daa93819.closeButton_daa93819{color:WindowText}}.closeButton_daa93819.closeButton_daa93819:hover{background:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c6c4" }, { "rawString": ";color:" }, { "theme": "neutralDark", "defaultValue": "#201f1e" }, { "rawString": "}.suggestionsAvailable_daa93819{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}" }]);
+var root = "root_daa93819";
+var suggestionsItem = "suggestionsItem_daa93819";
+var closeButton = "closeButton_daa93819";
+var suggestionsItemIsSuggested = "suggestionsItemIsSuggested_daa93819";
+var itemButton = "itemButton_daa93819";
+var actionButton = "actionButton_daa93819";
+var buttonSelected = "buttonSelected_daa93819";
+var suggestionsTitle = "suggestionsTitle_daa93819";
+var suggestionsContainer = "suggestionsContainer_daa93819";
+var suggestionsNone = "suggestionsNone_daa93819";
+var suggestionsSpinner = "suggestionsSpinner_daa93819";
+var suggestionsAvailable = "suggestionsAvailable_daa93819";
 
 
 /***/ }),
@@ -56445,7 +56414,9 @@ var SuggestionsItem = /** @class */ (function (_super) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SuggestionsItemGlobalClassNames", function() { return SuggestionsItemGlobalClassNames; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStyles", function() { return getStyles; });
-/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("../../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _Styling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("../office-ui-fabric-react/lib/Styling.js");
+
 
 var SuggestionsItemGlobalClassNames = {
     root: 'ms-Suggestions-item',
@@ -56457,7 +56428,7 @@ function getStyles(props) {
     var _a, _b, _c;
     var className = props.className, theme = props.theme, suggested = props.suggested;
     var palette = theme.palette, semanticColors = theme.semanticColors;
-    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_0__["getGlobalClassNames"])(SuggestionsItemGlobalClassNames, theme);
+    var classNames = Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getGlobalClassNames"])(SuggestionsItemGlobalClassNames, theme);
     return {
         root: [
             classNames.root,
@@ -56505,14 +56476,10 @@ function getStyles(props) {
                 // Require for IE11 to truncate the component.
                 overflow: 'hidden',
                 selectors: (_a = {},
-                    _a[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                    _a[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                         color: 'WindowText',
                         selectors: {
-                            ':hover': {
-                                background: 'Highlight',
-                                color: 'HighlightText',
-                                MsHighContrastAdjust: 'none',
-                            },
+                            ':hover': Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ background: 'Highlight', color: 'HighlightText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                         },
                     },
                     _a[':hover'] = {
@@ -56529,11 +56496,7 @@ function getStyles(props) {
                                 background: semanticColors.menuDivider,
                             }
                         },
-                        _b[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
-                            background: 'Highlight',
-                            color: 'HighlightText',
-                            MsHighContrastAdjust: 'none',
-                        },
+                        _b[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({ background: 'Highlight', color: 'HighlightText' }, Object(_Styling__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"])()),
                         _b),
                 },
             ],
@@ -56552,7 +56515,7 @@ function getStyles(props) {
                             color: palette.neutralDark,
                         }
                     },
-                    _c[_Styling__WEBPACK_IMPORTED_MODULE_0__["HighContrastSelector"]] = {
+                    _c[_Styling__WEBPACK_IMPORTED_MODULE_1__["HighContrastSelector"]] = {
                         color: 'WindowText',
                     },
                     _c),
@@ -57794,6 +57757,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenWidthMinUhfMobile", function() { return _index__WEBPACK_IMPORTED_MODULE_0__["ScreenWidthMinUhfMobile"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getScreenSelector", function() { return _index__WEBPACK_IMPORTED_MODULE_0__["getScreenSelector"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHighContrastNoAdjustStyle", function() { return _index__WEBPACK_IMPORTED_MODULE_0__["getHighContrastNoAdjustStyle"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEdgeChromiumNoHighContrastAdjustSelector", function() { return _index__WEBPACK_IMPORTED_MODULE_0__["getEdgeChromiumNoHighContrastAdjustSelector"]; });
 
@@ -59148,6 +59113,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenWidthMinUhfMobile", function() { return _Styling__WEBPACK_IMPORTED_MODULE_75__["ScreenWidthMinUhfMobile"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getScreenSelector", function() { return _Styling__WEBPACK_IMPORTED_MODULE_75__["getScreenSelector"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHighContrastNoAdjustStyle", function() { return _Styling__WEBPACK_IMPORTED_MODULE_75__["getHighContrastNoAdjustStyle"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEdgeChromiumNoHighContrastAdjustSelector", function() { return _Styling__WEBPACK_IMPORTED_MODULE_75__["getEdgeChromiumNoHighContrastAdjustSelector"]; });
 
@@ -64137,7 +64104,7 @@ __webpack_require__.r(__webpack_exports__);
 // Do not modify this file; it is generated as part of publish.
 // The checked in version is a placeholder only and will not be updated.
 
-Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('office-ui-fabric-react', '7.155.4');
+Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('office-ui-fabric-react', '7.160.3');
 
 
 /***/ }),
@@ -65290,7 +65257,7 @@ __webpack_require__.r(__webpack_exports__);
 // Do not modify this file; it is generated as part of publish.
 // The checked in version is a placeholder only and will not be updated.
 
-Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@fluentui/react-focus', '7.17.1');
+Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@fluentui/react-focus', '7.17.4');
 
 
 /***/ }),
@@ -65962,7 +65929,7 @@ __webpack_require__.r(__webpack_exports__);
 // Do not modify this file; it is generated as part of publish.
 // The checked in version is a placeholder only and will not be updated.
 
-Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/react-hooks', '7.13.9');
+Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/react-hooks', '7.13.11');
 
 
 /***/ }),
@@ -66300,6 +66267,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getScreenSelector", function() { return _styles_index__WEBPACK_IMPORTED_MODULE_1__["getScreenSelector"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHighContrastNoAdjustStyle", function() { return _styles_index__WEBPACK_IMPORTED_MODULE_1__["getHighContrastNoAdjustStyle"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEdgeChromiumNoHighContrastAdjustSelector", function() { return _styles_index__WEBPACK_IMPORTED_MODULE_1__["getEdgeChromiumNoHighContrastAdjustSelector"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "normalize", function() { return _styles_index__WEBPACK_IMPORTED_MODULE_1__["normalize"]; });
@@ -66395,10 +66364,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScreenWidthMaxXXLarge", function() { return ScreenWidthMaxXXLarge; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ScreenWidthMinUhfMobile", function() { return ScreenWidthMinUhfMobile; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getScreenSelector", function() { return getScreenSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getHighContrastNoAdjustStyle", function() { return getHighContrastNoAdjustStyle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEdgeChromiumNoHighContrastAdjustSelector", function() { return getEdgeChromiumNoHighContrastAdjustSelector; });
-var HighContrastSelector = '@media screen and (-ms-high-contrast: active)';
-var HighContrastSelectorWhite = '@media screen and (-ms-high-contrast: black-on-white)';
-var HighContrastSelectorBlack = '@media screen and (-ms-high-contrast: white-on-black)';
+var HighContrastSelector = '@media screen and (-ms-high-contrast: active), (forced-colors: active)';
+var HighContrastSelectorWhite = '@media screen and (-ms-high-contrast: black-on-white), (forced-colors: black-on-white)';
+var HighContrastSelectorBlack = '@media screen and (-ms-high-contrast: white-on-black), (forced-colors: white-on-black)';
 var EdgeChromiumHighContrastSelector = '@media screen and (forced-colors: active)';
 var ScreenWidthMinSmall = 320;
 var ScreenWidthMinMedium = 480;
@@ -66416,7 +66386,17 @@ function getScreenSelector(min, max) {
     return "@media only screen and (min-width: " + min + "px) and (max-width: " + max + "px)";
 }
 /**
+ * The style which turns off high contrast adjustment in browsers.
+ */
+function getHighContrastNoAdjustStyle() {
+    return {
+        forcedColorAdjust: 'none',
+        MsHighContrastAdjust: 'none',
+    };
+}
+/**
  * The style which turns off high contrast adjustment in (only) Edge Chromium browser.
+ * @deprecated Use `getHighContrastNoAdjustStyle`
  */
 function getEdgeChromiumNoHighContrastAdjustSelector() {
     var _a;
@@ -67076,6 +67056,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getScreenSelector", function() { return _CommonStyles__WEBPACK_IMPORTED_MODULE_11__["getScreenSelector"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHighContrastNoAdjustStyle", function() { return _CommonStyles__WEBPACK_IMPORTED_MODULE_11__["getHighContrastNoAdjustStyle"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEdgeChromiumNoHighContrastAdjustSelector", function() { return _CommonStyles__WEBPACK_IMPORTED_MODULE_11__["getEdgeChromiumNoHighContrastAdjustSelector"]; });
 
 /* harmony import */ var _GeneralStyles__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__("../styling/lib/styles/GeneralStyles.js");
@@ -67602,7 +67584,7 @@ __webpack_require__.r(__webpack_exports__);
 // Do not modify this file; it is generated as part of publish.
 // The checked in version is a placeholder only and will not be updated.
 
-Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/styling', '7.16.19');
+Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/styling', '7.18.0');
 
 
 /***/ }),
@@ -72595,10 +72577,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getInitials", function() { return getInitials; });
 /**
  * Regular expression matching characters to ignore when calculating the initials.
- * The first part matches characters within parenthesis, including the parenthesis.
- * The second part matches special ASCII characters except space, plus some unicode special characters.
  */
-var UNWANTED_CHARS_REGEX = /\([^)]*\)|[\0-\u001F\!-/:-@\[-`\{-\u00BF\u0250-\u036F\uD800-\uFFFF]/g;
+/**
+ * Regular expression matching characters within various types of enclosures, including the enclosures themselves
+ *  so for example, (xyz) [xyz] {xyz} all would be ignored
+ */
+var UNWANTED_ENCLOSURES_REGEX = /[\(\[\{][^\)\]\}]*[\)\]\}]/g;
+/**
+ * Regular expression matching special ASCII characters except space, plus some unicode special characters.
+ * Applies after unwanted enclosures have been removed
+ */
+var UNWANTED_CHARS_REGEX = /[\0-\u001F\!-/:-@\[-`\{-\u00BF\u0250-\u036F\uD800-\uFFFF]/g;
 /**
  * Regular expression matching phone numbers. Applied after chars matching UNWANTED_CHARS_REGEX have been removed
  * and number has been trimmed for whitespaces
@@ -72636,6 +72625,7 @@ function getInitialsLatin(displayName, isRtl) {
     return initials;
 }
 function cleanupDisplayName(displayName) {
+    displayName = displayName.replace(UNWANTED_ENCLOSURES_REGEX, '');
     displayName = displayName.replace(UNWANTED_CHARS_REGEX, '');
     displayName = displayName.replace(MULTIPLE_WHITESPACES_REGEX, ' ');
     displayName = displayName.trim();
@@ -73100,7 +73090,7 @@ function _merge(target, source, circularReferences) {
         if (source.hasOwnProperty(name_1)) {
             if (name_1 !== '__proto__' && name_1 !== 'constructor' && name_1 !== 'prototype') {
                 var value = source[name_1];
-                if (typeof value === 'object' && value !== null) {
+                if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
                     var isCircularReference = circularReferences.indexOf(value) > -1;
                     target[name_1] = (isCircularReference
                         ? value
@@ -74951,7 +74941,7 @@ __webpack_require__.r(__webpack_exports__);
 // Do not modify this file; it is generated as part of publish.
 // The checked in version is a placeholder only and will not be updated.
 
-Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/utilities', '7.33.2');
+Object(_uifabric_set_version__WEBPACK_IMPORTED_MODULE_0__["setVersion"])('@uifabric/utilities', '7.33.4');
 
 
 /***/ }),
@@ -76050,6 +76040,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ScreenWidthMinUhfMobile", function() { return office_ui_fabric_react_lib_index_bundle__WEBPACK_IMPORTED_MODULE_0__["ScreenWidthMinUhfMobile"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getScreenSelector", function() { return office_ui_fabric_react_lib_index_bundle__WEBPACK_IMPORTED_MODULE_0__["getScreenSelector"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getHighContrastNoAdjustStyle", function() { return office_ui_fabric_react_lib_index_bundle__WEBPACK_IMPORTED_MODULE_0__["getHighContrastNoAdjustStyle"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getEdgeChromiumNoHighContrastAdjustSelector", function() { return office_ui_fabric_react_lib_index_bundle__WEBPACK_IMPORTED_MODULE_0__["getEdgeChromiumNoHighContrastAdjustSelector"]; });
 

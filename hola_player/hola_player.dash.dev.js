@@ -81214,7 +81214,7 @@ var _ = {
 };
 
 var E = window.hola_player = module.exports = hola_player;
-E.VERSION = '1.1.1';
+E.VERSION = '1.1.2';
 E.players = {};
 var hola_conf, customer;
 try {
@@ -82602,12 +82602,38 @@ function check_filter(arr, val, is_filter_in){
     return is_filter_in==arr.indexOf(val)>=0;
 }
 
+// adding ?hola_provider_force or ?hola_provider_force=disabled to uri
+// overwrites register_percent and register_browser config
+function is_force_disabled(){
+    var v = get_conf('force', 'enabled');
+    return v=='disabled';
+}
+
+function is_env_disabled(){
+    var v;
+    if (!(v = get_conf('register_browser')))
+        return false;
+    var browser = external_util.user_agent.guess_browser();
+    var guess = external_util.user_agent.guess();
+    var platform = guess.mobile ? 'mobile' : guess.tv ? 'tv' :
+        'desktop';
+    if (browser.opera && browser.browser=='chrome')
+        browser.browser = 'opera';
+    try { v = JSON.parse(v); } catch(e){ v = {}; }
+    if (!check_filter(v.browser_in, browser.browser, true) ||
+        !check_filter(v.browser_out, browser.browser, false) ||
+        !check_filter(v.os_in, guess.os, true) ||
+        !check_filter(v.os_out, guess.os, false) ||
+        !check_filter(v.platform_in, platform, true) ||
+        !check_filter(v.platform_out, platform, false))
+    {
+        return true;
+    }
+    return false;
+}
+
 function is_register_disabled(){
     var v;
-    // adding ?hola_provider_force or ?hola_provider_force=disabled to uri
-    // overwrites register_percent and register_browser config
-    if (v = get_conf('force', 'enabled'))
-        return v=='disabled';
     if (v = get_conf('register_percent', 'n/a'))
     {
         if (isNaN(v)||v<0||v>100)
@@ -82619,25 +82645,7 @@ function is_register_disabled(){
         else if (!v || Math.random()*100>v)
             return true;
     }
-    if (v = get_conf('register_browser'))
-    {
-        var browser = external_util.user_agent.guess_browser();
-        var guess = external_util.user_agent.guess();
-        var platform = guess.mobile ? 'mobile' : guess.tv ? 'tv' :
-            'desktop';
-        if (browser.opera && browser.browser=='chrome')
-            browser.browser = 'opera';
-        try { v = JSON.parse(v); } catch(e){ v = {}; }
-        if (!check_filter(v.browser_in, browser.browser, true) ||
-            !check_filter(v.browser_out, browser.browser) ||
-            !check_filter(v.os_in, guess.os, true) ||
-            !check_filter(v.os_out, guess.os) ||
-            !check_filter(v.platform_in, platform, true) ||
-            !check_filter(v.platform_out, platform))
-        {
-            return true;
-        }
-    }
+    return false;
 }
 
 E.init = function(provider_id){
@@ -82660,6 +82668,8 @@ E.init = function(provider_id){
                 JSON.parse(v), {func: true, re: true});
         } catch(e){}
     }
+    init_conf.disabled = init_conf.disabled || is_force_disabled() ||
+        is_env_disabled();
     return init_conf;
 };
 
@@ -82890,7 +82900,7 @@ function main(){
     var Hls = window.Hls = _dereq_('hls.js');
     var provider = _dereq_('@hola.org/videojs5-hlsjs-source-handler');
     provider.Hls = Hls;
-    provider.version = '1.1.0';
+    provider.version = '1.1.1';
     provider.provider_version = provider.VERSION;
     provider.hls_version = provider.Hls.version;
     provider.hls_params = conf.hls_params;
@@ -82919,7 +82929,7 @@ var E = module.exports;
 var hlsjsConfig;
 var attached = false, disabled = false;
 
-E.VERSION = '1.1.1';
+E.VERSION = '1.1.2';
 E.name = 'HolaProviderHLS';
 
 E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){

@@ -1435,6 +1435,7 @@ const formatters = { html, haml, slim, pug };
  * required transformations applied
  */
 function parse(abbr, config) {
+    let oldTextValue;
     if (typeof abbr === 'string') {
         let parseOpt = config;
         if (config.options['jsx.enabled']) {
@@ -1444,6 +1445,10 @@ function parse(abbr, config) {
             parseOpt = Object.assign(Object.assign({}, parseOpt), { href: true });
         }
         abbr = parse$2(abbr, parseOpt);
+        // remove text field before snippets(abbr, config) call
+        // as abbreviation(abbr, parseOpt) already handled it
+        oldTextValue = config.text;
+        config.text = undefined;
     }
     // Run abbreviation resolve in two passes:
     // 1. Map each node to snippets, which are abbreviations as well. A single snippet
@@ -1451,6 +1456,7 @@ function parse(abbr, config) {
     // 2. Transform every resolved node
     abbr = resolveSnippets(abbr, config);
     walk(abbr, transform, config);
+    config.text = oldTextValue !== null && oldTextValue !== void 0 ? oldTextValue : config.text;
     return abbr;
 }
 /**

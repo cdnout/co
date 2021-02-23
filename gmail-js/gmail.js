@@ -2783,24 +2783,6 @@ var Gmail = function(localJQuery) {
         return emails;
     };
 
-    // dispatch mousedown and mouseup event on passed element
-    api.helper.trigger_mouse_click = function(element) {
-        if(element) {
-            //Trigger mouse down event
-            var mouseDown = document.createEvent("MouseEvents");
-            mouseDown.initEvent( "mousedown", true, false );
-            element.dispatchEvent(mouseDown);
-
-            //Trigger mouse up event
-            var mouseUp = document.createEvent("MouseEvents");
-            mouseUp.initEvent( "mouseup", true, false );
-            element.dispatchEvent(mouseUp);
-
-            return true;
-        }
-        return false;
-    };
-
     api.get.visible_emails = function(customInboxQuery) {
         var url = api.helper.get.visible_emails_pre(customInboxQuery);
         var get_data = api.tools.make_request(url);
@@ -3623,7 +3605,7 @@ var Gmail = function(localJQuery) {
         var minimizeButton = $("[alt='Minimize']")[0];
 
         if(minimizeButton) {
-            api.helper.trigger_mouse_click(minimizeButton);
+            minimizeButton.click();
 
             return true;
         }
@@ -4174,10 +4156,9 @@ var Gmail = function(localJQuery) {
     api.compose.start_compose = function() {
 
         //The compose button
-        var composeEl = $(".T-I.T-I-KE.L3")[0];
-
+        var composeEl = document.getElementsByClassName("T-I T-I-KE L3")[0];
         if(composeEl) {
-            api.helper.trigger_mouse_click(composeEl);
+            composeEl.click();
 
             return true;
         }

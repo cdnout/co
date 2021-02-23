@@ -1,4 +1,4 @@
-/*! css-doodle@0.13.9 */
+/*! css-doodle@0.14.2 */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -437,7 +437,7 @@
         }
       }
       else {
-        if (symbols[c]) {
+        if (symbols[c] && !/[0-9]/.test(it.curr(-1))) {
           c = symbols[c];
         }
         arg += c;
@@ -587,7 +587,7 @@
         if (c == '(') stack.push(c);
         if (c == ')') stack.pop();
 
-        if (symbols[c]) {
+        if (symbols[c] && !/[0-9]/.test(it.curr(-1))) {
           c = symbols[c];
         }
 
@@ -1279,7 +1279,7 @@
             }
             else {
               if (c == '(') stack.push(c);
-              if (c == ',') {
+              if (c == ',' && !stack.length) {
                 let arg = infix_to_postfix(func_body);
                 if (arg.length) values.push(arg);
                 func_body = '';
@@ -1510,7 +1510,7 @@
 
     for (let i = 0; i < split; ++i) {
       let t = start - deg * i;
-      let point = fn(t);
+      let point = fn(t, i);
       if (!i) first = point;
       add_point(point, scale);
     }
@@ -1521,7 +1521,7 @@
       if (w <= 0) w = 2 / 1000;
       for (let i = 0; i < split; ++i) {
         let t = start + deg * i;
-        let [x, y] = fn(t);
+        let [x, y] = fn(t, i);
         let theta = atan2(y, x);
         let point = [
           x - w * cos(theta),
@@ -1764,17 +1764,26 @@
     let py = is_empty(props.y) ? 'sin(t)' : props.y;
     let pr = is_empty(props.r) ? ''       : props.r;
 
-    return polygon(option, t => {
-      let context = Object.assign({}, props, { t });
+    return polygon(option, (t, i) => {
+      let context = Object.assign({}, props, {
+        't': t,
+        'θ': t,
+        'seq': (...list) => {
+          if (!list.length) return '';
+          return list[i % list.length];
+        }
+      });
+
       let x = calc(px, context);
       let y = calc(py, context);
+
       if (pr) {
         let r = calc(pr, context);
         x = r * Math.cos(t);
         y = r * Math.sin(t);
       }
       if (props.rotate) {
-        [x, y] = rotate(x, y, parseInt(props.rotate) || 0);
+        [x, y] = rotate(x, y, Number(props.rotate) || 0);
       }
       if (props.origin) {
         [x, y] = translate(x, y, props.origin);
@@ -1859,8 +1868,10 @@
       }
       else if (c == ';') {
         value = temp;
+        key = key.trim();
+        value = value.trim();
         if (key.length && value.length) {
-          result[key.trim()] = value.trim();
+          result[key] = value;
         }
         key = value = temp = '';
       }
@@ -1870,8 +1881,10 @@
       it.next();
     }
 
+    key = key.trim();
+    temp = temp.trim();
     if (key.length && temp.length) {
-      result[key.trim()] = temp.trim();
+      result[key] = temp;
     }
 
     return result;
@@ -1888,6 +1901,26 @@
       it.next();
     }
   }
+
+  const uniform_time = {
+    'name': 'cssd-uniform-time',
+    'animation-name': 'cssd-uniform-time-animation',
+    'animation-duration': '31536000000', /* one year in ms */
+    'animation-iteration-count': 'infinite',
+    'animation-delay': '0s',
+    'animation-direction': 'normal',
+    'animation-fill-mode': 'none',
+    'animation-play-state': 'running',
+    'animation-timing-function': 'linear',
+  };
+
+  uniform_time['animation'] = `
+  ${ uniform_time['animation-duration'] }ms
+  ${ uniform_time['animation-timing-function'] }
+  ${ uniform_time['animation-delay'] }
+  ${ uniform_time['animation-iteration-count'] }
+  ${ uniform_time['animation-name'] }
+`;
 
   function get_exposed(random) {
     const { shuffle } = List(random);
@@ -2090,6 +2123,10 @@
 
       var() {
         return value => `var(${ get_value(value) })`;
+      },
+
+      t() {
+        return value => `var(--${ uniform_time.name })`;
       },
 
       shape() {
@@ -2553,6 +2590,7 @@
       this.Func = get_exposed(random);
       this.Selector = Selector(random);
       this.custom_properties = {};
+      this.uniforms = {};
     }
 
     reset() {
@@ -2626,6 +2664,10 @@
           let fn = this.pick_func(fname);
 
           if (typeof fn === 'function') {
+            if (fname === 't') {
+              this.uniforms.time = true;
+            }
+
             if (fname === 'doodle' || fname === 'shaders') {
               let value = get_value((arg.arguments[0] || [])[0]);
               return fname === 'doodle'
@@ -2679,6 +2721,9 @@
             let fname = val.name.substr(1);
             let fn = this.pick_func(fname);
             if (typeof fn === 'function') {
+              if (fname === 't') {
+                this.uniforms.time = true;
+              }
               if (fname === 'doodle' || fname === 'shaders') {
                 let arg = val.arguments[0] || [];
                 let value = get_value(arg[0]);
@@ -2719,6 +2764,14 @@
 
       if (/^animation(\-name)?$/.test(prop)) {
         this.props.has_animation = true;
+
+        if (is_host_selector(selector)) {
+          let prefix = uniform_time[prop];
+          if (prefix && value) {
+            value =  prefix + ',' + value;
+          }
+        }
+
         if (coords.count > 1) {
           let { count } = coords;
           switch (prop) {
@@ -2943,6 +2996,21 @@
       });
 
       let keyframes = Object.keys(this.keyframes);
+
+      if (this.uniforms.time) {
+        this.styles.container += `
+        :host, .host {
+          animation: ${ uniform_time.animation };
+        }
+      `;
+        this.styles.keyframes += `
+       @keyframes ${ uniform_time['animation-name'] } {
+         from { --${ uniform_time.name }: 0 }
+         to { --${ uniform_time.name }: ${ uniform_time['animation-duration'] } }
+       }
+      `;
+      }
+
       this.coords.forEach((coords, i) => {
         keyframes.forEach(name => {
           let aname = this.compose_aname(name, coords.count);
@@ -2973,7 +3041,8 @@
         grid: this.grid,
         doodles: this.doodles,
         shaders: this.shaders,
-        definitions: definitions
+        definitions: definitions,
+        uniforms: this.uniforms
       }
     }
 
@@ -3236,40 +3305,6 @@
   //
   mixkey(math.random(), pool);
 
-  function get_all_variables(element) {
-    let ret = {};
-    if (element.computedStyleMap) {
-      for (let [prop, value] of element.computedStyleMap()) {
-        if (prop.startsWith('--')) {
-          ret[prop] = value[0][0];
-        }
-      }
-    } else {
-      let styles = getComputedStyle(element);
-      for (let prop of styles) {
-        if (prop.startsWith('--')) {
-          ret[prop] = styles.getPropertyValue(prop);
-        }
-      }
-    }
-    return inline(ret);
-  }
-
-  function get_variable(element, name) {
-    return getComputedStyle(element).getPropertyValue(name)
-      .trim()
-      .replace(/^\(|\)$/g, '');
-
-  }
-
-  function inline(map) {
-    let result = [];
-    for (let prop in map) {
-      result.push(prop + ':' + map[prop]);
-    }
-    return result.join(';');
-  }
-
   function create_shader(gl, type, source) {
     let shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -3378,6 +3413,40 @@
     return Promise.resolve(canvas.toDataURL());
   }
 
+  function get_all_variables(element) {
+    let ret = {};
+    if (element.computedStyleMap) {
+      for (let [prop, value] of element.computedStyleMap()) {
+        if (prop.startsWith('--')) {
+          ret[prop] = value[0][0];
+        }
+      }
+    } else {
+      let styles = getComputedStyle(element);
+      for (let prop of styles) {
+        if (prop.startsWith('--')) {
+          ret[prop] = styles.getPropertyValue(prop);
+        }
+      }
+    }
+    return inline(ret);
+  }
+
+  function get_variable(element, name) {
+    return getComputedStyle(element).getPropertyValue(name)
+      .trim()
+      .replace(/^\(|\)$/g, '');
+
+  }
+
+  function inline(map) {
+    let result = [];
+    for (let prop in map) {
+      result.push(prop + ':' + map[prop]);
+    }
+    return result.join(';');
+  }
+
   class Doodle extends HTMLElement {
     constructor() {
       super();
@@ -3429,6 +3498,10 @@
             grid
           );
         }
+      }
+
+      if (compiled.uniforms.time) {
+        this.register_uniform_time();
       }
 
       let replace = this.replace(compiled.doodles, compiled.shaders);
@@ -3540,9 +3613,11 @@
 
       let replace = this.replace(compiled.doodles, compiled.shaders);
       let grid_container = create_grid(grid);
+
       let size = (options && options.width && options.height)
         ? `width="${ options.width }" height="${ options.height }"`
         : '';
+
       replace(`
       <svg ${ size } xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
         <foreignObject width="100%" height="100%">
@@ -3649,9 +3724,15 @@
         );
 
         return Promise.all(mappings).then(mapping => {
-          mapping.forEach(({ id, value }) => {
-            input = input.replace('${' + id + '}', `url(${value})`);
-          });
+          if (input.replaceAll) {
+            mapping.forEach(({ id, value }) => {
+              input = input.replaceAll('${' + id + '}', `url(${value})`);
+            });
+          } else {
+            mapping.forEach(({ id, value }) => {
+              input = input.replace('${' + id + '}', `url(${value})`);
+            });
+          }
           return input;
         });
       }
@@ -3665,10 +3746,12 @@
       let style_container = get_grid_styles(grid) + host + container;
       let style_cells = has_delay ? '' : cells;
 
+      const { uniforms } = compiled;
+
       let replace = this.replace(compiled.doodles, compiled.shaders);
 
       this.doodle.innerHTML = `
-      <style>${ get_basic_styles() }</style>
+      <style>${ get_basic_styles(uniforms) }</style>
       <style class="style-keyframes">${ keyframes }</style>
       <style class="style-container">${ style_container }</style>
       <style class="style-cells">${ style_cells }</style>
@@ -3689,8 +3772,25 @@
       const definitions = compiled.definitions;
       if (window.CSS && window.CSS.registerProperty) {
         try {
+          if (uniforms.time) {
+            this.register_uniform_time();
+          }
           definitions.forEach(CSS.registerProperty);
         } catch (e) { }
+      }
+    }
+
+    register_uniform_time() {
+      if (!this.is_uniform_time_registered) {
+        try {
+          CSS.registerProperty({
+            name: '--' + uniform_time.name,
+            syntax: '<number>',
+            initialValue: 0,
+            inherits: true
+          });
+        } catch (e) {}
+        this.is_uniform_time_registered = true;
       }
     }
 
@@ -3709,7 +3809,7 @@
         <svg xmlns="http://www.w3.org/2000/svg"
           preserveAspectRatio="none"
           viewBox="0 0 ${ width } ${ height }"
-          ${ is_safari() ? '' : `width="${ w }px" height="${ h }px"`}
+          ${ is_safari() ? '' : `width="${ w }px" height="${ h }px"` }
         >
           <foreignObject width="100%" height="100%">
             <div
@@ -3766,25 +3866,26 @@
     customElements.define('css-doodle', Doodle);
   }
 
-  function get_basic_styles() {
+  function get_basic_styles(uniforms = {}) {
     const inherited_grid_props = get_props(/grid/)
       .map(n => `${ n }: inherit;`)
       .join('');
     return `
     * {
-      box-sizing: border-box;
+      box-sizing: border-box
     }
     *::after, *::before {
-      box-sizing: inherit;
+      box-sizing: inherit
     }
     :host, .host {
       display: block;
       visibility: visible;
       width: auto;
       height: auto;
+      --${ uniform_time.name }: 0
     }
     :host([hidden]), .host[hidden] {
-      display: none;
+      display: none
     }
     .container {
       position: relative;
@@ -3797,7 +3898,7 @@
       position: relative;
       line-height: 1;
       display: grid;
-      place-items: center;
+      place-items: center
     }
   `;
   }

@@ -1,2 +1,11088 @@
-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(require("@firebase/app")):"function"==typeof define&&define.amd?define(["@firebase/app"],e):e((t="undefined"!=typeof globalThis?globalThis:t||self).firebase)}(this,function(e){"use strict";try{(function(){function t(t){return t&&"object"==typeof t&&"default"in t?t:{default:t}}var $l=t(e);(function(){var t,o="function"==typeof Object.defineProperties?Object.defineProperty:function(t,e,n){t!=Array.prototype&&t!=Object.prototype&&(t[e]=n.value)};var u=function(t){t=["object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global,t];for(var e=0;e<t.length;++e){var n=t[e];if(n&&n.Math==Math)return n}return globalThis}(this);function c(t){var e,n,i="undefined"!=typeof Symbol&&Symbol.iterator&&t[Symbol.iterator];return i?i.call(t):{next:(e=t,n=0,function(){return n<e.length?{done:!1,value:e[n++]}:{done:!0}})}}!function(t,e){if(e){var n=u;t=t.split(".");for(var i=0;i<t.length-1;i++){var r=t[i];r in n||(n[r]={}),n=n[r]}(e=e(i=n[t=t[t.length-1]]))!=i&&null!=e&&o(n,t,{configurable:!0,writable:!0,value:e})}}("Promise",function(t){function a(t){this.b=0,this.c=void 0,this.a=[];var e=this.f();try{t(e.resolve,e.reject)}catch(t){e.reject(t)}}function e(){this.a=null}function s(e){return e instanceof a?e:new a(function(t){t(e)})}if(t)return t;e.prototype.b=function(t){var e;null==this.a&&(this.a=[],(e=this).c(function(){e.g()})),this.a.push(t)};var n=u.setTimeout;e.prototype.c=function(t){n(t,0)},e.prototype.g=function(){for(;this.a&&this.a.length;){var t=this.a;this.a=[];for(var e=0;e<t.length;++e){var n=t[e];t[e]=null;try{n()}catch(t){this.f(t)}}}this.a=null},e.prototype.f=function(t){this.c(function(){throw t})},a.prototype.f=function(){function t(e){return function(t){i||(i=!0,e.call(n,t))}}var n=this,i=!1;return{resolve:t(this.v),reject:t(this.g)}},a.prototype.v=function(t){if(t===this)this.g(new TypeError("A Promise cannot resolve to itself"));else if(t instanceof a)this.s(t);else{t:switch(typeof t){case"object":var e=null!=t;break t;case"function":e=!0;break t;default:e=!1}e?this.m(t):this.i(t)}},a.prototype.m=function(t){var e=void 0;try{e=t.then}catch(t){return void this.g(t)}"function"==typeof e?this.u(e,t):this.i(t)},a.prototype.g=function(t){this.h(2,t)},a.prototype.i=function(t){this.h(1,t)},a.prototype.h=function(t,e){if(0!=this.b)throw Error("Cannot settle("+t+", "+e+"): Promise already settled in state"+this.b);this.b=t,this.c=e,this.l()},a.prototype.l=function(){if(null!=this.a){for(var t=0;t<this.a.length;++t)r.b(this.a[t]);this.a=null}};var r=new e;return a.prototype.s=function(t){var e=this.f();t.Pa(e.resolve,e.reject)},a.prototype.u=function(t,e){var n=this.f();try{t.call(e,n.resolve,n.reject)}catch(t){n.reject(t)}},a.prototype.then=function(t,e){function n(e,t){return"function"==typeof e?function(t){try{i(e(t))}catch(t){r(t)}}:t}var i,r,o=new a(function(t,e){i=t,r=e});return this.Pa(n(t,i),n(e,r)),o},a.prototype.catch=function(t){return this.then(void 0,t)},a.prototype.Pa=function(t,e){function n(){switch(i.b){case 1:t(i.c);break;case 2:e(i.c);break;default:throw Error("Unexpected state: "+i.b)}}var i=this;null==this.a?r.b(n):this.a.push(n)},a.resolve=s,a.reject=function(n){return new a(function(t,e){e(n)})},a.race=function(r){return new a(function(t,e){for(var n=c(r),i=n.next();!i.done;i=n.next())s(i.value).Pa(t,e)})},a.all=function(t){var e=c(t),o=e.next();return o.done?s([]):new a(function(n,t){for(var i=[],r=0;i.push(void 0),r++,s(o.value).Pa(function(e){return function(t){i[e]=t,0==--r&&n(i)}}(i.length-1),t),!(o=e.next()).done;);})},a});var h=h||{},l=this||self,e=/^[\w+/_-]+[=]{0,2}$/,s=null;function f(t){return(t=t.querySelector&&t.querySelector("script[nonce]"))&&(t=t.nonce||t.getAttribute("nonce"))&&e.test(t)?t:""}function a(){}function d(t){var e=typeof t;return"object"!=e?e:t?Array.isArray(t)?"array":e:"null"}function p(t){var e=d(t);return"array"==e||"object"==e&&"number"==typeof t.length}function v(t){return"function"==d(t)}function m(t){var e=typeof t;return"object"==e&&null!=t||"function"==e}var n="closure_uid_"+(1e9*Math.random()>>>0),i=0;function r(t,e,n){return t.call.apply(t.bind,arguments)}function g(e,n,t){if(!e)throw Error();if(2<arguments.length){var i=Array.prototype.slice.call(arguments,2);return function(){var t=Array.prototype.slice.call(arguments);return Array.prototype.unshift.apply(t,i),e.apply(n,t)}}return function(){return e.apply(n,arguments)}}function b(t,e,n){return(b=Function.prototype.bind&&-1!=Function.prototype.bind.toString().indexOf("native code")?r:g).apply(null,arguments)}function y(e){var n=Array.prototype.slice.call(arguments,1);return function(){var t=n.slice();return t.push.apply(t,arguments),e.apply(this,t)}}var w=Date.now;function I(t,e){function n(){}n.prototype=e.prototype,t.$a=e.prototype,t.prototype=new n,t.prototype.constructor=t}function T(t){return t}function E(t,e,n){this.code=S+t,this.message=e||N[t]||"",this.a=n||null}function A(t){var e=t&&t.code;return e?new E(e.substring(S.length),t.message,t.serverResponse):null}I(E,Error),E.prototype.w=function(){var t={code:this.code,message:this.message};return this.a&&(t.serverResponse=this.a),t},E.prototype.toJSON=function(){return this.w()};var k,S="auth/",N={"admin-restricted-operation":"This operation is restricted to administrators only.","argument-error":"","app-not-authorized":"This app, identified by the domain where it's hosted, is not authorized to use Firebase Authentication with the provided API key. Review your key configuration in the Google API console.","app-not-installed":"The requested mobile application corresponding to the identifier (Android package name or iOS bundle ID) provided is not installed on this device.","captcha-check-failed":"The reCAPTCHA response token provided is either invalid, expired, already used or the domain associated with it does not match the list of whitelisted domains.","code-expired":"The SMS code has expired. Please re-send the verification code to try again.","cordova-not-ready":"Cordova framework is not ready.","cors-unsupported":"This browser is not supported.","credential-already-in-use":"This credential is already associated with a different user account.","custom-token-mismatch":"The custom token corresponds to a different audience.","requires-recent-login":"This operation is sensitive and requires recent authentication. Log in again before retrying this request.","dynamic-link-not-activated":"Please activate Dynamic Links in the Firebase Console and agree to the terms and conditions.","email-change-needs-verification":"Multi-factor users must always have a verified email.","email-already-in-use":"The email address is already in use by another account.","expired-action-code":"The action code has expired. ","cancelled-popup-request":"This operation has been cancelled due to another conflicting popup being opened.","internal-error":"An internal error has occurred.","invalid-app-credential":"The phone verification request contains an invalid application verifier. The reCAPTCHA token response is either invalid or expired.","invalid-app-id":"The mobile app identifier is not registed for the current project.","invalid-user-token":"This user's credential isn't valid for this project. This can happen if the user's token has been tampered with, or if the user isn't for the project associated with this API key.","invalid-auth-event":"An internal error has occurred.","invalid-verification-code":"The SMS verification code used to create the phone auth credential is invalid. Please resend the verification code sms and be sure use the verification code provided by the user.","invalid-continue-uri":"The continue URL provided in the request is invalid.","invalid-cordova-configuration":"The following Cordova plugins must be installed to enable OAuth sign-in: cordova-plugin-buildinfo, cordova-universal-links-plugin, cordova-plugin-browsertab, cordova-plugin-inappbrowser and cordova-plugin-customurlscheme.","invalid-custom-token":"The custom token format is incorrect. Please check the documentation.","invalid-dynamic-link-domain":"The provided dynamic link domain is not configured or authorized for the current project.","invalid-email":"The email address is badly formatted.","invalid-api-key":"Your API key is invalid, please check you have copied it correctly.","invalid-cert-hash":"The SHA-1 certificate hash provided is invalid.","invalid-credential":"The supplied auth credential is malformed or has expired.","invalid-message-payload":"The email template corresponding to this action contains invalid characters in its message. Please fix by going to the Auth email templates section in the Firebase Console.","invalid-multi-factor-session":"The request does not contain a valid proof of first factor successful sign-in.","invalid-oauth-provider":"EmailAuthProvider is not supported for this operation. This operation only supports OAuth providers.","invalid-oauth-client-id":"The OAuth client ID provided is either invalid or does not match the specified API key.","unauthorized-domain":"This domain is not authorized for OAuth operations for your Firebase project. Edit the list of authorized domains from the Firebase console.","invalid-action-code":"The action code is invalid. This can happen if the code is malformed, expired, or has already been used.","wrong-password":"The password is invalid or the user does not have a password.","invalid-persistence-type":"The specified persistence type is invalid. It can only be local, session or none.","invalid-phone-number":"The format of the phone number provided is incorrect. Please enter the phone number in a format that can be parsed into E.164 format. E.164 phone numbers are written in the format [+][country code][subscriber number including area code].","invalid-provider-id":"The specified provider ID is invalid.","invalid-recipient-email":"The email corresponding to this action failed to send as the provided recipient email address is invalid.","invalid-sender":"The email template corresponding to this action contains an invalid sender email or name. Please fix by going to the Auth email templates section in the Firebase Console.","invalid-verification-id":"The verification ID used to create the phone auth credential is invalid.","invalid-tenant-id":"The Auth instance's tenant ID is invalid.","multi-factor-info-not-found":"The user does not have a second factor matching the identifier provided.","multi-factor-auth-required":"Proof of ownership of a second factor is required to complete sign-in.","missing-android-pkg-name":"An Android Package Name must be provided if the Android App is required to be installed.","auth-domain-config-required":"Be sure to include authDomain when calling firebase.initializeApp(), by following the instructions in the Firebase console.","missing-app-credential":"The phone verification request is missing an application verifier assertion. A reCAPTCHA response token needs to be provided.","missing-verification-code":"The phone auth credential was created with an empty SMS verification code.","missing-continue-uri":"A continue URL must be provided in the request.","missing-iframe-start":"An internal error has occurred.","missing-ios-bundle-id":"An iOS Bundle ID must be provided if an App Store ID is provided.","missing-multi-factor-info":"No second factor identifier is provided.","missing-multi-factor-session":"The request is missing proof of first factor successful sign-in.","missing-or-invalid-nonce":"The request does not contain a valid nonce. This can occur if the SHA-256 hash of the provided raw nonce does not match the hashed nonce in the ID token payload.","missing-phone-number":"To send verification codes, provide a phone number for the recipient.","missing-verification-id":"The phone auth credential was created with an empty verification ID.","app-deleted":"This instance of FirebaseApp has been deleted.","account-exists-with-different-credential":"An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.","network-request-failed":"A network error (such as timeout, interrupted connection or unreachable host) has occurred.","no-auth-event":"An internal error has occurred.","no-such-provider":"User was not linked to an account with the given provider.","null-user":"A null user object was provided as the argument for an operation which requires a non-null user object.","operation-not-allowed":"The given sign-in provider is disabled for this Firebase project. Enable it in the Firebase console, under the sign-in method tab of the Auth section.","operation-not-supported-in-this-environment":'This operation is not supported in the environment this application is running on. "location.protocol" must be http, https or chrome-extension and web storage must be enabled.',"popup-blocked":"Unable to establish a connection with the popup. It may have been blocked by the browser.","popup-closed-by-user":"The popup has been closed by the user before finalizing the operation.","provider-already-linked":"User can only be linked to one identity for the given provider.","quota-exceeded":"The project's quota for this operation has been exceeded.","redirect-cancelled-by-user":"The redirect operation has been cancelled by the user before finalizing.","redirect-operation-pending":"A redirect sign-in operation is already pending.","rejected-credential":"The request contains malformed or mismatching credentials.","second-factor-already-in-use":"The second factor is already enrolled on this account.","maximum-second-factor-count-exceeded":"The maximum allowed number of second factors on a user has been exceeded.","tenant-id-mismatch":"The provided tenant ID does not match the Auth instance's tenant ID",timeout:"The operation has timed out.","user-token-expired":"The user's credential is no longer valid. The user must sign in again.","too-many-requests":"We have blocked all requests from this device due to unusual activity. Try again later.","unauthorized-continue-uri":"The domain of the continue URL is not whitelisted.  Please whitelist the domain in the Firebase console.","unsupported-first-factor":"Enrolling a second factor or signing in with a multi-factor account requires sign-in with a supported first factor.","unsupported-persistence-type":"The current environment does not support the specified persistence type.","unsupported-tenant-operation":"This operation is not supported in a multi-tenant context.","unverified-email":"The operation requires a verified email.","user-cancelled":"The user did not grant your application the permissions it requested.","user-not-found":"There is no user record corresponding to this identifier. The user may have been deleted.","user-disabled":"The user account has been disabled by an administrator.","user-mismatch":"The supplied credentials do not correspond to the previously signed in user.","user-signed-out":"","weak-password":"The password must be 6 characters long or more.","web-storage-unsupported":"This browser is not supported or 3rd party cookies and data may be disabled."},_={kd:{Sa:"https://staging-identitytoolkit.sandbox.googleapis.com/identitytoolkit/v3/relyingparty/",Ya:"https://staging-securetoken.sandbox.googleapis.com/v1/token",Va:"https://staging-identitytoolkit.sandbox.googleapis.com/v2/",id:"b"},rd:{Sa:"https://www.googleapis.com/identitytoolkit/v3/relyingparty/",Ya:"https://securetoken.googleapis.com/v1/token",Va:"https://identitytoolkit.googleapis.com/v2/",id:"p"},td:{Sa:"https://staging-www.sandbox.googleapis.com/identitytoolkit/v3/relyingparty/",Ya:"https://staging-securetoken.sandbox.googleapis.com/v1/token",Va:"https://staging-identitytoolkit.sandbox.googleapis.com/v2/",id:"s"},ud:{Sa:"https://www-googleapis-test.sandbox.google.com/identitytoolkit/v3/relyingparty/",Ya:"https://test-securetoken.sandbox.googleapis.com/v1/token",Va:"https://test-identitytoolkit.sandbox.googleapis.com/v2/",id:"t"}};function O(t){for(var e in _)if(_[e].id===t)return t=_[e],{firebaseEndpoint:t.Sa,secureTokenEndpoint:t.Ya,identityPlatformEndpoint:t.Va};return null}function C(t){if(t)try{return t.$goog_Thenable}catch(t){return}}function R(t){var e;Error.captureStackTrace?Error.captureStackTrace(this,R):(e=Error().stack)&&(this.stack=e),t&&(this.message=String(t))}function D(t,e){for(var n="",i=(t=t.split("%s")).length-1,r=0;r<i;r++)n+=t[r]+(r<e.length?e[r]:"%s");R.call(this,n+t[i])}function P(t){throw new D("Failure"+(t?": "+t:""),Array.prototype.slice.call(arguments,1))}function L(t,e){this.c=t,this.f=e,this.b=0,this.a=null}function x(t,e){t.f(e),t.b<100&&(t.b++,e.next=t.a,t.a=e)}function M(){this.b=this.a=null}k=O("__EID__")?"__EID__":void 0,I(R,Error),R.prototype.name="CustomError",I(D,R),D.prototype.name="AssertionError",L.prototype.get=function(){var t;return 0<this.b?(this.b--,t=this.a,this.a=t.next,t.next=null):t=this.c(),t};var j=new L(function(){return new U},function(t){t.reset()});function U(){this.next=this.b=this.a=null}M.prototype.add=function(t,e){var n=j.get();n.set(t,e),this.b?this.b.next=n:this.a=n,this.b=n},U.prototype.set=function(t,e){this.a=t,this.b=e,this.next=null},U.prototype.reset=function(){this.next=this.b=this.a=null};var V=Array.prototype.indexOf?function(t,e){return Array.prototype.indexOf.call(t,e,void 0)}:function(t,e){if("string"==typeof t)return"string"!=typeof e||1!=e.length?-1:t.indexOf(e,0);for(var n=0;n<t.length;n++)if(n in t&&t[n]===e)return n;return-1},F=Array.prototype.forEach?function(t,e,n){Array.prototype.forEach.call(t,e,n)}:function(t,e,n){for(var i=t.length,r="string"==typeof t?t.split(""):t,o=0;o<i;o++)o in r&&e.call(n,r[o],o,t)};var q=Array.prototype.filter?function(t,e){return Array.prototype.filter.call(t,e,void 0)}:function(t,e){for(var n,i=t.length,r=[],o=0,a="string"==typeof t?t.split(""):t,s=0;s<i;s++){s in a&&(n=a[s],e.call(void 0,n,s,t)&&(r[o++]=n))}return r},H=Array.prototype.map?function(t,e){return Array.prototype.map.call(t,e,void 0)}:function(t,e){for(var n=t.length,i=Array(n),r="string"==typeof t?t.split(""):t,o=0;o<n;o++)o in r&&(i[o]=e.call(void 0,r[o],o,t));return i},K=Array.prototype.some?function(t,e){return Array.prototype.some.call(t,e,void 0)}:function(t,e){for(var n=t.length,i="string"==typeof t?t.split(""):t,r=0;r<n;r++)if(r in i&&e.call(void 0,i[r],r,t))return!0;return!1};function G(t,e){return 0<=V(t,e)}function B(t,e){var n;return(n=0<=(e=V(t,e)))&&Array.prototype.splice.call(t,e,1),n}function W(n,i){!function(t,e){for(var n="string"==typeof t?t.split(""):t,i=t.length-1;0<=i;--i)i in n&&e.call(void 0,n[i],i,t)}(n,function(t,e){i.call(void 0,t,e,n)&&1==Array.prototype.splice.call(n,e,1).length&&0})}function X(){return Array.prototype.concat.apply([],arguments)}function J(t){var e=t.length;if(0<e){for(var n=Array(e),i=0;i<e;i++)n[i]=t[i];return n}return[]}var Y,z=String.prototype.trim?function(t){return t.trim()}:function(t){return/^[\s\xa0]*([\s\S]*?)[\s\xa0]*$/.exec(t)[1]},$=/&/g,Z=/</g,Q=/>/g,tt=/"/g,et=/'/g,nt=/\x00/g,it=/[\x00&<>"']/;function rt(t,e){return-1!=t.indexOf(e)}function ot(t,e){return t<e?-1:e<t?1:0}t:{var at=l.navigator;if(at){at=at.userAgent;if(at){Y=at;break t}}Y=""}function st(t){return rt(Y,t)}function ut(t,e){for(var n in t)e.call(void 0,t[n],n,t)}function ct(t){for(var e in t)return;return 1}function ht(t){var e,n={};for(e in t)n[e]=t[e];return n}var lt="constructor hasOwnProperty isPrototypeOf propertyIsEnumerable toLocaleString toString valueOf".split(" ");function ft(t){for(var e,n,i=1;i<arguments.length;i++){for(e in n=arguments[i])t[e]=n[e];for(var r=0;r<lt.length;r++)e=lt[r],Object.prototype.hasOwnProperty.call(n,e)&&(t[e]=n[e])}}function dt(t,e){t:{try{var n=t&&t.ownerDocument,n=n&&(n.defaultView||n.parentWindow);if((n=n||l).Element&&n.Location){var i=n;break t}}catch(t){}i=null}if(i&&void 0!==i[e]&&(!t||!(t instanceof i[e])&&(t instanceof i.Location||t instanceof i.Element))){if(m(t))try{var r=t.constructor.displayName||t.constructor.name||Object.prototype.toString.call(t)}catch(t){r="<object could not be stringified>"}else r=void 0===t?"undefined":null===t?"null":typeof t;P("Argument is not a %s (or a non-Element, non-Location mock); got: %s",e,r)}}function pt(t,e){this.a=t===bt&&e||"",this.b=gt}function vt(t){return t instanceof pt&&t.constructor===pt&&t.b===gt?t.a:(P("expected object of type Const, got '"+t+"'"),"type_error:Const")}pt.prototype.sa=!0,pt.prototype.ra=function(){return this.a},pt.prototype.toString=function(){return"Const{"+this.a+"}"};var mt,gt={},bt={};function yt(){if(void 0===mt){var t=null,e=l.trustedTypes;if(e&&e.createPolicy){try{t=e.createPolicy("goog#html",{createHTML:T,createScript:T,createScriptURL:T})}catch(t){l.console&&l.console.error(t.message)}mt=t}else mt=t}return mt}function wt(t,e){this.a=e===kt?t:""}function It(t){return t instanceof wt&&t.constructor===wt?t.a:(P("expected object of type TrustedResourceUrl, got '"+t+"' of type "+d(t)),"type_error:TrustedResourceUrl")}function Tt(t,n){var e,i=vt(t);if(!At.test(i))throw Error("Invalid TrustedResourceUrl format: "+i);return t=i.replace(Et,function(t,e){if(!Object.prototype.hasOwnProperty.call(n,e))throw Error('Found marker, "'+e+'", in format string, "'+i+'", but no valid label mapping found in args: '+JSON.stringify(n));return(t=n[e])instanceof pt?vt(t):encodeURIComponent(String(t))}),e=t,t=yt(),new wt(e=t?t.createScriptURL(e):e,kt)}wt.prototype.sa=!0,wt.prototype.ra=function(){return this.a.toString()},wt.prototype.toString=function(){return"TrustedResourceUrl{"+this.a+"}"};var Et=/%{(\w+)}/g,At=/^((https:)?\/\/[0-9a-z.:[\]-]+\/|\/[^/\\]|[^:/\\%]+\/|[^:/\\%]*[?#]|about:blank#)/i,kt={};function St(t,e){this.a=e===Pt?t:""}function Nt(t){return t instanceof St&&t.constructor===St?t.a:(P("expected object of type SafeUrl, got '"+t+"' of type "+d(t)),"type_error:SafeUrl")}St.prototype.sa=!0,St.prototype.ra=function(){return this.a.toString()},St.prototype.toString=function(){return"SafeUrl{"+this.a+"}"};var _t=/^(?:audio\/(?:3gpp2|3gpp|aac|L16|midi|mp3|mp4|mpeg|oga|ogg|opus|x-m4a|x-matroska|x-wav|wav|webm)|font\/\w+|image\/(?:bmp|gif|jpeg|jpg|png|tiff|webp|x-icon)|text\/csv|video\/(?:mpeg|mp4|ogg|webm|quicktime|x-matroska))(?:;\w+=(?:\w+|"[\w;,= ]+"))*$/i,Ot=/^data:(.*);base64,[a-z0-9+\/]+=*$/i,Ct=/^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;function Rt(t){return t instanceof St?t:(t="object"==typeof t&&t.sa?t.ra():String(t),t=Ct.test(t)||(e=(t=(t=String(t)).replace(/(%0A|%0D)/g,"")).match(Ot))&&_t.test(e[1])?new St(t,Pt):null);var e}function Dt(t){return t instanceof St?t:(t="object"==typeof t&&t.sa?t.ra():String(t),Ct.test(t)||(t="about:invalid#zClosurez"),new St(t,Pt))}var Pt={},Lt=new St("about:invalid#zClosurez",Pt);function xt(t,e,n){this.a=n===Mt?t:""}xt.prototype.sa=!0,xt.prototype.ra=function(){return this.a.toString()},xt.prototype.toString=function(){return"SafeHtml{"+this.a+"}"};var Mt={};function jt(t,e,n,i){return t=t instanceof St?t:Dt(t),e=e||l,n=n instanceof pt?vt(n):n||"",e.open(Nt(t),n,i,void 0)}function Ut(t){for(var e=t.split("%s"),n="",i=Array.prototype.slice.call(arguments,1);i.length&&1<e.length;)n+=e.shift()+i.shift();return n+e.join("%s")}function Vt(t){return it.test(t)&&(-1!=t.indexOf("&")&&(t=t.replace($,"&amp;")),-1!=t.indexOf("<")&&(t=t.replace(Z,"&lt;")),-1!=t.indexOf(">")&&(t=t.replace(Q,"&gt;")),-1!=t.indexOf('"')&&(t=t.replace(tt,"&quot;")),-1!=t.indexOf("'")&&(t=t.replace(et,"&#39;")),-1!=t.indexOf("\0")&&(t=t.replace(nt,"&#0;"))),t}function Ft(t){return Ft[" "](t),t}Ft[" "]=a;var qt,Ht=st("Opera"),Kt=st("Trident")||st("MSIE"),Gt=st("Edge"),Bt=Gt||Kt,Wt=st("Gecko")&&!(rt(Y.toLowerCase(),"webkit")&&!st("Edge"))&&!(st("Trident")||st("MSIE"))&&!st("Edge"),Xt=rt(Y.toLowerCase(),"webkit")&&!st("Edge");function Jt(){var t=l.document;return t?t.documentMode:void 0}t:{var Yt="",zt=(zt=Y,Wt?/rv:([^\);]+)(\)|;)/.exec(zt):Gt?/Edge\/([\d\.]+)/.exec(zt):Kt?/\b(?:MSIE|rv)[: ]([^\);]+)(\)|;)/.exec(zt):Xt?/WebKit\/(\S+)/.exec(zt):Ht?/(?:Version)[ \/]?(\S+)/.exec(zt):void 0);if(zt&&(Yt=zt?zt[1]:""),Kt){zt=Jt();if(null!=zt&&zt>parseFloat(Yt)){qt=String(zt);break t}}qt=Yt}var $t={};function Zt(s){return t=s,e=function(){for(var t=0,e=z(String(qt)).split("."),n=z(String(s)).split("."),i=Math.max(e.length,n.length),r=0;0==t&&r<i;r++){var o=e[r]||"",a=n[r]||"";do{if(o=/(\d*)(\D*)(.*)/.exec(o)||["","","",""],a=/(\d*)(\D*)(.*)/.exec(a)||["","","",""],0==o[0].length&&0==a[0].length)break;t=ot(0==o[1].length?0:parseInt(o[1],10),0==a[1].length?0:parseInt(a[1],10))||ot(0==o[2].length,0==a[2].length)||ot(o[2],a[2]),o=o[3],a=a[3]}while(0==t)}return 0<=t},n=$t,Object.prototype.hasOwnProperty.call(n,t)?n[t]:n[t]=e(t);var t,e,n}var Qt=l.document&&Kt?Jt()||(parseInt(qt,10)||void 0):void 0;try{new self.OffscreenCanvas(0,0).getContext("2d")}catch(t){}var te=!Kt||9<=Number(Qt);function ee(t){var e=document;return"string"==typeof t?e.getElementById(t):t}function ne(n,t){ut(t,function(t,e){t&&"object"==typeof t&&t.sa&&(t=t.ra()),"style"==e?n.style.cssText=t:"class"==e?n.className=t:"for"==e?n.htmlFor=t:oe.hasOwnProperty(e)?n.setAttribute(oe[e],t):0==e.lastIndexOf("aria-",0)||0==e.lastIndexOf("data-",0)?n.setAttribute(e,t):n[e]=t})}var ie,re,oe={cellpadding:"cellPadding",cellspacing:"cellSpacing",colspan:"colSpan",frameborder:"frameBorder",height:"height",maxlength:"maxLength",nonce:"nonce",role:"role",rowspan:"rowSpan",type:"type",usemap:"useMap",valign:"vAlign",width:"width"};function ae(){var t,e=arguments,n=document,i=String(e[0]),r=e[1];return!te&&r&&(r.name||r.type)&&(i=["<",i],r.name&&i.push(' name="',Vt(r.name),'"'),r.type&&(i.push(' type="',Vt(r.type),'"'),ft(t={},r),delete t.type,r=t),i.push(">"),i=i.join("")),i=se(n,i),r&&("string"==typeof r?i.className=r:Array.isArray(r)?i.className=r.join(" "):ne(i,r)),2<e.length&&function(e,n,t){function i(t){t&&n.appendChild("string"==typeof t?e.createTextNode(t):t)}for(var r=2;r<t.length;r++){var o=t[r];if(!p(o)||m(o)&&0<o.nodeType)i(o);else{t:{if(o&&"number"==typeof o.length){if(m(o)){var a="function"==typeof o.item||"string"==typeof o.item;break t}if(v(o)){a="function"==typeof o.item;break t}}a=!1}F(a?J(o):o,i)}}}(n,i,e),i}function se(t,e){return e=String(e),"application/xhtml+xml"===t.contentType&&(e=e.toLowerCase()),t.createElement(e)}function ue(t){l.setTimeout(function(){throw t},0)}function ce(t,e){re||function(){{var t;re=l.Promise&&l.Promise.resolve?(t=l.Promise.resolve(void 0),function(){t.then(fe)}):function(){var t=fe;!v(l.setImmediate)||l.Window&&l.Window.prototype&&!st("Edge")&&l.Window.prototype.setImmediate==l.setImmediate?(ie=ie||function(){var t=l.MessageChannel;if(void 0===t&&"undefined"!=typeof window&&window.postMessage&&window.addEventListener&&!st("Presto")&&(t=function(){var t=se(document,"IFRAME");t.style.display="none",document.documentElement.appendChild(t);var e=t.contentWindow;(t=e.document).open(),t.close();var n="callImmediate"+Math.random(),i="file:"==e.location.protocol?"*":e.location.protocol+"//"+e.location.host;t=b(function(t){"*"!=i&&t.origin!=i||t.data!=n||this.port1.onmessage()},this),e.addEventListener("message",t,!1),this.port1={},this.port2={postMessage:function(){e.postMessage(n,i)}}}),void 0===t||st("Trident")||st("MSIE"))return function(t){l.setTimeout(t,0)};var e=new t,n={},i=n;return e.port1.onmessage=function(){var t;void 0!==n.next&&(t=(n=n.next).Fb,n.Fb=null,t())},function(t){i.next={Fb:t},i=i.next,e.port2.postMessage(0)}}())(t):l.setImmediate(t)}}}(),he||(re(),he=!0),le.add(t,e)}var he=!1,le=new M;function fe(){for(var t,e,n;n=e=void 0,n=null,(e=le).a&&(n=e.a,e.a=e.a.next,e.a||(e.b=null),n.next=null),t=n;){try{t.a.call(t.b)}catch(t){ue(t)}x(j,t)}he=!1}function de(t,e){if(this.a=pe,this.h=void 0,this.f=this.b=this.c=null,this.g=this.i=!1,t!=a)try{var n=this;t.call(e,function(t){Se(n,ve,t)},function(t){if(!(t instanceof Pe))try{if(t instanceof Error)throw t;throw Error("Promise rejected.")}catch(t){}Se(n,me,t)})}catch(t){Se(this,me,t)}}var pe=0,ve=2,me=3;function ge(){this.next=this.f=this.b=this.g=this.a=null,this.c=!1}ge.prototype.reset=function(){this.f=this.b=this.g=this.a=null,this.c=!1};var be=new L(function(){return new ge},function(t){t.reset()});function ye(t,e,n){var i=be.get();return i.g=t,i.b=e,i.f=n,i}function we(t){if(t instanceof de)return t;var e=new de(a);return Se(e,ve,t),e}function Ie(n){return new de(function(t,e){e(n)})}function Te(t,e,n){Ne(t,e,n,null)||ce(y(e,t))}function Ee(n){return new de(function(i){var r=n.length,o=[];if(r)for(var t=function(t,e,n){r--,o[t]=e?{Ob:!0,value:n}:{Ob:!1,reason:n},0==r&&i(o)},e=0;e<n.length;e++)Te(n[e],y(t,e,!0),y(t,e,!1));else i(o)})}function Ae(t,e){t.b||t.a!=ve&&t.a!=me||_e(t),t.f?t.f.next=e:t.b=e,t.f=e}function ke(t,r,o,a){var e=ye(null,null,null);return e.a=new de(function(n,i){e.g=r?function(t){try{var e=r.call(a,t);n(e)}catch(t){i(t)}}:n,e.b=o?function(t){try{var e=o.call(a,t);void 0===e&&t instanceof Pe?i(t):n(e)}catch(t){i(t)}}:i}),Ae(e.a.c=t,e),e.a}function Se(t,e,n){var i,r;t.a==pe&&(t===n&&(e=me,n=new TypeError("Promise cannot resolve to itself")),t.a=1,Ne(n,t.Zc,t.$c,t)||(t.h=n,t.a=e,t.c=null,_e(t),e!=me||n instanceof Pe||(r=n,(i=t).g=!0,ce(function(){i.g&&De.call(null,r)}))))}function Ne(t,e,n,i){if(t instanceof de)return Ae(t,ye(e||a,n||null,i)),1;if(C(t))return t.then(e,n,i),1;if(m(t))try{var r=t.then;if(v(r))return function(t,e,n,i,r){function o(t){a||(a=!0,i.call(r,t))}var a=!1;try{e.call(t,function(t){a||(a=!0,n.call(r,t))},o)}catch(t){o(t)}}(t,r,e,n,i),1}catch(t){return n.call(i,t),1}}function _e(t){t.i||(t.i=!0,ce(t.fc,t))}function Oe(t){var e=null;return t.b&&(e=t.b,t.b=e.next,e.next=null),t.b||(t.f=null),e}function Ce(t,e,n,i){if(n==me&&e.b&&!e.c)for(;t&&t.g;t=t.c)t.g=!1;if(e.a)e.a.c=null,Re(e,n,i);else try{e.c?e.g.call(e.f):Re(e,n,i)}catch(t){De.call(null,t)}x(be,e)}function Re(t,e,n){e==ve?t.g.call(t.f,n):t.b&&t.b.call(t.f,n)}de.prototype.then=function(t,e,n){return ke(this,v(t)?t:null,v(e)?e:null,n)},de.prototype.$goog_Thenable=!0,(t=de.prototype).na=function(t,e){return(t=ye(t,t,e)).c=!0,Ae(this,t),this},t.o=function(t,e){return ke(this,null,t,e)},t.cancel=function(t){var e;this.a==pe&&(e=new Pe(t),ce(function(){!function t(e,n){if(e.a==pe)if(e.c){var i=e.c;if(i.b){for(var r=0,o=null,a=null,s=i.b;s&&(s.c||(r++,s.a==e&&(o=s),!(o&&1<r)));s=s.next)o||(a=s);o&&(i.a==pe&&1==r?t(i,n):(a?((r=a).next==i.f&&(i.f=r),r.next=r.next.next):Oe(i),Ce(i,o,me,n)))}e.c=null}else Se(e,me,n)}(this,e)},this))},t.Zc=function(t){this.a=pe,Se(this,ve,t)},t.$c=function(t){this.a=pe,Se(this,me,t)},t.fc=function(){for(var t;t=Oe(this);)Ce(this,t,this.a,this.h);this.i=!1};var De=ue;function Pe(t){R.call(this,t)}function Le(){this.xa=this.xa,this.oa=this.oa}I(Pe,R);var xe=0;function Me(t){t.xa||(t.xa=!0,t.Da(),0==xe)||(t=t,Object.prototype.hasOwnProperty.call(t,n)&&t[n]||(t[n]=++i))}Le.prototype.xa=!(Pe.prototype.name="cancel"),Le.prototype.Da=function(){if(this.oa)for(;this.oa.length;)this.oa.shift()()};var je=Object.freeze||function(t){return t},Ue=!Kt||9<=Number(Qt),Ve=Kt&&!Zt("9"),Fe=function(){if(!l.addEventListener||!Object.defineProperty)return!1;var t=!1,e=Object.defineProperty({},"passive",{get:function(){t=!0}});try{l.addEventListener("test",a,e),l.removeEventListener("test",a,e)}catch(t){}return t}();function qe(t,e){this.type=t,this.b=this.target=e,this.defaultPrevented=!1}function He(t,e){if(qe.call(this,t?t.type:""),this.relatedTarget=this.b=this.target=null,this.button=this.screenY=this.screenX=this.clientY=this.clientX=0,this.key="",this.metaKey=this.shiftKey=this.altKey=this.ctrlKey=!1,this.pointerId=0,this.pointerType="",this.a=null,t){var n=this.type=t.type,i=t.changedTouches&&t.changedTouches.length?t.changedTouches[0]:null;if(this.target=t.target||t.srcElement,this.b=e,e=t.relatedTarget){if(Wt){t:{try{Ft(e.nodeName);var r=!0;break t}catch(t){}r=!1}r||(e=null)}}else"mouseover"==n?e=t.fromElement:"mouseout"==n&&(e=t.toElement);this.relatedTarget=e,i?(this.clientX=void 0!==i.clientX?i.clientX:i.pageX,this.clientY=void 0!==i.clientY?i.clientY:i.pageY,this.screenX=i.screenX||0,this.screenY=i.screenY||0):(this.clientX=void 0!==t.clientX?t.clientX:t.pageX,this.clientY=void 0!==t.clientY?t.clientY:t.pageY,this.screenX=t.screenX||0,this.screenY=t.screenY||0),this.button=t.button,this.key=t.key||"",this.ctrlKey=t.ctrlKey,this.altKey=t.altKey,this.shiftKey=t.shiftKey,this.metaKey=t.metaKey,this.pointerId=t.pointerId||0,this.pointerType="string"==typeof t.pointerType?t.pointerType:Ke[t.pointerType]||"",(this.a=t).defaultPrevented&&this.preventDefault()}}qe.prototype.preventDefault=function(){this.defaultPrevented=!0},I(He,qe);var Ke=je({2:"touch",3:"pen",4:"mouse"});He.prototype.preventDefault=function(){He.$a.preventDefault.call(this);var t=this.a;if(t.preventDefault)t.preventDefault();else if(t.returnValue=!1,Ve)try{(t.ctrlKey||112<=t.keyCode&&t.keyCode<=123)&&(t.keyCode=-1)}catch(t){}},He.prototype.g=function(){return this.a};var Ge="closure_listenable_"+(1e6*Math.random()|0),Be=0;function We(t,e,n,i,r){this.listener=t,this.proxy=null,this.src=e,this.type=n,this.capture=!!i,this.Ua=r,this.key=++Be,this.va=this.Oa=!1}function Xe(t){t.va=!0,t.listener=null,t.proxy=null,t.src=null,t.Ua=null}function Je(t){this.src=t,this.a={},this.b=0}function Ye(t,e){var n=e.type;n in t.a&&B(t.a[n],e)&&(Xe(e),0==t.a[n].length&&(delete t.a[n],t.b--))}function ze(t,e,n,i){for(var r=0;r<t.length;++r){var o=t[r];if(!o.va&&o.listener==e&&o.capture==!!n&&o.Ua==i)return r}return-1}Je.prototype.add=function(t,e,n,i,r){var o=t.toString();(t=this.a[o])||(t=this.a[o]=[],this.b++);var a=ze(t,e,i,r);return-1<a?(e=t[a],n||(e.Oa=!1)):((e=new We(e,this.src,o,!!i,r)).Oa=n,t.push(e)),e};var $e="closure_lm_"+(1e6*Math.random()|0),Ze={};function Qe(t,e,n,i,r){if(i&&i.once)en(t,e,n,i,r);else if(Array.isArray(e))for(var o=0;o<e.length;o++)Qe(t,e[o],n,i,r);else n=ln(n),t&&t[Ge]?dn(t,e,n,m(i)?!!i.capture:!!i,r):tn(t,e,n,!1,i,r)}function tn(t,e,n,i,r,o){if(!e)throw Error("Invalid event type");var a,s,u=m(r)?!!r.capture:!!r,c=cn(t);if(c||(t[$e]=c=new Je(t)),!(n=c.add(e,n,i,u,o)).proxy)if(a=un,i=s=Ue?function(t){return a.call(s.src,s.listener,t)}:function(t){if(!(t=a.call(s.src,s.listener,t)))return t},(n.proxy=i).src=t,i.listener=n,t.addEventListener)Fe||(r=u),void 0===r&&(r=!1),t.addEventListener(e.toString(),i,r);else if(t.attachEvent)t.attachEvent(on(e.toString()),i);else{if(!t.addListener||!t.removeListener)throw Error("addEventListener and attachEvent are unavailable.");t.addListener(i)}}function en(t,e,n,i,r){if(Array.isArray(e))for(var o=0;o<e.length;o++)en(t,e[o],n,i,r);else n=ln(n),t&&t[Ge]?pn(t,e,n,m(i)?!!i.capture:!!i,r):tn(t,e,n,!0,i,r)}function nn(t,e,n,i,r){if(Array.isArray(e))for(var o=0;o<e.length;o++)nn(t,e[o],n,i,r);else i=m(i)?!!i.capture:!!i,n=ln(n),t&&t[Ge]?(t=t.v,(e=String(e).toString())in t.a&&(-1<(n=ze(o=t.a[e],n,i,r))&&(Xe(o[n]),Array.prototype.splice.call(o,n,1),0==o.length&&(delete t.a[e],t.b--)))):(t=t&&cn(t))&&(e=t.a[e.toString()],t=-1,e&&(t=ze(e,n,i,r)),(n=-1<t?e[t]:null)&&rn(n))}function rn(t){var e,n,i;"number"!=typeof t&&t&&!t.va&&((e=t.src)&&e[Ge]?Ye(e.v,t):(n=t.type,i=t.proxy,e.removeEventListener?e.removeEventListener(n,i,t.capture):e.detachEvent?e.detachEvent(on(n),i):e.addListener&&e.removeListener&&e.removeListener(i),(n=cn(e))?(Ye(n,t),0==n.b&&(n.src=null,e[$e]=null)):Xe(t)))}function on(t){return t in Ze?Ze[t]:Ze[t]="on"+t}function an(t,e,n,i){var r=!0;if((t=cn(t))&&(e=t.a[e.toString()]))for(e=e.concat(),t=0;t<e.length;t++){var o=e[t];o&&o.capture==n&&!o.va&&(o=sn(o,i),r=r&&!1!==o)}return r}function sn(t,e){var n=t.listener,i=t.Ua||t.src;return t.Oa&&rn(t),n.call(i,e)}function un(t,e){if(t.va)return!0;if(Ue)return sn(t,new He(e,this));if(!e)t:{e=["window","event"];for(var n=l,i=0;i<e.length;i++)if(null==(n=n[e[i]])){e=null;break t}e=n}if(e=new He(i=e,this),n=!0,!(i.keyCode<0||null!=i.returnValue)){t:{var r=!1;if(0==i.keyCode)try{i.keyCode=-1;break t}catch(t){r=!0}!r&&null!=i.returnValue||(i.returnValue=!0)}for(i=[],r=e.b;r;r=r.parentNode)i.push(r);for(t=t.type,r=i.length-1;0<=r;r--){e.b=i[r];var o=an(i[r],t,!0,e),n=n&&o}for(r=0;r<i.length;r++)e.b=i[r],o=an(i[r],t,!1,e),n=n&&o}return n}function cn(t){return(t=t[$e])instanceof Je?t:null}var hn="__closure_events_fn_"+(1e9*Math.random()>>>0);function ln(e){return v(e)?e:(e[hn]||(e[hn]=function(t){return e.handleEvent(t)}),e[hn])}function fn(){Le.call(this),this.v=new Je(this),(this.$b=this).fb=null}function dn(t,e,n,i,r){t.v.add(String(e),n,!1,i,r)}function pn(t,e,n,i,r){t.v.add(String(e),n,!0,i,r)}function vn(t,e,n,i){if(!(e=t.v.a[String(e)]))return!0;e=e.concat();for(var r=!0,o=0;o<e.length;++o){var a,s,u=e[o];u&&!u.va&&u.capture==n&&(a=u.listener,s=u.Ua||u.src,u.Oa&&Ye(t.v,u),r=!1!==a.call(s,i)&&r)}return r&&!i.defaultPrevented}function mn(t,e,n){if(v(t))n&&(t=b(t,n));else{if(!t||"function"!=typeof t.handleEvent)throw Error("Invalid listener argument");t=b(t.handleEvent,t)}return 2147483647<Number(e)?-1:l.setTimeout(t,e||0)}function gn(n){var i=null;return new de(function(t,e){-1==(i=mn(function(){t(void 0)},n))&&e(Error("Failed to schedule timer."))}).o(function(t){throw l.clearTimeout(i),t})}function bn(t){if(t.V&&"function"==typeof t.V)return t.V();if("string"==typeof t)return t.split("");if(p(t)){for(var e=[],n=t.length,i=0;i<n;i++)e.push(t[i]);return e}for(i in e=[],n=0,t)e[n++]=t[i];return e}function yn(t){if(t.Y&&"function"==typeof t.Y)return t.Y();if(!t.V||"function"!=typeof t.V){if(p(t)||"string"==typeof t){var e=[];t=t.length;for(var n=0;n<t;n++)e.push(n);return e}for(var i in e=[],n=0,t)e[n++]=i;return e}}function wn(t,e){this.b={},this.a=[],this.c=0;var n=arguments.length;if(1<n){if(n%2)throw Error("Uneven number of arguments");for(var i=0;i<n;i+=2)this.set(arguments[i],arguments[i+1])}else if(t)if(t instanceof wn)for(n=t.Y(),i=0;i<n.length;i++)this.set(n[i],t.get(n[i]));else for(i in t)this.set(i,t[i])}function In(t){if(t.c!=t.a.length){for(var e=0,n=0;e<t.a.length;){var i=t.a[e];Tn(t.b,i)&&(t.a[n++]=i),e++}t.a.length=n}if(t.c!=t.a.length){for(var r={},n=e=0;e<t.a.length;)Tn(r,i=t.a[e])||(r[t.a[n++]=i]=1),e++;t.a.length=n}}function Tn(t,e){return Object.prototype.hasOwnProperty.call(t,e)}I(fn,Le),fn.prototype[Ge]=!0,fn.prototype.addEventListener=function(t,e,n,i){Qe(this,t,e,n,i)},fn.prototype.removeEventListener=function(t,e,n,i){nn(this,t,e,n,i)},fn.prototype.dispatchEvent=function(t){var e,n=this.fb;if(n)for(e=[];n;n=n.fb)e.push(n);n=this.$b;var i=t.type||t;if("string"==typeof t?t=new qe(t,n):t instanceof qe?t.target=t.target||n:(a=t,ft(t=new qe(i,n),a)),a=!0,e)for(var r=e.length-1;0<=r;r--)var o=t.b=e[r],a=vn(o,i,!0,t)&&a;if(a=vn(o=t.b=n,i,!0,t)&&a,a=vn(o,i,!1,t)&&a,e)for(r=0;r<e.length;r++)a=vn(o=t.b=e[r],i,!1,t)&&a;return a},fn.prototype.Da=function(){if(fn.$a.Da.call(this),this.v){var t,e=this.v;for(t in e.a){for(var n=e.a[t],i=0;i<n.length;i++)Xe(n[i]);delete e.a[t],e.b--}}this.fb=null},(t=wn.prototype).V=function(){In(this);for(var t=[],e=0;e<this.a.length;e++)t.push(this.b[this.a[e]]);return t},t.Y=function(){return In(this),this.a.concat()},t.clear=function(){this.b={},this.c=this.a.length=0},t.get=function(t,e){return Tn(this.b,t)?this.b[t]:e},t.set=function(t,e){Tn(this.b,t)||(this.c++,this.a.push(t)),this.b[t]=e},t.forEach=function(t,e){for(var n=this.Y(),i=0;i<n.length;i++){var r=n[i],o=this.get(r);t.call(e,o,r,this)}};var En=/^(?:([^:/?#.]+):)?(?:\/\/(?:([^\\/?#]*)@)?([^\\/?#]*?)(?::([0-9]+))?(?=[\\/?#]|$))?([^?#]+)?(?:\?([^#]*))?(?:#([\s\S]*))?$/;function An(t,e){var n;this.a=this.l=this.f="",this.g=null,this.i=this.c="",this.h=!1,t instanceof An?(this.h=void 0!==e?e:t.h,kn(this,t.f),this.l=t.l,this.a=t.a,Sn(this,t.g),this.c=t.c,Nn(this,Wn(t.b)),this.i=t.i):t&&(n=String(t).match(En))?(this.h=!!e,kn(this,n[1]||"",!0),this.l=Dn(n[2]||""),this.a=Dn(n[3]||"",!0),Sn(this,n[4]),this.c=Dn(n[5]||"",!0),Nn(this,n[6]||"",!0),this.i=Dn(n[7]||"")):(this.h=!!e,this.b=new Fn(null,this.h))}function kn(t,e,n){t.f=n?Dn(e,!0):e,t.f&&(t.f=t.f.replace(/:$/,""))}function Sn(t,e){if(e){if(e=Number(e),isNaN(e)||e<0)throw Error("Bad port number "+e);t.g=e}else t.g=null}function Nn(t,e,n){var i,r;e instanceof Fn?(t.b=e,i=t.b,(r=t.h)&&!i.f&&(qn(i),i.c=null,i.a.forEach(function(t,e){var n=e.toLowerCase();e!=n&&(Kn(this,e),Bn(this,n,t))},i)),i.f=r):(n||(e=Pn(e,Un)),t.b=new Fn(e,t.h))}function _n(t,e,n){t.b.set(e,n)}function On(t,e){return t.b.get(e)}function Cn(t){return t instanceof An?new An(t):new An(t,void 0)}function Rn(t,e,n,i){var r=new An(null,void 0);return t&&kn(r,t),e&&(r.a=e),n&&Sn(r,n),i&&(r.c=i),r}function Dn(t,e){return t?e?decodeURI(t.replace(/%25/g,"%2525")):decodeURIComponent(t):""}function Pn(t,e,n){return"string"==typeof t?(t=encodeURI(t).replace(e,Ln),n&&(t=t.replace(/%25([0-9a-fA-F]{2})/g,"%$1")),t):null}function Ln(t){return"%"+((t=t.charCodeAt(0))>>4&15).toString(16)+(15&t).toString(16)}An.prototype.toString=function(){var t=[],e=this.f;e&&t.push(Pn(e,xn,!0),":");var n=this.a;return!n&&"file"!=e||(t.push("//"),(e=this.l)&&t.push(Pn(e,xn,!0),"@"),t.push(encodeURIComponent(String(n)).replace(/%25([0-9a-fA-F]{2})/g,"%$1")),null!=(n=this.g)&&t.push(":",String(n))),(n=this.c)&&(this.a&&"/"!=n.charAt(0)&&t.push("/"),t.push(Pn(n,"/"==n.charAt(0)?jn:Mn,!0))),(n=this.b.toString())&&t.push("?",n),(n=this.i)&&t.push("#",Pn(n,Vn)),t.join("")},An.prototype.resolve=function(t){var e=new An(this),n=!!t.f;n?kn(e,t.f):n=!!t.l,n?e.l=t.l:n=!!t.a,n?e.a=t.a:n=null!=t.g;var i,r=t.c;if(n)Sn(e,t.g);else if(n=!!t.c){if("/"!=r.charAt(0)&&(this.a&&!this.c?r="/"+r:-1!=(i=e.c.lastIndexOf("/"))&&(r=e.c.substr(0,i+1)+r)),".."==(i=r)||"."==i)r="";else if(rt(i,"./")||rt(i,"/.")){r=0==i.lastIndexOf("/",0),i=i.split("/");for(var o=[],a=0;a<i.length;){var s=i[a++];"."==s?r&&a==i.length&&o.push(""):".."==s?((1<o.length||1==o.length&&""!=o[0])&&o.pop(),r&&a==i.length&&o.push("")):(o.push(s),r=!0)}r=o.join("/")}else r=i}return n?e.c=r:n=""!==t.b.toString(),n?Nn(e,Wn(t.b)):n=!!t.i,n&&(e.i=t.i),e};var xn=/[#\/\?@]/g,Mn=/[#\?:]/g,jn=/[#\?]/g,Un=/[#\?@]/g,Vn=/#/g;function Fn(t,e){this.b=this.a=null,this.c=t||null,this.f=!!e}function qn(n){n.a||(n.a=new wn,n.b=0,n.c&&function(t,e){if(t){t=t.split("&");for(var n=0;n<t.length;n++){var i,r=t[n].indexOf("="),o=null;0<=r?(i=t[n].substring(0,r),o=t[n].substring(r+1)):i=t[n],e(i,o?decodeURIComponent(o.replace(/\+/g," ")):"")}}}(n.c,function(t,e){n.add(decodeURIComponent(t.replace(/\+/g," ")),e)}))}function Hn(t){var e=yn(t);if(void 0===e)throw Error("Keys are undefined");var n=new Fn(null,void 0);t=bn(t);for(var i=0;i<e.length;i++){var r=e[i],o=t[i];Array.isArray(o)?Bn(n,r,o):n.add(r,o)}return n}function Kn(t,e){qn(t),e=Xn(t,e),Tn(t.a.b,e)&&(t.c=null,t.b-=t.a.get(e).length,Tn((t=t.a).b,e)&&(delete t.b[e],t.c--,t.a.length>2*t.c&&In(t)))}function Gn(t,e){return qn(t),e=Xn(t,e),Tn(t.a.b,e)}function Bn(t,e,n){Kn(t,e),0<n.length&&(t.c=null,t.a.set(Xn(t,e),J(n)),t.b+=n.length)}function Wn(t){var e=new Fn;return e.c=t.c,t.a&&(e.a=new wn(t.a),e.b=t.b),e}function Xn(t,e){return e=String(e),t.f&&(e=e.toLowerCase()),e}function Jn(t){var e=[];return function t(e,n,i){if(null==n)i.push("null");else{if("object"==typeof n){if(Array.isArray(n)){var r=n;n=r.length,i.push("[");for(var o="",a=0;a<n;a++)i.push(o),t(e,r[a],i),o=",";return void i.push("]")}if(!(n instanceof String||n instanceof Number||n instanceof Boolean)){for(r in i.push("{"),o="",n)Object.prototype.hasOwnProperty.call(n,r)&&(a=n[r],"function"!=typeof a&&(i.push(o),Zn(r,i),i.push(":"),t(e,a,i),o=","));return void i.push("}")}n=n.valueOf()}switch(typeof n){case"string":Zn(n,i);break;case"number":i.push(isFinite(n)&&!isNaN(n)?String(n):"null");break;case"boolean":i.push(String(n));break;case"function":i.push("null");break;default:throw Error("Unknown type: "+typeof n)}}}(new Yn,t,e),e.join("")}function Yn(){}(t=Fn.prototype).add=function(t,e){qn(this),this.c=null,t=Xn(this,t);var n=this.a.get(t);return n||this.a.set(t,n=[]),n.push(e),this.b+=1,this},t.clear=function(){this.a=this.c=null,this.b=0},t.forEach=function(n,i){qn(this),this.a.forEach(function(t,e){F(t,function(t){n.call(i,t,e,this)},this)},this)},t.Y=function(){qn(this);for(var t=this.a.V(),e=this.a.Y(),n=[],i=0;i<e.length;i++)for(var r=t[i],o=0;o<r.length;o++)n.push(e[i]);return n},t.V=function(t){qn(this);var e=[];if("string"==typeof t)Gn(this,t)&&(e=X(e,this.a.get(Xn(this,t))));else{t=this.a.V();for(var n=0;n<t.length;n++)e=X(e,t[n])}return e},t.set=function(t,e){return qn(this),this.c=null,Gn(this,t=Xn(this,t))&&(this.b-=this.a.get(t).length),this.a.set(t,[e]),this.b+=1,this},t.get=function(t,e){return t&&0<(t=this.V(t)).length?String(t[0]):e},t.toString=function(){if(this.c)return this.c;if(!this.a)return"";for(var t=[],e=this.a.Y(),n=0;n<e.length;n++)for(var i=e[n],r=encodeURIComponent(String(i)),i=this.V(i),o=0;o<i.length;o++){var a=r;""!==i[o]&&(a+="="+encodeURIComponent(String(i[o]))),t.push(a)}return this.c=t.join("&")};var zn={'"':'\\"',"\\":"\\\\","/":"\\/","\b":"\\b","\f":"\\f","\n":"\\n","\r":"\\r","\t":"\\t","\v":"\\u000b"},$n=/\uffff/.test("\uffff")?/[\\"\x00-\x1f\x7f-\uffff]/g:/[\\"\x00-\x1f\x7f-\xff]/g;function Zn(t,e){e.push('"',t.replace($n,function(t){var e=zn[t];return e||(e="\\u"+(65536|t.charCodeAt(0)).toString(16).substr(1),zn[t]=e),e}),'"')}function Qn(){var t=bi();return Kt&&Qt&&11==Qt||/Edge\/\d+/.test(t)}function ti(){return l.window&&l.window.location.href||self&&self.location&&self.location.href||""}function ei(t,e){e=e||l.window;var n="about:blank";t&&(n=Nt(Rt(t)||Lt)),e.location.href=n}function ni(t){return!!((t=(t||bi()).toLowerCase()).match(/android/)||t.match(/webos/)||t.match(/iphone|ipad|ipod/)||t.match(/blackberry/)||t.match(/windows phone/)||t.match(/iemobile/))}function ii(t){t=t||l.window;try{t.close()}catch(t){}}function ri(t,e,n){var i=Math.floor(1e9*Math.random()).toString();e=e||500,n=n||600;var r=(window.screen.availHeight-n)/2,o=(window.screen.availWidth-e)/2;for(a in e={width:e,height:n,top:0<r?r:0,left:0<o?o:0,location:!0,resizable:!0,statusbar:!0,toolbar:!1},n=bi().toLowerCase(),i&&(e.target=i,rt(n,"crios/")&&(e.target="_blank")),vi(bi())==di&&(t=t||"http://localhost",e.scrollbars=!0),n=t||"",(t=e)||(t={}),i=window,e=n instanceof St?n:Rt(void 0!==n.href?n.href:String(n))||Lt,n=t.target||n.target,r=[],t)switch(a){case"width":case"height":case"top":case"left":r.push(a+"="+t[a]);break;case"target":case"noopener":case"noreferrer":break;default:r.push(a+"="+(t[a]?1:0))}var a=r.join(",");if((st("iPhone")&&!st("iPod")&&!st("iPad")||st("iPad")||st("iPod"))&&i.navigator&&i.navigator.standalone&&n&&"_self"!=n?(dt(a=se(document,"A"),"HTMLAnchorElement"),e=e instanceof St?e:Dt(e),a.href=Nt(e),a.setAttribute("target",n),t.noreferrer&&a.setAttribute("rel","noreferrer"),(t=document.createEvent("MouseEvent")).initMouseEvent("click",!0,!0,i,1),a.dispatchEvent(t),a={}):t.noreferrer?(a=jt("",i,n,a),t=Nt(e),a&&(Bt&&rt(t,";")&&(t="'"+t.replace(/'/g,"%27")+"'"),a.opener=null,t='<meta name="referrer" content="no-referrer"><meta http-equiv="refresh" content="0; url='+Vt(t)+'">',t=new xt(t=(i=yt())?i.createHTML(t):t,0,Mt),i=a.document)&&(i.write((o=t)instanceof xt&&o.constructor===xt?o.a:(P("expected object of type SafeHtml, got '"+o+"' of type "+d(o)),"type_error:SafeHtml")),i.close())):(a=jt(e,i,n,a))&&t.noopener&&(a.opener=null),a)try{a.focus()}catch(t){}return a}var oi=/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,ai=/^[^@]+@[^@]+$/;function si(){var e=null;return new de(function(t){"complete"==l.document.readyState?t():(e=function(){t()},en(window,"load",e))}).o(function(t){throw nn(window,"load",e),t})}function ui(t){return t=t||bi(),!("file:"!==Ei()&&"ionic:"!==Ei()||!t.toLowerCase().match(/iphone|ipad|ipod|android/))}function ci(){var t=l.window;try{return t&&t!=t.top}catch(t){return}}function hi(){return void 0!==l.WorkerGlobalScope&&"function"==typeof l.importScripts}function li(){return $l.default.INTERNAL.hasOwnProperty("reactNative")?"ReactNative":$l.default.INTERNAL.hasOwnProperty("node")?"Node":hi()?"Worker":"Browser"}function fi(){var t=li();return"ReactNative"===t||"Node"===t}var di="Firefox",pi="Chrome";function vi(t){var e=t.toLowerCase();return rt(e,"opera/")||rt(e,"opr/")||rt(e,"opios/")?"Opera":rt(e,"iemobile")?"IEMobile":rt(e,"msie")||rt(e,"trident/")?"IE":rt(e,"edge/")?"Edge":rt(e,"firefox/")?di:rt(e,"silk/")?"Silk":rt(e,"blackberry")?"Blackberry":rt(e,"webos")?"Webos":!rt(e,"safari/")||rt(e,"chrome/")||rt(e,"crios/")||rt(e,"android")?!rt(e,"chrome/")&&!rt(e,"crios/")||rt(e,"edge/")?rt(e,"android")?"Android":(t=t.match(/([a-zA-Z\d\.]+)\/[a-zA-Z\d\.]*$/))&&2==t.length?t[1]:"Other":pi:"Safari"}var mi={ld:"FirebaseCore-web",nd:"FirebaseUI-web"};function gi(t,e){e=e||[];var n,i=[],r={};for(n in mi)r[mi[n]]=!0;for(n=0;n<e.length;n++)void 0!==r[e[n]]&&(delete r[e[n]],i.push(e[n]));return i.sort(),(e=i).length||(e=["FirebaseCore-web"]),"Browser"===(i=li())?i=vi(r=bi()):"Worker"===i&&(i=vi(r=bi())+"-"+i),i+"/JsCore/"+t+"/"+e.join(",")}function bi(){return l.navigator&&l.navigator.userAgent||""}function yi(t,e){t=t.split("."),e=e||l;for(var n=0;n<t.length&&"object"==typeof e&&null!=e;n++)e=e[t[n]];return n!=t.length&&(e=void 0),e}function wi(){try{var t=l.localStorage,e=_i();if(t)return t.setItem(e,"1"),t.removeItem(e),!Qn()||!!l.indexedDB}catch(t){return hi()&&!!l.indexedDB}return!1}function Ii(){return(Ti()||"chrome-extension:"===Ei()||ui())&&!fi()&&wi()&&!hi()}function Ti(){return"http:"===Ei()||"https:"===Ei()}function Ei(){return l.location&&l.location.protocol||null}function Ai(t){return!ni(t=t||bi())&&vi(t)!=di}function ki(t){return void 0===t?null:Jn(t)}function Si(t){var e,n={};for(e in t)t.hasOwnProperty(e)&&null!==t[e]&&void 0!==t[e]&&(n[e]=t[e]);return n}function Ni(t){if(null!==t)return JSON.parse(t)}function _i(t){return t||Math.floor(1e9*Math.random()).toString()}function Oi(t){return"Safari"!=vi(t=t||bi())&&!t.toLowerCase().match(/iphone|ipad|ipod/)}function Ci(){var t=l.___jsl;if(t&&t.H)for(var e in t.H)if(t.H[e].r=t.H[e].r||[],t.H[e].L=t.H[e].L||[],t.H[e].r=t.H[e].L.concat(),t.CP)for(var n=0;n<t.CP.length;n++)t.CP[n]=null}function Ri(t,e){if(e<t)throw Error("Short delay should be less than long delay!");this.a=t,this.c=e,t=bi(),e=li(),this.b=ni(t)||"ReactNative"===e}function Di(){var t=l.document;return!t||void 0===t.visibilityState||"visible"==t.visibilityState}function Pi(t){try{var e=new Date(parseInt(t,10));if(!isNaN(e.getTime())&&!/[^0-9]/.test(t))return e.toUTCString()}catch(t){}return null}function Li(){return yi("fireauth.oauthhelper",l)||yi("fireauth.iframe",l)}Ri.prototype.get=function(){var t=l.navigator;return!t||"boolean"!=typeof t.onLine||!Ti()&&"chrome-extension:"!==Ei()&&void 0===t.connection||t.onLine?this.b?this.c:this.a:Math.min(5e3,this.a)};var xi,Mi={};function ji(t){Mi[t]||(Mi[t]=!0,"undefined"!=typeof console&&"function"==typeof console.warn&&console.warn(t))}try{var Ui={};Object.defineProperty(Ui,"abcd",{configurable:!0,enumerable:!0,value:1}),Object.defineProperty(Ui,"abcd",{configurable:!0,enumerable:!0,value:2}),xi=2==Ui.abcd}catch(t){xi=!1}function Vi(t,e,n){xi?Object.defineProperty(t,e,{configurable:!0,enumerable:!0,value:n}):t[e]=n}function Fi(t,e){if(e)for(var n in e)e.hasOwnProperty(n)&&Vi(t,n,e[n])}function qi(t){var e={};return Fi(e,t),e}function Hi(t){var e=t;if("object"==typeof t&&null!=t)for(var n in e="length"in t?[]:{},t)Vi(e,n,Hi(t[n]));return e}function Ki(t){var e=t&&(t[Ji]?"phone":null);if(!(e&&t&&t[Xi]))throw new E("internal-error","Internal assert: invalid MultiFactorInfo object");Vi(this,"uid",t[Xi]),Vi(this,"displayName",t[Bi]||null);var n=null;t[Wi]&&(n=new Date(t[Wi]).toUTCString()),Vi(this,"enrollmentTime",n),Vi(this,"factorId",e)}function Gi(t){try{var e=new Yi(t)}catch(t){e=null}return e}Ki.prototype.w=function(){return{uid:this.uid,displayName:this.displayName,factorId:this.factorId,enrollmentTime:this.enrollmentTime}};var Bi="displayName",Wi="enrolledAt",Xi="mfaEnrollmentId",Ji="phoneInfo";function Yi(t){Ki.call(this,t),Vi(this,"phoneNumber",t[Ji])}function zi(t){var e={},n=t[tr],i=t[nr],r=t[ir];if(t=Gi(t[er]),!r||r!=Zi&&r!=Qi&&!n||r==Qi&&!i||r==$i&&!t)throw Error("Invalid checkActionCode response!");r==Qi?(e[or]=n||null,e[sr]=n||null,e[rr]=i):(e[or]=i||null,e[sr]=i||null,e[rr]=n||null),e[ar]=t||null,Vi(this,cr,r),Vi(this,ur,Hi(e))}I(Yi,Ki),Yi.prototype.w=function(){var t=Yi.$a.w.call(this);return t.phoneNumber=this.phoneNumber,t};var $i="REVERT_SECOND_FACTOR_ADDITION",Zi="EMAIL_SIGNIN",Qi="VERIFY_AND_CHANGE_EMAIL",tr="email",er="mfaInfo",nr="newEmail",ir="requestType",rr="email",or="fromEmail",ar="multiFactorInfo",sr="previousEmail",ur="data",cr="operation";function hr(t){var e=On(t=Cn(t),lr)||null,n=On(t,fr)||null,i=(i=On(t,vr)||null)&&gr[i]||null;if(!e||!n||!i)throw new E("argument-error",lr+", "+fr+"and "+vr+" are required in a valid action code URL.");Fi(this,{apiKey:e,operation:i,code:n,continueUrl:On(t,dr)||null,languageCode:On(t,pr)||null,tenantId:On(t,mr)||null})}var lr="apiKey",fr="oobCode",dr="continueUrl",pr="languageCode",vr="mode",mr="tenantId",gr={recoverEmail:"RECOVER_EMAIL",resetPassword:"PASSWORD_RESET",revertSecondFactorAddition:$i,signIn:Zi,verifyAndChangeEmail:Qi,verifyEmail:"VERIFY_EMAIL"};function br(t){try{return new hr(t)}catch(t){return null}}function yr(t){var e=t[Ar];if(void 0===e)throw new E("missing-continue-uri");if("string"!=typeof e||"string"==typeof e&&!e.length)throw new E("invalid-continue-uri");if(this.i=e,this.b=this.a=null,this.g=!1,(i=t[wr])&&"object"==typeof i){e=i[Nr];var n=i[kr],i=i[Sr];if("string"==typeof e&&e.length){if(this.a=e,void 0!==n&&"boolean"!=typeof n)throw new E("argument-error",kr+" property must be a boolean when specified.");if(this.g=!!n,void 0!==i&&("string"!=typeof i||"string"==typeof i&&!i.length))throw new E("argument-error",Sr+" property must be a non empty string when specified.");this.b=i||null}else{if(void 0!==e)throw new E("argument-error",Nr+" property must be a non empty string when specified.");if(void 0!==n||void 0!==i)throw new E("missing-android-pkg-name")}}else if(void 0!==i)throw new E("argument-error",wr+" property must be a non null object when specified.");if(this.f=null,(e=t[Er])&&"object"==typeof e){if("string"==typeof(e=e[_r])&&e.length)this.f=e;else if(void 0!==e)throw new E("argument-error",_r+" property must be a non empty string when specified.")}else if(void 0!==e)throw new E("argument-error",Er+" property must be a non null object when specified.");if(void 0!==(e=t[Tr])&&"boolean"!=typeof e)throw new E("argument-error",Tr+" property must be a boolean when specified.");if(this.c=!!e,void 0!==(t=t[Ir])&&("string"!=typeof t||"string"==typeof t&&!t.length))throw new E("argument-error",Ir+" property must be a non empty string when specified.");this.h=t||null}var wr="android",Ir="dynamicLinkDomain",Tr="handleCodeInApp",Er="iOS",Ar="url",kr="installApp",Sr="minimumVersion",Nr="packageName",_r="bundleId";function Or(t){var e,n={};for(e in n.continueUrl=t.i,n.canHandleCodeInApp=t.c,(n.androidPackageName=t.a)&&(n.androidMinimumVersion=t.b,n.androidInstallApp=t.g),n.iOSBundleId=t.f,n.dynamicLinkDomain=t.h,n)null===n[e]&&delete n[e];return n}var Cr=null;function Rr(t){var e="";return function(i,t){function e(t){for(;r<i.length;){var e=i.charAt(r++),n=Cr[e];if(null!=n)return n;if(!/^[\s\xa0]*$/.test(e))throw Error("Unknown base64 encoding at char: "+e)}return t}!function(){if(!Cr){Cr={};for(var t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".split(""),e=["+/=","+/","-_=","-_.","-_"],n=0;n<5;n++)for(var i=t.concat(e[n].split("")),r=0;r<i.length;r++){var o=i[r];void 0===Cr[o]&&(Cr[o]=r)}}}();for(var r=0;;){var n=e(-1),o=e(0),a=e(64),s=e(64);if(64===s&&-1===n)break;t(n<<2|o>>4),64!=a&&(t(o<<4&240|a>>2),64!=s&&t(a<<6&192|s))}}(t,function(t){e+=String.fromCharCode(t)}),e}function Dr(t){var e=Lr(t);if(!(e&&e.sub&&e.iss&&e.aud&&e.exp))throw Error("Invalid JWT");this.i=t,this.a=e.exp,this.h=e.sub,t=Date.now()/1e3,this.g=e.iat||(t>this.a?this.a:t),this.b=e.provider_id||e.firebase&&e.firebase.sign_in_provider||null,this.f=e.firebase&&e.firebase.tenant||null,this.c=!!e.is_anonymous||"anonymous"==this.b}function Pr(t){try{return new Dr(t)}catch(t){return null}}function Lr(t){if(!t)return null;if(3!=(t=t.split(".")).length)return null;for(var e=(4-(t=t[1]).length%4)%4,n=0;n<e;n++)t+=".";try{return JSON.parse(Rr(t))}catch(t){}return null}Dr.prototype.S=function(){return this.f},Dr.prototype.l=function(){return this.c},Dr.prototype.toString=function(){return this.i};var xr="oauth_consumer_key oauth_nonce oauth_signature oauth_signature_method oauth_timestamp oauth_token oauth_version".split(" "),Mr=["client_id","response_type","scope","redirect_uri","state"],jr={md:{Ja:"locale",ua:700,ta:600,fa:"facebook.com",Wa:Mr},od:{Ja:null,ua:500,ta:750,fa:"github.com",Wa:Mr},pd:{Ja:"hl",ua:515,ta:680,fa:"google.com",Wa:Mr},vd:{Ja:"lang",ua:485,ta:705,fa:"twitter.com",Wa:xr},jd:{Ja:"locale",ua:640,ta:600,fa:"apple.com",Wa:[]}};function Ur(t){for(var e in jr)if(jr[e].fa==t)return jr[e];return null}function Vr(t){var e={};e["facebook.com"]=Gr,e["google.com"]=Wr,e["github.com"]=Br,e["twitter.com"]=Xr;var n=t&&t[qr];try{if(n)return new(e[n]?e[n]:Kr)(t);if(void 0!==t[Fr])return new Hr(t)}catch(t){}return null}var Fr="idToken",qr="providerId";function Hr(t){var e,n=t[qr];if(n||!t[Fr]||(e=Pr(t[Fr]))&&e.b&&(n=e.b),!n)throw Error("Invalid additional user info!");"anonymous"!=n&&"custom"!=n||(n=null),e=!1,void 0!==t.isNewUser?e=!!t.isNewUser:"identitytoolkit#SignupNewUserResponse"===t.kind&&(e=!0),Vi(this,"providerId",n),Vi(this,"isNewUser",e)}function Kr(t){Hr.call(this,t),Vi(this,"profile",Hi((t=Ni(t.rawUserInfo||"{}"))||{}))}function Gr(t){if(Kr.call(this,t),"facebook.com"!=this.providerId)throw Error("Invalid provider ID!")}function Br(t){if(Kr.call(this,t),"github.com"!=this.providerId)throw Error("Invalid provider ID!");Vi(this,"username",this.profile&&this.profile.login||null)}function Wr(t){if(Kr.call(this,t),"google.com"!=this.providerId)throw Error("Invalid provider ID!")}function Xr(t){if(Kr.call(this,t),"twitter.com"!=this.providerId)throw Error("Invalid provider ID!");Vi(this,"username",t.screenName||null)}function Jr(t){var e=On(i=Cn(t),"link"),n=On(Cn(e),"link"),i=On(i,"deep_link_id");return On(Cn(i),"link")||i||n||e||t}function Yr(t,e){if(!t&&!e)throw new E("internal-error","Internal assert: no raw session string available");if(t&&e)throw new E("internal-error","Internal assert: unable to determine the session type");this.a=t||null,this.b=e||null,this.type=this.a?zr:$r}I(Kr,Hr),I(Gr,Kr),I(Br,Kr),I(Wr,Kr),I(Xr,Kr);var zr="enroll",$r="signin";function Zr(){}function Qr(t,n){return t.then(function(t){if(t[Ha]){var e=Pr(t[Ha]);if(!e||n!=e.h)throw new E("user-mismatch");return t}throw new E("user-mismatch")}).o(function(t){throw t&&t.code&&t.code==S+"user-not-found"?new E("user-mismatch"):t})}function to(t,e){if(!e)throw new E("internal-error","failed to construct a credential");this.a=e,Vi(this,"providerId",t),Vi(this,"signInMethod",t)}function eo(t){return{pendingToken:t.a,requestUri:"http://localhost"}}function no(t){if(t&&t.providerId&&t.signInMethod&&0==t.providerId.indexOf("saml.")&&t.pendingToken)try{return new to(t.providerId,t.pendingToken)}catch(t){}return null}function io(t,e,n){if(this.a=null,e.idToken||e.accessToken)e.idToken&&Vi(this,"idToken",e.idToken),e.accessToken&&Vi(this,"accessToken",e.accessToken),e.nonce&&!e.pendingToken&&Vi(this,"nonce",e.nonce),e.pendingToken&&(this.a=e.pendingToken);else{if(!e.oauthToken||!e.oauthTokenSecret)throw new E("internal-error","failed to construct a credential");Vi(this,"accessToken",e.oauthToken),Vi(this,"secret",e.oauthTokenSecret)}Vi(this,"providerId",t),Vi(this,"signInMethod",n)}function ro(t){var e={};return t.idToken&&(e.id_token=t.idToken),t.accessToken&&(e.access_token=t.accessToken),t.secret&&(e.oauth_token_secret=t.secret),e.providerId=t.providerId,t.nonce&&!t.a&&(e.nonce=t.nonce),e={postBody:Hn(e).toString(),requestUri:"http://localhost"},t.a&&(delete e.postBody,e.pendingToken=t.a),e}function oo(t){if(t&&t.providerId&&t.signInMethod){var e={idToken:t.oauthIdToken,accessToken:t.oauthTokenSecret?null:t.oauthAccessToken,oauthTokenSecret:t.oauthTokenSecret,oauthToken:t.oauthTokenSecret&&t.oauthAccessToken,nonce:t.nonce,pendingToken:t.pendingToken};try{return new io(t.providerId,e,t.signInMethod)}catch(t){}}return null}function ao(t,e){this.Pc=e||[],Fi(this,{providerId:t,isOAuthProvider:!0}),this.Hb={},this.ob=(Ur(t)||{}).Ja||null,this.nb=null}function so(t){if("string"!=typeof t||0!=t.indexOf("saml."))throw new E("argument-error",'SAML provider IDs must be prefixed with "saml."');ao.call(this,t,[])}function uo(t){ao.call(this,t,Mr),this.a=[]}function co(){uo.call(this,"facebook.com")}function ho(t){if(!t)throw new E("argument-error","credential failed: expected 1 argument (the OAuth access token).");var e=t;return m(t)&&(e=t.accessToken),(new co).credential({accessToken:e})}function lo(){uo.call(this,"github.com")}function fo(t){if(!t)throw new E("argument-error","credential failed: expected 1 argument (the OAuth access token).");var e=t;return m(t)&&(e=t.accessToken),(new lo).credential({accessToken:e})}function po(){uo.call(this,"google.com"),this.Ca("profile")}function vo(t,e){var n=t;return m(t)&&(n=t.idToken,e=t.accessToken),(new po).credential({idToken:n,accessToken:e})}function mo(){ao.call(this,"twitter.com",xr)}function go(t,e){var n=t;if(m(n)||(n={oauthToken:t,oauthTokenSecret:e}),!n.oauthToken||!n.oauthTokenSecret)throw new E("argument-error","credential failed: expected 2 arguments (the OAuth access token and secret).");return new io("twitter.com",n,"twitter.com")}function bo(t,e,n){this.a=t,this.f=e,Vi(this,"providerId","password"),Vi(this,"signInMethod",n===wo.EMAIL_LINK_SIGN_IN_METHOD?wo.EMAIL_LINK_SIGN_IN_METHOD:wo.EMAIL_PASSWORD_SIGN_IN_METHOD)}function yo(t){return t&&t.email&&t.password?new bo(t.email,t.password,t.signInMethod):null}function wo(){Fi(this,{providerId:"password",isOAuthProvider:!1})}function Io(t,e){if(!(e=To(e)))throw new E("argument-error","Invalid email link!");return new bo(t,e.code,wo.EMAIL_LINK_SIGN_IN_METHOD)}function To(t){return(t=br(t=Jr(t)))&&t.operation===Zi?t:null}function Eo(t){if(!(t.cb&&t.bb||t.La&&t.ea))throw new E("internal-error");this.a=t,Vi(this,"providerId","phone"),this.fa="phone",Vi(this,"signInMethod","phone")}function Ao(e){if(e&&"phone"===e.providerId&&(e.verificationId&&e.verificationCode||e.temporaryProof&&e.phoneNumber)){var n={};return F(["verificationId","verificationCode","temporaryProof","phoneNumber"],function(t){e[t]&&(n[t]=e[t])}),new Eo(n)}return null}function ko(t){return t.a.La&&t.a.ea?{temporaryProof:t.a.La,phoneNumber:t.a.ea}:{sessionInfo:t.a.cb,code:t.a.bb}}function So(t){try{this.a=t||$l.default.auth()}catch(t){throw new E("argument-error","Either an instance of firebase.auth.Auth must be passed as an argument to the firebase.auth.PhoneAuthProvider constructor, or the default firebase App instance must be initialized via firebase.initializeApp().")}Fi(this,{providerId:"phone",isOAuthProvider:!1})}function No(t,e){if(!t)throw new E("missing-verification-id");if(!e)throw new E("missing-verification-code");return new Eo({cb:t,bb:e})}function _o(t){if(t.temporaryProof&&t.phoneNumber)return new Eo({La:t.temporaryProof,ea:t.phoneNumber});var e=t&&t.providerId;if(!e||"password"===e)return null;var n=t&&t.oauthAccessToken,i=t&&t.oauthTokenSecret,r=t&&t.nonce,o=t&&t.oauthIdToken,a=t&&t.pendingToken;try{switch(e){case"google.com":return vo(o,n);case"facebook.com":return ho(n);case"github.com":return fo(n);case"twitter.com":return go(n,i);default:return n||i||o||a?a?0==e.indexOf("saml.")?new to(e,a):new io(e,{pendingToken:a,idToken:t.oauthIdToken,accessToken:t.oauthAccessToken},e):new uo(e).credential({idToken:o,accessToken:n,rawNonce:r}):null}}catch(t){return null}}function Oo(t){if(!t.isOAuthProvider)throw new E("invalid-oauth-provider")}function Co(t,e,n,i,r,o,a){if(this.c=t,this.b=e||null,this.g=n||null,this.f=i||null,this.h=o||null,this.i=a||null,this.a=r||null,!this.g&&!this.a)throw new E("invalid-auth-event");if(this.g&&this.a)throw new E("invalid-auth-event");if(this.g&&!this.f)throw new E("invalid-auth-event")}function Ro(t){return(t=t||{}).type?new Co(t.type,t.eventId,t.urlResponse,t.sessionId,t.error&&A(t.error),t.postBody,t.tenantId):null}function Do(){this.b=null,this.a=[]}Yr.prototype.Ha=function(){return this.a?we(this.a):we(this.b)},Yr.prototype.w=function(){return this.type==zr?{multiFactorSession:{idToken:this.a}}:{multiFactorSession:{pendingCredential:this.b}}},Zr.prototype.ja=function(){},Zr.prototype.b=function(){},Zr.prototype.c=function(){},Zr.prototype.w=function(){},to.prototype.ja=function(t){return hs(t,eo(this))},to.prototype.b=function(t,e){var n=eo(this);return n.idToken=e,ls(t,n)},to.prototype.c=function(t,e){return Qr(fs(t,eo(this)),e)},to.prototype.w=function(){return{providerId:this.providerId,signInMethod:this.signInMethod,pendingToken:this.a}},io.prototype.ja=function(t){return hs(t,ro(this))},io.prototype.b=function(t,e){var n=ro(this);return n.idToken=e,ls(t,n)},io.prototype.c=function(t,e){return Qr(fs(t,ro(this)),e)},io.prototype.w=function(){var t={providerId:this.providerId,signInMethod:this.signInMethod};return this.idToken&&(t.oauthIdToken=this.idToken),this.accessToken&&(t.oauthAccessToken=this.accessToken),this.secret&&(t.oauthTokenSecret=this.secret),this.nonce&&(t.nonce=this.nonce),this.a&&(t.pendingToken=this.a),t},ao.prototype.Ka=function(t){return this.Hb=ht(t),this},I(so,ao),I(uo,ao),uo.prototype.Ca=function(t){return G(this.a,t)||this.a.push(t),this},uo.prototype.Pb=function(){return J(this.a)},uo.prototype.credential=function(t,e){e=m(t)?{idToken:t.idToken||null,accessToken:t.accessToken||null,nonce:t.rawNonce||null}:{idToken:t||null,accessToken:e||null};if(!e.idToken&&!e.accessToken)throw new E("argument-error","credential failed: must provide the ID token and/or the access token.");return new io(this.providerId,e,this.providerId)},I(co,uo),Vi(co,"PROVIDER_ID","facebook.com"),Vi(co,"FACEBOOK_SIGN_IN_METHOD","facebook.com"),I(lo,uo),Vi(lo,"PROVIDER_ID","github.com"),Vi(lo,"GITHUB_SIGN_IN_METHOD","github.com"),I(po,uo),Vi(po,"PROVIDER_ID","google.com"),Vi(po,"GOOGLE_SIGN_IN_METHOD","google.com"),I(mo,ao),Vi(mo,"PROVIDER_ID","twitter.com"),Vi(mo,"TWITTER_SIGN_IN_METHOD","twitter.com"),bo.prototype.ja=function(t){return this.signInMethod==wo.EMAIL_LINK_SIGN_IN_METHOD?Xs(t,ws,{email:this.a,oobCode:this.f}):Xs(t,Hs,{email:this.a,password:this.f})},bo.prototype.b=function(t,e){return this.signInMethod==wo.EMAIL_LINK_SIGN_IN_METHOD?Xs(t,Is,{idToken:e,email:this.a,oobCode:this.f}):Xs(t,Ls,{idToken:e,email:this.a,password:this.f})},bo.prototype.c=function(t,e){return Qr(this.ja(t),e)},bo.prototype.w=function(){return{email:this.a,password:this.f,signInMethod:this.signInMethod}},Fi(wo,{PROVIDER_ID:"password"}),Fi(wo,{EMAIL_LINK_SIGN_IN_METHOD:"emailLink"}),Fi(wo,{EMAIL_PASSWORD_SIGN_IN_METHOD:"password"}),Eo.prototype.ja=function(t){return t.eb(ko(this))},Eo.prototype.b=function(t,e){var n=ko(this);return n.idToken=e,Xs(t,Gs,n)},Eo.prototype.c=function(t,e){var n=ko(this);return n.operation="REAUTH",Qr(t=Xs(t,Bs,n),e)},Eo.prototype.w=function(){var t={providerId:"phone"};return this.a.cb&&(t.verificationId=this.a.cb),this.a.bb&&(t.verificationCode=this.a.bb),this.a.La&&(t.temporaryProof=this.a.La),this.a.ea&&(t.phoneNumber=this.a.ea),t},So.prototype.eb=function(i,r){var o=this.a.a;return we(r.verify()).then(function(n){if("string"!=typeof n)throw new E("argument-error","An implementation of firebase.auth.ApplicationVerifier.prototype.verify() must return a firebase.Promise that resolves with a string.");if("recaptcha"!==r.type)throw new E("argument-error",'Only firebase.auth.ApplicationVerifiers with type="recaptcha" are currently supported.');var t=m(i)?i.session:null,e=m(i)?i.phoneNumber:i,t=t&&t.type==zr?t.Ha().then(function(t){return Xs(o,Ms,{idToken:t,phoneEnrollmentInfo:{phoneNumber:e,recaptchaToken:n}}).then(function(t){return t.phoneSessionInfo.sessionInfo})}):t&&t.type==$r?t.Ha().then(function(t){return e=o,t={mfaPendingCredential:t,mfaEnrollmentId:i.multiFactorHint&&i.multiFactorHint.uid||i.multiFactorUid,phoneSignInInfo:{recaptchaToken:n}},Xs(e,js,t).then(function(t){return t.phoneResponseInfo.sessionInfo});var e}):Xs(o,Ds,{phoneNumber:e,recaptchaToken:n});return t.then(function(t){return"function"==typeof r.reset&&r.reset(),t},function(t){throw"function"==typeof r.reset&&r.reset(),t})})},Fi(So,{PROVIDER_ID:"phone"}),Fi(So,{PHONE_SIGN_IN_METHOD:"phone"}),Co.prototype.getUid=function(){var t=[];return t.push(this.c),this.b&&t.push(this.b),this.f&&t.push(this.f),this.i&&t.push(this.i),t.join("-")},Co.prototype.S=function(){return this.i},Co.prototype.w=function(){return{type:this.c,eventId:this.b,urlResponse:this.g,sessionId:this.f,postBody:this.h,tenantId:this.i,error:this.a&&this.a.w()}};var Po,Lo=null;function xo(t){var e="unauthorized-domain",n=void 0,i=Cn(t);t=i.a,"chrome-extension"==(i=i.f)?n=Ut("This chrome extension ID (chrome-extension://%s) is not authorized to run this operation. Add it to the OAuth redirect domains list in the Firebase console -> Auth section -> Sign in method tab.",t):"http"==i||"https"==i?n=Ut("This domain (%s) is not authorized to run this operation. Add it to the OAuth redirect domains list in the Firebase console -> Auth section -> Sign in method tab.",t):e="operation-not-supported-in-this-environment",E.call(this,e,n)}function Mo(t,e,n){E.call(this,t,n),(t=e||{}).Ib&&Vi(this,"email",t.Ib),t.ea&&Vi(this,"phoneNumber",t.ea),t.credential&&Vi(this,"credential",t.credential),t.Yb&&Vi(this,"tenantId",t.Yb)}function jo(t){if(t.code){var e=t.code||"";0==e.indexOf(S)&&(e=e.substring(S.length));var n={credential:_o(t),Yb:t.tenantId};if(t.email)n.Ib=t.email;else if(t.phoneNumber)n.ea=t.phoneNumber;else if(!n.credential)return new E(e,t.message||void 0);return new Mo(e,n,t.message)}return null}function Uo(){}function Vo(t){return t.c||(t.c=t.b())}function Fo(){}function qo(t){if(t.f||"undefined"!=typeof XMLHttpRequest||"undefined"==typeof ActiveXObject)return t.f;for(var e=["MSXML2.XMLHTTP.6.0","MSXML2.XMLHTTP.3.0","MSXML2.XMLHTTP","Microsoft.XMLHTTP"],n=0;n<e.length;n++){var i=e[n];try{return new ActiveXObject(i),t.f=i}catch(t){}}throw Error("Could not create ActiveXObject. ActiveX might be disabled, or MSXML might not be installed")}function Ho(){}function Ko(){this.a=new XDomainRequest,this.readyState=0,this.onreadystatechange=null,this.responseType=this.responseText=this.response="",this.status=-1,this.statusText="",this.a.onload=b(this.pc,this),this.a.onerror=b(this.Rb,this),this.a.onprogress=b(this.qc,this),this.a.ontimeout=b(this.uc,this)}function Go(t,e){t.readyState=e,t.onreadystatechange&&t.onreadystatechange()}function Bo(t,e,n){this.reset(t,e,n,void 0,void 0)}function Wo(t){this.f=t,this.b=this.c=this.a=null}function Xo(t,e){this.name=t,this.value=e}I(xo,E),I(Mo,E),Mo.prototype.w=function(){var t={code:this.code,message:this.message};this.email&&(t.email=this.email),this.phoneNumber&&(t.phoneNumber=this.phoneNumber),this.tenantId&&(t.tenantId=this.tenantId);var e=this.credential&&this.credential.w();return e&&ft(t,e),t},Mo.prototype.toJSON=function(){return this.w()},Uo.prototype.c=null,I(Fo,Uo),Fo.prototype.a=function(){var t=qo(this);return t?new ActiveXObject(t):new XMLHttpRequest},Fo.prototype.b=function(){var t={};return qo(this)&&(t[0]=!0,t[1]=!0),t},Po=new Fo,I(Ho,Uo),Ho.prototype.a=function(){var t=new XMLHttpRequest;if("withCredentials"in t)return t;if("undefined"!=typeof XDomainRequest)return new Ko;throw Error("Unsupported browser")},Ho.prototype.b=function(){return{}},(t=Ko.prototype).open=function(t,e,n){if(null!=n&&!n)throw Error("Only async requests are supported.");this.a.open(t,e)},t.send=function(t){if(t){if("string"!=typeof t)throw Error("Only string data is supported");this.a.send(t)}else this.a.send()},t.abort=function(){this.a.abort()},t.setRequestHeader=function(){},t.getResponseHeader=function(t){return"content-type"==t.toLowerCase()?this.a.contentType:""},t.pc=function(){this.status=200,this.response=this.responseText=this.a.responseText,Go(this,4)},t.Rb=function(){this.status=500,this.response=this.responseText="",Go(this,4)},t.uc=function(){this.Rb()},t.qc=function(){this.status=200,Go(this,1)},t.getAllResponseHeaders=function(){return"content-type: "+this.a.contentType},Bo.prototype.a=null,Bo.prototype.reset=function(t,e,n,i,r){delete this.a},Xo.prototype.toString=function(){return this.name};var Jo=new Xo("SEVERE",1e3),Yo=new Xo("WARNING",900),zo=new Xo("CONFIG",700),$o=new Xo("FINE",500);Wo.prototype.log=function(t,e,n){if(t.value>=function t(e){return e.c?e.c:e.a?t(e.a):(P("Root logger has no level set."),null)}(this).value)for(v(e)&&(e=e()),t=new Bo(t,String(e),this.f),n&&(t.a=n),n=this;n;)n=n.a};var Zo,Qo={},ta=null;function ea(t){var e,n,i;return ta||(ta=new Wo(""),(Qo[""]=ta).c=zo),(e=Qo[t])||(e=new Wo(t),i=t.lastIndexOf("."),n=t.substr(i+1),(i=ea(t.substr(0,i))).b||(i.b={}),(i.b[n]=e).a=i,Qo[t]=e),e}function na(t,e){t&&t.log($o,e,void 0)}function ia(t){this.f=t}function ra(t){fn.call(this),this.u=t,this.i=void 0,this.readyState=oa,this.status=0,this.responseType=this.responseText=this.response=this.statusText="",this.onreadystatechange=null,this.l=new Headers,this.b=null,this.s="GET",this.f="",this.a=!1,this.h=ea("goog.net.FetchXmlHttp"),this.m=this.c=this.g=null}I(ia,Uo),ia.prototype.a=function(){return new ra(this.f)},ia.prototype.b=(Zo={},function(){return Zo}),I(ra,fn);var oa=0;function aa(t){t.c.read().then(t.oc.bind(t)).catch(t.Ta.bind(t))}function sa(t){t.readyState=4,t.g=null,t.c=null,t.m=null,ua(t)}function ua(t){t.onreadystatechange&&t.onreadystatechange.call(t)}function ca(t){fn.call(this),this.headers=new wn,this.O=t||null,this.c=!1,this.A=this.a=null,this.i=this.P=this.l="",this.f=this.N=this.h=this.G=!1,this.g=0,this.s=null,this.m=ha,this.u=this.R=!1}(t=ra.prototype).open=function(t,e){if(this.readyState!=oa)throw this.abort(),Error("Error reopening a connection");this.s=t,this.f=e,this.readyState=1,ua(this)},t.send=function(t){if(1!=this.readyState)throw this.abort(),Error("need to call open() first. ");this.a=!0;var e={headers:this.l,method:this.s,credentials:this.i,cache:void 0};t&&(e.body=t),this.u.fetch(new Request(this.f,e)).then(this.tc.bind(this),this.Ta.bind(this))},t.abort=function(){this.response=this.responseText="",this.l=new Headers,this.status=0,this.c&&this.c.cancel("Request was aborted."),1<=this.readyState&&this.a&&4!=this.readyState&&(this.a=!1,sa(this)),this.readyState=oa},t.tc=function(t){this.a&&(this.g=t,this.b||(this.status=this.g.status,this.statusText=this.g.statusText,this.b=t.headers,this.readyState=2,ua(this)),this.a&&(this.readyState=3,ua(this),this.a&&("arraybuffer"===this.responseType?t.arrayBuffer().then(this.rc.bind(this),this.Ta.bind(this)):void 0!==l.ReadableStream&&"body"in t?(this.response=this.responseText="",this.c=t.body.getReader(),this.m=new TextDecoder,aa(this)):t.text().then(this.sc.bind(this),this.Ta.bind(this)))))},t.oc=function(t){var e;this.a&&((e=this.m.decode(t.value?t.value:new Uint8Array(0),{stream:!t.done}))&&(this.response=this.responseText+=e),(t.done?sa:ua)(this),3==this.readyState&&aa(this))},t.sc=function(t){this.a&&(this.response=this.responseText=t,sa(this))},t.rc=function(t){this.a&&(this.response=t,sa(this))},t.Ta=function(t){var e=this.h;e&&e.log(Yo,"Failed to fetch url "+this.f,t instanceof Error?t:Error(t)),this.a&&sa(this)},t.setRequestHeader=function(t,e){this.l.append(t,e)},t.getResponseHeader=function(t){return this.b?this.b.get(t.toLowerCase())||"":((t=this.h)&&t.log(Yo,"Attempting to get response header but no headers have been received for url: "+this.f,void 0),"")},t.getAllResponseHeaders=function(){if(!this.b){var t=this.h;return t&&t.log(Yo,"Attempting to get all response headers but no headers have been received for url: "+this.f,void 0),""}t=[];for(var e=this.b.entries(),n=e.next();!n.done;)n=n.value,t.push(n[0]+": "+n[1]),n=e.next();return t.join("\r\n")},Object.defineProperty(ra.prototype,"withCredentials",{get:function(){return"include"===this.i},set:function(t){this.i=t?"include":"same-origin"}}),I(ca,fn);var ha="";ca.prototype.b=ea("goog.net.XhrIo");var la=/^https?$/i,fa=["POST","PUT"];function da(e,t,n,i,r){if(e.a)throw Error("[goog.net.XhrIo] Object is active with another request="+e.l+"; newUri="+t);n=n?n.toUpperCase():"GET",e.l=t,e.i="",e.P=n,e.G=!1,e.c=!0,e.a=(e.O?e.O:Po).a(),e.A=e.O?Vo(e.O):Vo(Po),e.a.onreadystatechange=b(e.Ub,e);try{na(e.b,Ta(e,"Opening Xhr")),e.N=!0,e.a.open(n,String(t),!0),e.N=!1}catch(t){return na(e.b,Ta(e,"Error opening Xhr: "+t.message)),void va(e,t)}t=i||"";var o,a=new wn(e.headers);r&&function(t,e){if(t.forEach&&"function"==typeof t.forEach)t.forEach(e,void 0);else if(p(t)||"string"==typeof t)F(t,e,void 0);else for(var n=yn(t),i=bn(t),r=i.length,o=0;o<r;o++)e.call(void 0,i[o],n&&n[o],t)}(r,function(t,e){a.set(e,t)}),r=function(t){t:{for(var e=pa,n=t.length,i="string"==typeof t?t.split(""):t,r=0;r<n;r++)if(r in i&&e.call(void 0,i[r],r,t)){e=r;break t}e=-1}return e<0?null:"string"==typeof t?t.charAt(e):t[e]}(a.Y()),i=l.FormData&&t instanceof l.FormData,!G(fa,n)||r||i||a.set("Content-Type","application/x-www-form-urlencoded;charset=utf-8"),a.forEach(function(t,e){this.a.setRequestHeader(e,t)},e),e.m&&(e.a.responseType=e.m),"withCredentials"in e.a&&e.a.withCredentials!==e.R&&(e.a.withCredentials=e.R);try{ya(e),0<e.g&&(e.u=(o=e.a,Kt&&Zt(9)&&"number"==typeof o.timeout&&void 0!==o.ontimeout),na(e.b,Ta(e,"Will abort after "+e.g+"ms if incomplete, xhr2 "+e.u)),e.u?(e.a.timeout=e.g,e.a.ontimeout=b(e.Ma,e)):e.s=mn(e.Ma,e.g,e)),na(e.b,Ta(e,"Sending request")),e.h=!0,e.a.send(t),e.h=!1}catch(t){na(e.b,Ta(e,"Send error: "+t.message)),va(e,t)}}function pa(t){return"content-type"==t.toLowerCase()}function va(t,e){t.c=!1,t.a&&(t.f=!0,t.a.abort(),t.f=!1),t.i=e,ma(t),ba(t)}function ma(t){t.G||(t.G=!0,t.dispatchEvent("complete"),t.dispatchEvent("error"))}function ga(e){if(e.c&&void 0!==h)if(e.A[1]&&4==wa(e)&&2==Ia(e))na(e.b,Ta(e,"Local request error detected and ignored"));else if(e.h&&4==wa(e))mn(e.Ub,0,e);else if(e.dispatchEvent("readystatechange"),4==wa(e)){na(e.b,Ta(e,"Request complete")),e.c=!1;try{var t,n,i,r,o=Ia(e);t:switch(o){case 200:case 201:case 202:case 204:case 206:case 304:case 1223:var a=!0;break t;default:a=!1}if((t=a)||((n=0===o)&&(!(r=String(e.l).match(En)[1]||null)&&l.self&&l.self.location&&(r=(i=l.self.location.protocol).substr(0,i.length-1)),n=!la.test(r?r.toLowerCase():"")),t=n),t)e.dispatchEvent("complete"),e.dispatchEvent("success");else{try{var s=2<wa(e)?e.a.statusText:""}catch(t){na(e.b,"Can not get status: "+t.message),s=""}e.i=s+" ["+Ia(e)+"]",ma(e)}}finally{ba(e)}}}function ba(e,t){if(e.a){ya(e);var n=e.a,i=e.A[0]?a:null;e.a=null,e.A=null,t||e.dispatchEvent("ready");try{n.onreadystatechange=i}catch(t){(e=e.b)&&e.log(Jo,"Problem encountered resetting onreadystatechange: "+t.message,void 0)}}}function ya(t){t.a&&t.u&&(t.a.ontimeout=null),t.s&&(l.clearTimeout(t.s),t.s=null)}function wa(t){return t.a?t.a.readyState:0}function Ia(t){try{return 2<wa(t)?t.a.status:-1}catch(t){return-1}}function Ta(t,e){return e+" ["+t.P+" "+t.l+" "+Ia(t)+"]"}function Ea(t){var e=La;this.g=[],this.u=e,this.s=t||null,this.f=this.a=!1,this.c=void 0,this.m=this.A=this.h=!1,this.i=0,this.b=null,this.l=0}function Aa(t,e,n){t.a=!0,t.c=n,t.f=!e,_a(t)}function ka(t){if(t.a){if(!t.m)throw new Oa;t.m=!1}}function Sa(t,e,n,i){t.g.push([e,n,i]),t.a&&_a(t)}function Na(t){return K(t.g,function(t){return v(t[1])})}function _a(e){var n,i;e.i&&e.a&&Na(e)&&(n=e.i,(i=Da[n])&&(l.clearTimeout(i.a),delete Da[n]),e.i=0),e.b&&(e.b.l--,delete e.b),n=e.c;for(var t=i=!1;e.g.length&&!e.h;){var r=(a=e.g.shift())[0],o=a[1],a=a[2];if(r=e.f?o:r)try{var s=r.call(a||e.s,n);void 0!==s&&(e.f=e.f&&(s==n||s instanceof Error),e.c=n=s),(C(n)||"function"==typeof l.Promise&&n instanceof l.Promise)&&(t=!0,e.h=!0)}catch(t){n=t,e.f=!0,Na(e)||(i=!0)}}e.c=n,t&&(s=b(e.v,e,!0),t=b(e.v,e,!1),n instanceof Ea?(Sa(n,s,t),n.A=!0):n.then(s,t)),i&&(n=new Ra(n),Da[n.a]=n,e.i=n.a)}function Oa(){R.call(this)}function Ca(){R.call(this)}function Ra(t){this.a=l.setTimeout(b(this.c,this),0),this.b=t}(t=ca.prototype).Ma=function(){void 0!==h&&this.a&&(this.i="Timed out after "+this.g+"ms, aborting",na(this.b,Ta(this,this.i)),this.dispatchEvent("timeout"),this.abort(8))},t.abort=function(){this.a&&this.c&&(na(this.b,Ta(this,"Aborting")),this.c=!1,this.f=!0,this.a.abort(),this.f=!1,this.dispatchEvent("complete"),this.dispatchEvent("abort"),ba(this))},t.Da=function(){this.a&&(this.c&&(this.c=!1,this.f=!0,this.a.abort(),this.f=!1),ba(this,!0)),ca.$a.Da.call(this)},t.Ub=function(){this.xa||(this.N||this.h||this.f?ga(this):this.Ic())},t.Ic=function(){ga(this)},t.getResponse=function(){try{if(!this.a)return null;if("response"in this.a)return this.a.response;switch(this.m){case ha:case"text":return this.a.responseText;case"arraybuffer":if("mozResponseArrayBuffer"in this.a)return this.a.mozResponseArrayBuffer}var t=this.b;return t&&t.log(Jo,"Response type "+this.m+" is not supported on this browser",void 0),null}catch(t){return na(this.b,"Can not get response: "+t.message),null}},Ea.prototype.cancel=function(t){var e;this.a?this.c instanceof Ea&&this.c.cancel():(this.b&&(e=this.b,delete this.b,t?e.cancel(t):(e.l--,e.l<=0&&e.cancel())),this.u?this.u.call(this.s,this):this.m=!0,this.a||(t=new Ca,ka(this),Aa(this,!1,t)))},Ea.prototype.v=function(t,e){this.h=!1,Aa(this,t,e)},Ea.prototype.then=function(t,e,n){var i,r,o=new de(function(t,e){i=t,r=e});return Sa(this,i,function(t){t instanceof Ca?o.cancel():r(t)}),o.then(t,e,n)},Ea.prototype.$goog_Thenable=!0,I(Oa,R),Oa.prototype.message="Deferred has already fired",Oa.prototype.name="AlreadyCalledError",I(Ca,R),Ca.prototype.message="Deferred was canceled",Ca.prototype.name="CanceledError",Ra.prototype.c=function(){throw delete Da[this.a],this.b};var Da={};function Pa(t){var e=document,n=It(t).toString(),i=se(document,"SCRIPT"),r={Vb:i,Ma:void 0},o=new Ea(r),a=window.setTimeout(function(){xa(i,!0);var t=new Ua(ja,"Timeout reached for loading script "+n);ka(o),Aa(o,!1,t)},5e3);return r.Ma=a,i.onload=i.onreadystatechange=function(){i.readyState&&"loaded"!=i.readyState&&"complete"!=i.readyState||(xa(i,!1,a),ka(o),Aa(o,!0,null))},i.onerror=function(){xa(i,!0,a);var t=new Ua(Ma,"Error while loading script "+n);ka(o),Aa(o,!1,t)},ft(r={},{type:"text/javascript",charset:"UTF-8"}),ne(i,r),r=t,dt(t=i,"HTMLScriptElement"),t.src=It(r),(r=(r=t.ownerDocument&&t.ownerDocument.defaultView)&&r!=l?f(r.document):(null===s&&(s=f(l.document)),s))&&t.setAttribute("nonce",r),((e=((r=e)||document).getElementsByTagName("HEAD"))&&0!=e.length?e[0]:r.documentElement).appendChild(i),o}function La(){var t;this&&this.Vb&&((t=this.Vb)&&"SCRIPT"==t.tagName&&xa(t,!0,this.Ma))}function xa(t,e,n){null!=n&&l.clearTimeout(n),t.onload=a,t.onerror=a,t.onreadystatechange=a,e&&window.setTimeout(function(){t&&t.parentNode&&t.parentNode.removeChild(t)},0)}var Ma=0,ja=1;function Ua(t,e){var n="Jsloader error (code #"+t+")";e&&(n+=": "+e),R.call(this,n),this.code=t}function Va(t){this.f=t}function Fa(t,e,n){if(this.c=t,t=e||{},this.l=t.secureTokenEndpoint||"https://securetoken.googleapis.com/v1/token",this.v=t.secureTokenTimeout||Ka,this.g=ht(t.secureTokenHeaders||Ga),this.i=t.firebaseEndpoint||"https://www.googleapis.com/identitytoolkit/v3/relyingparty/",this.h=t.identityPlatformEndpoint||"https://identitytoolkit.googleapis.com/v2/",this.m=t.firebaseTimeout||Ba,this.a=ht(t.firebaseHeaders||Wa),n&&(this.a["X-Client-Version"]=n,this.g["X-Client-Version"]=n),n="Node"==li(),!(n=l.XMLHttpRequest||n&&$l.default.INTERNAL.node&&$l.default.INTERNAL.node.XMLHttpRequest)&&!hi())throw new E("internal-error","The XMLHttpRequest compatibility library was not found.");this.f=void 0,hi()?this.f=new ia(self):fi()?this.f=new Va(n):this.f=new Ho,this.b=null}I(Ua,R),I(Va,Uo),Va.prototype.a=function(){return new this.f},Va.prototype.b=function(){return{}};var qa,Ha="idToken",Ka=new Ri(3e4,6e4),Ga={"Content-Type":"application/x-www-form-urlencoded"},Ba=new Ri(3e4,6e4),Wa={"Content-Type":"application/json"};function Xa(t,e){e?t.a["X-Firebase-Locale"]=e:delete t.a["X-Firebase-Locale"]}function Ja(t,e){e&&(t.l=Ya("https://securetoken.googleapis.com/v1/token",e),t.i=Ya("https://www.googleapis.com/identitytoolkit/v3/relyingparty/",e),t.h=Ya("https://identitytoolkit.googleapis.com/v2/",e))}function Ya(t,e){return t=Cn(t),e=Cn(e.url),t.c=t.a+t.c,kn(t,e.f),t.a=e.a,Sn(t,e.g),t.toString()}function za(t,e){e?(t.a["X-Client-Version"]=e,t.g["X-Client-Version"]=e):(delete t.a["X-Client-Version"],delete t.g["X-Client-Version"])}function $a(t,e,n,i,r,o,a){var s;(t=((s=vi(s=bi())==pi&&(s=s.match(/\sChrome\/(\d+)/i))&&2==s.length?parseInt(s[1],10):null)&&s<30||Kt&&Qt&&!(9<Qt))&&!hi()?(qa=qa||new de(function(t,e){!function(t,e){{((window.gapi||{}).client||{}).request?t():(l[Qa]=function(){((window.gapi||{}).client||{}).request?t():e(Error("CORS_UNSUPPORTED"))},function(t,e){Sa(t,null,e,void 0)}(Pa(Tt(Za,{onload:Qa})),function(){e(Error("CORS_UNSUPPORTED"))}))}}(t,e)}),b(t.s,t)):b(t.u,t))(e,n,i,r,o,a)}Fa.prototype.S=function(){return this.b},Fa.prototype.u=function(t,n,e,i,r,o){if(hi()&&(void 0===l.fetch||void 0===l.Headers||void 0===l.Request))throw new E("operation-not-supported-in-this-environment","fetch, Headers and Request native APIs or equivalent Polyfills must be available to support HTTP requests from a Worker environment.");var a,s=new ca(this.f);o&&(s.g=Math.max(0,o),a=setTimeout(function(){s.dispatchEvent("timeout")},o)),dn(s,"complete",function(){a&&clearTimeout(a);var e=null;try{e=JSON.parse(function(e){try{return e.a?e.a.responseText:""}catch(t){return na(e.b,"Can not get responseText: "+t.message),""}}(this))||null}catch(t){e=null}n&&n(e)}),pn(s,"ready",function(){a&&clearTimeout(a),Me(this)}),pn(s,"timeout",function(){a&&clearTimeout(a),Me(this),n&&n(null)}),da(s,t,e,i,r)};var Za=new pt(bt,"https://apis.google.com/js/client.js?onload=%{onload}"),Qa="__fcb"+Math.floor(1e6*Math.random()).toString();function ts(t,e,n,i,r,o,a){var s=Cn(e+n);_n(s,"key",t.c),a&&_n(s,"cb",w().toString());var u="GET"==i;if(u)for(var c in r)r.hasOwnProperty(c)&&_n(s,c,r[c]);return new de(function(e,n){$a(t,s.toString(),function(t){t?t.error?n(Ys(t,o||{})):e(t):n(new E("network-request-failed"))},i,u?void 0:Jn(Si(r)),t.a,t.m.get())})}function es(t){if("string"!=typeof(t=t.email)||!ai.test(t))throw new E("invalid-email")}function ns(t){"email"in t&&es(t)}function is(t){if(!t[Ha]){if(t.mfaPendingCredential)throw new E("multi-factor-auth-required",null,ht(t));throw new E("internal-error")}}function rs(t){if(t.phoneNumber||t.temporaryProof){if(!t.phoneNumber||!t.temporaryProof)throw new E("internal-error")}else{if(!t.sessionInfo)throw new E("missing-verification-id");if(!t.code)throw new E("missing-verification-code")}}Fa.prototype.s=function(t,n,i,r,o){var a=this;qa.then(function(){window.gapi.client.setApiKey(a.c);var e=window.gapi.auth.getToken();window.gapi.auth.setToken(null),window.gapi.client.request({path:t,method:i,body:r,headers:o,authType:"none",callback:function(t){window.gapi.auth.setToken(e),n&&n(t)}})}).o(function(t){n&&n({error:{message:t&&t.message||"CORS_UNSUPPORTED"}})})},Fa.prototype.yb=function(){return Xs(this,xs,{})},Fa.prototype.Ab=function(t,e){return Xs(this,Ps,{idToken:t,email:e})},Fa.prototype.Bb=function(t,e){return Xs(this,Ls,{idToken:t,password:e})};var os={displayName:"DISPLAY_NAME",photoUrl:"PHOTO_URL"};function as(t){if(!t.phoneVerificationInfo)throw new E("internal-error");if(!t.phoneVerificationInfo.sessionInfo)throw new E("missing-verification-id");if(!t.phoneVerificationInfo.code)throw new E("missing-verification-code")}function ss(t){if(!t.requestUri||!t.sessionId&&!t.postBody&&!t.pendingToken)throw new E("internal-error")}function us(t,e){return e.oauthIdToken&&e.providerId&&0==e.providerId.indexOf("oidc.")&&!e.pendingToken&&(t.sessionId?e.nonce=t.sessionId:t.postBody&&(Gn(t=new Fn(t.postBody),"nonce")&&(e.nonce=t.get("nonce")))),e}function cs(t){var e=null;if(t.needConfirmation?(t.code="account-exists-with-different-credential",e=jo(t)):"FEDERATED_USER_ID_ALREADY_LINKED"==t.errorMessage?(t.code="credential-already-in-use",e=jo(t)):"EMAIL_EXISTS"==t.errorMessage?(t.code="email-already-in-use",e=jo(t)):t.errorMessage&&(e=Js(t.errorMessage)),e)throw e;is(t)}function hs(t,e){return e.returnIdpCredential=!0,Xs(t,Us,e)}function ls(t,e){return e.returnIdpCredential=!0,Xs(t,Fs,e)}function fs(t,e){return e.returnIdpCredential=!0,e.autoCreate=!1,Xs(t,Vs,e)}function ds(t){if(!t.oobCode)throw new E("invalid-action-code")}(t=Fa.prototype).Cb=function(t,i){var r={idToken:t},o=[];return ut(os,function(t,e){var n=i[e];null===n?o.push(t):e in i&&(r[e]=n)}),o.length&&(r.deleteAttribute=o),Xs(this,Ps,r)},t.ub=function(t,e){return ft(t={requestType:"PASSWORD_RESET",email:t},e),Xs(this,_s,t)},t.vb=function(t,e){return ft(t={requestType:"EMAIL_SIGNIN",email:t},e),Xs(this,ks,t)},t.tb=function(t,e){return ft(t={requestType:"VERIFY_EMAIL",idToken:t},e),Xs(this,Ss,t)},t.Db=function(t,e,n){return ft(t={requestType:"VERIFY_AND_CHANGE_EMAIL",idToken:t,newEmail:e},n),Xs(this,Ns,t)},t.eb=function(t){return Xs(this,Ks,t)},t.mb=function(t,e){return Xs(this,Rs,{oobCode:t,newPassword:e})},t.Qa=function(t){return Xs(this,vs,{oobCode:t})},t.ib=function(t){return Xs(this,ps,{oobCode:t})};var ps={endpoint:"setAccountInfo",B:ds,Z:"email",C:!0},vs={endpoint:"resetPassword",B:ds,F:function(t){var e=t.requestType;if(!e||!t.email&&"EMAIL_SIGNIN"!=e&&"VERIFY_AND_CHANGE_EMAIL"!=e)throw new E("internal-error")},C:!0},ms={endpoint:"signupNewUser",B:function(t){if(es(t),!t.password)throw new E("weak-password")},F:is,U:!0,C:!0},gs={endpoint:"createAuthUri",C:!0},bs={endpoint:"deleteAccount",M:["idToken"]},ys={endpoint:"setAccountInfo",M:["idToken","deleteProvider"],B:function(t){if(!Array.isArray(t.deleteProvider))throw new E("internal-error")}},ws={endpoint:"emailLinkSignin",M:["email","oobCode"],B:es,F:is,U:!0,C:!0},Is={endpoint:"emailLinkSignin",M:["idToken","email","oobCode"],B:es,F:is,U:!0},Ts={endpoint:"accounts/mfaEnrollment:finalize",M:["idToken","phoneVerificationInfo"],B:as,F:is,C:!0,Na:!0},Es={endpoint:"accounts/mfaSignIn:finalize",M:["mfaPendingCredential","phoneVerificationInfo"],B:as,F:is,C:!0,Na:!0},As={endpoint:"getAccountInfo"},ks={endpoint:"getOobConfirmationCode",M:["requestType"],B:function(t){if("EMAIL_SIGNIN"!=t.requestType)throw new E("internal-error");es(t)},Z:"email",C:!0},Ss={endpoint:"getOobConfirmationCode",M:["idToken","requestType"],B:function(t){if("VERIFY_EMAIL"!=t.requestType)throw new E("internal-error")},Z:"email",C:!0},Ns={endpoint:"getOobConfirmationCode",M:["idToken","newEmail","requestType"],B:function(t){if("VERIFY_AND_CHANGE_EMAIL"!=t.requestType)throw new E("internal-error")},Z:"email",C:!0},_s={endpoint:"getOobConfirmationCode",M:["requestType"],B:function(t){if("PASSWORD_RESET"!=t.requestType)throw new E("internal-error");es(t)},Z:"email",C:!0},Os={kb:!0,endpoint:"getProjectConfig",Tb:"GET"},Cs={kb:!0,endpoint:"getRecaptchaParam",Tb:"GET",F:function(t){if(!t.recaptchaSiteKey)throw new E("internal-error")}},Rs={endpoint:"resetPassword",B:ds,Z:"email",C:!0},Ds={endpoint:"sendVerificationCode",M:["phoneNumber","recaptchaToken"],Z:"sessionInfo",C:!0},Ps={endpoint:"setAccountInfo",M:["idToken"],B:ns,U:!0},Ls={endpoint:"setAccountInfo",M:["idToken"],B:function(t){if(ns(t),!t.password)throw new E("weak-password")},F:is,U:!0},xs={endpoint:"signupNewUser",F:is,U:!0,C:!0},Ms={endpoint:"accounts/mfaEnrollment:start",M:["idToken","phoneEnrollmentInfo"],B:function(t){if(!t.phoneEnrollmentInfo)throw new E("internal-error");if(!t.phoneEnrollmentInfo.phoneNumber)throw new E("missing-phone-number");if(!t.phoneEnrollmentInfo.recaptchaToken)throw new E("missing-app-credential")},F:function(t){if(!t.phoneSessionInfo||!t.phoneSessionInfo.sessionInfo)throw new E("internal-error")},C:!0,Na:!0},js={endpoint:"accounts/mfaSignIn:start",M:["mfaPendingCredential","mfaEnrollmentId","phoneSignInInfo"],B:function(t){if(!t.phoneSignInInfo||!t.phoneSignInInfo.recaptchaToken)throw new E("missing-app-credential")},F:function(t){if(!t.phoneResponseInfo||!t.phoneResponseInfo.sessionInfo)throw new E("internal-error")},C:!0,Na:!0},Us={endpoint:"verifyAssertion",B:ss,Xa:us,F:cs,U:!0,C:!0},Vs={endpoint:"verifyAssertion",B:ss,Xa:us,F:function(t){if(t.errorMessage&&"USER_NOT_FOUND"==t.errorMessage)throw new E("user-not-found");if(t.errorMessage)throw Js(t.errorMessage);is(t)},U:!0,C:!0},Fs={endpoint:"verifyAssertion",B:function(t){if(ss(t),!t.idToken)throw new E("internal-error")},Xa:us,F:cs,U:!0},qs={endpoint:"verifyCustomToken",B:function(t){if(!t.token)throw new E("invalid-custom-token")},F:is,U:!0,C:!0},Hs={endpoint:"verifyPassword",B:function(t){if(es(t),!t.password)throw new E("wrong-password")},F:is,U:!0,C:!0},Ks={endpoint:"verifyPhoneNumber",B:rs,F:is,C:!0},Gs={endpoint:"verifyPhoneNumber",B:function(t){if(!t.idToken)throw new E("internal-error");rs(t)},F:function(t){if(t.temporaryProof)throw t.code="credential-already-in-use",jo(t);is(t)}},Bs={Gb:{USER_NOT_FOUND:"user-not-found"},endpoint:"verifyPhoneNumber",B:rs,F:is,C:!0},Ws={endpoint:"accounts/mfaEnrollment:withdraw",M:["idToken","mfaEnrollmentId"],F:function(t){if(!!t[Ha]^!!t.refreshToken)throw new E("internal-error")},C:!0,Na:!0};function Xs(t,e,n){if(!function(t,e){if(!e||!e.length)return 1;if(t){for(var n=0;n<e.length;n++){var i=t[e[n]];if(null==i||""===i)return}return 1}}(n,e.M))return Ie(new E("internal-error"));var i,r=!!e.Na,o=e.Tb||"POST";return we(n).then(e.B).then(function(){return e.U&&(n.returnSecureToken=!0),e.C&&t.b&&void 0===n.tenantId&&(n.tenantId=t.b),ts(t,r?t.h:t.i,e.endpoint,o,n,e.Gb,e.kb||!1)}).then(function(t){return i=t,e.Xa?e.Xa(n,i):i}).then(e.F).then(function(){if(!e.Z)return i;if(!(e.Z in i))throw new E("internal-error");return i[e.Z]})}function Js(t){return Ys({error:{errors:[{message:t}],code:400,message:t}})}function Ys(t,e){var n,i=(t.error&&t.error.errors&&t.error.errors[0]||{}).reason||"",r={keyInvalid:"invalid-api-key",ipRefererBlocked:"app-not-authorized"};if(i=r[i]?new E(r[i]):null)return i;for(n in i=t.error&&t.error.message||"",ft(r={INVALID_CUSTOM_TOKEN:"invalid-custom-token",CREDENTIAL_MISMATCH:"custom-token-mismatch",MISSING_CUSTOM_TOKEN:"internal-error",INVALID_IDENTIFIER:"invalid-email",MISSING_CONTINUE_URI:"internal-error",INVALID_EMAIL:"invalid-email",INVALID_PASSWORD:"wrong-password",USER_DISABLED:"user-disabled",MISSING_PASSWORD:"internal-error",EMAIL_EXISTS:"email-already-in-use",PASSWORD_LOGIN_DISABLED:"operation-not-allowed",INVALID_IDP_RESPONSE:"invalid-credential",INVALID_PENDING_TOKEN:"invalid-credential",FEDERATED_USER_ID_ALREADY_LINKED:"credential-already-in-use",MISSING_OR_INVALID_NONCE:"missing-or-invalid-nonce",INVALID_MESSAGE_PAYLOAD:"invalid-message-payload",INVALID_RECIPIENT_EMAIL:"invalid-recipient-email",INVALID_SENDER:"invalid-sender",EMAIL_NOT_FOUND:"user-not-found",RESET_PASSWORD_EXCEED_LIMIT:"too-many-requests",EXPIRED_OOB_CODE:"expired-action-code",INVALID_OOB_CODE:"invalid-action-code",MISSING_OOB_CODE:"internal-error",INVALID_PROVIDER_ID:"invalid-provider-id",CREDENTIAL_TOO_OLD_LOGIN_AGAIN:"requires-recent-login",INVALID_ID_TOKEN:"invalid-user-token",TOKEN_EXPIRED:"user-token-expired",USER_NOT_FOUND:"user-token-expired",CORS_UNSUPPORTED:"cors-unsupported",DYNAMIC_LINK_NOT_ACTIVATED:"dynamic-link-not-activated",INVALID_APP_ID:"invalid-app-id",TOO_MANY_ATTEMPTS_TRY_LATER:"too-many-requests",WEAK_PASSWORD:"weak-password",OPERATION_NOT_ALLOWED:"operation-not-allowed",USER_CANCELLED:"user-cancelled",CAPTCHA_CHECK_FAILED:"captcha-check-failed",INVALID_APP_CREDENTIAL:"invalid-app-credential",INVALID_CODE:"invalid-verification-code",INVALID_PHONE_NUMBER:"invalid-phone-number",INVALID_SESSION_INFO:"invalid-verification-id",INVALID_TEMPORARY_PROOF:"invalid-credential",MISSING_APP_CREDENTIAL:"missing-app-credential",MISSING_CODE:"missing-verification-code",MISSING_PHONE_NUMBER:"missing-phone-number",MISSING_SESSION_INFO:"missing-verification-id",QUOTA_EXCEEDED:"quota-exceeded",SESSION_EXPIRED:"code-expired",REJECTED_CREDENTIAL:"rejected-credential",INVALID_CONTINUE_URI:"invalid-continue-uri",MISSING_ANDROID_PACKAGE_NAME:"missing-android-pkg-name",MISSING_IOS_BUNDLE_ID:"missing-ios-bundle-id",UNAUTHORIZED_DOMAIN:"unauthorized-continue-uri",INVALID_DYNAMIC_LINK_DOMAIN:"invalid-dynamic-link-domain",INVALID_OAUTH_CLIENT_ID:"invalid-oauth-client-id",INVALID_CERT_HASH:"invalid-cert-hash",UNSUPPORTED_TENANT_OPERATION:"unsupported-tenant-operation",INVALID_TENANT_ID:"invalid-tenant-id",TENANT_ID_MISMATCH:"tenant-id-mismatch",ADMIN_ONLY_OPERATION:"admin-restricted-operation",INVALID_MFA_PENDING_CREDENTIAL:"invalid-multi-factor-session",MFA_ENROLLMENT_NOT_FOUND:"multi-factor-info-not-found",MISSING_MFA_PENDING_CREDENTIAL:"missing-multi-factor-session",MISSING_MFA_ENROLLMENT_ID:"missing-multi-factor-info",EMAIL_CHANGE_NEEDS_VERIFICATION:"email-change-needs-verification",SECOND_FACTOR_EXISTS:"second-factor-already-in-use",SECOND_FACTOR_LIMIT_EXCEEDED:"maximum-second-factor-count-exceeded",UNSUPPORTED_FIRST_FACTOR:"unsupported-first-factor",UNVERIFIED_EMAIL:"unverified-email"},e||{}),e=(e=i.match(/^[^\s]+\s*:\s*([\s\S]*)$/))&&1<e.length?e[1]:void 0,r)if(0===i.indexOf(n))return new E(r[n],e);return!e&&t&&(e=ki(t)),new E("internal-error",e)}function zs(t){var o;this.b=t,this.a=null,this.qb=(o=this,(tu||(tu=new de(function(t,e){function n(){Ci(),yi("gapi.load")("gapi.iframes",{callback:t,ontimeout:function(){Ci(),e(Error("Network Error"))},timeout:Zs.get()})}var i;yi("gapi.iframes.Iframe")?t():yi("gapi.load")?n():(i="__iframefcb"+Math.floor(1e6*Math.random()).toString(),l[i]=function(){yi("gapi.load")?n():e(Error("Network Error"))},we(Pa(i=Tt($s,{onload:i}))).o(function(){e(Error("Network Error"))}))}).o(function(t){throw tu=null,t}))).then(function(){return new de(function(i,r){yi("gapi.iframes.getContext")().open({where:document.body,url:o.b,messageHandlersFilter:yi("gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER"),attributes:{style:{position:"absolute",top:"-100px",width:"1px",height:"1px"}},dontclear:!0},function(t){function e(){clearTimeout(n),i()}o.a=t,o.a.restyle({setHideOnLeave:!1});var n=setTimeout(function(){r(Error("Network Error"))},Qs.get());t.ping(e).then(e,function(){r(Error("Network Error"))})})})}))}var $s=new pt(bt,"https://apis.google.com/js/api.js?onload=%{onload}"),Zs=new Ri(3e4,6e4),Qs=new Ri(5e3,15e3),tu=null;function eu(t,e,n,i){this.l=t,this.i=e,this.h=n,this.g=i,this.f=null,t=this.g?Rn((t=Cn(this.g.url)).f,t.a,t.g,"/emulator/auth/iframe"):Rn("https",this.l,null,"/__/auth/iframe"),this.a=t,_n(this.a,"apiKey",this.i),_n(this.a,"appName",this.h),this.b=null,this.c=[]}function nu(t,e,n,i,r,o){this.u=t,this.s=e,this.c=n,this.v=i,this.m=o,this.h=this.g=this.l=null,this.a=r,this.i=this.f=null}function iu(t){try{return $l.default.app(t).auth().Ga()}catch(t){return[]}}function ru(t,e,n,i,r,o){this.s=t,this.g=e,this.b=n,this.f=o,this.c=i||null,this.h=r||null,this.l=this.u=this.A=null,this.i=[],this.v=this.a=null}function ou(t){var s=ti();return Xs(t,Os,{}).then(function(t){return t.authorizedDomains||[]}).then(function(t){t:{for(var e=(n=Cn(s)).f,n=n.a,i=0;i<t.length;i++){var r=t[i],o=n,a=e;if(o=0==r.indexOf("chrome-extension://")?Cn(r).a==o&&"chrome-extension"==a:("http"==a||"https"==a)&&(oi.test(r)?o==r:(r=r.split(".").join("\\."),new RegExp("^(.+\\."+r+"|"+r+")$","i").test(o)))){t=!0;break t}}t=!1}if(!t)throw new xo(ti())})}function au(r){return r.v||(r.v=si().then(function(){var t,e,n,i;r.u||(t=r.c,e=r.h,n=iu(r.b),(i=new eu(r.s,r.g,r.b,r.f)).f=t,i.b=e,i.c=J(n||[]),r.u=i.toString()),r.m=new zs(r.u),function(i){if(!i.m)throw Error("IfcHandler must be initialized!");!function(t,e){t.qb.then(function(){t.a.register("authEvent",e,yi("gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER"))})}(i.m,function(t){var e={};if(t&&t.authEvent){var n=!1;for(t=Ro(t.authEvent),e=0;e<i.i.length;e++)n=i.i[e](t)||n;return(e={}).status=n?"ACK":"ERROR",we(e)}return e.status="ERROR",we(e)})}(r)})),r.v}function su(t){return t.l||(t.A=t.c?gi(t.c,iu(t.b)):null,t.l=new Fa(t.g,O(t.h),t.A),t.f&&Ja(t.l,t.f)),t.l}function uu(t,e,n,i,r,o,a,s,u,c,h,l){return(t=new nu(t,e,n,i,r,l)).l=o,t.g=a,t.h=s,t.b=ht(u||null),t.f=c,t.xb(h).toString()}function cu(t){if(this.a=t||$l.default.INTERNAL.reactNative&&$l.default.INTERNAL.reactNative.AsyncStorage,!this.a)throw new E("internal-error","The React Native compatibility library was not found.");this.type="asyncStorage"}function hu(t){this.b=t,this.a={},this.f=b(this.c,this)}eu.prototype.toString=function(){return this.f?_n(this.a,"v",this.f):Kn(this.a.b,"v"),this.b?_n(this.a,"eid",this.b):Kn(this.a.b,"eid"),this.c.length?_n(this.a,"fw",this.c.join(",")):Kn(this.a.b,"fw"),this.a.toString()},nu.prototype.xb=function(t){return this.i=t,this},nu.prototype.toString=function(){var t;if(_n(t=this.m?Rn((t=Cn(this.m.url)).f,t.a,t.g,"/emulator/auth/handler"):Rn("https",this.u,null,"/__/auth/handler"),"apiKey",this.s),_n(t,"appName",this.c),_n(t,"authType",this.v),this.a.isOAuthProvider){var e,n=this.a;try{var i=$l.default.app(this.c).auth().ka()}catch(t){i=null}for(e in n.nb=i,_n(t,"providerId",this.a.providerId),n=Si((i=this.a).Hb))n[e]=n[e].toString();e=i.Pc,n=ht(n);for(var r=0;r<e.length;r++){var o=e[r];o in n&&delete n[o]}i.ob&&i.nb&&!n[i.ob]&&(n[i.ob]=i.nb),ct(n)||_n(t,"customParameters",ki(n))}if("function"==typeof this.a.Pb&&((i=this.a.Pb()).length&&_n(t,"scopes",i.join(","))),this.l?_n(t,"redirectUrl",this.l):Kn(t.b,"redirectUrl"),this.g?_n(t,"eventId",this.g):Kn(t.b,"eventId"),this.h?_n(t,"v",this.h):Kn(t.b,"v"),this.b)for(var a in this.b)this.b.hasOwnProperty(a)&&!On(t,a)&&_n(t,a,this.b[a]);return this.i?_n(t,"tid",this.i):Kn(t.b,"tid"),this.f?_n(t,"eid",this.f):Kn(t.b,"eid"),(a=iu(this.c)).length&&_n(t,"fw",a.join(",")),t.toString()},(t=ru.prototype).Nb=function(e,n,t){var i=new E("popup-closed-by-user"),r=new E("web-storage-unsupported"),o=this,a=!1;return this.la().then(function(){var t,i;i={type:"webStorageSupport"},au(t=o).then(function(){return e=t.m,n=i,e.qb.then(function(){return new de(function(t){e.a.send(n.type,n,t,yi("gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER"))})});var e,n}).then(function(t){if(t&&t.length&&void 0!==t[0].webStorageSupport)return t[0].webStorageSupport;throw Error()}).then(function(t){t||(e&&ii(e),n(r),a=!0)})}).o(function(){}).then(function(){if(!a)return n=e,new de(function(e){return function t(){gn(2e3).then(function(){return n&&!n.closed?t():void e()})}()});var n}).then(function(){if(!a)return gn(t).then(function(){n(i)})})},t.Wb=function(){var t=bi();return!Ai(t)&&!Oi(t)},t.Sb=function(){return!1},t.Lb=function(e,t,n,i,r,o,a,s){if(!e)return Ie(new E("popup-blocked"));if(a&&!Ai())return this.la().o(function(t){ii(e),r(t)}),i(),we();this.a||(this.a=ou(su(this)));var u=this;return this.a.then(function(){var t=u.la().o(function(t){throw ii(e),r(t),t});return i(),t}).then(function(){Oo(n),a||ei(uu(u.s,u.g,u.b,t,n,null,o,u.c,void 0,u.h,s,u.f),e)}).o(function(t){throw"auth/network-request-failed"==t.code&&(u.a=null),t})},t.Mb=function(t,e,n,i){this.a||(this.a=ou(su(this)));var r=this;return this.a.then(function(){Oo(e),ei(uu(r.s,r.g,r.b,t,e,ti(),n,r.c,void 0,r.h,i,r.f))}).o(function(t){throw"auth/network-request-failed"==t.code&&(r.a=null),t})},t.la=function(){var t=this;return au(this).then(function(){return t.m.qb}).o(function(){throw t.a=null,new E("network-request-failed")})},t.Zb=function(){return!0},t.Ea=function(t){this.i.push(t)},t.Ra=function(e){W(this.i,function(t){return t==e})},(t=cu.prototype).get=function(t){return we(this.a.getItem(t)).then(function(t){return t&&Ni(t)})},t.set=function(t,e){return we(this.a.setItem(t,ki(e)))},t.T=function(t){return we(this.a.removeItem(t))},t.ca=function(){},t.ia=function(){};var lu,fu=[];function du(t,e,n){ct(t.a)&&t.b.addEventListener("message",t.f),void 0===t.a[e]&&(t.a[e]=[]),t.a[e].push(n)}function pu(t){this.a=t}function vu(t){this.c=t,this.b=!1,this.a=[]}function mu(i,t,e,n){var r,o,a,s,u=e||{},c=null;if(i.b)return Ie(Error("connection_unavailable"));var h=n?800:50,l="undefined"!=typeof MessageChannel?new MessageChannel:null;return new de(function(e,n){l?(r=Math.floor(Math.random()*Math.pow(10,20)).toString(),l.port1.start(),a=setTimeout(function(){n(Error("unsupported_event"))},h),c={messageChannel:l,onMessage:o=function(t){t.data.eventId===r&&("ack"===t.data.status?(clearTimeout(a),s=setTimeout(function(){n(Error("timeout"))},3e3)):"done"===t.data.status?(clearTimeout(s),void 0!==t.data.response?e(t.data.response):n(Error("unknown_error"))):(clearTimeout(a),clearTimeout(s),n(Error("invalid_response"))))}},i.a.push(c),l.port1.addEventListener("message",o),i.c.postMessage({eventType:t,eventId:r,data:u},[l.port2])):n(Error("connection_unavailable"))}).then(function(t){return gu(i,c),t}).o(function(t){throw gu(i,c),t})}function gu(t,e){var n,i;e&&(n=e.messageChannel,i=e.onMessage,n&&(n.port1.removeEventListener("message",i),n.port1.close()),W(t.a,function(t){return t==e}))}function bu(){if(!Tu())throw new E("web-storage-unsupported");this.c={},this.a=[],this.b=0,this.v=l.indexedDB,this.type="indexedDB",this.g=this.m=this.f=this.l=null,this.s=!1,this.i=null;var t,e,n,i=this;hi()&&self?(this.m=(n=hi()?self:null,F(fu,function(t){t.b==n&&(e=t)}),e||(e=new hu(n),fu.push(e)),e),du(this.m,"keyChanged",function(t,n){return Nu(i).then(function(e){return 0<e.length&&F(i.a,function(t){t(e)}),{keyProcessed:G(e,n.key)}})}),du(this.m,"ping",function(){return we(["keyChanged"])})):((t=l.navigator)&&t.serviceWorker?we().then(function(){return t.serviceWorker.ready}).then(function(t){return t.active||null}).o(function(){return null}):we(null)).then(function(t){(i.i=t)&&(i.g=new vu(new pu(t)),mu(i.g,"ping",null,!0).then(function(t){t[0].fulfilled&&G(t[0].value,"keyChanged")&&(i.s=!0)}).o(function(){}))})}function yu(r){return new de(function(e,n){var t=r.v.open("firebaseLocalStorageDb",1);t.onerror=function(t){try{t.preventDefault()}catch(t){}n(Error(t.target.error))},t.onupgradeneeded=function(t){t=t.target.result;try{t.createObjectStore("firebaseLocalStorage",{keyPath:"fbase_key"})}catch(t){n(t)}},t.onsuccess=function(t){var i;(t=t.target.result).objectStoreNames.contains("firebaseLocalStorage")?e(t):(i=r,new de(function(t,e){var n=i.v.deleteDatabase("firebaseLocalStorageDb");n.onsuccess=function(){t()},n.onerror=function(t){e(Error(t.target.error))}}).then(function(){return yu(r)}).then(function(t){e(t)}).o(function(t){n(t)}))}})}function wu(t){return t.h||(t.h=yu(t)),t.h}function Iu(r,t){var o=0;return new de(function e(n,i){wu(r).then(t).then(n).o(function(t){return 3<++o?void i(t):wu(r).then(function(t){return t.close(),r.h=void 0,e(n,i)}).o(function(t){i(t)})})})}function Tu(){try{return l.indexedDB}catch(t){return}}function Eu(t){return t.objectStore("firebaseLocalStorage")}function Au(t,e){return t.transaction(["firebaseLocalStorage"],e?"readwrite":"readonly")}function ku(t){return new de(function(e,n){t.onsuccess=function(t){t&&t.target?e(t.target.result):e()},t.onerror=function(t){n(t.target.error)}})}function Su(t,e){return t.g&&t.i&&((n=l.navigator)&&n.serviceWorker&&n.serviceWorker.controller||null)===t.i?mu(t.g,"keyChanged",{key:e},t.s).then(function(){}).o(function(){}):we();var n}function Nu(i){return wu(i).then(function(t){var r=Eu(Au(t,!1));return r.getAll?ku(r.getAll()):new de(function(e,n){var i=[],t=r.openCursor();t.onsuccess=function(t){(t=t.target.result)?(i.push(t.value),t.continue()):e(i)},t.onerror=function(t){n(t.target.error)}})}).then(function(t){var e={},n=[];if(0==i.b){for(n=0;n<t.length;n++)e[t[n].fbase_key]=t[n].value;n=function t(e,n){var i,r=[];for(i in e)i in n&&typeof e[i]==typeof n[i]?"object"==typeof e[i]&&null!=e[i]&&null!=n[i]?0<t(e[i],n[i]).length&&r.push(i):e[i]!==n[i]&&r.push(i):r.push(i);for(i in n)i in e||r.push(i);return r}(i.c,e),i.c=e}return n})}function _u(t){t.l&&t.l.cancel("STOP_EVENT"),t.f&&(clearTimeout(t.f),t.f=null)}function Ou(t){var i=this,r=null;this.a=[],this.type="indexedDB",this.c=t,this.b=we().then(function(){if(Tu()){var e=_i(),n="__sak"+e;return lu=lu||new bu,(r=lu).set(n,e).then(function(){return r.get(n)}).then(function(t){if(t!==e)throw Error("indexedDB not supported!");return r.T(n)}).then(function(){return r}).o(function(){return i.c})}return i.c}).then(function(t){return i.type=t.type,t.ca(function(e){F(i.a,function(t){t(e)})}),t})}function Cu(){this.a={},this.type="inMemory"}function Ru(){if(!function(){var t="Node"==li();if(!(t=Du()||t&&$l.default.INTERNAL.node&&$l.default.INTERNAL.node.localStorage))return!1;try{return t.setItem("__sak","1"),t.removeItem("__sak"),!0}catch(t){return!1}}()){if("Node"==li())throw new E("internal-error","The LocalStorage compatibility library was not found.");throw new E("web-storage-unsupported")}this.a=Du()||$l.default.INTERNAL.node.localStorage,this.type="localStorage"}function Du(){try{var t=l.localStorage,e=_i();return t&&(t.setItem(e,"1"),t.removeItem(e)),t}catch(t){return null}}function Pu(){this.type="nullStorage"}function Lu(){if(!function(){var t="Node"==li();if(!(t=xu()||t&&$l.default.INTERNAL.node&&$l.default.INTERNAL.node.sessionStorage))return!1;try{return t.setItem("__sak","1"),t.removeItem("__sak"),!0}catch(t){return!1}}()){if("Node"==li())throw new E("internal-error","The SessionStorage compatibility library was not found.");throw new E("web-storage-unsupported")}this.a=xu()||$l.default.INTERNAL.node.sessionStorage,this.type="sessionStorage"}function xu(){try{var t=l.sessionStorage,e=_i();return t&&(t.setItem(e,"1"),t.removeItem(e)),t}catch(t){return null}}function Mu(){var t={};t.Browser=Vu,t.Node=Fu,t.ReactNative=qu,t.Worker=Hu,this.a=t[li()]}hu.prototype.c=function(n){var e,i=n.data.eventType,r=n.data.eventId,t=this.a[i];t&&0<t.length&&(n.ports[0].postMessage({status:"ack",eventId:r,eventType:i,response:null}),e=[],F(t,function(t){e.push(we().then(function(){return t(n.origin,n.data.data)}))}),Ee(e).then(function(t){var e=[];F(t,function(t){e.push({fulfilled:t.Ob,value:t.value,reason:t.reason?t.reason.message:void 0})}),F(e,function(t){for(var e in t)void 0===t[e]&&delete t[e]}),n.ports[0].postMessage({status:"done",eventId:r,eventType:i,response:e})}))},pu.prototype.postMessage=function(t,e){this.a.postMessage(t,e)},vu.prototype.close=function(){for(;0<this.a.length;)gu(this,this.a[0]);this.b=!0},(t=bu.prototype).set=function(i,r){var o=this,a=!1;return Iu(this,function(t){return ku((t=Eu(Au(t,!0))).get(i))}).then(function(n){return Iu(o,function(t){if(t=Eu(Au(t,!0)),n)return n.value=r,ku(t.put(n));o.b++,a=!0;var e={};return e.fbase_key=i,e.value=r,ku(t.add(e))})}).then(function(){return o.c[i]=r,Su(o,i)}).na(function(){a&&o.b--})},t.get=function(e){return Iu(this,function(t){return ku(Eu(Au(t,!1)).get(e))}).then(function(t){return t&&t.value})},t.T=function(e){var n=this,i=!1;return Iu(this,function(t){return i=!0,n.b++,ku(Eu(Au(t,!0)).delete(e))}).then(function(){return delete n.c[e],Su(n,e)}).na(function(){i&&n.b--})},t.ca=function(t){var n;0==this.a.length&&(_u(n=this),function e(){n.f=setTimeout(function(){n.l=Nu(n).then(function(e){0<e.length&&F(n.a,function(t){t(e)})}).then(function(){e()}).o(function(t){"STOP_EVENT"!=t.message&&e()})},800)}()),this.a.push(t)},t.ia=function(e){W(this.a,function(t){return t==e}),0==this.a.length&&_u(this)},(t=Ou.prototype).get=function(e){return this.b.then(function(t){return t.get(e)})},t.set=function(e,n){return this.b.then(function(t){return t.set(e,n)})},t.T=function(e){return this.b.then(function(t){return t.T(e)})},t.ca=function(t){this.a.push(t)},t.ia=function(e){W(this.a,function(t){return t==e})},(t=Cu.prototype).get=function(t){return we(this.a[t])},t.set=function(t,e){return this.a[t]=e,we()},t.T=function(t){return delete this.a[t],we()},t.ca=function(){},t.ia=function(){},(t=Ru.prototype).get=function(t){var e=this;return we().then(function(){return Ni(e.a.getItem(t))})},t.set=function(e,n){var i=this;return we().then(function(){var t=ki(n);null===t?i.T(e):i.a.setItem(e,t)})},t.T=function(t){var e=this;return we().then(function(){e.a.removeItem(t)})},t.ca=function(t){l.window&&Qe(l.window,"storage",t)},t.ia=function(t){l.window&&nn(l.window,"storage",t)},(t=Pu.prototype).get=function(){return we(null)},t.set=function(){return we()},t.T=function(){return we()},t.ca=function(){},t.ia=function(){},(t=Lu.prototype).get=function(t){var e=this;return we().then(function(){return Ni(e.a.getItem(t))})},t.set=function(e,n){var i=this;return we().then(function(){var t=ki(n);null===t?i.T(e):i.a.setItem(e,t)})},t.T=function(t){var e=this;return we().then(function(){e.a.removeItem(t)})},t.ca=function(){},t.ia=function(){};var ju,Uu,Vu={D:Ru,ab:Lu},Fu={D:Ru,ab:Lu},qu={D:cu,ab:Pu},Hu={D:Ru,ab:Pu},Ku={qd:"local",NONE:"none",sd:"session"};function Gu(){var t=!(Oi(bi())||!ci()),e=Ai(),n=wi();this.v=t,this.i=e,this.l=n,this.a={},t=ju=ju||new Mu;try{this.g=!Qn()&&Li()||!l.indexedDB?new t.a.D:new Ou(new(hi()?Cu:t.a.D))}catch(t){this.g=new Cu,this.i=!0}try{this.h=new t.a.ab}catch(t){this.h=new Cu}this.m=new Cu,this.f=b(this.Xb,this),this.b={}}function Bu(){return Uu=Uu||new Gu}function Wu(t,e){switch(e){case"session":return t.h;case"none":return t.m;default:return t.g}}function Xu(t,e){return"firebase:"+t.name+(e?":"+e:"")}function Ju(t,e,n){return n=Xu(e,n),"local"==e.D&&(t.b[n]=null),Wu(t,e.D).T(n)}function Yu(t){t.c&&(clearInterval(t.c),t.c=null)}function zu(t){this.a=t,this.b=Bu()}(t=Gu.prototype).get=function(t,e){return Wu(this,t.D).get(Xu(t,e))},t.set=function(e,t,n){var i=Xu(e,n),r=this,o=Wu(this,e.D);return o.set(i,t).then(function(){return o.get(i)}).then(function(t){"local"==e.D&&(r.b[i]=t)})},t.addListener=function(t,e,n){var i;t=Xu(t,e),this.l&&(this.b[t]=l.localStorage.getItem(t)),ct(this.a)&&(Wu(this,"local").ca(this.f),this.i||(Qn()||!Li())&&l.indexedDB||!this.l||(Yu(i=this),i.c=setInterval(function(){for(var t in i.a){var e=l.localStorage.getItem(t),n=i.b[t];e!=n&&(i.b[t]=e,e=new He({type:"storage",key:t,target:window,oldValue:n,newValue:e,a:!0}),i.Xb(e))}},1e3))),this.a[t]||(this.a[t]=[]),this.a[t].push(n)},t.removeListener=function(t,e,n){t=Xu(t,e),this.a[t]&&(W(this.a[t],function(t){return t==n}),0==this.a[t].length&&delete this.a[t]),ct(this.a)&&(Wu(this,"local").ia(this.f),Yu(this))},t.Xb=function(t){if(t&&t.g){var e=t.a.key;if(null==e)for(var n in this.a){var i=this.b[n];void 0===i&&(i=null);var r=l.localStorage.getItem(n);r!==i&&(this.b[n]=r,this.lb(n))}else if(0==e.indexOf("firebase:")&&this.a[e]){if(void 0!==t.a.a?Wu(this,"local").ia(this.f):Yu(this),this.v)if(n=l.localStorage.getItem(e),(i=t.a.newValue)!==n)null!==i?l.localStorage.setItem(e,i):l.localStorage.removeItem(e);else if(this.b[e]===i&&void 0===t.a.a)return;var o=this,n=function(){void 0===t.a.a&&o.b[e]===l.localStorage.getItem(e)||(o.b[e]=l.localStorage.getItem(e),o.lb(e))};Kt&&Qt&&10==Qt&&l.localStorage.getItem(e)!==t.a.newValue&&t.a.newValue!==t.a.oldValue?setTimeout(n,10):n()}}else F(t,b(this.lb,this))},t.lb=function(t){this.a[t]&&F(this.a[t],function(t){t()})};var $u,Zu={name:"authEvent",D:"local"};function Qu(){this.a=Bu()}function tc(t,e){this.b=ec,this.f=l.Uint8Array?new Uint8Array(this.b):Array(this.b),this.g=this.c=0,this.a=[],this.h=t,this.i=e,this.l=l.Int32Array?new Int32Array(64):Array(64),void 0===$u&&($u=l.Int32Array?new Int32Array(uc):uc),this.reset()}I(tc,function(){this.b=-1});for(var ec=64,nc=ec-1,ic=[],rc=0;rc<nc;rc++)ic[rc]=0;var oc=X(128,ic);function ac(t){for(var e=t.f,n=t.l,i=0,r=0;r<e.length;)n[i++]=e[r]<<24|e[r+1]<<16|e[r+2]<<8|e[r+3],r=4*i;for(e=16;e<64;e++){r=0|n[e-15],i=0|n[e-2];var o=(0|n[e-16])+((r>>>7|r<<25)^(r>>>18|r<<14)^r>>>3)|0,a=(0|n[e-7])+((i>>>17|i<<15)^(i>>>19|i<<13)^i>>>10)|0;n[e]=o+a|0}i=0|t.a[0],r=0|t.a[1];var s=0|t.a[2],u=0|t.a[3],c=0|t.a[4],h=0|t.a[5],l=0|t.a[6];for(o=0|t.a[7],e=0;e<64;e++){var f=((i>>>2|i<<30)^(i>>>13|i<<19)^(i>>>22|i<<10))+(i&r^i&s^r&s)|0;a=(o=o+((c>>>6|c<<26)^(c>>>11|c<<21)^(c>>>25|c<<7))|0)+((a=(a=c&h^~c&l)+(0|$u[e])|0)+(0|n[e])|0)|0,o=l,l=h,h=c,c=u+a|0,u=s,s=r,r=i,i=a+f|0}t.a[0]=t.a[0]+i|0,t.a[1]=t.a[1]+r|0,t.a[2]=t.a[2]+s|0,t.a[3]=t.a[3]+u|0,t.a[4]=t.a[4]+c|0,t.a[5]=t.a[5]+h|0,t.a[6]=t.a[6]+l|0,t.a[7]=t.a[7]+o|0}function sc(t,e,n){void 0===n&&(n=e.length);var i=0,r=t.c;if("string"==typeof e)for(;i<n;)t.f[r++]=e.charCodeAt(i++),r==t.b&&(ac(t),r=0);else{if(!p(e))throw Error("message must be string or array");for(;i<n;){var o=e[i++];if(!("number"==typeof o&&0<=o&&o<=255&&o==(0|o)))throw Error("message must be a byte array");t.f[r++]=o,r==t.b&&(ac(t),r=0)}}t.c=r,t.g+=n}tc.prototype.reset=function(){this.g=this.c=0,this.a=l.Int32Array?new Int32Array(this.i):J(this.i)};var uc=[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298];function cc(){tc.call(this,8,hc)}I(cc,tc);var hc=[1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];function lc(t,e,n,i,r,o){this.m=t,this.h=e,this.l=n,this.v=i||null,this.u=r||null,this.s=o,this.i=e+":"+n,this.A=new Qu,this.g=new zu(this.i),this.f=null,this.b=[],this.a=this.c=null}function fc(t){return new E("invalid-cordova-configuration",t)}function dc(t){var e=new cc;sc(e,t),t=[];var n=8*e.g;e.c<56?sc(e,oc,56-e.c):sc(e,oc,e.b-(e.c-56));for(var i=63;56<=i;i--)e.f[i]=255&n,n/=256;for(ac(e),i=n=0;i<e.h;i++)for(var r=24;0<=r;r-=8)t[n++]=e.a[i]>>r&255;return H(t,function(t){return 1<(t=t.toString(16)).length?t:"0"+t}).join("")}function pc(t,e){for(var n=0;n<t.b.length;n++)try{t.b[n](e)}catch(t){}}function vc(s){return s.f||(s.f=s.la().then(function(){return new de(function(n){function e(i){t=!0,a&&a.cancel(),mc(r).then(function(t){var e,n=o;t&&i&&i.url&&(e=null,-1!=(n=Jr(i.url)).indexOf("/__/auth/callback")&&(e=(e="object"==typeof(e=Ni(On(e=Cn(n),"firebaseError")||null))?A(e):null)?new Co(t.c,t.b,null,null,e,null,t.S()):new Co(t.c,t.b,n,t.f,null,null,t.S())),n=e||o),pc(r,n)})}var r,o,t,a,i;s.Ea(function t(e){return n(e),s.Ra(t),!1}),r=s,o=new Co("unknown",null,null,null,new E("no-auth-event")),t=!1,a=gn(500).then(function(){return mc(r).then(function(){t||pc(r,o)})}),i=l.handleOpenURL,l.handleOpenURL=function(t){if(0==t.toLowerCase().indexOf(yi("BuildInfo.packageName",l).toLowerCase()+"://")&&e({url:t}),"function"==typeof i)try{i(t)}catch(t){console.error(t)}},Lo=Lo||new Do,function(t){var n=Lo;n.a.push(t),n.b||(n.b=function(t){for(var e=0;e<n.a.length;e++)n.a[e](t)},"function"==typeof(t=yi("universalLinks.subscribe",l))&&t(null,n.b))}(e)})})),s.f}function mc(e){var t,n=null;return(t=e.g).b.get(Zu,t.a).then(Ro).then(function(t){return n=t,Ju((t=e.g).b,Zu,t.a)}).then(function(){return n})}function gc(t){this.a=t,this.b=Bu()}(t=lc.prototype).la=function(){return this.Ia?this.Ia:this.Ia=(ui(void 0)?si().then(function(){return new de(function(t,e){var n=l.document,i=setTimeout(function(){e(Error("Cordova framework is not ready."))},1e3);n.addEventListener("deviceready",function(){clearTimeout(i),t()},!1)})}):Ie(Error("Cordova must run in an Android or iOS file scheme."))).then(function(){if("function"!=typeof yi("universalLinks.subscribe",l))throw fc("cordova-universal-links-plugin-fix is not installed");if(void 0===yi("BuildInfo.packageName",l))throw fc("cordova-plugin-buildinfo is not installed");if("function"!=typeof yi("cordova.plugins.browsertab.openUrl",l))throw fc("cordova-plugin-browsertab is not installed");if("function"!=typeof yi("cordova.InAppBrowser.open",l))throw fc("cordova-plugin-inappbrowser is not installed")},function(){throw new E("cordova-not-ready")})},t.Nb=function(t,e){return e(new E("operation-not-supported-in-this-environment")),we()},t.Lb=function(){return Ie(new E("operation-not-supported-in-this-environment"))},t.Zb=function(){return!1},t.Wb=function(){return!0},t.Sb=function(){return!0},t.Mb=function(t,e,n,i){if(this.c)return Ie(new E("redirect-operation-pending"));var r=this,o=l.document,a=null,s=null,u=null,c=null;return this.c=we().then(function(){return Oo(e),vc(r)}).then(function(){return function(n,t,e,i,r){var o=function(){for(var t=20,e=[];0<t;)e.push("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(62*Math.random()))),t--;return e.join("")}(),a=new Co(t,i,null,o,new E("no-auth-event"),null,r),s=yi("BuildInfo.packageName",l);if("string"!=typeof s)throw new E("invalid-cordova-configuration");var u=yi("BuildInfo.displayName",l),c={};if(bi().toLowerCase().match(/iphone|ipad|ipod/))c.ibi=s;else{if(!bi().toLowerCase().match(/android/))return Ie(new E("operation-not-supported-in-this-environment"));c.apn=s}u&&(c.appDisplayName=u),o=dc(o),c.sessionId=o;var h=uu(n.m,n.h,n.l,t,e,null,i,n.v,c,n.u,r,n.s);return n.la().then(function(){var t=n.i;return n.A.a.set(Zu,a.w(),t)}).then(function(){var t=yi("cordova.plugins.browsertab.isAvailable",l);if("function"!=typeof t)throw new E("invalid-cordova-configuration");var e=null;t(function(t){if(t){if("function"!=typeof(e=yi("cordova.plugins.browsertab.openUrl",l)))throw new E("invalid-cordova-configuration");e(h)}else{if("function"!=typeof(e=yi("cordova.InAppBrowser.open",l)))throw new E("invalid-cordova-configuration");t=bi(),n.a=e(h,t.match(/(iPad|iPhone|iPod).*OS 7_\d/i)||t.match(/(iPad|iPhone|iPod).*OS 8_\d/i)?"_blank":"_system","location=yes")}})})}(r,t,e,n,i)}).then(function(){return new de(function(e,t){s=function(){var t=yi("cordova.plugins.browsertab.close",l);return e(),"function"==typeof t&&t(),r.a&&"function"==typeof r.a.close&&(r.a.close(),r.a=null),!1},r.Ea(s),u=function(){a=a||gn(2e3).then(function(){t(new E("redirect-cancelled-by-user"))})},c=function(){Di()&&u()},o.addEventListener("resume",u,!1),bi().toLowerCase().match(/android/)||o.addEventListener("visibilitychange",c,!1)}).o(function(t){return mc(r).then(function(){throw t})})}).na(function(){u&&o.removeEventListener("resume",u,!1),c&&o.removeEventListener("visibilitychange",c,!1),a&&a.cancel(),s&&r.Ra(s),r.c=null})},t.Ea=function(e){this.b.push(e),vc(this).o(function(t){"auth/invalid-cordova-configuration"===t.code&&(t=new Co("unknown",null,null,null,new E("no-auth-event")),e(t))})},t.Ra=function(e){W(this.b,function(t){return t==e})};var bc={name:"pendingRedirect",D:"session"};function yc(t){return Ju(t.b,bc,t.a)}function wc(t,e,n,i){this.h={},this.u=0,this.O=t,this.m=e,this.v=n,this.G=i,this.i=[],this.f=!1,this.l=b(this.s,this),this.b=new xc,this.A=new Fc,this.g=new gc(Pc(this.m,this.v)),this.c={},this.c.unknown=this.b,this.c.signInViaRedirect=this.b,this.c.linkViaRedirect=this.b,this.c.reauthViaRedirect=this.b,this.c.signInViaPopup=this.A,this.c.linkViaPopup=this.A,this.c.reauthViaPopup=this.A,this.a=Ic(this.O,this.m,this.v,k,this.G)}function Ic(t,e,n,i,r){var o=$l.default.SDK_VERSION||null;return new(ui()?lc:ru)(t,e,n,o,i,r)}function Tc(e){e.f||(e.f=!0,e.a.Ea(e.l));var n=e.a;return e.a.la().o(function(t){throw e.a==n&&e.reset(),t})}function Ec(n){n.a.Wb()&&Tc(n).o(function(t){var e=new Co("unknown",null,null,null,new E("operation-not-supported-in-this-environment"));Oc(t)&&n.s(e)}),n.a.Sb()||Mc(n.b)}function Ac(n,t){G(n.i,t)||n.i.push(t),n.f||(t=n.g).b.get(bc,t.a).then(function(t){return"pending"==t}).then(function(t){t?yc(n.g).then(function(){Tc(n).o(function(t){var e=new Co("unknown",null,null,null,new E("operation-not-supported-in-this-environment"));Oc(t)&&n.s(e)})}):Ec(n)}).o(function(){Ec(n)})}function kc(t,e){W(t.i,function(t){return t==e})}wc.prototype.reset=function(){this.f=!1,this.a.Ra(this.l),this.a=Ic(this.O,this.m,this.v,null,this.G),this.h={}},wc.prototype.s=function(t){if(!t)throw new E("invalid-auth-event");if(6e5<=w()-this.u&&(this.h={},this.u=0),t&&t.getUid()&&this.h.hasOwnProperty(t.getUid()))return!1;for(var e=!1,n=0;n<this.i.length;n++){var i=this.i[n];if(i.Eb(t.c,t.b)){(e=this.c[t.c])&&(e.i(t,i),t&&(t.f||t.b)&&(this.h[t.getUid()]=!0,this.u=w())),e=!0;break}}return Mc(this.b),e};var Sc=new Ri(2e3,1e4),Nc=new Ri(3e4,6e4);function _c(t,e,n,i,r,o,a){return t.a.Lb(e,n,i,function(){t.f||(t.f=!0,t.a.Ea(t.l))},function(){t.reset()},r,o,a)}function Oc(t){return!(!t||"auth/cordova-not-ready"!=t.code)}function Cc(e,t,n,i,r){var o,a;return(a=e.g).b.set(bc,"pending",a.a).then(function(){return e.a.Mb(t,n,i,r).o(function(t){if(Oc(t))throw new E("operation-not-supported-in-this-environment");return o=t,yc(e.g).then(function(){throw o})}).then(function(){return e.a.Zb()?new de(function(){}):yc(e.g).then(function(){return e.qa()}).then(function(){}).o(function(){})})})}function Rc(t,e,n,i,r){return t.a.Nb(i,function(t){e.ma(n,null,t,r)},Sc.get())}wc.prototype.qa=function(){return this.b.qa()};var Dc={};function Pc(t,e,n){return t=t+":"+e,n&&(t=t+":"+n.url),t}function Lc(t,e,n,i){var r=Pc(e,n,i);return Dc[r]||(Dc[r]=new wc(t,e,n,i)),Dc[r]}function xc(){this.b=null,this.f=[],this.c=[],this.a=null,this.h=this.g=!1}function Mc(t){t.g||(t.g=!0,Vc(t,!1,null,null))}function jc(t){t.g&&!t.h&&Vc(t,!1,null,null)}function Uc(t,e){if(t.b=function(){return we(e)},t.f.length)for(var n=0;n<t.f.length;n++)t.f[n](e)}function Vc(t,e,n,i){e?i?function(t,e){if(t.b=function(){return Ie(e)},t.c.length)for(var n=0;n<t.c.length;n++)t.c[n](e)}(t,i):Uc(t,n):Uc(t,{user:null}),t.f=[],t.c=[]}function Fc(){}function qc(){this.hb=!1,Object.defineProperty(this,"appVerificationDisabled",{get:function(){return this.hb},set:function(t){this.hb=t},enumerable:!1})}function Hc(t,e){this.a=e,Vi(this,"verificationId",t)}function Kc(t,e,n,i){return new So(t).eb(e,n).then(function(t){return new Hc(t,i)})}function Gc(t){var e=Lr(t);if(!(e&&e.exp&&e.auth_time&&e.iat))throw new E("internal-error","An internal error occurred. The token obtained by Firebase appears to be malformed. Please retry the operation.");Fi(this,{token:t,expirationTime:Pi(1e3*e.exp),authTime:Pi(1e3*e.auth_time),issuedAtTime:Pi(1e3*e.iat),signInProvider:e.firebase&&e.firebase.sign_in_provider?e.firebase.sign_in_provider:null,signInSecondFactor:e.firebase&&e.firebase.sign_in_second_factor?e.firebase.sign_in_second_factor:null,claims:e})}function Bc(t,e,n){var i=e&&e[Xc];if(!i)throw new E("argument-error","Internal assert: Invalid MultiFactorResolver");this.a=t,this.f=ht(e),this.g=n,this.c=new Yr(null,i),this.b=[];var r=this;F(e[Wc]||[],function(t){(t=Gi(t))&&r.b.push(t)}),Vi(this,"auth",this.a),Vi(this,"session",this.c),Vi(this,"hints",this.b)}xc.prototype.reset=function(){this.b=null,this.a&&(this.a.cancel(),this.a=null)},xc.prototype.i=function(t,e){var n,i,r,o;t?(this.reset(),this.g=!0,n=t.c,i=t.b,r=t.a&&"auth/web-storage-unsupported"==t.a.code,o=t.a&&"auth/operation-not-supported-in-this-environment"==t.a.code,this.h=!(!r&&!o),"unknown"!=n||r||o?t.a?(Vc(this,!0,null,t.a),we()):e.Fa(n,i)?function(e,t,n){n=n.Fa(t.c,t.b);var i=t.g,r=t.f,o=t.h,a=t.S(),s=!!t.c.match(/Redirect$/);n(i,r,a,o).then(function(t){Vc(e,s,t,null)}).o(function(t){Vc(e,s,null,t)})}(this,t,e):Ie(new E("invalid-auth-event")):(Vc(this,!1,null,null),we())):Ie(new E("invalid-auth-event"))},xc.prototype.qa=function(){var r=this;return new de(function(t,e){var n,i;r.b?r.b().then(t,e):(r.f.push(t),r.c.push(e),n=r,i=new E("timeout"),n.a&&n.a.cancel(),n.a=gn(Nc.get()).then(function(){n.b||(n.g=!0,Vc(n,!0,null,i))}))})},Fc.prototype.i=function(t,e){var n,i,r,o,a;t?(n=t.c,i=t.b,t.a?(e.ma(t.c,null,t.a,t.b),we()):e.Fa(n,i)?(r=e,o=(t=t).b,a=t.c,r.Fa(a,o)(t.g,t.f,t.S(),t.h).then(function(t){r.ma(a,t,null,o)}).o(function(t){r.ma(a,null,t,o)})):Ie(new E("invalid-auth-event"))):Ie(new E("invalid-auth-event"))},Hc.prototype.confirm=function(t){return t=No(this.verificationId,t),this.a(t)};var Wc="mfaInfo",Xc="mfaPendingCredential";function Jc(t,e,n,i){E.call(this,"multi-factor-auth-required",i,e),this.b=new Bc(t,e,n),Vi(this,"resolver",this.b)}function Yc(t,e,n){if(t&&m(t.serverResponse)&&"auth/multi-factor-auth-required"===t.code)try{return new Jc(e,t.serverResponse,n,t.message)}catch(t){}return null}function zc(){}function $c(t){Vi(this,"factorId",t.fa),this.a=t}function Zc(t){if($c.call(this,t),this.a.fa!=So.PROVIDER_ID)throw new E("argument-error","firebase.auth.PhoneMultiFactorAssertion requires a valid firebase.auth.PhoneAuthCredential")}function Qc(t,e){for(var n in qe.call(this,t),e)this[n]=e[n]}function th(t,e){this.a=t,this.b=[],this.c=b(this.xc,this),Qe(this.a,"userReloaded",this.c);var i=[];e&&e.multiFactor&&e.multiFactor.enrolledFactors&&F(e.multiFactor.enrolledFactors,function(t){var e=null,n={};if(t){t.uid&&(n[Xi]=t.uid),t.displayName&&(n[Bi]=t.displayName),t.enrollmentTime&&(n[Wi]=new Date(t.enrollmentTime).toISOString()),t.phoneNumber&&(n[Ji]=t.phoneNumber);try{e=new Yi(n)}catch(t){}t=e}else t=null;t&&i.push(t)}),eh(this,i)}function eh(t,e){t.b=e,Vi(t,"enrolledFactors",e)}function nh(t,e,n){if(this.i=t,this.h=e,this.g=n,this.c=3e4,this.f=96e4,this.b=null,this.a=this.c,this.f<this.c)throw Error("Proactive refresh lower bound greater than upper bound!")}function ih(t,e){return e?(t.a=t.c,t.g()):(e=t.a,t.a*=2,t.a>t.f&&(t.a=t.f),e)}function rh(t){this.f=t,this.b=this.a=null,this.c=Date.now()}function oh(t,e){void 0===e&&(e=t.b?(e=t.b).a-e.g:0),t.c=Date.now()+1e3*e}function ah(t,e){t.b=Pr(e[Ha]||""),t.a=e.refreshToken,oh(t,void 0!==(e=e.expiresIn)?Number(e):void 0)}function sh(e,t){return i=e.f,r=t,new de(function(e,n){"refresh_token"==r.grant_type&&r.refresh_token||"authorization_code"==r.grant_type&&r.code?$a(i,i.l+"?key="+encodeURIComponent(i.c),function(t){t?t.error?n(Ys(t)):t.access_token&&t.refresh_token?e(t):n(new E("internal-error")):n(new E("network-request-failed"))},"POST",Hn(r).toString(),i.g,i.v.get()):n(new E("internal-error"))}).then(function(t){return e.b=Pr(t.access_token),e.a=t.refresh_token,oh(e,t.expires_in),{accessToken:e.b.toString(),refreshToken:e.a}}).o(function(t){throw"auth/user-token-expired"==t.code&&(e.a=null),t});var i,r}function uh(t,e){this.a=t||null,this.b=e||null,Fi(this,{lastSignInTime:Pi(e||null),creationTime:Pi(t||null)})}function ch(t,e,n,i,r,o){Fi(this,{uid:t,displayName:i||null,photoURL:r||null,email:n||null,phoneNumber:o||null,providerId:e})}function hh(t,e,n){this.G=[],this.l=t.apiKey,this.m=t.appName,this.s=t.authDomain||null;var i,r=$l.default.SDK_VERSION?gi($l.default.SDK_VERSION):null;this.a=new Fa(this.l,O(k),r),t.emulatorConfig&&Ja(this.a,t.emulatorConfig),this.b=new rh(this.a),bh(this,e[Ha]),ah(this.b,e),Vi(this,"refreshToken",this.b.a),Ih(this,n||{}),fn.call(this),this.P=!1,this.s&&Ii()&&(this.h=Lc(this.s,this.l,this.m)),this.R=[],this.f=null,this.u=(i=this,new nh(function(){return i.I(!0)},function(t){return!(!t||"auth/network-request-failed"!=t.code)},function(){var t=i.b.c-Date.now()-3e5;return 0<t?t:0})),this.$=b(this.gb,this);var o=this;this.pa=null,this.Ba=function(t){o.wa(t.i)},this.ba=null,this.za=function(t){Ja(o.a,t.c)},this.W=null,this.X=[],this.Aa=function(t){dh(o,t.f)},this.aa=null,this.N=new th(this,n),Vi(this,"multiFactor",this.N)}function lh(t,e){t.ba&&nn(t.ba,"languageCodeChanged",t.Ba),(t.ba=e)&&Qe(e,"languageCodeChanged",t.Ba)}function fh(t,e){t.W&&nn(t.W,"emulatorConfigChanged",t.za),(t.W=e)&&Qe(e,"emulatorConfigChanged",t.za)}function dh(t,e){t.X=e,za(t.a,$l.default.SDK_VERSION?gi($l.default.SDK_VERSION,t.X):null)}function ph(t,e){t.aa&&nn(t.aa,"frameworkChanged",t.Aa),(t.aa=e)&&Qe(e,"frameworkChanged",t.Aa)}function vh(e){try{return $l.default.app(e.m).auth()}catch(t){throw new E("internal-error","No firebase.auth.Auth instance is available for the Firebase App '"+e.m+"'!")}}function mh(t){t.A||t.u.b||(t.u.start(),nn(t,"tokenChanged",t.$),Qe(t,"tokenChanged",t.$))}function gh(t){nn(t,"tokenChanged",t.$),t.u.stop()}function bh(t,e){t.ya=e,Vi(t,"_lat",e)}function yh(t){for(var e=[],n=0;n<t.R.length;n++)e.push(t.R[n](t));return Ee(e).then(function(){return t})}function wh(t){t.h&&!t.P&&(t.P=!0,Ac(t.h,t))}function Ih(t,e){Fi(t,{uid:e.uid,displayName:e.displayName||null,photoURL:e.photoURL||null,email:e.email||null,emailVerified:e.emailVerified||!1,phoneNumber:e.phoneNumber||null,isAnonymous:e.isAnonymous||!1,tenantId:e.tenantId||null,metadata:new uh(e.createdAt,e.lastLoginAt),providerData:[]}),t.a.b=t.tenantId}function Th(){}function Eh(t){return we().then(function(){if(t.A)throw new E("app-deleted")})}function Ah(t){return H(t.providerData,function(t){return t.providerId})}function kh(t,e){e&&(Sh(t,e.providerId),t.providerData.push(e))}function Sh(t,e){W(t.providerData,function(t){return t.providerId==e})}function Nh(t,e,n){("uid"!=e||n)&&t.hasOwnProperty(e)&&Vi(t,e,n)}function _h(e,t){var n,i;e!=t&&(Fi(e,{uid:t.uid,displayName:t.displayName,photoURL:t.photoURL,email:t.email,emailVerified:t.emailVerified,phoneNumber:t.phoneNumber,isAnonymous:t.isAnonymous,tenantId:t.tenantId,providerData:[]}),t.metadata?Vi(e,"metadata",new uh((i=t.metadata).a,i.b)):Vi(e,"metadata",new uh),F(t.providerData,function(t){kh(e,t)}),n=e.b,i=t.b,n.b=i.b,n.a=i.a,n.c=i.c,Vi(e,"refreshToken",e.b.a),eh(e.N,t.N.b))}function Oh(r){return r.I().then(function(t){var e,n,i=r.isAnonymous;return n=t,Xs((e=r).a,As,{idToken:n}).then(b(e.Jc,e)).then(function(){return i||Nh(r,"isAnonymous",!1),t})})}function Ch(t,e){e[Ha]&&t.ya!=e[Ha]&&(ah(t.b,e),t.dispatchEvent(new Qc("tokenChanged")),bh(t,e[Ha]),Nh(t,"refreshToken",t.b.a))}function Rh(t,e){return Oh(t).then(function(){if(G(Ah(t),e))return yh(t).then(function(){throw new E("provider-already-linked")})})}function Dh(t,e,n){return qi({user:t,credential:_o(e),additionalUserInfo:e=Vr(e),operationType:n})}function Ph(t,e){return Ch(t,e),t.reload().then(function(){return t})}function Lh(n,i,t,e,r){if(!Ii())return Ie(new E("operation-not-supported-in-this-environment"));if(n.f&&!r)return Ie(n.f);var o=Ur(t.providerId),a=_i(n.uid+":::"),s=null;(!Ai()||ci())&&n.s&&t.isOAuthProvider&&(s=uu(n.s,n.l,n.m,i,t,null,a,$l.default.SDK_VERSION||null,null,null,n.tenantId));var u=ri(s,o&&o.ua,o&&o.ta);return e=e().then(function(){if(Mh(n),!r)return n.I().then(function(){})}).then(function(){return _c(n.h,u,i,t,a,!!s,n.tenantId)}).then(function(){return new de(function(t,e){n.ma(i,null,new E("cancelled-popup-request"),n.i||null),n.g=t,n.O=e,n.i=a,n.c=Rc(n.h,n,i,u,a)})}).then(function(t){return u&&ii(u),t?qi(t):null}).o(function(t){throw u&&ii(u),t}),jh(n,e,r)}function xh(e,t,n,i,r){if(!Ii())return Ie(new E("operation-not-supported-in-this-environment"));if(e.f&&!r)return Ie(e.f);var o=null,a=_i(e.uid+":::");return i=i().then(function(){if(Mh(e),!r)return e.I().then(function(){})}).then(function(){return e.ga=a,yh(e)}).then(function(t){return e.ha&&(t=(t=e.ha).b.set(Fh,e.w(),t.a)),t}).then(function(){return Cc(e.h,t,n,a,e.tenantId)}).o(function(t){if(o=t,e.ha)return qh(e.ha);throw o}).then(function(){if(o)throw o}),jh(e,i,r)}function Mh(t){if(!t.h||!t.P){if(t.h&&!t.P)throw new E("internal-error");throw new E("auth-domain-config-required")}}function jh(n,t,e){var i,r=(t=t,e=e,(i=n).f&&!e?(t.cancel(),Ie(i.f)):t.o(function(t){throw!t||"auth/user-disabled"!=t.code&&"auth/user-token-expired"!=t.code||(i.f||i.dispatchEvent(new Qc("userInvalidated")),i.f=t),t}));return n.G.push(r),r.na(function(){B(n.G,r)}),r.o(function(t){var e=null;throw t&&"auth/multi-factor-auth-required"===t.code&&(e=Yc(t.w(),vh(n),b(n.ic,n))),e||t})}function Uh(t){if(!t.apiKey)return null;var e={apiKey:t.apiKey,authDomain:t.authDomain,appName:t.appName,emulatorConfig:t.emulatorConfig},n={};if(!t.stsTokenManager||!t.stsTokenManager.accessToken)return null;n[Ha]=t.stsTokenManager.accessToken,n.refreshToken=t.stsTokenManager.refreshToken||null;var i=t.stsTokenManager.expirationTime;i&&(n.expiresIn=(i-Date.now())/1e3);var r=new hh(e,n,t);return t.providerData&&F(t.providerData,function(t){t&&kh(r,qi(t))}),t.redirectEventId&&(r.ga=t.redirectEventId),r}function Vh(t){this.a=t,this.b=Bu()}Bc.prototype.Qc=function(t){var n=this;return t.rb(this.a.a,this.c).then(function(t){var e=ht(n.f);return delete e[Wc],delete e[Xc],ft(e,t),n.g(e)})},I(Jc,E),zc.prototype.rb=function(t,e,n){return e.type==zr?(o=this,a=t,s=n,e.Ha().then(function(t){return t={idToken:t},void 0!==s&&(t.displayName=s),ft(t,{phoneVerificationInfo:ko(o.a)}),Xs(a,Ts,t)})):(i=this,r=t,e.Ha().then(function(t){return ft(t={mfaPendingCredential:t},{phoneVerificationInfo:ko(i.a)}),Xs(r,Es,t)}));var i,r,o,a,s},I($c,zc),I(Zc,$c),I(Qc,qe),(t=th.prototype).xc=function(t){var e;eh(this,(t=t.gd,e=[],F(t.mfaInfo||[],function(t){(t=Gi(t))&&e.push(t)}),e))},t.Qb=function(){return this.a.I().then(function(t){return new Yr(t,null)})},t.ec=function(e,n){var i=this,r=this.a.a;return this.Qb().then(function(t){return e.rb(r,t,n)}).then(function(t){return Ch(i.a,t),i.a.reload()})},t.ad=function(t){var n=this,i="string"==typeof t?t:t.uid,e=this.a.a;return this.a.I().then(function(t){return Xs(e,Ws,{idToken:t,mfaEnrollmentId:i})}).then(function(t){var e=q(n.b,function(t){return t.uid!=i});return eh(n,e),Ch(n.a,t),n.a.reload().o(function(t){if("auth/user-token-expired"!=t.code)throw t})})},t.w=function(){return{multiFactor:{enrolledFactors:H(this.b,function(t){return t.w()})}}},nh.prototype.start=function(){this.a=this.c,function e(n,t){n.stop();n.b=gn(ih(n,t)).then(function(){return e=l.document,n=null,Di()||!e?we():new de(function(t){n=function(){Di()&&(e.removeEventListener("visibilitychange",n,!1),t())},e.addEventListener("visibilitychange",n,!1)}).o(function(t){throw e.removeEventListener("visibilitychange",n,!1),t});var e,n}).then(function(){return n.i()}).then(function(){e(n,!0)}).o(function(t){n.h(t)&&e(n,!1)})}(this,!0)},nh.prototype.stop=function(){this.b&&(this.b.cancel(),this.b=null)},rh.prototype.w=function(){return{apiKey:this.f.c,refreshToken:this.a,accessToken:this.b&&this.b.toString(),expirationTime:this.c}},rh.prototype.getToken=function(t){return t=!!t,this.b&&!this.a?Ie(new E("user-token-expired")):t||!this.b||Date.now()>this.c-3e4?this.a?sh(this,{grant_type:"refresh_token",refresh_token:this.a}):we(null):we({accessToken:this.b.toString(),refreshToken:this.a})},uh.prototype.w=function(){return{lastLoginAt:this.b,createdAt:this.a}},I(hh,fn),hh.prototype.wa=function(t){this.pa=t,Xa(this.a,t)},hh.prototype.ka=function(){return this.pa},hh.prototype.Ga=function(){return J(this.X)},hh.prototype.gb=function(){this.u.b&&(this.u.stop(),this.u.start())},Vi(hh.prototype,"providerId","firebase"),(t=hh.prototype).reload=function(){var t=this;return jh(this,Eh(this).then(function(){return Oh(t).then(function(){return yh(t)}).then(Th)}))},t.nc=function(t){return this.I(t).then(function(t){return new Gc(t)})},t.I=function(t){var e=this;return jh(this,Eh(this).then(function(){return e.b.getToken(t)}).then(function(t){if(!t)throw new E("internal-error");return t.accessToken!=e.ya&&(bh(e,t.accessToken),e.dispatchEvent(new Qc("tokenChanged"))),Nh(e,"refreshToken",t.refreshToken),t.accessToken}))},t.Jc=function(t){if(!(t=t.users)||!t.length)throw new E("internal-error");Ih(this,{uid:(t=t[0]).localId,displayName:t.displayName,photoURL:t.photoUrl,email:t.email,emailVerified:!!t.emailVerified,phoneNumber:t.phoneNumber,lastLoginAt:t.lastLoginAt,createdAt:t.createdAt,tenantId:t.tenantId});for(var e,n=(e=(e=t).providerUserInfo)&&e.length?H(e,function(t){return new ch(t.rawId,t.providerId,t.email,t.displayName,t.photoUrl,t.phoneNumber)}):[],i=0;i<n.length;i++)kh(this,n[i]);Nh(this,"isAnonymous",!(this.email&&t.passwordHash||this.providerData&&this.providerData.length)),this.dispatchEvent(new Qc("userReloaded",{gd:t}))},t.Kc=function(t){return ji("firebase.User.prototype.reauthenticateAndRetrieveDataWithCredential is deprecated. Please use firebase.User.prototype.reauthenticateWithCredential instead."),this.sb(t)},t.sb=function(t){var e=this,n=null;return jh(this,t.c(this.a,this.uid).then(function(t){return Ch(e,t),n=Dh(e,t,"reauthenticate"),e.f=null,e.reload()}).then(function(){return n}),!0)},t.Bc=function(t){return ji("firebase.User.prototype.linkAndRetrieveDataWithCredential is deprecated. Please use firebase.User.prototype.linkWithCredential instead."),this.pb(t)},t.pb=function(e){var n=this,i=null;return jh(this,Rh(this,e.providerId).then(function(){return n.I()}).then(function(t){return e.b(n.a,t)}).then(function(t){return i=Dh(n,t,"link"),Ph(n,t)}).then(function(){return i}))},t.Cc=function(t,e){var n=this;return jh(this,Rh(this,"phone").then(function(){return Kc(vh(n),t,e,b(n.pb,n))}))},t.Lc=function(t,e){var n=this;return jh(this,we().then(function(){return Kc(vh(n),t,e,b(n.sb,n))}),!0)},t.Ab=function(e){var n=this;return jh(this,this.I().then(function(t){return n.a.Ab(t,e)}).then(function(t){return Ch(n,t),n.reload()}))},t.dd=function(e){var n=this;return jh(this,this.I().then(function(t){return e.b(n.a,t)}).then(function(t){return Ch(n,t),n.reload()}))},t.Bb=function(e){var n=this;return jh(this,this.I().then(function(t){return n.a.Bb(t,e)}).then(function(t){return Ch(n,t),n.reload()}))},t.Cb=function(e){if(void 0===e.displayName&&void 0===e.photoURL)return Eh(this);var n=this;return jh(this,this.I().then(function(t){return n.a.Cb(t,{displayName:e.displayName,photoUrl:e.photoURL})}).then(function(t){return Ch(n,t),Nh(n,"displayName",t.displayName||null),Nh(n,"photoURL",t.photoUrl||null),F(n.providerData,function(t){"password"===t.providerId&&(Vi(t,"displayName",n.displayName),Vi(t,"photoURL",n.photoURL))}),yh(n)}).then(Th))},t.bd=function(e){var n=this;return jh(this,Oh(this).then(function(t){return G(Ah(n),e)?Xs(n.a,ys,{idToken:t,deleteProvider:[e]}).then(function(t){var e={};return F(t.providerUserInfo||[],function(t){e[t.providerId]=!0}),F(Ah(n),function(t){e[t]||Sh(n,t)}),e[So.PROVIDER_ID]||Vi(n,"phoneNumber",null),yh(n)}):yh(n).then(function(){throw new E("no-such-provider")})}))},t.delete=function(){var e=this;return jh(this,this.I().then(function(t){return Xs(e.a,bs,{idToken:t})}).then(function(){e.dispatchEvent(new Qc("userDeleted"))})).then(function(){for(var t=0;t<e.G.length;t++)e.G[t].cancel("app-deleted");lh(e,null),fh(e,null),ph(e,null),e.G=[],e.A=!0,gh(e),Vi(e,"refreshToken",null),e.h&&kc(e.h,e)})},t.Eb=function(t,e){return!!("linkViaPopup"==t&&(this.i||null)==e&&this.g||"reauthViaPopup"==t&&(this.i||null)==e&&this.g||"linkViaRedirect"==t&&(this.ga||null)==e||"reauthViaRedirect"==t&&(this.ga||null)==e)},t.ma=function(t,e,n,i){"linkViaPopup"!=t&&"reauthViaPopup"!=t||i!=(this.i||null)||(n&&this.O?this.O(n):e&&!n&&this.g&&this.g(e),this.c&&(this.c.cancel(),this.c=null),delete this.g,delete this.O)},t.Fa=function(t,e){return"linkViaPopup"==t&&e==(this.i||null)?b(this.Jb,this):"reauthViaPopup"==t&&e==(this.i||null)?b(this.Kb,this):"linkViaRedirect"==t&&(this.ga||null)==e?b(this.Jb,this):"reauthViaRedirect"==t&&(this.ga||null)==e?b(this.Kb,this):null},t.Dc=function(t){var e=this;return Lh(this,"linkViaPopup",t,function(){return Rh(e,t.providerId).then(function(){return yh(e)})},!1)},t.Mc=function(t){return Lh(this,"reauthViaPopup",t,function(){return we()},!0)},t.Ec=function(t){var e=this;return xh(this,"linkViaRedirect",t,function(){return Rh(e,t.providerId)},!1)},t.Nc=function(t){return xh(this,"reauthViaRedirect",t,function(){return we()},!0)},t.Jb=function(e,n,t,i){var r=this;this.c&&(this.c.cancel(),this.c=null);var o=null;return t=this.I().then(function(t){return ls(r.a,{requestUri:e,postBody:i,sessionId:n,idToken:t})}).then(function(t){return o=Dh(r,t,"link"),Ph(r,t)}).then(function(){return o}),jh(this,t)},t.Kb=function(t,e,n,i){var r=this;this.c&&(this.c.cancel(),this.c=null);var o=null;return jh(this,we().then(function(){return Qr(fs(r.a,{requestUri:t,sessionId:e,postBody:i,tenantId:n}),r.uid)}).then(function(t){return o=Dh(r,t,"reauthenticate"),Ch(r,t),r.f=null,r.reload()}).then(function(){return o}),!0)},t.tb=function(e){var n=this,i=null;return jh(this,this.I().then(function(t){return i=t,void 0===e||ct(e)?{}:Or(new yr(e))}).then(function(t){return n.a.tb(i,t)}).then(function(t){if(n.email!=t)return n.reload()}).then(function(){}))},t.Db=function(e,n){var i=this,r=null;return jh(this,this.I().then(function(t){return r=t,void 0===n||ct(n)?{}:Or(new yr(n))}).then(function(t){return i.a.Db(r,e,t)}).then(function(t){if(i.email!=t)return i.reload()}).then(function(){}))},t.ic=function(t){var e=null,n=this;return jh(this,t=Qr(we(t),n.uid).then(function(t){return e=Dh(n,t,"reauthenticate"),Ch(n,t),n.f=null,n.reload()}).then(function(){return e}),!0)},t.toJSON=function(){return this.w()},t.w=function(){var e={uid:this.uid,displayName:this.displayName,photoURL:this.photoURL,email:this.email,emailVerified:this.emailVerified,phoneNumber:this.phoneNumber,isAnonymous:this.isAnonymous,tenantId:this.tenantId,providerData:[],apiKey:this.l,appName:this.m,authDomain:this.s,stsTokenManager:this.b.w(),redirectEventId:this.ga||null};return this.metadata&&ft(e,this.metadata.w()),F(this.providerData,function(t){e.providerData.push(function(t){var e,n={};for(e in t)t.hasOwnProperty(e)&&(n[e]=t[e]);return n}(t))}),ft(e,this.N.w()),e};var Fh={name:"redirectUser",D:"session"};function qh(t){return Ju(t.b,Fh,t.a)}function Hh(t){var e,n,i,r;this.a=t,this.b=Bu(),this.c=null,this.f=(n=Bh("local"),i=Bh("session"),r=Bh("none"),function(n,i,r){var o=Xu(i,r),a=Wu(n,i.D);return n.get(i,r).then(function(t){var e=null;try{e=Ni(l.localStorage.getItem(o))}catch(t){}if(e&&!t)return l.localStorage.removeItem(o),n.set(i,e,r);e&&t&&"localStorage"!=a.type&&l.localStorage.removeItem(o)})}((e=this).b,n,e.a).then(function(){return e.b.get(i,e.a)}).then(function(t){return t?i:e.b.get(r,e.a).then(function(t){return t?r:e.b.get(n,e.a).then(function(t){return t?n:e.b.get(Gh,e.a).then(function(t){return t?Bh(t):n})})})}).then(function(t){return e.c=t,Kh(e,t.D)}).o(function(){e.c||(e.c=n)})),this.b.addListener(Bh("local"),this.a,b(this.g,this))}function Kh(t,e){var n,s,i=[];for(n in Ku)Ku[n]!==e&&i.push(Ju(t.b,Bh(Ku[n]),t.a));return i.push(Ju(t.b,Gh,t.a)),s=i,new de(function(n,e){var i=s.length,r=[];if(i)for(var t=function(t,e){i--,r[t]=e,0==i&&n(r)},o=function(t){e(t)},a=0;a<s.length;a++)Te(s[a],y(t,a),o);else n(r)})}Hh.prototype.g=function(){var e=this,n=Bh("local");Yh(this,function(){return we().then(function(){return e.c&&"local"!=e.c.D?e.b.get(n,e.a):null}).then(function(t){if(t)return Kh(e,"local").then(function(){e.c=n})})})};var Gh={name:"persistence",D:"session"};function Bh(t){return{name:"authUser",D:t}}function Wh(t,e){return Yh(t,function(){return t.b.set(t.c,e.w(),t.a)})}function Xh(t){return Yh(t,function(){return Ju(t.b,t.c,t.a)})}function Jh(t,e,n){return Yh(t,function(){return t.b.get(t.c,t.a).then(function(t){return t&&e&&(t.authDomain=e),t&&n&&(t.emulatorConfig=n),Uh(t||{})})})}function Yh(t,e){return t.f=t.f.then(e,e),t.f}function zh(t){if(this.m=!1,Vi(this,"settings",new qc),Vi(this,"app",t),!ol(this).options||!ol(this).options.apiKey)throw new E("invalid-api-key");var n,e,i,r,o,a;t=$l.default.SDK_VERSION?gi($l.default.SDK_VERSION):null,this.a=new Fa(ol(this).options&&ol(this).options.apiKey,O(k),t),this.R=[],this.u=[],this.P=[],this.ac=$l.default.INTERNAL.createSubscribe(b(this.yc,this)),this.X=void 0,this.bc=$l.default.INTERNAL.createSubscribe(b(this.zc,this)),il(this,null),this.l=new Hh(ol(this).options.apiKey+":"+ol(this).name),this.G=new Vh(ol(this).options.apiKey+":"+ol(this).name),this.$=cl(this,(e=ol(n=this).options.authDomain,t=function(e){var t=function(t,e){return t.b.get(Fh,t.a).then(function(t){return t&&e&&(t.authDomain=e),Uh(t||{})})}(e.G,ol(e).options.authDomain).then(function(t){return(e.s=t)&&(t.ha=e.G),qh(e.G)});return cl(e,t)}(n).then(function(){return Jh(n.l,e,n.f)}).then(function(e){return e?(e.ha=n.G,n.s&&(n.s.ga||null)==(e.ga||null)?e:e.reload().then(function(){return Wh(n.l,e).then(function(){return e})}).o(function(t){return"auth/network-request-failed"==t.code?e:Xh(n.l)})):null}).then(function(t){il(n,t||null)}),cl(n,t))),this.h=cl(this,(i=this).$.then(function(){return el(i)}).o(function(){}).then(function(){if(!i.m)return i.pa()}).o(function(){}).then(function(){var t;i.m||(i.ba=!0,(t=i.l).b.addListener(Bh("local"),t.a,i.pa))})),this.ba=!1,this.pa=b(this.Yc,this),this.Ba=b(this.da,this),this.ya=b(this.kc,this),this.za=b(this.vc,this),this.Aa=b(this.wc,this),this.b=null,o=ol(r=this).options.authDomain,a=ol(r).options.apiKey,o&&Ii()&&(r.gb=r.$.then(function(){var t;if(!r.m)return r.b=Lc(o,a,ol(r).name,r.f),Ac(r.b,r),al(r)&&wh(al(r)),r.s&&(wh(r.s),(t=r.s).wa(r.ka()),lh(t,r),dh(t=r.s,r.N),ph(t,r),Ja((t=r.s).a,r.f),fh(t,r),r.s=null),r.b})),this.INTERNAL={},this.INTERNAL.delete=b(this.delete,this),this.INTERNAL.logFramework=b(this.Fc,this),this.A=0,fn.call(this),t=this,Object.defineProperty(t,"lc",{get:function(){return this.ka()},set:function(t){this.wa(t)},enumerable:!1}),t.aa=null,Object.defineProperty(t,"ti",{get:function(){return this.S()},set:function(t){this.xb(t)},enumerable:!1}),t.W=null,this.N=[],this.f=null}function $h(t){qe.call(this,"languageCodeChanged"),this.i=t}function Zh(t){qe.call(this,"emulatorConfigChanged"),this.c=t}function Qh(t){qe.call(this,"frameworkChanged"),this.f=t}function tl(t){return t.gb||Ie(new E("auth-domain-config-required"))}function el(t){if(!Ii())return Ie(new E("operation-not-supported-in-this-environment"));var e=tl(t).then(function(){return t.b.qa()}).then(function(t){return t?qi(t):null});return cl(t,e)}function nl(o,a){var s={};return s.apiKey=ol(o).options.apiKey,s.authDomain=ol(o).options.authDomain,s.appName=ol(o).name,o.f&&(s.emulatorConfig=o.f),o.$.then(function(){return t=s,e=a,n=o.G,i=o.Ga(),r=new hh(t,e),n&&(r.ha=n),i&&dh(r,i),r.reload().then(function(){return r});var t,e,n,i,r}).then(function(t){return al(o)&&t.uid==al(o).uid?_h(al(o),t):(il(o,t),wh(t)),o.da(t)}).then(function(){ul(o)})}function il(t,e){var n,i;al(t)&&(n=al(t),i=t.Ba,W(n.R,function(t){return t==i}),nn(al(t),"tokenChanged",t.ya),nn(al(t),"userDeleted",t.za),nn(al(t),"userInvalidated",t.Aa),gh(al(t))),e&&(e.R.push(t.Ba),Qe(e,"tokenChanged",t.ya),Qe(e,"userDeleted",t.za),Qe(e,"userInvalidated",t.Aa),0<t.A&&mh(e)),Vi(t,"currentUser",e),e&&(e.wa(t.ka()),lh(e,t),dh(e,t.N),ph(e,t),Ja(e.a,t.f),fh(e,t))}function rl(n,t){var e=null,i=null;return cl(n,t.then(function(t){return e=_o(t),i=Vr(t),nl(n,t)},function(t){var e=null;throw t&&"auth/multi-factor-auth-required"===t.code&&(e=Yc(t.w(),n,b(n.jc,n))),e||t}).then(function(){return qi({user:al(n),credential:e,additionalUserInfo:i,operationType:"signIn"})}))}function ol(t){return t.app}function al(t){return t.currentUser}function sl(t){return al(t)&&al(t)._lat||null}function ul(t){if(t.ba){for(var e=0;e<t.u.length;e++)t.u[e]&&t.u[e](sl(t));if(t.X!==t.getUid()&&t.P.length)for(t.X=t.getUid(),e=0;e<t.P.length;e++)t.P[e]&&t.P[e](sl(t))}}function cl(t,e){return t.R.push(e),e.na(function(){B(t.R,e)}),e}function hl(){}function ll(){this.a={},this.b=1e12}Hh.prototype.wb=function(e){var n=null,i=this;return function(t){var e=new E("invalid-persistence-type"),n=new E("unsupported-persistence-type");t:{for(i in Ku)if(Ku[i]==t){var i=!0;break t}i=!1}if(!i||"string"!=typeof t)throw e;switch(li()){case"ReactNative":if("session"===t)throw n;break;case"Node":if("none"!==t)throw n;break;case"Worker":if("session"===t||!Tu()&&"none"!==t)throw n;break;default:if(!wi()&&"none"!==t)throw n}}(e),Yh(this,function(){return e!=i.c.D?i.b.get(i.c,i.a).then(function(t){return n=t,Kh(i,e)}).then(function(){if(i.c=Bh(e),n)return i.b.set(i.c,n,i.a)}):we()})},I(zh,fn),I($h,qe),I(Zh,qe),I(Qh,qe),(t=zh.prototype).wb=function(t){return t=this.l.wb(t),cl(this,t)},t.wa=function(t){this.aa===t||this.m||(this.aa=t,Xa(this.a,this.aa),this.dispatchEvent(new $h(this.ka())))},t.ka=function(){return this.aa},t.ed=function(){var t=l.navigator;this.wa(t&&(t.languages&&t.languages[0]||t.language||t.userLanguage)||null)},t.fd=function(t,e){if(!this.f){if(!/^https?:\/\//.test(t))throw new E("argument-error","Emulator URL must start with a valid scheme (http:// or https://).");e=!!e&&!!e.disableWarnings,"undefined"!=typeof console&&"function"==typeof console.info&&console.info("WARNING: You are using the Auth Emulator, which is intended for local testing only.  Do not use with production credentials."),l.document&&!e&&si().then(function(){var t=l.document.createElement("div");t.innerText="Running in emulator mode. Do not use with production credentials.",t.style.position="fixed",t.style.width="100%",t.style.backgroundColor="#ffffff",t.style.border=".1em solid #000000",t.style.color="#ff0000",t.style.bottom="0px",t.style.left="0px",t.style.margin="0px",t.style.zIndex=1e4,t.style.textAlign="center",t.classList.add("firebase-emulator-warning"),l.document.body.appendChild(t)}),this.f={url:t},this.settings.hb=!0,Ja(this.a,this.f),this.dispatchEvent(new Zh(this.f))}},t.Fc=function(t){this.N.push(t),za(this.a,$l.default.SDK_VERSION?gi($l.default.SDK_VERSION,this.N):null),this.dispatchEvent(new Qh(this.N))},t.Ga=function(){return J(this.N)},t.xb=function(t){this.W===t||this.m||(this.W=t,this.a.b=this.W)},t.S=function(){return this.W},t.toJSON=function(){return{apiKey:ol(this).options.apiKey,authDomain:ol(this).options.authDomain,appName:ol(this).name,currentUser:al(this)&&al(this).w()}},t.Eb=function(t,e){switch(t){case"unknown":case"signInViaRedirect":return!0;case"signInViaPopup":return this.i==e&&!!this.g;default:return!1}},t.ma=function(t,e,n,i){"signInViaPopup"==t&&this.i==i&&(n&&this.O?this.O(n):e&&!n&&this.g&&this.g(e),this.c&&(this.c.cancel(),this.c=null),delete this.g,delete this.O)},t.Fa=function(t,e){return"signInViaRedirect"==t||"signInViaPopup"==t&&this.i==e&&this.g?b(this.hc,this):null},t.hc=function(t,e,n,i){var r=this,o={requestUri:t,postBody:i,sessionId:e,tenantId:n};return this.c&&(this.c.cancel(),this.c=null),r.$.then(function(){return rl(r,hs(r.a,o))})},t.Wc=function(e){if(!Ii())return Ie(new E("operation-not-supported-in-this-environment"));var n=this,t=Ur(e.providerId),i=_i(),r=null;(!Ai()||ci())&&ol(this).options.authDomain&&e.isOAuthProvider&&(r=uu(ol(this).options.authDomain,ol(this).options.apiKey,ol(this).name,"signInViaPopup",e,null,i,$l.default.SDK_VERSION||null,null,null,this.S(),this.f));var o=ri(r,t&&t.ua,t&&t.ta);return cl(this,t=tl(this).then(function(t){return _c(t,o,"signInViaPopup",e,i,!!r,n.S())}).then(function(){return new de(function(t,e){n.ma("signInViaPopup",null,new E("cancelled-popup-request"),n.i),n.g=t,n.O=e,n.i=i,n.c=Rc(n.b,n,"signInViaPopup",o,i)})}).then(function(t){return o&&ii(o),t?qi(t):null}).o(function(t){throw o&&ii(o),t}))},t.Xc=function(t){if(!Ii())return Ie(new E("operation-not-supported-in-this-environment"));var e=this;return cl(this,tl(this).then(function(){return Yh(t=e.l,function(){return t.b.set(Gh,t.c.D,t.a)});var t}).then(function(){return Cc(e.b,"signInViaRedirect",t,void 0,e.S())}))},t.qa=function(){var e=this;return el(this).then(function(t){return e.b&&jc(e.b.b),t}).o(function(t){throw e.b&&jc(e.b.b),t})},t.cd=function(t){if(!t)return Ie(new E("null-user"));if(this.W!=t.tenantId)return Ie(new E("tenant-id-mismatch"));var e=this,n={};n.apiKey=ol(this).options.apiKey,n.authDomain=ol(this).options.authDomain,n.appName=ol(this).name;var i,r,o,a,s,u=(i=t,r=n,o=e.G,a=e.Ga(),s=i.b,(n={})[Ha]=s.b&&s.b.toString(),n.refreshToken=s.a,r=new hh(r||{apiKey:i.l,authDomain:i.s,appName:i.m},n),o&&(r.ha=o),a&&dh(r,a),_h(r,i),r);return cl(this,this.h.then(function(){if(ol(e).options.apiKey!=t.l)return u.reload()}).then(function(){return al(e)&&t.uid==al(e).uid?(_h(al(e),t),e.da(t)):(il(e,u),wh(u),e.da(u))}).then(function(){ul(e)}))},t.zb=function(){var t=this,e=this.h.then(function(){return t.b&&jc(t.b.b),al(t)?(il(t,null),Xh(t.l).then(function(){ul(t)})):we()});return cl(this,e)},t.Yc=function(){var i=this;return Jh(this.l,ol(this).options.authDomain).then(function(t){if(!i.m){var e,n;if((n=al(i)&&t)&&(n=al(i).uid,e=t.uid,n=null!=n&&""!==n&&null!=e&&""!==e&&n==e),n)return _h(al(i),t),al(i).I();(al(i)||t)&&(il(i,t),t&&(wh(t),t.ha=i.G),i.b&&Ac(i.b,i),ul(i))}})},t.da=function(t){return Wh(this.l,t)},t.kc=function(){ul(this),this.da(al(this))},t.vc=function(){this.zb()},t.wc=function(){this.zb()},t.jc=function(t){var e=this;return this.h.then(function(){return rl(e,we(t))})},t.yc=function(t){var e=this;this.addAuthTokenListener(function(){t.next(al(e))})},t.zc=function(t){var e,n,i=this;n=function(){t.next(al(i))},(e=this).P.push(n),cl(e,e.h.then(function(){!e.m&&G(e.P,n)&&e.X!==e.getUid()&&(e.X=e.getUid(),n(sl(e)))}))},t.Hc=function(t,e,n){var i=this;return this.ba&&Promise.resolve().then(function(){"function"==typeof t?t(al(i)):"function"==typeof t.next&&t.next(al(i))}),this.ac(t,e,n)},t.Gc=function(t,e,n){var i=this;return this.ba&&Promise.resolve().then(function(){i.X=i.getUid(),"function"==typeof t?t(al(i)):"function"==typeof t.next&&t.next(al(i))}),this.bc(t,e,n)},t.mc=function(t){var e=this,n=this.h.then(function(){return al(e)?al(e).I(t).then(function(t){return{accessToken:t}}):null});return cl(this,n)},t.Sc=function(t){var n=this;return this.h.then(function(){return rl(n,Xs(n.a,qs,{token:t}))}).then(function(t){var e=t.user;return Nh(e,"isAnonymous",!1),n.da(e),t})},t.Tc=function(t,e){var n=this;return this.h.then(function(){return rl(n,Xs(n.a,Hs,{email:t,password:e}))})},t.dc=function(t,e){var n=this;return this.h.then(function(){return rl(n,Xs(n.a,ms,{email:t,password:e}))})},t.Za=function(t){var e=this;return this.h.then(function(){return rl(e,t.ja(e.a))})},t.Rc=function(t){return ji("firebase.auth.Auth.prototype.signInAndRetrieveDataWithCredential is deprecated. Please use firebase.auth.Auth.prototype.signInWithCredential instead."),this.Za(t)},t.yb=function(){var n=this;return this.h.then(function(){var t=al(n);if(t&&t.isAnonymous){var e=qi({providerId:null,isNewUser:!1});return qi({user:t,credential:null,additionalUserInfo:e,operationType:"signIn"})}return rl(n,n.a.yb()).then(function(t){var e=t.user;return Nh(e,"isAnonymous",!0),n.da(e),t})})},t.getUid=function(){return al(this)&&al(this).uid||null},t.cc=function(t){this.addAuthTokenListener(t),this.A++,0<this.A&&al(this)&&mh(al(this))},t.Oc=function(e){var n=this;F(this.u,function(t){t==e&&n.A--}),this.A<0&&(this.A=0),0==this.A&&al(this)&&gh(al(this)),this.removeAuthTokenListener(e)},t.addAuthTokenListener=function(t){var e=this;this.u.push(t),cl(this,this.h.then(function(){e.m||G(e.u,t)&&t(sl(e))}))},t.removeAuthTokenListener=function(e){W(this.u,function(t){return t==e})},t.delete=function(){this.m=!0;for(var t=0;t<this.R.length;t++)this.R[t].cancel("app-deleted");return this.R=[],this.l&&(t=this.l).b.removeListener(Bh("local"),t.a,this.pa),this.b&&(kc(this.b,this),jc(this.b.b)),Promise.resolve()},t.gc=function(t){return cl(this,Xs(this.a,gs,{identifier:t,continueUri:Ti()?ti():"http://localhost"}).then(function(t){return t.signinMethods||[]}))},t.Ac=function(t){return!!To(t)},t.vb=function(e,n){var i=this;return cl(this,we().then(function(){var t=new yr(n);if(!t.c)throw new E("argument-error",Tr+" must be true when sending sign in link to email");return Or(t)}).then(function(t){return i.a.vb(e,t)}).then(function(){}))},t.hd=function(t){return this.Qa(t).then(function(t){return t.data.email})},t.mb=function(t,e){return cl(this,this.a.mb(t,e).then(function(){}))},t.Qa=function(t){return cl(this,this.a.Qa(t).then(function(t){return new zi(t)}))},t.ib=function(t){return cl(this,this.a.ib(t).then(function(){}))},t.ub=function(e,t){var n=this;return cl(this,we().then(function(){return void 0===t||ct(t)?{}:Or(new yr(t))}).then(function(t){return n.a.ub(e,t)}).then(function(){}))},t.Vc=function(t,e){return cl(this,Kc(this,t,e,b(this.Za,this)))},t.Uc=function(n,i){var r=this;return cl(this,we().then(function(){var t=i||ti(),e=Io(n,t);if(!(t=To(t)))throw new E("argument-error","Invalid email link!");if(t.tenantId!==r.S())throw new E("tenant-id-mismatch");return r.Za(e)}))},hl.prototype.render=function(){},hl.prototype.reset=function(){},hl.prototype.getResponse=function(){},hl.prototype.execute=function(){};var fl=null;function dl(t,e){return(e=pl(e))&&t.a[e]||null}function pl(t){return(t=void 0===t?1e12:t)?t.toString():null}function vl(t,e){this.g=!1,this.c=e,this.a=this.b=null,this.i="invisible"!==this.c.size,this.f=ee(t);var n=this;this.h=function(){n.execute()},this.i?this.execute():Qe(this.f,"click",this.h)}function ml(t){if(t.g)throw Error("reCAPTCHA mock was already deleted!")}function gl(){}function bl(){}ll.prototype.render=function(t,e){return this.a[this.b.toString()]=new vl(t,e),this.b++},ll.prototype.reset=function(t){var e=dl(this,t);t=pl(t),e&&t&&(e.delete(),delete this.a[t])},ll.prototype.getResponse=function(t){return(t=dl(this,t))?t.getResponse():null},ll.prototype.execute=function(t){(t=dl(this,t))&&t.execute()},vl.prototype.getResponse=function(){return ml(this),this.b},vl.prototype.execute=function(){ml(this);var n=this;this.a||(this.a=setTimeout(function(){n.b=function(){for(var t=50,e=[];0<t;)e.push("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".charAt(Math.floor(62*Math.random()))),t--;return e.join("")}();var t=n.c.callback,e=n.c["expired-callback"];if(t)try{t(n.b)}catch(t){}n.a=setTimeout(function(){if(n.a=null,n.b=null,e)try{e()}catch(t){}n.i&&n.execute()},6e4)},500))},vl.prototype.delete=function(){ml(this),this.g=!0,clearTimeout(this.a),this.a=null,nn(this.f,"click",this.h)},Vi(gl,"FACTOR_ID","phone"),bl.prototype.g=function(){return we(fl=fl||new ll)},bl.prototype.c=function(){};var yl=null;function wl(){this.b=l.grecaptcha?1/0:0,this.f=null,this.a="__rcb"+Math.floor(1e6*Math.random()).toString()}var Il=new pt(bt,"https://www.google.com/recaptcha/api.js?onload=%{onload}&render=explicit&hl=%{hl}"),Tl=new Ri(3e4,6e4);wl.prototype.g=function(r){var o=this;return new de(function(t,e){var i=setTimeout(function(){e(new E("network-request-failed"))},Tl.get());!l.grecaptcha||r!==o.f&&!o.b?(l[o.a]=function(){var n;l.grecaptcha?(o.f=r,n=l.grecaptcha.render,l.grecaptcha.render=function(t,e){return t=n(t,e),o.b++,t},clearTimeout(i),t(l.grecaptcha)):(clearTimeout(i),e(new E("internal-error"))),delete l[o.a]},we(Pa(Tt(Il,{onload:o.a,hl:r||""}))).o(function(){clearTimeout(i),e(new E("internal-error","Unable to load external reCAPTCHA dependencies!"))})):(clearTimeout(i),t(l.grecaptcha))})},wl.prototype.c=function(){this.b--};var El=null;function Al(t,e,n,i,r,o,a){if(Vi(this,"type","recaptcha"),this.c=this.f=null,this.A=!1,this.m=e,this.g=null,a=a?yl=yl||new bl:El=El||new wl,this.v=a,this.a=n||{theme:"light",type:"image"},this.i=[],this.a[Nl])throw new E("argument-error","sitekey should not be provided for reCAPTCHA as one is automatically provisioned for the current project.");if(this.h="invisible"===this.a[_l],!l.document)throw new E("operation-not-supported-in-this-environment","RecaptchaVerifier is only supported in a browser HTTP/HTTPS environment with DOM support.");if(!ee(e)||!this.h&&ee(e).hasChildNodes())throw new E("argument-error","reCAPTCHA container is either not found or already contains inner elements!");this.s=new Fa(t,o||null,r||null),this.u=i||function(){return null};var s=this;this.l=[];var u=this.a[kl];this.a[kl]=function(t){var e;Ol(s,t),"function"==typeof u?u(t):"string"!=typeof u||"function"==typeof(e=yi(u,l))&&e(t)};var c=this.a[Sl];this.a[Sl]=function(){var t;Ol(s,null),"function"==typeof c?c():"string"!=typeof c||"function"==typeof(t=yi(c,l))&&t()}}var kl="callback",Sl="expired-callback",Nl="sitekey",_l="size";function Ol(t,e){for(var n=0;n<t.l.length;n++)try{t.l[n](e)}catch(t){}}function Cl(t,e){return t.i.push(e),e.na(function(){B(t.i,e)}),e}function Rl(t){if(t.A)throw new E("internal-error","RecaptchaVerifier instance has been destroyed.")}function Dl(t,e,n){var i=!1;try{this.b=n||$l.default.app()}catch(t){throw new E("argument-error","No firebase.app.App instance is currently initialized.")}if(!this.b.options||!this.b.options.apiKey)throw new E("invalid-api-key");n=this.b.options.apiKey;var r=this,o=null;try{o=this.b.auth().Ga()}catch(t){}try{i=this.b.auth().settings.appVerificationDisabledForTesting}catch(t){}o=$l.default.SDK_VERSION?gi($l.default.SDK_VERSION,o):null,Al.call(this,n,t,e,function(){try{var e=r.b.auth().ka()}catch(t){e=null}return e},o,O(k),i)}function Pl(t,e,n,i){t:{n=Array.prototype.slice.call(n);for(var r=0,o=!1,a=0;a<e.length;a++)if(e[a].optional)o=!0;else{if(o)throw new E("internal-error","Argument validator encountered a required argument after an optional argument.");r++}if(o=e.length,n.length<r||o<n.length)i="Expected "+(r==o?1==r?"1 argument":r+" arguments":r+"-"+o+" arguments")+" but got "+n.length+".";else{for(r=0;r<n.length;r++)if(o=e[r].optional&&void 0===n[r],!e[r].K(n[r])&&!o){if(e=e[r],r<0||r>=Ll.length)throw new E("internal-error","Argument validator received an unsupported number of arguments.");n=Ll[r],i=(i?"":n+" argument ")+(e.name?'"'+e.name+'" ':"")+"must be "+e.J+".";break t}i=null}}if(i)throw new E("argument-error",t+" failed: "+i)}(t=Al.prototype).Ia=function(){var e=this;return this.f?this.f:this.f=Cl(this,we().then(function(){if(Ti()&&!hi())return si();throw new E("operation-not-supported-in-this-environment","RecaptchaVerifier is only supported in a browser HTTP/HTTPS environment.")}).then(function(){return e.v.g(e.u())}).then(function(t){return e.g=t,Xs(e.s,Cs,{})}).then(function(t){e.a[Nl]=t.recaptchaSiteKey}).o(function(t){throw e.f=null,t}))},t.render=function(){Rl(this);var n=this;return Cl(this,this.Ia().then(function(){var t,e;return null===n.c&&(e=n.m,n.h||(t=ee(e),e=ae("DIV"),t.appendChild(e)),n.c=n.g.render(e,n.a)),n.c}))},t.verify=function(){Rl(this);var r=this;return Cl(this,this.render().then(function(e){return new de(function(n){var i,t=r.g.getResponse(e);t?n(t):(i=function(t){var e;t&&(e=i,W(r.l,function(t){return t==e}),n(t))},r.l.push(i),r.h&&r.g.execute(r.c))})}))},t.reset=function(){Rl(this),null!==this.c&&this.g.reset(this.c)},t.clear=function(){Rl(this),this.A=!0,this.v.c();for(var t,e=0;e<this.i.length;e++)this.i[e].cancel("RecaptchaVerifier instance has been destroyed.");if(!this.h){e=ee(this.m);for(;t=e.firstChild;)e.removeChild(t)}},I(Dl,Al);var Ll="First Second Third Fourth Fifth Sixth Seventh Eighth Ninth".split(" ");function xl(t,e){return{name:t||"",J:"a valid string",optional:!!e,K:function(t){return"string"==typeof t}}}function Ml(t,e){return{name:t||"",J:"a boolean",optional:!!e,K:function(t){return"boolean"==typeof t}}}function jl(t,e){return{name:t||"",J:"a valid object",optional:!!e,K:m}}function Ul(t,e){return{name:t||"",J:"a function",optional:!!e,K:function(t){return"function"==typeof t}}}function Vl(t,e){return{name:t||"",J:"null",optional:!!e,K:function(t){return null===t}}}function Fl(n){return{name:n?n+"Credential":"credential",J:n?"a valid "+n+" credential":"a valid credential",optional:!1,K:function(t){if(!t)return!1;var e=!n||t.providerId===n;return!(!t.ja||!e)}}}function ql(){return{name:"multiFactorAssertion",J:"a valid multiFactorAssertion",optional:!1,K:function(t){return!!t&&!!t.rb}}}function Hl(){return{name:"authProvider",J:"a valid Auth provider",optional:!1,K:function(t){return!!(t&&t.providerId&&t.hasOwnProperty&&t.hasOwnProperty("isOAuthProvider"))}}}function Kl(t,e){return m(t)&&"string"==typeof t.type&&t.type===e&&"function"==typeof t.Ha}function Gl(t){return m(t)&&"string"==typeof t.uid}function Bl(){return{name:"applicationVerifier",J:"an implementation of firebase.auth.ApplicationVerifier",optional:!1,K:function(t){return!(!t||"string"!=typeof t.type||"function"!=typeof t.verify)}}}function Wl(e,n,t,i){return{name:t||"",J:e.J+" or "+n.J,optional:!!i,K:function(t){return e.K(t)||n.K(t)}}}function Xl(t,e){for(var n in e){var i=e[n].name;t[i]=zl(i,t[n],e[n].j)}}function Jl(t,e){for(var n in e){var i=e[n].name;i!==n&&Object.defineProperty(t,i,{get:y(function(t){return this[t]},n),set:y(function(t,e,n,i){Pl(t,[n],[i],!0),this[e]=i},i,n,e[n].jb),enumerable:!0})}}function Yl(t,e,n,i){t[e]=zl(e,n,i)}function zl(t,e,n){function i(){var t=Array.prototype.slice.call(arguments);return Pl(o,n,t),e.apply(this,t)}if(!n)return e;var r,o=(t=(t=t).split("."))[t.length-1];for(r in e)i[r]=e[r];for(r in e.prototype)i.prototype[r]=e.prototype[r];return i}Xl(zh.prototype,{ib:{name:"applyActionCode",j:[xl("code")]},Qa:{name:"checkActionCode",j:[xl("code")]},mb:{name:"confirmPasswordReset",j:[xl("code"),xl("newPassword")]},dc:{name:"createUserWithEmailAndPassword",j:[xl("email"),xl("password")]},gc:{name:"fetchSignInMethodsForEmail",j:[xl("email")]},qa:{name:"getRedirectResult",j:[]},Ac:{name:"isSignInWithEmailLink",j:[xl("emailLink")]},Gc:{name:"onAuthStateChanged",j:[Wl(jl(),Ul(),"nextOrObserver"),Ul("opt_error",!0),Ul("opt_completed",!0)]},Hc:{name:"onIdTokenChanged",j:[Wl(jl(),Ul(),"nextOrObserver"),Ul("opt_error",!0),Ul("opt_completed",!0)]},ub:{name:"sendPasswordResetEmail",j:[xl("email"),Wl(jl("opt_actionCodeSettings",!0),Vl(null,!0),"opt_actionCodeSettings",!0)]},vb:{name:"sendSignInLinkToEmail",j:[xl("email"),jl("actionCodeSettings")]},wb:{name:"setPersistence",j:[xl("persistence")]},Rc:{name:"signInAndRetrieveDataWithCredential",j:[Fl()]},yb:{name:"signInAnonymously",j:[]},Za:{name:"signInWithCredential",j:[Fl()]},Sc:{name:"signInWithCustomToken",j:[xl("token")]},Tc:{name:"signInWithEmailAndPassword",j:[xl("email"),xl("password")]},Uc:{name:"signInWithEmailLink",j:[xl("email"),xl("emailLink",!0)]},Vc:{name:"signInWithPhoneNumber",j:[xl("phoneNumber"),Bl()]},Wc:{name:"signInWithPopup",j:[Hl()]},Xc:{name:"signInWithRedirect",j:[Hl()]},cd:{name:"updateCurrentUser",j:[Wl({name:"user",J:"an instance of Firebase User",optional:!1,K:function(t){return!!(t&&t instanceof hh)}},Vl(),"user")]},zb:{name:"signOut",j:[]},toJSON:{name:"toJSON",j:[xl(null,!0)]},ed:{name:"useDeviceLanguage",j:[]},fd:{name:"useEmulator",j:[xl("url"),jl("options",!0)]},hd:{name:"verifyPasswordResetCode",j:[xl("code")]}}),Jl(zh.prototype,{lc:{name:"languageCode",jb:Wl(xl(),Vl(),"languageCode")},ti:{name:"tenantId",jb:Wl(xl(),Vl(),"tenantId")}}),(zh.Persistence=Ku).LOCAL="local",zh.Persistence.SESSION="session",zh.Persistence.NONE="none",Xl(hh.prototype,{delete:{name:"delete",j:[]},nc:{name:"getIdTokenResult",j:[Ml("opt_forceRefresh",!0)]},I:{name:"getIdToken",j:[Ml("opt_forceRefresh",!0)]},Bc:{name:"linkAndRetrieveDataWithCredential",j:[Fl()]},pb:{name:"linkWithCredential",j:[Fl()]},Cc:{name:"linkWithPhoneNumber",j:[xl("phoneNumber"),Bl()]},Dc:{name:"linkWithPopup",j:[Hl()]},Ec:{name:"linkWithRedirect",j:[Hl()]},Kc:{name:"reauthenticateAndRetrieveDataWithCredential",j:[Fl()]},sb:{name:"reauthenticateWithCredential",j:[Fl()]},Lc:{name:"reauthenticateWithPhoneNumber",j:[xl("phoneNumber"),Bl()]},Mc:{name:"reauthenticateWithPopup",j:[Hl()]},Nc:{name:"reauthenticateWithRedirect",j:[Hl()]},reload:{name:"reload",j:[]},tb:{name:"sendEmailVerification",j:[Wl(jl("opt_actionCodeSettings",!0),Vl(null,!0),"opt_actionCodeSettings",!0)]},toJSON:{name:"toJSON",j:[xl(null,!0)]},bd:{name:"unlink",j:[xl("provider")]},Ab:{name:"updateEmail",j:[xl("email")]},Bb:{name:"updatePassword",j:[xl("password")]},dd:{name:"updatePhoneNumber",j:[Fl("phone")]},Cb:{name:"updateProfile",j:[jl("profile")]},Db:{name:"verifyBeforeUpdateEmail",j:[xl("email"),Wl(jl("opt_actionCodeSettings",!0),Vl(null,!0),"opt_actionCodeSettings",!0)]}}),Xl(ll.prototype,{execute:{name:"execute"},render:{name:"render"},reset:{name:"reset"},getResponse:{name:"getResponse"}}),Xl(hl.prototype,{execute:{name:"execute"},render:{name:"render"},reset:{name:"reset"},getResponse:{name:"getResponse"}}),Xl(de.prototype,{na:{name:"finally"},o:{name:"catch"},then:{name:"then"}}),Jl(qc.prototype,{appVerificationDisabled:{name:"appVerificationDisabledForTesting",jb:Ml("appVerificationDisabledForTesting")}}),Xl(Hc.prototype,{confirm:{name:"confirm",j:[xl("verificationCode")]}}),Yl(Zr,"fromJSON",function(t){t="string"==typeof t?JSON.parse(t):t;for(var e,n=[oo,yo,Ao,no],i=0;i<n.length;i++)if(e=n[i](t))return e;return null},[Wl(xl(),jl(),"json")]),Yl(wo,"credential",function(t,e){return new bo(t,e)},[xl("email"),xl("password")]),Xl(bo.prototype,{w:{name:"toJSON",j:[xl(null,!0)]}}),Xl(co.prototype,{Ca:{name:"addScope",j:[xl("scope")]},Ka:{name:"setCustomParameters",j:[jl("customOAuthParameters")]}}),Yl(co,"credential",ho,[Wl(xl(),jl(),"token")]),Yl(wo,"credentialWithLink",Io,[xl("email"),xl("emailLink")]),Xl(lo.prototype,{Ca:{name:"addScope",j:[xl("scope")]},Ka:{name:"setCustomParameters",j:[jl("customOAuthParameters")]}}),Yl(lo,"credential",fo,[Wl(xl(),jl(),"token")]),Xl(po.prototype,{Ca:{name:"addScope",j:[xl("scope")]},Ka:{name:"setCustomParameters",j:[jl("customOAuthParameters")]}}),Yl(po,"credential",vo,[Wl(xl(),Wl(jl(),Vl()),"idToken"),Wl(xl(),Vl(),"accessToken",!0)]),Xl(mo.prototype,{Ka:{name:"setCustomParameters",j:[jl("customOAuthParameters")]}}),Yl(mo,"credential",go,[Wl(xl(),jl(),"token"),xl("secret",!0)]),Xl(uo.prototype,{Ca:{name:"addScope",j:[xl("scope")]},credential:{name:"credential",j:[Wl(xl(),Wl(jl(),Vl()),"optionsOrIdToken"),Wl(xl(),Vl(),"accessToken",!0)]},Ka:{name:"setCustomParameters",j:[jl("customOAuthParameters")]}}),Xl(io.prototype,{w:{name:"toJSON",j:[xl(null,!0)]}}),Xl(to.prototype,{w:{name:"toJSON",j:[xl(null,!0)]}}),Yl(So,"credential",No,[xl("verificationId"),xl("verificationCode")]),Xl(So.prototype,{eb:{name:"verifyPhoneNumber",j:[Wl(xl(),{name:"phoneInfoOptions",J:"valid phone info options",optional:!1,K:function(t){return!!t&&(t.session&&t.phoneNumber?Kl(t.session,zr)&&"string"==typeof t.phoneNumber:t.session&&t.multiFactorHint?Kl(t.session,$r)&&Gl(t.multiFactorHint):t.session&&t.multiFactorUid?Kl(t.session,$r)&&"string"==typeof t.multiFactorUid:!!t.phoneNumber&&"string"==typeof t.phoneNumber)}},"phoneInfoOptions"),Bl()]}}),Xl(Eo.prototype,{w:{name:"toJSON",j:[xl(null,!0)]}}),Xl(E.prototype,{toJSON:{name:"toJSON",j:[xl(null,!0)]}}),Xl(Mo.prototype,{toJSON:{name:"toJSON",j:[xl(null,!0)]}}),Xl(xo.prototype,{toJSON:{name:"toJSON",j:[xl(null,!0)]}}),Xl(Jc.prototype,{toJSON:{name:"toJSON",j:[xl(null,!0)]}}),Xl(Bc.prototype,{Qc:{name:"resolveSignIn",j:[ql()]}}),Xl(th.prototype,{Qb:{name:"getSession",j:[]},ec:{name:"enroll",j:[ql(),xl("displayName",!0)]},ad:{name:"unenroll",j:[Wl({name:"multiFactorInfo",J:"a valid multiFactorInfo",optional:!1,K:Gl},xl(),"multiFactorInfoIdentifier")]}}),Xl(Dl.prototype,{clear:{name:"clear",j:[]},render:{name:"render",j:[]},verify:{name:"verify",j:[]}}),Yl(hr,"parseLink",br,[xl("link")]),Yl(gl,"assertion",function(t){return new Zc(t)},[Fl("phone")]),function(){if(void 0===$l.default||!$l.default.INTERNAL||!$l.default.INTERNAL.registerComponent)throw Error("Cannot find the firebase namespace; be sure to include firebase-app.js before this library.");var t={ActionCodeInfo:{Operation:{EMAIL_SIGNIN:Zi,PASSWORD_RESET:"PASSWORD_RESET",RECOVER_EMAIL:"RECOVER_EMAIL",REVERT_SECOND_FACTOR_ADDITION:$i,VERIFY_AND_CHANGE_EMAIL:Qi,VERIFY_EMAIL:"VERIFY_EMAIL"}},Auth:zh,AuthCredential:Zr,Error:E};Yl(t,"EmailAuthProvider",wo,[]),Yl(t,"FacebookAuthProvider",co,[]),Yl(t,"GithubAuthProvider",lo,[]),Yl(t,"GoogleAuthProvider",po,[]),Yl(t,"TwitterAuthProvider",mo,[]),Yl(t,"OAuthProvider",uo,[xl("providerId")]),Yl(t,"SAMLAuthProvider",so,[xl("providerId")]),Yl(t,"PhoneAuthProvider",So,[{name:"auth",J:"an instance of Firebase Auth",optional:!0,K:function(t){return!!(t&&t instanceof zh)}}]),Yl(t,"RecaptchaVerifier",Dl,[Wl(xl(),{name:"",J:"an HTML element",optional:!1,K:function(t){return!!(t&&t instanceof Element)}},"recaptchaContainer"),jl("recaptchaParameters",!0),{name:"app",J:"an instance of Firebase App",optional:!0,K:function(t){return!!(t&&t instanceof $l.default.app.App)}}]),Yl(t,"ActionCodeURL",hr,[]),Yl(t,"PhoneMultiFactorGenerator",gl,[]),$l.default.INTERNAL.registerComponent({name:"auth",instanceFactory:function(t){return new zh(t=t.getProvider("app").getImmediate())},multipleInstances:!1,serviceProps:t,instantiationMode:"LAZY",type:"PUBLIC"}),$l.default.INTERNAL.registerComponent({name:"auth-internal",instanceFactory:function(t){return{getUid:b((t=t.getProvider("auth").getImmediate()).getUid,t),getToken:b(t.mc,t),addAuthTokenListener:b(t.cc,t),removeAuthTokenListener:b(t.Oc,t)}},multipleInstances:!1,instantiationMode:"LAZY",type:"PRIVATE"}),$l.default.registerVersion("@firebase/auth","0.16.1"),$l.default.INTERNAL.extendNamespace({User:hh})}()}).apply("undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})}).apply(this,arguments)}catch(t){throw console.error(t),new Error("Cannot instantiate firebase-auth.js - be sure to load firebase-app.js first.")}});
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@firebase/app')) :
+    typeof define === 'function' && define.amd ? define(['exports', '@firebase/app'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.firebase = global.firebase || {}, global.firebase.auth = global.firebase.auth || {}), global.firebase.app));
+}(this, (function (exports, app) { 'use strict';
+
+    try {
+                (function() {
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    function __rest(s, e) {
+        var t = {};
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+            t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
+            }
+        return t;
+    }
+
+    function __awaiter(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
+
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    }
+
+    function __spreadArrays() {
+        for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+        for (var r = Array(s), k = 0, i = 0; i < il; i++)
+            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+                r[k] = a[j];
+        return r;
+    }
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var stringToByteArray = function (str) {
+        // TODO(user): Use native implementations if/when available
+        var out = [];
+        var p = 0;
+        for (var i = 0; i < str.length; i++) {
+            var c = str.charCodeAt(i);
+            if (c < 128) {
+                out[p++] = c;
+            }
+            else if (c < 2048) {
+                out[p++] = (c >> 6) | 192;
+                out[p++] = (c & 63) | 128;
+            }
+            else if ((c & 0xfc00) === 0xd800 &&
+                i + 1 < str.length &&
+                (str.charCodeAt(i + 1) & 0xfc00) === 0xdc00) {
+                // Surrogate Pair
+                c = 0x10000 + ((c & 0x03ff) << 10) + (str.charCodeAt(++i) & 0x03ff);
+                out[p++] = (c >> 18) | 240;
+                out[p++] = ((c >> 12) & 63) | 128;
+                out[p++] = ((c >> 6) & 63) | 128;
+                out[p++] = (c & 63) | 128;
+            }
+            else {
+                out[p++] = (c >> 12) | 224;
+                out[p++] = ((c >> 6) & 63) | 128;
+                out[p++] = (c & 63) | 128;
+            }
+        }
+        return out;
+    };
+    /**
+     * Turns an array of numbers into the string given by the concatenation of the
+     * characters to which the numbers correspond.
+     * @param bytes Array of numbers representing characters.
+     * @return Stringification of the array.
+     */
+    var byteArrayToString = function (bytes) {
+        // TODO(user): Use native implementations if/when available
+        var out = [];
+        var pos = 0, c = 0;
+        while (pos < bytes.length) {
+            var c1 = bytes[pos++];
+            if (c1 < 128) {
+                out[c++] = String.fromCharCode(c1);
+            }
+            else if (c1 > 191 && c1 < 224) {
+                var c2 = bytes[pos++];
+                out[c++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
+            }
+            else if (c1 > 239 && c1 < 365) {
+                // Surrogate Pair
+                var c2 = bytes[pos++];
+                var c3 = bytes[pos++];
+                var c4 = bytes[pos++];
+                var u = (((c1 & 7) << 18) | ((c2 & 63) << 12) | ((c3 & 63) << 6) | (c4 & 63)) -
+                    0x10000;
+                out[c++] = String.fromCharCode(0xd800 + (u >> 10));
+                out[c++] = String.fromCharCode(0xdc00 + (u & 1023));
+            }
+            else {
+                var c2 = bytes[pos++];
+                var c3 = bytes[pos++];
+                out[c++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+            }
+        }
+        return out.join('');
+    };
+    // We define it as an object literal instead of a class because a class compiled down to es5 can't
+    // be treeshaked. https://github.com/rollup/rollup/issues/1691
+    // Static lookup maps, lazily populated by init_()
+    var base64 = {
+        /**
+         * Maps bytes to characters.
+         */
+        byteToCharMap_: null,
+        /**
+         * Maps characters to bytes.
+         */
+        charToByteMap_: null,
+        /**
+         * Maps bytes to websafe characters.
+         * @private
+         */
+        byteToCharMapWebSafe_: null,
+        /**
+         * Maps websafe characters to bytes.
+         * @private
+         */
+        charToByteMapWebSafe_: null,
+        /**
+         * Our default alphabet, shared between
+         * ENCODED_VALS and ENCODED_VALS_WEBSAFE
+         */
+        ENCODED_VALS_BASE: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz' + '0123456789',
+        /**
+         * Our default alphabet. Value 64 (=) is special; it means "nothing."
+         */
+        get ENCODED_VALS() {
+            return this.ENCODED_VALS_BASE + '+/=';
+        },
+        /**
+         * Our websafe alphabet.
+         */
+        get ENCODED_VALS_WEBSAFE() {
+            return this.ENCODED_VALS_BASE + '-_.';
+        },
+        /**
+         * Whether this browser supports the atob and btoa functions. This extension
+         * started at Mozilla but is now implemented by many browsers. We use the
+         * ASSUME_* variables to avoid pulling in the full useragent detection library
+         * but still allowing the standard per-browser compilations.
+         *
+         */
+        HAS_NATIVE_SUPPORT: typeof atob === 'function',
+        /**
+         * Base64-encode an array of bytes.
+         *
+         * @param input An array of bytes (numbers with
+         *     value in [0, 255]) to encode.
+         * @param webSafe Boolean indicating we should use the
+         *     alternative alphabet.
+         * @return The base64 encoded string.
+         */
+        encodeByteArray: function (input, webSafe) {
+            if (!Array.isArray(input)) {
+                throw Error('encodeByteArray takes an array as a parameter');
+            }
+            this.init_();
+            var byteToCharMap = webSafe
+                ? this.byteToCharMapWebSafe_
+                : this.byteToCharMap_;
+            var output = [];
+            for (var i = 0; i < input.length; i += 3) {
+                var byte1 = input[i];
+                var haveByte2 = i + 1 < input.length;
+                var byte2 = haveByte2 ? input[i + 1] : 0;
+                var haveByte3 = i + 2 < input.length;
+                var byte3 = haveByte3 ? input[i + 2] : 0;
+                var outByte1 = byte1 >> 2;
+                var outByte2 = ((byte1 & 0x03) << 4) | (byte2 >> 4);
+                var outByte3 = ((byte2 & 0x0f) << 2) | (byte3 >> 6);
+                var outByte4 = byte3 & 0x3f;
+                if (!haveByte3) {
+                    outByte4 = 64;
+                    if (!haveByte2) {
+                        outByte3 = 64;
+                    }
+                }
+                output.push(byteToCharMap[outByte1], byteToCharMap[outByte2], byteToCharMap[outByte3], byteToCharMap[outByte4]);
+            }
+            return output.join('');
+        },
+        /**
+         * Base64-encode a string.
+         *
+         * @param input A string to encode.
+         * @param webSafe If true, we should use the
+         *     alternative alphabet.
+         * @return The base64 encoded string.
+         */
+        encodeString: function (input, webSafe) {
+            // Shortcut for Mozilla browsers that implement
+            // a native base64 encoder in the form of "btoa/atob"
+            if (this.HAS_NATIVE_SUPPORT && !webSafe) {
+                return btoa(input);
+            }
+            return this.encodeByteArray(stringToByteArray(input), webSafe);
+        },
+        /**
+         * Base64-decode a string.
+         *
+         * @param input to decode.
+         * @param webSafe True if we should use the
+         *     alternative alphabet.
+         * @return string representing the decoded value.
+         */
+        decodeString: function (input, webSafe) {
+            // Shortcut for Mozilla browsers that implement
+            // a native base64 encoder in the form of "btoa/atob"
+            if (this.HAS_NATIVE_SUPPORT && !webSafe) {
+                return atob(input);
+            }
+            return byteArrayToString(this.decodeStringToByteArray(input, webSafe));
+        },
+        /**
+         * Base64-decode a string.
+         *
+         * In base-64 decoding, groups of four characters are converted into three
+         * bytes.  If the encoder did not apply padding, the input length may not
+         * be a multiple of 4.
+         *
+         * In this case, the last group will have fewer than 4 characters, and
+         * padding will be inferred.  If the group has one or two characters, it decodes
+         * to one byte.  If the group has three characters, it decodes to two bytes.
+         *
+         * @param input Input to decode.
+         * @param webSafe True if we should use the web-safe alphabet.
+         * @return bytes representing the decoded value.
+         */
+        decodeStringToByteArray: function (input, webSafe) {
+            this.init_();
+            var charToByteMap = webSafe
+                ? this.charToByteMapWebSafe_
+                : this.charToByteMap_;
+            var output = [];
+            for (var i = 0; i < input.length;) {
+                var byte1 = charToByteMap[input.charAt(i++)];
+                var haveByte2 = i < input.length;
+                var byte2 = haveByte2 ? charToByteMap[input.charAt(i)] : 0;
+                ++i;
+                var haveByte3 = i < input.length;
+                var byte3 = haveByte3 ? charToByteMap[input.charAt(i)] : 64;
+                ++i;
+                var haveByte4 = i < input.length;
+                var byte4 = haveByte4 ? charToByteMap[input.charAt(i)] : 64;
+                ++i;
+                if (byte1 == null || byte2 == null || byte3 == null || byte4 == null) {
+                    throw Error();
+                }
+                var outByte1 = (byte1 << 2) | (byte2 >> 4);
+                output.push(outByte1);
+                if (byte3 !== 64) {
+                    var outByte2 = ((byte2 << 4) & 0xf0) | (byte3 >> 2);
+                    output.push(outByte2);
+                    if (byte4 !== 64) {
+                        var outByte3 = ((byte3 << 6) & 0xc0) | byte4;
+                        output.push(outByte3);
+                    }
+                }
+            }
+            return output;
+        },
+        /**
+         * Lazy static initialization function. Called before
+         * accessing any of the static map variables.
+         * @private
+         */
+        init_: function () {
+            if (!this.byteToCharMap_) {
+                this.byteToCharMap_ = {};
+                this.charToByteMap_ = {};
+                this.byteToCharMapWebSafe_ = {};
+                this.charToByteMapWebSafe_ = {};
+                // We want quick mappings back and forth, so we precompute two maps.
+                for (var i = 0; i < this.ENCODED_VALS.length; i++) {
+                    this.byteToCharMap_[i] = this.ENCODED_VALS.charAt(i);
+                    this.charToByteMap_[this.byteToCharMap_[i]] = i;
+                    this.byteToCharMapWebSafe_[i] = this.ENCODED_VALS_WEBSAFE.charAt(i);
+                    this.charToByteMapWebSafe_[this.byteToCharMapWebSafe_[i]] = i;
+                    // Be forgiving when decoding and correctly decode both encodings.
+                    if (i >= this.ENCODED_VALS_BASE.length) {
+                        this.charToByteMap_[this.ENCODED_VALS_WEBSAFE.charAt(i)] = i;
+                        this.charToByteMapWebSafe_[this.ENCODED_VALS.charAt(i)] = i;
+                    }
+                }
+            }
+        }
+    };
+    /**
+     * URL-safe base64 decoding
+     *
+     * NOTE: DO NOT use the global atob() function - it does NOT support the
+     * base64Url variant encoding.
+     *
+     * @param str To be decoded
+     * @return Decoded result, if possible
+     */
+    var base64Decode = function (str) {
+        try {
+            return base64.decodeString(str, true);
+        }
+        catch (e) {
+            console.error('base64Decode failed: ', e);
+        }
+        return null;
+    };
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Returns navigator.userAgent string or '' if it's not defined.
+     * @return user agent string
+     */
+    function getUA() {
+        if (typeof navigator !== 'undefined' &&
+            typeof navigator['userAgent'] === 'string') {
+            return navigator['userAgent'];
+        }
+        else {
+            return '';
+        }
+    }
+    /**
+     * Detect Cordova / PhoneGap / Ionic frameworks on a mobile device.
+     *
+     * Deliberately does not rely on checking `file://` URLs (as this fails PhoneGap
+     * in the Ripple emulator) nor Cordova `onDeviceReady`, which would normally
+     * wait for a callback.
+     */
+    function isMobileCordova() {
+        return (typeof window !== 'undefined' &&
+            // @ts-ignore Setting up an broadly applicable index signature for Window
+            // just to deal with this case would probably be a bad idea.
+            !!(window['cordova'] || window['phonegap'] || window['PhoneGap']) &&
+            /ios|iphone|ipod|ipad|android|blackberry|iemobile/i.test(getUA()));
+    }
+    function isBrowserExtension() {
+        var runtime = typeof chrome === 'object'
+            ? chrome.runtime
+            : typeof browser === 'object'
+                ? browser.runtime
+                : undefined;
+        return typeof runtime === 'object' && runtime.id !== undefined;
+    }
+    /**
+     * Detect React Native.
+     *
+     * @return true if ReactNative environment is detected.
+     */
+    function isReactNative() {
+        return (typeof navigator === 'object' && navigator['product'] === 'ReactNative');
+    }
+    /** Detects Internet Explorer. */
+    function isIE() {
+        var ua = getUA();
+        return ua.indexOf('MSIE ') >= 0 || ua.indexOf('Trident/') >= 0;
+    }
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var ERROR_NAME = 'FirebaseError';
+    // Based on code from:
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Custom_Error_Types
+    var FirebaseError = /** @class */ (function (_super) {
+        __extends(FirebaseError, _super);
+        function FirebaseError(code, message, customData) {
+            var _this = _super.call(this, message) || this;
+            _this.code = code;
+            _this.customData = customData;
+            _this.name = ERROR_NAME;
+            // Fix For ES5
+            // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+            Object.setPrototypeOf(_this, FirebaseError.prototype);
+            // Maintains proper stack trace for where our error was thrown.
+            // Only available on V8.
+            if (Error.captureStackTrace) {
+                Error.captureStackTrace(_this, ErrorFactory.prototype.create);
+            }
+            return _this;
+        }
+        return FirebaseError;
+    }(Error));
+    var ErrorFactory = /** @class */ (function () {
+        function ErrorFactory(service, serviceName, errors) {
+            this.service = service;
+            this.serviceName = serviceName;
+            this.errors = errors;
+        }
+        ErrorFactory.prototype.create = function (code) {
+            var data = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                data[_i - 1] = arguments[_i];
+            }
+            var customData = data[0] || {};
+            var fullCode = this.service + "/" + code;
+            var template = this.errors[code];
+            var message = template ? replaceTemplate(template, customData) : 'Error';
+            // Service Name: Error message (service/code).
+            var fullMessage = this.serviceName + ": " + message + " (" + fullCode + ").";
+            var error = new FirebaseError(fullCode, fullMessage, customData);
+            return error;
+        };
+        return ErrorFactory;
+    }());
+    function replaceTemplate(template, data) {
+        return template.replace(PATTERN, function (_, key) {
+            var value = data[key];
+            return value != null ? String(value) : "<" + key + "?>";
+        });
+    }
+    var PATTERN = /\{\$([^}]+)}/g;
+    function isEmpty(obj) {
+        for (var key in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Returns a querystring-formatted string (e.g. &arg=val&arg2=val2) from a
+     * params object (e.g. {arg: 'val', arg2: 'val2'})
+     * Note: You must prepend it with ? when adding it to a URL.
+     */
+    function querystring(querystringParams) {
+        var params = [];
+        var _loop_1 = function (key, value) {
+            if (Array.isArray(value)) {
+                value.forEach(function (arrayVal) {
+                    params.push(encodeURIComponent(key) + '=' + encodeURIComponent(arrayVal));
+                });
+            }
+            else {
+                params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+            }
+        };
+        for (var _i = 0, _a = Object.entries(querystringParams); _i < _a.length; _i++) {
+            var _b = _a[_i], key = _b[0], value = _b[1];
+            _loop_1(key, value);
+        }
+        return params.length ? '&' + params.join('&') : '';
+    }
+
+    /**
+     * Helper to make a Subscribe function (just like Promise helps make a
+     * Thenable).
+     *
+     * @param executor Function which can make calls to a single Observer
+     *     as a proxy.
+     * @param onNoObservers Callback when count of Observers goes to zero.
+     */
+    function createSubscribe(executor, onNoObservers) {
+        var proxy = new ObserverProxy(executor, onNoObservers);
+        return proxy.subscribe.bind(proxy);
+    }
+    /**
+     * Implement fan-out for any number of Observers attached via a subscribe
+     * function.
+     */
+    var ObserverProxy = /** @class */ (function () {
+        /**
+         * @param executor Function which can make calls to a single Observer
+         *     as a proxy.
+         * @param onNoObservers Callback when count of Observers goes to zero.
+         */
+        function ObserverProxy(executor, onNoObservers) {
+            var _this = this;
+            this.observers = [];
+            this.unsubscribes = [];
+            this.observerCount = 0;
+            // Micro-task scheduling by calling task.then().
+            this.task = Promise.resolve();
+            this.finalized = false;
+            this.onNoObservers = onNoObservers;
+            // Call the executor asynchronously so subscribers that are called
+            // synchronously after the creation of the subscribe function
+            // can still receive the very first value generated in the executor.
+            this.task
+                .then(function () {
+                executor(_this);
+            })
+                .catch(function (e) {
+                _this.error(e);
+            });
+        }
+        ObserverProxy.prototype.next = function (value) {
+            this.forEachObserver(function (observer) {
+                observer.next(value);
+            });
+        };
+        ObserverProxy.prototype.error = function (error) {
+            this.forEachObserver(function (observer) {
+                observer.error(error);
+            });
+            this.close(error);
+        };
+        ObserverProxy.prototype.complete = function () {
+            this.forEachObserver(function (observer) {
+                observer.complete();
+            });
+            this.close();
+        };
+        /**
+         * Subscribe function that can be used to add an Observer to the fan-out list.
+         *
+         * - We require that no event is sent to a subscriber sychronously to their
+         *   call to subscribe().
+         */
+        ObserverProxy.prototype.subscribe = function (nextOrObserver, error, complete) {
+            var _this = this;
+            var observer;
+            if (nextOrObserver === undefined &&
+                error === undefined &&
+                complete === undefined) {
+                throw new Error('Missing Observer.');
+            }
+            // Assemble an Observer object when passed as callback functions.
+            if (implementsAnyMethods(nextOrObserver, [
+                'next',
+                'error',
+                'complete'
+            ])) {
+                observer = nextOrObserver;
+            }
+            else {
+                observer = {
+                    next: nextOrObserver,
+                    error: error,
+                    complete: complete
+                };
+            }
+            if (observer.next === undefined) {
+                observer.next = noop;
+            }
+            if (observer.error === undefined) {
+                observer.error = noop;
+            }
+            if (observer.complete === undefined) {
+                observer.complete = noop;
+            }
+            var unsub = this.unsubscribeOne.bind(this, this.observers.length);
+            // Attempt to subscribe to a terminated Observable - we
+            // just respond to the Observer with the final error or complete
+            // event.
+            if (this.finalized) {
+                // eslint-disable-next-line @typescript-eslint/no-floating-promises
+                this.task.then(function () {
+                    try {
+                        if (_this.finalError) {
+                            observer.error(_this.finalError);
+                        }
+                        else {
+                            observer.complete();
+                        }
+                    }
+                    catch (e) {
+                        // nothing
+                    }
+                    return;
+                });
+            }
+            this.observers.push(observer);
+            return unsub;
+        };
+        // Unsubscribe is synchronous - we guarantee that no events are sent to
+        // any unsubscribed Observer.
+        ObserverProxy.prototype.unsubscribeOne = function (i) {
+            if (this.observers === undefined || this.observers[i] === undefined) {
+                return;
+            }
+            delete this.observers[i];
+            this.observerCount -= 1;
+            if (this.observerCount === 0 && this.onNoObservers !== undefined) {
+                this.onNoObservers(this);
+            }
+        };
+        ObserverProxy.prototype.forEachObserver = function (fn) {
+            if (this.finalized) {
+                // Already closed by previous event....just eat the additional values.
+                return;
+            }
+            // Since sendOne calls asynchronously - there is no chance that
+            // this.observers will become undefined.
+            for (var i = 0; i < this.observers.length; i++) {
+                this.sendOne(i, fn);
+            }
+        };
+        // Call the Observer via one of it's callback function. We are careful to
+        // confirm that the observe has not been unsubscribed since this asynchronous
+        // function had been queued.
+        ObserverProxy.prototype.sendOne = function (i, fn) {
+            var _this = this;
+            // Execute the callback asynchronously
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            this.task.then(function () {
+                if (_this.observers !== undefined && _this.observers[i] !== undefined) {
+                    try {
+                        fn(_this.observers[i]);
+                    }
+                    catch (e) {
+                        // Ignore exceptions raised in Observers or missing methods of an
+                        // Observer.
+                        // Log error to console. b/31404806
+                        if (typeof console !== 'undefined' && console.error) {
+                            console.error(e);
+                        }
+                    }
+                }
+            });
+        };
+        ObserverProxy.prototype.close = function (err) {
+            var _this = this;
+            if (this.finalized) {
+                return;
+            }
+            this.finalized = true;
+            if (err !== undefined) {
+                this.finalError = err;
+            }
+            // Proxy is no longer needed - garbage collect references
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            this.task.then(function () {
+                _this.observers = undefined;
+                _this.onNoObservers = undefined;
+            });
+        };
+        return ObserverProxy;
+    }());
+    /**
+     * Return true if the object passed in implements any of the named methods.
+     */
+    function implementsAnyMethods(obj, methods) {
+        if (typeof obj !== 'object' || obj === null) {
+            return false;
+        }
+        for (var _i = 0, methods_1 = methods; _i < methods_1.length; _i++) {
+            var method = methods_1[_i];
+            if (method in obj && typeof obj[method] === 'function') {
+                return true;
+            }
+        }
+        return false;
+    }
+    function noop() {
+        // do nothing
+    }
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    function __spreadArrays$1() {
+        for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+        for (var r = Array(s), k = 0, i = 0; i < il; i++)
+            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+                r[k] = a[j];
+        return r;
+    }
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _a;
+    /**
+     * The JS SDK supports 5 log levels and also allows a user the ability to
+     * silence the logs altogether.
+     *
+     * The order is a follows:
+     * DEBUG < VERBOSE < INFO < WARN < ERROR
+     *
+     * All of the log types above the current log level will be captured (i.e. if
+     * you set the log level to `INFO`, errors will still be logged, but `DEBUG` and
+     * `VERBOSE` logs will not)
+     */
+    var LogLevel;
+    (function (LogLevel) {
+        LogLevel[LogLevel["DEBUG"] = 0] = "DEBUG";
+        LogLevel[LogLevel["VERBOSE"] = 1] = "VERBOSE";
+        LogLevel[LogLevel["INFO"] = 2] = "INFO";
+        LogLevel[LogLevel["WARN"] = 3] = "WARN";
+        LogLevel[LogLevel["ERROR"] = 4] = "ERROR";
+        LogLevel[LogLevel["SILENT"] = 5] = "SILENT";
+    })(LogLevel || (LogLevel = {}));
+    var levelStringToEnum = {
+        'debug': LogLevel.DEBUG,
+        'verbose': LogLevel.VERBOSE,
+        'info': LogLevel.INFO,
+        'warn': LogLevel.WARN,
+        'error': LogLevel.ERROR,
+        'silent': LogLevel.SILENT
+    };
+    /**
+     * The default log level
+     */
+    var defaultLogLevel = LogLevel.INFO;
+    /**
+     * By default, `console.debug` is not displayed in the developer console (in
+     * chrome). To avoid forcing users to have to opt-in to these logs twice
+     * (i.e. once for firebase, and once in the console), we are sending `DEBUG`
+     * logs to the `console.log` function.
+     */
+    var ConsoleMethod = (_a = {},
+        _a[LogLevel.DEBUG] = 'log',
+        _a[LogLevel.VERBOSE] = 'log',
+        _a[LogLevel.INFO] = 'info',
+        _a[LogLevel.WARN] = 'warn',
+        _a[LogLevel.ERROR] = 'error',
+        _a);
+    /**
+     * The default log handler will forward DEBUG, VERBOSE, INFO, WARN, and ERROR
+     * messages on to their corresponding console counterparts (if the log method
+     * is supported by the current log level)
+     */
+    var defaultLogHandler = function (instance, logType) {
+        var args = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            args[_i - 2] = arguments[_i];
+        }
+        if (logType < instance.logLevel) {
+            return;
+        }
+        var now = new Date().toISOString();
+        var method = ConsoleMethod[logType];
+        if (method) {
+            console[method].apply(console, __spreadArrays$1(["[" + now + "]  " + instance.name + ":"], args));
+        }
+        else {
+            throw new Error("Attempted to log a message with an invalid logType (value: " + logType + ")");
+        }
+    };
+    var Logger = /** @class */ (function () {
+        /**
+         * Gives you an instance of a Logger to capture messages according to
+         * Firebase's logging scheme.
+         *
+         * @param name The name that the logs will be associated with
+         */
+        function Logger(name) {
+            this.name = name;
+            /**
+             * The log level of the given Logger instance.
+             */
+            this._logLevel = defaultLogLevel;
+            /**
+             * The main (internal) log handler for the Logger instance.
+             * Can be set to a new function in internal package code but not by user.
+             */
+            this._logHandler = defaultLogHandler;
+            /**
+             * The optional, additional, user-defined log handler for the Logger instance.
+             */
+            this._userLogHandler = null;
+        }
+        Object.defineProperty(Logger.prototype, "logLevel", {
+            get: function () {
+                return this._logLevel;
+            },
+            set: function (val) {
+                if (!(val in LogLevel)) {
+                    throw new TypeError("Invalid value \"" + val + "\" assigned to `logLevel`");
+                }
+                this._logLevel = val;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        // Workaround for setter/getter having to be the same type.
+        Logger.prototype.setLogLevel = function (val) {
+            this._logLevel = typeof val === 'string' ? levelStringToEnum[val] : val;
+        };
+        Object.defineProperty(Logger.prototype, "logHandler", {
+            get: function () {
+                return this._logHandler;
+            },
+            set: function (val) {
+                if (typeof val !== 'function') {
+                    throw new TypeError('Value assigned to `logHandler` must be a function');
+                }
+                this._logHandler = val;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        Object.defineProperty(Logger.prototype, "userLogHandler", {
+            get: function () {
+                return this._userLogHandler;
+            },
+            set: function (val) {
+                this._userLogHandler = val;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        /**
+         * The functions below are all based on the `console` interface
+         */
+        Logger.prototype.debug = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays$1([this, LogLevel.DEBUG], args));
+            this._logHandler.apply(this, __spreadArrays$1([this, LogLevel.DEBUG], args));
+        };
+        Logger.prototype.log = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays$1([this, LogLevel.VERBOSE], args));
+            this._logHandler.apply(this, __spreadArrays$1([this, LogLevel.VERBOSE], args));
+        };
+        Logger.prototype.info = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays$1([this, LogLevel.INFO], args));
+            this._logHandler.apply(this, __spreadArrays$1([this, LogLevel.INFO], args));
+        };
+        Logger.prototype.warn = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays$1([this, LogLevel.WARN], args));
+            this._logHandler.apply(this, __spreadArrays$1([this, LogLevel.WARN], args));
+        };
+        Logger.prototype.error = function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            this._userLogHandler && this._userLogHandler.apply(this, __spreadArrays$1([this, LogLevel.ERROR], args));
+            this._logHandler.apply(this, __spreadArrays$1([this, LogLevel.ERROR], args));
+        };
+        return Logger;
+    }());
+
+    /**
+     * Component for service name T, e.g. `auth`, `auth-internal`
+     */
+    var Component = /** @class */ (function () {
+        /**
+         *
+         * @param name The public service name, e.g. app, auth, firestore, database
+         * @param instanceFactory Service factory responsible for creating the public interface
+         * @param type whether the service provided by the component is public or private
+         */
+        function Component(name, instanceFactory, type) {
+            this.name = name;
+            this.instanceFactory = instanceFactory;
+            this.type = type;
+            this.multipleInstances = false;
+            /**
+             * Properties to be added to the service namespace
+             */
+            this.serviceProps = {};
+            this.instantiationMode = "LAZY" /* LAZY */;
+        }
+        Component.prototype.setInstantiationMode = function (mode) {
+            this.instantiationMode = mode;
+            return this;
+        };
+        Component.prototype.setMultipleInstances = function (multipleInstances) {
+            this.multipleInstances = multipleInstances;
+            return this;
+        };
+        Component.prototype.setServiceProps = function (props) {
+            this.serviceProps = props;
+            return this;
+        };
+        return Component;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _debugErrorMap() {
+        var _a;
+        return _a = {},
+            _a["admin-restricted-operation" /* ADMIN_ONLY_OPERATION */] = 'This operation is restricted to administrators only.',
+            _a["argument-error" /* ARGUMENT_ERROR */] = '',
+            _a["app-not-authorized" /* APP_NOT_AUTHORIZED */] = "This app, identified by the domain where it's hosted, is not " +
+                'authorized to use Firebase Authentication with the provided API key. ' +
+                'Review your key configuration in the Google API console.',
+            _a["app-not-installed" /* APP_NOT_INSTALLED */] = 'The requested mobile application corresponding to the identifier (' +
+                'Android package name or iOS bundle ID) provided is not installed on ' +
+                'this device.',
+            _a["captcha-check-failed" /* CAPTCHA_CHECK_FAILED */] = 'The reCAPTCHA response token provided is either invalid, expired, ' +
+                'already used or the domain associated with it does not match the list ' +
+                'of whitelisted domains.',
+            _a["code-expired" /* CODE_EXPIRED */] = 'The SMS code has expired. Please re-send the verification code to try ' +
+                'again.',
+            _a["cordova-not-ready" /* CORDOVA_NOT_READY */] = 'Cordova framework is not ready.',
+            _a["cors-unsupported" /* CORS_UNSUPPORTED */] = 'This browser is not supported.',
+            _a["credential-already-in-use" /* CREDENTIAL_ALREADY_IN_USE */] = 'This credential is already associated with a different user account.',
+            _a["custom-token-mismatch" /* CREDENTIAL_MISMATCH */] = 'The custom token corresponds to a different audience.',
+            _a["requires-recent-login" /* CREDENTIAL_TOO_OLD_LOGIN_AGAIN */] = 'This operation is sensitive and requires recent authentication. Log in ' +
+                'again before retrying this request.',
+            _a["dependent-sdk-initialized-before-auth" /* DEPENDENT_SDK_INIT_BEFORE_AUTH */] = 'Another Firebase SDK was initialized and is trying to use Auth before Auth is ' +
+                'initialized. Please be sure to call `initializeAuth` or `getAuth` before ' +
+                'starting any other Firebase SDK.',
+            _a["dynamic-link-not-activated" /* DYNAMIC_LINK_NOT_ACTIVATED */] = 'Please activate Dynamic Links in the Firebase Console and agree to the terms and ' +
+                'conditions.',
+            _a["email-change-needs-verification" /* EMAIL_CHANGE_NEEDS_VERIFICATION */] = 'Multi-factor users must always have a verified email.',
+            _a["email-already-in-use" /* EMAIL_EXISTS */] = 'The email address is already in use by another account.',
+            _a["emulator-config-failed" /* EMULATOR_CONFIG_FAILED */] = 'Auth instance has already been used to make a network call. Auth can ' +
+                'no longer be configured to use the emulator. Try calling ' +
+                '"useAuthEmulator()" sooner.',
+            _a["expired-action-code" /* EXPIRED_OOB_CODE */] = 'The action code has expired.',
+            _a["cancelled-popup-request" /* EXPIRED_POPUP_REQUEST */] = 'This operation has been cancelled due to another conflicting popup being opened.',
+            _a["internal-error" /* INTERNAL_ERROR */] = 'An internal AuthError has occurred.',
+            _a["invalid-app-credential" /* INVALID_APP_CREDENTIAL */] = 'The phone verification request contains an invalid application verifier.' +
+                ' The reCAPTCHA token response is either invalid or expired.',
+            _a["invalid-app-id" /* INVALID_APP_ID */] = 'The mobile app identifier is not registed for the current project.',
+            _a["invalid-user-token" /* INVALID_AUTH */] = "This user's credential isn't valid for this project. This can happen " +
+                "if the user's token has been tampered with, or if the user isn't for " +
+                'the project associated with this API key.',
+            _a["invalid-auth-event" /* INVALID_AUTH_EVENT */] = 'An internal AuthError has occurred.',
+            _a["invalid-verification-code" /* INVALID_CODE */] = 'The SMS verification code used to create the phone auth credential is ' +
+                'invalid. Please resend the verification code sms and be sure use the ' +
+                'verification code provided by the user.',
+            _a["invalid-continue-uri" /* INVALID_CONTINUE_URI */] = 'The continue URL provided in the request is invalid.',
+            _a["invalid-cordova-configuration" /* INVALID_CORDOVA_CONFIGURATION */] = 'The following Cordova plugins must be installed to enable OAuth sign-in: ' +
+                'cordova-plugin-buildinfo, cordova-universal-links-plugin, ' +
+                'cordova-plugin-browsertab, cordova-plugin-inappbrowser and ' +
+                'cordova-plugin-customurlscheme.',
+            _a["invalid-custom-token" /* INVALID_CUSTOM_TOKEN */] = 'The custom token format is incorrect. Please check the documentation.',
+            _a["invalid-dynamic-link-domain" /* INVALID_DYNAMIC_LINK_DOMAIN */] = 'The provided dynamic link domain is not configured or authorized for the current project.',
+            _a["invalid-email" /* INVALID_EMAIL */] = 'The email address is badly formatted.',
+            _a["invalid-emulator-scheme" /* INVALID_EMULATOR_SCHEME */] = 'Emulator URL must start with a valid scheme (http:// or https://).',
+            _a["invalid-api-key" /* INVALID_API_KEY */] = 'Your API key is invalid, please check you have copied it correctly.',
+            _a["invalid-cert-hash" /* INVALID_CERT_HASH */] = 'The SHA-1 certificate hash provided is invalid.',
+            _a["invalid-credential" /* INVALID_IDP_RESPONSE */] = 'The supplied auth credential is malformed or has expired.',
+            _a["invalid-message-payload" /* INVALID_MESSAGE_PAYLOAD */] = 'The email template corresponding to this action contains invalid characters in its message. ' +
+                'Please fix by going to the Auth email templates section in the Firebase Console.',
+            _a["invalid-multi-factor-session" /* INVALID_MFA_SESSION */] = 'The request does not contain a valid proof of first factor successful sign-in.',
+            _a["invalid-oauth-provider" /* INVALID_OAUTH_PROVIDER */] = 'EmailAuthProvider is not supported for this operation. This operation ' +
+                'only supports OAuth providers.',
+            _a["invalid-oauth-client-id" /* INVALID_OAUTH_CLIENT_ID */] = 'The OAuth client ID provided is either invalid or does not match the ' +
+                'specified API key.',
+            _a["unauthorized-domain" /* INVALID_ORIGIN */] = 'This domain is not authorized for OAuth operations for your Firebase ' +
+                'project. Edit the list of authorized domains from the Firebase console.',
+            _a["invalid-action-code" /* INVALID_OOB_CODE */] = 'The action code is invalid. This can happen if the code is malformed, ' +
+                'expired, or has already been used.',
+            _a["wrong-password" /* INVALID_PASSWORD */] = 'The password is invalid or the user does not have a password.',
+            _a["invalid-persistence-type" /* INVALID_PERSISTENCE */] = 'The specified persistence type is invalid. It can only be local, session or none.',
+            _a["invalid-phone-number" /* INVALID_PHONE_NUMBER */] = 'The format of the phone number provided is incorrect. Please enter the ' +
+                'phone number in a format that can be parsed into E.164 format. E.164 ' +
+                'phone numbers are written in the format [+][country code][subscriber ' +
+                'number including area code].',
+            _a["invalid-provider-id" /* INVALID_PROVIDER_ID */] = 'The specified provider ID is invalid.',
+            _a["invalid-recipient-email" /* INVALID_RECIPIENT_EMAIL */] = 'The email corresponding to this action failed to send as the provided ' +
+                'recipient email address is invalid.',
+            _a["invalid-sender" /* INVALID_SENDER */] = 'The email template corresponding to this action contains an invalid sender email or name. ' +
+                'Please fix by going to the Auth email templates section in the Firebase Console.',
+            _a["invalid-verification-id" /* INVALID_SESSION_INFO */] = 'The verification ID used to create the phone auth credential is invalid.',
+            _a["invalid-tenant-id" /* INVALID_TENANT_ID */] = "The Auth instance's tenant ID is invalid.",
+            _a["missing-android-pkg-name" /* MISSING_ANDROID_PACKAGE_NAME */] = 'An Android Package Name must be provided if the Android App is required to be installed.',
+            _a["auth-domain-config-required" /* MISSING_AUTH_DOMAIN */] = 'Be sure to include authDomain when calling firebase.initializeApp(), ' +
+                'by following the instructions in the Firebase console.',
+            _a["missing-app-credential" /* MISSING_APP_CREDENTIAL */] = 'The phone verification request is missing an application verifier ' +
+                'assertion. A reCAPTCHA response token needs to be provided.',
+            _a["missing-verification-code" /* MISSING_CODE */] = 'The phone auth credential was created with an empty SMS verification code.',
+            _a["missing-continue-uri" /* MISSING_CONTINUE_URI */] = 'A continue URL must be provided in the request.',
+            _a["missing-iframe-start" /* MISSING_IFRAME_START */] = 'An internal AuthError has occurred.',
+            _a["missing-ios-bundle-id" /* MISSING_IOS_BUNDLE_ID */] = 'An iOS Bundle ID must be provided if an App Store ID is provided.',
+            _a["missing-or-invalid-nonce" /* MISSING_OR_INVALID_NONCE */] = 'The request does not contain a valid nonce. This can occur if the ' +
+                'SHA-256 hash of the provided raw nonce does not match the hashed nonce ' +
+                'in the ID token payload.',
+            _a["missing-multi-factor-info" /* MISSING_MFA_INFO */] = 'No second factor identifier is provided.',
+            _a["missing-multi-factor-session" /* MISSING_MFA_SESSION */] = 'The request is missing proof of first factor successful sign-in.',
+            _a["missing-phone-number" /* MISSING_PHONE_NUMBER */] = 'To send verification codes, provide a phone number for the recipient.',
+            _a["missing-verification-id" /* MISSING_SESSION_INFO */] = 'The phone auth credential was created with an empty verification ID.',
+            _a["app-deleted" /* MODULE_DESTROYED */] = 'This instance of FirebaseApp has been deleted.',
+            _a["multi-factor-info-not-found" /* MFA_INFO_NOT_FOUND */] = 'The user does not have a second factor matching the identifier provided.',
+            _a["multi-factor-auth-required" /* MFA_REQUIRED */] = 'Proof of ownership of a second factor is required to complete sign-in.',
+            _a["account-exists-with-different-credential" /* NEED_CONFIRMATION */] = 'An account already exists with the same email address but different ' +
+                'sign-in credentials. Sign in using a provider associated with this ' +
+                'email address.',
+            _a["network-request-failed" /* NETWORK_REQUEST_FAILED */] = 'A network AuthError (such as timeout, interrupted connection or unreachable host) has occurred.',
+            _a["no-auth-event" /* NO_AUTH_EVENT */] = 'An internal AuthError has occurred.',
+            _a["no-such-provider" /* NO_SUCH_PROVIDER */] = 'User was not linked to an account with the given provider.',
+            _a["null-user" /* NULL_USER */] = 'A null user object was provided as the argument for an operation which ' +
+                'requires a non-null user object.',
+            _a["operation-not-allowed" /* OPERATION_NOT_ALLOWED */] = 'The given sign-in provider is disabled for this Firebase project. ' +
+                'Enable it in the Firebase console, under the sign-in method tab of the ' +
+                'Auth section.',
+            _a["operation-not-supported-in-this-environment" /* OPERATION_NOT_SUPPORTED */] = 'This operation is not supported in the environment this application is ' +
+                'running on. "location.protocol" must be http, https or chrome-extension' +
+                ' and web storage must be enabled.',
+            _a["popup-blocked" /* POPUP_BLOCKED */] = 'Unable to establish a connection with the popup. It may have been blocked by the browser.',
+            _a["popup-closed-by-user" /* POPUP_CLOSED_BY_USER */] = 'The popup has been closed by the user before finalizing the operation.',
+            _a["provider-already-linked" /* PROVIDER_ALREADY_LINKED */] = 'User can only be linked to one identity for the given provider.',
+            _a["quota-exceeded" /* QUOTA_EXCEEDED */] = "The project's quota for this operation has been exceeded.",
+            _a["redirect-cancelled-by-user" /* REDIRECT_CANCELLED_BY_USER */] = 'The redirect operation has been cancelled by the user before finalizing.',
+            _a["redirect-operation-pending" /* REDIRECT_OPERATION_PENDING */] = 'A redirect sign-in operation is already pending.',
+            _a["rejected-credential" /* REJECTED_CREDENTIAL */] = 'The request contains malformed or mismatching credentials.',
+            _a["second-factor-already-in-use" /* SECOND_FACTOR_ALREADY_ENROLLED */] = 'The second factor is already enrolled on this account.',
+            _a["maximum-second-factor-count-exceeded" /* SECOND_FACTOR_LIMIT_EXCEEDED */] = 'The maximum allowed number of second factors on a user has been exceeded.',
+            _a["tenant-id-mismatch" /* TENANT_ID_MISMATCH */] = "The provided tenant ID does not match the Auth instance's tenant ID",
+            _a["timeout" /* TIMEOUT */] = 'The operation has timed out.',
+            _a["user-token-expired" /* TOKEN_EXPIRED */] = "The user's credential is no longer valid. The user must sign in again.",
+            _a["too-many-requests" /* TOO_MANY_ATTEMPTS_TRY_LATER */] = 'We have blocked all requests from this device due to unusual activity. ' +
+                'Try again later.',
+            _a["unauthorized-continue-uri" /* UNAUTHORIZED_DOMAIN */] = 'The domain of the continue URL is not whitelisted.  Please whitelist ' +
+                'the domain in the Firebase console.',
+            _a["unsupported-first-factor" /* UNSUPPORTED_FIRST_FACTOR */] = 'Enrolling a second factor or signing in with a multi-factor account requires sign-in with a supported first factor.',
+            _a["unsupported-persistence-type" /* UNSUPPORTED_PERSISTENCE */] = 'The current environment does not support the specified persistence type.',
+            _a["unsupported-tenant-operation" /* UNSUPPORTED_TENANT_OPERATION */] = 'This operation is not supported in a multi-tenant context.',
+            _a["unverified-email" /* UNVERIFIED_EMAIL */] = 'The operation requires a verified email.',
+            _a["user-cancelled" /* USER_CANCELLED */] = 'The user did not grant your application the permissions it requested.',
+            _a["user-not-found" /* USER_DELETED */] = 'There is no user record corresponding to this identifier. The user may ' +
+                'have been deleted.',
+            _a["user-disabled" /* USER_DISABLED */] = 'The user account has been disabled by an administrator.',
+            _a["user-mismatch" /* USER_MISMATCH */] = 'The supplied credentials do not correspond to the previously signed in user.',
+            _a["user-signed-out" /* USER_SIGNED_OUT */] = '',
+            _a["weak-password" /* WEAK_PASSWORD */] = 'The password must be 6 characters long or more.',
+            _a["web-storage-unsupported" /* WEB_STORAGE_UNSUPPORTED */] = 'This browser is not supported or 3rd party cookies and data may be disabled.',
+            _a["already-initialized" /* ALREADY_INITIALIZED */] = 'Auth can only be initialized once per app.',
+            _a;
+    }
+    function _prodErrorMap() {
+        var _a;
+        // We will include this one message in the prod error map since by the very
+        // nature of this error, developers will never be able to see the message
+        // using the debugErrorMap (which is installed during auth initialization).
+        return _a = {},
+            _a["dependent-sdk-initialized-before-auth" /* DEPENDENT_SDK_INIT_BEFORE_AUTH */] = 'Another Firebase SDK was initialized and is trying to use Auth before Auth is ' +
+                'initialized. Please be sure to call `initializeAuth` or `getAuth` before ' +
+                'starting any other Firebase SDK.',
+            _a;
+    }
+    /**
+     * A verbose error map with detailed descriptions for most error codes.
+     *
+     * See discussion at {@link @firebase/auth-types#AuthErrorMap}
+     *
+     * @public
+     */
+    var debugErrorMap = _debugErrorMap;
+    /**
+     * A minimal error map with all verbose error messages stripped.
+     *
+     * See discussion at {@link @firebase/auth-types#AuthErrorMap}
+     *
+     * @public
+     */
+    var prodErrorMap = _prodErrorMap;
+    var _DEFAULT_AUTH_ERROR_FACTORY = new ErrorFactory('auth', 'Firebase', _prodErrorMap());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var logClient = new Logger('@firebase/auth-exp');
+    function _logError(msg) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        if (logClient.logLevel <= LogLevel.ERROR) {
+            logClient.error.apply(logClient, __spreadArrays(["Auth (" + app.SDK_VERSION + "): " + msg], args));
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _fail(authOrCode) {
+        var rest = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            rest[_i - 1] = arguments[_i];
+        }
+        throw createErrorInternal.apply(void 0, __spreadArrays([authOrCode], rest));
+    }
+    function _createError(authOrCode) {
+        var rest = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            rest[_i - 1] = arguments[_i];
+        }
+        return createErrorInternal.apply(void 0, __spreadArrays([authOrCode], rest));
+    }
+    function createErrorInternal(authOrCode) {
+        var _a;
+        var rest = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            rest[_i - 1] = arguments[_i];
+        }
+        if (typeof authOrCode !== 'string') {
+            var code = rest[0];
+            var fullParams = __spreadArrays(rest.slice(1));
+            if (fullParams[0]) {
+                fullParams[0].appName = authOrCode.name;
+            }
+            return (_a = authOrCode._errorFactory).create.apply(_a, __spreadArrays([code], fullParams));
+        }
+        return _DEFAULT_AUTH_ERROR_FACTORY.create.apply(_DEFAULT_AUTH_ERROR_FACTORY, __spreadArrays([authOrCode], rest));
+    }
+    function _assert(assertion, authOrCode) {
+        var rest = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            rest[_i - 2] = arguments[_i];
+        }
+        if (!assertion) {
+            throw createErrorInternal.apply(void 0, __spreadArrays([authOrCode], rest));
+        }
+    }
+    /**
+     * Unconditionally fails, throwing an internal error with the given message.
+     *
+     * @param failure type of failure encountered
+     * @throws Error
+     */
+    function debugFail(failure) {
+        // Log the failure in addition to throw an exception, just in case the
+        // exception is swallowed.
+        var message = "INTERNAL ASSERTION FAILED: " + failure;
+        _logError(message);
+        // NOTE: We don't use FirebaseError here because these are internal failures
+        // that cannot be handled by the user. (Also it would create a circular
+        // dependency between the error and assert modules which doesn't work.)
+        throw new Error(message);
+    }
+    /**
+     * Fails if the given assertion condition is false, throwing an Error with the
+     * given message if it did.
+     *
+     * @param assertion
+     * @param message
+     */
+    function debugAssert(assertion, message) {
+        if (!assertion) {
+            debugFail(message);
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var instanceCache = new Map();
+    function _getInstance(cls) {
+        debugAssert(cls instanceof Function, 'Expected a class definition');
+        var instance = instanceCache.get(cls);
+        if (instance) {
+            debugAssert(instance instanceof cls, 'Instance stored in cache mismatched with class');
+            return instance;
+        }
+        instance = new cls();
+        instanceCache.set(cls, instance);
+        return instance;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /** @public */
+    function initializeAuth(app$1, deps) {
+        var provider = app._getProvider(app$1, 'auth-exp');
+        if (provider.isInitialized()) {
+            var auth_1 = provider.getImmediate();
+            _fail(auth_1, "already-initialized" /* ALREADY_INITIALIZED */);
+        }
+        var auth = provider.getImmediate();
+        _initializeAuthInstance(auth, deps);
+        return auth;
+    }
+    function _initializeAuthInstance(auth, deps) {
+        var persistence = (deps === null || deps === void 0 ? void 0 : deps.persistence) || [];
+        var hierarchy = (Array.isArray(persistence)
+            ? persistence
+            : [persistence]).map(_getInstance);
+        if (deps === null || deps === void 0 ? void 0 : deps.errorMap) {
+            auth._updateErrorMap(deps.errorMap);
+        }
+        // This promise is intended to float; auth initialization happens in the
+        // background, meanwhile the auth object may be used by the app.
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        auth._initializeWithPersistence(hierarchy, deps === null || deps === void 0 ? void 0 : deps.popupRedirectResolver);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _getCurrentUrl() {
+        var _a;
+        return (typeof self !== 'undefined' && ((_a = self.location) === null || _a === void 0 ? void 0 : _a.href)) || '';
+    }
+    function _isHttpOrHttps() {
+        return _getCurrentScheme() === 'http:' || _getCurrentScheme() === 'https:';
+    }
+    function _getCurrentScheme() {
+        var _a;
+        return (typeof self !== 'undefined' && ((_a = self.location) === null || _a === void 0 ? void 0 : _a.protocol)) || null;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Determine whether the browser is working online
+     */
+    function _isOnline() {
+        if (typeof navigator !== 'undefined' &&
+            navigator &&
+            'onLine' in navigator &&
+            typeof navigator.onLine === 'boolean' &&
+            // Apply only for traditional web apps and Chrome extensions.
+            // This is especially true for Cordova apps which have unreliable
+            // navigator.onLine behavior unless cordova-plugin-network-information is
+            // installed which overwrites the native navigator.onLine value and
+            // defines navigator.connection.
+            (_isHttpOrHttps() || isBrowserExtension() || 'connection' in navigator)) {
+            return navigator.onLine;
+        }
+        // If we can't determine the state, assume it is online.
+        return true;
+    }
+    function _getUserLanguage() {
+        if (typeof navigator === 'undefined') {
+            return null;
+        }
+        var navigatorLanguage = navigator;
+        return (
+        // Most reliable, but only supported in Chrome/Firefox.
+        (navigatorLanguage.languages && navigatorLanguage.languages[0]) ||
+            // Supported in most browsers, but returns the language of the browser
+            // UI, not the language set in browser settings.
+            navigatorLanguage.language ||
+            // Couldn't determine language.
+            null);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * A structure to help pick between a range of long and short delay durations
+     * depending on the current environment. In general, the long delay is used for
+     * mobile environments whereas short delays are used for desktop environments.
+     */
+    var Delay = /** @class */ (function () {
+        function Delay(shortDelay, longDelay) {
+            this.shortDelay = shortDelay;
+            this.longDelay = longDelay;
+            // Internal error when improperly initialized.
+            debugAssert(longDelay > shortDelay, 'Short delay should be less than long delay!');
+            this.isMobile = isMobileCordova() || isReactNative();
+        }
+        Delay.prototype.get = function () {
+            if (!_isOnline()) {
+                // Pick the shorter timeout.
+                return Math.min(5000 /* OFFLINE */, this.shortDelay);
+            }
+            // If running in a mobile environment, return the long delay, otherwise
+            // return the short delay.
+            // This could be improved in the future to dynamically change based on other
+            // variables instead of just reading the current environment.
+            return this.isMobile ? this.longDelay : this.shortDelay;
+        };
+        return Delay;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _emulatorUrl(config, path) {
+        debugAssert(config.emulator, 'Emulator should always be set here');
+        var url = config.emulator.url;
+        if (!path) {
+            return url;
+        }
+        return "" + url + (path.startsWith('/') ? path.slice(1) : path);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var FetchProvider = /** @class */ (function () {
+        function FetchProvider() {
+        }
+        FetchProvider.initialize = function (fetchImpl, headersImpl, responseImpl) {
+            this.fetchImpl = fetchImpl;
+            if (headersImpl) {
+                this.headersImpl = headersImpl;
+            }
+            if (responseImpl) {
+                this.responseImpl = responseImpl;
+            }
+        };
+        FetchProvider.fetch = function () {
+            if (this.fetchImpl) {
+                return this.fetchImpl;
+            }
+            if (typeof self !== 'undefined' && 'fetch' in self) {
+                return self.fetch;
+            }
+            debugFail('Could not find fetch implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill');
+        };
+        FetchProvider.headers = function () {
+            if (this.headersImpl) {
+                return this.headersImpl;
+            }
+            if (typeof self !== 'undefined' && 'Headers' in self) {
+                return self.Headers;
+            }
+            debugFail('Could not find Headers implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill');
+        };
+        FetchProvider.response = function () {
+            if (this.responseImpl) {
+                return this.responseImpl;
+            }
+            if (typeof self !== 'undefined' && 'Response' in self) {
+                return self.Response;
+            }
+            debugFail('Could not find Response implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill');
+        };
+        return FetchProvider;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _a$1;
+    /**
+     * Map from errors returned by the server to errors to developer visible errors
+     */
+    var SERVER_ERROR_MAP = (_a$1 = {},
+        // Custom token errors.
+        _a$1["CREDENTIAL_MISMATCH" /* CREDENTIAL_MISMATCH */] = "custom-token-mismatch" /* CREDENTIAL_MISMATCH */,
+        // This can only happen if the SDK sends a bad request.
+        _a$1["MISSING_CUSTOM_TOKEN" /* MISSING_CUSTOM_TOKEN */] = "internal-error" /* INTERNAL_ERROR */,
+        // Create Auth URI errors.
+        _a$1["INVALID_IDENTIFIER" /* INVALID_IDENTIFIER */] = "invalid-email" /* INVALID_EMAIL */,
+        // This can only happen if the SDK sends a bad request.
+        _a$1["MISSING_CONTINUE_URI" /* MISSING_CONTINUE_URI */] = "internal-error" /* INTERNAL_ERROR */,
+        // Sign in with email and password errors (some apply to sign up too).
+        _a$1["INVALID_PASSWORD" /* INVALID_PASSWORD */] = "wrong-password" /* INVALID_PASSWORD */,
+        // This can only happen if the SDK sends a bad request.
+        _a$1["MISSING_PASSWORD" /* MISSING_PASSWORD */] = "internal-error" /* INTERNAL_ERROR */,
+        // Sign up with email and password errors.
+        _a$1["EMAIL_EXISTS" /* EMAIL_EXISTS */] = "email-already-in-use" /* EMAIL_EXISTS */,
+        _a$1["PASSWORD_LOGIN_DISABLED" /* PASSWORD_LOGIN_DISABLED */] = "operation-not-allowed" /* OPERATION_NOT_ALLOWED */,
+        // Verify assertion for sign in with credential errors:
+        _a$1["INVALID_IDP_RESPONSE" /* INVALID_IDP_RESPONSE */] = "invalid-credential" /* INVALID_IDP_RESPONSE */,
+        _a$1["INVALID_PENDING_TOKEN" /* INVALID_PENDING_TOKEN */] = "invalid-credential" /* INVALID_IDP_RESPONSE */,
+        _a$1["FEDERATED_USER_ID_ALREADY_LINKED" /* FEDERATED_USER_ID_ALREADY_LINKED */] = "credential-already-in-use" /* CREDENTIAL_ALREADY_IN_USE */,
+        // This can only happen if the SDK sends a bad request.
+        _a$1["MISSING_REQ_TYPE" /* MISSING_REQ_TYPE */] = "internal-error" /* INTERNAL_ERROR */,
+        // Send Password reset email errors:
+        _a$1["EMAIL_NOT_FOUND" /* EMAIL_NOT_FOUND */] = "user-not-found" /* USER_DELETED */,
+        _a$1["RESET_PASSWORD_EXCEED_LIMIT" /* RESET_PASSWORD_EXCEED_LIMIT */] = "too-many-requests" /* TOO_MANY_ATTEMPTS_TRY_LATER */,
+        _a$1["EXPIRED_OOB_CODE" /* EXPIRED_OOB_CODE */] = "expired-action-code" /* EXPIRED_OOB_CODE */,
+        _a$1["INVALID_OOB_CODE" /* INVALID_OOB_CODE */] = "invalid-action-code" /* INVALID_OOB_CODE */,
+        // This can only happen if the SDK sends a bad request.
+        _a$1["MISSING_OOB_CODE" /* MISSING_OOB_CODE */] = "internal-error" /* INTERNAL_ERROR */,
+        // Operations that require ID token in request:
+        _a$1["CREDENTIAL_TOO_OLD_LOGIN_AGAIN" /* CREDENTIAL_TOO_OLD_LOGIN_AGAIN */] = "requires-recent-login" /* CREDENTIAL_TOO_OLD_LOGIN_AGAIN */,
+        _a$1["INVALID_ID_TOKEN" /* INVALID_ID_TOKEN */] = "invalid-user-token" /* INVALID_AUTH */,
+        _a$1["TOKEN_EXPIRED" /* TOKEN_EXPIRED */] = "user-token-expired" /* TOKEN_EXPIRED */,
+        _a$1["USER_NOT_FOUND" /* USER_NOT_FOUND */] = "user-token-expired" /* TOKEN_EXPIRED */,
+        // Other errors.
+        _a$1["TOO_MANY_ATTEMPTS_TRY_LATER" /* TOO_MANY_ATTEMPTS_TRY_LATER */] = "too-many-requests" /* TOO_MANY_ATTEMPTS_TRY_LATER */,
+        // Phone Auth related errors.
+        _a$1["INVALID_CODE" /* INVALID_CODE */] = "invalid-verification-code" /* INVALID_CODE */,
+        _a$1["INVALID_SESSION_INFO" /* INVALID_SESSION_INFO */] = "invalid-verification-id" /* INVALID_SESSION_INFO */,
+        _a$1["INVALID_TEMPORARY_PROOF" /* INVALID_TEMPORARY_PROOF */] = "invalid-credential" /* INVALID_IDP_RESPONSE */,
+        _a$1["MISSING_SESSION_INFO" /* MISSING_SESSION_INFO */] = "missing-verification-id" /* MISSING_SESSION_INFO */,
+        _a$1["SESSION_EXPIRED" /* SESSION_EXPIRED */] = "code-expired" /* CODE_EXPIRED */,
+        // Other action code errors when additional settings passed.
+        // MISSING_CONTINUE_URI is getting mapped to INTERNAL_ERROR above.
+        // This is OK as this error will be caught by client side validation.
+        _a$1["MISSING_ANDROID_PACKAGE_NAME" /* MISSING_ANDROID_PACKAGE_NAME */] = "missing-android-pkg-name" /* MISSING_ANDROID_PACKAGE_NAME */,
+        _a$1["UNAUTHORIZED_DOMAIN" /* UNAUTHORIZED_DOMAIN */] = "unauthorized-continue-uri" /* UNAUTHORIZED_DOMAIN */,
+        // getProjectConfig errors when clientId is passed.
+        _a$1["INVALID_OAUTH_CLIENT_ID" /* INVALID_OAUTH_CLIENT_ID */] = "invalid-oauth-client-id" /* INVALID_OAUTH_CLIENT_ID */,
+        // User actions (sign-up or deletion) disabled errors.
+        _a$1["ADMIN_ONLY_OPERATION" /* ADMIN_ONLY_OPERATION */] = "admin-restricted-operation" /* ADMIN_ONLY_OPERATION */,
+        // Multi factor related errors.
+        _a$1["INVALID_MFA_PENDING_CREDENTIAL" /* INVALID_MFA_PENDING_CREDENTIAL */] = "invalid-multi-factor-session" /* INVALID_MFA_SESSION */,
+        _a$1["MFA_ENROLLMENT_NOT_FOUND" /* MFA_ENROLLMENT_NOT_FOUND */] = "multi-factor-info-not-found" /* MFA_INFO_NOT_FOUND */,
+        _a$1["MISSING_MFA_ENROLLMENT_ID" /* MISSING_MFA_ENROLLMENT_ID */] = "missing-multi-factor-info" /* MISSING_MFA_INFO */,
+        _a$1["MISSING_MFA_PENDING_CREDENTIAL" /* MISSING_MFA_PENDING_CREDENTIAL */] = "missing-multi-factor-session" /* MISSING_MFA_SESSION */,
+        _a$1["SECOND_FACTOR_EXISTS" /* SECOND_FACTOR_EXISTS */] = "second-factor-already-in-use" /* SECOND_FACTOR_ALREADY_ENROLLED */,
+        _a$1["SECOND_FACTOR_LIMIT_EXCEEDED" /* SECOND_FACTOR_LIMIT_EXCEEDED */] = "maximum-second-factor-count-exceeded" /* SECOND_FACTOR_LIMIT_EXCEEDED */,
+        _a$1);
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var DEFAULT_API_TIMEOUT_MS = new Delay(30000, 60000);
+    function _performApiRequest(auth, method, path, request, customErrorMap) {
+        if (customErrorMap === void 0) { customErrorMap = {}; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performFetchWithErrorHandling(auth, customErrorMap, function () {
+                        var body = {};
+                        var params = {};
+                        if (request) {
+                            if (method === "GET" /* GET */) {
+                                params = request;
+                            }
+                            else {
+                                body = {
+                                    body: JSON.stringify(request)
+                                };
+                            }
+                        }
+                        var query = querystring(__assign({ key: auth.config.apiKey }, params)).slice(1);
+                        var headers = new (FetchProvider.headers())();
+                        headers.set("Content-Type" /* CONTENT_TYPE */, 'application/json');
+                        headers.set("X-Client-Version" /* X_CLIENT_VERSION */, auth.config.sdkClientVersion);
+                        if (auth.languageCode) {
+                            headers.set("X-Firebase-Locale" /* X_FIREBASE_LOCALE */, auth.languageCode);
+                        }
+                        return FetchProvider.fetch()(_getFinalTarget(auth, auth.config.apiHost, path, query), __assign({ method: method,
+                            headers: headers, referrerPolicy: 'no-referrer' }, body));
+                    })];
+            });
+        });
+    }
+    function _performFetchWithErrorHandling(auth, customErrorMap, fetchFn) {
+        return __awaiter(this, void 0, void 0, function () {
+            var errorMap, networkTimeout, response, json, errorMessage, serverErrorCode, authError, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        auth._canInitEmulator = false;
+                        errorMap = __assign(__assign({}, SERVER_ERROR_MAP), customErrorMap);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 4, , 5]);
+                        networkTimeout = new NetworkTimeout(auth);
+                        return [4 /*yield*/, Promise.race([
+                                fetchFn(),
+                                networkTimeout.promise
+                            ])];
+                    case 2:
+                        response = _a.sent();
+                        // If we've reached this point, the fetch succeeded and the networkTimeout
+                        // didn't throw; clear the network timeout delay so that Node won't hang
+                        networkTimeout.clearNetworkTimeout();
+                        return [4 /*yield*/, response.json()];
+                    case 3:
+                        json = _a.sent();
+                        if ('needConfirmation' in json) {
+                            throw makeTaggedError(auth, "account-exists-with-different-credential" /* NEED_CONFIRMATION */, json);
+                        }
+                        if (response.ok && !('errorMessage' in json)) {
+                            return [2 /*return*/, json];
+                        }
+                        else {
+                            errorMessage = response.ok ? json.errorMessage : json.error.message;
+                            serverErrorCode = errorMessage.split(' : ')[0];
+                            if (serverErrorCode === "FEDERATED_USER_ID_ALREADY_LINKED" /* FEDERATED_USER_ID_ALREADY_LINKED */) {
+                                throw makeTaggedError(auth, "credential-already-in-use" /* CREDENTIAL_ALREADY_IN_USE */, json);
+                            }
+                            else if (serverErrorCode === "EMAIL_EXISTS" /* EMAIL_EXISTS */) {
+                                throw makeTaggedError(auth, "email-already-in-use" /* EMAIL_EXISTS */, json);
+                            }
+                            authError = errorMap[serverErrorCode] ||
+                                serverErrorCode
+                                    .toLowerCase()
+                                    .replace(/[_\s]+/g, '-');
+                            _fail(auth, authError);
+                        }
+                        return [3 /*break*/, 5];
+                    case 4:
+                        e_1 = _a.sent();
+                        if (e_1 instanceof FirebaseError) {
+                            throw e_1;
+                        }
+                        _fail(auth, "network-request-failed" /* NETWORK_REQUEST_FAILED */);
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function _performSignInRequest(auth, method, path, request, customErrorMap) {
+        if (customErrorMap === void 0) { customErrorMap = {}; }
+        return __awaiter(this, void 0, void 0, function () {
+            var serverResponse;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _performApiRequest(auth, method, path, request, customErrorMap)];
+                    case 1:
+                        serverResponse = (_a.sent());
+                        if ('mfaPendingCredential' in serverResponse) {
+                            _fail(auth, "multi-factor-auth-required" /* MFA_REQUIRED */, {
+                                serverResponse: serverResponse
+                            });
+                        }
+                        return [2 /*return*/, serverResponse];
+                }
+            });
+        });
+    }
+    function _getFinalTarget(auth, host, path, query) {
+        var base = "" + host + path + "?" + query;
+        if (!auth.config.emulator) {
+            return auth.config.apiScheme + "://" + base;
+        }
+        return _emulatorUrl(auth.config, base);
+    }
+    var NetworkTimeout = /** @class */ (function () {
+        function NetworkTimeout(auth) {
+            var _this = this;
+            this.auth = auth;
+            // Node timers and browser timers are fundamentally incompatible, but we
+            // don't care about the value here
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.timer = null;
+            this.promise = new Promise(function (_, reject) {
+                _this.timer = setTimeout(function () {
+                    return reject(_createError(_this.auth, "timeout" /* TIMEOUT */));
+                }, DEFAULT_API_TIMEOUT_MS.get());
+            });
+        }
+        NetworkTimeout.prototype.clearNetworkTimeout = function () {
+            clearTimeout(this.timer);
+        };
+        return NetworkTimeout;
+    }());
+    function makeTaggedError(auth, code, response) {
+        var errorParams = {
+            appName: auth.name
+        };
+        if (response.email) {
+            errorParams.email = response.email;
+        }
+        if (response.phoneNumber) {
+            errorParams.phoneNumber = response.phoneNumber;
+        }
+        var error = _createError(auth, code, errorParams);
+        // We know customData is defined on error because errorParams is defined
+        error.customData._tokenResponse = response;
+        return error;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function deleteAccount(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:delete" /* DELETE_ACCOUNT */, request)];
+            });
+        });
+    }
+    function deleteLinkedAccounts(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:update" /* SET_ACCOUNT_INFO */, request)];
+            });
+        });
+    }
+    function getAccountInfo(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:lookup" /* GET_ACCOUNT_INFO */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function utcTimestampToDateString(utcTimestamp) {
+        if (!utcTimestamp) {
+            return undefined;
+        }
+        try {
+            // Convert to date object.
+            var date = new Date(Number(utcTimestamp));
+            // Test date is valid.
+            if (!isNaN(date.getTime())) {
+                // Convert to UTC date string.
+                return date.toUTCString();
+            }
+        }
+        catch (e) {
+            // Do nothing. undefined will be returned.
+        }
+        return undefined;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Returns a JSON Web Token (JWT) used to identify the user to a Firebase service.
+     *
+     * @remarks
+     * Returns the current token if it has not expired or if it will not expire in the next five
+     * minutes. Otherwise, this will refresh the token and return a new one.
+     *
+     * @param user - The user.
+     * @param forceRefresh - Force refresh regardless of token expiration.
+     *
+     * @public
+     */
+    function getIdToken(user, forceRefresh) {
+        if (forceRefresh === void 0) { forceRefresh = false; }
+        return user.getIdToken(forceRefresh);
+    }
+    /**
+     * Returns a deserialized JSON Web Token (JWT) used to identitfy the user to a Firebase service.
+     *
+     * @remarks
+     * Returns the current token if it has not expired or if it will not expire in the next five
+     * minutes. Otherwise, this will refresh the token and return a new one.
+     *
+     * @param user - The user.
+     * @param forceRefresh - Force refresh regardless of token expiration.
+     *
+     * @public
+     */
+    function getIdTokenResult(user, forceRefresh) {
+        if (forceRefresh === void 0) { forceRefresh = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, token, claims, firebase, signInProvider;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, user.getIdToken(forceRefresh)];
+                    case 1:
+                        token = _a.sent();
+                        claims = _parseToken(token);
+                        _assert(claims && claims.exp && claims.auth_time && claims.iat, userInternal.auth, "internal-error" /* INTERNAL_ERROR */);
+                        firebase = typeof claims.firebase === 'object' ? claims.firebase : undefined;
+                        signInProvider = firebase === null || firebase === void 0 ? void 0 : firebase['sign_in_provider'];
+                        return [2 /*return*/, {
+                                claims: claims,
+                                token: token,
+                                authTime: utcTimestampToDateString(secondsStringToMilliseconds(claims.auth_time)),
+                                issuedAtTime: utcTimestampToDateString(secondsStringToMilliseconds(claims.iat)),
+                                expirationTime: utcTimestampToDateString(secondsStringToMilliseconds(claims.exp)),
+                                signInProvider: signInProvider || null,
+                                signInSecondFactor: (firebase === null || firebase === void 0 ? void 0 : firebase['sign_in_second_factor']) || null
+                            }];
+                }
+            });
+        });
+    }
+    function secondsStringToMilliseconds(seconds) {
+        return Number(seconds) * 1000;
+    }
+    function _parseToken(token) {
+        var _a = token.split('.'), algorithm = _a[0], payload = _a[1], signature = _a[2];
+        if (algorithm === undefined ||
+            payload === undefined ||
+            signature === undefined) {
+            _logError('JWT malformed, contained fewer than 3 sections');
+            return null;
+        }
+        try {
+            var decoded = base64Decode(payload);
+            if (!decoded) {
+                _logError('Failed to decode base64 JWT payload');
+                return null;
+            }
+            return JSON.parse(decoded);
+        }
+        catch (e) {
+            _logError('Caught error parsing JWT payload as JSON', e);
+            return null;
+        }
+    }
+    /**
+     * Extract expiresIn TTL from a token by subtracting the expiration from the issuance.
+     */
+    function _tokenExpiresIn(token) {
+        var parsedToken = _parseToken(token);
+        _assert(parsedToken, "internal-error" /* INTERNAL_ERROR */);
+        _assert(typeof parsedToken.exp !== 'undefined', "internal-error" /* INTERNAL_ERROR */);
+        _assert(typeof parsedToken.iat !== 'undefined', "internal-error" /* INTERNAL_ERROR */);
+        return Number(parsedToken.exp) - Number(parsedToken.iat);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _logoutIfInvalidated(user, promise, bypassAuthState) {
+        if (bypassAuthState === void 0) { bypassAuthState = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (bypassAuthState) {
+                            return [2 /*return*/, promise];
+                        }
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 6]);
+                        return [4 /*yield*/, promise];
+                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3:
+                        e_1 = _a.sent();
+                        if (!(e_1 instanceof FirebaseError && isUserInvalidated(e_1))) return [3 /*break*/, 5];
+                        if (!(user.auth.currentUser === user)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, user.auth.signOut()];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5: throw e_1;
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function isUserInvalidated(_a) {
+        var code = _a.code;
+        return (code === "auth/" + "user-disabled" /* USER_DISABLED */ ||
+            code === "auth/" + "user-token-expired" /* TOKEN_EXPIRED */);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var ProactiveRefresh = /** @class */ (function () {
+        function ProactiveRefresh(user) {
+            this.user = user;
+            this.isRunning = false;
+            // Node timers and browser timers return fundamentally different types.
+            // We don't actually care what the value is but TS won't accept unknown and
+            // we can't cast properly in both environments.
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.timerId = null;
+            this.errorBackoff = 30000 /* RETRY_BACKOFF_MIN */;
+        }
+        ProactiveRefresh.prototype._start = function () {
+            if (this.isRunning) {
+                return;
+            }
+            this.isRunning = true;
+            this.schedule();
+        };
+        ProactiveRefresh.prototype._stop = function () {
+            if (!this.isRunning) {
+                return;
+            }
+            this.isRunning = false;
+            if (this.timerId !== null) {
+                clearTimeout(this.timerId);
+            }
+        };
+        ProactiveRefresh.prototype.getInterval = function (wasError) {
+            var _a;
+            if (wasError) {
+                var interval = this.errorBackoff;
+                this.errorBackoff = Math.min(this.errorBackoff * 2, 960000 /* RETRY_BACKOFF_MAX */);
+                return interval;
+            }
+            else {
+                // Reset the error backoff
+                this.errorBackoff = 30000 /* RETRY_BACKOFF_MIN */;
+                var expTime = (_a = this.user.stsTokenManager.expirationTime) !== null && _a !== void 0 ? _a : 0;
+                var interval = expTime - Date.now() - 300000 /* OFFSET */;
+                return Math.max(0, interval);
+            }
+        };
+        ProactiveRefresh.prototype.schedule = function (wasError) {
+            var _this = this;
+            if (wasError === void 0) { wasError = false; }
+            if (!this.isRunning) {
+                // Just in case...
+                return;
+            }
+            var interval = this.getInterval(wasError);
+            this.timerId = setTimeout(function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.iteration()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); }, interval);
+        };
+        ProactiveRefresh.prototype.iteration = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, this.user.getIdToken(true)];
+                        case 1:
+                            _a.sent();
+                            return [3 /*break*/, 3];
+                        case 2:
+                            e_1 = _a.sent();
+                            // Only retry on network errors
+                            if (e_1.code === "auth/" + "network-request-failed" /* NETWORK_REQUEST_FAILED */) {
+                                this.schedule(/* wasError */ true);
+                            }
+                            return [2 /*return*/];
+                        case 3:
+                            this.schedule();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        return ProactiveRefresh;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var UserMetadata = /** @class */ (function () {
+        function UserMetadata(createdAt, lastLoginAt) {
+            this.createdAt = createdAt;
+            this.lastLoginAt = lastLoginAt;
+            this._initializeTime();
+        }
+        UserMetadata.prototype._initializeTime = function () {
+            this.lastSignInTime = utcTimestampToDateString(this.lastLoginAt);
+            this.creationTime = utcTimestampToDateString(this.createdAt);
+        };
+        UserMetadata.prototype._copy = function (metadata) {
+            this.createdAt = metadata.createdAt;
+            this.lastLoginAt = metadata.lastLoginAt;
+            this._initializeTime();
+        };
+        UserMetadata.prototype.toJSON = function () {
+            return {
+                createdAt: this.createdAt,
+                lastLoginAt: this.lastLoginAt
+            };
+        };
+        return UserMetadata;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _reloadWithoutSaving(user) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var auth, idToken, response, coreAccount, newProviderData, providerData, oldIsAnonymous, newIsAnonymous, isAnonymous, updates;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        auth = user.auth;
+                        return [4 /*yield*/, user.getIdToken()];
+                    case 1:
+                        idToken = _b.sent();
+                        return [4 /*yield*/, _logoutIfInvalidated(user, getAccountInfo(auth, { idToken: idToken }))];
+                    case 2:
+                        response = _b.sent();
+                        _assert(response === null || response === void 0 ? void 0 : response.users.length, auth, "internal-error" /* INTERNAL_ERROR */);
+                        coreAccount = response.users[0];
+                        user._notifyReloadListener(coreAccount);
+                        newProviderData = ((_a = coreAccount.providerUserInfo) === null || _a === void 0 ? void 0 : _a.length) ? extractProviderData(coreAccount.providerUserInfo)
+                            : [];
+                        providerData = mergeProviderData(user.providerData, newProviderData);
+                        oldIsAnonymous = user.isAnonymous;
+                        newIsAnonymous = !(user.email && coreAccount.passwordHash) && !(providerData === null || providerData === void 0 ? void 0 : providerData.length);
+                        isAnonymous = !oldIsAnonymous ? false : newIsAnonymous;
+                        updates = {
+                            uid: coreAccount.localId,
+                            displayName: coreAccount.displayName || null,
+                            photoURL: coreAccount.photoUrl || null,
+                            email: coreAccount.email || null,
+                            emailVerified: coreAccount.emailVerified || false,
+                            phoneNumber: coreAccount.phoneNumber || null,
+                            tenantId: coreAccount.tenantId || null,
+                            providerData: providerData,
+                            metadata: new UserMetadata(coreAccount.createdAt, coreAccount.lastLoginAt),
+                            isAnonymous: isAnonymous
+                        };
+                        Object.assign(user, updates);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Reloads user account data, if signed in.
+     *
+     * @param user - The user.
+     *
+     * @public
+     */
+    function reload(user) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, _reloadWithoutSaving(userInternal)];
+                    case 1:
+                        _a.sent();
+                        // Even though the current user hasn't changed, update
+                        // current user will trigger a persistence update w/ the
+                        // new info.
+                        return [4 /*yield*/, userInternal.auth._persistUserIfCurrent(userInternal)];
+                    case 2:
+                        // Even though the current user hasn't changed, update
+                        // current user will trigger a persistence update w/ the
+                        // new info.
+                        _a.sent();
+                        userInternal.auth._notifyListenersIfCurrent(userInternal);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function mergeProviderData(original, newData) {
+        var deduped = original.filter(function (o) { return !newData.some(function (n) { return n.providerId === o.providerId; }); });
+        return __spreadArrays(deduped, newData);
+    }
+    function extractProviderData(providers) {
+        return providers.map(function (_a) {
+            var providerId = _a.providerId, provider = __rest(_a, ["providerId"]);
+            return {
+                providerId: providerId,
+                uid: provider.rawId || '',
+                displayName: provider.displayName || null,
+                email: provider.email || null,
+                phoneNumber: provider.phoneNumber || null,
+                photoURL: provider.photoUrl || null
+            };
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function requestStsToken(auth, refreshToken) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _performFetchWithErrorHandling(auth, {}, function () {
+                            var body = querystring({
+                                'grant_type': 'refresh_token',
+                                'refresh_token': refreshToken
+                            }).slice(1);
+                            var _a = auth.config, tokenApiHost = _a.tokenApiHost, apiKey = _a.apiKey, sdkClientVersion = _a.sdkClientVersion;
+                            var url = _getFinalTarget(auth, tokenApiHost, "/v1/token" /* TOKEN */, "key=" + apiKey);
+                            return FetchProvider.fetch()(url, {
+                                method: "POST" /* POST */,
+                                headers: {
+                                    'X-Client-Version': sdkClientVersion,
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: body
+                            });
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        // The response comes back in snake_case. Convert to camel:
+                        return [2 /*return*/, {
+                                accessToken: response.access_token,
+                                expiresIn: response.expires_in,
+                                refreshToken: response.refresh_token
+                            }];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var StsTokenManager = /** @class */ (function () {
+        function StsTokenManager() {
+            this.refreshToken = null;
+            this.accessToken = null;
+            this.expirationTime = null;
+        }
+        Object.defineProperty(StsTokenManager.prototype, "isExpired", {
+            get: function () {
+                return (!this.expirationTime ||
+                    Date.now() > this.expirationTime - 30000 /* TOKEN_REFRESH */);
+            },
+            enumerable: false,
+            configurable: true
+        });
+        StsTokenManager.prototype.updateFromServerResponse = function (response) {
+            _assert(response.idToken, "internal-error" /* INTERNAL_ERROR */);
+            _assert(typeof response.idToken !== 'undefined', "internal-error" /* INTERNAL_ERROR */);
+            _assert(typeof response.refreshToken !== 'undefined', "internal-error" /* INTERNAL_ERROR */);
+            var expiresIn = 'expiresIn' in response && typeof response.expiresIn !== 'undefined'
+                ? Number(response.expiresIn)
+                : _tokenExpiresIn(response.idToken);
+            this.updateTokensAndExpiration(response.idToken, response.refreshToken, expiresIn);
+        };
+        StsTokenManager.prototype.getToken = function (auth, forceRefresh) {
+            if (forceRefresh === void 0) { forceRefresh = false; }
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _assert(!this.accessToken || this.refreshToken, auth, "user-token-expired" /* TOKEN_EXPIRED */);
+                            if (!forceRefresh && this.accessToken && !this.isExpired) {
+                                return [2 /*return*/, this.accessToken];
+                            }
+                            if (!this.refreshToken) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.refresh(auth, this.refreshToken)];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/, this.accessToken];
+                        case 2: return [2 /*return*/, null];
+                    }
+                });
+            });
+        };
+        StsTokenManager.prototype.clearRefreshToken = function () {
+            this.refreshToken = null;
+        };
+        StsTokenManager.prototype.refresh = function (auth, oldToken) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a, accessToken, refreshToken, expiresIn;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, requestStsToken(auth, oldToken)];
+                        case 1:
+                            _a = _b.sent(), accessToken = _a.accessToken, refreshToken = _a.refreshToken, expiresIn = _a.expiresIn;
+                            this.updateTokensAndExpiration(accessToken, refreshToken, Number(expiresIn));
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        StsTokenManager.prototype.updateTokensAndExpiration = function (accessToken, refreshToken, expiresInSec) {
+            this.refreshToken = refreshToken || null;
+            this.accessToken = accessToken || null;
+            this.expirationTime = Date.now() + expiresInSec * 1000;
+        };
+        StsTokenManager.fromJSON = function (appName, object) {
+            var refreshToken = object.refreshToken, accessToken = object.accessToken, expirationTime = object.expirationTime;
+            var manager = new StsTokenManager();
+            if (refreshToken) {
+                _assert(typeof refreshToken === 'string', "internal-error" /* INTERNAL_ERROR */, {
+                    appName: appName
+                });
+                manager.refreshToken = refreshToken;
+            }
+            if (accessToken) {
+                _assert(typeof accessToken === 'string', "internal-error" /* INTERNAL_ERROR */, {
+                    appName: appName
+                });
+                manager.accessToken = accessToken;
+            }
+            if (expirationTime) {
+                _assert(typeof expirationTime === 'number', "internal-error" /* INTERNAL_ERROR */, {
+                    appName: appName
+                });
+                manager.expirationTime = expirationTime;
+            }
+            return manager;
+        };
+        StsTokenManager.prototype.toJSON = function () {
+            return {
+                refreshToken: this.refreshToken,
+                accessToken: this.accessToken,
+                expirationTime: this.expirationTime
+            };
+        };
+        StsTokenManager.prototype._assign = function (stsTokenManager) {
+            this.accessToken = stsTokenManager.accessToken;
+            this.refreshToken = stsTokenManager.refreshToken;
+            this.expirationTime = stsTokenManager.expirationTime;
+        };
+        StsTokenManager.prototype._clone = function () {
+            return Object.assign(new StsTokenManager(), this.toJSON());
+        };
+        StsTokenManager.prototype._performRefresh = function () {
+            return debugFail('not implemented');
+        };
+        return StsTokenManager;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function assertStringOrUndefined(assertion, appName) {
+        _assert(typeof assertion === 'string' || typeof assertion === 'undefined', "internal-error" /* INTERNAL_ERROR */, { appName: appName });
+    }
+    var UserImpl = /** @class */ (function () {
+        function UserImpl(_a) {
+            var uid = _a.uid, auth = _a.auth, stsTokenManager = _a.stsTokenManager, opt = __rest(_a, ["uid", "auth", "stsTokenManager"]);
+            // For the user object, provider is always Firebase.
+            this.providerId = "firebase" /* FIREBASE */;
+            this.emailVerified = false;
+            this.isAnonymous = false;
+            this.tenantId = null;
+            this.providerData = [];
+            this.proactiveRefresh = new ProactiveRefresh(this);
+            this.reloadUserInfo = null;
+            this.reloadListener = null;
+            this.uid = uid;
+            this.auth = auth;
+            this.stsTokenManager = stsTokenManager;
+            this.accessToken = stsTokenManager.accessToken;
+            this.displayName = opt.displayName || null;
+            this.email = opt.email || null;
+            this.phoneNumber = opt.phoneNumber || null;
+            this.photoURL = opt.photoURL || null;
+            this.isAnonymous = opt.isAnonymous || false;
+            this.metadata = new UserMetadata(opt.createdAt || undefined, opt.lastLoginAt || undefined);
+        }
+        UserImpl.prototype.getIdToken = function (forceRefresh) {
+            return __awaiter(this, void 0, void 0, function () {
+                var accessToken;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, _logoutIfInvalidated(this, this.stsTokenManager.getToken(this.auth, forceRefresh))];
+                        case 1:
+                            accessToken = _a.sent();
+                            _assert(accessToken, this.auth, "internal-error" /* INTERNAL_ERROR */);
+                            if (!(this.accessToken !== accessToken)) return [3 /*break*/, 3];
+                            this.accessToken = accessToken;
+                            return [4 /*yield*/, this.auth._persistUserIfCurrent(this)];
+                        case 2:
+                            _a.sent();
+                            this.auth._notifyListenersIfCurrent(this);
+                            _a.label = 3;
+                        case 3: return [2 /*return*/, accessToken];
+                    }
+                });
+            });
+        };
+        UserImpl.prototype.getIdTokenResult = function (forceRefresh) {
+            return getIdTokenResult(this, forceRefresh);
+        };
+        UserImpl.prototype.reload = function () {
+            return reload(this);
+        };
+        UserImpl.prototype._assign = function (user) {
+            if (this === user) {
+                return;
+            }
+            _assert(this.uid === user.uid, this.auth, "internal-error" /* INTERNAL_ERROR */);
+            this.displayName = user.displayName;
+            this.photoURL = user.photoURL;
+            this.email = user.email;
+            this.emailVerified = user.emailVerified;
+            this.phoneNumber = user.phoneNumber;
+            this.isAnonymous = user.isAnonymous;
+            this.tenantId = user.tenantId;
+            this.providerData = user.providerData.map(function (userInfo) { return (__assign({}, userInfo)); });
+            this.metadata._copy(user.metadata);
+            this.stsTokenManager._assign(user.stsTokenManager);
+        };
+        UserImpl.prototype._clone = function () {
+            return new UserImpl(__assign(__assign({}, this), { stsTokenManager: this.stsTokenManager._clone() }));
+        };
+        UserImpl.prototype._onReload = function (callback) {
+            // There should only ever be one listener, and that is a single instance of MultiFactorUser
+            _assert(!this.reloadListener, this.auth, "internal-error" /* INTERNAL_ERROR */);
+            this.reloadListener = callback;
+            if (this.reloadUserInfo) {
+                this._notifyReloadListener(this.reloadUserInfo);
+                this.reloadUserInfo = null;
+            }
+        };
+        UserImpl.prototype._notifyReloadListener = function (userInfo) {
+            if (this.reloadListener) {
+                this.reloadListener(userInfo);
+            }
+            else {
+                // If no listener is subscribed yet, save the result so it's available when they do subscribe
+                this.reloadUserInfo = userInfo;
+            }
+        };
+        UserImpl.prototype._startProactiveRefresh = function () {
+            this.proactiveRefresh._start();
+        };
+        UserImpl.prototype._stopProactiveRefresh = function () {
+            this.proactiveRefresh._stop();
+        };
+        UserImpl.prototype._updateTokensIfNecessary = function (response, reload) {
+            if (reload === void 0) { reload = false; }
+            return __awaiter(this, void 0, void 0, function () {
+                var tokensRefreshed;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            tokensRefreshed = false;
+                            if (response.idToken &&
+                                response.idToken !== this.stsTokenManager.accessToken) {
+                                this.stsTokenManager.updateFromServerResponse(response);
+                                tokensRefreshed = true;
+                            }
+                            if (!reload) return [3 /*break*/, 2];
+                            return [4 /*yield*/, _reloadWithoutSaving(this)];
+                        case 1:
+                            _a.sent();
+                            _a.label = 2;
+                        case 2: return [4 /*yield*/, this.auth._persistUserIfCurrent(this)];
+                        case 3:
+                            _a.sent();
+                            if (tokensRefreshed) {
+                                this.auth._notifyListenersIfCurrent(this);
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        UserImpl.prototype.delete = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var idToken;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.getIdToken()];
+                        case 1:
+                            idToken = _a.sent();
+                            return [4 /*yield*/, _logoutIfInvalidated(this, deleteAccount(this.auth, { idToken: idToken }))];
+                        case 2:
+                            _a.sent();
+                            this.stsTokenManager.clearRefreshToken();
+                            // TODO: Determine if cancellable-promises are necessary to use in this class so that delete()
+                            //       cancels pending actions...
+                            return [2 /*return*/, this.auth.signOut()];
+                    }
+                });
+            });
+        };
+        UserImpl.prototype.toJSON = function () {
+            return __assign({ uid: this.uid, email: this.email || undefined, emailVerified: this.emailVerified, displayName: this.displayName || undefined, isAnonymous: this.isAnonymous, photoURL: this.photoURL || undefined, phoneNumber: this.phoneNumber || undefined, tenantId: this.tenantId || undefined, providerData: this.providerData.map(function (userInfo) { return (__assign({}, userInfo)); }), stsTokenManager: this.stsTokenManager.toJSON(), 
+                // Redirect event ID must be maintained in case there is a pending
+                // redirect event.
+                _redirectEventId: this._redirectEventId }, this.metadata.toJSON());
+        };
+        Object.defineProperty(UserImpl.prototype, "refreshToken", {
+            get: function () {
+                return this.stsTokenManager.refreshToken || '';
+            },
+            enumerable: false,
+            configurable: true
+        });
+        UserImpl._fromJSON = function (auth, object) {
+            var _a, _b, _c, _d, _e, _f, _g, _h;
+            var displayName = (_a = object.displayName) !== null && _a !== void 0 ? _a : undefined;
+            var email = (_b = object.email) !== null && _b !== void 0 ? _b : undefined;
+            var phoneNumber = (_c = object.phoneNumber) !== null && _c !== void 0 ? _c : undefined;
+            var photoURL = (_d = object.photoURL) !== null && _d !== void 0 ? _d : undefined;
+            var tenantId = (_e = object.tenantId) !== null && _e !== void 0 ? _e : undefined;
+            var _redirectEventId = (_f = object._redirectEventId) !== null && _f !== void 0 ? _f : undefined;
+            var createdAt = (_g = object.createdAt) !== null && _g !== void 0 ? _g : undefined;
+            var lastLoginAt = (_h = object.lastLoginAt) !== null && _h !== void 0 ? _h : undefined;
+            var uid = object.uid, emailVerified = object.emailVerified, isAnonymous = object.isAnonymous, providerData = object.providerData, plainObjectTokenManager = object.stsTokenManager;
+            _assert(uid && plainObjectTokenManager, auth, "internal-error" /* INTERNAL_ERROR */);
+            var stsTokenManager = StsTokenManager.fromJSON(this.name, plainObjectTokenManager);
+            _assert(typeof uid === 'string', auth, "internal-error" /* INTERNAL_ERROR */);
+            assertStringOrUndefined(displayName, auth.name);
+            assertStringOrUndefined(email, auth.name);
+            _assert(typeof emailVerified === 'boolean', auth, "internal-error" /* INTERNAL_ERROR */);
+            _assert(typeof isAnonymous === 'boolean', auth, "internal-error" /* INTERNAL_ERROR */);
+            assertStringOrUndefined(phoneNumber, auth.name);
+            assertStringOrUndefined(photoURL, auth.name);
+            assertStringOrUndefined(tenantId, auth.name);
+            assertStringOrUndefined(_redirectEventId, auth.name);
+            assertStringOrUndefined(createdAt, auth.name);
+            assertStringOrUndefined(lastLoginAt, auth.name);
+            var user = new UserImpl({
+                uid: uid,
+                auth: auth,
+                email: email,
+                emailVerified: emailVerified,
+                displayName: displayName,
+                isAnonymous: isAnonymous,
+                photoURL: photoURL,
+                phoneNumber: phoneNumber,
+                tenantId: tenantId,
+                stsTokenManager: stsTokenManager,
+                createdAt: createdAt,
+                lastLoginAt: lastLoginAt
+            });
+            if (providerData && Array.isArray(providerData)) {
+                user.providerData = providerData.map(function (userInfo) { return (__assign({}, userInfo)); });
+            }
+            if (_redirectEventId) {
+                user._redirectEventId = _redirectEventId;
+            }
+            return user;
+        };
+        /**
+         * Initialize a User from an idToken server response
+         * @param auth
+         * @param idTokenResponse
+         */
+        UserImpl._fromIdTokenResponse = function (auth, idTokenResponse, isAnonymous) {
+            if (isAnonymous === void 0) { isAnonymous = false; }
+            return __awaiter(this, void 0, void 0, function () {
+                var stsTokenManager, user;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            stsTokenManager = new StsTokenManager();
+                            stsTokenManager.updateFromServerResponse(idTokenResponse);
+                            user = new UserImpl({
+                                uid: idTokenResponse.localId,
+                                auth: auth,
+                                stsTokenManager: stsTokenManager,
+                                isAnonymous: isAnonymous
+                            });
+                            // Updates the user info and data and resolves with a user instance.
+                            return [4 /*yield*/, _reloadWithoutSaving(user)];
+                        case 1:
+                            // Updates the user info and data and resolves with a user instance.
+                            _a.sent();
+                            return [2 /*return*/, user];
+                    }
+                });
+            });
+        };
+        return UserImpl;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var InMemoryPersistence = /** @class */ (function () {
+        function InMemoryPersistence() {
+            this.type = "NONE" /* NONE */;
+            this.storage = {};
+        }
+        InMemoryPersistence.prototype._isAvailable = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    return [2 /*return*/, true];
+                });
+            });
+        };
+        InMemoryPersistence.prototype._set = function (key, value) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    this.storage[key] = value;
+                    return [2 /*return*/];
+                });
+            });
+        };
+        InMemoryPersistence.prototype._get = function (key) {
+            return __awaiter(this, void 0, void 0, function () {
+                var value;
+                return __generator(this, function (_a) {
+                    value = this.storage[key];
+                    return [2 /*return*/, value === undefined ? null : value];
+                });
+            });
+        };
+        InMemoryPersistence.prototype._remove = function (key) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    delete this.storage[key];
+                    return [2 /*return*/];
+                });
+            });
+        };
+        InMemoryPersistence.prototype._addListener = function (_key, _listener) {
+            // Listeners are not supported for in-memory storage since it cannot be shared across windows/workers
+            return;
+        };
+        InMemoryPersistence.prototype._removeListener = function (_key, _listener) {
+            // Listeners are not supported for in-memory storage since it cannot be shared across windows/workers
+            return;
+        };
+        InMemoryPersistence.type = 'NONE';
+        return InMemoryPersistence;
+    }());
+    /**
+     * An implementation of {@link @firebase/auth-types#Persistence} of type 'NONE'.
+     *
+     * @public
+     */
+    var inMemoryPersistence = InMemoryPersistence;
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _persistenceKeyName(key, apiKey, appName) {
+        return "firebase" /* PERSISTENCE */ + ":" + key + ":" + apiKey + ":" + appName;
+    }
+    var PersistenceUserManager = /** @class */ (function () {
+        function PersistenceUserManager(persistence, auth, userKey) {
+            this.persistence = persistence;
+            this.auth = auth;
+            this.userKey = userKey;
+            var _a = this.auth, config = _a.config, name = _a.name;
+            this.fullUserKey = _persistenceKeyName(this.userKey, config.apiKey, name);
+            this.fullPersistenceKey = _persistenceKeyName("persistence" /* PERSISTENCE_USER */, config.apiKey, name);
+            this.boundEventHandler = auth._onStorageEvent.bind(auth);
+            this.persistence._addListener(this.fullUserKey, this.boundEventHandler);
+        }
+        PersistenceUserManager.prototype.setCurrentUser = function (user) {
+            return this.persistence._set(this.fullUserKey, user.toJSON());
+        };
+        PersistenceUserManager.prototype.getCurrentUser = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var blob;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.persistence._get(this.fullUserKey)];
+                        case 1:
+                            blob = _a.sent();
+                            return [2 /*return*/, blob ? UserImpl._fromJSON(this.auth, blob) : null];
+                    }
+                });
+            });
+        };
+        PersistenceUserManager.prototype.removeCurrentUser = function () {
+            return this.persistence._remove(this.fullUserKey);
+        };
+        PersistenceUserManager.prototype.savePersistenceForRedirect = function () {
+            return this.persistence._set(this.fullPersistenceKey, this.persistence.type);
+        };
+        PersistenceUserManager.prototype.setPersistence = function (newPersistence) {
+            return __awaiter(this, void 0, void 0, function () {
+                var currentUser;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (this.persistence.type === newPersistence.type) {
+                                return [2 /*return*/];
+                            }
+                            return [4 /*yield*/, this.getCurrentUser()];
+                        case 1:
+                            currentUser = _a.sent();
+                            return [4 /*yield*/, this.removeCurrentUser()];
+                        case 2:
+                            _a.sent();
+                            this.persistence = newPersistence;
+                            if (currentUser) {
+                                return [2 /*return*/, this.setCurrentUser(currentUser)];
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        PersistenceUserManager.prototype.delete = function () {
+            this.persistence._removeListener(this.fullUserKey, this.boundEventHandler);
+        };
+        PersistenceUserManager.create = function (auth, persistenceHierarchy, userKey) {
+            if (userKey === void 0) { userKey = "authUser" /* AUTH_USER */; }
+            return __awaiter(this, void 0, void 0, function () {
+                var key, _i, persistenceHierarchy_1, persistence;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!persistenceHierarchy.length) {
+                                return [2 /*return*/, new PersistenceUserManager(_getInstance(inMemoryPersistence), auth, userKey)];
+                            }
+                            key = _persistenceKeyName(userKey, auth.config.apiKey, auth.name);
+                            _i = 0, persistenceHierarchy_1 = persistenceHierarchy;
+                            _a.label = 1;
+                        case 1:
+                            if (!(_i < persistenceHierarchy_1.length)) return [3 /*break*/, 4];
+                            persistence = persistenceHierarchy_1[_i];
+                            return [4 /*yield*/, persistence._get(key)];
+                        case 2:
+                            if (_a.sent()) {
+                                return [2 /*return*/, new PersistenceUserManager(persistence, auth, userKey)];
+                            }
+                            _a.label = 3;
+                        case 3:
+                            _i++;
+                            return [3 /*break*/, 1];
+                        case 4: 
+                        // Check all the available storage options.
+                        // TODO: Migrate from local storage to indexedDB
+                        // TODO: Clear other forms once one is found
+                        // All else failed, fall back to zeroth persistence
+                        // TODO: Modify this to support non-browser devices
+                        return [2 /*return*/, new PersistenceUserManager(persistenceHierarchy[0], auth, userKey)];
+                    }
+                });
+            });
+        };
+        return PersistenceUserManager;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var AuthImpl = /** @class */ (function () {
+        function AuthImpl(app, config) {
+            this.app = app;
+            this.config = config;
+            this.currentUser = null;
+            this.emulatorConfig = null;
+            this.operations = Promise.resolve();
+            this.authStateSubscription = new Subscription(this);
+            this.idTokenSubscription = new Subscription(this);
+            this.redirectUser = null;
+            this.isProactiveRefreshEnabled = false;
+            this.redirectInitializerError = null;
+            // Any network calls will set this to true and prevent subsequent emulator
+            // initialization
+            this._canInitEmulator = true;
+            this._isInitialized = false;
+            this._deleted = false;
+            this._initializationPromise = null;
+            this._popupRedirectResolver = null;
+            this._errorFactory = _DEFAULT_AUTH_ERROR_FACTORY;
+            // Tracks the last notified UID for state change listeners to prevent
+            // repeated calls to the callbacks. Undefined means it's never been
+            // called, whereas null means it's been called with a signed out user
+            this.lastNotifiedUid = undefined;
+            this.languageCode = null;
+            this.tenantId = null;
+            this.settings = { appVerificationDisabledForTesting: false };
+            this.name = app.name;
+        }
+        AuthImpl.prototype._initializeWithPersistence = function (persistenceHierarchy, popupRedirectResolver) {
+            var _this = this;
+            if (popupRedirectResolver) {
+                this._popupRedirectResolver = _getInstance(popupRedirectResolver);
+            }
+            // Have to check for app deletion throughout initialization (after each
+            // promise resolution)
+            this._initializationPromise = this.queue(function () { return __awaiter(_this, void 0, void 0, function () {
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            if (this._deleted) {
+                                return [2 /*return*/];
+                            }
+                            _a = this;
+                            return [4 /*yield*/, PersistenceUserManager.create(this, persistenceHierarchy)];
+                        case 1:
+                            _a.persistenceManager = _b.sent();
+                            if (this._deleted) {
+                                return [2 /*return*/];
+                            }
+                            return [4 /*yield*/, this.initializeCurrentUser(popupRedirectResolver)];
+                        case 2:
+                            _b.sent();
+                            if (this._deleted) {
+                                return [2 /*return*/];
+                            }
+                            this._isInitialized = true;
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            // After initialization completes, throw any error caused by redirect flow
+            return this._initializationPromise.then(function () {
+                if (_this.redirectInitializerError) {
+                    throw _this.redirectInitializerError;
+                }
+            });
+        };
+        /**
+         * If the persistence is changed in another window, the user manager will let us know
+         */
+        AuthImpl.prototype._onStorageEvent = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var user;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (this._deleted) {
+                                return [2 /*return*/];
+                            }
+                            return [4 /*yield*/, this.assertedPersistence.getCurrentUser()];
+                        case 1:
+                            user = _a.sent();
+                            if (!this.currentUser && !user) {
+                                // No change, do nothing (was signed out and remained signed out).
+                                return [2 /*return*/];
+                            }
+                            if (!(this.currentUser && user && this.currentUser.uid === user.uid)) return [3 /*break*/, 3];
+                            // Data update, simply copy data changes.
+                            this._currentUser._assign(user);
+                            // If tokens changed from previous user tokens, this will trigger
+                            // notifyAuthListeners_.
+                            return [4 /*yield*/, this.currentUser.getIdToken()];
+                        case 2:
+                            // If tokens changed from previous user tokens, this will trigger
+                            // notifyAuthListeners_.
+                            _a.sent();
+                            return [2 /*return*/];
+                        case 3: 
+                        // Update current Auth state. Either a new login or logout.
+                        return [4 /*yield*/, this._updateCurrentUser(user)];
+                        case 4:
+                            // Update current Auth state. Either a new login or logout.
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype.initializeCurrentUser = function (popupRedirectResolver) {
+            var _a;
+            return __awaiter(this, void 0, void 0, function () {
+                var storedUser, redirectUserEventId, storedUserEventId, result;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, this.assertedPersistence.getCurrentUser()];
+                        case 1:
+                            storedUser = (_b.sent());
+                            if (!(popupRedirectResolver && this.config.authDomain)) return [3 /*break*/, 4];
+                            return [4 /*yield*/, this.getOrInitRedirectPersistenceManager()];
+                        case 2:
+                            _b.sent();
+                            redirectUserEventId = (_a = this.redirectUser) === null || _a === void 0 ? void 0 : _a._redirectEventId;
+                            storedUserEventId = storedUser === null || storedUser === void 0 ? void 0 : storedUser._redirectEventId;
+                            return [4 /*yield*/, this.tryRedirectSignIn(popupRedirectResolver)];
+                        case 3:
+                            result = _b.sent();
+                            // If the stored user (i.e. the old "currentUser") has a redirectId that
+                            // matches the redirect user, then we want to initially sign in with the
+                            // new user object from result.
+                            // TODO(samgho): More thoroughly test all of this
+                            if ((!redirectUserEventId || redirectUserEventId === storedUserEventId) && (result === null || result === void 0 ? void 0 : result.user)) {
+                                storedUser = result.user;
+                            }
+                            _b.label = 4;
+                        case 4:
+                            // If no user in persistence, there is no current user. Set to null.
+                            if (!storedUser) {
+                                return [2 /*return*/, this.directlySetCurrentUser(null)];
+                            }
+                            if (!storedUser._redirectEventId) {
+                                // This isn't a redirect user, we can reload and bail
+                                // This will also catch the redirected user, if available, as that method
+                                // strips the _redirectEventId
+                                return [2 /*return*/, this.reloadAndSetCurrentUserOrClear(storedUser)];
+                            }
+                            _assert(this._popupRedirectResolver, this, "argument-error" /* ARGUMENT_ERROR */);
+                            return [4 /*yield*/, this.getOrInitRedirectPersistenceManager()];
+                        case 5:
+                            _b.sent();
+                            // If the redirect user's event ID matches the current user's event ID,
+                            // DO NOT reload the current user, otherwise they'll be cleared from storage.
+                            // This is important for the reauthenticateWithRedirect() flow.
+                            if (this.redirectUser &&
+                                this.redirectUser._redirectEventId === storedUser._redirectEventId) {
+                                return [2 /*return*/, this.directlySetCurrentUser(storedUser)];
+                            }
+                            return [2 /*return*/, this.reloadAndSetCurrentUserOrClear(storedUser)];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype.tryRedirectSignIn = function (redirectResolver) {
+            return __awaiter(this, void 0, void 0, function () {
+                var result, e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            result = null;
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 5]);
+                            return [4 /*yield*/, this._popupRedirectResolver._completeRedirectFn(this, redirectResolver, true)];
+                        case 2:
+                            // We know this._popupRedirectResolver is set since redirectResolver
+                            // is passed in. The _completeRedirectFn expects the unwrapped extern.
+                            result = _a.sent();
+                            return [3 /*break*/, 5];
+                        case 3:
+                            e_1 = _a.sent();
+                            this.redirectInitializerError = e_1;
+                            return [4 /*yield*/, this._setRedirectUser(null)];
+                        case 4:
+                            _a.sent();
+                            return [3 /*break*/, 5];
+                        case 5: return [2 /*return*/, result];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype.reloadAndSetCurrentUserOrClear = function (user) {
+            return __awaiter(this, void 0, void 0, function () {
+                var e_2;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 2, , 3]);
+                            return [4 /*yield*/, _reloadWithoutSaving(user)];
+                        case 1:
+                            _a.sent();
+                            return [3 /*break*/, 3];
+                        case 2:
+                            e_2 = _a.sent();
+                            if (e_2.code !== "auth/" + "network-request-failed" /* NETWORK_REQUEST_FAILED */) {
+                                // Something's wrong with the user's token. Log them out and remove
+                                // them from storage
+                                return [2 /*return*/, this.directlySetCurrentUser(null)];
+                            }
+                            return [3 /*break*/, 3];
+                        case 3: return [2 /*return*/, this.directlySetCurrentUser(user)];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype.useDeviceLanguage = function () {
+            this.languageCode = _getUserLanguage();
+        };
+        AuthImpl.prototype._delete = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    this._deleted = true;
+                    return [2 /*return*/];
+                });
+            });
+        };
+        AuthImpl.prototype.updateCurrentUser = function (userExtern) {
+            return __awaiter(this, void 0, void 0, function () {
+                var user;
+                return __generator(this, function (_a) {
+                    user = userExtern;
+                    _assert(!user || user.auth.name === this.name, this, "argument-error" /* ARGUMENT_ERROR */);
+                    return [2 /*return*/, this._updateCurrentUser(user && user._clone())];
+                });
+            });
+        };
+        AuthImpl.prototype._updateCurrentUser = function (user) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_a) {
+                    if (this._deleted) {
+                        return [2 /*return*/];
+                    }
+                    if (user) {
+                        _assert(this.tenantId === user.tenantId, this, "tenant-id-mismatch" /* TENANT_ID_MISMATCH */);
+                    }
+                    return [2 /*return*/, this.queue(function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this.directlySetCurrentUser(user)];
+                                    case 1:
+                                        _a.sent();
+                                        this.notifyAuthListeners();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
+                });
+            });
+        };
+        AuthImpl.prototype.signOut = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (!(this.redirectPersistenceManager || this._popupRedirectResolver)) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this._setRedirectUser(null)];
+                        case 1:
+                            _a.sent();
+                            _a.label = 2;
+                        case 2: return [2 /*return*/, this._updateCurrentUser(null)];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype.setPersistence = function (persistence) {
+            var _this = this;
+            return this.queue(function () { return __awaiter(_this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.assertedPersistence.setPersistence(_getInstance(persistence))];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+        };
+        AuthImpl.prototype._getPersistence = function () {
+            return this.assertedPersistence.persistence.type;
+        };
+        AuthImpl.prototype._updateErrorMap = function (errorMap) {
+            this._errorFactory = new ErrorFactory('auth', 'Firebase', errorMap());
+        };
+        AuthImpl.prototype.onAuthStateChanged = function (nextOrObserver, error, completed) {
+            return this.registerStateListener(this.authStateSubscription, nextOrObserver, error, completed);
+        };
+        AuthImpl.prototype.onIdTokenChanged = function (nextOrObserver, error, completed) {
+            return this.registerStateListener(this.idTokenSubscription, nextOrObserver, error, completed);
+        };
+        AuthImpl.prototype.toJSON = function () {
+            var _a;
+            return {
+                apiKey: this.config.apiKey,
+                authDomain: this.config.authDomain,
+                appName: this.name,
+                currentUser: (_a = this._currentUser) === null || _a === void 0 ? void 0 : _a.toJSON()
+            };
+        };
+        AuthImpl.prototype._setRedirectUser = function (user, popupRedirectResolver) {
+            return __awaiter(this, void 0, void 0, function () {
+                var redirectManager;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.getOrInitRedirectPersistenceManager(popupRedirectResolver)];
+                        case 1:
+                            redirectManager = _a.sent();
+                            return [2 /*return*/, user === null
+                                    ? redirectManager.removeCurrentUser()
+                                    : redirectManager.setCurrentUser(user)];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype.getOrInitRedirectPersistenceManager = function (popupRedirectResolver) {
+            return __awaiter(this, void 0, void 0, function () {
+                var resolver, _a, _b;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            if (!!this.redirectPersistenceManager) return [3 /*break*/, 3];
+                            resolver = (popupRedirectResolver && _getInstance(popupRedirectResolver)) ||
+                                this._popupRedirectResolver;
+                            _assert(resolver, this, "argument-error" /* ARGUMENT_ERROR */);
+                            _a = this;
+                            return [4 /*yield*/, PersistenceUserManager.create(this, [_getInstance(resolver._redirectPersistence)], "redirectUser" /* REDIRECT_USER */)];
+                        case 1:
+                            _a.redirectPersistenceManager = _c.sent();
+                            _b = this;
+                            return [4 /*yield*/, this.redirectPersistenceManager.getCurrentUser()];
+                        case 2:
+                            _b.redirectUser = _c.sent();
+                            _c.label = 3;
+                        case 3: return [2 /*return*/, this.redirectPersistenceManager];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype._redirectUserForId = function (id) {
+            var _a, _b;
+            return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            if (!this._isInitialized) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.queue(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                                    return [2 /*return*/];
+                                }); }); })];
+                        case 1:
+                            _c.sent();
+                            _c.label = 2;
+                        case 2:
+                            if (((_a = this._currentUser) === null || _a === void 0 ? void 0 : _a._redirectEventId) === id) {
+                                return [2 /*return*/, this._currentUser];
+                            }
+                            if (((_b = this.redirectUser) === null || _b === void 0 ? void 0 : _b._redirectEventId) === id) {
+                                return [2 /*return*/, this.redirectUser];
+                            }
+                            return [2 /*return*/, null];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype._persistUserIfCurrent = function (user) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_a) {
+                    if (user === this.currentUser) {
+                        return [2 /*return*/, this.queue(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                                return [2 /*return*/, this.directlySetCurrentUser(user)];
+                            }); }); })];
+                    }
+                    return [2 /*return*/];
+                });
+            });
+        };
+        /** Notifies listeners only if the user is current */
+        AuthImpl.prototype._notifyListenersIfCurrent = function (user) {
+            if (user === this.currentUser) {
+                this.notifyAuthListeners();
+            }
+        };
+        AuthImpl.prototype._key = function () {
+            return this.config.authDomain + ":" + this.config.apiKey + ":" + this.name;
+        };
+        AuthImpl.prototype._startProactiveRefresh = function () {
+            this.isProactiveRefreshEnabled = true;
+            if (this.currentUser) {
+                this._currentUser._startProactiveRefresh();
+            }
+        };
+        AuthImpl.prototype._stopProactiveRefresh = function () {
+            this.isProactiveRefreshEnabled = false;
+            if (this.currentUser) {
+                this._currentUser._stopProactiveRefresh();
+            }
+        };
+        Object.defineProperty(AuthImpl.prototype, "_currentUser", {
+            /** Returns the current user cast as the internal type */
+            get: function () {
+                return this.currentUser;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        AuthImpl.prototype.notifyAuthListeners = function () {
+            var _a, _b;
+            if (!this._isInitialized) {
+                return;
+            }
+            this.idTokenSubscription.next(this.currentUser);
+            var currentUid = (_b = (_a = this.currentUser) === null || _a === void 0 ? void 0 : _a.uid) !== null && _b !== void 0 ? _b : null;
+            if (this.lastNotifiedUid !== currentUid) {
+                this.lastNotifiedUid = currentUid;
+                this.authStateSubscription.next(this.currentUser);
+            }
+        };
+        AuthImpl.prototype.registerStateListener = function (subscription, nextOrObserver, error, completed) {
+            var _this = this;
+            if (this._deleted) {
+                return function () { };
+            }
+            var cb = typeof nextOrObserver === 'function'
+                ? nextOrObserver
+                : nextOrObserver.next;
+            var promise = this._isInitialized
+                ? Promise.resolve()
+                : this._initializationPromise;
+            _assert(promise, this, "internal-error" /* INTERNAL_ERROR */);
+            // The callback needs to be called asynchronously per the spec.
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            promise.then(function () { return cb(_this.currentUser); });
+            if (typeof nextOrObserver === 'function') {
+                return subscription.addObserver(nextOrObserver, error, completed);
+            }
+            else {
+                return subscription.addObserver(nextOrObserver);
+            }
+        };
+        /**
+         * Unprotected (from race conditions) method to set the current user. This
+         * should only be called from within a queued callback. This is necessary
+         * because the queue shouldn't rely on another queued callback.
+         */
+        AuthImpl.prototype.directlySetCurrentUser = function (user) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (this.currentUser && this.currentUser !== user) {
+                                this._currentUser._stopProactiveRefresh();
+                                if (user && this.isProactiveRefreshEnabled) {
+                                    user._startProactiveRefresh();
+                                }
+                            }
+                            this.currentUser = user;
+                            if (!user) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.assertedPersistence.setCurrentUser(user)];
+                        case 1:
+                            _a.sent();
+                            return [3 /*break*/, 4];
+                        case 2: return [4 /*yield*/, this.assertedPersistence.removeCurrentUser()];
+                        case 3:
+                            _a.sent();
+                            _a.label = 4;
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        AuthImpl.prototype.queue = function (action) {
+            // In case something errors, the callback still should be called in order
+            // to keep the promise chain alive
+            this.operations = this.operations.then(action, action);
+            return this.operations;
+        };
+        Object.defineProperty(AuthImpl.prototype, "assertedPersistence", {
+            get: function () {
+                _assert(this.persistenceManager, this, "internal-error" /* INTERNAL_ERROR */);
+                return this.persistenceManager;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        return AuthImpl;
+    }());
+    /**
+     * Method to be used to cast down to our private implmentation of Auth
+     *
+     * @param auth Auth object passed in from developer
+     */
+    function _castAuth(auth) {
+        return auth;
+    }
+    /** Helper class to wrap subscriber logic */
+    var Subscription = /** @class */ (function () {
+        function Subscription(auth) {
+            var _this = this;
+            this.auth = auth;
+            this.observer = null;
+            this.addObserver = createSubscribe(function (observer) { return (_this.observer = observer); });
+        }
+        Object.defineProperty(Subscription.prototype, "next", {
+            get: function () {
+                _assert(this.observer, this.auth, "internal-error" /* INTERNAL_ERROR */);
+                return this.observer.next.bind(this.observer);
+            },
+            enumerable: false,
+            configurable: true
+        });
+        return Subscription;
+    }());
+
+    /**
+     * @license
+     * Copyright 2021 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Changes the Auth instance to communicate with the Firebase Auth Emulator, instead of production
+     * Firebase Auth services.
+     *
+     * @remarks
+     * This must be called synchronously immediately following the first call to
+     * {@link @firebase/auth#initializeAuth}.  Do not use with production credentials as emulator
+     * traffic is not encrypted.
+     *
+     *
+     * @example
+     * ```javascript
+     * useAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param url - The URL at which the emulator is running (eg, 'http://localhost:9099').
+     * @param options.disableWarnings - (Optional: default false) Disable the warning banner attached to the DOM
+     *
+     * @public
+     */
+    function useAuthEmulator(auth, url, options) {
+        var authInternal = _castAuth(auth);
+        _assert(authInternal._canInitEmulator, authInternal, "emulator-config-failed" /* EMULATOR_CONFIG_FAILED */);
+        _assert(/^https?:\/\//.test(url), authInternal, "invalid-emulator-scheme" /* INVALID_EMULATOR_SCHEME */);
+        var parsedUrl = new URL(url);
+        var disableWarnings = !!(options === null || options === void 0 ? void 0 : options.disableWarnings);
+        // Store the normalized URL whose path is always nonempty (i.e. containing at least a single '/').
+        authInternal.config.emulator = { url: parsedUrl.toString() };
+        authInternal.settings.appVerificationDisabledForTesting = true;
+        authInternal.emulatorConfig = Object.freeze({
+            host: parsedUrl.hostname,
+            port: parsedUrl.port ? Number(parsedUrl.port) : null,
+            protocol: parsedUrl.protocol.replace(':', ''),
+            options: Object.freeze({ disableWarnings: disableWarnings })
+        });
+        emitEmulatorWarning(disableWarnings);
+    }
+    function emitEmulatorWarning(disableBanner) {
+        function attachBanner() {
+            var el = document.createElement('p');
+            var sty = el.style;
+            el.innerText =
+                'Running in emulator mode. Do not use with production credentials.';
+            sty.position = 'fixed';
+            sty.width = '100%';
+            sty.backgroundColor = '#ffffff';
+            sty.border = '.1em solid #000000';
+            sty.color = '#ff0000';
+            sty.bottom = '0px';
+            sty.left = '0px';
+            sty.margin = '0px';
+            sty.zIndex = '10000';
+            sty.textAlign = 'center';
+            el.classList.add('firebase-emulator-warning');
+            document.body.appendChild(el);
+        }
+        if (typeof console !== 'undefined' && typeof console.info === 'function') {
+            console.info('WARNING: You are using the Auth Emulator,' +
+                ' which is intended for local testing only.  Do not use with' +
+                ' production credentials.');
+        }
+        if (typeof window !== 'undefined' &&
+            typeof document !== 'undefined' &&
+            !disableBanner) {
+            if (document.readyState === 'loading') {
+                window.addEventListener('DOMContentLoaded', attachBanner);
+            }
+            else {
+                attachBanner();
+            }
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * {@inheritdoc @firebase/auth-types#AuthCredential}
+     *
+     * @public
+     */
+    var AuthCredential = /** @class */ (function () {
+        /** @internal */
+        function AuthCredential(providerId, signInMethod) {
+            this.providerId = providerId;
+            this.signInMethod = signInMethod;
+        }
+        /** {@inheritdoc @firebase/auth-types#AuthCredential.toJSON} */
+        AuthCredential.prototype.toJSON = function () {
+            return debugFail('not implemented');
+        };
+        /** @internal */
+        AuthCredential.prototype._getIdTokenResponse = function (_auth) {
+            return debugFail('not implemented');
+        };
+        /** @internal */
+        AuthCredential.prototype._linkToIdToken = function (_auth, _idToken) {
+            return debugFail('not implemented');
+        };
+        /** @internal */
+        AuthCredential.prototype._getReauthenticationResolver = function (_auth) {
+            return debugFail('not implemented');
+        };
+        return AuthCredential;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function resetPassword(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:resetPassword" /* RESET_PASSWORD */, request)];
+            });
+        });
+    }
+    function updateEmailPassword(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:update" /* SET_ACCOUNT_INFO */, request)];
+            });
+        });
+    }
+    function applyActionCode(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:update" /* SET_ACCOUNT_INFO */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function signInWithPassword(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithPassword" /* SIGN_IN_WITH_PASSWORD */, request)];
+            });
+        });
+    }
+    function sendOobCode(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:sendOobCode" /* SEND_OOB_CODE */, request)];
+            });
+        });
+    }
+    function sendEmailVerification(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, sendOobCode(auth, request)];
+            });
+        });
+    }
+    function sendPasswordResetEmail(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, sendOobCode(auth, request)];
+            });
+        });
+    }
+    function sendSignInLinkToEmail(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, sendOobCode(auth, request)];
+            });
+        });
+    }
+    function verifyAndChangeEmail(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, sendOobCode(auth, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function signInWithEmailLink(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithEmailLink" /* SIGN_IN_WITH_EMAIL_LINK */, request)];
+            });
+        });
+    }
+    function signInWithEmailLinkForLinking(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithEmailLink" /* SIGN_IN_WITH_EMAIL_LINK */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Interface that represents the credentials returned by {@link EmailAuthProvider} for
+     * {@link @firebase/auth-types#ProviderId.PASSWORD}
+     *
+     * @remarks
+     * Covers both {@link @firebase/auth-types#SignInMethod.EMAIL_PASSWORD} and
+     * {@link @firebase/auth-types#SignInMethod.EMAIL_LINK}.
+     *
+     * @public
+     */
+    var EmailAuthCredential = /** @class */ (function (_super) {
+        __extends(EmailAuthCredential, _super);
+        /** @internal */
+        function EmailAuthCredential(email, password, signInMethod, tenantId) {
+            if (tenantId === void 0) { tenantId = null; }
+            var _this = _super.call(this, "password" /* PASSWORD */, signInMethod) || this;
+            _this.email = email;
+            _this.password = password;
+            _this.tenantId = tenantId;
+            return _this;
+        }
+        /** @internal */
+        EmailAuthCredential._fromEmailAndPassword = function (email, password) {
+            return new EmailAuthCredential(email, password, "password" /* EMAIL_PASSWORD */);
+        };
+        /** @internal */
+        EmailAuthCredential._fromEmailAndCode = function (email, oobCode, tenantId) {
+            if (tenantId === void 0) { tenantId = null; }
+            return new EmailAuthCredential(email, oobCode, "emailLink" /* EMAIL_LINK */, tenantId);
+        };
+        /** {@inheritdoc @firebase/auth-types#AuthCredential.toJSON} */
+        EmailAuthCredential.prototype.toJSON = function () {
+            return {
+                email: this.email,
+                password: this.password,
+                signInMethod: this.signInMethod,
+                tenantId: this.tenantId
+            };
+        };
+        /** {@inheritdoc @firebase/auth-types#AuthCredential.fromJSON} */
+        EmailAuthCredential.fromJSON = function (json) {
+            var obj = typeof json === 'string' ? JSON.parse(json) : json;
+            if ((obj === null || obj === void 0 ? void 0 : obj.email) && (obj === null || obj === void 0 ? void 0 : obj.password)) {
+                if (obj.signInMethod === "password" /* EMAIL_PASSWORD */) {
+                    return this._fromEmailAndPassword(obj.email, obj.password);
+                }
+                else if (obj.signInMethod === "emailLink" /* EMAIL_LINK */) {
+                    return this._fromEmailAndCode(obj.email, obj.password, obj.tenantId);
+                }
+            }
+            return null;
+        };
+        /** @internal */
+        EmailAuthCredential.prototype._getIdTokenResponse = function (auth) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (this.signInMethod) {
+                        case "password" /* EMAIL_PASSWORD */:
+                            return [2 /*return*/, signInWithPassword(auth, {
+                                    returnSecureToken: true,
+                                    email: this.email,
+                                    password: this.password
+                                })];
+                        case "emailLink" /* EMAIL_LINK */:
+                            return [2 /*return*/, signInWithEmailLink(auth, {
+                                    email: this.email,
+                                    oobCode: this.password
+                                })];
+                        default:
+                            _fail(auth, "internal-error" /* INTERNAL_ERROR */);
+                    }
+                    return [2 /*return*/];
+                });
+            });
+        };
+        /** @internal */
+        EmailAuthCredential.prototype._linkToIdToken = function (auth, idToken) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (this.signInMethod) {
+                        case "password" /* EMAIL_PASSWORD */:
+                            return [2 /*return*/, updateEmailPassword(auth, {
+                                    idToken: idToken,
+                                    returnSecureToken: true,
+                                    email: this.email,
+                                    password: this.password
+                                })];
+                        case "emailLink" /* EMAIL_LINK */:
+                            return [2 /*return*/, signInWithEmailLinkForLinking(auth, {
+                                    idToken: idToken,
+                                    email: this.email,
+                                    oobCode: this.password
+                                })];
+                        default:
+                            _fail(auth, "internal-error" /* INTERNAL_ERROR */);
+                    }
+                    return [2 /*return*/];
+                });
+            });
+        };
+        /** @internal */
+        EmailAuthCredential.prototype._getReauthenticationResolver = function (auth) {
+            return this._getIdTokenResponse(auth);
+        };
+        return EmailAuthCredential;
+    }(AuthCredential));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function signInWithIdp(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithIdp" /* SIGN_IN_WITH_IDP */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var IDP_REQUEST_URI = 'http://localhost';
+    /**
+     * {@inheritdoc @firebase/auth-types#OAuthCredential}
+     *
+     * @public
+     */
+    var OAuthCredential = /** @class */ (function (_super) {
+        __extends(OAuthCredential, _super);
+        function OAuthCredential() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.pendingToken = null;
+            return _this;
+        }
+        /** @internal */
+        OAuthCredential._fromParams = function (params) {
+            var cred = new OAuthCredential(params.providerId, params.signInMethod);
+            if (params.idToken || params.accessToken) {
+                // OAuth 2 and either ID token or access token.
+                if (params.idToken) {
+                    cred.idToken = params.idToken;
+                }
+                if (params.accessToken) {
+                    cred.accessToken = params.accessToken;
+                }
+                // Add nonce if available and no pendingToken is present.
+                if (params.nonce && !params.pendingToken) {
+                    cred.nonce = params.nonce;
+                }
+                if (params.pendingToken) {
+                    cred.pendingToken = params.pendingToken;
+                }
+            }
+            else if (params.oauthToken && params.oauthTokenSecret) {
+                // OAuth 1 and OAuth token with token secret
+                cred.accessToken = params.oauthToken;
+                cred.secret = params.oauthTokenSecret;
+            }
+            else {
+                _fail("argument-error" /* ARGUMENT_ERROR */);
+            }
+            return cred;
+        };
+        /** {@inheritdoc @firebase/auth-types#OAuthCredential.toJSON}  */
+        OAuthCredential.prototype.toJSON = function () {
+            return {
+                idToken: this.idToken,
+                accessToken: this.accessToken,
+                secret: this.secret,
+                nonce: this.nonce,
+                pendingToken: this.pendingToken,
+                providerId: this.providerId,
+                signInMethod: this.signInMethod
+            };
+        };
+        /** {@inheritdoc @firebase/auth-types#OAuthCredential.fromJSON} */
+        OAuthCredential.fromJSON = function (json) {
+            var obj = typeof json === 'string' ? JSON.parse(json) : json;
+            var providerId = obj.providerId, signInMethod = obj.signInMethod, rest = __rest(obj, ["providerId", "signInMethod"]);
+            if (!providerId || !signInMethod) {
+                return null;
+            }
+            var cred = new OAuthCredential(providerId, signInMethod);
+            Object.assign(cred, rest);
+            return cred;
+        };
+        /** @internal */
+        OAuthCredential.prototype._getIdTokenResponse = function (auth) {
+            var request = this.buildRequest();
+            return signInWithIdp(auth, request);
+        };
+        /** @internal */
+        OAuthCredential.prototype._linkToIdToken = function (auth, idToken) {
+            var request = this.buildRequest();
+            request.idToken = idToken;
+            return signInWithIdp(auth, request);
+        };
+        /** @internal */
+        OAuthCredential.prototype._getReauthenticationResolver = function (auth) {
+            var request = this.buildRequest();
+            request.autoCreate = false;
+            return signInWithIdp(auth, request);
+        };
+        OAuthCredential.prototype.buildRequest = function () {
+            var request = {
+                requestUri: IDP_REQUEST_URI,
+                returnSecureToken: true,
+                postBody: null
+            };
+            if (this.pendingToken) {
+                request.pendingToken = this.pendingToken;
+            }
+            else {
+                var postBody = {};
+                if (this.idToken) {
+                    postBody['id_token'] = this.idToken;
+                }
+                if (this.accessToken) {
+                    postBody['access_token'] = this.accessToken;
+                }
+                if (this.secret) {
+                    postBody['oauth_token_secret'] = this.secret;
+                }
+                postBody['providerId'] = this.providerId;
+                if (this.nonce && !this.pendingToken) {
+                    postBody['nonce'] = this.nonce;
+                }
+                request.postBody = querystring(postBody);
+            }
+            return request;
+        };
+        return OAuthCredential;
+    }(AuthCredential));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _a$1$1;
+    function sendPhoneVerificationCode(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:sendVerificationCode" /* SEND_VERIFICATION_CODE */, request)];
+            });
+        });
+    }
+    function signInWithPhoneNumber(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithPhoneNumber" /* SIGN_IN_WITH_PHONE_NUMBER */, request)];
+            });
+        });
+    }
+    function linkWithPhoneNumber(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithPhoneNumber" /* SIGN_IN_WITH_PHONE_NUMBER */, request)];
+            });
+        });
+    }
+    var VERIFY_PHONE_NUMBER_FOR_EXISTING_ERROR_MAP_ = (_a$1$1 = {},
+        _a$1$1["USER_NOT_FOUND" /* USER_NOT_FOUND */] = "user-not-found" /* USER_DELETED */,
+        _a$1$1);
+    function verifyPhoneNumberForExisting(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            var apiRequest;
+            return __generator(this, function (_a) {
+                apiRequest = __assign(__assign({}, request), { operation: 'REAUTH' });
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithPhoneNumber" /* SIGN_IN_WITH_PHONE_NUMBER */, apiRequest, VERIFY_PHONE_NUMBER_FOR_EXISTING_ERROR_MAP_)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * {@inheritdoc @firebase/auth-types#PhoneAuthCredential}
+     *
+     * @public
+     */
+    var PhoneAuthCredential = /** @class */ (function (_super) {
+        __extends(PhoneAuthCredential, _super);
+        function PhoneAuthCredential(params) {
+            var _this = _super.call(this, "phone" /* PHONE */, "phone" /* PHONE */) || this;
+            _this.params = params;
+            return _this;
+        }
+        /** @internal */
+        PhoneAuthCredential._fromVerification = function (verificationId, verificationCode) {
+            return new PhoneAuthCredential({ verificationId: verificationId, verificationCode: verificationCode });
+        };
+        /** @internal */
+        PhoneAuthCredential._fromTokenResponse = function (phoneNumber, temporaryProof) {
+            return new PhoneAuthCredential({ phoneNumber: phoneNumber, temporaryProof: temporaryProof });
+        };
+        /** @internal */
+        PhoneAuthCredential.prototype._getIdTokenResponse = function (auth) {
+            return signInWithPhoneNumber(auth, this._makeVerificationRequest());
+        };
+        /** @internal */
+        PhoneAuthCredential.prototype._linkToIdToken = function (auth, idToken) {
+            return linkWithPhoneNumber(auth, __assign({ idToken: idToken }, this._makeVerificationRequest()));
+        };
+        /** @internal */
+        PhoneAuthCredential.prototype._getReauthenticationResolver = function (auth) {
+            return verifyPhoneNumberForExisting(auth, this._makeVerificationRequest());
+        };
+        /** @internal */
+        PhoneAuthCredential.prototype._makeVerificationRequest = function () {
+            var _a = this.params, temporaryProof = _a.temporaryProof, phoneNumber = _a.phoneNumber, verificationId = _a.verificationId, verificationCode = _a.verificationCode;
+            if (temporaryProof && phoneNumber) {
+                return { temporaryProof: temporaryProof, phoneNumber: phoneNumber };
+            }
+            return {
+                sessionInfo: verificationId,
+                code: verificationCode
+            };
+        };
+        /** {@inheritdoc @firebase/auth-types#toJSON} */
+        PhoneAuthCredential.prototype.toJSON = function () {
+            var obj = {
+                providerId: this.providerId
+            };
+            if (this.params.phoneNumber) {
+                obj.phoneNumber = this.params.phoneNumber;
+            }
+            if (this.params.temporaryProof) {
+                obj.temporaryProof = this.params.temporaryProof;
+            }
+            if (this.params.verificationCode) {
+                obj.verificationCode = this.params.verificationCode;
+            }
+            if (this.params.verificationId) {
+                obj.verificationId = this.params.verificationId;
+            }
+            return obj;
+        };
+        /** {@inheritdoc @firebase/auth-types#fromJSON} */
+        PhoneAuthCredential.fromJSON = function (json) {
+            if (typeof json === 'string') {
+                json = JSON.parse(json);
+            }
+            var _a = json, verificationId = _a.verificationId, verificationCode = _a.verificationCode, phoneNumber = _a.phoneNumber, temporaryProof = _a.temporaryProof;
+            if (!verificationCode &&
+                !verificationId &&
+                !phoneNumber &&
+                !temporaryProof) {
+                return null;
+            }
+            return new PhoneAuthCredential({
+                verificationId: verificationId,
+                verificationCode: verificationCode,
+                phoneNumber: phoneNumber,
+                temporaryProof: temporaryProof
+            });
+        };
+        return PhoneAuthCredential;
+    }(AuthCredential));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Maps the mode string in action code URL to Action Code Info operation.
+     *
+     * @param mode
+     */
+    function parseMode(mode) {
+        switch (mode) {
+            case 'recoverEmail':
+                return "RECOVER_EMAIL" /* RECOVER_EMAIL */;
+            case 'resetPassword':
+                return "PASSWORD_RESET" /* PASSWORD_RESET */;
+            case 'signIn':
+                return "EMAIL_SIGNIN" /* EMAIL_SIGNIN */;
+            case 'verifyEmail':
+                return "VERIFY_EMAIL" /* VERIFY_EMAIL */;
+            case 'verifyAndChangeEmail':
+                return "VERIFY_AND_CHANGE_EMAIL" /* VERIFY_AND_CHANGE_EMAIL */;
+            case 'revertSecondFactorAddition':
+                return "REVERT_SECOND_FACTOR_ADDITION" /* REVERT_SECOND_FACTOR_ADDITION */;
+            default:
+                return null;
+        }
+    }
+    /**
+     * Helper to parse FDL links
+     *
+     * @param url
+     */
+    function parseDeepLink(url) {
+        var uri = new URL(url);
+        var link = uri.searchParams.get('link');
+        // Double link case (automatic redirect).
+        var doubleDeepLink = link ? new URL(link).searchParams.get('link') : null;
+        // iOS custom scheme links.
+        var iOSDeepLink = uri.searchParams.get('deep_link_id');
+        var iOSDoubleDeepLink = iOSDeepLink
+            ? new URL(iOSDeepLink).searchParams.get('link')
+            : null;
+        return iOSDoubleDeepLink || iOSDeepLink || doubleDeepLink || link || url;
+    }
+    /**
+     * {@inheritDoc @firebase/auth-types#ActionCodeURL}
+     *
+     * @public
+     */
+    var ActionCodeURL = /** @class */ (function () {
+        /**
+         * @param actionLink - The link from which to extract the URL.
+         * @returns The ActionCodeURL object, or null if the link is invalid.
+         *
+         * @internal
+         */
+        function ActionCodeURL(actionLink) {
+            var uri = new URL(actionLink);
+            var apiKey = uri.searchParams.get("apiKey" /* API_KEY */);
+            var code = uri.searchParams.get("oobCode" /* CODE */);
+            var operation = parseMode(uri.searchParams.get("mode" /* MODE */));
+            // Validate API key, code and mode.
+            _assert(apiKey && code && operation, "argument-error" /* ARGUMENT_ERROR */);
+            this.apiKey = apiKey;
+            this.operation = operation;
+            this.code = code;
+            this.continueUrl = uri.searchParams.get("continueUrl" /* CONTINUE_URL */);
+            this.languageCode = uri.searchParams.get("languageCode" /* LANGUAGE_CODE */);
+            this.tenantId = uri.searchParams.get("tenantId" /* TENANT_ID */);
+        }
+        /** {@inheritDoc @firebase/auth-types#ActionCodeURL.parseLink} */
+        ActionCodeURL.parseLink = function (link) {
+            var actionLink = parseDeepLink(link);
+            try {
+                return new ActionCodeURL(actionLink);
+            }
+            catch (_a) {
+                return null;
+            }
+        };
+        return ActionCodeURL;
+    }());
+    /**
+     * {@inheritDoc @firebase/auth-types#ActionCodeURL.parseLink}
+     *
+     * @public
+     */
+    function parseActionCodeURL(link) {
+        return ActionCodeURL.parseLink(link);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * {@inheritdoc @firebase/auth-types#EmailAuthProvider}
+     *
+     * @public
+     */
+    var EmailAuthProvider = /** @class */ (function () {
+        function EmailAuthProvider() {
+            /** {@inheritdoc @firebase/auth-types#EmailAuthProvider.providerId} */
+            this.providerId = EmailAuthProvider.PROVIDER_ID;
+        }
+        /** {@inheritdoc @firebase/auth-types#EmailAuthProvider.credential} */
+        EmailAuthProvider.credential = function (email, password) {
+            return EmailAuthCredential._fromEmailAndPassword(email, password);
+        };
+        /** {@inheritdoc @firebase/auth-types#EmailAuthProvider.credentialWithLink} */
+        EmailAuthProvider.credentialWithLink = function (email, emailLink) {
+            var actionCodeUrl = ActionCodeURL.parseLink(emailLink);
+            _assert(actionCodeUrl, "argument-error" /* ARGUMENT_ERROR */);
+            return EmailAuthCredential._fromEmailAndCode(email, actionCodeUrl.code, actionCodeUrl.tenantId);
+        };
+        /** {@inheritdoc @firebase/auth-types#EmailAuthProvider.PROVIDER_ID} */
+        EmailAuthProvider.PROVIDER_ID = "password" /* PASSWORD */;
+        /** {@inheritdoc @firebase/auth-types#EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD} */
+        EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD = "password" /* EMAIL_PASSWORD */;
+        /** {@inheritdoc @firebase/auth-types#EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD} */
+        EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD = "emailLink" /* EMAIL_LINK */;
+        return EmailAuthProvider;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Provider for generating generic {@link OAuthCredential}.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new OAuthProvider('google.com');
+     * // Start a sign in process for an unauthenticated user.
+     * provider.addScope('profile');
+     * provider.addScope('email');
+     * await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * if (result) {
+     *   // This is the signed-in user
+     *   const user = result.user;
+     *   // This gives you a OAuth Access Token for the provider.
+     *   const credential = provider.credentialFromResult(auth, result);
+     *   const token = credential.accessToken;
+     * }
+     * ```
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a popup.
+     * const provider = new OAuthProvider('google.com');
+     * provider.addScope('profile');
+     * provider.addScope('email');
+     * const result = await signInWithPopup(auth, provider);
+     *
+     * // The signed-in user info.
+     * const user = result.user;
+     * // This gives you a OAuth Access Token for the provider.
+     * const credential = provider.credentialFromResult(auth, result);
+     * const token = credential.accessToken;
+     * ```
+     * @public
+     */
+    var OAuthProvider = /** @class */ (function () {
+        /**
+         * Constructor for generic OAuth providers.
+         *
+         * @param providerId - Provider for which credentials should be generated.
+         */
+        function OAuthProvider(providerId) {
+            this.providerId = providerId;
+            /** @internal */
+            this.defaultLanguageCode = null;
+            /** @internal */
+            this.scopes = [];
+            /** @internal */
+            this.customParameters = {};
+        }
+        OAuthProvider.credentialFromJSON = function (json) {
+            var obj = typeof json === 'string' ? JSON.parse(json) : json;
+            _assert('providerId' in obj && 'signInMethod' in obj, "argument-error" /* ARGUMENT_ERROR */);
+            return OAuthCredential._fromParams(obj);
+        };
+        /**
+         * Creates a {@link OAuthCredential} from a generic OAuth provider's access token or ID token.
+         *
+         * @remarks
+         * The raw nonce is required when an ID token with a nonce field is provided. The SHA-256 hash of
+         * the raw nonce must match the nonce field in the ID token.
+         *
+         * @example
+         * ```javascript
+         * // `googleUser` from the onsuccess Google Sign In callback.
+         * // Initialize a generate OAuth provider with a `google.com` providerId.
+         * const provider = new OAuthProvider('google.com');
+         * const credential = provider.credential({
+         *   idToken: googleUser.getAuthResponse().id_token,
+         * });
+         * const result = await signInWithCredential(credential);
+         * ```
+         *
+         * @param params - Either the options object containing the ID token, access token and raw nonce
+         * or the ID token string.
+         */
+        OAuthProvider.prototype.credential = function (params) {
+            _assert(params.idToken && params.accessToken, "argument-error" /* ARGUMENT_ERROR */);
+            // For OAuthCredential, sign in method is same as providerId.
+            return OAuthCredential._fromParams(__assign({ providerId: this.providerId, signInMethod: this.providerId }, params));
+        };
+        /**
+         * Set the language gode.
+         *
+         * @param languageCode - language code
+         */
+        OAuthProvider.prototype.setDefaultLanguage = function (languageCode) {
+            this.defaultLanguageCode = languageCode;
+        };
+        /**
+         * Sets the OAuth custom parameters to pass in an OAuth request for popup and redirect sign-in
+         * operations.
+         *
+         * @remarks
+         * For a detailed list, check the reserved required OAuth 2.0 parameters such as `client_id`,
+         * `redirect_uri`, `scope`, `response_type`, and `state` are not allowed and will be ignored.
+         *
+         * @param customOAuthParameters - The custom OAuth parameters to pass in the OAuth request.
+         */
+        OAuthProvider.prototype.setCustomParameters = function (customOAuthParameters) {
+            this.customParameters = customOAuthParameters;
+            return this;
+        };
+        /**
+         * Retrieve the current list of {@link CustomParameters}.
+         */
+        OAuthProvider.prototype.getCustomParameters = function () {
+            return this.customParameters;
+        };
+        /**
+         * Add an OAuth scope to the credential.
+         *
+         * @param scope - Provider OAuth scope to add.
+         */
+        OAuthProvider.prototype.addScope = function (scope) {
+            // If not already added, add scope to list.
+            if (!this.scopes.includes(scope)) {
+                this.scopes.push(scope);
+            }
+            return this;
+        };
+        /**
+         * Retrieve the current list of OAuth scopes.
+         */
+        OAuthProvider.prototype.getScopes = function () {
+            return __spreadArrays(this.scopes);
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#UserCredential}.
+         *
+         * @param userCredential - The user credential.
+         */
+        OAuthProvider.credentialFromResult = function (userCredential) {
+            return OAuthProvider.oauthCredentialFromTaggedObject(userCredential);
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#AuthError} which was
+         * thrown during a sign-in, link, or reauthenticate operation.
+         *
+         * @param userCredential - The user credential.
+         */
+        OAuthProvider.credentialFromError = function (error) {
+            return OAuthProvider.oauthCredentialFromTaggedObject((error.customData || {}));
+        };
+        // This needs to have a different name so it doesn't conflict with the
+        // subclasses
+        OAuthProvider.oauthCredentialFromTaggedObject = function (_a) {
+            var tokenResponse = _a._tokenResponse;
+            if (!tokenResponse) {
+                return null;
+            }
+            var _b = tokenResponse, oauthIdToken = _b.oauthIdToken, oauthAccessToken = _b.oauthAccessToken, oauthTokenSecret = _b.oauthTokenSecret, pendingToken = _b.pendingToken, nonce = _b.nonce, providerId = _b.providerId;
+            if (!oauthAccessToken &&
+                !oauthTokenSecret &&
+                !oauthIdToken &&
+                !pendingToken) {
+                return null;
+            }
+            if (!providerId) {
+                return null;
+            }
+            try {
+                return new OAuthProvider(providerId).credential({
+                    idToken: oauthIdToken,
+                    accessToken: oauthAccessToken,
+                    rawNonce: nonce
+                });
+            }
+            catch (e) {
+                return null;
+            }
+        };
+        return OAuthProvider;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Provider for generating an {@link OAuthCredential} for {@link @firebase/auth-types#ProviderId.FACEBOOK}.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new FacebookAuthProvider();
+     * // Start a sign in process for an unauthenticated user.
+     * provider.addScope('user_birthday');
+     * await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * if (result) {
+     *   // This is the signed-in user
+     *   const user = result.user;
+     *   // This gives you a Facebook Access Token.
+     *   const credential = provider.credentialFromResult(auth, result);
+     *   const token = credential.accessToken;
+     * }
+     * ```
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a popup.
+     * const provider = new FacebookAuthProvider();
+     * provider.addScope('user_birthday');
+     * const result = await signInWithPopup(auth, provider);
+     *
+     * // The signed-in user info.
+     * const user = result.user;
+     * // This gives you a Facebook Access Token.
+     * const credential = provider.credentialFromResult(auth, result);
+     * const token = credential.accessToken;
+     * ```
+     *
+     * @public
+     */
+    var FacebookAuthProvider = /** @class */ (function (_super) {
+        __extends(FacebookAuthProvider, _super);
+        function FacebookAuthProvider() {
+            return _super.call(this, "facebook.com" /* FACEBOOK */) || this;
+        }
+        /**
+         * Creates a credential for Facebook.
+         *
+         * @example
+         * ```javascript
+         * // `event` from the Facebook auth.authResponseChange callback.
+         * const credential = FacebookAuthProvider.credential(event.authResponse.accessToken);
+         * const result = await signInWithCredential(credential);
+         * ```
+         *
+         * @param accessToken - Facebook access token.
+         */
+        FacebookAuthProvider.credential = function (accessToken) {
+            return OAuthCredential._fromParams({
+                providerId: FacebookAuthProvider.PROVIDER_ID,
+                signInMethod: FacebookAuthProvider.FACEBOOK_SIGN_IN_METHOD,
+                accessToken: accessToken
+            });
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#UserCredential}.
+         *
+         * @param userCredential - The user credential.
+         */
+        FacebookAuthProvider.credentialFromResult = function (userCredential) {
+            return FacebookAuthProvider.credentialFromTaggedObject(userCredential);
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#AuthError} which was
+         * thrown during a sign-in, link, or reauthenticate operation.
+         *
+         * @param userCredential - The user credential.
+         */
+        FacebookAuthProvider.credentialFromError = function (error) {
+            return FacebookAuthProvider.credentialFromTaggedObject((error.customData || {}));
+        };
+        FacebookAuthProvider.credentialFromTaggedObject = function (_a) {
+            var tokenResponse = _a._tokenResponse;
+            if (!tokenResponse || !('oauthAccessToken' in tokenResponse)) {
+                return null;
+            }
+            if (!tokenResponse.oauthAccessToken) {
+                return null;
+            }
+            try {
+                return FacebookAuthProvider.credential(tokenResponse.oauthAccessToken);
+            }
+            catch (_b) {
+                return null;
+            }
+        };
+        /** Always set to {@link @firebase/auth-types#SignInMethod.FACEBOOK}. */
+        FacebookAuthProvider.FACEBOOK_SIGN_IN_METHOD = "facebook.com" /* FACEBOOK */;
+        /** Always set to {@link @firebase/auth-types#ProviderId.FACEBOOK}. */
+        FacebookAuthProvider.PROVIDER_ID = "facebook.com" /* FACEBOOK */;
+        return FacebookAuthProvider;
+    }(OAuthProvider));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Provider for generating an an {@link OAuthCredential} for {@link @firebase/auth-types#ProviderId.GOOGLE}.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new GoogleAuthProvider();
+     * // Start a sign in process for an unauthenticated user.
+     * provider.addScope('profile');
+     * provider.addScope('email');
+     * await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * if (result) {
+     *   // This is the signed-in user
+     *   const user = result.user;
+     *   // This gives you a Google Access Token.
+     *   const credential = provider.credentialFromResult(auth, result);
+     *   const token = credential.accessToken;
+     * }
+     * ```
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a popup.
+     * const provider = new GoogleAuthProvider();
+     * provider.addScope('profile');
+     * provider.addScope('email');
+     * const result = await signInWithPopup(auth, provider);
+     *
+     * // The signed-in user info.
+     * const user = result.user;
+     * // This gives you a Google Access Token.
+     * const credential = provider.credentialFromResult(auth, result);
+     * const token = credential.accessToken;
+     * ```
+     *
+     * @public
+     */
+    var GoogleAuthProvider = /** @class */ (function (_super) {
+        __extends(GoogleAuthProvider, _super);
+        function GoogleAuthProvider() {
+            var _this = _super.call(this, "google.com" /* GOOGLE */) || this;
+            _this.addScope('profile');
+            return _this;
+        }
+        /**
+         * Creates a credential for Google. At least one of ID token and access token is required.
+         *
+         * @example
+         * ```javascript
+         * // \`googleUser\` from the onsuccess Google Sign In callback.
+         * const credential = GoogleAuthProvider.credential(googleUser.getAuthResponse().id_token);
+         * const result = await signInWithCredential(credential);
+         * ```
+         *
+         * @param idToken - Google ID token.
+         * @param accessToken - Google access token.
+         */
+        GoogleAuthProvider.credential = function (idToken, accessToken) {
+            return OAuthCredential._fromParams({
+                providerId: GoogleAuthProvider.PROVIDER_ID,
+                signInMethod: GoogleAuthProvider.GOOGLE_SIGN_IN_METHOD,
+                idToken: idToken,
+                accessToken: accessToken
+            });
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#UserCredential}.
+         *
+         * @param userCredential - The user credential.
+         */
+        GoogleAuthProvider.credentialFromResult = function (userCredential) {
+            return GoogleAuthProvider.credentialFromTaggedObject(userCredential);
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#AuthError} which was
+         * thrown during a sign-in, link, or reauthenticate operation.
+         *
+         * @param userCredential - The user credential.
+         */
+        GoogleAuthProvider.credentialFromError = function (error) {
+            return GoogleAuthProvider.credentialFromTaggedObject((error.customData || {}));
+        };
+        GoogleAuthProvider.credentialFromTaggedObject = function (_a) {
+            var tokenResponse = _a._tokenResponse;
+            if (!tokenResponse) {
+                return null;
+            }
+            var _b = tokenResponse, oauthIdToken = _b.oauthIdToken, oauthAccessToken = _b.oauthAccessToken;
+            if (!oauthIdToken && !oauthAccessToken) {
+                // This could be an oauth 1 credential or a phone credential
+                return null;
+            }
+            try {
+                return GoogleAuthProvider.credential(oauthIdToken, oauthAccessToken);
+            }
+            catch (_c) {
+                return null;
+            }
+        };
+        /** Always set to {@link @firebase/auth-types#SignInMethod.GOOGLE}. */
+        GoogleAuthProvider.GOOGLE_SIGN_IN_METHOD = "google.com" /* GOOGLE */;
+        /** Always set to {@link @firebase/auth-types#ProviderId.GOOGLE}. */
+        GoogleAuthProvider.PROVIDER_ID = "google.com" /* GOOGLE */;
+        return GoogleAuthProvider;
+    }(OAuthProvider));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Provider for generating an {@link OAuthCredential} for {@link @firebase/auth-types#ProviderId.GITHUB}.
+     *
+     * @remarks
+     * GitHub requires an OAuth 2.0 redirect, so you can either handle the redirect directly, or use
+     * the {@link signInWithPopup} handler:
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new GithubAuthProvider();
+     * // Start a sign in process for an unauthenticated user.
+     * provider.addScope('repo');
+     * await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * if (result) {
+     *   // This is the signed-in user
+     *   const user = result.user;
+     *   // This gives you a Github Access Token.
+     *   const credential = provider.credentialFromResult(auth, result);
+     *   const token = credential.accessToken;
+     * }
+     * ```
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a popup.
+     * const provider = new GithubAuthProvider();
+     * provider.addScope('repo');
+     * const result = await signInWithPopup(auth, provider);
+     *
+     * // The signed-in user info.
+     * const user = result.user;
+     * // This gives you a Github Access Token.
+     * const credential = provider.credentialFromResult(auth, result);
+     * const token = credential.accessToken;
+     * ```
+     * @public
+     */
+    var GithubAuthProvider = /** @class */ (function (_super) {
+        __extends(GithubAuthProvider, _super);
+        function GithubAuthProvider() {
+            return _super.call(this, "github.com" /* GITHUB */) || this;
+        }
+        /**
+         * Creates a credential for Github.
+         *
+         * @param accessToken - Github access token.
+         */
+        GithubAuthProvider.credential = function (accessToken) {
+            return OAuthCredential._fromParams({
+                providerId: GithubAuthProvider.PROVIDER_ID,
+                signInMethod: GithubAuthProvider.GITHUB_SIGN_IN_METHOD,
+                accessToken: accessToken
+            });
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#UserCredential}.
+         *
+         * @param userCredential - The user credential.
+         */
+        GithubAuthProvider.credentialFromResult = function (userCredential) {
+            return GithubAuthProvider.credentialFromTaggedObject(userCredential);
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#AuthError} which was
+         * thrown during a sign-in, link, or reauthenticate operation.
+         *
+         * @param userCredential - The user credential.
+         */
+        GithubAuthProvider.credentialFromError = function (error) {
+            return GithubAuthProvider.credentialFromTaggedObject((error.customData || {}));
+        };
+        GithubAuthProvider.credentialFromTaggedObject = function (_a) {
+            var tokenResponse = _a._tokenResponse;
+            if (!tokenResponse || !('oauthAccessToken' in tokenResponse)) {
+                return null;
+            }
+            if (!tokenResponse.oauthAccessToken) {
+                return null;
+            }
+            try {
+                return GithubAuthProvider.credential(tokenResponse.oauthAccessToken);
+            }
+            catch (_b) {
+                return null;
+            }
+        };
+        /** Always set to {@link @firebase/auth-types#SignInMethod.GITHUB}. */
+        GithubAuthProvider.GITHUB_SIGN_IN_METHOD = "github.com" /* GITHUB */;
+        /** Always set to {@link @firebase/auth-types#ProviderId.GITHUB}. */
+        GithubAuthProvider.PROVIDER_ID = "github.com" /* GITHUB */;
+        return GithubAuthProvider;
+    }(OAuthProvider));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Provider for generating an {@link OAuthCredential} for {@link @firebase/auth-types#ProviderId.TWITTER}.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new TwitterAuthProvider();
+     * // Start a sign in process for an unauthenticated user.
+     * await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * if (result) {
+     *   // This is the signed-in user
+     *   const user = result.user;
+     *   // This gives you a Twitter Access Token and Secret.
+     *   const credential = provider.credentialFromResult(auth, result);
+     *   const token = credential.accessToken;
+     *   const secret = credential.secret;
+     * }
+     * ```
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a popup.
+     * const provider = new TwitterAuthProvider();
+     * const result = await signInWithPopup(auth, provider);
+     *
+     * // The signed-in user info.
+     * const user = result.user;
+     * // This gives you a Twitter Access Token and Secret.
+     * const credential = provider.credentialFromResult(auth, result);
+     * const token = credential.accessToken;
+     * const secret = credential.secret;
+     * ```
+     *
+     * @public
+     */
+    var TwitterAuthProvider = /** @class */ (function (_super) {
+        __extends(TwitterAuthProvider, _super);
+        function TwitterAuthProvider() {
+            return _super.call(this, "twitter.com" /* TWITTER */) || this;
+        }
+        /**
+         * Creates a credential for Twitter.
+         *
+         * @param token - Twitter access token.
+         * @param secret - Twitter secret.
+         */
+        TwitterAuthProvider.credential = function (token, secret) {
+            return OAuthCredential._fromParams({
+                providerId: TwitterAuthProvider.PROVIDER_ID,
+                signInMethod: TwitterAuthProvider.TWITTER_SIGN_IN_METHOD,
+                oauthToken: token,
+                oauthTokenSecret: secret
+            });
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#UserCredential}.
+         *
+         * @param userCredential - The user credential.
+         */
+        TwitterAuthProvider.credentialFromResult = function (userCredential) {
+            return TwitterAuthProvider.credentialFromTaggedObject(userCredential);
+        };
+        /**
+         * Used to extract the underlying {@link OAuthCredential} from a {@link @firebase/auth-types#AuthError} which was
+         * thrown during a sign-in, link, or reauthenticate operation.
+         *
+         * @param userCredential - The user credential.
+         */
+        TwitterAuthProvider.credentialFromError = function (error) {
+            return TwitterAuthProvider.credentialFromTaggedObject((error.customData || {}));
+        };
+        TwitterAuthProvider.credentialFromTaggedObject = function (_a) {
+            var tokenResponse = _a._tokenResponse;
+            if (!tokenResponse) {
+                return null;
+            }
+            var _b = tokenResponse, oauthAccessToken = _b.oauthAccessToken, oauthTokenSecret = _b.oauthTokenSecret;
+            if (!oauthAccessToken || !oauthTokenSecret) {
+                return null;
+            }
+            try {
+                return TwitterAuthProvider.credential(oauthAccessToken, oauthTokenSecret);
+            }
+            catch (_c) {
+                return null;
+            }
+        };
+        TwitterAuthProvider.TWITTER_SIGN_IN_METHOD = "twitter.com" /* TWITTER */;
+        TwitterAuthProvider.PROVIDER_ID = "twitter.com" /* TWITTER */;
+        return TwitterAuthProvider;
+    }(OAuthProvider));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function signUp(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signUp" /* SIGN_UP */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var UserCredentialImpl = /** @class */ (function () {
+        function UserCredentialImpl(params) {
+            this.user = params.user;
+            this.providerId = params.providerId;
+            this._tokenResponse = params._tokenResponse;
+            this.operationType = params.operationType;
+        }
+        UserCredentialImpl._fromIdTokenResponse = function (auth, operationType, idTokenResponse, isAnonymous) {
+            if (isAnonymous === void 0) { isAnonymous = false; }
+            return __awaiter(this, void 0, void 0, function () {
+                var user, providerId, userCred;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, UserImpl._fromIdTokenResponse(auth, idTokenResponse, isAnonymous)];
+                        case 1:
+                            user = _a.sent();
+                            providerId = providerIdForResponse(idTokenResponse);
+                            userCred = new UserCredentialImpl({
+                                user: user,
+                                providerId: providerId,
+                                _tokenResponse: idTokenResponse,
+                                operationType: operationType
+                            });
+                            return [2 /*return*/, userCred];
+                    }
+                });
+            });
+        };
+        UserCredentialImpl._forOperation = function (user, operationType, response) {
+            return __awaiter(this, void 0, void 0, function () {
+                var providerId;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, user._updateTokensIfNecessary(response, /* reload */ true)];
+                        case 1:
+                            _a.sent();
+                            providerId = providerIdForResponse(response);
+                            return [2 /*return*/, new UserCredentialImpl({
+                                    user: user,
+                                    providerId: providerId,
+                                    _tokenResponse: response,
+                                    operationType: operationType
+                                })];
+                    }
+                });
+            });
+        };
+        return UserCredentialImpl;
+    }());
+    function providerIdForResponse(response) {
+        if (response.providerId) {
+            return response.providerId;
+        }
+        if ('phoneNumber' in response) {
+            return "phone" /* PHONE */;
+        }
+        return null;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Asynchronously signs in as an anonymous user.
+     *
+     * @remarks
+     * If there is already an anonymous user signed in, that user will be returned; otherwise, a
+     * new anonymous user identity will be created and returned.
+     *
+     * @param auth - The Auth instance.
+     *
+     * @public
+     */
+    function signInAnonymously(auth) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var authInternal, response, userCredential;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        authInternal = _castAuth(auth);
+                        if ((_a = authInternal.currentUser) === null || _a === void 0 ? void 0 : _a.isAnonymous) {
+                            // If an anonymous user is already signed in, no need to sign them in again.
+                            return [2 /*return*/, new UserCredentialImpl({
+                                    user: authInternal.currentUser,
+                                    providerId: null,
+                                    operationType: "signIn" /* SIGN_IN */
+                                })];
+                        }
+                        return [4 /*yield*/, signUp(authInternal, {
+                                returnSecureToken: true
+                            })];
+                    case 1:
+                        response = _b.sent();
+                        return [4 /*yield*/, UserCredentialImpl._fromIdTokenResponse(authInternal, "signIn" /* SIGN_IN */, response, true)];
+                    case 2:
+                        userCredential = _b.sent();
+                        return [4 /*yield*/, authInternal._updateCurrentUser(userCredential.user)];
+                    case 3:
+                        _b.sent();
+                        return [2 /*return*/, userCredential];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var MultiFactorError = /** @class */ (function (_super) {
+        __extends(MultiFactorError, _super);
+        function MultiFactorError(auth, error, operationType, user) {
+            var _a;
+            var _this = _super.call(this, error.code, error.message) || this;
+            _this.operationType = operationType;
+            _this.user = user;
+            _this.name = 'FirebaseError';
+            // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+            Object.setPrototypeOf(_this, MultiFactorError.prototype);
+            _this.appName = auth.name;
+            _this.code = error.code;
+            _this.tenantId = (_a = auth.tenantId) !== null && _a !== void 0 ? _a : undefined;
+            _this.serverResponse = error.customData
+                .serverResponse;
+            return _this;
+        }
+        MultiFactorError._fromErrorAndOperation = function (auth, error, operationType, user) {
+            return new MultiFactorError(auth, error, operationType, user);
+        };
+        return MultiFactorError;
+    }(FirebaseError));
+    function _processCredentialSavingMfaContextIfNecessary(auth, operationType, credential, user) {
+        var idTokenProvider = operationType === "reauthenticate" /* REAUTHENTICATE */
+            ? credential._getReauthenticationResolver(auth)
+            : credential._getIdTokenResponse(auth);
+        return idTokenProvider.catch(function (error) {
+            if (error.code === "auth/" + "multi-factor-auth-required" /* MFA_REQUIRED */) {
+                throw MultiFactorError._fromErrorAndOperation(auth, error, operationType, user);
+            }
+            throw error;
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Takes a set of UserInfo provider data and converts it to a set of names
+     */
+    function providerDataAsNames(providerData) {
+        return new Set(providerData
+            .map(function (_a) {
+            var providerId = _a.providerId;
+            return providerId;
+        })
+            .filter(function (pid) { return !!pid; }));
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Unlinks a provider from a user account.
+     *
+     * @param user - The user.
+     * @param providerId - The provider to unlink.
+     *
+     * @public
+     */
+    function unlink(user, providerId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, providerUserInfo, _a, _b, providersLeft;
+            var _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, _assertLinkedStatus(true, userInternal, providerId)];
+                    case 1:
+                        _d.sent();
+                        _a = deleteLinkedAccounts;
+                        _b = [userInternal.auth];
+                        _c = {};
+                        return [4 /*yield*/, user.getIdToken()];
+                    case 2: return [4 /*yield*/, _a.apply(void 0, _b.concat([(_c.idToken = _d.sent(),
+                                _c.deleteProvider = [providerId],
+                                _c)]))];
+                    case 3:
+                        providerUserInfo = (_d.sent()).providerUserInfo;
+                        providersLeft = providerDataAsNames(providerUserInfo || []);
+                        userInternal.providerData = user.providerData.filter(function (pd) {
+                            return providersLeft.has(pd.providerId);
+                        });
+                        if (!providersLeft.has("phone" /* PHONE */)) {
+                            userInternal.phoneNumber = null;
+                        }
+                        return [4 /*yield*/, userInternal.auth._persistUserIfCurrent(userInternal)];
+                    case 4:
+                        _d.sent();
+                        return [2 /*return*/, user];
+                }
+            });
+        });
+    }
+    function _link(user, credential, bypassAuthState) {
+        if (bypassAuthState === void 0) { bypassAuthState = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var response, _a, _b, _c, _d, _e;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
+                    case 0:
+                        _a = _logoutIfInvalidated;
+                        _b = [user];
+                        _d = (_c = credential)._linkToIdToken;
+                        _e = [user.auth];
+                        return [4 /*yield*/, user.getIdToken()];
+                    case 1: return [4 /*yield*/, _a.apply(void 0, _b.concat([_d.apply(_c, _e.concat([_f.sent()])), bypassAuthState]))];
+                    case 2:
+                        response = _f.sent();
+                        return [2 /*return*/, UserCredentialImpl._forOperation(user, "link" /* LINK */, response)];
+                }
+            });
+        });
+    }
+    function _assertLinkedStatus(expected, user, provider) {
+        return __awaiter(this, void 0, void 0, function () {
+            var providerIds, code;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _reloadWithoutSaving(user)];
+                    case 1:
+                        _a.sent();
+                        providerIds = providerDataAsNames(user.providerData);
+                        code = expected === false
+                            ? "provider-already-linked" /* PROVIDER_ALREADY_LINKED */
+                            : "no-such-provider" /* NO_SUCH_PROVIDER */;
+                        _assert(providerIds.has(provider) === expected, user.auth, code);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _reauthenticate(user, credential, bypassAuthState) {
+        if (bypassAuthState === void 0) { bypassAuthState = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var auth, operationType, response, parsed, localId, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        auth = user.auth;
+                        operationType = "reauthenticate" /* REAUTHENTICATE */;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, _logoutIfInvalidated(user, _processCredentialSavingMfaContextIfNecessary(auth, operationType, credential, user), bypassAuthState)];
+                    case 2:
+                        response = _a.sent();
+                        _assert(response.idToken, auth, "internal-error" /* INTERNAL_ERROR */);
+                        parsed = _parseToken(response.idToken);
+                        _assert(parsed, auth, "internal-error" /* INTERNAL_ERROR */);
+                        localId = parsed.sub;
+                        _assert(user.uid === localId, auth, "user-mismatch" /* USER_MISMATCH */);
+                        return [2 /*return*/, UserCredentialImpl._forOperation(user, operationType, response)];
+                    case 3:
+                        e_1 = _a.sent();
+                        // Convert user deleted error into user mismatch
+                        if ((e_1 === null || e_1 === void 0 ? void 0 : e_1.code) === "auth/" + "user-not-found" /* USER_DELETED */) {
+                            _fail(auth, "user-mismatch" /* USER_MISMATCH */);
+                        }
+                        throw e_1;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _signInWithCredential(auth, credential, bypassAuthState) {
+        if (bypassAuthState === void 0) { bypassAuthState = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var operationType, response, userCredential;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        operationType = "signIn" /* SIGN_IN */;
+                        return [4 /*yield*/, _processCredentialSavingMfaContextIfNecessary(auth, operationType, credential)];
+                    case 1:
+                        response = _a.sent();
+                        return [4 /*yield*/, UserCredentialImpl._fromIdTokenResponse(auth, operationType, response)];
+                    case 2:
+                        userCredential = _a.sent();
+                        if (!!bypassAuthState) return [3 /*break*/, 4];
+                        return [4 /*yield*/, auth._updateCurrentUser(userCredential.user)];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, userCredential];
+                }
+            });
+        });
+    }
+    /**
+     * Asynchronously signs in with the given credentials.
+     *
+     * @remarks
+     * An {@link @firebase/auth-types#AuthProvider} can be used to generate the credential.
+     *
+     * @param auth - The Auth instance.
+     * @param credential - The auth credential.
+     *
+     * @public
+     */
+    function signInWithCredential(auth, credential) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _signInWithCredential(_castAuth(auth), credential)];
+            });
+        });
+    }
+    /**
+     * Links the user account with the given credentials.
+     *
+     * @remarks
+     * An {@link @firebase/auth-types#AuthProvider} can be used to generate the credential.
+     *
+     * @param user - The user.
+     * @param credential - The auth credential.
+     *
+     * @public
+     */
+    function linkWithCredential(user, credential) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, _assertLinkedStatus(false, userInternal, credential.providerId)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, _link(userInternal, credential)];
+                }
+            });
+        });
+    }
+    /**
+     * Re-authenticates a user using a fresh credential.
+     *
+     * @remarks
+     * Use before operations such as {@link updatePassword} that require tokens from recent sign-in
+     * attempts. This method can be used to recover from a
+     * {@link AuthErrorCode.CREDENTIAL_TOO_OLD_LOGIN_AGAIN} error.
+     *
+     * @param user - The user.
+     * @param credential - The auth credential.
+     *
+     * @public
+     */
+    function reauthenticateWithCredential(user, credential) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _reauthenticate(user, credential)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function signInWithCustomToken(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performSignInRequest(auth, "POST" /* POST */, "/v1/accounts:signInWithCustomToken" /* SIGN_IN_WITH_CUSTOM_TOKEN */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Asynchronously signs in using a custom token.
+     *
+     * @remarks
+     * Custom tokens are used to integrate Firebase Auth with existing auth systems, and must
+     * be generated by an auth backend using the
+     * {@link https://firebase.google.com/docs/reference/admin/node/admin.auth.Auth#createcustomtoken | createCustomToken}
+     * method in the {@link https://firebase.google.com/docs/auth/admin | Admin SDK} .
+     *
+     * Fails with an error if the token is invalid, expired, or not accepted by the Firebase Auth service.
+     *
+     * @param auth - The Auth instance.
+     * @param customToken - The custom token to sign in with.
+     *
+     * @public
+     */
+    function signInWithCustomToken$1(auth, customToken) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, authInternal, cred;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, signInWithCustomToken(auth, {
+                            token: customToken,
+                            returnSecureToken: true
+                        })];
+                    case 1:
+                        response = _a.sent();
+                        authInternal = _castAuth(auth);
+                        return [4 /*yield*/, UserCredentialImpl._fromIdTokenResponse(authInternal, "signIn" /* SIGN_IN */, response)];
+                    case 2:
+                        cred = _a.sent();
+                        return [4 /*yield*/, authInternal._updateCurrentUser(cred.user)];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/, cred];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var MultiFactorInfo = /** @class */ (function () {
+        function MultiFactorInfo(factorId, response) {
+            this.factorId = factorId;
+            this.uid = response.mfaEnrollmentId;
+            this.enrollmentTime = new Date(response.enrolledAt).toUTCString();
+            this.displayName = response.displayName;
+        }
+        MultiFactorInfo._fromServerResponse = function (auth, enrollment) {
+            if ('phoneInfo' in enrollment) {
+                return PhoneMultiFactorInfo._fromServerResponse(auth, enrollment);
+            }
+            return _fail(auth, "internal-error" /* INTERNAL_ERROR */);
+        };
+        return MultiFactorInfo;
+    }());
+    var PhoneMultiFactorInfo = /** @class */ (function (_super) {
+        __extends(PhoneMultiFactorInfo, _super);
+        function PhoneMultiFactorInfo(response) {
+            var _this = _super.call(this, "phone" /* PHONE */, response) || this;
+            _this.phoneNumber = response.phoneInfo;
+            return _this;
+        }
+        PhoneMultiFactorInfo._fromServerResponse = function (_auth, enrollment) {
+            return new PhoneMultiFactorInfo(enrollment);
+        };
+        return PhoneMultiFactorInfo;
+    }(MultiFactorInfo));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _setActionCodeSettingsOnRequest(auth, request, actionCodeSettings) {
+        var _a;
+        _assert(((_a = actionCodeSettings.url) === null || _a === void 0 ? void 0 : _a.length) > 0, auth, "invalid-continue-uri" /* INVALID_CONTINUE_URI */);
+        _assert(typeof actionCodeSettings.dynamicLinkDomain === 'undefined' ||
+            actionCodeSettings.dynamicLinkDomain.length > 0, auth, "invalid-dynamic-link-domain" /* INVALID_DYNAMIC_LINK_DOMAIN */);
+        request.continueUrl = actionCodeSettings.url;
+        request.dynamicLinkDomain = actionCodeSettings.dynamicLinkDomain;
+        request.canHandleCodeInApp = actionCodeSettings.handleCodeInApp;
+        if (actionCodeSettings.iOS) {
+            _assert(actionCodeSettings.iOS.bundleId.length > 0, auth, "missing-ios-bundle-id" /* MISSING_IOS_BUNDLE_ID */);
+            request.iosBundleId = actionCodeSettings.iOS.bundleId;
+        }
+        if (actionCodeSettings.android) {
+            _assert(actionCodeSettings.android.packageName.length > 0, auth, "missing-android-pkg-name" /* MISSING_ANDROID_PACKAGE_NAME */);
+            request.androidInstallApp = actionCodeSettings.android.installApp;
+            request.androidMinimumVersionCode =
+                actionCodeSettings.android.minimumVersion;
+            request.androidPackageName = actionCodeSettings.android.packageName;
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Sends a password reset email to the given email address.
+     *
+     * @remarks
+     * To complete the password reset, call {@link confirmPasswordReset} with the code supplied in
+     * the email sent to the user, along with the new password specified by the user.
+     *
+     * @example
+     * ```javascript
+     * const actionCodeSettings = {
+     *   url: 'https://www.example.com/?email=user@example.com',
+     *   iOS: {
+     *      bundleId: 'com.example.ios'
+     *   },
+     *   android: {
+     *     packageName: 'com.example.android',
+     *     installApp: true,
+     *     minimumVersion: '12'
+     *   },
+     *   handleCodeInApp: true
+     * };
+     * await sendPasswordResetEmail(auth, 'user@example.com', actionCodeSettings);
+     * // Obtain code from user.
+     * await confirmPasswordReset('user@example.com', code);
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param email - The user's email address.
+     * @param actionCodeSettings - The {@link @firebase/auth-types#ActionCodeSettings}.
+     *
+     * @public
+     */
+    function sendPasswordResetEmail$1(auth, email, actionCodeSettings) {
+        return __awaiter(this, void 0, void 0, function () {
+            var request;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        request = {
+                            requestType: "PASSWORD_RESET" /* PASSWORD_RESET */,
+                            email: email
+                        };
+                        if (actionCodeSettings) {
+                            _setActionCodeSettingsOnRequest(auth, request, actionCodeSettings);
+                        }
+                        return [4 /*yield*/, sendPasswordResetEmail(auth, request)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Completes the password reset process, given a confirmation code and new password.
+     *
+     * @param auth - The Auth instance.
+     * @param oobCode - A confirmation code sent to the user.
+     * @param newPassword - The new password.
+     *
+     * @public
+     */
+    function confirmPasswordReset(auth, oobCode, newPassword) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, resetPassword(auth, {
+                            oobCode: oobCode,
+                            newPassword: newPassword
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Applies a verification code sent to the user by email or other out-of-band mechanism.
+     *
+     * @param auth - The Auth instance.
+     * @param oobCode - A verification code sent to the user.
+     *
+     * @public
+     */
+    function applyActionCode$1(auth, oobCode) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, applyActionCode(auth, { oobCode: oobCode })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Checks a verification code sent to the user by email or other out-of-band mechanism.
+     *
+     * @returns metadata about the code.
+     *
+     * @param auth - The Auth instance.
+     * @param oobCode - A verification code sent to the user.
+     *
+     * @public
+     */
+    function checkActionCode(auth, oobCode) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, operation, multiFactorInfo;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, resetPassword(auth, { oobCode: oobCode })];
+                    case 1:
+                        response = _a.sent();
+                        operation = response.requestType;
+                        _assert(operation, auth, "internal-error" /* INTERNAL_ERROR */);
+                        switch (operation) {
+                            case "EMAIL_SIGNIN" /* EMAIL_SIGNIN */:
+                                break;
+                            case "VERIFY_AND_CHANGE_EMAIL" /* VERIFY_AND_CHANGE_EMAIL */:
+                                _assert(response.newEmail, auth, "internal-error" /* INTERNAL_ERROR */);
+                                break;
+                            case "REVERT_SECOND_FACTOR_ADDITION" /* REVERT_SECOND_FACTOR_ADDITION */:
+                                _assert(response.mfaInfo, auth, "internal-error" /* INTERNAL_ERROR */);
+                            // fall through
+                            default:
+                                _assert(response.email, auth, "internal-error" /* INTERNAL_ERROR */);
+                        }
+                        multiFactorInfo = null;
+                        if (response.mfaInfo) {
+                            multiFactorInfo = MultiFactorInfo._fromServerResponse(_castAuth(auth), response.mfaInfo);
+                        }
+                        return [2 /*return*/, {
+                                data: {
+                                    email: (response.requestType ===
+                                        "VERIFY_AND_CHANGE_EMAIL" /* VERIFY_AND_CHANGE_EMAIL */
+                                        ? response.newEmail
+                                        : response.email) || null,
+                                    previousEmail: (response.requestType ===
+                                        "VERIFY_AND_CHANGE_EMAIL" /* VERIFY_AND_CHANGE_EMAIL */
+                                        ? response.email
+                                        : response.newEmail) || null,
+                                    multiFactorInfo: multiFactorInfo
+                                },
+                                operation: operation
+                            }];
+                }
+            });
+        });
+    }
+    /**
+     * Checks a password reset code sent to the user by email or other out-of-band mechanism.
+     *
+     * @returns the user's email address if valid.
+     *
+     * @param auth - The Auth instance.
+     * @param code - A verification code sent to the user.
+     *
+     * @public
+     */
+    function verifyPasswordResetCode(auth, code) {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, checkActionCode(auth, code)];
+                    case 1:
+                        data = (_a.sent()).data;
+                        // Email should always be present since a code was sent to it
+                        return [2 /*return*/, data.email];
+                }
+            });
+        });
+    }
+    /**
+     * Creates a new user account associated with the specified email address and password.
+     *
+     * @remarks
+     * On successful creation of the user account, this user will also be signed in to your application.
+     *
+     * User account creation can fail if the account already exists or the password is invalid.
+     *
+     * Note: The email address acts as a unique identifier for the user and enables an email-based
+     * password reset. This function will create a new user account and set the initial user password.
+     *
+     * @param auth - The Auth instance.
+     * @param email - The user's email address.
+     * @param password - The user's chosen password.
+     *
+     * @public
+     */
+    function createUserWithEmailAndPassword(auth, email, password) {
+        return __awaiter(this, void 0, void 0, function () {
+            var authInternal, response, userCredential;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        authInternal = _castAuth(auth);
+                        return [4 /*yield*/, signUp(auth, {
+                                returnSecureToken: true,
+                                email: email,
+                                password: password
+                            })];
+                    case 1:
+                        response = _a.sent();
+                        return [4 /*yield*/, UserCredentialImpl._fromIdTokenResponse(authInternal, "signIn" /* SIGN_IN */, response)];
+                    case 2:
+                        userCredential = _a.sent();
+                        return [4 /*yield*/, authInternal._updateCurrentUser(userCredential.user)];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/, userCredential];
+                }
+            });
+        });
+    }
+    /**
+     * Asynchronously signs in using an email and password.
+     *
+     * @remarks
+     * Fails with an error if the email address and password do not match.
+     *
+     * Note: The user's password is NOT the password used to access the user's email account. The
+     * email address serves as a unique identifier for the user, and the password is used to access
+     * the user's account in your Firebase project. See also: {@link createUserWithEmailAndPassword}.
+     *
+     * @param auth - The Auth instance.
+     * @param email - The users email address.
+     * @param password - The users password.
+     *
+     * @public
+     */
+    function signInWithEmailAndPassword(auth, email, password) {
+        return signInWithCredential(auth, EmailAuthProvider.credential(email, password));
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Sends a sign-in email link to the user with the specified email.
+     *
+     * @remarks
+     * The sign-in operation has to always be completed in the app unlike other out of band email
+     * actions (password reset and email verifications). This is because, at the end of the flow,
+     * the user is expected to be signed in and their Auth state persisted within the app.
+     *
+     * To complete sign in with the email link, call {@link signInWithEmailLink} with the email
+     * address and the email link supplied in the email sent to the user.
+     *
+     * @example
+     * ```javascript
+     * const actionCodeSettings = {
+     *   url: 'https://www.example.com/?email=user@example.com',
+     *   iOS: {
+     *      bundleId: 'com.example.ios'
+     *   },
+     *   android: {
+     *     packageName: 'com.example.android',
+     *     installApp: true,
+     *     minimumVersion: '12'
+     *   },
+     *   handleCodeInApp: true
+     * };
+     * await sendSignInLinkToEmail(auth, 'user@example.com', actionCodeSettings);
+     * // Obtain emailLink from the user.
+     * if(isSignInWithEmailLink(auth, emailLink)) {
+     *   await signInWithEmailLink('user@example.com', 'user@example.com', emailLink);
+     * }
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param email - The user's email address.
+     * @param actionCodeSettings - The {@link @firebase/auth-types#ActionCodeSettings}.
+     *
+     * @public
+     */
+    function sendSignInLinkToEmail$1(auth, email, actionCodeSettings) {
+        return __awaiter(this, void 0, void 0, function () {
+            var request;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        request = {
+                            requestType: "EMAIL_SIGNIN" /* EMAIL_SIGNIN */,
+                            email: email
+                        };
+                        _assert(actionCodeSettings === null || actionCodeSettings === void 0 ? void 0 : actionCodeSettings.handleCodeInApp, auth, "argument-error" /* ARGUMENT_ERROR */);
+                        if (actionCodeSettings) {
+                            _setActionCodeSettingsOnRequest(auth, request, actionCodeSettings);
+                        }
+                        return [4 /*yield*/, sendSignInLinkToEmail(auth, request)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Checks if an incoming link is a sign-in with email link suitable for {@link signInWithEmailLink}.
+     *
+     * @param auth - The Auth instance.
+     * @param emailLink - The link sent to the user's email address.
+     *
+     * @public
+     */
+    function isSignInWithEmailLink(auth, emailLink) {
+        var actionCodeUrl = ActionCodeURL.parseLink(emailLink);
+        return (actionCodeUrl === null || actionCodeUrl === void 0 ? void 0 : actionCodeUrl.operation) === "EMAIL_SIGNIN" /* EMAIL_SIGNIN */;
+    }
+    /**
+     * Asynchronously signs in using an email and sign-in email link.
+     *
+     * @remarks
+     * If no link is passed, the link is inferred from the current URL.
+     *
+     * Fails with an error if the email address is invalid or OTP in email link expires.
+     *
+     * Note: Confirm the link is a sign-in email link before calling this method firebase.auth.Auth.isSignInWithEmailLink.
+     *
+     * @example
+     * ```javascript
+     * const actionCodeSettings = {
+     *   url: 'https://www.example.com/?email=user@example.com',
+     *   iOS: {
+     *      bundleId: 'com.example.ios'
+     *   },
+     *   android: {
+     *     packageName: 'com.example.android',
+     *     installApp: true,
+     *     minimumVersion: '12'
+     *   },
+     *   handleCodeInApp: true
+     * };
+     * await sendSignInLinkToEmail(auth, 'user@example.com', actionCodeSettings);
+     * // Obtain emailLink from the user.
+     * if(isSignInWithEmailLink(auth, emailLink)) {
+     *   await signInWithEmailLink('user@example.com', 'user@example.com', emailLink);
+     * }
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param email - The user's email address.
+     * @param emailLink - The link sent to the user's email address.
+     *
+     * @public
+     */
+    function signInWithEmailLink$1(auth, email, emailLink) {
+        return __awaiter(this, void 0, void 0, function () {
+            var credential;
+            return __generator(this, function (_a) {
+                credential = EmailAuthProvider.credentialWithLink(email, emailLink || _getCurrentUrl());
+                // Check if the tenant ID in the email link matches the tenant ID on Auth
+                // instance.
+                _assert(credential.tenantId === (auth.tenantId || null), auth, "tenant-id-mismatch" /* TENANT_ID_MISMATCH */);
+                return [2 /*return*/, signInWithCredential(auth, credential)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function createAuthUri(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:createAuthUri" /* CREATE_AUTH_URI */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Gets the list of possible sign in methods for the given email address.
+     *
+     * @remarks
+     * This is useful to differentiate methods of sign-in for the same provider, eg.
+     * {@link EmailAuthProvider} which has 2 methods of sign-in,
+     * {@link @firebase/auth-types#SignInMethod.EMAIL_PASSWORD} and
+     * {@link @firebase/auth-types#SignInMethod.EMAIL_LINK} .
+     *
+     * @param auth - The Auth instance.
+     * @param email - The user's email address.
+     *
+     * @public
+     */
+    function fetchSignInMethodsForEmail(auth, email) {
+        return __awaiter(this, void 0, void 0, function () {
+            var continueUri, request, signinMethods;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        continueUri = _isHttpOrHttps() ? _getCurrentUrl() : 'http://localhost';
+                        request = {
+                            identifier: email,
+                            continueUri: continueUri
+                        };
+                        return [4 /*yield*/, createAuthUri(auth, request)];
+                    case 1:
+                        signinMethods = (_a.sent()).signinMethods;
+                        return [2 /*return*/, signinMethods || []];
+                }
+            });
+        });
+    }
+    /**
+     * Sends a verification email to a user.
+     *
+     * @remarks
+     * The verification process is completed by calling {@link applyActionCode}.
+     *
+     * @example
+     * ```javascript
+     * const actionCodeSettings = {
+     *   url: 'https://www.example.com/?email=user@example.com',
+     *   iOS: {
+     *      bundleId: 'com.example.ios'
+     *   },
+     *   android: {
+     *     packageName: 'com.example.android',
+     *     installApp: true,
+     *     minimumVersion: '12'
+     *   },
+     *   handleCodeInApp: true
+     * };
+     * await sendEmailVerification(user, actionCodeSettings);
+     * // Obtain code from the user.
+     * await applyActionCode(auth, code);
+     * ```
+     *
+     * @param user - The user.
+     * @param actionCodeSettings - The {@link @firebase/auth-types#ActionCodeSettings}.
+     *
+     * @public
+     */
+    function sendEmailVerification$1(user, actionCodeSettings) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, idToken, request, email;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, user.getIdToken()];
+                    case 1:
+                        idToken = _a.sent();
+                        request = {
+                            requestType: "VERIFY_EMAIL" /* VERIFY_EMAIL */,
+                            idToken: idToken
+                        };
+                        if (actionCodeSettings) {
+                            _setActionCodeSettingsOnRequest(userInternal.auth, request, actionCodeSettings);
+                        }
+                        return [4 /*yield*/, sendEmailVerification(userInternal.auth, request)];
+                    case 2:
+                        email = (_a.sent()).email;
+                        if (!(email !== user.email)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, user.reload()];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Sends a verification email to a new email address.
+     *
+     * @remarks
+     * The user's email will be updated to the new one after being verified.
+     *
+     * If you have a custom email action handler, you can complete the verification process by calling
+     * {@link applyActionCode}.
+     *
+     * @example
+     * ```javascript
+     * const actionCodeSettings = {
+     *   url: 'https://www.example.com/?email=user@example.com',
+     *   iOS: {
+     *      bundleId: 'com.example.ios'
+     *   },
+     *   android: {
+     *     packageName: 'com.example.android',
+     *     installApp: true,
+     *     minimumVersion: '12'
+     *   },
+     *   handleCodeInApp: true
+     * };
+     * await verifyBeforeUpdateEmail(user, 'newemail@example.com', actionCodeSettings);
+     * // Obtain code from the user.
+     * await applyActionCode(auth, code);
+     * ```
+     *
+     * @param user - The user.
+     * @param newEmail - The new email address to be verified before update.
+     * @param actionCodeSettings - The {@link @firebase/auth-types#ActionCodeSettings}.
+     *
+     * @public
+     */
+    function verifyBeforeUpdateEmail(user, newEmail, actionCodeSettings) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, idToken, request, email;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, user.getIdToken()];
+                    case 1:
+                        idToken = _a.sent();
+                        request = {
+                            requestType: "VERIFY_AND_CHANGE_EMAIL" /* VERIFY_AND_CHANGE_EMAIL */,
+                            idToken: idToken,
+                            newEmail: newEmail
+                        };
+                        if (actionCodeSettings) {
+                            _setActionCodeSettingsOnRequest(userInternal.auth, request, actionCodeSettings);
+                        }
+                        return [4 /*yield*/, verifyAndChangeEmail(userInternal.auth, request)];
+                    case 2:
+                        email = (_a.sent()).email;
+                        if (!(email !== user.email)) return [3 /*break*/, 4];
+                        // If the local copy of the email on user is outdated, reload the
+                        // user.
+                        return [4 /*yield*/, user.reload()];
+                    case 3:
+                        // If the local copy of the email on user is outdated, reload the
+                        // user.
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function updateProfile(auth, request) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "POST" /* POST */, "/v1/accounts:update" /* SET_ACCOUNT_INFO */, request)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Updates a user's profile data.
+     *
+     * @param user - The user.
+     * @param profile - The profile's `displayName` and `photoURL` to update.
+     *
+     * @public
+     */
+    function updateProfile$1(user, _a) {
+        var displayName = _a.displayName, photoUrl = _a.photoURL;
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, idToken, profileRequest, response, passwordProvider;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (displayName === undefined && photoUrl === undefined) {
+                            return [2 /*return*/];
+                        }
+                        userInternal = user;
+                        return [4 /*yield*/, user.getIdToken()];
+                    case 1:
+                        idToken = _b.sent();
+                        profileRequest = {
+                            idToken: idToken,
+                            displayName: displayName,
+                            photoUrl: photoUrl,
+                            returnSecureToken: true
+                        };
+                        return [4 /*yield*/, _logoutIfInvalidated(userInternal, updateProfile(userInternal.auth, profileRequest))];
+                    case 2:
+                        response = _b.sent();
+                        userInternal.displayName = response.displayName || null;
+                        userInternal.photoURL = response.photoUrl || null;
+                        passwordProvider = userInternal.providerData.find(function (_a) {
+                            var providerId = _a.providerId;
+                            return providerId === "password" /* PASSWORD */;
+                        });
+                        if (passwordProvider) {
+                            passwordProvider.displayName = user.displayName;
+                            passwordProvider.photoURL = user.photoURL;
+                        }
+                        return [4 /*yield*/, userInternal._updateTokensIfNecessary(response)];
+                    case 3:
+                        _b.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Updates the user's email address.
+     *
+     * @remarks
+     * An email will be sent to the original email address (if it was set) that allows to revoke the
+     * email address change, in order to protect them from account hijacking.
+     *
+     * Important: this is a security sensitive operation that requires the user to have recently signed
+     * in. If this requirement isn't met, ask the user to authenticate again and then call
+     * {@link reauthenticateWithCredential}.
+     *
+     * @param user - The user.
+     * @param newEmail - The new email address.
+     *
+     * @public
+     */
+    function updateEmail(user, newEmail) {
+        return updateEmailOrPassword(user, newEmail, null);
+    }
+    /**
+     * Updates the user's password.
+     *
+     * @remarks
+     * Important: this is a security sensitive operation that requires the user to have recently signed
+     * in. If this requirement isn't met, ask the user to authenticate again and then call
+     * {@link reauthenticateWithCredential}.
+     *
+     * @param user - The user.
+     * @param newPassword - The new password.
+     *
+     * @public
+     */
+    function updatePassword(user, newPassword) {
+        return updateEmailOrPassword(user, null, newPassword);
+    }
+    function updateEmailOrPassword(user, email, password) {
+        return __awaiter(this, void 0, void 0, function () {
+            var auth, idToken, request, response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        auth = user.auth;
+                        return [4 /*yield*/, user.getIdToken()];
+                    case 1:
+                        idToken = _a.sent();
+                        request = {
+                            idToken: idToken,
+                            returnSecureToken: true
+                        };
+                        if (email) {
+                            request.email = email;
+                        }
+                        if (password) {
+                            request.password = password;
+                        }
+                        return [4 /*yield*/, _logoutIfInvalidated(user, updateEmailPassword(auth, request))];
+                    case 2:
+                        response = _a.sent();
+                        return [4 /*yield*/, user._updateTokensIfNecessary(response, /* reload */ true)];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Parse the `AdditionalUserInfo` from the ID token response.
+     *
+     */
+    function _fromIdTokenResponse(idTokenResponse) {
+        var _a, _b;
+        if (!idTokenResponse) {
+            return null;
+        }
+        var providerId = idTokenResponse.providerId;
+        var profile = idTokenResponse.rawUserInfo
+            ? JSON.parse(idTokenResponse.rawUserInfo)
+            : {};
+        var isNewUser = idTokenResponse.isNewUser ||
+            idTokenResponse.kind === "identitytoolkit#SignupNewUserResponse" /* SignupNewUser */;
+        if (!providerId && (idTokenResponse === null || idTokenResponse === void 0 ? void 0 : idTokenResponse.idToken)) {
+            var signInProvider = (_b = (_a = _parseToken(idTokenResponse.idToken)) === null || _a === void 0 ? void 0 : _a.firebase) === null || _b === void 0 ? void 0 : _b['sign_in_provider'];
+            if (signInProvider) {
+                var filteredProviderId = signInProvider !== "anonymous" /* ANONYMOUS */ &&
+                    signInProvider !== "custom" /* CUSTOM */
+                    ? signInProvider
+                    : null;
+                // Uses generic class in accordance with the legacy SDK.
+                return new GenericAdditionalUserInfo(isNewUser, filteredProviderId);
+            }
+        }
+        if (!providerId) {
+            return null;
+        }
+        switch (providerId) {
+            case "facebook.com" /* FACEBOOK */:
+                return new FacebookAdditionalUserInfo(isNewUser, profile);
+            case "github.com" /* GITHUB */:
+                return new GithubAdditionalUserInfo(isNewUser, profile);
+            case "google.com" /* GOOGLE */:
+                return new GoogleAdditionalUserInfo(isNewUser, profile);
+            case "twitter.com" /* TWITTER */:
+                return new TwitterAdditionalUserInfo(isNewUser, profile, idTokenResponse.screenName || null);
+            case "custom" /* CUSTOM */:
+            case "anonymous" /* ANONYMOUS */:
+                return new GenericAdditionalUserInfo(isNewUser, null);
+            default:
+                return new GenericAdditionalUserInfo(isNewUser, providerId, profile);
+        }
+    }
+    var GenericAdditionalUserInfo = /** @class */ (function () {
+        function GenericAdditionalUserInfo(isNewUser, providerId, profile) {
+            if (profile === void 0) { profile = {}; }
+            this.isNewUser = isNewUser;
+            this.providerId = providerId;
+            this.profile = profile;
+        }
+        return GenericAdditionalUserInfo;
+    }());
+    var FederatedAdditionalUserInfoWithUsername = /** @class */ (function (_super) {
+        __extends(FederatedAdditionalUserInfoWithUsername, _super);
+        function FederatedAdditionalUserInfoWithUsername(isNewUser, providerId, profile, username) {
+            var _this = _super.call(this, isNewUser, providerId, profile) || this;
+            _this.username = username;
+            return _this;
+        }
+        return FederatedAdditionalUserInfoWithUsername;
+    }(GenericAdditionalUserInfo));
+    var FacebookAdditionalUserInfo = /** @class */ (function (_super) {
+        __extends(FacebookAdditionalUserInfo, _super);
+        function FacebookAdditionalUserInfo(isNewUser, profile) {
+            return _super.call(this, isNewUser, "facebook.com" /* FACEBOOK */, profile) || this;
+        }
+        return FacebookAdditionalUserInfo;
+    }(GenericAdditionalUserInfo));
+    var GithubAdditionalUserInfo = /** @class */ (function (_super) {
+        __extends(GithubAdditionalUserInfo, _super);
+        function GithubAdditionalUserInfo(isNewUser, profile) {
+            return _super.call(this, isNewUser, "github.com" /* GITHUB */, profile, typeof (profile === null || profile === void 0 ? void 0 : profile.login) === 'string' ? profile === null || profile === void 0 ? void 0 : profile.login : null) || this;
+        }
+        return GithubAdditionalUserInfo;
+    }(FederatedAdditionalUserInfoWithUsername));
+    var GoogleAdditionalUserInfo = /** @class */ (function (_super) {
+        __extends(GoogleAdditionalUserInfo, _super);
+        function GoogleAdditionalUserInfo(isNewUser, profile) {
+            return _super.call(this, isNewUser, "google.com" /* GOOGLE */, profile) || this;
+        }
+        return GoogleAdditionalUserInfo;
+    }(GenericAdditionalUserInfo));
+    var TwitterAdditionalUserInfo = /** @class */ (function (_super) {
+        __extends(TwitterAdditionalUserInfo, _super);
+        function TwitterAdditionalUserInfo(isNewUser, profile, screenName) {
+            return _super.call(this, isNewUser, "twitter.com" /* TWITTER */, profile, screenName) || this;
+        }
+        return TwitterAdditionalUserInfo;
+    }(FederatedAdditionalUserInfoWithUsername));
+    /**
+     * Extracts provider specific {@link @firebase/auth-types#AdditionalUserInfo} for the given credential.
+     *
+     * @param userCredential - The user credential.
+     *
+     * @public
+     */
+    function getAdditionalUserInfo(userCredential) {
+        var _a = userCredential, user = _a.user, _tokenResponse = _a._tokenResponse;
+        if (user.isAnonymous && !_tokenResponse) {
+            // Handle the special case where signInAnonymously() gets called twice.
+            // No network call is made so there's nothing to actually fill this in
+            return {
+                providerId: null,
+                isNewUser: false,
+                profile: null
+            };
+        }
+        return _fromIdTokenResponse(_tokenResponse);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // Non-optional auth methods.
+    /**
+     * Changes the type of persistence on the Auth instance for the currently saved
+     * Auth session and applies this type of persistence for future sign-in requests, including
+     * sign-in with redirect requests.
+     *
+     * @remarks
+     * This makes it easy for a user signing in to specify whether their session should be
+     * remembered or not. It also makes it easier to never persist the Auth state for applications
+     * that are shared by other users or have sensitive data.
+     *
+     * @example
+     * ```javascript
+     * setPersistence(auth, browserSessionPersistence);
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param persistence - The {@link @firebase/auth-types#Persistence} to use.
+     * @returns A promise that resolves once the persistence change has completed
+     *
+     * @public
+     */
+    function setPersistence(auth, persistence) {
+        return auth.setPersistence(persistence);
+    }
+    /**
+     * Adds an observer for changes to the signed-in user's ID token, which includes sign-in,
+     * sign-out, and token refresh events.
+     *
+     * @param auth - The Auth instance.
+     * @param nextOrObserver - callback triggered on change.
+     * @param error - callback triggered on error.
+     * @param completed - callback triggered when observer is removed.
+     *
+     * @public
+     */
+    function onIdTokenChanged(auth, nextOrObserver, error, completed) {
+        return auth.onIdTokenChanged(nextOrObserver, error, completed);
+    }
+    /**
+     * Adds an observer for changes to the user's sign-in state.
+     *
+     * @remarks
+     * To keep the old behavior, see {@link onIdTokenChanged}.
+     *
+     * @param auth - The Auth instance.
+     * @param nextOrObserver - callback triggered on change.
+     * @param error - callback triggered on error.
+     * @param completed - callback triggered when observer is removed.
+     *
+     * @public
+     */
+    function onAuthStateChanged(auth, nextOrObserver, error, completed) {
+        return auth.onAuthStateChanged(nextOrObserver, error, completed);
+    }
+    /**
+     * Sets the current language to the default device/browser preference.
+     *
+     * @param auth - The Auth instanec.
+     *
+     * @public
+     */
+    function useDeviceLanguage(auth) {
+        auth.useDeviceLanguage();
+    }
+    /**
+     * Asynchronously sets the provided user as {@link @firebase/auth-types#Auth.currentUser} on the
+     * {@link @firebase/auth-types#Auth} instance.
+     *
+     * @remarks
+     * A new instance copy of the user provided will be made and set as currentUser.
+     *
+     * This will trigger {@link onAuthStateChanged} and {@link onIdTokenChanged} listeners
+     * like other sign in methods.
+     *
+     * The operation fails with an error if the user to be updated belongs to a different Firebase
+     * project.
+     *
+     * @param auth - The Auth instance.
+     * @param user - The new {@link @firebase/auth-types#User}.
+     *
+     * @public
+     */
+    function updateCurrentUser(auth, user) {
+        return auth.updateCurrentUser(user);
+    }
+    /**
+     * Signs out the current user.
+     *
+     * @param auth - The Auth instance.
+     *
+     * @public
+     */
+    function signOut(auth) {
+        return auth.signOut();
+    }
+    /**
+     * Deletes and signs out the user.
+     *
+     * @remarks
+     * Important: this is a security-sensitive operation that requires the user to have recently
+     * signed in. If this requirement isn't met, ask the user to authenticate again and then call
+     * {@link reauthenticateWithCredential}.
+     *
+     * @param user - The user.
+     *
+     * @public
+     */
+    function deleteUser(user) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, user.delete()];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var MultiFactorSession = /** @class */ (function () {
+        function MultiFactorSession(type, credential) {
+            this.type = type;
+            this.credential = credential;
+        }
+        MultiFactorSession._fromIdtoken = function (idToken) {
+            return new MultiFactorSession("enroll" /* ENROLL */, idToken);
+        };
+        MultiFactorSession._fromMfaPendingCredential = function (mfaPendingCredential) {
+            return new MultiFactorSession("signin" /* SIGN_IN */, mfaPendingCredential);
+        };
+        MultiFactorSession.prototype.toJSON = function () {
+            var _a;
+            var key = this.type === "enroll" /* ENROLL */
+                ? 'idToken'
+                : 'pendingCredential';
+            return {
+                multiFactorSession: (_a = {},
+                    _a[key] = this.credential,
+                    _a)
+            };
+        };
+        MultiFactorSession.fromJSON = function (obj) {
+            var _a, _b;
+            if (obj === null || obj === void 0 ? void 0 : obj.multiFactorSession) {
+                if ((_a = obj.multiFactorSession) === null || _a === void 0 ? void 0 : _a.pendingCredential) {
+                    return MultiFactorSession._fromMfaPendingCredential(obj.multiFactorSession.pendingCredential);
+                }
+                else if ((_b = obj.multiFactorSession) === null || _b === void 0 ? void 0 : _b.idToken) {
+                    return MultiFactorSession._fromIdtoken(obj.multiFactorSession.idToken);
+                }
+            }
+            return null;
+        };
+        return MultiFactorSession;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var MultiFactorResolver = /** @class */ (function () {
+        function MultiFactorResolver(session, hints, signInResolver) {
+            this.session = session;
+            this.hints = hints;
+            this.signInResolver = signInResolver;
+        }
+        /** @internal */
+        MultiFactorResolver._fromError = function (authExtern, error) {
+            var _this = this;
+            var auth = _castAuth(authExtern);
+            var hints = (error.serverResponse.mfaInfo || []).map(function (enrollment) {
+                return MultiFactorInfo._fromServerResponse(auth, enrollment);
+            });
+            _assert(error.serverResponse.mfaPendingCredential, auth, "internal-error" /* INTERNAL_ERROR */);
+            var session = MultiFactorSession._fromMfaPendingCredential(error.serverResponse.mfaPendingCredential);
+            return new MultiFactorResolver(session, hints, function (assertion) { return __awaiter(_this, void 0, void 0, function () {
+                var mfaResponse, idTokenResponse, _a, userCredential;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, assertion._process(auth, session)];
+                        case 1:
+                            mfaResponse = _b.sent();
+                            // Clear out the unneeded fields from the old login response
+                            delete error.serverResponse.mfaInfo;
+                            delete error.serverResponse.mfaPendingCredential;
+                            idTokenResponse = __assign(__assign({}, error.serverResponse), { idToken: mfaResponse.idToken, refreshToken: mfaResponse.refreshToken });
+                            _a = error.operationType;
+                            switch (_a) {
+                                case "signIn" /* SIGN_IN */: return [3 /*break*/, 2];
+                                case "reauthenticate" /* REAUTHENTICATE */: return [3 /*break*/, 5];
+                            }
+                            return [3 /*break*/, 6];
+                        case 2: return [4 /*yield*/, UserCredentialImpl._fromIdTokenResponse(auth, error.operationType, idTokenResponse)];
+                        case 3:
+                            userCredential = _b.sent();
+                            return [4 /*yield*/, auth._updateCurrentUser(userCredential.user)];
+                        case 4:
+                            _b.sent();
+                            return [2 /*return*/, userCredential];
+                        case 5:
+                            _assert(error.user, auth, "internal-error" /* INTERNAL_ERROR */);
+                            return [2 /*return*/, UserCredentialImpl._forOperation(error.user, error.operationType, idTokenResponse)];
+                        case 6:
+                            _fail(auth, "internal-error" /* INTERNAL_ERROR */);
+                            _b.label = 7;
+                        case 7: return [2 /*return*/];
+                    }
+                });
+            }); });
+        };
+        MultiFactorResolver.prototype.resolveSignIn = function (assertionExtern) {
+            return __awaiter(this, void 0, void 0, function () {
+                var assertion;
+                return __generator(this, function (_a) {
+                    assertion = assertionExtern;
+                    return [2 /*return*/, this.signInResolver(assertion)];
+                });
+            });
+        };
+        return MultiFactorResolver;
+    }());
+    /**
+     * Provides a {@link @firebase/auth-types#MultiFactorResolver} suitable for completion of a
+     * multi-factor flow.
+     *
+     * @param auth - The auth instance.
+     * @param error - The {@link @firebase/auth-types#MultiFactorError} raised during a sign-in, or
+     * reauthentication operation.
+     *
+     * @public
+     */
+    function getMultiFactorResolver(auth, error) {
+        var _a;
+        var errorInternal = error;
+        _assert(error.operationType, auth, "argument-error" /* ARGUMENT_ERROR */);
+        _assert((_a = errorInternal.serverResponse) === null || _a === void 0 ? void 0 : _a.mfaPendingCredential, auth, "argument-error" /* ARGUMENT_ERROR */);
+        return MultiFactorResolver._fromError(auth, errorInternal);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function startEnrollPhoneMfa(auth, request) {
+        return _performApiRequest(auth, "POST" /* POST */, "/v2/accounts/mfaEnrollment:start" /* START_PHONE_MFA_ENROLLMENT */, __assign({ tenantId: auth.tenantId }, request));
+    }
+    function finalizeEnrollPhoneMfa(auth, request) {
+        return _performApiRequest(auth, "POST" /* POST */, "/v2/accounts/mfaEnrollment:finalize" /* FINALIZE_PHONE_MFA_ENROLLMENT */, __assign({ tenantId: auth.tenantId }, request));
+    }
+    function withdrawMfa(auth, request) {
+        return _performApiRequest(auth, "POST" /* POST */, "/v2/accounts/mfaEnrollment:withdraw" /* WITHDRAW_MFA */, __assign({ tenantId: auth.tenantId }, request));
+    }
+
+    var MultiFactorUser = /** @class */ (function () {
+        function MultiFactorUser(user) {
+            var _this = this;
+            this.user = user;
+            this.enrolledFactors = [];
+            user._onReload(function (userInfo) {
+                if (userInfo.mfaInfo) {
+                    _this.enrolledFactors = userInfo.mfaInfo.map(function (enrollment) {
+                        return MultiFactorInfo._fromServerResponse(user.auth, enrollment);
+                    });
+                }
+            });
+        }
+        MultiFactorUser._fromUser = function (user) {
+            return new MultiFactorUser(user);
+        };
+        MultiFactorUser.prototype.getSession = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a, _b;
+                return __generator(this, function (_c) {
+                    switch (_c.label) {
+                        case 0:
+                            _b = (_a = MultiFactorSession)._fromIdtoken;
+                            return [4 /*yield*/, this.user.getIdToken()];
+                        case 1: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+                    }
+                });
+            });
+        };
+        MultiFactorUser.prototype.enroll = function (assertionExtern, displayName) {
+            return __awaiter(this, void 0, void 0, function () {
+                var assertion, session, finalizeMfaResponse;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            assertion = assertionExtern;
+                            return [4 /*yield*/, this.getSession()];
+                        case 1:
+                            session = (_a.sent());
+                            return [4 /*yield*/, _logoutIfInvalidated(this.user, assertion._process(this.user.auth, session, displayName))];
+                        case 2:
+                            finalizeMfaResponse = _a.sent();
+                            // New tokens will be issued after enrollment of the new second factors.
+                            // They need to be updated on the user.
+                            return [4 /*yield*/, this.user._updateTokensIfNecessary(finalizeMfaResponse)];
+                        case 3:
+                            // New tokens will be issued after enrollment of the new second factors.
+                            // They need to be updated on the user.
+                            _a.sent();
+                            // The user needs to be reloaded to get the new multi-factor information
+                            // from server. USER_RELOADED event will be triggered and `enrolledFactors`
+                            // will be updated.
+                            return [2 /*return*/, this.user.reload()];
+                    }
+                });
+            });
+        };
+        MultiFactorUser.prototype.unenroll = function (infoOrUid) {
+            return __awaiter(this, void 0, void 0, function () {
+                var mfaEnrollmentId, idToken, idTokenResponse, e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            mfaEnrollmentId = typeof infoOrUid === 'string' ? infoOrUid : infoOrUid.uid;
+                            return [4 /*yield*/, this.user.getIdToken()];
+                        case 1:
+                            idToken = _a.sent();
+                            return [4 /*yield*/, _logoutIfInvalidated(this.user, withdrawMfa(this.user.auth, {
+                                    idToken: idToken,
+                                    mfaEnrollmentId: mfaEnrollmentId
+                                }))];
+                        case 2:
+                            idTokenResponse = _a.sent();
+                            // Remove the second factor from the user's list.
+                            this.enrolledFactors = this.enrolledFactors.filter(function (_a) {
+                                var uid = _a.uid;
+                                return uid !== mfaEnrollmentId;
+                            });
+                            // Depending on whether the backend decided to revoke the user's session,
+                            // the tokenResponse may be empty. If the tokens were not updated (and they
+                            // are now invalid), reloading the user will discover this and invalidate
+                            // the user's state accordingly.
+                            return [4 /*yield*/, this.user._updateTokensIfNecessary(idTokenResponse)];
+                        case 3:
+                            // Depending on whether the backend decided to revoke the user's session,
+                            // the tokenResponse may be empty. If the tokens were not updated (and they
+                            // are now invalid), reloading the user will discover this and invalidate
+                            // the user's state accordingly.
+                            _a.sent();
+                            _a.label = 4;
+                        case 4:
+                            _a.trys.push([4, 6, , 7]);
+                            return [4 /*yield*/, this.user.reload()];
+                        case 5:
+                            _a.sent();
+                            return [3 /*break*/, 7];
+                        case 6:
+                            e_1 = _a.sent();
+                            if (e_1.code !== "auth/" + "user-token-expired" /* TOKEN_EXPIRED */) {
+                                throw e_1;
+                            }
+                            return [3 /*break*/, 7];
+                        case 7: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        return MultiFactorUser;
+    }());
+    var multiFactorUserCache = new WeakMap();
+    /**
+     * The {@link @firebase/auth-types#MultiFactorUser} corresponding to the user.
+     *
+     * @remarks
+     * This is used to access all multi-factor properties and operations related to the user.
+     *
+     * @param user - The user.
+     *
+     * @public
+     */
+    function multiFactor(user) {
+        if (!multiFactorUserCache.has(user)) {
+            multiFactorUserCache.set(user, MultiFactorUser._fromUser(user));
+        }
+        return multiFactorUserCache.get(user);
+    }
+
+    var version = "0.0.900";
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Determine the browser for the purposes of reporting usage to the API
+     */
+    function _getBrowserName(userAgent) {
+        var ua = userAgent.toLowerCase();
+        if (ua.includes('opera/') || ua.includes('opr/') || ua.includes('opios/')) {
+            return "Opera" /* OPERA */;
+        }
+        else if (_isIEMobile(ua)) {
+            // Windows phone IEMobile browser.
+            return "IEMobile" /* IEMOBILE */;
+        }
+        else if (ua.includes('msie') || ua.includes('trident/')) {
+            return "IE" /* IE */;
+        }
+        else if (ua.includes('edge/')) {
+            return "Edge" /* EDGE */;
+        }
+        else if (_isFirefox(ua)) {
+            return "Firefox" /* FIREFOX */;
+        }
+        else if (ua.includes('silk/')) {
+            return "Silk" /* SILK */;
+        }
+        else if (_isBlackBerry(ua)) {
+            // Blackberry browser.
+            return "Blackberry" /* BLACKBERRY */;
+        }
+        else if (_isWebOS(ua)) {
+            // WebOS default browser.
+            return "Webos" /* WEBOS */;
+        }
+        else if (_isSafari(ua)) {
+            return "Safari" /* SAFARI */;
+        }
+        else if ((ua.includes('chrome/') || _isChromeIOS(ua)) &&
+            !ua.includes('edge/')) {
+            return "Chrome" /* CHROME */;
+        }
+        else if (_isAndroid(ua)) {
+            // Android stock browser.
+            return "Android" /* ANDROID */;
+        }
+        else {
+            // Most modern browsers have name/version at end of user agent string.
+            var re = /([a-zA-Z\d\.]+)\/[a-zA-Z\d\.]*$/;
+            var matches = userAgent.match(re);
+            if ((matches === null || matches === void 0 ? void 0 : matches.length) === 2) {
+                return matches[1];
+            }
+        }
+        return "Other" /* OTHER */;
+    }
+    function _isFirefox(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        return /firefox\//i.test(ua);
+    }
+    function _isSafari(userAgent) {
+        var ua = userAgent.toLowerCase();
+        return (ua.includes('safari/') &&
+            !ua.includes('chrome/') &&
+            !ua.includes('crios/') &&
+            !ua.includes('android'));
+    }
+    function _isChromeIOS(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        return /crios\//i.test(ua);
+    }
+    function _isIEMobile(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        return /iemobile/i.test(ua);
+    }
+    function _isAndroid(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        return /android/i.test(ua);
+    }
+    function _isBlackBerry(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        return /blackberry/i.test(ua);
+    }
+    function _isWebOS(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        return /webos/i.test(ua);
+    }
+    function _isIOS(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        return /iphone|ipad|ipod/i.test(ua);
+    }
+    function _isIOSStandalone(ua) {
+        var _a;
+        if (ua === void 0) { ua = getUA(); }
+        return _isIOS(ua) && !!((_a = window.navigator) === null || _a === void 0 ? void 0 : _a.standalone);
+    }
+    function _isIE10() {
+        return isIE() && document.documentMode === 10;
+    }
+    function _isMobileBrowser(ua) {
+        if (ua === void 0) { ua = getUA(); }
+        // TODO: implement getBrowserName equivalent for OS.
+        return (_isIOS(ua) ||
+            _isAndroid(ua) ||
+            _isWebOS(ua) ||
+            _isBlackBerry(ua) ||
+            /windows phone/i.test(ua) ||
+            _isIEMobile(ua));
+    }
+    function _isIframe() {
+        try {
+            // Check that the current window is not the top window.
+            // If so, return true.
+            return !!(window && window !== window.top);
+        }
+        catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /*
+     * Determine the SDK version string
+     *
+     * TODO: This should be set on the Auth object during initialization
+     */
+    function _getClientVersion(clientPlatform) {
+        var reportedPlatform;
+        switch (clientPlatform) {
+            case "Browser" /* BROWSER */:
+                // In a browser environment, report the browser name.
+                reportedPlatform = _getBrowserName(getUA());
+                break;
+            case "Worker" /* WORKER */:
+                // Technically a worker runs from a browser but we need to differentiate a
+                // worker from a browser.
+                // For example: Chrome-Worker/JsCore/4.9.1/FirebaseCore-web.
+                reportedPlatform = _getBrowserName(getUA()) + "-" + clientPlatform;
+                break;
+            default:
+                reportedPlatform = clientPlatform;
+        }
+        return reportedPlatform + "/" + "JsCore" /* CORE */ + "/" + app.SDK_VERSION + "/" + "FirebaseCore-web" /* DEFAULT */;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var AuthInternal = /** @class */ (function () {
+        function AuthInternal(auth) {
+            this.auth = auth;
+            this.internalListeners = new Map();
+        }
+        AuthInternal.prototype.getUid = function () {
+            var _a;
+            this.assertAuthConfigured();
+            return ((_a = this.auth.currentUser) === null || _a === void 0 ? void 0 : _a.uid) || null;
+        };
+        AuthInternal.prototype.getToken = function (forceRefresh) {
+            return __awaiter(this, void 0, void 0, function () {
+                var accessToken;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.assertAuthConfigured();
+                            return [4 /*yield*/, this.auth._initializationPromise];
+                        case 1:
+                            _a.sent();
+                            if (!this.auth.currentUser) {
+                                return [2 /*return*/, null];
+                            }
+                            return [4 /*yield*/, this.auth.currentUser.getIdToken(forceRefresh)];
+                        case 2:
+                            accessToken = _a.sent();
+                            return [2 /*return*/, { accessToken: accessToken }];
+                    }
+                });
+            });
+        };
+        AuthInternal.prototype.addAuthTokenListener = function (listener) {
+            this.assertAuthConfigured();
+            if (this.internalListeners.has(listener)) {
+                return;
+            }
+            var unsubscribe = this.auth.onIdTokenChanged(function (user) {
+                var _a;
+                listener(((_a = user) === null || _a === void 0 ? void 0 : _a.stsTokenManager.accessToken) || null);
+            });
+            this.internalListeners.set(listener, unsubscribe);
+            this.updateProactiveRefresh();
+        };
+        AuthInternal.prototype.removeAuthTokenListener = function (listener) {
+            this.assertAuthConfigured();
+            var unsubscribe = this.internalListeners.get(listener);
+            if (!unsubscribe) {
+                return;
+            }
+            this.internalListeners.delete(listener);
+            unsubscribe();
+            this.updateProactiveRefresh();
+        };
+        AuthInternal.prototype.assertAuthConfigured = function () {
+            _assert(this.auth._initializationPromise, "dependent-sdk-initialized-before-auth" /* DEPENDENT_SDK_INIT_BEFORE_AUTH */);
+        };
+        AuthInternal.prototype.updateProactiveRefresh = function () {
+            if (this.internalListeners.size > 0) {
+                this.auth._startProactiveRefresh();
+            }
+            else {
+                this.auth._stopProactiveRefresh();
+            }
+        };
+        return AuthInternal;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function getVersionForPlatform(clientPlatform) {
+        switch (clientPlatform) {
+            case "Node" /* NODE */:
+                return 'node';
+            case "ReactNative" /* REACT_NATIVE */:
+                return 'rn';
+            case "Worker" /* WORKER */:
+                return 'webworker';
+            case "Cordova" /* CORDOVA */:
+                return 'cordova';
+            default:
+                return undefined;
+        }
+    }
+    /** @internal */
+    function registerAuth(clientPlatform) {
+        app._registerComponent(new Component("auth-exp" /* AUTH */, function (container) {
+            var app = container.getProvider('app-exp').getImmediate();
+            var _a = app.options, apiKey = _a.apiKey, authDomain = _a.authDomain;
+            return (function (app) {
+                _assert(apiKey, "invalid-api-key" /* INVALID_API_KEY */, { appName: app.name });
+                var config = {
+                    apiKey: apiKey,
+                    authDomain: authDomain,
+                    apiHost: "identitytoolkit.googleapis.com" /* API_HOST */,
+                    tokenApiHost: "securetoken.googleapis.com" /* TOKEN_API_HOST */,
+                    apiScheme: "https" /* API_SCHEME */,
+                    sdkClientVersion: _getClientVersion(clientPlatform)
+                };
+                return new AuthImpl(app, config);
+            })(app);
+        }, "PUBLIC" /* PUBLIC */));
+        app._registerComponent(new Component("auth-internal" /* AUTH_INTERNAL */, function (container) {
+            var auth = _castAuth(container.getProvider("auth-exp" /* AUTH */).getImmediate());
+            return (function (auth) { return new AuthInternal(auth); })(auth);
+        }, "PRIVATE" /* PRIVATE */));
+        app.registerVersion("auth-exp" /* AUTH */, version, getVersionForPlatform(clientPlatform));
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var STORAGE_AVAILABLE_KEY = '__sak';
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // There are two different browser persistence types: local and session.
+    // Both have the same implementation but use a different underlying storage
+    // object.
+    var BrowserPersistenceClass = /** @class */ (function () {
+        function BrowserPersistenceClass(storage, type) {
+            this.storage = storage;
+            this.type = type;
+        }
+        BrowserPersistenceClass.prototype._isAvailable = function () {
+            try {
+                if (!this.storage) {
+                    return Promise.resolve(false);
+                }
+                this.storage.setItem(STORAGE_AVAILABLE_KEY, '1');
+                this.storage.removeItem(STORAGE_AVAILABLE_KEY);
+                return Promise.resolve(true);
+            }
+            catch (_a) {
+                return Promise.resolve(false);
+            }
+        };
+        BrowserPersistenceClass.prototype._set = function (key, value) {
+            this.storage.setItem(key, JSON.stringify(value));
+            return Promise.resolve();
+        };
+        BrowserPersistenceClass.prototype._get = function (key) {
+            var json = this.storage.getItem(key);
+            return Promise.resolve(json ? JSON.parse(json) : null);
+        };
+        BrowserPersistenceClass.prototype._remove = function (key) {
+            this.storage.removeItem(key);
+            return Promise.resolve();
+        };
+        return BrowserPersistenceClass;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _iframeCannotSyncWebStorage() {
+        var ua = getUA();
+        return _isSafari(ua) || _isIOS(ua);
+    }
+    // The polling period in case events are not supported
+    var _POLLING_INTERVAL_MS = 1000;
+    // The IE 10 localStorage cross tab synchronization delay in milliseconds
+    var IE10_LOCAL_STORAGE_SYNC_DELAY = 10;
+    var BrowserLocalPersistence = /** @class */ (function (_super) {
+        __extends(BrowserLocalPersistence, _super);
+        function BrowserLocalPersistence() {
+            var _this = _super.call(this, localStorage, "LOCAL" /* LOCAL */) || this;
+            _this.listeners = {};
+            _this.localCache = {};
+            // setTimeout return value is platform specific
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            _this.pollTimer = null;
+            // Safari or iOS browser and embedded in an iframe.
+            _this.safariLocalStorageNotSynced = _iframeCannotSyncWebStorage() && _isIframe();
+            // Whether to use polling instead of depending on window events
+            _this.fallbackToPolling = _isMobileBrowser();
+            _this.boundEventHandler = _this.onStorageEvent.bind(_this);
+            return _this;
+        }
+        BrowserLocalPersistence.prototype.forAllChangedKeys = function (cb) {
+            // Check all keys with listeners on them.
+            for (var _i = 0, _a = Object.keys(this.listeners); _i < _a.length; _i++) {
+                var key = _a[_i];
+                // Get value from localStorage.
+                var newValue = this.storage.getItem(key);
+                var oldValue = this.localCache[key];
+                // If local map value does not match, trigger listener with storage event.
+                // Differentiate this simulated event from the real storage event.
+                if (newValue !== oldValue) {
+                    cb(key, oldValue, newValue);
+                }
+            }
+        };
+        BrowserLocalPersistence.prototype.onStorageEvent = function (event, poll) {
+            var _this = this;
+            if (poll === void 0) { poll = false; }
+            // Key would be null in some situations, like when localStorage is cleared
+            if (!event.key) {
+                this.forAllChangedKeys(function (key, _oldValue, newValue) {
+                    _this.notifyListeners(key, newValue);
+                });
+                return;
+            }
+            var key = event.key;
+            // Ignore keys that have no listeners.
+            if (!this.listeners[key]) {
+                return;
+            }
+            // Check the mechanism how this event was detected.
+            // The first event will dictate the mechanism to be used.
+            if (poll) {
+                // Environment detects storage changes via polling.
+                // Remove storage event listener to prevent possible event duplication.
+                this.detachListener();
+            }
+            else {
+                // Environment detects storage changes via storage event listener.
+                // Remove polling listener to prevent possible event duplication.
+                this.stopPolling();
+            }
+            // Safari embedded iframe. Storage event will trigger with the delta
+            // changes but no changes will be applied to the iframe localStorage.
+            if (this.safariLocalStorageNotSynced) {
+                // Get current iframe page value.
+                var storedValue_1 = this.storage.getItem(key);
+                // Value not synchronized, synchronize manually.
+                if (event.newValue !== storedValue_1) {
+                    if (event.newValue !== null) {
+                        // Value changed from current value.
+                        this.storage.setItem(key, event.newValue);
+                    }
+                    else {
+                        // Current value deleted.
+                        this.storage.removeItem(key);
+                    }
+                }
+                else if (this.localCache[key] === event.newValue && !poll) {
+                    // Already detected and processed, do not trigger listeners again.
+                    return;
+                }
+            }
+            var triggerListeners = function () {
+                // Keep local map up to date in case storage event is triggered before
+                // poll.
+                var storedValue = _this.storage.getItem(key);
+                if (!poll && _this.localCache[key] === storedValue) {
+                    // Real storage event which has already been detected, do nothing.
+                    // This seems to trigger in some IE browsers for some reason.
+                    return;
+                }
+                _this.notifyListeners(key, storedValue);
+            };
+            var storedValue = this.storage.getItem(key);
+            if (_isIE10() &&
+                storedValue !== event.newValue &&
+                event.newValue !== event.oldValue) {
+                // IE 10 has this weird bug where a storage event would trigger with the
+                // correct key, oldValue and newValue but localStorage.getItem(key) does
+                // not yield the updated value until a few milliseconds. This ensures
+                // this recovers from that situation.
+                setTimeout(triggerListeners, IE10_LOCAL_STORAGE_SYNC_DELAY);
+            }
+            else {
+                triggerListeners();
+            }
+        };
+        BrowserLocalPersistence.prototype.notifyListeners = function (key, value) {
+            if (!this.listeners[key]) {
+                return;
+            }
+            this.localCache[key] = value;
+            for (var _i = 0, _a = Array.from(this.listeners[key]); _i < _a.length; _i++) {
+                var listener = _a[_i];
+                listener(value ? JSON.parse(value) : value);
+            }
+        };
+        BrowserLocalPersistence.prototype.startPolling = function () {
+            var _this = this;
+            this.stopPolling();
+            this.pollTimer = setInterval(function () {
+                _this.forAllChangedKeys(function (key, oldValue, newValue) {
+                    _this.onStorageEvent(new StorageEvent('storage', {
+                        key: key,
+                        oldValue: oldValue,
+                        newValue: newValue
+                    }), 
+                    /* poll */ true);
+                });
+            }, _POLLING_INTERVAL_MS);
+        };
+        BrowserLocalPersistence.prototype.stopPolling = function () {
+            if (this.pollTimer) {
+                clearInterval(this.pollTimer);
+                this.pollTimer = null;
+            }
+        };
+        BrowserLocalPersistence.prototype.attachListener = function () {
+            window.addEventListener('storage', this.boundEventHandler);
+        };
+        BrowserLocalPersistence.prototype.detachListener = function () {
+            window.removeEventListener('storage', this.boundEventHandler);
+        };
+        BrowserLocalPersistence.prototype._addListener = function (key, listener) {
+            this.localCache[key] = this.storage.getItem(key);
+            if (Object.keys(this.listeners).length === 0) {
+                // Whether browser can detect storage event when it had already been pushed to the background.
+                // This may happen in some mobile browsers. A localStorage change in the foreground window
+                // will not be detected in the background window via the storage event.
+                // This was detected in iOS 7.x mobile browsers
+                if (this.fallbackToPolling) {
+                    this.startPolling();
+                }
+                else {
+                    this.attachListener();
+                }
+            }
+            this.listeners[key] = this.listeners[key] || new Set();
+            this.listeners[key].add(listener);
+        };
+        BrowserLocalPersistence.prototype._removeListener = function (key, listener) {
+            if (this.listeners[key]) {
+                this.listeners[key].delete(listener);
+                if (this.listeners[key].size === 0) {
+                    delete this.listeners[key];
+                    delete this.localCache[key];
+                }
+            }
+            if (Object.keys(this.listeners).length === 0) {
+                this.detachListener();
+                this.stopPolling();
+            }
+        };
+        BrowserLocalPersistence.type = 'LOCAL';
+        return BrowserLocalPersistence;
+    }(BrowserPersistenceClass));
+    /**
+     * An implementation of {@link @firebase/auth-types#Persistence} of type 'LOCAL' using `localStorage`
+     * for the underlying storage.
+     *
+     * @public
+     */
+    var browserLocalPersistence = BrowserLocalPersistence;
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Shim for Promise.allSettled, note the slightly different format of `fulfilled` vs `status`.
+     *
+     * @param promises - Array of promises to wait on.
+     */
+    function _allSettled(promises) {
+        var _this = this;
+        return Promise.all(promises.map(function (promise) { return __awaiter(_this, void 0, void 0, function () {
+            var value, reason_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, promise];
+                    case 1:
+                        value = _a.sent();
+                        return [2 /*return*/, {
+                                fulfilled: true,
+                                value: value
+                            }];
+                    case 2:
+                        reason_1 = _a.sent();
+                        return [2 /*return*/, {
+                                fulfilled: false,
+                                reason: reason_1
+                            }];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); }));
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Interface class for receiving messages.
+     *
+     */
+    var Receiver = /** @class */ (function () {
+        function Receiver(eventTarget) {
+            this.eventTarget = eventTarget;
+            this.handlersMap = {};
+            this.boundEventHandler = this.handleEvent.bind(this);
+        }
+        /**
+         * Obtain an instance of a Receiver for a given event target, if none exists it will be created.
+         *
+         * @param eventTarget - An event target (such as window or self) through which the underlying
+         * messages will be received.
+         */
+        Receiver._getInstance = function (eventTarget) {
+            // The results are stored in an array since objects can't be keys for other
+            // objects. In addition, setting a unique property on an event target as a
+            // hash map key may not be allowed due to CORS restrictions.
+            var existingInstance = this.receivers.find(function (receiver) {
+                return receiver.isListeningto(eventTarget);
+            });
+            if (existingInstance) {
+                return existingInstance;
+            }
+            var newInstance = new Receiver(eventTarget);
+            this.receivers.push(newInstance);
+            return newInstance;
+        };
+        Receiver.prototype.isListeningto = function (eventTarget) {
+            return this.eventTarget === eventTarget;
+        };
+        /**
+         * Fans out a MessageEvent to the appropriate listeners.
+         *
+         * @remarks
+         * Sends an {@link Status.ACK} upon receipt and a {@link Status.DONE} once all handlers have
+         * finished processing.
+         *
+         * @param event - The MessageEvent.
+         *
+         */
+        Receiver.prototype.handleEvent = function (event) {
+            return __awaiter(this, void 0, void 0, function () {
+                var messageEvent, _a, eventId, eventType, data, handlers, promises, response;
+                var _this = this;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            messageEvent = event;
+                            _a = messageEvent.data, eventId = _a.eventId, eventType = _a.eventType, data = _a.data;
+                            handlers = this.handlersMap[eventType];
+                            if (!(handlers === null || handlers === void 0 ? void 0 : handlers.size)) {
+                                return [2 /*return*/];
+                            }
+                            messageEvent.ports[0].postMessage({
+                                status: "ack" /* ACK */,
+                                eventId: eventId,
+                                eventType: eventType
+                            });
+                            promises = Array.from(handlers).map(function (handler) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                                return [2 /*return*/, handler(messageEvent.origin, data)];
+                            }); }); });
+                            return [4 /*yield*/, _allSettled(promises)];
+                        case 1:
+                            response = _b.sent();
+                            messageEvent.ports[0].postMessage({
+                                status: "done" /* DONE */,
+                                eventId: eventId,
+                                eventType: eventType,
+                                response: response
+                            });
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        /**
+         * Subscribe an event handler for a particular event.
+         *
+         * @param eventType - Event name to subscribe to.
+         * @param eventHandler - The event handler which should receive the events.
+         *
+         */
+        Receiver.prototype._subscribe = function (eventType, eventHandler) {
+            if (Object.keys(this.handlersMap).length === 0) {
+                this.eventTarget.addEventListener('message', this.boundEventHandler);
+            }
+            if (!this.handlersMap[eventType]) {
+                this.handlersMap[eventType] = new Set();
+            }
+            this.handlersMap[eventType].add(eventHandler);
+        };
+        /**
+         * Unsubscribe an event handler from a particular event.
+         *
+         * @param eventType - Event name to unsubscribe from.
+         * @param eventHandler - Optinoal event handler, if none provided, unsubscribe all handlers on this event.
+         *
+         */
+        Receiver.prototype._unsubscribe = function (eventType, eventHandler) {
+            if (this.handlersMap[eventType] && eventHandler) {
+                this.handlersMap[eventType].delete(eventHandler);
+            }
+            if (!eventHandler || this.handlersMap[eventType].size === 0) {
+                delete this.handlersMap[eventType];
+            }
+            if (Object.keys(this.handlersMap).length === 0) {
+                this.eventTarget.removeEventListener('message', this.boundEventHandler);
+            }
+        };
+        Receiver.receivers = [];
+        return Receiver;
+    }());
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function generateEventId(prefix, digits) {
+        if (prefix === void 0) { prefix = ''; }
+        if (digits === void 0) { digits = 20; }
+        return "" + prefix + Math.floor(Math.random() * Math.pow(10, digits));
+    }
+    /**
+     * Interface for sending messages and waiting for a completion response.
+     *
+     */
+    var Sender = /** @class */ (function () {
+        function Sender(target) {
+            this.target = target;
+            this.handlers = new Set();
+        }
+        /**
+         * Unsubscribe the handler and remove it from our tracking Set.
+         *
+         * @param handler - The handler to unsubscribe.
+         */
+        Sender.prototype.removeMessageHandler = function (handler) {
+            if (handler.messageChannel) {
+                handler.messageChannel.port1.removeEventListener('message', handler.onMessage);
+                handler.messageChannel.port1.close();
+            }
+            this.handlers.delete(handler);
+        };
+        /**
+         * Send a message to the Receiver located at {@link target}.
+         *
+         * @remarks
+         * We'll first wait a bit for an ACK , if we get one we will wait significantly longer until the
+         * receiver has had a chance to fully process the event.
+         *
+         * @param eventType - Type of event to send.
+         * @param data - The payload of the event.
+         * @param timeout - Timeout for waiting on an ACK from the receiver.
+         *
+         * @returns An array of settled promises from all the handlers that were listening on the receiver.
+         */
+        Sender.prototype._send = function (eventType, data, timeout) {
+            if (timeout === void 0) { timeout = 50 /* ACK */; }
+            return __awaiter(this, void 0, void 0, function () {
+                var messageChannel, completionTimer, handler;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    messageChannel = typeof MessageChannel !== 'undefined' ? new MessageChannel() : null;
+                    if (!messageChannel) {
+                        throw new Error("connection_unavailable" /* CONNECTION_UNAVAILABLE */);
+                    }
+                    return [2 /*return*/, new Promise(function (resolve, reject) {
+                            var eventId = generateEventId();
+                            messageChannel.port1.start();
+                            var ackTimer = setTimeout(function () {
+                                reject(new Error("unsupported_event" /* UNSUPPORTED_EVENT */));
+                            }, timeout);
+                            handler = {
+                                messageChannel: messageChannel,
+                                onMessage: function (event) {
+                                    var messageEvent = event;
+                                    if (messageEvent.data.eventId !== eventId) {
+                                        return;
+                                    }
+                                    switch (messageEvent.data.status) {
+                                        case "ack" /* ACK */:
+                                            // The receiver should ACK first.
+                                            clearTimeout(ackTimer);
+                                            completionTimer = setTimeout(function () {
+                                                reject(new Error("timeout" /* TIMEOUT */));
+                                            }, 3000 /* COMPLETION */);
+                                            break;
+                                        case "done" /* DONE */:
+                                            // Once the receiver's handlers are finished we will get the results.
+                                            clearTimeout(completionTimer);
+                                            resolve(messageEvent.data.response);
+                                            break;
+                                        default:
+                                            clearTimeout(ackTimer);
+                                            clearTimeout(completionTimer);
+                                            reject(new Error("invalid_response" /* INVALID_RESPONSE */));
+                                            break;
+                                    }
+                                }
+                            };
+                            _this.handlers.add(handler);
+                            messageChannel.port1.addEventListener('message', handler.onMessage);
+                            _this.target.postMessage({
+                                eventType: eventType,
+                                eventId: eventId,
+                                data: data
+                            }, [messageChannel.port2]);
+                        }).finally(function () {
+                            if (handler) {
+                                _this.removeMessageHandler(handler);
+                            }
+                        })];
+                });
+            });
+        };
+        return Sender;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Lazy accessor for window, since the compat layer won't tree shake this out,
+     * we need to make sure not to mess with window unless we have to
+     */
+    function _window() {
+        return window;
+    }
+    function _setWindowLocation(url) {
+        _window().location.href = url;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _isWorker() {
+        return (typeof _window()['WorkerGlobalScope'] !== 'undefined' &&
+            typeof _window()['importScripts'] === 'function');
+    }
+    function _getActiveServiceWorker() {
+        return __awaiter(this, void 0, void 0, function () {
+            var registration, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!(navigator === null || navigator === void 0 ? void 0 : navigator.serviceWorker)) {
+                            return [2 /*return*/, null];
+                        }
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, navigator.serviceWorker.ready];
+                    case 2:
+                        registration = _b.sent();
+                        return [2 /*return*/, registration.active];
+                    case 3:
+                        _a = _b.sent();
+                        return [2 /*return*/, null];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function _getServiceWorkerController() {
+        var _a;
+        return ((_a = navigator === null || navigator === void 0 ? void 0 : navigator.serviceWorker) === null || _a === void 0 ? void 0 : _a.controller) || null;
+    }
+    function _getWorkerGlobalScope() {
+        return _isWorker() ? self : null;
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var DB_NAME = 'firebaseLocalStorageDb';
+    var DB_VERSION = 1;
+    var DB_OBJECTSTORE_NAME = 'firebaseLocalStorage';
+    var DB_DATA_KEYPATH = 'fbase_key';
+    /**
+     * Promise wrapper for IDBRequest
+     *
+     * Unfortunately we can't cleanly extend Promise<T> since promises are not callable in ES6
+     *
+     */
+    var DBPromise = /** @class */ (function () {
+        function DBPromise(request) {
+            this.request = request;
+        }
+        DBPromise.prototype.toPromise = function () {
+            var _this = this;
+            return new Promise(function (resolve, reject) {
+                _this.request.addEventListener('success', function () {
+                    resolve(_this.request.result);
+                });
+                _this.request.addEventListener('error', function () {
+                    reject(_this.request.error);
+                });
+            });
+        };
+        return DBPromise;
+    }());
+    function getObjectStore(db, isReadWrite) {
+        return db
+            .transaction([DB_OBJECTSTORE_NAME], isReadWrite ? 'readwrite' : 'readonly')
+            .objectStore(DB_OBJECTSTORE_NAME);
+    }
+    function _deleteDatabase() {
+        var request = indexedDB.deleteDatabase(DB_NAME);
+        return new DBPromise(request).toPromise();
+    }
+    function _openDatabase() {
+        var _this = this;
+        var request = indexedDB.open(DB_NAME, DB_VERSION);
+        return new Promise(function (resolve, reject) {
+            request.addEventListener('error', function () {
+                reject(request.error);
+            });
+            request.addEventListener('upgradeneeded', function () {
+                var db = request.result;
+                try {
+                    db.createObjectStore(DB_OBJECTSTORE_NAME, { keyPath: DB_DATA_KEYPATH });
+                }
+                catch (e) {
+                    reject(e);
+                }
+            });
+            request.addEventListener('success', function () { return __awaiter(_this, void 0, void 0, function () {
+                var db;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            db = request.result;
+                            if (!!db.objectStoreNames.contains(DB_OBJECTSTORE_NAME)) return [3 /*break*/, 2];
+                            return [4 /*yield*/, _deleteDatabase()];
+                        case 1:
+                            _a.sent();
+                            return [2 /*return*/, _openDatabase()];
+                        case 2:
+                            resolve(db);
+                            _a.label = 3;
+                        case 3: return [2 /*return*/];
+                    }
+                });
+            }); });
+        });
+    }
+    function _putObject(db, key, value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var getRequest, data, request, request;
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        getRequest = getObjectStore(db, false).get(key);
+                        return [4 /*yield*/, new DBPromise(getRequest).toPromise()];
+                    case 1:
+                        data = _b.sent();
+                        if (data) {
+                            // Force an index signature on the user object
+                            data.value = value;
+                            request = getObjectStore(db, true).put(data);
+                            return [2 /*return*/, new DBPromise(request).toPromise()];
+                        }
+                        else {
+                            request = getObjectStore(db, true).add((_a = {},
+                                _a[DB_DATA_KEYPATH] = key,
+                                _a.value = value,
+                                _a));
+                            return [2 /*return*/, new DBPromise(request).toPromise()];
+                        }
+                }
+            });
+        });
+    }
+    function getObject(db, key) {
+        return __awaiter(this, void 0, void 0, function () {
+            var request, data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        request = getObjectStore(db, false).get(key);
+                        return [4 /*yield*/, new DBPromise(request).toPromise()];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, data === undefined ? null : data.value];
+                }
+            });
+        });
+    }
+    function deleteObject(db, key) {
+        var request = getObjectStore(db, true).delete(key);
+        return new DBPromise(request).toPromise();
+    }
+    var _POLLING_INTERVAL_MS$1 = 800;
+    var _TRANSACTION_RETRY_COUNT = 3;
+    var IndexedDBLocalPersistence = /** @class */ (function () {
+        function IndexedDBLocalPersistence() {
+            this.type = "LOCAL" /* LOCAL */;
+            this.listeners = {};
+            this.localCache = {};
+            // setTimeout return value is platform specific
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            this.pollTimer = null;
+            this.pendingWrites = 0;
+            this.receiver = null;
+            this.sender = null;
+            this.serviceWorkerReceiverAvailable = false;
+            this.activeServiceWorker = null;
+            // Fire & forget the service worker registration as it may never resolve
+            this._workerInitializationPromise = this.initializeServiceWorkerMessaging().then(function () { }, function () { });
+        }
+        IndexedDBLocalPersistence.prototype._openDb = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            if (this.db) {
+                                return [2 /*return*/, this.db];
+                            }
+                            _a = this;
+                            return [4 /*yield*/, _openDatabase()];
+                        case 1:
+                            _a.db = _b.sent();
+                            return [2 /*return*/, this.db];
+                    }
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype._withRetries = function (op) {
+            return __awaiter(this, void 0, void 0, function () {
+                var numAttempts, db, e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            numAttempts = 0;
+                            _a.label = 1;
+                        case 1:
+                            _a.label = 2;
+                        case 2:
+                            _a.trys.push([2, 5, , 6]);
+                            return [4 /*yield*/, this._openDb()];
+                        case 3:
+                            db = _a.sent();
+                            return [4 /*yield*/, op(db)];
+                        case 4: return [2 /*return*/, _a.sent()];
+                        case 5:
+                            e_1 = _a.sent();
+                            if (numAttempts++ > _TRANSACTION_RETRY_COUNT) {
+                                throw e_1;
+                            }
+                            if (this.db) {
+                                this.db.close();
+                                this.db = undefined;
+                            }
+                            return [3 /*break*/, 6];
+                        case 6: return [3 /*break*/, 1];
+                        case 7: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        /**
+         * IndexedDB events do not propagate from the main window to the worker context.  We rely on a
+         * postMessage interface to send these events to the worker ourselves.
+         */
+        IndexedDBLocalPersistence.prototype.initializeServiceWorkerMessaging = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    return [2 /*return*/, _isWorker() ? this.initializeReceiver() : this.initializeSender()];
+                });
+            });
+        };
+        /**
+         * As the worker we should listen to events from the main window.
+         */
+        IndexedDBLocalPersistence.prototype.initializeReceiver = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_a) {
+                    this.receiver = Receiver._getInstance(_getWorkerGlobalScope());
+                    // Refresh from persistence if we receive a KeyChanged message.
+                    this.receiver._subscribe("keyChanged" /* KEY_CHANGED */, function (_origin, data) { return __awaiter(_this, void 0, void 0, function () {
+                        var keys;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this._poll()];
+                                case 1:
+                                    keys = _a.sent();
+                                    return [2 /*return*/, {
+                                            keyProcessed: keys.includes(data.key)
+                                        }];
+                            }
+                        });
+                    }); });
+                    // Let the sender know that we are listening so they give us more timeout.
+                    this.receiver._subscribe("ping" /* PING */, function (_origin, _data) { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            return [2 /*return*/, ["keyChanged" /* KEY_CHANGED */]];
+                        });
+                    }); });
+                    return [2 /*return*/];
+                });
+            });
+        };
+        /**
+         * As the main window, we should let the worker know when keys change (set and remove).
+         *
+         * @remarks
+         * {@link https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerContainer/ready | ServiceWorkerContainer.ready}
+         * may not resolve.
+         */
+        IndexedDBLocalPersistence.prototype.initializeSender = function () {
+            var _a, _b;
+            return __awaiter(this, void 0, void 0, function () {
+                var _c, results;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            // Check to see if there's an active service worker.
+                            _c = this;
+                            return [4 /*yield*/, _getActiveServiceWorker()];
+                        case 1:
+                            // Check to see if there's an active service worker.
+                            _c.activeServiceWorker = _d.sent();
+                            if (!this.activeServiceWorker) {
+                                return [2 /*return*/];
+                            }
+                            this.sender = new Sender(this.activeServiceWorker);
+                            return [4 /*yield*/, this.sender._send("ping" /* PING */, {}, 800 /* LONG_ACK */)];
+                        case 2:
+                            results = _d.sent();
+                            if (!results) {
+                                return [2 /*return*/];
+                            }
+                            if (((_a = results[0]) === null || _a === void 0 ? void 0 : _a.fulfilled) && ((_b = results[0]) === null || _b === void 0 ? void 0 : _b.value.includes("keyChanged" /* KEY_CHANGED */))) {
+                                this.serviceWorkerReceiverAvailable = true;
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        /**
+         * Let the worker know about a changed key, the exact key doesn't technically matter since the
+         * worker will just trigger a full sync anyway.
+         *
+         * @remarks
+         * For now, we only support one service worker per page.
+         *
+         * @param key - Storage key which changed.
+         */
+        IndexedDBLocalPersistence.prototype.notifyServiceWorker = function (key) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            if (!this.sender ||
+                                !this.activeServiceWorker ||
+                                _getServiceWorkerController() !== this.activeServiceWorker) {
+                                return [2 /*return*/];
+                            }
+                            _b.label = 1;
+                        case 1:
+                            _b.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, this.sender._send("keyChanged" /* KEY_CHANGED */, { key: key }, 
+                                // Use long timeout if receiver has previously responded to a ping from us.
+                                this.serviceWorkerReceiverAvailable
+                                    ? 800 /* LONG_ACK */
+                                    : 50 /* ACK */)];
+                        case 2:
+                            _b.sent();
+                            return [3 /*break*/, 4];
+                        case 3:
+                            _a = _b.sent();
+                            return [3 /*break*/, 4];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype._isAvailable = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var db, _a;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _b.trys.push([0, 4, , 5]);
+                            if (!indexedDB) {
+                                return [2 /*return*/, false];
+                            }
+                            return [4 /*yield*/, _openDatabase()];
+                        case 1:
+                            db = _b.sent();
+                            return [4 /*yield*/, _putObject(db, STORAGE_AVAILABLE_KEY, '1')];
+                        case 2:
+                            _b.sent();
+                            return [4 /*yield*/, deleteObject(db, STORAGE_AVAILABLE_KEY)];
+                        case 3:
+                            _b.sent();
+                            return [2 /*return*/, true];
+                        case 4:
+                            _a = _b.sent();
+                            return [3 /*break*/, 5];
+                        case 5: return [2 /*return*/, false];
+                    }
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype._withPendingWrite = function (write) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.pendingWrites++;
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, , 3, 4]);
+                            return [4 /*yield*/, write()];
+                        case 2:
+                            _a.sent();
+                            return [3 /*break*/, 4];
+                        case 3:
+                            this.pendingWrites--;
+                            return [7 /*endfinally*/];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype._set = function (key, value) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_a) {
+                    return [2 /*return*/, this._withPendingWrite(function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this._withRetries(function (db) { return _putObject(db, key, value); })];
+                                    case 1:
+                                        _a.sent();
+                                        this.localCache[key] = value;
+                                        return [2 /*return*/, this.notifyServiceWorker(key)];
+                                }
+                            });
+                        }); })];
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype._get = function (key) {
+            return __awaiter(this, void 0, void 0, function () {
+                var obj;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this._withRetries(function (db) {
+                                return getObject(db, key);
+                            })];
+                        case 1:
+                            obj = (_a.sent());
+                            this.localCache[key] = obj;
+                            return [2 /*return*/, obj];
+                    }
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype._remove = function (key) {
+            return __awaiter(this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_a) {
+                    return [2 /*return*/, this._withPendingWrite(function () { return __awaiter(_this, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this._withRetries(function (db) { return deleteObject(db, key); })];
+                                    case 1:
+                                        _a.sent();
+                                        delete this.localCache[key];
+                                        return [2 /*return*/, this.notifyServiceWorker(key)];
+                                }
+                            });
+                        }); })];
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype._poll = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var result, keys, _i, result_1, _a, key, value;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0: return [4 /*yield*/, this._withRetries(function (db) {
+                                var getAllRequest = getObjectStore(db, false).getAll();
+                                return new DBPromise(getAllRequest).toPromise();
+                            })];
+                        case 1:
+                            result = _b.sent();
+                            if (!result) {
+                                return [2 /*return*/, []];
+                            }
+                            // If we have pending writes in progress abort, we'll get picked up on the next poll
+                            if (this.pendingWrites !== 0) {
+                                return [2 /*return*/, []];
+                            }
+                            keys = [];
+                            for (_i = 0, result_1 = result; _i < result_1.length; _i++) {
+                                _a = result_1[_i], key = _a.fbase_key, value = _a.value;
+                                if (JSON.stringify(this.localCache[key]) !== JSON.stringify(value)) {
+                                    this.notifyListeners(key, value);
+                                    keys.push(key);
+                                }
+                            }
+                            return [2 /*return*/, keys];
+                    }
+                });
+            });
+        };
+        IndexedDBLocalPersistence.prototype.notifyListeners = function (key, newValue) {
+            if (!this.listeners[key]) {
+                return;
+            }
+            this.localCache[key] = newValue;
+            for (var _i = 0, _a = Array.from(this.listeners[key]); _i < _a.length; _i++) {
+                var listener = _a[_i];
+                listener(newValue);
+            }
+        };
+        IndexedDBLocalPersistence.prototype.startPolling = function () {
+            var _this = this;
+            this.stopPolling();
+            this.pollTimer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                return [2 /*return*/, this._poll()];
+            }); }); }, _POLLING_INTERVAL_MS$1);
+        };
+        IndexedDBLocalPersistence.prototype.stopPolling = function () {
+            if (this.pollTimer) {
+                clearInterval(this.pollTimer);
+                this.pollTimer = null;
+            }
+        };
+        IndexedDBLocalPersistence.prototype._addListener = function (key, listener) {
+            if (Object.keys(this.listeners).length === 0) {
+                this.startPolling();
+            }
+            this.listeners[key] = this.listeners[key] || new Set();
+            this.listeners[key].add(listener);
+        };
+        IndexedDBLocalPersistence.prototype._removeListener = function (key, listener) {
+            if (this.listeners[key]) {
+                this.listeners[key].delete(listener);
+                if (this.listeners[key].size === 0) {
+                    delete this.listeners[key];
+                    delete this.localCache[key];
+                }
+            }
+            if (Object.keys(this.listeners).length === 0) {
+                this.stopPolling();
+            }
+        };
+        IndexedDBLocalPersistence.type = 'LOCAL';
+        return IndexedDBLocalPersistence;
+    }());
+    /**
+     * An implementation of {@link @firebase/auth-types#Persistence} of type 'LOCAL' using `indexedDB`
+     * for the underlying storage.
+     *
+     * @public
+     */
+    var indexedDBLocalPersistence = IndexedDBLocalPersistence;
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // The amount of time to store the UIDs of seen events; this is
+    // set to 10 min by default
+    var EVENT_DUPLICATION_CACHE_DURATION_MS = 10 * 60 * 1000;
+    var AuthEventManager = /** @class */ (function () {
+        function AuthEventManager(auth) {
+            this.auth = auth;
+            this.cachedEventUids = new Set();
+            this.consumers = new Set();
+            this.queuedRedirectEvent = null;
+            this.hasHandledPotentialRedirect = false;
+            this.lastProcessedEventTime = Date.now();
+        }
+        AuthEventManager.prototype.registerConsumer = function (authEventConsumer) {
+            this.consumers.add(authEventConsumer);
+            if (this.queuedRedirectEvent &&
+                this.isEventForConsumer(this.queuedRedirectEvent, authEventConsumer)) {
+                this.sendToConsumer(this.queuedRedirectEvent, authEventConsumer);
+                this.saveEventToCache(this.queuedRedirectEvent);
+                this.queuedRedirectEvent = null;
+            }
+        };
+        AuthEventManager.prototype.unregisterConsumer = function (authEventConsumer) {
+            this.consumers.delete(authEventConsumer);
+        };
+        AuthEventManager.prototype.onEvent = function (event) {
+            var _this = this;
+            // Check if the event has already been handled
+            if (this.hasEventBeenHandled(event)) {
+                return false;
+            }
+            var handled = false;
+            this.consumers.forEach(function (consumer) {
+                if (_this.isEventForConsumer(event, consumer)) {
+                    handled = true;
+                    _this.sendToConsumer(event, consumer);
+                    _this.saveEventToCache(event);
+                }
+            });
+            if (this.hasHandledPotentialRedirect || !isRedirectEvent(event)) {
+                // If we've already seen a redirect before, or this is a popup event,
+                // bail now
+                return handled;
+            }
+            this.hasHandledPotentialRedirect = true;
+            // If the redirect wasn't handled, hang on to it
+            if (!handled) {
+                this.queuedRedirectEvent = event;
+                handled = true;
+            }
+            return handled;
+        };
+        AuthEventManager.prototype.sendToConsumer = function (event, consumer) {
+            var _a;
+            if (event.error && !isNullRedirectEvent(event)) {
+                var code = ((_a = event.error.code) === null || _a === void 0 ? void 0 : _a.split('auth/')[1]) ||
+                    "internal-error" /* INTERNAL_ERROR */;
+                consumer.onError(_createError(this.auth, code));
+            }
+            else {
+                consumer.onAuthEvent(event);
+            }
+        };
+        AuthEventManager.prototype.isEventForConsumer = function (event, consumer) {
+            var eventIdMatches = consumer.eventId === null ||
+                (!!event.eventId && event.eventId === consumer.eventId);
+            return consumer.filter.includes(event.type) && eventIdMatches;
+        };
+        AuthEventManager.prototype.hasEventBeenHandled = function (event) {
+            if (Date.now() - this.lastProcessedEventTime >=
+                EVENT_DUPLICATION_CACHE_DURATION_MS) {
+                this.cachedEventUids.clear();
+            }
+            return this.cachedEventUids.has(eventUid(event));
+        };
+        AuthEventManager.prototype.saveEventToCache = function (event) {
+            this.cachedEventUids.add(eventUid(event));
+            this.lastProcessedEventTime = Date.now();
+        };
+        return AuthEventManager;
+    }());
+    function eventUid(e) {
+        return [e.type, e.eventId, e.sessionId, e.tenantId].filter(function (v) { return v; }).join('-');
+    }
+    function isNullRedirectEvent(_a) {
+        var type = _a.type, error = _a.error;
+        return (type === "unknown" /* UNKNOWN */ &&
+            (error === null || error === void 0 ? void 0 : error.code) === "auth/" + "no-auth-event" /* NO_AUTH_EVENT */);
+    }
+    function isRedirectEvent(event) {
+        switch (event.type) {
+            case "signInViaRedirect" /* SIGN_IN_VIA_REDIRECT */:
+            case "linkViaRedirect" /* LINK_VIA_REDIRECT */:
+            case "reauthViaRedirect" /* REAUTH_VIA_REDIRECT */:
+                return true;
+            case "unknown" /* UNKNOWN */:
+                return isNullRedirectEvent(event);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _generateEventId(prefix) {
+        return "" + (prefix ? prefix : '') + Math.floor(Math.random() * 1000000000);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function _getProjectConfig(auth) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, _performApiRequest(auth, "GET" /* GET */, "/v1/projects" /* GET_PROJECT_CONFIG */, {})];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var IP_ADDRESS_REGEX = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
+    var HTTP_REGEX = /^https?/;
+    function _validateOrigin(auth) {
+        return __awaiter(this, void 0, void 0, function () {
+            var authorizedDomains, _i, authorizedDomains_1, domain;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        // Skip origin validation if we are in an emulated environment
+                        if (auth.config.emulator) {
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, _getProjectConfig(auth)];
+                    case 1:
+                        authorizedDomains = (_a.sent()).authorizedDomains;
+                        for (_i = 0, authorizedDomains_1 = authorizedDomains; _i < authorizedDomains_1.length; _i++) {
+                            domain = authorizedDomains_1[_i];
+                            try {
+                                if (matchDomain(domain)) {
+                                    return [2 /*return*/];
+                                }
+                            }
+                            catch (_b) {
+                                // Do nothing if there's a URL error; just continue searching
+                            }
+                        }
+                        // In the old SDK, this error also provides helpful messages.
+                        _fail(auth, "unauthorized-domain" /* INVALID_ORIGIN */);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function matchDomain(expected) {
+        var currentUrl = _getCurrentUrl();
+        var _a = new URL(currentUrl), protocol = _a.protocol, hostname = _a.hostname;
+        if (expected.startsWith('chrome-extension://')) {
+            var ceUrl = new URL(expected);
+            if (ceUrl.hostname === '' && hostname === '') {
+                // For some reason we're not parsing chrome URLs properly
+                return (protocol === 'chrome-extension:' &&
+                    expected.replace('chrome-extension://', '') ===
+                        currentUrl.replace('chrome-extension://', ''));
+            }
+            return protocol === 'chrome-extension:' && ceUrl.hostname === hostname;
+        }
+        if (!HTTP_REGEX.test(protocol)) {
+            return false;
+        }
+        if (IP_ADDRESS_REGEX.test(expected)) {
+            // The domain has to be exactly equal to the pattern, as an IP domain will
+            // only contain the IP, no extra character.
+            return hostname === expected;
+        }
+        // Dots in pattern should be escaped.
+        var escapedDomainPattern = expected.replace(/\./g, '\\.');
+        // Non ip address domains.
+        // domain.com = *.domain.com OR domain.com
+        var re = new RegExp('^(.+\\.' + escapedDomainPattern + '|' + escapedDomainPattern + ')$', 'i');
+        return re.test(hostname);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function getScriptParentElement() {
+        var _a, _b;
+        return (_b = (_a = document.getElementsByTagName('head')) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : document;
+    }
+    function _loadJS(url) {
+        // TODO: consider adding timeout support & cancellation
+        return new Promise(function (resolve, reject) {
+            var el = document.createElement('script');
+            el.setAttribute('src', url);
+            el.onload = resolve;
+            el.onerror = reject;
+            el.type = 'text/javascript';
+            el.charset = 'UTF-8';
+            getScriptParentElement().appendChild(el);
+        });
+    }
+    function _generateCallbackName(prefix) {
+        return "__" + prefix + Math.floor(Math.random() * 1000000);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var NETWORK_TIMEOUT = new Delay(30000, 60000);
+    /**
+     * Reset unlaoded GApi modules. If gapi.load fails due to a network error,
+     * it will stop working after a retrial. This is a hack to fix this issue.
+     */
+    function resetUnloadedGapiModules() {
+        // Clear last failed gapi.load state to force next gapi.load to first
+        // load the failed gapi.iframes module.
+        // Get gapix.beacon context.
+        var beacon = _window().___jsl;
+        // Get current hint.
+        if (beacon === null || beacon === void 0 ? void 0 : beacon.H) {
+            // Get gapi hint.
+            for (var _i = 0, _a = Object.keys(beacon.H); _i < _a.length; _i++) {
+                var hint = _a[_i];
+                // Requested modules.
+                beacon.H[hint].r = beacon.H[hint].r || [];
+                // Loaded modules.
+                beacon.H[hint].L = beacon.H[hint].L || [];
+                // Set requested modules to a copy of the loaded modules.
+                beacon.H[hint].r = __spreadArrays(beacon.H[hint].L);
+                // Clear pending callbacks.
+                if (beacon.CP) {
+                    for (var i = 0; i < beacon.CP.length; i++) {
+                        // Remove all failed pending callbacks.
+                        beacon.CP[i] = null;
+                    }
+                }
+            }
+        }
+    }
+    function loadGapi(auth) {
+        return new Promise(function (resolve, reject) {
+            var _a, _b, _c;
+            // Function to run when gapi.load is ready.
+            function loadGapiIframe() {
+                // The developer may have tried to previously run gapi.load and failed.
+                // Run this to fix that.
+                resetUnloadedGapiModules();
+                gapi.load('gapi.iframes', {
+                    callback: function () {
+                        resolve(gapi.iframes.getContext());
+                    },
+                    ontimeout: function () {
+                        // The above reset may be sufficient, but having this reset after
+                        // failure ensures that if the developer calls gapi.load after the
+                        // connection is re-established and before another attempt to embed
+                        // the iframe, it would work and would not be broken because of our
+                        // failed attempt.
+                        // Timeout when gapi.iframes.Iframe not loaded.
+                        resetUnloadedGapiModules();
+                        reject(_createError(auth, "network-request-failed" /* NETWORK_REQUEST_FAILED */));
+                    },
+                    timeout: NETWORK_TIMEOUT.get()
+                });
+            }
+            if ((_b = (_a = _window().gapi) === null || _a === void 0 ? void 0 : _a.iframes) === null || _b === void 0 ? void 0 : _b.Iframe) {
+                // If gapi.iframes.Iframe available, resolve.
+                resolve(gapi.iframes.getContext());
+            }
+            else if (!!((_c = _window().gapi) === null || _c === void 0 ? void 0 : _c.load)) {
+                // Gapi loader ready, load gapi.iframes.
+                loadGapiIframe();
+            }
+            else {
+                // Create a new iframe callback when this is called so as not to overwrite
+                // any previous defined callback. This happens if this method is called
+                // multiple times in parallel and could result in the later callback
+                // overwriting the previous one. This would end up with a iframe
+                // timeout.
+                var cbName = _generateCallbackName('iframefcb');
+                // GApi loader not available, dynamically load platform.js.
+                _window()[cbName] = function () {
+                    // GApi loader should be ready.
+                    if (!!gapi.load) {
+                        loadGapiIframe();
+                    }
+                    else {
+                        // Gapi loader failed, throw error.
+                        reject(_createError(auth, "network-request-failed" /* NETWORK_REQUEST_FAILED */));
+                    }
+                };
+                // Load GApi loader.
+                return _loadJS("https://apis.google.com/js/api.js?onload=" + cbName);
+            }
+        }).catch(function (error) {
+            // Reset cached promise to allow for retrial.
+            cachedGApiLoader = null;
+            throw error;
+        });
+    }
+    var cachedGApiLoader = null;
+    function _loadGapi(auth) {
+        cachedGApiLoader = cachedGApiLoader || loadGapi(auth);
+        return cachedGApiLoader;
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var PING_TIMEOUT = new Delay(5000, 15000);
+    var IFRAME_PATH = '__/auth/iframe';
+    var EMULATED_IFRAME_PATH = 'emulator/auth/iframe';
+    var IFRAME_ATTRIBUTES = {
+        style: {
+            position: 'absolute',
+            top: '-100px',
+            width: '1px',
+            height: '1px'
+        }
+    };
+    function getIframeUrl(auth) {
+        var config = auth.config;
+        _assert(config.authDomain, auth, "auth-domain-config-required" /* MISSING_AUTH_DOMAIN */);
+        var url = config.emulator
+            ? _emulatorUrl(config, EMULATED_IFRAME_PATH)
+            : "https://" + auth.config.authDomain + "/" + IFRAME_PATH;
+        var params = {
+            apiKey: config.apiKey,
+            appName: auth.name,
+            v: app.SDK_VERSION
+        };
+        // Can pass 'eid' as one of 'p' (production), 's' (staging), or 't' (test)
+        // TODO: do we care about frameworks? pass them as fw=
+        return url + "?" + querystring(params).slice(1);
+    }
+    function _openIframe(auth) {
+        return __awaiter(this, void 0, void 0, function () {
+            var context, gapi;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _loadGapi(auth)];
+                    case 1:
+                        context = _a.sent();
+                        gapi = _window().gapi;
+                        _assert(gapi, auth, "internal-error" /* INTERNAL_ERROR */);
+                        return [2 /*return*/, context.open({
+                                where: document.body,
+                                url: getIframeUrl(auth),
+                                messageHandlersFilter: gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER,
+                                attributes: IFRAME_ATTRIBUTES,
+                                dontclear: true
+                            }, function (iframe) {
+                                return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                                    // Clear timer and resolve pending iframe ready promise.
+                                    function clearTimerAndResolve() {
+                                        _window().clearTimeout(networkErrorTimer);
+                                        resolve(iframe);
+                                    }
+                                    var networkError, networkErrorTimer;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4 /*yield*/, iframe.restyle({
+                                                    // Prevent iframe from closing on mouse out.
+                                                    setHideOnLeave: false
+                                                })];
+                                            case 1:
+                                                _a.sent();
+                                                networkError = _createError(auth, "network-request-failed" /* NETWORK_REQUEST_FAILED */);
+                                                networkErrorTimer = _window().setTimeout(function () {
+                                                    reject(networkError);
+                                                }, PING_TIMEOUT.get());
+                                                // This returns an IThenable. However the reject part does not call
+                                                // when the iframe is not loaded.
+                                                iframe.ping(clearTimerAndResolve).then(clearTimerAndResolve, function () {
+                                                    reject(networkError);
+                                                });
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                }); });
+                            })];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var BrowserSessionPersistence = /** @class */ (function (_super) {
+        __extends(BrowserSessionPersistence, _super);
+        function BrowserSessionPersistence() {
+            return _super.call(this, sessionStorage, "SESSION" /* SESSION */) || this;
+        }
+        BrowserSessionPersistence.prototype._addListener = function (_key, _listener) {
+            // Listeners are not supported for session storage since it cannot be shared across windows
+            return;
+        };
+        BrowserSessionPersistence.prototype._removeListener = function (_key, _listener) {
+            // Listeners are not supported for session storage since it cannot be shared across windows
+            return;
+        };
+        BrowserSessionPersistence.type = 'SESSION';
+        return BrowserSessionPersistence;
+    }(BrowserPersistenceClass));
+    /**
+     * An implementation of {@link @firebase/auth-types#Persistence} of 'SESSION' using `sessionStorage`
+     * for the underlying storage.
+     *
+     * @public
+     */
+    var browserSessionPersistence = BrowserSessionPersistence;
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC.
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var BASE_POPUP_OPTIONS = {
+        location: 'yes',
+        resizable: 'yes',
+        statusbar: 'yes',
+        toolbar: 'no'
+    };
+    var DEFAULT_WIDTH = 500;
+    var DEFAULT_HEIGHT = 600;
+    var TARGET_BLANK = '_blank';
+    var FIREFOX_EMPTY_URL = 'http://localhost';
+    var AuthPopup = /** @class */ (function () {
+        function AuthPopup(window) {
+            this.window = window;
+            this.associatedEvent = null;
+        }
+        AuthPopup.prototype.close = function () {
+            if (this.window) {
+                try {
+                    this.window.close();
+                }
+                catch (e) { }
+            }
+        };
+        return AuthPopup;
+    }());
+    function _open(auth, url, name, width, height) {
+        if (width === void 0) { width = DEFAULT_WIDTH; }
+        if (height === void 0) { height = DEFAULT_HEIGHT; }
+        var top = Math.min((window.screen.availHeight - height) / 2, 0).toString();
+        var left = Math.min((window.screen.availWidth - width) / 2, 0).toString();
+        var target = '';
+        var options = __assign(__assign({}, BASE_POPUP_OPTIONS), { width: width.toString(), height: height.toString(), top: top,
+            left: left });
+        // Chrome iOS 7 and 8 is returning an undefined popup win when target is
+        // specified, even though the popup is not necessarily blocked.
+        var ua = getUA().toLowerCase();
+        if (name) {
+            target = _isChromeIOS(ua) ? TARGET_BLANK : name;
+        }
+        if (_isFirefox(ua)) {
+            // Firefox complains when invalid URLs are popped out. Hacky way to bypass.
+            url = url || FIREFOX_EMPTY_URL;
+            // Firefox disables by default scrolling on popup windows, which can create
+            // issues when the user has many Google accounts, for instance.
+            options.scrollbars = 'yes';
+        }
+        var optionsString = Object.entries(options).reduce(function (accum, _a) {
+            var key = _a[0], value = _a[1];
+            return "" + accum + key + "=" + value + ",";
+        }, '');
+        if (_isIOSStandalone(ua) && target !== '_self') {
+            openAsNewWindowIOS(url || '', target);
+            return new AuthPopup(null);
+        }
+        // about:blank getting sanitized causing browsers like IE/Edge to display
+        // brief error message before redirecting to handler.
+        var newWin = window.open(url || '', target, optionsString);
+        _assert(newWin, auth, "popup-blocked" /* POPUP_BLOCKED */);
+        // Flaky on IE edge, encapsulate with a try and catch.
+        try {
+            newWin.focus();
+        }
+        catch (e) { }
+        return new AuthPopup(newWin);
+    }
+    function openAsNewWindowIOS(url, target) {
+        var el = document.createElement('a');
+        el.href = url;
+        el.target = target;
+        var click = document.createEvent('MouseEvent');
+        click.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 1, null);
+        el.dispatchEvent(click);
+    }
+
+    /**
+     * @license
+     * Copyright 2021 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Chooses a popup/redirect resolver to use. This prefers the override (which
+     * is directly passed in), and falls back to the property set on the auth
+     * object. If neither are available, this function errors w/ an argument error.
+     */
+    function _withDefaultResolver(auth, resolverOverride) {
+        if (resolverOverride) {
+            return _getInstance(resolverOverride);
+        }
+        _assert(auth._popupRedirectResolver, auth, "argument-error" /* ARGUMENT_ERROR */);
+        return auth._popupRedirectResolver;
+    }
+
+    /**
+     * @license
+     * Copyright 2019 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var IdpCredential = /** @class */ (function (_super) {
+        __extends(IdpCredential, _super);
+        function IdpCredential(params) {
+            var _this = _super.call(this, "custom" /* CUSTOM */, "custom" /* CUSTOM */) || this;
+            _this.params = params;
+            return _this;
+        }
+        IdpCredential.prototype._getIdTokenResponse = function (auth) {
+            return signInWithIdp(auth, this._buildIdpRequest());
+        };
+        IdpCredential.prototype._linkToIdToken = function (auth, idToken) {
+            return signInWithIdp(auth, this._buildIdpRequest(idToken));
+        };
+        IdpCredential.prototype._getReauthenticationResolver = function (auth) {
+            return signInWithIdp(auth, this._buildIdpRequest());
+        };
+        IdpCredential.prototype._buildIdpRequest = function (idToken) {
+            var request = {
+                requestUri: this.params.requestUri,
+                sessionId: this.params.sessionId,
+                postBody: this.params.postBody || null,
+                tenantId: this.params.tenantId,
+                pendingToken: this.params.pendingToken,
+                returnSecureToken: true,
+                returnIdpCredential: true
+            };
+            if (idToken) {
+                request.idToken = idToken;
+            }
+            return request;
+        };
+        return IdpCredential;
+    }(AuthCredential));
+    function _signIn(params) {
+        return _signInWithCredential(params.auth, new IdpCredential(params), params.bypassAuthState);
+    }
+    function _reauth(params) {
+        var auth = params.auth, user = params.user;
+        _assert(user, auth, "internal-error" /* INTERNAL_ERROR */);
+        return _reauthenticate(user, new IdpCredential(params), params.bypassAuthState);
+    }
+    function _link$1(params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var auth, user;
+            return __generator(this, function (_a) {
+                auth = params.auth, user = params.user;
+                _assert(user, auth, "internal-error" /* INTERNAL_ERROR */);
+                return [2 /*return*/, _link(user, new IdpCredential(params), params.bypassAuthState)];
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Popup event manager. Handles the popup's entire lifecycle; listens to auth
+     * events
+     */
+    var AbstractPopupRedirectOperation = /** @class */ (function () {
+        function AbstractPopupRedirectOperation(auth, filter, resolver, user, bypassAuthState) {
+            if (bypassAuthState === void 0) { bypassAuthState = false; }
+            this.auth = auth;
+            this.resolver = resolver;
+            this.user = user;
+            this.bypassAuthState = bypassAuthState;
+            this.pendingPromise = null;
+            this.eventManager = null;
+            this.filter = Array.isArray(filter) ? filter : [filter];
+        }
+        AbstractPopupRedirectOperation.prototype.execute = function () {
+            var _this = this;
+            return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                var _a, e_1;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            this.pendingPromise = { resolve: resolve, reject: reject };
+                            _b.label = 1;
+                        case 1:
+                            _b.trys.push([1, 4, , 5]);
+                            _a = this;
+                            return [4 /*yield*/, this.resolver._initialize(this.auth)];
+                        case 2:
+                            _a.eventManager = _b.sent();
+                            return [4 /*yield*/, this.onExecution()];
+                        case 3:
+                            _b.sent();
+                            this.eventManager.registerConsumer(this);
+                            return [3 /*break*/, 5];
+                        case 4:
+                            e_1 = _b.sent();
+                            this.reject(e_1);
+                            return [3 /*break*/, 5];
+                        case 5: return [2 /*return*/];
+                    }
+                });
+            }); });
+        };
+        AbstractPopupRedirectOperation.prototype.onAuthEvent = function (event) {
+            return __awaiter(this, void 0, void 0, function () {
+                var urlResponse, sessionId, postBody, tenantId, error, type, params, _a, e_2;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            urlResponse = event.urlResponse, sessionId = event.sessionId, postBody = event.postBody, tenantId = event.tenantId, error = event.error, type = event.type;
+                            if (error) {
+                                this.reject(error);
+                                return [2 /*return*/];
+                            }
+                            params = {
+                                auth: this.auth,
+                                requestUri: urlResponse,
+                                sessionId: sessionId,
+                                tenantId: tenantId || undefined,
+                                postBody: postBody || undefined,
+                                user: this.user,
+                                bypassAuthState: this.bypassAuthState
+                            };
+                            _b.label = 1;
+                        case 1:
+                            _b.trys.push([1, 3, , 4]);
+                            _a = this.resolve;
+                            return [4 /*yield*/, this.getIdpTask(type)(params)];
+                        case 2:
+                            _a.apply(this, [_b.sent()]);
+                            return [3 /*break*/, 4];
+                        case 3:
+                            e_2 = _b.sent();
+                            this.reject(e_2);
+                            return [3 /*break*/, 4];
+                        case 4: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        AbstractPopupRedirectOperation.prototype.onError = function (error) {
+            this.reject(error);
+        };
+        AbstractPopupRedirectOperation.prototype.getIdpTask = function (type) {
+            switch (type) {
+                case "signInViaPopup" /* SIGN_IN_VIA_POPUP */:
+                case "signInViaRedirect" /* SIGN_IN_VIA_REDIRECT */:
+                    return _signIn;
+                case "linkViaPopup" /* LINK_VIA_POPUP */:
+                case "linkViaRedirect" /* LINK_VIA_REDIRECT */:
+                    return _link$1;
+                case "reauthViaPopup" /* REAUTH_VIA_POPUP */:
+                case "reauthViaRedirect" /* REAUTH_VIA_REDIRECT */:
+                    return _reauth;
+                default:
+                    _fail(this.auth, "internal-error" /* INTERNAL_ERROR */);
+            }
+        };
+        AbstractPopupRedirectOperation.prototype.resolve = function (cred) {
+            debugAssert(this.pendingPromise, 'Pending promise was never set');
+            this.pendingPromise.resolve(cred);
+            this.unregisterAndCleanUp();
+        };
+        AbstractPopupRedirectOperation.prototype.reject = function (error) {
+            debugAssert(this.pendingPromise, 'Pending promise was never set');
+            this.pendingPromise.reject(error);
+            this.unregisterAndCleanUp();
+        };
+        AbstractPopupRedirectOperation.prototype.unregisterAndCleanUp = function () {
+            if (this.eventManager) {
+                this.eventManager.unregisterConsumer(this);
+            }
+            this.pendingPromise = null;
+            this.cleanUp();
+        };
+        return AbstractPopupRedirectOperation;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // We only get one redirect outcome for any one auth, so just store it
+    // in here.
+    var redirectOutcomeMap = new Map();
+    var RedirectAction = /** @class */ (function (_super) {
+        __extends(RedirectAction, _super);
+        function RedirectAction(auth, resolver, bypassAuthState) {
+            if (bypassAuthState === void 0) { bypassAuthState = false; }
+            var _this = _super.call(this, auth, [
+                "signInViaRedirect" /* SIGN_IN_VIA_REDIRECT */,
+                "linkViaRedirect" /* LINK_VIA_REDIRECT */,
+                "reauthViaRedirect" /* REAUTH_VIA_REDIRECT */,
+                "unknown" /* UNKNOWN */
+            ], resolver, undefined, bypassAuthState) || this;
+            _this.eventId = null;
+            return _this;
+        }
+        /**
+         * Override the execute function; if we already have a redirect result, then
+         * just return it.
+         */
+        RedirectAction.prototype.execute = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var readyOutcome, result_1, e_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            readyOutcome = redirectOutcomeMap.get(this.auth._key());
+                            if (!!readyOutcome) return [3 /*break*/, 5];
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 3, , 4]);
+                            return [4 /*yield*/, _super.prototype.execute.call(this)];
+                        case 2:
+                            result_1 = _a.sent();
+                            readyOutcome = function () { return Promise.resolve(result_1); };
+                            return [3 /*break*/, 4];
+                        case 3:
+                            e_1 = _a.sent();
+                            readyOutcome = function () { return Promise.reject(e_1); };
+                            return [3 /*break*/, 4];
+                        case 4:
+                            redirectOutcomeMap.set(this.auth._key(), readyOutcome);
+                            _a.label = 5;
+                        case 5: return [2 /*return*/, readyOutcome()];
+                    }
+                });
+            });
+        };
+        RedirectAction.prototype.onAuthEvent = function (event) {
+            return __awaiter(this, void 0, void 0, function () {
+                var user;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (event.type === "signInViaRedirect" /* SIGN_IN_VIA_REDIRECT */) {
+                                return [2 /*return*/, _super.prototype.onAuthEvent.call(this, event)];
+                            }
+                            else if (event.type === "unknown" /* UNKNOWN */) {
+                                // This is a sentinel value indicating there's no pending redirect
+                                this.resolve(null);
+                                return [2 /*return*/];
+                            }
+                            if (!event.eventId) return [3 /*break*/, 2];
+                            return [4 /*yield*/, this.auth._redirectUserForId(event.eventId)];
+                        case 1:
+                            user = _a.sent();
+                            if (user) {
+                                this.user = user;
+                                return [2 /*return*/, _super.prototype.onAuthEvent.call(this, event)];
+                            }
+                            else {
+                                this.resolve(null);
+                            }
+                            _a.label = 2;
+                        case 2: return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        RedirectAction.prototype.onExecution = function () {
+            return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+                return [2 /*return*/];
+            }); });
+        };
+        RedirectAction.prototype.cleanUp = function () { };
+        return RedirectAction;
+    }(AbstractPopupRedirectOperation));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Authenticates a Firebase client using a full-page redirect flow.
+     *
+     * @remarks
+     * To handle the results and errors for this operation, refer to {@link getRedirectResult}.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new FacebookAuthProvider();
+     * // You can add additional scopes to the provider:
+     * provider.addScope('user_birthday');
+     * // Start a sign in process for an unauthenticated user.
+     * await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * if (result) {
+     *   // This is the signed-in user
+     *   const user = result.user;
+     *   // This gives you a Facebook Access Token.
+     *   const credential = provider.credentialFromResult(auth, result);
+     *   const token = credential.accessToken;
+     * }
+     * // As this API can be used for sign-in, linking and reauthentication,
+     * // check the operationType to determine what triggered this redirect
+     * // operation.
+     * const operationType = result.operationType;
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param provider - The provider to authenticate. The provider has to be an {@link OAuthProvider}.
+     * Non-OAuth providers like {@link EmailAuthProvider} will throw an error.
+     * @param resolver - An instance of {@link @firebase/auth-types#PopupRedirectResolver}, optional
+     * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
+     *
+     * @public
+     */
+    function signInWithRedirect(auth, provider, resolver) {
+        return _signInWithRedirect(auth, provider, resolver);
+    }
+    function _signInWithRedirect(auth, provider, resolver) {
+        return __awaiter(this, void 0, void 0, function () {
+            var authInternal;
+            return __generator(this, function (_a) {
+                authInternal = _castAuth(auth);
+                _assert(provider instanceof OAuthProvider, auth, "argument-error" /* ARGUMENT_ERROR */);
+                return [2 /*return*/, _withDefaultResolver(authInternal, resolver)._openRedirect(authInternal, provider, "signInViaRedirect" /* SIGN_IN_VIA_REDIRECT */)];
+            });
+        });
+    }
+    /**
+     * Reauthenticates the current user with the specified {@link OAuthProvider} using a full-page redirect flow.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new FacebookAuthProvider();
+     * const result = await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * // Link using a redirect.
+     * await linkWithRedirect(result.user, provider);
+     * // This will again trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * ```
+     *
+     * @param user - The user.
+     * @param provider - The provider to authenticate. The provider has to be an {@link OAuthProvider}.
+     * Non-OAuth providers like {@link EmailAuthProvider} will throw an error.
+     * @param resolver - An instance of {@link @firebase/auth-types#PopupRedirectResolver}, optional
+     * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
+     *
+     * @public
+     */
+    function reauthenticateWithRedirect(user, provider, resolver) {
+        return _reauthenticateWithRedirect(user, provider, resolver);
+    }
+    function _reauthenticateWithRedirect(user, provider, resolver) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, resolverInternal, eventId;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        _assert(provider instanceof OAuthProvider, userInternal.auth, "argument-error" /* ARGUMENT_ERROR */);
+                        resolverInternal = _withDefaultResolver(userInternal.auth, resolver);
+                        return [4 /*yield*/, prepareUserForRedirect(userInternal)];
+                    case 1:
+                        eventId = _a.sent();
+                        return [2 /*return*/, resolverInternal._openRedirect(userInternal.auth, provider, "reauthViaRedirect" /* REAUTH_VIA_REDIRECT */, eventId)];
+                }
+            });
+        });
+    }
+    /**
+     * Links the {@link OAuthProvider} to the user account using a full-page redirect flow.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using some other provider.
+     * const result = await signInWithEmailAndPassword(auth, email, password);
+     * // Link using a redirect.
+     * const provider = new FacebookAuthProvider();
+     * await linkWithRedirect(result.user, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * ```
+     *
+     * @param user - The user.
+     * @param provider - The provider to authenticate. The provider has to be an {@link OAuthProvider}.
+     * Non-OAuth providers like {@link EmailAuthProvider} will throw an error.
+     * @param resolver - An instance of {@link @firebase/auth-types#PopupRedirectResolver}, optional
+     * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
+     *
+     *
+     * @public
+     */
+    function linkWithRedirect(user, provider, resolver) {
+        return _linkWithRedirect(user, provider, resolver);
+    }
+    function _linkWithRedirect(user, provider, resolver) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, resolverInternal, eventId;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        _assert(provider instanceof OAuthProvider, userInternal.auth, "argument-error" /* ARGUMENT_ERROR */);
+                        resolverInternal = _withDefaultResolver(userInternal.auth, resolver);
+                        return [4 /*yield*/, _assertLinkedStatus(false, userInternal, provider.providerId)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, prepareUserForRedirect(userInternal)];
+                    case 2:
+                        eventId = _a.sent();
+                        return [2 /*return*/, resolverInternal._openRedirect(userInternal.auth, provider, "linkViaRedirect" /* LINK_VIA_REDIRECT */, eventId)];
+                }
+            });
+        });
+    }
+    /**
+     * Returns a {@link @firebase/auth-types#UserCredential} from the redirect-based sign-in flow.
+     *
+     * @remarks
+     * If sign-in succeeded, returns the signed in user. If sign-in was unsuccessful, fails with an
+     * error. If no redirect operation was called, returns a {@link @firebase/auth-types#UserCredential}
+     * with a null `user`.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a redirect.
+     * const provider = new FacebookAuthProvider();
+     * // You can add additional scopes to the provider:
+     * provider.addScope('user_birthday');
+     * // Start a sign in process for an unauthenticated user.
+     * await signInWithRedirect(auth, provider);
+     * // This will trigger a full page redirect away from your app
+     *
+     * // After returning from the redirect when your app initializes you can obtain the result
+     * const result = await getRedirectResult(auth);
+     * if (result) {
+     *   // This is the signed-in user
+     *   const user = result.user;
+     *   // This gives you a Facebook Access Token.
+     *   const credential = provider.credentialFromResult(auth, result);
+     *   const token = credential.accessToken;
+     * }
+     * // As this API can be used for sign-in, linking and reauthentication,
+     * // check the operationType to determine what triggered this redirect
+     * // operation.
+     * const operationType = result.operationType;
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param resolver - An instance of {@link @firebase/auth-types#PopupRedirectResolver}, optional
+     * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
+     *
+     * @public
+     */
+    function getRedirectResult(auth, resolver) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _castAuth(auth)._initializationPromise];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, _getRedirectResult(auth, resolver, false)];
+                }
+            });
+        });
+    }
+    function _getRedirectResult(auth, resolverExtern, bypassAuthState) {
+        if (bypassAuthState === void 0) { bypassAuthState = false; }
+        return __awaiter(this, void 0, void 0, function () {
+            var authInternal, resolver, action, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        authInternal = _castAuth(auth);
+                        resolver = _withDefaultResolver(authInternal, resolverExtern);
+                        action = new RedirectAction(authInternal, resolver, bypassAuthState);
+                        return [4 /*yield*/, action.execute()];
+                    case 1:
+                        result = _a.sent();
+                        if (!(result && !bypassAuthState)) return [3 /*break*/, 4];
+                        delete result.user._redirectEventId;
+                        return [4 /*yield*/, authInternal._persistUserIfCurrent(result.user)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, authInternal._setRedirectUser(null, resolverExtern)];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/, result];
+                }
+            });
+        });
+    }
+    function prepareUserForRedirect(user) {
+        return __awaiter(this, void 0, void 0, function () {
+            var eventId;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        eventId = _generateEventId(user.uid + ":::");
+                        user._redirectEventId = eventId;
+                        return [4 /*yield*/, user.auth._setRedirectUser(user)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, user.auth._persistUserIfCurrent(user)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, eventId];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2021 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * URL for Authentication widget which will initiate the OAuth handshake
+     *
+     * @internal
+     */
+    var WIDGET_PATH = '__/auth/handler';
+    /**
+     * URL for emulated environment
+     *
+     * @internal
+     */
+    var EMULATOR_WIDGET_PATH = 'emulator/auth/handler';
+    function _getRedirectUrl(auth, provider, authType, redirectUrl, eventId, additionalParams) {
+        _assert(auth.config.authDomain, auth, "auth-domain-config-required" /* MISSING_AUTH_DOMAIN */);
+        _assert(auth.config.apiKey, auth, "invalid-api-key" /* INVALID_API_KEY */);
+        var params = {
+            apiKey: auth.config.apiKey,
+            appName: auth.name,
+            authType: authType,
+            redirectUrl: redirectUrl,
+            v: app.SDK_VERSION,
+            eventId: eventId
+        };
+        if (provider instanceof OAuthProvider) {
+            provider.setDefaultLanguage(auth.languageCode);
+            params.providerId = provider.providerId || '';
+            if (!isEmpty(provider.getCustomParameters())) {
+                params.customParameters = JSON.stringify(provider.getCustomParameters());
+            }
+            var scopes = provider.getScopes().filter(function (scope) { return scope !== ''; });
+            if (scopes.length > 0) {
+                params.scopes = scopes.join(',');
+            }
+            // TODO set additionalParams from the provider as well?
+            for (var _i = 0, _a = Object.entries(additionalParams || {}); _i < _a.length; _i++) {
+                var _b = _a[_i], key = _b[0], value = _b[1];
+                params[key] = value;
+            }
+        }
+        if (auth.tenantId) {
+            params.tid = auth.tenantId;
+        }
+        for (var _c = 0, _d = Object.keys(params); _c < _d.length; _c++) {
+            var key = _d[_c];
+            if (params[key] === undefined) {
+                delete params[key];
+            }
+        }
+        // TODO: maybe set eid as endipointId
+        // TODO: maybe set fw as Frameworks.join(",")
+        var url = new URL(getHandlerBase(auth) + "?" + querystring(params).slice(1));
+        return url.toString();
+    }
+    function getHandlerBase(_a) {
+        var config = _a.config;
+        if (!config.emulator) {
+            return "https://" + config.authDomain + "/" + WIDGET_PATH;
+        }
+        return _emulatorUrl(config, EMULATOR_WIDGET_PATH);
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * The special web storage event
+     *
+     */
+    var WEB_STORAGE_SUPPORT_KEY = 'webStorageSupport';
+    var BrowserPopupRedirectResolver = /** @class */ (function () {
+        function BrowserPopupRedirectResolver() {
+            this.eventManagers = {};
+            this.iframes = {};
+            this.originValidationPromises = {};
+            this._redirectPersistence = browserSessionPersistence;
+            this._completeRedirectFn = _getRedirectResult;
+        }
+        // Wrapping in async even though we don't await anywhere in order
+        // to make sure errors are raised as promise rejections
+        BrowserPopupRedirectResolver.prototype._openPopup = function (auth, provider, authType, eventId) {
+            var _a;
+            return __awaiter(this, void 0, void 0, function () {
+                var url;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            debugAssert((_a = this.eventManagers[auth._key()]) === null || _a === void 0 ? void 0 : _a.manager, '_initialize() not called before _openPopup()');
+                            return [4 /*yield*/, this.originValidation(auth)];
+                        case 1:
+                            _b.sent();
+                            url = _getRedirectUrl(auth, provider, authType, _getCurrentUrl(), eventId);
+                            return [2 /*return*/, _open(auth, url, _generateEventId())];
+                    }
+                });
+            });
+        };
+        BrowserPopupRedirectResolver.prototype._openRedirect = function (auth, provider, authType, eventId) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.originValidation(auth)];
+                        case 1:
+                            _a.sent();
+                            _setWindowLocation(_getRedirectUrl(auth, provider, authType, _getCurrentUrl(), eventId));
+                            return [2 /*return*/, new Promise(function () { })];
+                    }
+                });
+            });
+        };
+        BrowserPopupRedirectResolver.prototype._initialize = function (auth) {
+            var key = auth._key();
+            if (this.eventManagers[key]) {
+                var _a = this.eventManagers[key], manager = _a.manager, promise_1 = _a.promise;
+                if (manager) {
+                    return Promise.resolve(manager);
+                }
+                else {
+                    debugAssert(promise_1, 'If manager is not set, promise should be');
+                    return promise_1;
+                }
+            }
+            var promise = this.initAndGetManager(auth);
+            this.eventManagers[key] = { promise: promise };
+            return promise;
+        };
+        BrowserPopupRedirectResolver.prototype.initAndGetManager = function (auth) {
+            return __awaiter(this, void 0, void 0, function () {
+                var iframe, manager;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, _openIframe(auth)];
+                        case 1:
+                            iframe = _a.sent();
+                            manager = new AuthEventManager(auth);
+                            iframe.register('authEvent', function (iframeEvent) {
+                                _assert(iframeEvent === null || iframeEvent === void 0 ? void 0 : iframeEvent.authEvent, auth, "invalid-auth-event" /* INVALID_AUTH_EVENT */);
+                                // TODO: Consider splitting redirect and popup events earlier on
+                                var handled = manager.onEvent(iframeEvent.authEvent);
+                                return { status: handled ? "ACK" /* ACK */ : "ERROR" /* ERROR */ };
+                            }, gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER);
+                            this.eventManagers[auth._key()] = { manager: manager };
+                            this.iframes[auth._key()] = iframe;
+                            return [2 /*return*/, manager];
+                    }
+                });
+            });
+        };
+        BrowserPopupRedirectResolver.prototype._isIframeWebStorageSupported = function (auth, cb) {
+            var iframe = this.iframes[auth._key()];
+            iframe.send(WEB_STORAGE_SUPPORT_KEY, { type: WEB_STORAGE_SUPPORT_KEY }, function (result) {
+                var _a;
+                var isSupported = (_a = result === null || result === void 0 ? void 0 : result[0]) === null || _a === void 0 ? void 0 : _a[WEB_STORAGE_SUPPORT_KEY];
+                if (isSupported !== undefined) {
+                    cb(!!isSupported);
+                }
+                _fail(auth, "internal-error" /* INTERNAL_ERROR */);
+            }, gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER);
+        };
+        BrowserPopupRedirectResolver.prototype.originValidation = function (auth) {
+            var key = auth._key();
+            if (!this.originValidationPromises[key]) {
+                this.originValidationPromises[key] = _validateOrigin(auth);
+            }
+            return this.originValidationPromises[key];
+        };
+        return BrowserPopupRedirectResolver;
+    }());
+    /**
+     * An implementation of {@link @firebase/auth-types#PopupRedirectResolver} suitable for browser
+     * based applications.
+     *
+     * @public
+     */
+    var browserPopupRedirectResolver = BrowserPopupRedirectResolver;
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function startSignInPhoneMfa(auth, request) {
+        return _performApiRequest(auth, "POST" /* POST */, "/v2/accounts/mfaSignIn:start" /* START_PHONE_MFA_SIGN_IN */, __assign({ tenantId: auth.tenantId }, request));
+    }
+    function finalizeSignInPhoneMfa(auth, request) {
+        return _performApiRequest(auth, "POST" /* POST */, "/v2/accounts/mfaSignIn:finalize" /* FINALIZE_PHONE_MFA_SIGN_IN */, __assign({ tenantId: auth.tenantId }, request));
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function getRecaptchaParams(auth) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _performApiRequest(auth, "GET" /* GET */, "/v1/recaptchaParams" /* GET_RECAPTCHA_PARAM */)];
+                    case 1: return [2 /*return*/, ((_a.sent()).recaptchaSiteKey || '')];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _SOLVE_TIME_MS = 500;
+    var _EXPIRATION_TIME_MS = 60000;
+    var _WIDGET_ID_START = 1000000000000;
+    var MockReCaptcha = /** @class */ (function () {
+        function MockReCaptcha(auth) {
+            this.auth = auth;
+            this.counter = _WIDGET_ID_START;
+            this._widgets = new Map();
+        }
+        MockReCaptcha.prototype.render = function (container, parameters) {
+            var id = this.counter;
+            this._widgets.set(id, new MockWidget(container, this.auth.name, parameters || {}));
+            this.counter++;
+            return id;
+        };
+        MockReCaptcha.prototype.reset = function (optWidgetId) {
+            var _a;
+            var id = optWidgetId || _WIDGET_ID_START;
+            void ((_a = this._widgets.get(id)) === null || _a === void 0 ? void 0 : _a.delete());
+            this._widgets.delete(id);
+        };
+        MockReCaptcha.prototype.getResponse = function (optWidgetId) {
+            var _a;
+            var id = optWidgetId || _WIDGET_ID_START;
+            return ((_a = this._widgets.get(id)) === null || _a === void 0 ? void 0 : _a.getResponse()) || '';
+        };
+        MockReCaptcha.prototype.execute = function (optWidgetId) {
+            var _a;
+            return __awaiter(this, void 0, void 0, function () {
+                var id;
+                return __generator(this, function (_b) {
+                    id = optWidgetId || _WIDGET_ID_START;
+                    void ((_a = this._widgets.get(id)) === null || _a === void 0 ? void 0 : _a.execute());
+                    return [2 /*return*/, ''];
+                });
+            });
+        };
+        return MockReCaptcha;
+    }());
+    var MockWidget = /** @class */ (function () {
+        function MockWidget(containerOrId, appName, params) {
+            var _this = this;
+            this.params = params;
+            this.timerId = null;
+            this.deleted = false;
+            this.responseToken = null;
+            this.clickHandler = function () {
+                _this.execute();
+            };
+            var container = typeof containerOrId === 'string'
+                ? document.getElementById(containerOrId)
+                : containerOrId;
+            _assert(container, "argument-error" /* ARGUMENT_ERROR */, { appName: appName });
+            this.container = container;
+            this.isVisible = this.params.size !== 'invisible';
+            if (this.isVisible) {
+                this.execute();
+            }
+            else {
+                this.container.addEventListener('click', this.clickHandler);
+            }
+        }
+        MockWidget.prototype.getResponse = function () {
+            this.checkIfDeleted();
+            return this.responseToken;
+        };
+        MockWidget.prototype.delete = function () {
+            this.checkIfDeleted();
+            this.deleted = true;
+            if (this.timerId) {
+                clearTimeout(this.timerId);
+                this.timerId = null;
+            }
+            this.container.removeEventListener('click', this.clickHandler);
+        };
+        MockWidget.prototype.execute = function () {
+            var _this = this;
+            this.checkIfDeleted();
+            if (this.timerId) {
+                return;
+            }
+            this.timerId = window.setTimeout(function () {
+                _this.responseToken = generateRandomAlphaNumericString(50);
+                var _a = _this.params, callback = _a.callback, expiredCallback = _a["expired-callback"];
+                if (callback) {
+                    try {
+                        callback(_this.responseToken);
+                    }
+                    catch (e) { }
+                }
+                _this.timerId = window.setTimeout(function () {
+                    _this.timerId = null;
+                    _this.responseToken = null;
+                    if (expiredCallback) {
+                        try {
+                            expiredCallback();
+                        }
+                        catch (e) { }
+                    }
+                    if (_this.isVisible) {
+                        _this.execute();
+                    }
+                }, _EXPIRATION_TIME_MS);
+            }, _SOLVE_TIME_MS);
+        };
+        MockWidget.prototype.checkIfDeleted = function () {
+            if (this.deleted) {
+                throw new Error('reCAPTCHA mock was already deleted!');
+            }
+        };
+        return MockWidget;
+    }());
+    function generateRandomAlphaNumericString(len) {
+        var chars = [];
+        var allowedChars = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (var i = 0; i < len; i++) {
+            chars.push(allowedChars.charAt(Math.floor(Math.random() * allowedChars.length)));
+        }
+        return chars.join('');
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    // ReCaptcha will load using the same callback, so the callback function needs
+    // to be kept around
+    var _JSLOAD_CALLBACK = _generateCallbackName('rcb');
+    var NETWORK_TIMEOUT_DELAY = new Delay(30000, 60000);
+    var RECAPTCHA_BASE = 'https://www.google.com/recaptcha/api.js?';
+    /**
+     * Loader for the GReCaptcha library. There should only ever be one of this.
+     */
+    var ReCaptchaLoaderImpl = /** @class */ (function () {
+        function ReCaptchaLoaderImpl() {
+            this.hostLanguage = '';
+            this.counter = 0;
+            this.librarySeparatelyLoaded = !!_window().grecaptcha;
+        }
+        ReCaptchaLoaderImpl.prototype.load = function (auth, hl) {
+            var _this = this;
+            if (hl === void 0) { hl = ''; }
+            _assert(isHostLanguageValid(hl), auth, "argument-error" /* ARGUMENT_ERROR */);
+            if (this.shouldResolveImmediately(hl)) {
+                return Promise.resolve(_window().grecaptcha);
+            }
+            return new Promise(function (resolve, reject) {
+                var networkTimeout = _window().setTimeout(function () {
+                    reject(_createError(auth, "network-request-failed" /* NETWORK_REQUEST_FAILED */));
+                }, NETWORK_TIMEOUT_DELAY.get());
+                _window()[_JSLOAD_CALLBACK] = function () {
+                    _window().clearTimeout(networkTimeout);
+                    delete _window()[_JSLOAD_CALLBACK];
+                    var recaptcha = _window().grecaptcha;
+                    if (!recaptcha) {
+                        reject(_createError(auth, "internal-error" /* INTERNAL_ERROR */));
+                        return;
+                    }
+                    // Wrap the greptcha render function so that we know if the developer has
+                    // called it separately
+                    var render = recaptcha.render;
+                    recaptcha.render = function (container, params) {
+                        var widgetId = render(container, params);
+                        _this.counter++;
+                        return widgetId;
+                    };
+                    _this.hostLanguage = hl;
+                    resolve(recaptcha);
+                };
+                var url = RECAPTCHA_BASE + "?" + querystring({
+                    onload: _JSLOAD_CALLBACK,
+                    render: 'explicit',
+                    hl: hl
+                });
+                _loadJS(url).catch(function () {
+                    clearTimeout(networkTimeout);
+                    reject(_createError(auth, "internal-error" /* INTERNAL_ERROR */));
+                });
+            });
+        };
+        ReCaptchaLoaderImpl.prototype.clearedOneInstance = function () {
+            this.counter--;
+        };
+        ReCaptchaLoaderImpl.prototype.shouldResolveImmediately = function (hl) {
+            // We can resolve immediately if:
+            //   • grecaptcha is already defined AND (
+            //     1. the requested language codes are the same OR
+            //     2. there exists already a ReCaptcha on the page
+            //     3. the library was already loaded by the app
+            // In cases (2) and (3), we _can't_ reload as it would break the recaptchas
+            // that are already in the page
+            return (!!_window().grecaptcha &&
+                (hl === this.hostLanguage ||
+                    this.counter > 0 ||
+                    this.librarySeparatelyLoaded));
+        };
+        return ReCaptchaLoaderImpl;
+    }());
+    function isHostLanguageValid(hl) {
+        return hl.length <= 6 && /^\s*[a-zA-Z0-9\-]*\s*$/.test(hl);
+    }
+    var MockReCaptchaLoaderImpl = /** @class */ (function () {
+        function MockReCaptchaLoaderImpl() {
+        }
+        MockReCaptchaLoaderImpl.prototype.load = function (auth) {
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    return [2 /*return*/, new MockReCaptcha(auth)];
+                });
+            });
+        };
+        MockReCaptchaLoaderImpl.prototype.clearedOneInstance = function () { };
+        return MockReCaptchaLoaderImpl;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var RECAPTCHA_VERIFIER_TYPE = 'recaptcha';
+    var DEFAULT_PARAMS = {
+        theme: 'light',
+        type: 'image'
+    };
+    /**
+     * {@inheritdoc @firebase/auth-types#RecaptchaVerifier}
+     * @public
+     */
+    var RecaptchaVerifier = /** @class */ (function () {
+        function RecaptchaVerifier(containerOrId, parameters, authExtern) {
+            if (parameters === void 0) { parameters = __assign({}, DEFAULT_PARAMS); }
+            this.parameters = parameters;
+            this.type = RECAPTCHA_VERIFIER_TYPE;
+            this.destroyed = false;
+            this.widgetId = null;
+            this.tokenChangeListeners = new Set();
+            this.renderPromise = null;
+            this.recaptcha = null;
+            this.auth = _castAuth(authExtern);
+            this.isInvisible = this.parameters.size === 'invisible';
+            _assert(typeof document !== 'undefined', this.auth, "operation-not-supported-in-this-environment" /* OPERATION_NOT_SUPPORTED */);
+            var container = typeof containerOrId === 'string'
+                ? document.getElementById(containerOrId)
+                : containerOrId;
+            _assert(container, this.auth, "argument-error" /* ARGUMENT_ERROR */);
+            this.container = container;
+            this.parameters.callback = this.makeTokenCallback(this.parameters.callback);
+            this._recaptchaLoader = this.auth.settings.appVerificationDisabledForTesting
+                ? new MockReCaptchaLoaderImpl()
+                : new ReCaptchaLoaderImpl();
+            this.validateStartingState();
+            // TODO: Figure out if sdk version is needed
+        }
+        /** {@inheritdoc @firebase/auth-types#RecaptchaVerifier.verify} */
+        RecaptchaVerifier.prototype.verify = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var id, recaptcha, response;
+                var _this = this;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            this.assertNotDestroyed();
+                            return [4 /*yield*/, this.render()];
+                        case 1:
+                            id = _a.sent();
+                            recaptcha = this.getAssertedRecaptcha();
+                            response = recaptcha.getResponse(id);
+                            if (response) {
+                                return [2 /*return*/, response];
+                            }
+                            return [2 /*return*/, new Promise(function (resolve) {
+                                    var tokenChange = function (token) {
+                                        if (!token) {
+                                            return; // Ignore token expirations.
+                                        }
+                                        _this.tokenChangeListeners.delete(tokenChange);
+                                        resolve(token);
+                                    };
+                                    _this.tokenChangeListeners.add(tokenChange);
+                                    if (_this.isInvisible) {
+                                        recaptcha.execute(id);
+                                    }
+                                })];
+                    }
+                });
+            });
+        };
+        /** {@inheritdoc @firebase/auth-types#RecaptchaVerifier.render} */
+        RecaptchaVerifier.prototype.render = function () {
+            var _this = this;
+            try {
+                this.assertNotDestroyed();
+            }
+            catch (e) {
+                // This method returns a promise. Since it's not async (we want to return the
+                // _same_ promise if rendering is still occurring), the API surface should
+                // reject with the error rather than just throw
+                return Promise.reject(e);
+            }
+            if (this.renderPromise) {
+                return this.renderPromise;
+            }
+            this.renderPromise = this.makeRenderPromise().catch(function (e) {
+                _this.renderPromise = null;
+                throw e;
+            });
+            return this.renderPromise;
+        };
+        /** @internal */
+        RecaptchaVerifier.prototype._reset = function () {
+            this.assertNotDestroyed();
+            if (this.widgetId !== null) {
+                this.getAssertedRecaptcha().reset(this.widgetId);
+            }
+        };
+        /** {@inheritdoc @firebase/auth-types#RecaptchaVerifier.clear} */
+        RecaptchaVerifier.prototype.clear = function () {
+            var _this = this;
+            this.assertNotDestroyed();
+            this.destroyed = true;
+            this._recaptchaLoader.clearedOneInstance();
+            if (!this.isInvisible) {
+                this.container.childNodes.forEach(function (node) {
+                    _this.container.removeChild(node);
+                });
+            }
+        };
+        RecaptchaVerifier.prototype.validateStartingState = function () {
+            _assert(!this.parameters.sitekey, this.auth, "argument-error" /* ARGUMENT_ERROR */);
+            _assert(this.isInvisible || !this.container.hasChildNodes(), this.auth, "argument-error" /* ARGUMENT_ERROR */);
+            _assert(typeof document !== 'undefined', this.auth, "operation-not-supported-in-this-environment" /* OPERATION_NOT_SUPPORTED */);
+        };
+        RecaptchaVerifier.prototype.makeTokenCallback = function (existing) {
+            var _this = this;
+            return function (token) {
+                _this.tokenChangeListeners.forEach(function (listener) { return listener(token); });
+                if (typeof existing === 'function') {
+                    existing(token);
+                }
+                else if (typeof existing === 'string') {
+                    var globalFunc = _window()[existing];
+                    if (typeof globalFunc === 'function') {
+                        globalFunc(token);
+                    }
+                }
+            };
+        };
+        RecaptchaVerifier.prototype.assertNotDestroyed = function () {
+            _assert(!this.destroyed, this.auth, "internal-error" /* INTERNAL_ERROR */);
+        };
+        RecaptchaVerifier.prototype.makeRenderPromise = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var container, guaranteedEmpty;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.init()];
+                        case 1:
+                            _a.sent();
+                            if (!this.widgetId) {
+                                container = this.container;
+                                if (!this.isInvisible) {
+                                    guaranteedEmpty = document.createElement('div');
+                                    container.appendChild(guaranteedEmpty);
+                                    container = guaranteedEmpty;
+                                }
+                                this.widgetId = this.getAssertedRecaptcha().render(container, this.parameters);
+                            }
+                            return [2 /*return*/, this.widgetId];
+                    }
+                });
+            });
+        };
+        RecaptchaVerifier.prototype.init = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var _a, siteKey;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            _assert(_isHttpOrHttps() && !_isWorker(), this.auth, "internal-error" /* INTERNAL_ERROR */);
+                            return [4 /*yield*/, domReady()];
+                        case 1:
+                            _b.sent();
+                            _a = this;
+                            return [4 /*yield*/, this._recaptchaLoader.load(this.auth, this.auth.languageCode || undefined)];
+                        case 2:
+                            _a.recaptcha = _b.sent();
+                            return [4 /*yield*/, getRecaptchaParams(this.auth)];
+                        case 3:
+                            siteKey = _b.sent();
+                            _assert(siteKey, this.auth, "internal-error" /* INTERNAL_ERROR */);
+                            this.parameters.sitekey = siteKey;
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        RecaptchaVerifier.prototype.getAssertedRecaptcha = function () {
+            _assert(this.recaptcha, this.auth, "internal-error" /* INTERNAL_ERROR */);
+            return this.recaptcha;
+        };
+        return RecaptchaVerifier;
+    }());
+    function domReady() {
+        var resolver = null;
+        return new Promise(function (resolve) {
+            if (document.readyState === 'complete') {
+                resolve();
+                return;
+            }
+            // Document not ready, wait for load before resolving.
+            // Save resolver, so we can remove listener in case it was externally
+            // cancelled.
+            resolver = function () { return resolve(); };
+            window.addEventListener('load', resolver);
+        }).catch(function (e) {
+            if (resolver) {
+                window.removeEventListener('load', resolver);
+            }
+            throw e;
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var ConfirmationResult = /** @class */ (function () {
+        function ConfirmationResult(verificationId, onConfirmation) {
+            this.verificationId = verificationId;
+            this.onConfirmation = onConfirmation;
+        }
+        ConfirmationResult.prototype.confirm = function (verificationCode) {
+            var authCredential = PhoneAuthCredential._fromVerification(this.verificationId, verificationCode);
+            return this.onConfirmation(authCredential);
+        };
+        return ConfirmationResult;
+    }());
+    /**
+     * Asynchronously signs in using a phone number.
+     *
+     * @remarks
+     * This method sends a code via SMS to the given
+     * phone number, and returns a {@link @firebase/auth-types#ConfirmationResult}. After the user
+     * provides the code sent to their phone, call {@link @firebase/auth-types#ConfirmationResult.confirm}
+     * with the code to sign the user in.
+     *
+     * For abuse prevention, this method also requires a {@link @firebase/auth-types#ApplicationVerifier}.
+     * This SDK includes a reCAPTCHA-based implementation, {@link RecaptchaVerifier}.
+     *
+     * @example
+     * ```javascript
+     * // 'recaptcha-container' is the ID of an element in the DOM.
+     * const applicationVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+     * const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, applicationVerifier);
+     * // Obtain a verificationCode from the user.
+     * const credential = await confirmationResult.confirm(verificationCode);
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param phoneNumber - The user's phone number in E.164 format (e.g. +16505550101).
+     * @param appVerifier - The {@link @firebase/auth-types#ApplicationVerifier}.
+     *
+     * @public
+     */
+    function signInWithPhoneNumber$1(auth, phoneNumber, appVerifier) {
+        return __awaiter(this, void 0, void 0, function () {
+            var verificationId;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _verifyPhoneNumber(_castAuth(auth), phoneNumber, appVerifier)];
+                    case 1:
+                        verificationId = _a.sent();
+                        return [2 /*return*/, new ConfirmationResult(verificationId, function (cred) {
+                                return signInWithCredential(auth, cred);
+                            })];
+                }
+            });
+        });
+    }
+    /**
+     * Links the user account with the given phone number.
+     *
+     * @param user - The user.
+     * @param phoneNumber - The user's phone number in E.164 format (e.g. +16505550101).
+     * @param appVerifier - The {@link @firebase/auth-types#ApplicationVerifier}.
+     *
+     * @public
+     */
+    function linkWithPhoneNumber$1(user, phoneNumber, appVerifier) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, verificationId;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, _assertLinkedStatus(false, userInternal, "phone" /* PHONE */)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, _verifyPhoneNumber(userInternal.auth, phoneNumber, appVerifier)];
+                    case 2:
+                        verificationId = _a.sent();
+                        return [2 /*return*/, new ConfirmationResult(verificationId, function (cred) {
+                                return linkWithCredential(user, cred);
+                            })];
+                }
+            });
+        });
+    }
+    /**
+     * Re-authenticates a user using a fresh phne credential.
+     *
+     * @remarks Use before operations such as {@link updatePassword} that require tokens from recent sign-in attempts.
+     *
+     * @param user - The user.
+     * @param phoneNumber - The user's phone number in E.164 format (e.g. +16505550101).
+     * @param appVerifier - The {@link @firebase/auth-types#ApplicationVerifier}.
+     *
+     * @public
+     */
+    function reauthenticateWithPhoneNumber(user, phoneNumber, appVerifier) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, verificationId;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        userInternal = user;
+                        return [4 /*yield*/, _verifyPhoneNumber(userInternal.auth, phoneNumber, appVerifier)];
+                    case 1:
+                        verificationId = _a.sent();
+                        return [2 /*return*/, new ConfirmationResult(verificationId, function (cred) {
+                                return reauthenticateWithCredential(user, cred);
+                            })];
+                }
+            });
+        });
+    }
+    /**
+     * Returns a verification ID to be used in conjunction with the SMS code that is sent.
+     *
+     */
+    function _verifyPhoneNumber(auth, options, verifier) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var recaptchaToken, phoneInfoOptions, session, response, mfaEnrollmentId, response, sessionInfo;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, verifier.verify()];
+                    case 1:
+                        recaptchaToken = _b.sent();
+                        _b.label = 2;
+                    case 2:
+                        _b.trys.push([2, , 10, 11]);
+                        _assert(typeof recaptchaToken === 'string', auth, "argument-error" /* ARGUMENT_ERROR */);
+                        _assert(verifier.type === RECAPTCHA_VERIFIER_TYPE, auth, "argument-error" /* ARGUMENT_ERROR */);
+                        phoneInfoOptions = void 0;
+                        if (typeof options === 'string') {
+                            phoneInfoOptions = {
+                                phoneNumber: options
+                            };
+                        }
+                        else {
+                            phoneInfoOptions = options;
+                        }
+                        if (!('session' in phoneInfoOptions)) return [3 /*break*/, 7];
+                        session = phoneInfoOptions.session;
+                        if (!('phoneNumber' in phoneInfoOptions)) return [3 /*break*/, 4];
+                        _assert(session.type === "enroll" /* ENROLL */, auth, "internal-error" /* INTERNAL_ERROR */);
+                        return [4 /*yield*/, startEnrollPhoneMfa(auth, {
+                                idToken: session.credential,
+                                phoneEnrollmentInfo: {
+                                    phoneNumber: phoneInfoOptions.phoneNumber,
+                                    recaptchaToken: recaptchaToken
+                                }
+                            })];
+                    case 3:
+                        response = _b.sent();
+                        return [2 /*return*/, response.phoneSessionInfo.sessionInfo];
+                    case 4:
+                        _assert(session.type === "signin" /* SIGN_IN */, auth, "internal-error" /* INTERNAL_ERROR */);
+                        mfaEnrollmentId = ((_a = phoneInfoOptions.multiFactorHint) === null || _a === void 0 ? void 0 : _a.uid) ||
+                            phoneInfoOptions.multiFactorUid;
+                        _assert(mfaEnrollmentId, auth, "missing-multi-factor-info" /* MISSING_MFA_INFO */);
+                        return [4 /*yield*/, startSignInPhoneMfa(auth, {
+                                mfaPendingCredential: session.credential,
+                                mfaEnrollmentId: mfaEnrollmentId,
+                                phoneSignInInfo: {
+                                    recaptchaToken: recaptchaToken
+                                }
+                            })];
+                    case 5:
+                        response = _b.sent();
+                        return [2 /*return*/, response.phoneResponseInfo.sessionInfo];
+                    case 6: return [3 /*break*/, 9];
+                    case 7: return [4 /*yield*/, sendPhoneVerificationCode(auth, {
+                            phoneNumber: phoneInfoOptions.phoneNumber,
+                            recaptchaToken: recaptchaToken
+                        })];
+                    case 8:
+                        sessionInfo = (_b.sent()).sessionInfo;
+                        return [2 /*return*/, sessionInfo];
+                    case 9: return [3 /*break*/, 11];
+                    case 10:
+                        verifier._reset();
+                        return [7 /*endfinally*/];
+                    case 11: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /**
+     * Updates the user's phone number.
+     *
+     * @example
+     * ```
+     * // 'recaptcha-container' is the ID of an element in the DOM.
+     * const applicationVerifier = new RecaptchaVerifier('recaptcha-container');
+     * const provider = new PhoneAuthProvider(auth);
+     * const verificationId = await provider.verifyPhoneNumber('+16505550101', applicationVerifier);
+     * // Obtain the verificationCode from the user.
+     * const phoneCredential = PhoneAuthProvider.credential(verificationId, verificationCode);
+     * await updatePhoneNumber(user, phoneCredential);
+     * ```
+     *
+     * @param user - The user.
+     * @param credential - A credential authenticating the new phone number.
+     *
+     * @public
+     */
+    function updatePhoneNumber(user, credential) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _link(user, credential)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * {@inheritdoc @firebase/auth-types#PhoneAuthProvider}
+     * @public
+     */
+    var PhoneAuthProvider = /** @class */ (function () {
+        function PhoneAuthProvider(auth) {
+            /** {@inheritdoc @firebase/auth-types#PhoneAuthProvider.providerId} */
+            this.providerId = PhoneAuthProvider.PROVIDER_ID;
+            this.auth = _castAuth(auth);
+        }
+        /** {@inheritdoc @firebase/auth-types#PhoneAuthProvider.verifyPhoneNumber} */
+        PhoneAuthProvider.prototype.verifyPhoneNumber = function (phoneOptions, applicationVerifier) {
+            return _verifyPhoneNumber(this.auth, phoneOptions, applicationVerifier);
+        };
+        /** {@inheritdoc @firebase/auth-types#PhoneAuthProvider.credential} */
+        PhoneAuthProvider.credential = function (verificationId, verificationCode) {
+            return PhoneAuthCredential._fromVerification(verificationId, verificationCode);
+        };
+        PhoneAuthProvider.credentialFromResult = function (userCredential) {
+            var credential = userCredential;
+            _assert(credential._tokenResponse, credential.user.auth, "argument-error" /* ARGUMENT_ERROR */);
+            var _a = credential._tokenResponse, phoneNumber = _a.phoneNumber, temporaryProof = _a.temporaryProof;
+            if (phoneNumber && temporaryProof) {
+                return PhoneAuthCredential._fromTokenResponse(phoneNumber, temporaryProof);
+            }
+            _fail(credential.user.auth, "argument-error" /* ARGUMENT_ERROR */);
+        };
+        /** {@inheritdoc @firebase/auth-types#PhoneAuthProvider.PROVIDER_ID} */
+        PhoneAuthProvider.PROVIDER_ID = "phone" /* PHONE */;
+        /** {@inheritdoc @firebase/auth-types#PhoneAuthProvider.PHONE_SIGN_IN_METHOD} */
+        PhoneAuthProvider.PHONE_SIGN_IN_METHOD = "phone" /* PHONE */;
+        return PhoneAuthProvider;
+    }());
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var _POLL_WINDOW_CLOSE_TIMEOUT = new Delay(2000, 10000);
+    /**
+     * Authenticates a Firebase client using a popup-based OAuth authentication flow.
+     *
+     * @remarks
+     * If succeeds, returns the signed in user along with the provider's credential. If sign in was
+     * unsuccessful, returns an error object containing additional information about the error.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a popup.
+     * const provider = new FacebookAuthProvider();
+     * const result = await signInWithPopup(auth, provider);
+     *
+     * // The signed-in user info.
+     * const user = result.user;
+     * // This gives you a Facebook Access Token.
+     * const credential = provider.credentialFromResult(auth, result);
+     * const token = credential.accessToken;
+     * ```
+     *
+     * @param auth - The Auth instance.
+     * @param provider - The provider to authenticate. The provider has to be an {@link OAuthProvider}.
+     * Non-OAuth providers like {@link EmailAuthProvider} will throw an error.
+     * @param resolver - An instance of {@link @firebase/auth-types#PopupRedirectResolver}, optional
+     * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
+     *
+     *
+     * @public
+     */
+    function signInWithPopup(auth, provider, resolver) {
+        return __awaiter(this, void 0, void 0, function () {
+            var authInternal, resolverInternal, action;
+            return __generator(this, function (_a) {
+                authInternal = _castAuth(auth);
+                _assert(provider instanceof OAuthProvider, auth, "argument-error" /* ARGUMENT_ERROR */);
+                resolverInternal = _withDefaultResolver(authInternal, resolver);
+                action = new PopupOperation(authInternal, "signInViaPopup" /* SIGN_IN_VIA_POPUP */, provider, resolverInternal);
+                return [2 /*return*/, action.executeNotNull()];
+            });
+        });
+    }
+    /**
+     * Reauthenticates the current user with the specified {@link OAuthProvider} using a pop-up based
+     * OAuth flow.
+     *
+     * @remarks
+     * If the reauthentication is successful, the returned result will contain the user and the
+     * provider's credential.
+     *
+     * @example
+     * ```javascript
+     * // Sign in using a popup.
+     * const provider = new FacebookAuthProvider();
+     * const result = await signInWithPopup(auth, provider);
+     * // Reauthenticate using a popup.
+     * await reauthenticateWithPopup(result.user, provider);
+     * ```
+     *
+     * @param user - The user.
+     * @param provider - The provider to authenticate. The provider has to be an {@link OAuthProvider}.
+     * Non-OAuth providers like {@link EmailAuthProvider} will throw an error.
+     * @param resolver - An instance of {@link @firebase/auth-types#PopupRedirectResolver}, optional
+     * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
+     *
+     * @public
+     */
+    function reauthenticateWithPopup(user, provider, resolver) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, resolverInternal, action;
+            return __generator(this, function (_a) {
+                userInternal = user;
+                _assert(provider instanceof OAuthProvider, userInternal.auth, "argument-error" /* ARGUMENT_ERROR */);
+                resolverInternal = _withDefaultResolver(userInternal.auth, resolver);
+                action = new PopupOperation(userInternal.auth, "reauthViaPopup" /* REAUTH_VIA_POPUP */, provider, resolverInternal, userInternal);
+                return [2 /*return*/, action.executeNotNull()];
+            });
+        });
+    }
+    /**
+     * Links the authenticated provider to the user account using a pop-up based OAuth flow.
+     *
+     * @remarks
+     * If the linking is successful, the returned result will contain the user and the provider's credential.
+     *
+     *
+     * @example
+     * ```javascript
+     * // Sign in using some other provider.
+     * const result = await signInWithEmailAndPassword(auth, email, password);
+     * // Link using a popup.
+     * const provider = new FacebookAuthProvider();
+     * await linkWithPopup(result.user, provider);
+     * ```
+     *
+     * @param user - The user.
+     * @param provider - The provider to authenticate. The provider has to be an {@link OAuthProvider}.
+     * Non-OAuth providers like {@link EmailAuthProvider} will throw an error.
+     * @param resolver - An instance of {@link @firebase/auth-types#PopupRedirectResolver}, optional
+     * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
+     *
+     * @public
+     */
+    function linkWithPopup(user, provider, resolver) {
+        return __awaiter(this, void 0, void 0, function () {
+            var userInternal, resolverInternal, action;
+            return __generator(this, function (_a) {
+                userInternal = user;
+                _assert(provider instanceof OAuthProvider, userInternal.auth, "argument-error" /* ARGUMENT_ERROR */);
+                resolverInternal = _withDefaultResolver(userInternal.auth, resolver);
+                action = new PopupOperation(userInternal.auth, "linkViaPopup" /* LINK_VIA_POPUP */, provider, resolverInternal, userInternal);
+                return [2 /*return*/, action.executeNotNull()];
+            });
+        });
+    }
+    /**
+     * Popup event manager. Handles the popup's entire lifecycle; listens to auth
+     * events
+     *
+     */
+    var PopupOperation = /** @class */ (function (_super) {
+        __extends(PopupOperation, _super);
+        function PopupOperation(auth, filter, provider, resolver, user) {
+            var _this = _super.call(this, auth, filter, resolver, user) || this;
+            _this.provider = provider;
+            _this.authWindow = null;
+            _this.pollId = null;
+            if (PopupOperation.currentPopupAction) {
+                PopupOperation.currentPopupAction.cancel();
+            }
+            PopupOperation.currentPopupAction = _this;
+            return _this;
+        }
+        PopupOperation.prototype.executeNotNull = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var result;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, this.execute()];
+                        case 1:
+                            result = _a.sent();
+                            _assert(result, this.auth, "internal-error" /* INTERNAL_ERROR */);
+                            return [2 /*return*/, result];
+                    }
+                });
+            });
+        };
+        PopupOperation.prototype.onExecution = function () {
+            return __awaiter(this, void 0, void 0, function () {
+                var eventId, _a;
+                var _this = this;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
+                        case 0:
+                            debugAssert(this.filter.length === 1, 'Popup operations only handle one event');
+                            eventId = _generateEventId();
+                            _a = this;
+                            return [4 /*yield*/, this.resolver._openPopup(this.auth, this.provider, this.filter[0], // There's always one, see constructor
+                                eventId)];
+                        case 1:
+                            _a.authWindow = _b.sent();
+                            this.authWindow.associatedEvent = eventId;
+                            // Check for web storage support _after_ the popup is loaded. Checking for
+                            // web storage is slow (on the order of a second or so). Rather than
+                            // waiting on that before opening the window, optimistically open the popup
+                            // and check for storage support at the same time. If storage support is
+                            // not available, this will cause the whole thing to reject properly. It
+                            // will also close the popup, but since the promise has already rejected,
+                            // the popup closed by user poll will reject into the void.
+                            this.resolver._isIframeWebStorageSupported(this.auth, function (isSupported) {
+                                if (!isSupported) {
+                                    _this.reject(_createError(_this.auth, "web-storage-unsupported" /* WEB_STORAGE_UNSUPPORTED */));
+                                }
+                            });
+                            // Handle user closure. Notice this does *not* use await
+                            this.pollUserCancellation();
+                            return [2 /*return*/];
+                    }
+                });
+            });
+        };
+        Object.defineProperty(PopupOperation.prototype, "eventId", {
+            get: function () {
+                var _a;
+                return ((_a = this.authWindow) === null || _a === void 0 ? void 0 : _a.associatedEvent) || null;
+            },
+            enumerable: false,
+            configurable: true
+        });
+        PopupOperation.prototype.cancel = function () {
+            this.reject(_createError(this.auth, "cancelled-popup-request" /* EXPIRED_POPUP_REQUEST */));
+        };
+        PopupOperation.prototype.cleanUp = function () {
+            if (this.authWindow) {
+                this.authWindow.close();
+            }
+            if (this.pollId) {
+                window.clearTimeout(this.pollId);
+            }
+            this.authWindow = null;
+            this.pollId = null;
+            PopupOperation.currentPopupAction = null;
+        };
+        PopupOperation.prototype.pollUserCancellation = function () {
+            var _this = this;
+            var poll = function () {
+                var _a, _b;
+                if ((_b = (_a = _this.authWindow) === null || _a === void 0 ? void 0 : _a.window) === null || _b === void 0 ? void 0 : _b.closed) {
+                    // Make sure that there is sufficient time for whatever action to
+                    // complete. The window could have closed but the sign in network
+                    // call could still be in flight.
+                    _this.pollId = window.setTimeout(function () {
+                        _this.pollId = null;
+                        _this.reject(_createError(_this.auth, "popup-closed-by-user" /* POPUP_CLOSED_BY_USER */));
+                    }, 2000 /* AUTH_EVENT */);
+                    return;
+                }
+                _this.pollId = window.setTimeout(poll, _POLL_WINDOW_CLOSE_TIMEOUT.get());
+            };
+            poll();
+        };
+        // Only one popup is ever shown at once. The lifecycle of the current popup
+        // can be managed / cancelled by the constructor.
+        PopupOperation.currentPopupAction = null;
+        return PopupOperation;
+    }(AbstractPopupRedirectOperation));
+
+    /**
+     * @license
+     * Copyright 2020 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    var MultiFactorAssertion = /** @class */ (function () {
+        function MultiFactorAssertion(factorId) {
+            this.factorId = factorId;
+        }
+        MultiFactorAssertion.prototype._process = function (auth, session, displayName) {
+            switch (session.type) {
+                case "enroll" /* ENROLL */:
+                    return this._finalizeEnroll(auth, session.credential, displayName);
+                case "signin" /* SIGN_IN */:
+                    return this._finalizeSignIn(auth, session.credential);
+                default:
+                    return debugFail('unexpected MultiFactorSessionType');
+            }
+        };
+        return MultiFactorAssertion;
+    }());
+
+    /**
+     * {@inheritdoc @firebase/auth-types#PhoneMultiFactorAssertion}
+     *
+     * @public
+     */
+    var PhoneMultiFactorAssertion = /** @class */ (function (_super) {
+        __extends(PhoneMultiFactorAssertion, _super);
+        function PhoneMultiFactorAssertion(credential) {
+            var _this = _super.call(this, "phone" /* PHONE */) || this;
+            _this.credential = credential;
+            return _this;
+        }
+        /** @internal */
+        PhoneMultiFactorAssertion._fromCredential = function (credential) {
+            return new PhoneMultiFactorAssertion(credential);
+        };
+        /** @internal */
+        PhoneMultiFactorAssertion.prototype._finalizeEnroll = function (auth, idToken, displayName) {
+            return finalizeEnrollPhoneMfa(auth, {
+                idToken: idToken,
+                displayName: displayName,
+                phoneVerificationInfo: this.credential._makeVerificationRequest()
+            });
+        };
+        /** @internal */
+        PhoneMultiFactorAssertion.prototype._finalizeSignIn = function (auth, mfaPendingCredential) {
+            return finalizeSignInPhoneMfa(auth, {
+                mfaPendingCredential: mfaPendingCredential,
+                phoneVerificationInfo: this.credential._makeVerificationRequest()
+            });
+        };
+        return PhoneMultiFactorAssertion;
+    }(MultiFactorAssertion));
+    /**
+     * {@inheritdoc @firebase/auth-types#PhoneMultiFactorGenerator}
+     * @public
+     */
+    var PhoneMultiFactorGenerator = /** @class */ (function () {
+        function PhoneMultiFactorGenerator() {
+        }
+        /** {@inheritdoc @firebase/auth-types#PhoneMultiFactorGenerator.assertion} */
+        PhoneMultiFactorGenerator.assertion = function (credential) {
+            return PhoneMultiFactorAssertion._fromCredential(credential);
+        };
+        return PhoneMultiFactorGenerator;
+    }());
+
+    /**
+     * @license
+     * Copyright 2017 Google LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *   http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    /**
+     * Initializes an Auth instance with platform specific default dependencies.
+     *
+     * @param app - The Firebase App.
+     *
+     * @public
+     */
+    function getAuth(app$1) {
+        var provider = app._getProvider(app$1, 'auth-exp');
+        if (provider.isInitialized()) {
+            return provider.getImmediate();
+        }
+        return initializeAuth(app$1, {
+            popupRedirectResolver: browserPopupRedirectResolver,
+            persistence: [indexedDBLocalPersistence, browserLocalPersistence]
+        });
+    }
+    registerAuth("Browser" /* BROWSER */);
+
+    exports.ActionCodeURL = ActionCodeURL;
+    exports.AuthCredential = AuthCredential;
+    exports.EmailAuthCredential = EmailAuthCredential;
+    exports.EmailAuthProvider = EmailAuthProvider;
+    exports.FacebookAuthProvider = FacebookAuthProvider;
+    exports.GithubAuthProvider = GithubAuthProvider;
+    exports.GoogleAuthProvider = GoogleAuthProvider;
+    exports.OAuthCredential = OAuthCredential;
+    exports.OAuthProvider = OAuthProvider;
+    exports.PhoneAuthCredential = PhoneAuthCredential;
+    exports.PhoneAuthProvider = PhoneAuthProvider;
+    exports.PhoneMultiFactorGenerator = PhoneMultiFactorGenerator;
+    exports.RecaptchaVerifier = RecaptchaVerifier;
+    exports.TwitterAuthProvider = TwitterAuthProvider;
+    exports.applyActionCode = applyActionCode$1;
+    exports.browserLocalPersistence = browserLocalPersistence;
+    exports.browserPopupRedirectResolver = browserPopupRedirectResolver;
+    exports.browserSessionPersistence = browserSessionPersistence;
+    exports.checkActionCode = checkActionCode;
+    exports.confirmPasswordReset = confirmPasswordReset;
+    exports.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+    exports.debugErrorMap = debugErrorMap;
+    exports.deleteUser = deleteUser;
+    exports.fetchSignInMethodsForEmail = fetchSignInMethodsForEmail;
+    exports.getAdditionalUserInfo = getAdditionalUserInfo;
+    exports.getAuth = getAuth;
+    exports.getIdToken = getIdToken;
+    exports.getIdTokenResult = getIdTokenResult;
+    exports.getMultiFactorResolver = getMultiFactorResolver;
+    exports.getRedirectResult = getRedirectResult;
+    exports.inMemoryPersistence = inMemoryPersistence;
+    exports.indexedDBLocalPersistence = indexedDBLocalPersistence;
+    exports.initializeAuth = initializeAuth;
+    exports.isSignInWithEmailLink = isSignInWithEmailLink;
+    exports.linkWithCredential = linkWithCredential;
+    exports.linkWithPhoneNumber = linkWithPhoneNumber$1;
+    exports.linkWithPopup = linkWithPopup;
+    exports.linkWithRedirect = linkWithRedirect;
+    exports.multiFactor = multiFactor;
+    exports.onAuthStateChanged = onAuthStateChanged;
+    exports.onIdTokenChanged = onIdTokenChanged;
+    exports.parseActionCodeURL = parseActionCodeURL;
+    exports.prodErrorMap = prodErrorMap;
+    exports.reauthenticateWithCredential = reauthenticateWithCredential;
+    exports.reauthenticateWithPhoneNumber = reauthenticateWithPhoneNumber;
+    exports.reauthenticateWithPopup = reauthenticateWithPopup;
+    exports.reauthenticateWithRedirect = reauthenticateWithRedirect;
+    exports.reload = reload;
+    exports.sendEmailVerification = sendEmailVerification$1;
+    exports.sendPasswordResetEmail = sendPasswordResetEmail$1;
+    exports.sendSignInLinkToEmail = sendSignInLinkToEmail$1;
+    exports.setPersistence = setPersistence;
+    exports.signInAnonymously = signInAnonymously;
+    exports.signInWithCredential = signInWithCredential;
+    exports.signInWithCustomToken = signInWithCustomToken$1;
+    exports.signInWithEmailAndPassword = signInWithEmailAndPassword;
+    exports.signInWithEmailLink = signInWithEmailLink$1;
+    exports.signInWithPhoneNumber = signInWithPhoneNumber$1;
+    exports.signInWithPopup = signInWithPopup;
+    exports.signInWithRedirect = signInWithRedirect;
+    exports.signOut = signOut;
+    exports.unlink = unlink;
+    exports.updateCurrentUser = updateCurrentUser;
+    exports.updateEmail = updateEmail;
+    exports.updatePassword = updatePassword;
+    exports.updatePhoneNumber = updatePhoneNumber;
+    exports.updateProfile = updateProfile$1;
+    exports.useAuthEmulator = useAuthEmulator;
+    exports.useDeviceLanguage = useDeviceLanguage;
+    exports.verifyBeforeUpdateEmail = verifyBeforeUpdateEmail;
+    exports.verifyPasswordResetCode = verifyPasswordResetCode;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+
+              }).apply(this, arguments);
+            } catch(err) {
+                console.error(err);
+                throw new Error(
+                  'Cannot instantiate firebase-auth.js - ' +
+                  'be sure to load firebase-app.js first.'
+                );
+              }
+
+})));
 //# sourceMappingURL=firebase-auth.js.map

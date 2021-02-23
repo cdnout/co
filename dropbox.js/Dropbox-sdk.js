@@ -927,8 +927,8 @@
   };
   /**
    * Get a thumbnail for an image. This method currently supports files with the
-   * following file extensions: jpg, jpeg, png, tiff, tif, gif and bmp. Photos
-   * that are larger than 20MB in size won't be converted to a thumbnail.
+   * following file extensions: jpg, jpeg, png, tiff, tif, gif, webp, ppm and bmp.
+   * Photos that are larger than 20MB in size won't be converted to a thumbnail.
    * @function Dropbox#filesGetThumbnail
    * @arg {FilesThumbnailArg} arg - The request parameters.
    * @returns {Promise.<DropboxResponse<FilesFileMetadata>, Error.<FilesThumbnailError>>}
@@ -939,7 +939,9 @@
     return this.request('files/get_thumbnail', arg, 'user', 'content', 'download');
   };
   /**
-   * Get a thumbnail for a file.
+   * Get a thumbnail for an image. This method currently supports files with the
+   * following file extensions: jpg, jpeg, png, tiff, tif, gif, webp, ppm and bmp.
+   * Photos that are larger than 20MB in size won't be converted to a thumbnail.
    * @function Dropbox#filesGetThumbnailV2
    * @arg {FilesThumbnailV2Arg} arg - The request parameters.
    * @returns {Promise.<DropboxResponse<FilesPreviewResult>, Error.<FilesThumbnailV2Error>>}
@@ -952,8 +954,8 @@
   /**
    * Get thumbnails for a list of images. We allow up to 25 thumbnails in a single
    * batch. This method currently supports files with the following file
-   * extensions: jpg, jpeg, png, tiff, tif, gif and bmp. Photos that are larger
-   * than 20MB in size won't be converted to a thumbnail.
+   * extensions: jpg, jpeg, png, tiff, tif, gif, webp, ppm and bmp. Photos that
+   * are larger than 20MB in size won't be converted to a thumbnail.
    * @function Dropbox#filesGetThumbnailBatch
    * @arg {FilesGetThumbnailBatchArg} arg - The request parameters.
    * @returns {Promise.<DropboxResponse<FilesGetThumbnailBatchResult>, Error.<FilesGetThumbnailBatchError>>}
@@ -1438,13 +1440,13 @@
    * upload_session/append_v2 to add more data and upload_session/finish to save
    * all the data to a file in Dropbox. A single request should not upload more
    * than 150 MB. The maximum size of a file one can upload to an upload session
-   * is 350 GB. An upload session can be used for a maximum of 48 hours.
-   * Attempting to use an UploadSessionStartResult.session_id with
-   * upload_session/append_v2 or upload_session/finish more than 48 hours after
-   * its creation will return a UploadSessionLookupError.not_found. Calls to this
-   * endpoint will count as data transport calls for any Dropbox Business teams
-   * with a limit on the number of data transport calls allowed per month. For
-   * more information, see the Data transport limit page
+   * is 350 GB. An upload session can be used for a maximum of 7 days. Attempting
+   * to use an UploadSessionStartResult.session_id with upload_session/append_v2
+   * or upload_session/finish more than 7 days after its creation will return a
+   * UploadSessionLookupError.not_found. Calls to this endpoint will count as data
+   * transport calls for any Dropbox Business teams with a limit on the number of
+   * data transport calls allowed per month. For more information, see the Data
+   * transport limit page
    * https://www.dropbox.com/developers/reference/data-transport-limit. By
    * default, upload sessions require you to send content of the file in
    * sequential order via consecutive upload_session/start,
@@ -3108,7 +3110,8 @@
     return this.request('team/properties/template/add', arg, 'team', 'api', 'rpc');
   };
   /**
-   * Permission : Team member file access.
+   * Permission : Team member file access. The scope for the route is
+   * files.team_metadata.write.
    * @function Dropbox#teamPropertiesTemplateGet
    * @deprecated
    * @arg {FilePropertiesGetTemplateArg} arg - The request parameters.
@@ -3120,7 +3123,8 @@
     return this.request('team/properties/template/get', arg, 'team', 'api', 'rpc');
   };
   /**
-   * Permission : Team member file access.
+   * Permission : Team member file access. The scope for the route is
+   * files.team_metadata.write.
    * @function Dropbox#teamPropertiesTemplateList
    * @deprecated
    * @returns {Promise.<DropboxResponse<FilePropertiesListTemplateResult>, Error.<FilePropertiesTemplateError>>}
@@ -3426,6 +3430,13 @@
     return typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope // eslint-disable-line no-restricted-globals
     || typeof module === 'undefined' || typeof window !== 'undefined';
   }
+  function isBrowserEnv() {
+    return typeof window !== 'undefined';
+  }
+  function createBrowserSafeString(toBeConverted) {
+    var convertedString = toBeConverted.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    return convertedString;
+  }
 
   /**
    * The response class of HTTP errors from API calls using the Dropbox SDK.
@@ -3525,7 +3536,7 @@
 
   var fetch;
 
-  if (typeof window !== 'undefined') {
+  if (isBrowserEnv()) {
     fetch = window.fetch.bind(window);
   } else {
     fetch = require('node-fetch'); // eslint-disable-line global-require
@@ -3533,10 +3544,18 @@
 
   var crypto;
 
-  if (typeof window !== 'undefined') {
+  if (isBrowserEnv()) {
     crypto = window.crypto || window.msCrypto; // for IE11
   } else {
     crypto = require('crypto'); // eslint-disable-line global-require
+  }
+
+  var Encoder;
+
+  if (typeof TextEncoder === 'undefined') {
+    Encoder = require('util').TextEncoder; // eslint-disable-line global-require
+  } else {
+    Encoder = TextEncoder;
   } // Expiration is 300 seconds but needs to be in milliseconds for Date object
 
 
@@ -3682,14 +3701,38 @@
     }, {
       key: "generatePKCECodes",
       value: function generatePKCECodes() {
-        var codeVerifier = crypto.randomBytes(PKCELength);
-        codeVerifier = codeVerifier.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '').substr(0, 128);
+        var _this = this;
+
+        var codeVerifier;
+
+        if (isBrowserEnv()) {
+          var array = new Uint8Array(PKCELength);
+          var randomValueArray = crypto.getRandomValues(array);
+          var base64String = btoa(randomValueArray);
+          codeVerifier = createBrowserSafeString(base64String).substr(0, 128);
+        } else {
+          var randomBytes = crypto.randomBytes(PKCELength);
+          codeVerifier = createBrowserSafeString(randomBytes).substr(0, 128);
+        }
+
         this.codeVerifier = codeVerifier;
-        var encoder = new TextEncoder();
+        var encoder = new Encoder();
         var codeData = encoder.encode(codeVerifier);
-        var codeChallenge = crypto.createHash('sha256').update(codeData).digest();
-        codeChallenge = codeChallenge.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        var codeChallenge;
+
+        if (isBrowserEnv()) {
+          return crypto.subtle.digest('SHA-256', codeData).then(function (digestedHash) {
+            var typedArray = new Uint8Array(digestedHash);
+            var base64String = btoa(typedArray);
+            codeChallenge = createBrowserSafeString(base64String).substr(0, 128);
+            _this.codeChallenge = codeChallenge;
+          });
+        }
+
+        var digestedHash = crypto.createHash('sha256').update(codeData).digest();
+        codeChallenge = createBrowserSafeString(digestedHash);
         this.codeChallenge = codeChallenge;
+        return Promise.resolve();
       }
       /**
        * Get a URL that can be used to authenticate users for the Dropbox API.
@@ -3712,12 +3755,15 @@
        * @arg {boolean} [usePKCE] - Whether or not to use Sha256 based PKCE. PKCE should be only use on
        * client apps which doesn't call your server. It is less secure than non-PKCE flow but
        * can be used if you are unable to safely retrieve your app secret
-       * @returns {String} Url to send user to for Dropbox API authentication
+       * @returns {Promise<String>} - Url to send user to for Dropbox API authentication
+       * returned in a promise
        */
 
     }, {
       key: "getAuthenticationUrl",
       value: function getAuthenticationUrl(redirectUri, state) {
+        var _this2 = this;
+
         var authType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'token';
         var tokenAccessType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
         var scope = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
@@ -3779,12 +3825,14 @@
         }
 
         if (usePKCE) {
-          this.generatePKCECodes();
-          authUrl += '&code_challenge_method=S256';
-          authUrl += "&code_challenge=".concat(this.codeChallenge);
+          return this.generatePKCECodes().then(function () {
+            authUrl += '&code_challenge_method=S256';
+            authUrl += "&code_challenge=".concat(_this2.codeChallenge);
+            return authUrl;
+          });
         }
 
-        return authUrl;
+        return Promise.resolve(authUrl);
       }
       /**
        * Get an OAuth2 access token from an OAuth2 Code.
@@ -3862,7 +3910,7 @@
     }, {
       key: "refreshAccessToken",
       value: function refreshAccessToken() {
-        var _this = this;
+        var _this3 = this;
 
         var scope = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
         var refreshUrl = BaseTokenUrl;
@@ -3897,9 +3945,9 @@
         return this.fetch(refreshUrl, fetchOptions).then(function (res) {
           return parseResponse(res);
         }).then(function (res) {
-          _this.setAccessToken(res.result.access_token);
+          _this3.setAccessToken(res.result.access_token);
 
-          _this.setAccessTokenExpiresAt(getTokenExpiresAtDate(res.result.expires_in));
+          _this3.setAccessTokenExpiresAt(getTokenExpiresAtDate(res.result.expires_in));
         });
       }
       /**
@@ -3912,62 +3960,63 @@
       key: "authenticateWithCordova",
       value: function authenticateWithCordova(successCallback, errorCallback) {
         var redirectUrl = 'https://www.dropbox.com/1/oauth2/redirect_receiver';
-        var url = this.getAuthenticationUrl(redirectUrl);
-        var removed = false;
-        var browser = window.open(url, '_blank');
+        this.getAuthenticationUrl(redirectUrl).then(function (url) {
+          var removed = false;
+          var browser = window.open(url, '_blank');
 
-        function onLoadError(event) {
-          if (event.code !== -999) {
+          function onLoadError(event) {
             // Workaround to fix wrong behavior on cordova-plugin-inappbrowser
-            // Try to avoid a browser crash on browser.close().
-            window.setTimeout(function () {
-              browser.close();
-            }, 10);
-            errorCallback();
-          }
-        }
-
-        function onLoadStop(event) {
-          var errorLabel = '&error=';
-          var errorIndex = event.url.indexOf(errorLabel);
-
-          if (errorIndex > -1) {
-            // Try to avoid a browser crash on browser.close().
-            window.setTimeout(function () {
-              browser.close();
-            }, 10);
-            errorCallback();
-          } else {
-            var tokenLabel = '#access_token=';
-            var tokenIndex = event.url.indexOf(tokenLabel);
-            var tokenTypeIndex = event.url.indexOf('&token_type=');
-
-            if (tokenIndex > -1) {
-              tokenIndex += tokenLabel.length; // Try to avoid a browser crash on browser.close().
-
+            if (event.code !== -999) {
+              // Try to avoid a browser crash on browser.close().
               window.setTimeout(function () {
                 browser.close();
               }, 10);
-              var accessToken = event.url.substring(tokenIndex, tokenTypeIndex);
-              successCallback(accessToken);
+              errorCallback();
             }
           }
-        }
 
-        function onExit() {
-          if (removed) {
-            return;
+          function onLoadStop(event) {
+            var errorLabel = '&error=';
+            var errorIndex = event.url.indexOf(errorLabel);
+
+            if (errorIndex > -1) {
+              // Try to avoid a browser crash on browser.close().
+              window.setTimeout(function () {
+                browser.close();
+              }, 10);
+              errorCallback();
+            } else {
+              var tokenLabel = '#access_token=';
+              var tokenIndex = event.url.indexOf(tokenLabel);
+              var tokenTypeIndex = event.url.indexOf('&token_type=');
+
+              if (tokenIndex > -1) {
+                tokenIndex += tokenLabel.length; // Try to avoid a browser crash on browser.close().
+
+                window.setTimeout(function () {
+                  browser.close();
+                }, 10);
+                var accessToken = event.url.substring(tokenIndex, tokenTypeIndex);
+                successCallback(accessToken);
+              }
+            }
           }
 
-          browser.removeEventListener('loaderror', onLoadError);
-          browser.removeEventListener('loadstop', onLoadStop);
-          browser.removeEventListener('exit', onExit);
-          removed = true;
-        }
+          function onExit() {
+            if (removed) {
+              return;
+            }
 
-        browser.addEventListener('loaderror', onLoadError);
-        browser.addEventListener('loadstop', onLoadStop);
-        browser.addEventListener('exit', onExit);
+            browser.removeEventListener('loaderror', onLoadError);
+            browser.removeEventListener('loadstop', onLoadStop);
+            browser.removeEventListener('exit', onExit);
+            removed = true;
+          }
+
+          browser.addEventListener('loaderror', onLoadError);
+          browser.addEventListener('loadstop', onLoadStop);
+          browser.addEventListener('exit', onExit);
+        });
       }
     }]);
 

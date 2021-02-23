@@ -28,6 +28,8 @@
     };
 
     function __extends(d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -82,6 +84,7 @@
         }
     }
 
+    /** @deprecated */
     function __spreadArrays() {
         for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
         for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -90,7 +93,7 @@
         return r;
     }
 
-    var n,l,u,i,t,o,r,f={},e=[],c=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function s(n,l){for(var u in l)n[u]=l[u];return n}function a(n){var l=n.parentNode;l&&l.removeChild(n);}function v(n,l,u){var i,t,o,r=arguments,f={};for(o in l)"key"==o?i=l[o]:"ref"==o?t=l[o]:f[o]=l[o];if(arguments.length>3)for(u=[u],o=3;o<arguments.length;o++)u.push(r[o]);if(null!=u&&(f.children=u),"function"==typeof n&&null!=n.defaultProps)for(o in n.defaultProps)void 0===f[o]&&(f[o]=n.defaultProps[o]);return h(n,f,i,t,null)}function h(l,u,i,t,o){var r={type:l,props:u,key:i,ref:t,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:null==o?++n.__v:o};return null!=n.vnode&&n.vnode(r),r}function y(){return {current:null}}function p(n){return n.children}function d(n,l){this.props=n,this.context=l;}function _(n,l){if(null==l)return n.__?_(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return "function"==typeof n.type?_(n):null}function w(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return w(n)}}function k(l){(!l.__d&&(l.__d=!0)&&u.push(l)&&!g.__r++||t!==n.debounceRendering)&&((t=n.debounceRendering)||i)(g);}function g(){for(var n;g.__r=u.length;)n=u.sort(function(n,l){return n.__v.__b-l.__v.__b}),u=[],n.some(function(n){var l,u,i,t,o,r;n.__d&&(o=(t=(l=n).__v).__e,(r=l.__P)&&(u=[],(i=s({},t)).__v=t.__v+1,$(r,t,i,l.__n,void 0!==r.ownerSVGElement,null!=t.__h?[o]:null,u,null==o?_(t):o,t.__h),j(u,t),t.__e!=o&&w(t)));});}function m(n,l,u,i,t,o,r,c,s,v){var y,d,w,k,g,m,x,P=i&&i.__k||e,C=P.length;for(s==f&&(s=null!=r?r[0]:C?_(i,0):null),u.__k=[],y=0;y<l.length;y++)if(null!=(k=u.__k[y]=null==(k=l[y])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k?h(null,k,null,null,k):Array.isArray(k)?h(p,{children:k},null,null,null):k.__b>0?h(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(w=P[y])||w&&k.key==w.key&&k.type===w.type)P[y]=void 0;else for(d=0;d<C;d++){if((w=P[d])&&k.key==w.key&&k.type===w.type){P[d]=void 0;break}w=null;}$(n,k,w=w||f,t,o,r,c,s,v),g=k.__e,(d=k.ref)&&w.ref!=d&&(x||(x=[]),w.ref&&x.push(w.ref,null,k),x.push(d,k.__c||g,k)),null!=g?(null==m&&(m=g),"function"==typeof k.type&&k.__k===w.__k?k.__d=s=b(k,s,n):s=A(n,k,w,P,r,g,s),v||"option"!==u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&w.__e==s&&s.parentNode!=n&&(s=_(w));}if(u.__e=m,null!=r&&"function"!=typeof u.type)for(y=r.length;y--;)null!=r[y]&&a(r[y]);for(y=C;y--;)null!=P[y]&&("function"==typeof u.type&&null!=P[y].__e&&P[y].__e==u.__d&&(u.__d=_(i,y+1)),L(P[y],P[y]));if(x)for(y=0;y<x.length;y++)I(x[y],x[++y],x[++y]);}function b(n,l,u){var i,t;for(i=0;i<n.__k.length;i++)(t=n.__k[i])&&(t.__=n,"function"==typeof t.type?b(t,l,u):l=A(u,t,t,n.__k,null,t.__e,l));return l}function A(n,l,u,i,t,o,r){var f,e,c;if(void 0!==l.__d)f=l.__d,l.__d=void 0;else if(t==u||o!=r||null==o.parentNode)n:if(null==r||r.parentNode!==n)n.appendChild(o),f=null;else {for(e=r,c=0;(e=e.nextSibling)&&c<i.length;c+=2)if(e==o)break n;n.insertBefore(o,r),f=r;}return void 0!==f?f:o.nextSibling}function P(n,l,u,i,t){var o;for(o in u)"children"===o||"key"===o||o in l||z(n,o,null,u[o],i);for(o in l)t&&"function"!=typeof l[o]||"children"===o||"key"===o||"value"===o||"checked"===o||u[o]===l[o]||z(n,o,l[o],u[o],i);}function C(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||c.test(l)?u:u+"px";}function z(n,l,u,i,t){var o,r,f;if(t&&"className"==l&&(l="class"),"style"===l)if("string"==typeof u)n.style.cssText=u;else {if("string"==typeof i&&(n.style.cssText=i=""),i)for(l in i)u&&l in u||C(n.style,l,"");if(u)for(l in u)i&&u[l]===i[l]||C(n.style,l,u[l]);}else "o"===l[0]&&"n"===l[1]?(o=l!==(l=l.replace(/Capture$/,"")),(r=l.toLowerCase())in n&&(l=r),l=l.slice(2),n.l||(n.l={}),n.l[l+o]=u,f=o?T:N,u?i||n.addEventListener(l,f,o):n.removeEventListener(l,f,o)):"list"!==l&&"tagName"!==l&&"form"!==l&&"type"!==l&&"size"!==l&&"download"!==l&&"href"!==l&&!t&&l in n?n[l]=null==u?"":u:"function"!=typeof u&&"dangerouslySetInnerHTML"!==l&&(l!==(l=l.replace(/xlink:?/,""))?null==u||!1===u?n.removeAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase()):n.setAttributeNS("http://www.w3.org/1999/xlink",l.toLowerCase(),u):null==u||!1===u&&!/^ar/.test(l)?n.removeAttribute(l):n.setAttribute(l,u));}function N(l){this.l[l.type+!1](n.event?n.event(l):l);}function T(l){this.l[l.type+!0](n.event?n.event(l):l);}function $(l,u,i,t,o,r,f,e,c){var a,v,h,y,_,w,k,g,b,x,A,P=u.type;if(void 0!==u.constructor)return null;null!=i.__h&&(c=i.__h,e=u.__e=i.__e,u.__h=null,r=[e]),(a=n.__b)&&a(u);try{n:if("function"==typeof P){if(g=u.props,b=(a=P.contextType)&&t[a.__c],x=a?b?b.props.value:a.__:t,i.__c?k=(v=u.__c=i.__c).__=v.__E:("prototype"in P&&P.prototype.render?u.__c=v=new P(g,x):(u.__c=v=new d(g,x),v.constructor=P,v.render=M),b&&b.sub(v),v.props=g,v.state||(v.state={}),v.context=x,v.__n=t,h=v.__d=!0,v.__h=[]),null==v.__s&&(v.__s=v.state),null!=P.getDerivedStateFromProps&&(v.__s==v.state&&(v.__s=s({},v.__s)),s(v.__s,P.getDerivedStateFromProps(g,v.__s))),y=v.props,_=v.state,h)null==P.getDerivedStateFromProps&&null!=v.componentWillMount&&v.componentWillMount(),null!=v.componentDidMount&&v.__h.push(v.componentDidMount);else {if(null==P.getDerivedStateFromProps&&g!==y&&null!=v.componentWillReceiveProps&&v.componentWillReceiveProps(g,x),!v.__e&&null!=v.shouldComponentUpdate&&!1===v.shouldComponentUpdate(g,v.__s,x)||u.__v===i.__v){v.props=g,v.state=v.__s,u.__v!==i.__v&&(v.__d=!1),v.__v=u,u.__e=i.__e,u.__k=i.__k,v.__h.length&&f.push(v);break n}null!=v.componentWillUpdate&&v.componentWillUpdate(g,v.__s,x),null!=v.componentDidUpdate&&v.__h.push(function(){v.componentDidUpdate(y,_,w);});}v.context=x,v.props=g,v.state=v.__s,(a=n.__r)&&a(u),v.__d=!1,v.__v=u,v.__P=l,a=v.render(v.props,v.state,v.context),v.state=v.__s,null!=v.getChildContext&&(t=s(s({},t),v.getChildContext())),h||null==v.getSnapshotBeforeUpdate||(w=v.getSnapshotBeforeUpdate(y,_)),A=null!=a&&a.type===p&&null==a.key?a.props.children:a,m(l,Array.isArray(A)?A:[A],u,i,t,o,r,f,e,c),v.base=u.__e,u.__h=null,v.__h.length&&f.push(v),k&&(v.__E=v.__=null),v.__e=!1;}else null==r&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=H(i.__e,u,i,t,o,r,f,c);(a=n.diffed)&&a(u);}catch(l){u.__v=null,(c||null!=r)&&(u.__e=e,u.__h=!!c,r[r.indexOf(e)]=null),n.__e(l,u,i);}}function j(l,u){n.__c&&n.__c(u,l),l.some(function(u){try{l=u.__h,u.__h=[],l.some(function(n){n.call(u);});}catch(l){n.__e(l,u.__v);}});}function H(n,l,u,i,t,o,r,c){var s,a,v,h,y,p=u.props,d=l.props;if(t="svg"===l.type||t,null!=o)for(s=0;s<o.length;s++)if(null!=(a=o[s])&&((null===l.type?3===a.nodeType:a.localName===l.type)||n==a)){n=a,o[s]=null;break}if(null==n){if(null===l.type)return document.createTextNode(d);n=t?document.createElementNS("http://www.w3.org/2000/svg",l.type):document.createElement(l.type,d.is&&{is:d.is}),o=null,c=!1;}if(null===l.type)p===d||c&&n.data===d||(n.data=d);else {if(null!=o&&(o=e.slice.call(n.childNodes)),v=(p=u.props||f).dangerouslySetInnerHTML,h=d.dangerouslySetInnerHTML,!c){if(null!=o)for(p={},y=0;y<n.attributes.length;y++)p[n.attributes[y].name]=n.attributes[y].value;(h||v)&&(h&&(v&&h.__html==v.__html||h.__html===n.innerHTML)||(n.innerHTML=h&&h.__html||""));}P(n,d,p,t,c),h?l.__k=[]:(s=l.props.children,m(n,Array.isArray(s)?s:[s],l,u,i,"foreignObject"!==l.type&&t,o,r,f,c)),c||("value"in d&&void 0!==(s=d.value)&&(s!==n.value||"progress"===l.type&&!s)&&z(n,"value",s,p.value,!1),"checked"in d&&void 0!==(s=d.checked)&&s!==n.checked&&z(n,"checked",s,p.checked,!1));}return n}function I(l,u,i){try{"function"==typeof l?l(u):l.current=u;}catch(l){n.__e(l,i);}}function L(l,u,i){var t,o,r;if(n.unmount&&n.unmount(l),(t=l.ref)&&(t.current&&t.current!==l.__e||I(t,null,u)),i||"function"==typeof l.type||(i=null!=(o=l.__e)),l.__e=l.__d=void 0,null!=(t=l.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount();}catch(l){n.__e(l,u);}t.base=t.__P=null;}if(t=l.__k)for(r=0;r<t.length;r++)t[r]&&L(t[r],u,i);null!=o&&a(o);}function M(n,l,u){return this.constructor(n,u)}function O(l,u,i){var t,r,c;n.__&&n.__(l,u),r=(t=i===o)?null:i&&i.__k||u.__k,l=v(p,null,[l]),c=[],$(u,(t?u:i||u).__k=l,r||f,f,void 0!==u.ownerSVGElement,i&&!t?[i]:r?null:u.childNodes.length?e.slice.call(u.childNodes):null,c,i||f,t),j(c,l);}function B(n,l){var u={__c:l="__cC"+r++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n){var u,i;return this.getChildContext||(u=[],(i={})[l]=this,this.getChildContext=function(){return i},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(k);},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n);};}),n.children}};return u.Provider.__=u.Consumer.contextType=u}n={__e:function(n,l){for(var u,i,t,o=l.__h;l=l.__;)if((u=l.__c)&&!u.__)try{if((i=u.constructor)&&null!=i.getDerivedStateFromError&&(u.setState(i.getDerivedStateFromError(n)),t=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),t=u.__d),t)return l.__h=o,u.__E=u}catch(l){n=l;}throw n},__v:0},l=function(n){return null!=n&&void 0===n.constructor},d.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=s({},this.state),"function"==typeof n&&(n=n(s({},u),this.props)),n&&s(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),k(this));},d.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),k(this));},d.prototype.render=p,u=[],i="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,g.__r=0,o=f,r=0;
+    var n,l,u,i,t,r,o={},f=[],e=/acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;function c(n,l){for(var u in l)n[u]=l[u];return n}function s(n){var l=n.parentNode;l&&l.removeChild(n);}function a(n,l,u){var i,t,r,o=arguments,f={};for(r in l)"key"==r?i=l[r]:"ref"==r?t=l[r]:f[r]=l[r];if(arguments.length>3)for(u=[u],r=3;r<arguments.length;r++)u.push(o[r]);if(null!=u&&(f.children=u),"function"==typeof n&&null!=n.defaultProps)for(r in n.defaultProps)void 0===f[r]&&(f[r]=n.defaultProps[r]);return v(n,f,i,t,null)}function v(l,u,i,t,r){var o={type:l,props:u,key:i,ref:t,__k:null,__:null,__b:0,__e:null,__d:void 0,__c:null,__h:null,constructor:void 0,__v:null==r?++n.__v:r};return null!=n.vnode&&n.vnode(o),o}function h(){return {current:null}}function y(n){return n.children}function p(n,l){this.props=n,this.context=l;}function d(n,l){if(null==l)return n.__?d(n.__,n.__.__k.indexOf(n)+1):null;for(var u;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e)return u.__e;return "function"==typeof n.type?d(n):null}function _(n){var l,u;if(null!=(n=n.__)&&null!=n.__c){for(n.__e=n.__c.base=null,l=0;l<n.__k.length;l++)if(null!=(u=n.__k[l])&&null!=u.__e){n.__e=n.__c.base=u.__e;break}return _(n)}}function k(l){(!l.__d&&(l.__d=!0)&&u.push(l)&&!m.__r++||t!==n.debounceRendering)&&((t=n.debounceRendering)||i)(m);}function m(){for(var n;m.__r=u.length;)n=u.sort(function(n,l){return n.__v.__b-l.__v.__b}),u=[],n.some(function(n){var l,u,i,t,r,o;n.__d&&(r=(t=(l=n).__v).__e,(o=l.__P)&&(u=[],(i=c({},t)).__v=t.__v+1,T(o,t,i,l.__n,void 0!==o.ownerSVGElement,null!=t.__h?[r]:null,u,null==r?d(t):r,t.__h),j(u,t),t.__e!=r&&_(t)));});}function b(n,l,u,i,t,r,e,c,s,a){var h,p,_,k,m,b,w,A=i&&i.__k||f,P=A.length;for(u.__k=[],h=0;h<l.length;h++)if(null!=(k=u.__k[h]=null==(k=l[h])||"boolean"==typeof k?null:"string"==typeof k||"number"==typeof k?v(null,k,null,null,k):Array.isArray(k)?v(y,{children:k},null,null,null):k.__b>0?v(k.type,k.props,k.key,null,k.__v):k)){if(k.__=u,k.__b=u.__b+1,null===(_=A[h])||_&&k.key==_.key&&k.type===_.type)A[h]=void 0;else for(p=0;p<P;p++){if((_=A[p])&&k.key==_.key&&k.type===_.type){A[p]=void 0;break}_=null;}T(n,k,_=_||o,t,r,e,c,s,a),m=k.__e,(p=k.ref)&&_.ref!=p&&(w||(w=[]),_.ref&&w.push(_.ref,null,k),w.push(p,k.__c||m,k)),null!=m?(null==b&&(b=m),"function"==typeof k.type&&null!=k.__k&&k.__k===_.__k?k.__d=s=g(k,s,n):s=x(n,k,_,A,m,s),a||"option"!==u.type?"function"==typeof u.type&&(u.__d=s):n.value=""):s&&_.__e==s&&s.parentNode!=n&&(s=d(_));}for(u.__e=b,h=P;h--;)null!=A[h]&&("function"==typeof u.type&&null!=A[h].__e&&A[h].__e==u.__d&&(u.__d=d(i,h+1)),L(A[h],A[h]));if(w)for(h=0;h<w.length;h++)I(w[h],w[++h],w[++h]);}function g(n,l,u){var i,t;for(i=0;i<n.__k.length;i++)(t=n.__k[i])&&(t.__=n,l="function"==typeof t.type?g(t,l,u):x(u,t,t,n.__k,t.__e,l));return l}function x(n,l,u,i,t,r){var o,f,e;if(void 0!==l.__d)o=l.__d,l.__d=void 0;else if(null==u||t!=r||null==t.parentNode)n:if(null==r||r.parentNode!==n)n.appendChild(t),o=null;else {for(f=r,e=0;(f=f.nextSibling)&&e<i.length;e+=2)if(f==t)break n;n.insertBefore(t,r),o=r;}return void 0!==o?o:t.nextSibling}function A(n,l,u,i,t){var r;for(r in u)"children"===r||"key"===r||r in l||C(n,r,null,u[r],i);for(r in l)t&&"function"!=typeof l[r]||"children"===r||"key"===r||"value"===r||"checked"===r||u[r]===l[r]||C(n,r,l[r],u[r],i);}function P(n,l,u){"-"===l[0]?n.setProperty(l,u):n[l]=null==u?"":"number"!=typeof u||e.test(l)?u:u+"px";}function C(n,l,u,i,t){var r;n:if("style"===l)if("string"==typeof u)n.style.cssText=u;else {if("string"==typeof i&&(n.style.cssText=i=""),i)for(l in i)u&&l in u||P(n.style,l,"");if(u)for(l in u)i&&u[l]===i[l]||P(n.style,l,u[l]);}else if("o"===l[0]&&"n"===l[1])r=l!==(l=l.replace(/Capture$/,"")),l=l.toLowerCase()in n?l.toLowerCase().slice(2):l.slice(2),n.l||(n.l={}),n.l[l+r]=u,u?i||n.addEventListener(l,r?H:$,r):n.removeEventListener(l,r?H:$,r);else if("dangerouslySetInnerHTML"!==l){if(t)l=l.replace(/xlink[H:h]/,"h").replace(/sName$/,"s");else if("href"!==l&&"list"!==l&&"form"!==l&&"download"!==l&&l in n)try{n[l]=null==u?"":u;break n}catch(n){}"function"==typeof u||(null!=u&&(!1!==u||"a"===l[0]&&"r"===l[1])?n.setAttribute(l,u):n.removeAttribute(l));}}function $(l){this.l[l.type+!1](n.event?n.event(l):l);}function H(l){this.l[l.type+!0](n.event?n.event(l):l);}function T(l,u,i,t,r,o,f,e,s){var a,v,h,d,_,k,m,g,w,x,A,P=u.type;if(void 0!==u.constructor)return null;null!=i.__h&&(s=i.__h,e=u.__e=i.__e,u.__h=null,o=[e]),(a=n.__b)&&a(u);try{n:if("function"==typeof P){if(g=u.props,w=(a=P.contextType)&&t[a.__c],x=a?w?w.props.value:a.__:t,i.__c?m=(v=u.__c=i.__c).__=v.__E:("prototype"in P&&P.prototype.render?u.__c=v=new P(g,x):(u.__c=v=new p(g,x),v.constructor=P,v.render=M),w&&w.sub(v),v.props=g,v.state||(v.state={}),v.context=x,v.__n=t,h=v.__d=!0,v.__h=[]),null==v.__s&&(v.__s=v.state),null!=P.getDerivedStateFromProps&&(v.__s==v.state&&(v.__s=c({},v.__s)),c(v.__s,P.getDerivedStateFromProps(g,v.__s))),d=v.props,_=v.state,h)null==P.getDerivedStateFromProps&&null!=v.componentWillMount&&v.componentWillMount(),null!=v.componentDidMount&&v.__h.push(v.componentDidMount);else {if(null==P.getDerivedStateFromProps&&g!==d&&null!=v.componentWillReceiveProps&&v.componentWillReceiveProps(g,x),!v.__e&&null!=v.shouldComponentUpdate&&!1===v.shouldComponentUpdate(g,v.__s,x)||u.__v===i.__v){v.props=g,v.state=v.__s,u.__v!==i.__v&&(v.__d=!1),v.__v=u,u.__e=i.__e,u.__k=i.__k,v.__h.length&&f.push(v);break n}null!=v.componentWillUpdate&&v.componentWillUpdate(g,v.__s,x),null!=v.componentDidUpdate&&v.__h.push(function(){v.componentDidUpdate(d,_,k);});}v.context=x,v.props=g,v.state=v.__s,(a=n.__r)&&a(u),v.__d=!1,v.__v=u,v.__P=l,a=v.render(v.props,v.state,v.context),v.state=v.__s,null!=v.getChildContext&&(t=c(c({},t),v.getChildContext())),h||null==v.getSnapshotBeforeUpdate||(k=v.getSnapshotBeforeUpdate(d,_)),A=null!=a&&a.type===y&&null==a.key?a.props.children:a,b(l,Array.isArray(A)?A:[A],u,i,t,r,o,f,e,s),v.base=u.__e,u.__h=null,v.__h.length&&f.push(v),m&&(v.__E=v.__=null),v.__e=!1;}else null==o&&u.__v===i.__v?(u.__k=i.__k,u.__e=i.__e):u.__e=z(i.__e,u,i,t,r,o,f,s);(a=n.diffed)&&a(u);}catch(l){u.__v=null,(s||null!=o)&&(u.__e=e,u.__h=!!s,o[o.indexOf(e)]=null),n.__e(l,u,i);}}function j(l,u){n.__c&&n.__c(u,l),l.some(function(u){try{l=u.__h,u.__h=[],l.some(function(n){n.call(u);});}catch(l){n.__e(l,u.__v);}});}function z(n,l,u,i,t,r,e,c){var a,v,h,y,p=u.props,d=l.props,_=l.type,k=0;if("svg"===_&&(t=!0),null!=r)for(;k<r.length;k++)if((a=r[k])&&(a===n||(_?a.localName==_:3==a.nodeType))){n=a,r[k]=null;break}if(null==n){if(null===_)return document.createTextNode(d);n=t?document.createElementNS("http://www.w3.org/2000/svg",_):document.createElement(_,d.is&&d),r=null,c=!1;}if(null===_)p===d||c&&n.data===d||(n.data=d);else {if(r=r&&f.slice.call(n.childNodes),v=(p=u.props||o).dangerouslySetInnerHTML,h=d.dangerouslySetInnerHTML,!c){if(null!=r)for(p={},y=0;y<n.attributes.length;y++)p[n.attributes[y].name]=n.attributes[y].value;(h||v)&&(h&&(v&&h.__html==v.__html||h.__html===n.innerHTML)||(n.innerHTML=h&&h.__html||""));}if(A(n,d,p,t,c),h)l.__k=[];else if(k=l.props.children,b(n,Array.isArray(k)?k:[k],l,u,i,t&&"foreignObject"!==_,r,e,n.firstChild,c),null!=r)for(k=r.length;k--;)null!=r[k]&&s(r[k]);c||("value"in d&&void 0!==(k=d.value)&&(k!==n.value||"progress"===_&&!k)&&C(n,"value",k,p.value,!1),"checked"in d&&void 0!==(k=d.checked)&&k!==n.checked&&C(n,"checked",k,p.checked,!1));}return n}function I(l,u,i){try{"function"==typeof l?l(u):l.current=u;}catch(l){n.__e(l,i);}}function L(l,u,i){var t,r,o;if(n.unmount&&n.unmount(l),(t=l.ref)&&(t.current&&t.current!==l.__e||I(t,null,u)),i||"function"==typeof l.type||(i=null!=(r=l.__e)),l.__e=l.__d=void 0,null!=(t=l.__c)){if(t.componentWillUnmount)try{t.componentWillUnmount();}catch(l){n.__e(l,u);}t.base=t.__P=null;}if(t=l.__k)for(o=0;o<t.length;o++)t[o]&&L(t[o],u,i);null!=r&&s(r);}function M(n,l,u){return this.constructor(n,u)}function N(l,u,i){var t,r,e;n.__&&n.__(l,u),r=(t="function"==typeof i)?null:i&&i.__k||u.__k,e=[],T(u,l=(!t&&i||u).__k=a(y,null,[l]),r||o,o,void 0!==u.ownerSVGElement,!t&&i?[i]:r?null:u.firstChild?f.slice.call(u.childNodes):null,e,!t&&i?i:r?r.__e:u.firstChild,t),j(e,l);}function q(n,l){var u={__c:l="__cC"+r++,__:n,Consumer:function(n,l){return n.children(l)},Provider:function(n){var u,i;return this.getChildContext||(u=[],(i={})[l]=this,this.getChildContext=function(){return i},this.shouldComponentUpdate=function(n){this.props.value!==n.value&&u.some(k);},this.sub=function(n){u.push(n);var l=n.componentWillUnmount;n.componentWillUnmount=function(){u.splice(u.indexOf(n),1),l&&l.call(n);};}),n.children}};return u.Provider.__=u.Consumer.contextType=u}n={__e:function(n,l){for(var u,i,t;l=l.__;)if((u=l.__c)&&!u.__)try{if((i=u.constructor)&&null!=i.getDerivedStateFromError&&(u.setState(i.getDerivedStateFromError(n)),t=u.__d),null!=u.componentDidCatch&&(u.componentDidCatch(n),t=u.__d),t)return u.__E=u}catch(l){n=l;}throw n},__v:0},l=function(n){return null!=n&&void 0===n.constructor},p.prototype.setState=function(n,l){var u;u=null!=this.__s&&this.__s!==this.state?this.__s:this.__s=c({},this.state),"function"==typeof n&&(n=n(c({},u),this.props)),n&&c(u,n),null!=n&&this.__v&&(l&&this.__h.push(l),k(this));},p.prototype.forceUpdate=function(n){this.__v&&(this.__e=!0,n&&this.__h.push(n),k(this));},p.prototype.render=y,u=[],i="function"==typeof Promise?Promise.prototype.then.bind(Promise.resolve()):setTimeout,m.__r=0,r=0;
 
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -226,7 +229,7 @@
             return _this;
         }
         return BaseComponent;
-    }(d));
+    }(p));
 
     var HTMLElement$1 = /** @class */ (function (_super) {
         __extends(HTMLElement, _super);
@@ -234,7 +237,7 @@
             return _super !== null && _super.apply(this, arguments) || this;
         }
         HTMLElement.prototype.render = function () {
-            return v(this.props.parentElement, {
+            return a(this.props.parentElement, {
                 dangerouslySetInnerHTML: { __html: this.props.content },
             });
         };
@@ -249,7 +252,7 @@
         return value.documentElement.textContent;
     }
     function html(content, parentElement) {
-        return v(HTMLElement$1, { content: content, parentElement: parentElement });
+        return a(HTMLElement$1, { content: content, parentElement: parentElement });
     }
 
     var Cell = /** @class */ (function (_super) {
@@ -776,14 +779,14 @@
                 var plugin = this.config.plugin.get(this.props.pluginId);
                 if (!plugin)
                     return null;
-                return v(p, {}, v(plugin.component, __assign(__assign({ plugin: plugin }, plugin.props), this.props.props)));
+                return a(y, {}, a(plugin.component, __assign(__assign({ plugin: plugin }, plugin.props), this.props.props)));
             }
             else if (this.props.position !== undefined) {
                 // render using a specific plugin position
-                return v(p, {}, this.config.plugin
+                return a(y, {}, this.config.plugin
                     .list(this.props.position)
                     .map(function (p) {
-                    return v(p.component, __assign(__assign({ plugin: p }, p.props), _this.props.props));
+                    return a(p.component, __assign(__assign({ plugin: p }, p.props), _this.props.props));
                 }));
             }
             return null;
@@ -846,8 +849,8 @@
             if (this.searchProcessor instanceof ServerGlobalSearchFilter) {
                 onInput = debounce(onInput, this.props.debounceTimeout);
             }
-            return (v("div", { className: className(classJoin('search', this.config.className.search)) },
-                v("input", { type: "search", placeholder: this._('search.placeholder'), "aria-label": this._('search.placeholder'), onInput: onInput, className: classJoin(className('input'), className('search', 'input')), value: this.store.state.keyword })));
+            return (a("div", { className: className(classJoin('search', this.config.className.search)) },
+                a("input", { type: "search", placeholder: this._('search.placeholder'), "aria-label": this._('search.placeholder'), onInput: onInput, className: classJoin(className('input'), className('search', 'input')), value: this.store.state.keyword })));
         };
         Search.defaultProps = {
             debounceTimeout: 250,
@@ -1007,44 +1010,44 @@
             if (this.state.page + Math.floor(maxCount / 2) >= this.pages) {
                 pagePivot = maxCount - (this.pages - this.state.page);
             }
-            return (v(p, null,
-                this.pages > maxCount && this.state.page - pagePivot > 0 && (v(p, null,
-                    v("button", { tabIndex: 0, role: "button", onClick: this.setPage.bind(this, 0), title: this._('pagination.firstPage'), "aria-label": this._('pagination.firstPage'), className: this.config.className.paginationButton }, this._('1')),
-                    v("button", { tabIndex: -1, className: classJoin(className('spread'), this.config.className.paginationButton) }, "..."))),
+            return (a(y, null,
+                this.pages > maxCount && this.state.page - pagePivot > 0 && (a(y, null,
+                    a("button", { tabIndex: 0, role: "button", onClick: this.setPage.bind(this, 0), title: this._('pagination.firstPage'), "aria-label": this._('pagination.firstPage'), className: this.config.className.paginationButton }, this._('1')),
+                    a("button", { tabIndex: -1, className: classJoin(className('spread'), this.config.className.paginationButton) }, "..."))),
                 Array.from(Array(maxCount).keys())
                     .map(function (i) { return _this.state.page + (i - pagePivot); })
-                    .map(function (i) { return (v("button", { tabIndex: 0, role: "button", onClick: _this.setPage.bind(_this, i), className: classJoin(_this.state.page === i
+                    .map(function (i) { return (a("button", { tabIndex: 0, role: "button", onClick: _this.setPage.bind(_this, i), className: classJoin(_this.state.page === i
                         ? classJoin(className('currentPage'), _this.config.className.paginationButtonCurrent)
                         : null, _this.config.className.paginationButton), title: _this._('pagination.page', i + 1), "aria-label": _this._('pagination.page', i + 1) }, _this._("" + (i + 1)))); }),
-                this.pages > maxCount && this.pages > this.state.page + pagePivot + 1 && (v(p, null,
-                    v("button", { tabIndex: -1, className: classJoin(className('spread'), this.config.className.paginationButton) }, "..."),
-                    v("button", { tabIndex: 0, role: "button", onClick: this.setPage.bind(this, this.pages - 1), title: this._('pagination.page', this.pages), "aria-label": this._('pagination.page', this.pages), className: this.config.className.paginationButton }, this._("" + this.pages))))));
+                this.pages > maxCount && this.pages > this.state.page + pagePivot + 1 && (a(y, null,
+                    a("button", { tabIndex: -1, className: classJoin(className('spread'), this.config.className.paginationButton) }, "..."),
+                    a("button", { tabIndex: 0, role: "button", onClick: this.setPage.bind(this, this.pages - 1), title: this._('pagination.page', this.pages), "aria-label": this._('pagination.page', this.pages), className: this.config.className.paginationButton }, this._("" + this.pages))))));
         };
         Pagination.prototype.renderSummary = function () {
-            return (v(p, null, this.props.summary && this.state.total > 0 && (v("div", { role: "status", "aria-live": "polite", className: classJoin(className('summary'), this.config.className.paginationSummary), title: this._('pagination.navigate', this.state.page + 1, this.pages) },
+            return (a(y, null, this.props.summary && this.state.total > 0 && (a("div", { role: "status", "aria-live": "polite", className: classJoin(className('summary'), this.config.className.paginationSummary), title: this._('pagination.navigate', this.state.page + 1, this.pages) },
                 this._('pagination.showing'),
                 ' ',
-                v("b", null, this._("" + (this.state.page * this.state.limit + 1))),
+                a("b", null, this._("" + (this.state.page * this.state.limit + 1))),
                 ' ',
                 this._('pagination.to'),
                 ' ',
-                v("b", null, this._("" + Math.min((this.state.page + 1) * this.state.limit, this.state.total))),
+                a("b", null, this._("" + Math.min((this.state.page + 1) * this.state.limit, this.state.total))),
                 ' ',
                 this._('pagination.of'),
                 " ",
-                v("b", null, this._("" + this.state.total)),
+                a("b", null, this._("" + this.state.total)),
                 ' ',
                 this._('pagination.results')))));
         };
         Pagination.prototype.render = function () {
             if (!this.props.enabled)
                 return null;
-            return (v("div", { className: classJoin(className('pagination'), this.config.className.pagination) },
+            return (a("div", { className: classJoin(className('pagination'), this.config.className.pagination) },
                 this.renderSummary(),
-                v("div", { className: className('pages') },
-                    this.props.prevButton && (v("button", { tabIndex: 0, role: "button", disabled: this.state.page === 0, onClick: this.setPage.bind(this, this.state.page - 1), title: this._('pagination.previous'), "aria-label": this._('pagination.previous'), className: classJoin(this.config.className.paginationButton, this.config.className.paginationButtonPrev) }, this._('pagination.previous'))),
+                a("div", { className: className('pages') },
+                    this.props.prevButton && (a("button", { tabIndex: 0, role: "button", disabled: this.state.page === 0, onClick: this.setPage.bind(this, this.state.page - 1), title: this._('pagination.previous'), "aria-label": this._('pagination.previous'), className: classJoin(this.config.className.paginationButton, this.config.className.paginationButtonPrev) }, this._('pagination.previous'))),
                     this.renderPages(),
-                    this.props.nextButton && (v("button", { tabIndex: 0, role: "button", disabled: this.pages === this.state.page + 1 || this.pages === 0, onClick: this.setPage.bind(this, this.state.page + 1), title: this._('pagination.next'), "aria-label": this._('pagination.next'), className: classJoin(this.config.className.paginationButton, this.config.className.paginationButtonNext) }, this._('pagination.next'))))));
+                    this.props.nextButton && (a("button", { tabIndex: 0, role: "button", disabled: this.pages === this.state.page + 1 || this.pages === 0, onClick: this.setPage.bind(this, this.state.page + 1), title: this._('pagination.next'), "aria-label": this._('pagination.next'), className: classJoin(this.config.className.paginationButton, this.config.className.paginationButtonNext) }, this._('pagination.next'))))));
         };
         Pagination.defaultProps = {
             summary: true,
@@ -1114,7 +1117,7 @@
                 tableElement_1.style.margin = '0';
                 tableElement_1.style.border = 'none';
                 tableElement_1.style.outline = 'none';
-                return (v("div", { ref: function (nodeElement) {
+                return (a("div", { ref: function (nodeElement) {
                         nodeElement && nodeElement.appendChild(tableElement_1);
                     } }));
             }
@@ -1185,14 +1188,14 @@
             // no padding, margin or border to get the minimum space required
             // to render columns. One the table is rendered and widths are known,
             // we unmount the shadow table from the DOM and set the correct width
-            var shadowTable = y();
+            var shadowTable = h();
             if (tableRef.current && autoWidth) {
                 // render a ShadowTable with the first 10 rows
-                var el = v(ShadowTable, {
+                var el = a(ShadowTable, {
                     tableRef: tableRef,
                 });
                 el.ref = shadowTable;
-                O(el, tempRef.current);
+                N(el, tempRef.current);
             }
             for (var _i = 0, _a = flatten(Header.tabularFormat(this.columns)); _i < _a.length; _i++) {
                 var column = _a[_i];
@@ -1213,7 +1216,7 @@
             }
             if (tableRef.current && autoWidth) {
                 // unmount the shadow table from temp
-                O(null, tempRef.current);
+                N(null, tempRef.current);
             }
             return this;
         };
@@ -1950,7 +1953,7 @@
         ServerInitiator.prototype._process = function () {
             return Object.entries(this.props.serverStorageOptions)
                 .filter(function (_a) {
-                var _ = _a[0], val = _a[1];
+                _a[0]; var val = _a[1];
                 return typeof val !== 'function';
             })
                 .reduce(function (acc, _a) {
@@ -2088,8 +2091,8 @@
             return {
                 plugin: new PluginManager(),
                 dispatcher: new Dispatcher(),
-                tableRef: y(),
-                tempRef: y(),
+                tableRef: h(),
+                tempRef: h(),
                 width: '100%',
                 height: 'auto',
                 autoWidth: true,
@@ -2168,7 +2171,7 @@
                 return this.props.column.formatter(this.props.cell.data, this.props.row, this.props.column);
             }
             if (this.props.column && this.props.column.plugin) {
-                return (v(PluginRenderer, { pluginId: this.props.column.id, props: {
+                return (a(PluginRenderer, { pluginId: this.props.column.id, props: {
                         column: this.props.column,
                         cell: this.props.cell,
                         row: this.props.row,
@@ -2182,18 +2185,17 @@
             this.config.eventEmitter.emit('cellClick', e, this.props.cell, this.props.column, this.props.row);
         };
         TD.prototype.getCustomAttributes = function (column) {
-            if (column) {
-                if (typeof column.attributes === 'function') {
-                    return column.attributes(this.props.cell.data, this.props.row, this.props.column);
-                }
-                else {
-                    return column.attributes;
-                }
+            if (!column)
+                return {};
+            if (typeof column.attributes === 'function') {
+                return column.attributes(this.props.cell.data, this.props.row, this.props.column);
             }
-            return {};
+            else {
+                return column.attributes;
+            }
         };
         TD.prototype.render = function () {
-            return (v("td", __assign({ role: this.props.role, colSpan: this.props.colSpan, "data-column-id": this.props.column && this.props.column.id, className: classJoin(className('td'), this.props.className, this.config.className.td), style: __assign(__assign({}, this.props.style), this.config.style.td), onClick: this.handleClick.bind(this) }, this.getCustomAttributes(this.props.column)), this.content()));
+            return (a("td", __assign({ role: this.props.role, colSpan: this.props.colSpan, "data-column-id": this.props.column && this.props.column.id, className: classJoin(className('td'), this.props.className, this.config.className.td), style: __assign(__assign({}, this.props.style), this.config.style.td), onClick: this.handleClick.bind(this) }, this.getCustomAttributes(this.props.column)), this.content()));
         };
         return TD;
     }(BaseComponent));
@@ -2223,16 +2225,16 @@
                 return this.props.children;
             }
             else {
-                return (v(p, null, this.props.row.cells.map(function (cell, i) {
+                return (a(y, null, this.props.row.cells.map(function (cell, i) {
                     var column = _this.getColumn(i);
                     if (column && column.hidden)
                         return null;
-                    return (v(TD, { key: cell.id, cell: cell, row: _this.props.row, column: column }));
+                    return (a(TD, { key: cell.id, cell: cell, row: _this.props.row, column: column }));
                 })));
             }
         };
         TR.prototype.render = function () {
-            return (v("tr", { className: className('tr'), onClick: this.handleClick.bind(this) }, this.getChildren()));
+            return (a("tr", { className: classJoin(className('tr'), this.config.className.tr), onClick: this.handleClick.bind(this) }, this.getChildren()));
         };
         return TR;
     }(BaseComponent));
@@ -2243,8 +2245,8 @@
             return _super !== null && _super.apply(this, arguments) || this;
         }
         MessageRow.prototype.render = function () {
-            return (v(TR, { messageRow: true },
-                v(TD, { role: "alert", colSpan: this.props.colSpan, messageCell: true, cell: new Cell(this.props.message), className: classJoin(className('message'), this.props.className ? this.props.className : null) })));
+            return (a(TR, { messageRow: true },
+                a(TD, { role: "alert", colSpan: this.props.colSpan, messageCell: true, cell: new Cell(this.props.message), className: classJoin(className('message'), this.props.className ? this.props.className : null) })));
         };
         return MessageRow;
     }(BaseComponent));
@@ -2262,17 +2264,17 @@
         };
         TBody.prototype.render = function () {
             var _this = this;
-            return (v("tbody", { className: classJoin(className('tbody'), this.config.className.tbody) },
+            return (a("tbody", { className: classJoin(className('tbody'), this.config.className.tbody) },
                 this.props.data &&
                     this.props.data.rows.map(function (row) {
-                        return v(TR, { key: row.id, row: row, header: _this.props.header });
+                        return a(TR, { key: row.id, row: row, header: _this.props.header });
                     }),
                 this.props.status === Status.Loading &&
-                    (!this.props.data || this.props.data.length === 0) && (v(MessageRow, { message: this._('loading'), colSpan: this.headerLength(), className: classJoin(className('loading'), this.config.className.loading) })),
+                    (!this.props.data || this.props.data.length === 0) && (a(MessageRow, { message: this._('loading'), colSpan: this.headerLength(), className: classJoin(className('loading'), this.config.className.loading) })),
                 this.props.status === Status.Rendered &&
                     this.props.data &&
-                    this.props.data.length === 0 && (v(MessageRow, { message: this._('noRecordsFound'), colSpan: this.headerLength(), className: classJoin(className('notfound'), this.config.className.notfound) })),
-                this.props.status === Status.Error && (v(MessageRow, { message: this._('error'), colSpan: this.headerLength(), className: classJoin(className('error'), this.config.className.error) }))));
+                    this.props.data.length === 0 && (a(MessageRow, { message: this._('noRecordsFound'), colSpan: this.headerLength(), className: classJoin(className('notfound'), this.config.className.notfound) })),
+                this.props.status === Status.Error && (a(MessageRow, { message: this._('error'), colSpan: this.headerLength(), className: classJoin(className('error'), this.config.className.error) }))));
         };
         return TBody;
     }(BaseComponent));
@@ -2586,7 +2588,7 @@
             else if (direction === -1) {
                 sortClassName = 'desc';
             }
-            return (v("button", { 
+            return (a("button", { 
                 // because the corresponding <th> has tabIndex=0
                 tabIndex: -1, "aria-label": this._("sort.sort" + (direction === 1 ? 'Desc' : 'Asc')), title: this._("sort.sort" + (direction === 1 ? 'Desc' : 'Asc')), className: classJoin(className('sort'), className('sort', sortClassName), this.config.className.sort), onClick: this.changeDirection.bind(this) }));
         };
@@ -2597,8 +2599,8 @@
         __extends(TH, _super);
         function TH(props, context) {
             var _this = _super.call(this, props, context) || this;
-            _this.sortRef = y();
-            _this.thRef = y();
+            _this.sortRef = h();
+            _this.thRef = h();
             _this.state = {
                 style: {},
             };
@@ -2639,20 +2641,31 @@
                 return this.props.column.name;
             }
             if (this.props.column.plugin !== undefined) {
-                return (v(PluginRenderer, { pluginId: this.props.column.plugin.id, props: {
+                return (a(PluginRenderer, { pluginId: this.props.column.plugin.id, props: {
                         column: this.props.column,
                     } }));
             }
             return null;
+        };
+        TH.prototype.getCustomAttributes = function () {
+            var column = this.props.column;
+            if (!column)
+                return {};
+            if (typeof column.attributes === 'function') {
+                return column.attributes(null, null, this.props.column);
+            }
+            else {
+                return column.attributes;
+            }
         };
         TH.prototype.render = function () {
             var props = {};
             if (this.isSortable()) {
                 props['tabIndex'] = 0;
             }
-            return (v("th", __assign({ ref: this.thRef, "data-column-id": this.props.column && this.props.column.id, className: classJoin(className('th'), this.isSortable() ? className('th', 'sort') : null, this.props.column.fixedHeader ? className('th', 'fixed') : null, this.config.className.th), onClick: this.onClick.bind(this), style: __assign(__assign(__assign(__assign({}, this.config.style.th), { width: this.props.column.width }), this.state.style), this.props.style), onKeyDown: this.keyDown.bind(this), rowSpan: this.props.rowSpan > 1 ? this.props.rowSpan : undefined, colSpan: this.props.colSpan > 1 ? this.props.colSpan : undefined }, props),
+            return (a("th", __assign({ ref: this.thRef, "data-column-id": this.props.column && this.props.column.id, className: classJoin(className('th'), this.isSortable() ? className('th', 'sort') : null, this.props.column.fixedHeader ? className('th', 'fixed') : null, this.config.className.th), onClick: this.onClick.bind(this), style: __assign(__assign(__assign(__assign({}, this.config.style.th), { width: this.props.column.width }), this.state.style), this.props.style), onKeyDown: this.keyDown.bind(this), rowSpan: this.props.rowSpan > 1 ? this.props.rowSpan : undefined, colSpan: this.props.colSpan > 1 ? this.props.colSpan : undefined }, this.getCustomAttributes(), props),
                 this.content(),
-                this.isSortable() && (v(Sort, __assign({ ref: this.sortRef, index: this.props.index }, this.props.column.sort)))));
+                this.isSortable() && (a(Sort, __assign({ ref: this.sortRef, index: this.props.index }, this.props.column.sort)))));
         };
         return TH;
     }(BaseComponent));
@@ -2675,13 +2688,13 @@
         }
         THead.prototype.renderColumn = function (column, rowIndex, columnIndex, totalRows) {
             var _a = calculateRowColSpans(column, rowIndex, totalRows), rowSpan = _a.rowSpan, colSpan = _a.colSpan;
-            return (v(TH, { column: column, index: columnIndex, colSpan: colSpan, rowSpan: rowSpan }));
+            return (a(TH, { column: column, index: columnIndex, colSpan: colSpan, rowSpan: rowSpan }));
         };
         THead.prototype.renderRow = function (row, rowIndex, totalRows) {
             var _this = this;
             // because the only sortable columns are leaf columns (not parents)
             var leafColumns = Header.leafColumns(this.props.header.columns);
-            return (v(TR, null, row.map(function (col) {
+            return (a(TR, null, row.map(function (col) {
                 if (col.hidden)
                     return null;
                 return _this.renderColumn(col, rowIndex, leafColumns.indexOf(col), totalRows);
@@ -2696,7 +2709,7 @@
         };
         THead.prototype.render = function () {
             if (this.props.header) {
-                return (v("thead", { key: this.props.header.id, className: classJoin(className('thead'), this.config.className.thead) }, this.renderRows()));
+                return (a("thead", { key: this.props.header.id, className: classJoin(className('thead'), this.config.className.thead) }, this.renderRows()));
             }
             return null;
         };
@@ -2709,12 +2722,12 @@
             return _super !== null && _super.apply(this, arguments) || this;
         }
         Table.prototype.render = function () {
-            return (v("table", { role: "grid", className: classJoin(className('table'), this.config.className.table), style: __assign(__assign({}, this.config.style.table), {
+            return (a("table", { role: "grid", className: classJoin(className('table'), this.config.className.table), style: __assign(__assign({}, this.config.style.table), {
                     width: this.props.width,
                     height: this.props.height,
                 }) },
-                v(THead, { header: this.props.header }),
-                v(TBody, { data: this.props.data, status: this.props.status, header: this.props.header })));
+                a(THead, { header: this.props.header }),
+                a(TBody, { data: this.props.data, status: this.props.status, header: this.props.header })));
         };
         return Table;
     }(BaseComponent));
@@ -2723,7 +2736,7 @@
         __extends(HeaderContainer, _super);
         function HeaderContainer(props, context) {
             var _this = _super.call(this, props, context) || this;
-            _this.headerRef = y();
+            _this.headerRef = h();
             _this.state = {
                 isActive: true,
             };
@@ -2738,8 +2751,8 @@
         };
         HeaderContainer.prototype.render = function () {
             if (this.state.isActive) {
-                return (v("div", { ref: this.headerRef, className: classJoin(className('head'), this.config.className.header), style: __assign({}, this.config.style.header) },
-                    v(PluginRenderer, { position: exports.PluginPosition.Header })));
+                return (a("div", { ref: this.headerRef, className: classJoin(className('head'), this.config.className.header), style: __assign({}, this.config.style.header) },
+                    a(PluginRenderer, { position: exports.PluginPosition.Header })));
             }
             return null;
         };
@@ -2750,7 +2763,7 @@
         __extends(FooterContainer, _super);
         function FooterContainer(props, context) {
             var _this = _super.call(this, props, context) || this;
-            _this.footerRef = y();
+            _this.footerRef = h();
             _this.state = {
                 isActive: true,
             };
@@ -2765,8 +2778,8 @@
         };
         FooterContainer.prototype.render = function () {
             if (this.state.isActive) {
-                return (v("div", { ref: this.footerRef, className: classJoin(className('footer'), this.config.className.footer), style: __assign({}, this.config.style.footer) },
-                    v(PluginRenderer, { position: exports.PluginPosition.Footer })));
+                return (a("div", { ref: this.footerRef, className: classJoin(className('footer'), this.config.className.footer), style: __assign({}, this.config.style.footer) },
+                    a(PluginRenderer, { position: exports.PluginPosition.Footer })));
             }
             return null;
         };
@@ -2778,7 +2791,7 @@
         function Container(props, context) {
             var _this = _super.call(this, props, context) || this;
             // global Config context which is passed to all components
-            _this.configContext = B(null);
+            _this.configContext = q(null);
             _this.state = {
                 status: Status.Loading,
                 header: props.header,
@@ -2862,16 +2875,16 @@
         };
         Container.prototype.render = function () {
             var configContext = this.configContext;
-            return (v(configContext.Provider, { value: this.props.config },
-                v("div", { role: "complementary", className: classJoin('gridjs', className('container'), this.state.status === Status.Loading ? className('loading') : null, this.props.config.className.container), style: __assign(__assign({}, this.props.config.style.container), {
+            return (a(configContext.Provider, { value: this.props.config },
+                a("div", { role: "complementary", className: classJoin('gridjs', className('container'), this.state.status === Status.Loading ? className('loading') : null, this.props.config.className.container), style: __assign(__assign({}, this.props.config.style.container), {
                         width: this.props.width,
                     }) },
-                    this.state.status === Status.Loading && (v("div", { className: className('loading-bar') })),
-                    v(HeaderContainer, null),
-                    v("div", { className: className('wrapper'), style: { width: this.props.width, height: this.props.height } },
-                        v(Table, { ref: this.props.config.tableRef, data: this.state.data, header: this.state.header, width: this.props.width, height: this.props.height, status: this.state.status })),
-                    v(FooterContainer, null)),
-                v("div", { ref: this.props.config.tempRef, id: "gridjs-temp", className: className('temp') })));
+                    this.state.status === Status.Loading && (a("div", { className: className('loading-bar') })),
+                    a(HeaderContainer, null),
+                    a("div", { className: className('wrapper'), style: { width: this.props.width, height: this.props.height } },
+                        a(Table, { ref: this.props.config.tableRef, data: this.state.data, header: this.state.header, width: this.props.width, height: this.props.height, status: this.state.status })),
+                    a(FooterContainer, null)),
+                a("div", { ref: this.props.config.tempRef, id: "gridjs-temp", className: className('temp') })));
         };
         return Container;
     }(BaseComponent));
@@ -2889,7 +2902,7 @@
             return this;
         };
         Grid.prototype.createElement = function () {
-            return v(Container, {
+            return a(Container, {
                 config: this.config,
                 pipeline: this.config.pipeline,
                 header: this.config.header,
@@ -2910,8 +2923,8 @@
             // clear the pipeline cache
             this.config.pipeline.clearCache();
             // TODO: not sure if it's a good idea to render a null element but I couldn't find a better way
-            O(null, this.config.container);
-            O(this.createElement(), this.config.container);
+            N(null, this.config.container);
+            N(this.createElement(), this.config.container);
             return this;
         };
         /**
@@ -2929,28 +2942,28 @@
                 return this;
             }
             this.config.container = container;
-            O(this.createElement(), container);
+            N(this.createElement(), container);
             return this;
         };
         return Grid;
     }(EventEmitter));
 
-    var t$1,u$1,r$1,o$1=0,i$1=[],c$1=n.__b,f$1=n.__r,e$1=n.diffed,a$1=n.__c,v$1=n.unmount;function m$1(t,r){n.__h&&n.__h(u$1,t,o$1||r),o$1=0;var i=u$1.__H||(u$1.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function y$1(r,o){var i=m$1(t$1++,3);!n.__s&&k$1(i.__H,o)&&(i.__=r,i.__H=o,u$1.__H.__h.push(i));}function s$1(n){return o$1=5,d$1(function(){return {current:n}},[])}function d$1(n,u){var r=m$1(t$1++,7);return k$1(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function x(){i$1.forEach(function(t){if(t.__P)try{t.__H.__h.forEach(g$1),t.__H.__h.forEach(j$1),t.__H.__h=[];}catch(u){t.__H.__h=[],n.__e(u,t.__v);}}),i$1=[];}n.__b=function(n){u$1=null,c$1&&c$1(n);},n.__r=function(n){f$1&&f$1(n),t$1=0;var r=(u$1=n.__c).__H;r&&(r.__h.forEach(g$1),r.__h.forEach(j$1),r.__h=[]);},n.diffed=function(t){e$1&&e$1(t);var o=t.__c;o&&o.__H&&o.__H.__h.length&&(1!==i$1.push(o)&&r$1===n.requestAnimationFrame||((r$1=n.requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),b$1&&cancelAnimationFrame(t),setTimeout(n);},r=setTimeout(u,100);b$1&&(t=requestAnimationFrame(u));})(x)),u$1=void 0;},n.__c=function(t,u){u.some(function(t){try{t.__h.forEach(g$1),t.__h=t.__h.filter(function(n){return !n.__||j$1(n)});}catch(r){u.some(function(n){n.__h&&(n.__h=[]);}),u=[],n.__e(r,t.__v);}}),a$1&&a$1(t,u);},n.unmount=function(t){v$1&&v$1(t);var u=t.__c;if(u&&u.__H)try{u.__H.__.forEach(g$1);}catch(t){n.__e(t,u.__v);}};var b$1="function"==typeof requestAnimationFrame;function g$1(n){var t=u$1;"function"==typeof n.__c&&n.__c(),u$1=t;}function j$1(n){var t=u$1;n.__c=n.__(),u$1=t;}function k$1(n,t){return !n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}
+    var t$1,u$1,r$1,o$1=0,i$1=[],c$1=n.__b,f$1=n.__r,e$1=n.diffed,a$1=n.__c,v$1=n.unmount;function m$1(t,r){n.__h&&n.__h(u$1,t,o$1||r),o$1=0;var i=u$1.__H||(u$1.__H={__:[],__h:[]});return t>=i.__.length&&i.__.push({}),i.__[t]}function y$1(r,o){var i=m$1(t$1++,3);!n.__s&&k$1(i.__H,o)&&(i.__=r,i.__H=o,u$1.__H.__h.push(i));}function s$1(n){return o$1=5,d$1(function(){return {current:n}},[])}function d$1(n,u){var r=m$1(t$1++,7);return k$1(r.__H,u)&&(r.__=n(),r.__H=u,r.__h=n),r.__}function x$1(){i$1.forEach(function(t){if(t.__P)try{t.__H.__h.forEach(g$1),t.__H.__h.forEach(j$1),t.__H.__h=[];}catch(u){t.__H.__h=[],n.__e(u,t.__v);}}),i$1=[];}n.__b=function(n){u$1=null,c$1&&c$1(n);},n.__r=function(n){f$1&&f$1(n),t$1=0;var r=(u$1=n.__c).__H;r&&(r.__h.forEach(g$1),r.__h.forEach(j$1),r.__h=[]);},n.diffed=function(t){e$1&&e$1(t);var o=t.__c;o&&o.__H&&o.__H.__h.length&&(1!==i$1.push(o)&&r$1===n.requestAnimationFrame||((r$1=n.requestAnimationFrame)||function(n){var t,u=function(){clearTimeout(r),b$1&&cancelAnimationFrame(t),setTimeout(n);},r=setTimeout(u,100);b$1&&(t=requestAnimationFrame(u));})(x$1)),u$1=void 0;},n.__c=function(t,u){u.some(function(t){try{t.__h.forEach(g$1),t.__h=t.__h.filter(function(n){return !n.__||j$1(n)});}catch(r){u.some(function(n){n.__h&&(n.__h=[]);}),u=[],n.__e(r,t.__v);}}),a$1&&a$1(t,u);},n.unmount=function(t){v$1&&v$1(t);var u=t.__c;if(u&&u.__H)try{u.__H.__.forEach(g$1);}catch(t){n.__e(t,u.__v);}};var b$1="function"==typeof requestAnimationFrame;function g$1(n){var t=u$1;"function"==typeof n.__c&&n.__c(),u$1=t;}function j$1(n){var t=u$1;n.__c=n.__(),u$1=t;}function k$1(n,t){return !n||n.length!==t.length||t.some(function(t,u){return t!==n[u]})}
 
     exports.BaseActions = BaseActions;
     exports.BaseComponent = BaseComponent;
     exports.BaseStore = BaseStore;
     exports.Cell = Cell;
-    exports.Component = d;
+    exports.Component = p;
     exports.Config = Config;
     exports.Dispatcher = Dispatcher;
     exports.Grid = Grid;
     exports.PluginBaseComponent = PluginBaseComponent;
     exports.Row = Row;
     exports.className = className;
-    exports.createElement = v;
-    exports.createRef = y;
-    exports.h = v;
+    exports.createElement = a;
+    exports.createRef = h;
+    exports.h = a;
     exports.html = html;
     exports.useEffect = y$1;
     exports.useRef = s$1;

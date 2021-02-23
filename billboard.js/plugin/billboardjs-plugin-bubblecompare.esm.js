@@ -5,7 +5,7 @@
  * billboard.js, JavaScript chart library
  * https://naver.github.io/billboard.js/
  * 
- * @version 2.1.4
+ * @version 2.2.3
  * @requires billboard.js
  * @summary billboard.js plugin
 */
@@ -42,16 +42,8 @@ function __extends(d, b) {
     this.constructor = d;
   }
 
+  if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + (b + "") + " is not a constructor or null");
   _extendStatics(d, b), d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-}
-
-function _defineProperty(obj, key, value) {
-  return key in obj ? Object.defineProperty(obj, key, {
-    value: value,
-    enumerable: !0,
-    configurable: !0,
-    writable: !0
-  }) : obj[key] = value, obj;
 }
 
 /**
@@ -128,7 +120,7 @@ var Plugin = /*#__PURE__*/function () {
   }, Plugin;
 }();
 
-_defineProperty(Plugin, "version", "#2.1.4#");
+Plugin.version = "#2.2.3#";
 
 /**
  * Bubble compare diagram plugin.<br>

@@ -4,7 +4,7 @@ name: @egjs/flicking
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-flicking
-version: 3.7.1
+version: 3.7.2
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -9146,10 +9146,8 @@ version: 3.7.1
 
         if (panelCount > 0) {
           this.currentPanel = panelManager.get(status.index) || panelManager.get(defaultIndex) || panelManager.firstPanel();
-          this.nearestPanel = this.currentPanel;
         } else {
           this.currentPanel = undefined;
-          this.nearestPanel = undefined;
         }
 
         this.visiblePanels = orderedPanels.filter(function (panel) {
@@ -11308,7 +11306,7 @@ version: 3.7.1
        */
 
 
-      Flicking.VERSION = "3.7.1";
+      Flicking.VERSION = "3.7.2";
       /**
        * Direction constant - "PREV" or "NEXT"
        * @ko 방향 상수 - "PREV" 또는 "NEXT"
