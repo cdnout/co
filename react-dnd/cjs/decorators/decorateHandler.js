@@ -1,33 +1,29 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.decorateHandler = decorateHandler;
 
-var React = _interopRequireWildcard(require("react"));
+var _jsxRuntime = require("react/jsx-runtime");
+
+var _react = require("react");
 
 var _shallowequal = require("@react-dnd/shallowequal");
 
 var _invariant = require("@react-dnd/invariant");
 
-var _hoistNonReactStatics = _interopRequireDefault(require("hoist-non-react-statics"));
-
-var _DndContext = require("../common/DndContext");
-
-var _js_utils = require("../utils/js_utils");
-
-var _disposables = require("./disposables");
+var _core = require("../core");
 
 var _utils = require("./utils");
 
+var _disposables = require("./disposables");
+
+var _hoistNonReactStatics = _interopRequireDefault(require("hoist-non-react-statics"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -76,143 +72,141 @@ function decorateHandler(_ref) {
   var Decorated = DecoratedComponent;
   var displayName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
 
-  var DragDropContainer =
-  /** @class */
-  function () {
-    var DragDropContainer = /*#__PURE__*/function (_React$Component) {
-      _inherits(DragDropContainer, _React$Component);
+  var DragDropContainer = /*#__PURE__*/function (_Component) {
+    _inherits(DragDropContainer, _Component);
 
-      var _super = _createSuper(DragDropContainer);
+    var _super = _createSuper(DragDropContainer);
 
-      function DragDropContainer(props) {
-        var _this;
+    function DragDropContainer(props) {
+      var _this;
 
-        _classCallCheck(this, DragDropContainer);
+      _classCallCheck(this, DragDropContainer);
 
-        _this = _super.call(this, props);
-        _this.decoratedRef = React.createRef();
+      _this = _super.call(this, props);
+      _this.decoratedRef = (0, _react.createRef)();
 
-        _this.handleChange = function () {
-          var nextState = _this.getCurrentState();
+      _this.handleChange = function () {
+        var nextState = _this.getCurrentState();
 
-          if (!(0, _shallowequal.shallowEqual)(nextState, _this.state)) {
-            _this.setState(nextState);
-          }
-        };
+        if (!(0, _shallowequal.shallowEqual)(nextState, _this.state)) {
+          _this.setState(nextState);
+        }
+      };
 
-        _this.disposable = new _disposables.SerialDisposable();
+      _this.disposable = new _disposables.SerialDisposable();
 
-        _this.receiveProps(props);
+      _this.receiveProps(props);
 
-        _this.dispose();
+      _this.dispose();
 
-        return _this;
+      return _this;
+    }
+
+    _createClass(DragDropContainer, [{
+      key: "getHandlerId",
+      value: function getHandlerId() {
+        return this.handlerId;
       }
-
-      _createClass(DragDropContainer, [{
-        key: "getHandlerId",
-        value: function getHandlerId() {
-          return this.handlerId;
-        }
-      }, {
-        key: "getDecoratedComponentInstance",
-        value: function getDecoratedComponentInstance() {
-          (0, _invariant.invariant)(this.decoratedRef.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
-          return this.decoratedRef.current;
-        }
-      }, {
-        key: "shouldComponentUpdate",
-        value: function shouldComponentUpdate(nextProps, nextState) {
-          return !arePropsEqual(nextProps, this.props) || !(0, _shallowequal.shallowEqual)(nextState, this.state);
-        }
-      }, {
-        key: "componentDidMount",
-        value: function componentDidMount() {
-          this.disposable = new _disposables.SerialDisposable();
-          this.currentType = undefined;
+    }, {
+      key: "getDecoratedComponentInstance",
+      value: function getDecoratedComponentInstance() {
+        (0, _invariant.invariant)(this.decoratedRef.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
+        return this.decoratedRef.current;
+      }
+    }, {
+      key: "shouldComponentUpdate",
+      value: function shouldComponentUpdate(nextProps, nextState) {
+        return !arePropsEqual(nextProps, this.props) || !(0, _shallowequal.shallowEqual)(nextState, this.state);
+      }
+    }, {
+      key: "componentDidMount",
+      value: function componentDidMount() {
+        this.disposable = new _disposables.SerialDisposable();
+        this.currentType = undefined;
+        this.receiveProps(this.props);
+        this.handleChange();
+      }
+    }, {
+      key: "componentDidUpdate",
+      value: function componentDidUpdate(prevProps) {
+        if (!arePropsEqual(this.props, prevProps)) {
           this.receiveProps(this.props);
           this.handleChange();
         }
-      }, {
-        key: "componentDidUpdate",
-        value: function componentDidUpdate(prevProps) {
-          if (!arePropsEqual(this.props, prevProps)) {
-            this.receiveProps(this.props);
-            this.handleChange();
-          }
+      }
+    }, {
+      key: "componentWillUnmount",
+      value: function componentWillUnmount() {
+        this.dispose();
+      }
+    }, {
+      key: "receiveProps",
+      value: function receiveProps(props) {
+        if (!this.handler) {
+          return;
         }
-      }, {
-        key: "componentWillUnmount",
-        value: function componentWillUnmount() {
-          this.dispose();
+
+        this.handler.receiveProps(props);
+        this.receiveType(getType(props));
+      }
+    }, {
+      key: "receiveType",
+      value: function receiveType(type) {
+        if (!this.handlerMonitor || !this.manager || !this.handlerConnector) {
+          return;
         }
-      }, {
-        key: "receiveProps",
-        value: function receiveProps(props) {
-          if (!this.handler) {
-            return;
-          }
 
-          this.handler.receiveProps(props);
-          this.receiveType(getType(props));
+        if (type === this.currentType) {
+          return;
         }
-      }, {
-        key: "receiveType",
-        value: function receiveType(type) {
-          if (!this.handlerMonitor || !this.manager || !this.handlerConnector) {
-            return;
-          }
 
-          if (type === this.currentType) {
-            return;
-          }
+        this.currentType = type;
 
-          this.currentType = type;
+        var _registerHandler = registerHandler(type, this.handler, this.manager),
+            _registerHandler2 = _slicedToArray(_registerHandler, 2),
+            handlerId = _registerHandler2[0],
+            unregister = _registerHandler2[1];
 
-          var _registerHandler = registerHandler(type, this.handler, this.manager),
-              _registerHandler2 = _slicedToArray(_registerHandler, 2),
-              handlerId = _registerHandler2[0],
-              unregister = _registerHandler2[1];
+        this.handlerId = handlerId;
+        this.handlerMonitor.receiveHandlerId(handlerId);
+        this.handlerConnector.receiveHandlerId(handlerId);
+        var globalMonitor = this.manager.getMonitor();
+        var unsubscribe = globalMonitor.subscribeToStateChange(this.handleChange, {
+          handlerIds: [handlerId]
+        });
+        this.disposable.setDisposable(new _disposables.CompositeDisposable(new _disposables.Disposable(unsubscribe), new _disposables.Disposable(unregister)));
+      }
+    }, {
+      key: "dispose",
+      value: function dispose() {
+        this.disposable.dispose();
 
-          this.handlerId = handlerId;
-          this.handlerMonitor.receiveHandlerId(handlerId);
-          this.handlerConnector.receiveHandlerId(handlerId);
-          var globalMonitor = this.manager.getMonitor();
-          var unsubscribe = globalMonitor.subscribeToStateChange(this.handleChange, {
-            handlerIds: [handlerId]
-          });
-          this.disposable.setDisposable(new _disposables.CompositeDisposable(new _disposables.Disposable(unsubscribe), new _disposables.Disposable(unregister)));
+        if (this.handlerConnector) {
+          this.handlerConnector.receiveHandlerId(null);
         }
-      }, {
-        key: "dispose",
-        value: function dispose() {
-          this.disposable.dispose();
-
-          if (this.handlerConnector) {
-            this.handlerConnector.receiveHandlerId(null);
-          }
+      }
+    }, {
+      key: "getCurrentState",
+      value: function getCurrentState() {
+        if (!this.handlerConnector) {
+          return {};
         }
-      }, {
-        key: "getCurrentState",
-        value: function getCurrentState() {
-          if (!this.handlerConnector) {
-            return {};
-          }
 
-          var nextState = collect(this.handlerConnector.hooks, this.handlerMonitor, this.props);
+        var nextState = collect(this.handlerConnector.hooks, this.handlerMonitor, this.props);
 
-          if (process.env.NODE_ENV !== 'production') {
-            (0, _invariant.invariant)((0, _js_utils.isPlainObject)(nextState), 'Expected `collect` specified as the second argument to ' + '%s for %s to return a plain object of props to inject. ' + 'Instead, received %s.', containerDisplayName, displayName, nextState);
-          }
-
-          return nextState;
+        if (process.env.NODE_ENV !== 'production') {
+          (0, _invariant.invariant)((0, _utils.isPlainObject)(nextState), 'Expected `collect` specified as the second argument to ' + '%s for %s to return a plain object of props to inject. ' + 'Instead, received %s.', containerDisplayName, displayName, nextState);
         }
-      }, {
-        key: "render",
-        value: function render() {
-          var _this2 = this;
 
-          return React.createElement(_DndContext.DndContext.Consumer, null, function (_ref2) {
+        return nextState;
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var _this2 = this;
+
+        return (0, _jsxRuntime.jsx)(_core.DndContext.Consumer, {
+          children: function children(_ref2) {
             var dragDropManager = _ref2.dragDropManager;
 
             _this2.receiveDragDropManager(dragDropManager);
@@ -225,39 +219,37 @@ function decorateHandler(_ref) {
               });
             }
 
-            return React.createElement(Decorated, Object.assign({}, _this2.props, _this2.getCurrentState(), {
+            return (0, _jsxRuntime.jsx)(Decorated, Object.assign({}, _this2.props, _this2.getCurrentState(), {
               // NOTE: if Decorated is a Function Component, decoratedRef will not be populated unless it's a refforwarding component.
               ref: (0, _utils.isRefable)(Decorated) ? _this2.decoratedRef : null
-            }));
-          });
-        }
-      }, {
-        key: "receiveDragDropManager",
-        value: function receiveDragDropManager(dragDropManager) {
-          if (this.manager !== undefined) {
-            return;
+            }), void 0);
           }
-
-          (0, _invariant.invariant)(dragDropManager !== undefined, 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
-
-          if (dragDropManager === undefined) {
-            return;
-          }
-
-          this.manager = dragDropManager;
-          this.handlerMonitor = createMonitor(dragDropManager);
-          this.handlerConnector = createConnector(dragDropManager.getBackend());
-          this.handler = createHandler(this.handlerMonitor, this.decoratedRef);
+        }, void 0);
+      }
+    }, {
+      key: "receiveDragDropManager",
+      value: function receiveDragDropManager(dragDropManager) {
+        if (this.manager !== undefined) {
+          return;
         }
-      }]);
 
-      return DragDropContainer;
-    }(React.Component);
+        (0, _invariant.invariant)(dragDropManager !== undefined, 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
 
-    DragDropContainer.DecoratedComponent = DecoratedComponent;
-    DragDropContainer.displayName = "".concat(containerDisplayName, "(").concat(displayName, ")");
+        if (dragDropManager === undefined) {
+          return;
+        }
+
+        this.manager = dragDropManager;
+        this.handlerMonitor = createMonitor(dragDropManager);
+        this.handlerConnector = createConnector(dragDropManager.getBackend());
+        this.handler = createHandler(this.handlerMonitor, this.decoratedRef);
+      }
+    }]);
+
     return DragDropContainer;
-  }();
+  }(_react.Component);
 
+  DragDropContainer.DecoratedComponent = DecoratedComponent;
+  DragDropContainer.displayName = "".concat(containerDisplayName, "(").concat(displayName, ")");
   return (0, _hoistNonReactStatics.default)(DragDropContainer, DecoratedComponent);
 }

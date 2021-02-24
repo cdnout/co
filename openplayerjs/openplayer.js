@@ -1667,6 +1667,9 @@ var Player = function () {
       },
       mode: 'responsive',
       onError: function onError() {},
+      progress: {
+        duration: 0
+      },
       showLoaderOnInit: false,
       startTime: 0,
       startVolume: 1,
@@ -1882,6 +1885,27 @@ var Player = function () {
       this.element.dispatchEvent(e);
     }
   }, {
+    key: "removeControl",
+    value: function removeControl(controlName) {
+      var _this2 = this;
+
+      var layers = this.getOptions().controls.layers;
+      Object.keys(layers).forEach(function (layer) {
+        layers[layer].forEach(function (item, idx) {
+          if (item === controlName) {
+            layers[layer].splice(idx, 1);
+          }
+        });
+      });
+      this.customControlItems.forEach(function (item, idx) {
+        if (item.id === controlName) {
+          _this2.customControlItems.splice(idx, 1);
+        }
+      });
+      var e = events_1.addEvent('controlschanged');
+      this.element.dispatchEvent(e);
+    }
+  }, {
     key: "_prepareMedia",
     value: function _prepareMedia() {
       try {
@@ -2015,7 +2039,7 @@ var Player = function () {
   }, {
     key: "_createPlayButton",
     value: function _createPlayButton() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (general_1.isAudio(this.element)) {
         return;
@@ -2039,170 +2063,170 @@ var Player = function () {
       }
 
       this.playBtn.addEventListener('click', function () {
-        if (_this2.adsInstance) {
-          _this2.adsInstance.playRequested = _this2.activeElement().paused;
+        if (_this3.adsInstance) {
+          _this3.adsInstance.playRequested = _this3.activeElement().paused;
         }
 
-        if (_this2.activeElement().paused) {
-          _this2.activeElement().play();
+        if (_this3.activeElement().paused) {
+          _this3.activeElement().play();
         } else {
-          _this2.activeElement().pause();
+          _this3.activeElement().pause();
         }
       }, constants_1.EVENT_OPTIONS);
     }
   }, {
     key: "_setEvents",
     value: function _setEvents() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (general_1.isVideo(this.element)) {
         this.events.loadedmetadata = function () {
-          var el = _this3.activeElement();
+          var el = _this4.activeElement();
 
-          if (_this3.options.showLoaderOnInit && !constants_1.IS_IOS && !constants_1.IS_ANDROID) {
-            _this3.loader.setAttribute('aria-hidden', 'false');
+          if (_this4.options.showLoaderOnInit && !constants_1.IS_IOS && !constants_1.IS_ANDROID) {
+            _this4.loader.setAttribute('aria-hidden', 'false');
 
-            _this3.playBtn.setAttribute('aria-hidden', 'true');
+            _this4.playBtn.setAttribute('aria-hidden', 'true');
           } else {
-            _this3.loader.setAttribute('aria-hidden', 'true');
+            _this4.loader.setAttribute('aria-hidden', 'true');
 
-            _this3.playBtn.setAttribute('aria-hidden', 'false');
+            _this4.playBtn.setAttribute('aria-hidden', 'false');
           }
 
           if (el.paused) {
-            _this3.playBtn.classList.remove('op-player__play--paused');
+            _this4.playBtn.classList.remove('op-player__play--paused');
 
-            _this3.playBtn.setAttribute('aria-pressed', 'false');
+            _this4.playBtn.setAttribute('aria-pressed', 'false');
           }
         };
 
         this.events.waiting = function () {
-          _this3.playBtn.setAttribute('aria-hidden', 'true');
+          _this4.playBtn.setAttribute('aria-hidden', 'true');
 
-          _this3.loader.setAttribute('aria-hidden', 'false');
+          _this4.loader.setAttribute('aria-hidden', 'false');
         };
 
         this.events.seeking = function () {
-          var el = _this3.activeElement();
+          var el = _this4.activeElement();
 
-          _this3.playBtn.setAttribute('aria-hidden', 'true');
+          _this4.playBtn.setAttribute('aria-hidden', 'true');
 
-          _this3.loader.setAttribute('aria-hidden', el instanceof media_1["default"] ? 'false' : 'true');
+          _this4.loader.setAttribute('aria-hidden', el instanceof media_1["default"] ? 'false' : 'true');
         };
 
         this.events.seeked = function () {
-          var el = _this3.activeElement();
+          var el = _this4.activeElement();
 
           if (Math.round(el.currentTime) === 0) {
-            _this3.playBtn.setAttribute('aria-hidden', 'true');
+            _this4.playBtn.setAttribute('aria-hidden', 'true');
 
-            _this3.loader.setAttribute('aria-hidden', 'false');
+            _this4.loader.setAttribute('aria-hidden', 'false');
           } else {
-            _this3.playBtn.setAttribute('aria-hidden', el instanceof media_1["default"] ? 'false' : 'true');
+            _this4.playBtn.setAttribute('aria-hidden', el instanceof media_1["default"] ? 'false' : 'true');
 
-            _this3.loader.setAttribute('aria-hidden', 'true');
+            _this4.loader.setAttribute('aria-hidden', 'true');
           }
         };
 
         this.events.play = function () {
-          _this3.playBtn.classList.add('op-player__play--paused');
+          _this4.playBtn.classList.add('op-player__play--paused');
 
-          _this3.playBtn.title = _this3.options.labels.pause;
+          _this4.playBtn.title = _this4.options.labels.pause;
 
-          _this3.loader.setAttribute('aria-hidden', 'true');
+          _this4.loader.setAttribute('aria-hidden', 'true');
 
-          if (_this3.options.showLoaderOnInit) {
-            _this3.playBtn.setAttribute('aria-hidden', 'true');
+          if (_this4.options.showLoaderOnInit) {
+            _this4.playBtn.setAttribute('aria-hidden', 'true');
           } else {
             setTimeout(function () {
-              _this3.playBtn.setAttribute('aria-hidden', 'true');
-            }, _this3.options.hidePlayBtnTimer);
+              _this4.playBtn.setAttribute('aria-hidden', 'true');
+            }, _this4.options.hidePlayBtnTimer);
           }
         };
 
         this.events.playing = function () {
-          _this3.loader.setAttribute('aria-hidden', 'true');
+          _this4.loader.setAttribute('aria-hidden', 'true');
 
-          _this3.playBtn.setAttribute('aria-hidden', 'true');
+          _this4.playBtn.setAttribute('aria-hidden', 'true');
         };
 
         this.events.pause = function () {
-          var el = _this3.activeElement();
+          var el = _this4.activeElement();
 
-          _this3.playBtn.classList.remove('op-player__play--paused');
+          _this4.playBtn.classList.remove('op-player__play--paused');
 
-          _this3.playBtn.title = _this3.options.labels.play;
+          _this4.playBtn.title = _this4.options.labels.play;
 
-          if (_this3.options.showLoaderOnInit && Math.round(el.currentTime) === 0) {
-            _this3.playBtn.setAttribute('aria-hidden', 'true');
+          if (_this4.options.showLoaderOnInit && Math.round(el.currentTime) === 0) {
+            _this4.playBtn.setAttribute('aria-hidden', 'true');
 
-            _this3.loader.setAttribute('aria-hidden', 'false');
+            _this4.loader.setAttribute('aria-hidden', 'false');
           } else {
-            _this3.playBtn.setAttribute('aria-hidden', 'false');
+            _this4.playBtn.setAttribute('aria-hidden', 'false');
 
-            _this3.loader.setAttribute('aria-hidden', 'true');
+            _this4.loader.setAttribute('aria-hidden', 'true');
           }
         };
 
         this.events.ended = function () {
-          _this3.loader.setAttribute('aria-hidden', 'true');
+          _this4.loader.setAttribute('aria-hidden', 'true');
 
-          _this3.playBtn.setAttribute('aria-hidden', 'true');
+          _this4.playBtn.setAttribute('aria-hidden', 'true');
         };
       }
 
       Object.keys(this.events).forEach(function (event) {
-        _this3.element.addEventListener(event, _this3.events[event], constants_1.EVENT_OPTIONS);
+        _this4.element.addEventListener(event, _this4.events[event], constants_1.EVENT_OPTIONS);
       });
     }
   }, {
     key: "_autoplay",
     value: function _autoplay() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (!this.processedAutoplay) {
         this.processedAutoplay = true;
         this.element.removeEventListener('canplay', this._autoplay.bind(this));
         media_2.isAutoplaySupported(this.element, function (autoplay) {
-          _this4.canAutoplay = autoplay;
+          _this5.canAutoplay = autoplay;
         }, function (muted) {
-          _this4.canAutoplayMuted = muted;
+          _this5.canAutoplayMuted = muted;
         }, function () {
-          if (_this4.canAutoplayMuted) {
-            _this4.activeElement().muted = true;
-            _this4.activeElement().volume = 0;
+          if (_this5.canAutoplayMuted) {
+            _this5.activeElement().muted = true;
+            _this5.activeElement().volume = 0;
             var e = events_1.addEvent('volumechange');
 
-            _this4.element.dispatchEvent(e);
+            _this5.element.dispatchEvent(e);
 
             var volumeEl = document.createElement('div');
-            var action = constants_1.IS_IOS || constants_1.IS_ANDROID ? _this4.options.labels.tap : _this4.options.labels.click;
+            var action = constants_1.IS_IOS || constants_1.IS_ANDROID ? _this5.options.labels.tap : _this5.options.labels.click;
             volumeEl.className = 'op-player__unmute';
             volumeEl.innerHTML = "<span>".concat(action, "</span>");
             volumeEl.tabIndex = 0;
             volumeEl.addEventListener('click', function () {
-              _this4.activeElement().muted = false;
-              _this4.activeElement().volume = _this4.volume;
+              _this5.activeElement().muted = false;
+              _this5.activeElement().volume = _this5.volume;
               var event = events_1.addEvent('volumechange');
 
-              _this4.element.dispatchEvent(event);
+              _this5.element.dispatchEvent(event);
 
               general_1.removeElement(volumeEl);
             }, constants_1.EVENT_OPTIONS);
 
-            var target = _this4.getContainer();
+            var target = _this5.getContainer();
 
             target.insertBefore(volumeEl, target.firstChild);
           } else {
-            _this4.activeElement().muted = _this4.element.muted;
-            _this4.activeElement().volume = _this4.volume;
+            _this5.activeElement().muted = _this5.element.muted;
+            _this5.activeElement().volume = _this5.volume;
           }
 
-          if (_this4.ads) {
-            var adsOptions = _this4.options && _this4.options.ads ? _this4.options.ads : undefined;
-            _this4.adsInstance = new ads_1["default"](_this4, _this4.ads, _this4.canAutoplay, _this4.canAutoplayMuted, adsOptions);
-          } else if (_this4.canAutoplay || _this4.canAutoplayMuted) {
-            return _this4.play();
+          if (_this5.ads) {
+            var adsOptions = _this5.options && _this5.options.ads ? _this5.options.ads : undefined;
+            _this5.adsInstance = new ads_1["default"](_this5, _this5.ads, _this5.canAutoplay, _this5.canAutoplayMuted, adsOptions);
+          } else if (_this5.canAutoplay || _this5.canAutoplayMuted) {
+            return _this5.play();
           }
         });
       }
@@ -2210,14 +2234,14 @@ var Player = function () {
   }, {
     key: "_mergeOptions",
     value: function _mergeOptions(playerOptions) {
-      var _this5 = this;
+      var _this6 = this;
 
       this.options = Object.assign(Object.assign({}, this.defaultOptions), playerOptions);
 
       if (playerOptions) {
         var objectElements = ['labels', 'controls'];
         objectElements.forEach(function (item) {
-          _this5.options[item] = playerOptions[item] && Object.keys(playerOptions[item]).length ? Object.assign(Object.assign({}, _this5.defaultOptions[item]), playerOptions[item]) : _this5.defaultOptions[item];
+          _this6.options[item] = playerOptions[item] && Object.keys(playerOptions[item]).length ? Object.assign(Object.assign({}, _this6.defaultOptions[item]), playerOptions[item]) : _this6.defaultOptions[item];
         });
       }
     }
@@ -5095,8 +5119,40 @@ var Controls = function () {
       this.controls.dispatchEvent(e);
     }
   }, {
+    key: "_hideCustomMenu",
+    value: function _hideCustomMenu(menu) {
+      var timeout;
+
+      if (timeout && typeof window !== 'undefined') {
+        window.cancelAnimationFrame(timeout);
+      }
+
+      if (typeof window !== 'undefined') {
+        timeout = window.requestAnimationFrame(function () {
+          menu.setAttribute('aria-hidden', 'true');
+        });
+      }
+    }
+  }, {
+    key: "_toggleCustomMenu",
+    value: function _toggleCustomMenu(event, menu, item) {
+      var menus = this.player.getContainer().querySelectorAll('.op-settings');
+      menus.forEach(function (m) {
+        if (m.getAttribute('aria-hidden') === 'false' && m.id !== menu.id) {
+          m.setAttribute('aria-hidden', 'true');
+        }
+      });
+      menu.setAttribute('aria-hidden', menu.getAttribute('aria-hidden') === 'true' ? 'false' : 'true');
+
+      if (typeof item.click === 'function') {
+        item.click(event);
+      }
+    }
+  }, {
     key: "_createCustomControl",
     value: function _createCustomControl(item) {
+      var _this6 = this;
+
       var control = document.createElement('button');
       var icon = /\.(jpg|png|svg|gif)$/.test(item.icon) ? "<img src=\"".concat(item.icon, "\">") : item.icon;
       control.className = "op-controls__".concat(item.id, " op-control__").concat(item.position, " ").concat(item.showInAds ? '' : 'op-control__hide-in-ad');
@@ -5104,7 +5160,39 @@ var Controls = function () {
       control.id = item.id;
       control.title = item.title;
       control.innerHTML = "".concat(icon, " <span class=\"op-sr\">").concat(item.title, "</span>");
-      control.addEventListener('click', item.click, constants_1.EVENT_OPTIONS);
+
+      if (item.subitems && Array.isArray(item.subitems) && item.subitems.length > 0) {
+        var menu = document.createElement('div');
+        menu.className = 'op-settings op-settings__custom';
+        menu.id = "".concat(item.id, "-menu");
+        menu.setAttribute('aria-hidden', 'true');
+        var items = item.subitems.map(function (s) {
+          var itemIcon = '';
+
+          if (s.icon) {
+            itemIcon = /\.(jpg|png|svg|gif)$/.test(s.icon) ? "<img src=\"".concat(s.icon, "\">") : s.icon;
+          }
+
+          return "<div class=\"op-settings__menu-item\" tabindex=\"0\" ".concat(s.title ? "title=\"".concat(s.title, "\"") : '', " role=\"menuitemradio\">\n                    <div class=\"op-settings__menu-label\" id=\"").concat(s.id, "\" data-value=\"").concat(item.id, "-").concat(s.id, "\">").concat(itemIcon, " ").concat(s.label, "</div>\n                </div>");
+        });
+        menu.innerHTML = "<div class=\"op-settings__menu\" role=\"menu\">".concat(items.join(''), "</div>");
+        this.player.getContainer().appendChild(menu);
+        item.subitems.forEach(function (subitem) {
+          var menuItem = menu.querySelector("#".concat(subitem.id));
+
+          if (menuItem && subitem.click && typeof subitem.click === 'function') {
+            menuItem.addEventListener('click', subitem.click, constants_1.EVENT_OPTIONS);
+          }
+        });
+        control.addEventListener('click', function (e) {
+          return _this6._toggleCustomMenu(e, menu, item);
+        }, constants_1.EVENT_OPTIONS);
+        this.player.getElement().addEventListener('controlshidden', function () {
+          return _this6._hideCustomMenu(menu);
+        }, constants_1.EVENT_OPTIONS);
+      } else if (typeof item.click === 'function') {
+        control.addEventListener('click', item.click, constants_1.EVENT_OPTIONS);
+      }
 
       if (item.layer) {
         if (item.layer === 'main') {
@@ -5117,11 +5205,37 @@ var Controls = function () {
   }, {
     key: "_destroyCustomControl",
     value: function _destroyCustomControl(item) {
+      var _this7 = this;
+
       var key = item.title.toLowerCase().replace(' ', '-');
       var control = this.getContainer().querySelector(".op-controls__".concat(key));
 
       if (control) {
-        control.removeEventListener('click', item.click);
+        if (item.subitems && Array.isArray(item.subitems) && item.subitems.length > 0) {
+          var menu = this.player.getContainer().querySelector("#".concat(item.id, "-menu"));
+
+          if (menu) {
+            item.subitems.forEach(function (subitem) {
+              var menuItem = menu.querySelector("#".concat(subitem.id));
+
+              if (menuItem && subitem.click && typeof subitem.click === 'function') {
+                menuItem.removeEventListener('click', subitem.click);
+              }
+            });
+            control.removeEventListener('click', function (e) {
+              return _this7._toggleCustomMenu(e, menu, item);
+            });
+            this.player.getElement().removeEventListener('controlshidden', function () {
+              return _this7._hideCustomMenu(menu);
+            });
+            general_1.removeElement(menu);
+          }
+        }
+
+        if (typeof item.click === 'function') {
+          control.removeEventListener('click', item.click);
+        }
+
         general_1.removeElement(control);
       }
     }
@@ -5223,12 +5337,7 @@ var Captions = function () {
         this.menu = document.createElement('div');
         this.menu.className = 'op-settings op-captions__menu';
         this.menu.setAttribute('aria-hidden', 'true');
-        this.button.classList.add('op-control--no-hover');
-        this.menu = document.createElement('div');
-        this.menu.className = 'op-settings op-captions__menu';
-        this.menu.setAttribute('aria-hidden', 'true');
         this.menu.innerHTML = "<div class=\"op-settings__menu\" role=\"menu\" id=\"menu-item-captions\">\n                <div class=\"op-settings__submenu-item\" tabindex=\"0\" role=\"menuitemradio\" aria-checked=\"".concat(this["default"] === 'off' ? 'true' : 'false', "\">\n                    <div class=\"op-settings__submenu-label op-subtitles__option\" data-value=\"captions-off\">").concat(this.labels.off, "</div>\n                </div>\n            </div>");
-        this.player.getControls().getLayer(this.layer).appendChild(this.menu);
       }
 
       var _loop = function _loop(i, total, _tracks) {
@@ -5377,7 +5486,17 @@ var Captions = function () {
       if (this.hasTracks) {
         var target = this.player.getContainer();
         target.insertBefore(this.captions, target.firstChild);
-        this.player.getControls().getLayer(this.layer).appendChild(this.button);
+
+        if (this.detachMenu) {
+          var itemContainer = document.createElement('div');
+          itemContainer.className = "op-controls__container op-control__".concat(this.position);
+          itemContainer.appendChild(this.button);
+          itemContainer.appendChild(this.menu);
+          this.player.getControls().getLayer(this.layer).appendChild(itemContainer);
+        } else {
+          this.player.getControls().getLayer(this.layer).appendChild(this.button);
+        }
+
         this.button.addEventListener('click', this.events.button.click, constants_1.EVENT_OPTIONS);
       }
 
@@ -6042,8 +6161,6 @@ var Levels = function () {
       this.events.media.hlsManifestParsed = loadLevelsEvent.bind(this);
 
       if (this.detachMenu) {
-        this.player.getControls().getLayer(this.layer).appendChild(this.button);
-
         this._buildMenu();
 
         this.events.button.click = function () {
@@ -6340,7 +6457,11 @@ var Levels = function () {
           return "\n                <div class=\"op-settings__submenu-item\" tabindex=\"0\" role=\"menuitemradio\"\n                    aria-checked=\"".concat(_this4["default"] === item.key ? 'true' : 'false', "\">\n                    <div class=\"op-settings__submenu-label ").concat(className || '', "\" data-value=\"levels-").concat(item.key, "\">").concat(item.label, "</div>\n                </div>");
         }).join(''), "\n            </div>");
         this.menu.innerHTML = menu;
-        this.player.getControls().getLayer(this.layer).appendChild(this.menu);
+        var itemContainer = document.createElement('div');
+        itemContainer.className = "op-controls__container op-control__".concat(this.position);
+        itemContainer.appendChild(this.button);
+        itemContainer.appendChild(this.menu);
+        this.player.getControls().getLayer(this.layer).appendChild(itemContainer);
       }
     }
   }]);
@@ -6737,7 +6858,7 @@ var Progress = function () {
           var max = parseFloat(_this.slider.max);
           _this.slider.value = current.toString();
           _this.slider.style.backgroundSize = "".concat((current - min) * 100 / (max - min), "% 100%");
-          _this.played.value = el.duration <= 0 || isNaN(el.duration) || !isFinite(el.duration) ? 0 : current / el.duration * 100;
+          _this.played.value = el.duration <= 0 || isNaN(el.duration) || !isFinite(el.duration) ? _this.player.getOptions().progress.duration : current / el.duration * 100;
 
           if (_this.player.getElement().getAttribute('op-dvr__enabled') && Math.floor(_this.played.value) >= 99) {
             lastCurrentTime = el.currentTime;
@@ -6758,7 +6879,7 @@ var Progress = function () {
 
         _this.progress.setAttribute('aria-valuemax', el.duration.toString());
 
-        _this.played.value = el.duration <= 0 || isNaN(el.duration) || !isFinite(el.duration) ? 0 : current / el.duration * 100;
+        _this.played.value = el.duration <= 0 || isNaN(el.duration) || !isFinite(el.duration) ? _this.player.getOptions().progress.duration : current / el.duration * 100;
       };
 
       this.events.media.ended = function () {
@@ -6785,7 +6906,7 @@ var Progress = function () {
         var max = parseFloat(target.max);
         var val = parseFloat(target.value);
         _this.slider.style.backgroundSize = "".concat((val - min) * 100 / (max - min), "% 100%");
-        _this.played.value = el.duration <= 0 || isNaN(el.duration) || !isFinite(el.duration) ? 0 : val / el.duration * 100;
+        _this.played.value = el.duration <= 0 || isNaN(el.duration) || !isFinite(el.duration) ? _this.player.getOptions().progress.duration : val / el.duration * 100;
 
         if (_this.player.getElement().getAttribute('op-dvr__enabled')) {
           el.currentTime = Math.round(_this.played.value) >= 99 ? lastCurrentTime : val;
@@ -6936,7 +7057,7 @@ var Progress = function () {
       var isAd = this.player.isAd();
       var key = e.which || e.keyCode || 0;
       var newStep = this.player.getOptions().step ? this.player.getOptions().step : el.duration * 0.05;
-      var step = el.duration !== Infinity ? newStep : 0;
+      var step = el.duration !== Infinity ? newStep : this.player.getOptions().progress.duration;
 
       if (key === 35 && !isAd) {
         el.currentTime = el.duration;
@@ -7333,13 +7454,13 @@ var Time = function () {
       this.duration = document.createElement('time');
       this.duration.className = 'op-controls__duration';
       this.duration.setAttribute('aria-hidden', 'false');
-      this.duration.innerText = '0:00';
+      this.duration.innerText = time_1.formatTime(this.player.getOptions().progress.duration);
 
       var setInitialTime = function setInitialTime() {
         var el = _this.player.activeElement();
 
         if (el.duration !== Infinity && !_this.player.getElement().getAttribute('op-live__enabled')) {
-          var duration = !isNaN(el.duration) ? el.duration : 0;
+          var duration = !isNaN(el.duration) ? el.duration : _this.player.getOptions().progress.duration;
           _this.duration.innerText = time_1.formatTime(duration);
           _this.current.innerText = time_1.formatTime(el.currentTime);
         } else {
@@ -7390,7 +7511,7 @@ var Time = function () {
       this.events.media.ended = function () {
         var el = _this.player.activeElement();
 
-        var duration = !isNaN(el.duration) ? el.duration : 0;
+        var duration = !isNaN(el.duration) ? el.duration : _this.player.getOptions().progress.duration;
 
         if (_this.player.isMedia()) {
           _this.duration.innerText = time_1.formatTime(duration);
@@ -9368,6 +9489,8 @@ var Ads = function () {
           break;
 
         case google.ima.AdEvent.Type.VOLUME_CHANGED:
+          this._setMediaVolume(this.volume);
+
         case google.ima.AdEvent.Type.VOLUME_MUTED:
           if (ad.isLinear()) {
             var volumeEvent = events_1.addEvent('volumechange');
@@ -9399,10 +9522,31 @@ var Ads = function () {
           }
 
           break;
+
+        default:
+          break;
       }
 
-      var e = events_1.addEvent("ads".concat(event.type));
-      this.element.dispatchEvent(e);
+      if (event.type === google.ima.AdEvent.Type.LOG) {
+        var adData = event.getAdData();
+
+        if (adData['adError']) {
+          var message = adData['adError'].getMessage();
+          console.warn("Ad warning: Non-fatal error occurred: ".concat(message));
+          var details = {
+            detail: {
+              data: adData['adError'],
+              message: message,
+              type: 'Ads'
+            }
+          };
+          var errorEvent = events_1.addEvent('playererror', details);
+          this.element.dispatchEvent(errorEvent);
+        }
+      } else {
+        var e = events_1.addEvent("ads".concat(event.type));
+        this.element.dispatchEvent(e);
+      }
     }
   }, {
     key: "_error",
@@ -9465,7 +9609,7 @@ var Ads = function () {
 
       manager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, this._onContentPauseRequested.bind(this), constants_1.EVENT_OPTIONS);
       manager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, this._onContentResumeRequested.bind(this), constants_1.EVENT_OPTIONS);
-      this.events = [google.ima.AdEvent.Type.ALL_ADS_COMPLETED, google.ima.AdEvent.Type.CLICK, google.ima.AdEvent.Type.COMPLETE, google.ima.AdEvent.Type.FIRST_QUARTILE, google.ima.AdEvent.Type.LOADED, google.ima.AdEvent.Type.MIDPOINT, google.ima.AdEvent.Type.PAUSED, google.ima.AdEvent.Type.RESUMED, google.ima.AdEvent.Type.USER_CLOSE, google.ima.AdEvent.Type.STARTED, google.ima.AdEvent.Type.THIRD_QUARTILE, google.ima.AdEvent.Type.SKIPPED, google.ima.AdEvent.Type.VOLUME_CHANGED, google.ima.AdEvent.Type.VOLUME_MUTED];
+      this.events = [google.ima.AdEvent.Type.ALL_ADS_COMPLETED, google.ima.AdEvent.Type.CLICK, google.ima.AdEvent.Type.VIDEO_CLICKED, google.ima.AdEvent.Type.VIDEO_ICON_CLICKED, google.ima.AdEvent.Type.AD_PROGRESS, google.ima.AdEvent.Type.AD_BUFFERING, google.ima.AdEvent.Type.IMPRESSION, google.ima.AdEvent.Type.DURATION_CHANGE, google.ima.AdEvent.Type.USER_CLOSE, google.ima.AdEvent.Type.LINEAR_CHANGED, google.ima.AdEvent.Type.SKIPPABLE_STATE_CHANGED, google.ima.AdEvent.Type.AD_METADATA, google.ima.AdEvent.Type.INTERACTION, google.ima.AdEvent.Type.COMPLETE, google.ima.AdEvent.Type.FIRST_QUARTILE, google.ima.AdEvent.Type.LOADED, google.ima.AdEvent.Type.MIDPOINT, google.ima.AdEvent.Type.PAUSED, google.ima.AdEvent.Type.RESUMED, google.ima.AdEvent.Type.USER_CLOSE, google.ima.AdEvent.Type.STARTED, google.ima.AdEvent.Type.THIRD_QUARTILE, google.ima.AdEvent.Type.SKIPPED, google.ima.AdEvent.Type.VOLUME_CHANGED, google.ima.AdEvent.Type.VOLUME_MUTED, google.ima.AdEvent.Type.LOG];
 
       if (!this.adsOptions.autoPlayAdBreaks) {
         this.events.push(google.ima.AdEvent.Type.AD_BREAK_READY);
@@ -9702,6 +9846,12 @@ var Ads = function () {
       this._resumeMedia();
     }
   }, {
+    key: "_setMediaVolume",
+    value: function _setMediaVolume(volume) {
+      this.media.volume = volume;
+      this.media.muted = volume === 0;
+    }
+  }, {
     key: "playRequested",
     set: function set(value) {
       this.playTriggered = value;
@@ -9712,28 +9862,29 @@ var Ads = function () {
       if (this.adsManager) {
         this.adsVolume = value;
         this.adsManager.setVolume(value);
-        this.media.volume = value;
-        this.media.muted = value === 0;
+
+        this._setMediaVolume(value);
+
         this.adsMuted = value === 0;
       }
     },
     get: function get() {
-      return this.adsVolume;
+      return this.adsManager.getVolume();
     }
   }, {
     key: "muted",
     set: function set(value) {
       if (this.adsManager) {
-        if (value === true) {
+        if (value) {
           this.adsManager.setVolume(0);
           this.adsMuted = true;
-          this.media.muted = true;
-          this.media.volume = 0;
+
+          this._setMediaVolume(0);
         } else {
           this.adsManager.setVolume(this.adsVolume);
           this.adsMuted = false;
-          this.media.muted = false;
-          this.media.volume = this.adsVolume;
+
+          this._setMediaVolume(this.adsVolume);
         }
       }
     },

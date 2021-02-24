@@ -12,7 +12,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 import { useEffect } from 'react';
 import { useDragDropManager } from './useDragDropManager';
-import { useCollector } from './internal/useCollector';
+import { useCollector } from './useCollector';
 /**
  * useDragLayer Hook
  * @param collector The property collector

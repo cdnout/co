@@ -1,6 +1,6 @@
 <?php 
-//$npm_check = "";
-$keyfiles_add = array("");
+$npm_check = "ng-table";
+$keyfiles_add = array("ng-table.min.css");
 $version_limit = "-10";
 $type_s = "jquery";
 ?>

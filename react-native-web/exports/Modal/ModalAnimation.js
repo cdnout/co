@@ -37,7 +37,13 @@ function ModalAnimation(props) {
 
   var wasVisible = useRef(false);
   var isAnimated = animationType && animationType !== 'none';
-  var animationEndCallback = useCallback(function () {
+  var animationEndCallback = useCallback(function (e) {
+    if (e && e.currentTarget !== e.target) {
+      // If the event was generated for something NOT this element we
+      // should ignore it as it's not relevant to us
+      return;
+    }
+
     if (visible) {
       if (onShow) {
         onShow();
@@ -144,7 +150,7 @@ var styles = StyleSheet.create({
     }
   },
   hidden: {
-    display: 'none'
+    opacity: 0
   }
 });
 var animatedSlideInStyles = [styles.container, styles.animatedIn, styles.slideIn];

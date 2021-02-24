@@ -1,6 +1,6 @@
 <?php 
-//$npm_check = "";
-$keyfiles_add = array("");
+$npm_check = "kube";
+$keyfiles_add = array("kube.min.js");
 $version_limit = "-10";
 $type_s = "jquery";
 ?>

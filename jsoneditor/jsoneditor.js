@@ -24,8 +24,8 @@
  * Copyright (c) 2011-2021 Jos de Jong, http://jsoneditoronline.org
  *
  * @author  Jos de Jong, <wjosdejong@gmail.com>
- * @version 9.1.8
- * @date    2021-01-16
+ * @version 9.2.0
+ * @date    2021-02-24
  */
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -45,7 +45,7 @@ return /******/ (function() { // webpackBootstrap
 /***/ (function(module) {
 
 "use strict";
-module.exports = JSON.parse("{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"$id\":\"https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#\",\"description\":\"Meta-schema for $data reference (JSON Schema extension proposal)\",\"type\":\"object\",\"required\":[\"$data\"],\"properties\":{\"$data\":{\"type\":\"string\",\"anyOf\":[{\"format\":\"relative-json-pointer\"},{\"format\":\"json-pointer\"}]}},\"additionalProperties\":false}");
+module.exports = JSON.parse('{"$schema":"http://json-schema.org/draft-07/schema#","$id":"https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#","description":"Meta-schema for $data reference (JSON Schema extension proposal)","type":"object","required":["$data"],"properties":{"$data":{"type":"string","anyOf":[{"format":"relative-json-pointer"},{"format":"json-pointer"}]}},"additionalProperties":false}');
 
 /***/ }),
 
@@ -53,7 +53,7 @@ module.exports = JSON.parse("{\"$schema\":\"http://json-schema.org/draft-07/sche
 /***/ (function(module) {
 
 "use strict";
-module.exports = JSON.parse("{\"id\":\"http://json-schema.org/draft-04/schema#\",\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"description\":\"Core schema meta-schema\",\"definitions\":{\"schemaArray\":{\"type\":\"array\",\"minItems\":1,\"items\":{\"$ref\":\"#\"}},\"positiveInteger\":{\"type\":\"integer\",\"minimum\":0},\"positiveIntegerDefault0\":{\"allOf\":[{\"$ref\":\"#/definitions/positiveInteger\"},{\"default\":0}]},\"simpleTypes\":{\"enum\":[\"array\",\"boolean\",\"integer\",\"null\",\"number\",\"object\",\"string\"]},\"stringArray\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"minItems\":1,\"uniqueItems\":true}},\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"$schema\":{\"type\":\"string\"},\"title\":{\"type\":\"string\"},\"description\":{\"type\":\"string\"},\"default\":{},\"multipleOf\":{\"type\":\"number\",\"minimum\":0,\"exclusiveMinimum\":true},\"maximum\":{\"type\":\"number\"},\"exclusiveMaximum\":{\"type\":\"boolean\",\"default\":false},\"minimum\":{\"type\":\"number\"},\"exclusiveMinimum\":{\"type\":\"boolean\",\"default\":false},\"maxLength\":{\"$ref\":\"#/definitions/positiveInteger\"},\"minLength\":{\"$ref\":\"#/definitions/positiveIntegerDefault0\"},\"pattern\":{\"type\":\"string\",\"format\":\"regex\"},\"additionalItems\":{\"anyOf\":[{\"type\":\"boolean\"},{\"$ref\":\"#\"}],\"default\":{}},\"items\":{\"anyOf\":[{\"$ref\":\"#\"},{\"$ref\":\"#/definitions/schemaArray\"}],\"default\":{}},\"maxItems\":{\"$ref\":\"#/definitions/positiveInteger\"},\"minItems\":{\"$ref\":\"#/definitions/positiveIntegerDefault0\"},\"uniqueItems\":{\"type\":\"boolean\",\"default\":false},\"maxProperties\":{\"$ref\":\"#/definitions/positiveInteger\"},\"minProperties\":{\"$ref\":\"#/definitions/positiveIntegerDefault0\"},\"required\":{\"$ref\":\"#/definitions/stringArray\"},\"additionalProperties\":{\"anyOf\":[{\"type\":\"boolean\"},{\"$ref\":\"#\"}],\"default\":{}},\"definitions\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"properties\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"patternProperties\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"dependencies\":{\"type\":\"object\",\"additionalProperties\":{\"anyOf\":[{\"$ref\":\"#\"},{\"$ref\":\"#/definitions/stringArray\"}]}},\"enum\":{\"type\":\"array\",\"minItems\":1,\"uniqueItems\":true},\"type\":{\"anyOf\":[{\"$ref\":\"#/definitions/simpleTypes\"},{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/simpleTypes\"},\"minItems\":1,\"uniqueItems\":true}]},\"format\":{\"type\":\"string\"},\"allOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"anyOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"oneOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"not\":{\"$ref\":\"#\"}},\"dependencies\":{\"exclusiveMaximum\":[\"maximum\"],\"exclusiveMinimum\":[\"minimum\"]},\"default\":{}}");
+module.exports = JSON.parse('{"id":"http://json-schema.org/draft-04/schema#","$schema":"http://json-schema.org/draft-04/schema#","description":"Core schema meta-schema","definitions":{"schemaArray":{"type":"array","minItems":1,"items":{"$ref":"#"}},"positiveInteger":{"type":"integer","minimum":0},"positiveIntegerDefault0":{"allOf":[{"$ref":"#/definitions/positiveInteger"},{"default":0}]},"simpleTypes":{"enum":["array","boolean","integer","null","number","object","string"]},"stringArray":{"type":"array","items":{"type":"string"},"minItems":1,"uniqueItems":true}},"type":"object","properties":{"id":{"type":"string"},"$schema":{"type":"string"},"title":{"type":"string"},"description":{"type":"string"},"default":{},"multipleOf":{"type":"number","minimum":0,"exclusiveMinimum":true},"maximum":{"type":"number"},"exclusiveMaximum":{"type":"boolean","default":false},"minimum":{"type":"number"},"exclusiveMinimum":{"type":"boolean","default":false},"maxLength":{"$ref":"#/definitions/positiveInteger"},"minLength":{"$ref":"#/definitions/positiveIntegerDefault0"},"pattern":{"type":"string","format":"regex"},"additionalItems":{"anyOf":[{"type":"boolean"},{"$ref":"#"}],"default":{}},"items":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/schemaArray"}],"default":{}},"maxItems":{"$ref":"#/definitions/positiveInteger"},"minItems":{"$ref":"#/definitions/positiveIntegerDefault0"},"uniqueItems":{"type":"boolean","default":false},"maxProperties":{"$ref":"#/definitions/positiveInteger"},"minProperties":{"$ref":"#/definitions/positiveIntegerDefault0"},"required":{"$ref":"#/definitions/stringArray"},"additionalProperties":{"anyOf":[{"type":"boolean"},{"$ref":"#"}],"default":{}},"definitions":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"properties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"patternProperties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"dependencies":{"type":"object","additionalProperties":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/stringArray"}]}},"enum":{"type":"array","minItems":1,"uniqueItems":true},"type":{"anyOf":[{"$ref":"#/definitions/simpleTypes"},{"type":"array","items":{"$ref":"#/definitions/simpleTypes"},"minItems":1,"uniqueItems":true}]},"format":{"type":"string"},"allOf":{"$ref":"#/definitions/schemaArray"},"anyOf":{"$ref":"#/definitions/schemaArray"},"oneOf":{"$ref":"#/definitions/schemaArray"},"not":{"$ref":"#"}},"dependencies":{"exclusiveMaximum":["maximum"],"exclusiveMinimum":["minimum"]},"default":{}}');
 
 /***/ }),
 
@@ -61,7 +61,7 @@ module.exports = JSON.parse("{\"id\":\"http://json-schema.org/draft-04/schema#\"
 /***/ (function(module) {
 
 "use strict";
-module.exports = JSON.parse("{\"$schema\":\"http://json-schema.org/draft-06/schema#\",\"$id\":\"http://json-schema.org/draft-06/schema#\",\"title\":\"Core schema meta-schema\",\"definitions\":{\"schemaArray\":{\"type\":\"array\",\"minItems\":1,\"items\":{\"$ref\":\"#\"}},\"nonNegativeInteger\":{\"type\":\"integer\",\"minimum\":0},\"nonNegativeIntegerDefault0\":{\"allOf\":[{\"$ref\":\"#/definitions/nonNegativeInteger\"},{\"default\":0}]},\"simpleTypes\":{\"enum\":[\"array\",\"boolean\",\"integer\",\"null\",\"number\",\"object\",\"string\"]},\"stringArray\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"uniqueItems\":true,\"default\":[]}},\"type\":[\"object\",\"boolean\"],\"properties\":{\"$id\":{\"type\":\"string\",\"format\":\"uri-reference\"},\"$schema\":{\"type\":\"string\",\"format\":\"uri\"},\"$ref\":{\"type\":\"string\",\"format\":\"uri-reference\"},\"title\":{\"type\":\"string\"},\"description\":{\"type\":\"string\"},\"default\":{},\"examples\":{\"type\":\"array\",\"items\":{}},\"multipleOf\":{\"type\":\"number\",\"exclusiveMinimum\":0},\"maximum\":{\"type\":\"number\"},\"exclusiveMaximum\":{\"type\":\"number\"},\"minimum\":{\"type\":\"number\"},\"exclusiveMinimum\":{\"type\":\"number\"},\"maxLength\":{\"$ref\":\"#/definitions/nonNegativeInteger\"},\"minLength\":{\"$ref\":\"#/definitions/nonNegativeIntegerDefault0\"},\"pattern\":{\"type\":\"string\",\"format\":\"regex\"},\"additionalItems\":{\"$ref\":\"#\"},\"items\":{\"anyOf\":[{\"$ref\":\"#\"},{\"$ref\":\"#/definitions/schemaArray\"}],\"default\":{}},\"maxItems\":{\"$ref\":\"#/definitions/nonNegativeInteger\"},\"minItems\":{\"$ref\":\"#/definitions/nonNegativeIntegerDefault0\"},\"uniqueItems\":{\"type\":\"boolean\",\"default\":false},\"contains\":{\"$ref\":\"#\"},\"maxProperties\":{\"$ref\":\"#/definitions/nonNegativeInteger\"},\"minProperties\":{\"$ref\":\"#/definitions/nonNegativeIntegerDefault0\"},\"required\":{\"$ref\":\"#/definitions/stringArray\"},\"additionalProperties\":{\"$ref\":\"#\"},\"definitions\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"properties\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"patternProperties\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"dependencies\":{\"type\":\"object\",\"additionalProperties\":{\"anyOf\":[{\"$ref\":\"#\"},{\"$ref\":\"#/definitions/stringArray\"}]}},\"propertyNames\":{\"$ref\":\"#\"},\"const\":{},\"enum\":{\"type\":\"array\",\"minItems\":1,\"uniqueItems\":true},\"type\":{\"anyOf\":[{\"$ref\":\"#/definitions/simpleTypes\"},{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/simpleTypes\"},\"minItems\":1,\"uniqueItems\":true}]},\"format\":{\"type\":\"string\"},\"allOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"anyOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"oneOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"not\":{\"$ref\":\"#\"}},\"default\":{}}");
+module.exports = JSON.parse('{"$schema":"http://json-schema.org/draft-06/schema#","$id":"http://json-schema.org/draft-06/schema#","title":"Core schema meta-schema","definitions":{"schemaArray":{"type":"array","minItems":1,"items":{"$ref":"#"}},"nonNegativeInteger":{"type":"integer","minimum":0},"nonNegativeIntegerDefault0":{"allOf":[{"$ref":"#/definitions/nonNegativeInteger"},{"default":0}]},"simpleTypes":{"enum":["array","boolean","integer","null","number","object","string"]},"stringArray":{"type":"array","items":{"type":"string"},"uniqueItems":true,"default":[]}},"type":["object","boolean"],"properties":{"$id":{"type":"string","format":"uri-reference"},"$schema":{"type":"string","format":"uri"},"$ref":{"type":"string","format":"uri-reference"},"title":{"type":"string"},"description":{"type":"string"},"default":{},"examples":{"type":"array","items":{}},"multipleOf":{"type":"number","exclusiveMinimum":0},"maximum":{"type":"number"},"exclusiveMaximum":{"type":"number"},"minimum":{"type":"number"},"exclusiveMinimum":{"type":"number"},"maxLength":{"$ref":"#/definitions/nonNegativeInteger"},"minLength":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"pattern":{"type":"string","format":"regex"},"additionalItems":{"$ref":"#"},"items":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/schemaArray"}],"default":{}},"maxItems":{"$ref":"#/definitions/nonNegativeInteger"},"minItems":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"uniqueItems":{"type":"boolean","default":false},"contains":{"$ref":"#"},"maxProperties":{"$ref":"#/definitions/nonNegativeInteger"},"minProperties":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"required":{"$ref":"#/definitions/stringArray"},"additionalProperties":{"$ref":"#"},"definitions":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"properties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"patternProperties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"dependencies":{"type":"object","additionalProperties":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/stringArray"}]}},"propertyNames":{"$ref":"#"},"const":{},"enum":{"type":"array","minItems":1,"uniqueItems":true},"type":{"anyOf":[{"$ref":"#/definitions/simpleTypes"},{"type":"array","items":{"$ref":"#/definitions/simpleTypes"},"minItems":1,"uniqueItems":true}]},"format":{"type":"string"},"allOf":{"$ref":"#/definitions/schemaArray"},"anyOf":{"$ref":"#/definitions/schemaArray"},"oneOf":{"$ref":"#/definitions/schemaArray"},"not":{"$ref":"#"}},"default":{}}');
 
 /***/ }),
 
@@ -69,7 +69,7 @@ module.exports = JSON.parse("{\"$schema\":\"http://json-schema.org/draft-06/sche
 /***/ (function(module) {
 
 "use strict";
-module.exports = JSON.parse("{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"$id\":\"http://json-schema.org/draft-07/schema#\",\"title\":\"Core schema meta-schema\",\"definitions\":{\"schemaArray\":{\"type\":\"array\",\"minItems\":1,\"items\":{\"$ref\":\"#\"}},\"nonNegativeInteger\":{\"type\":\"integer\",\"minimum\":0},\"nonNegativeIntegerDefault0\":{\"allOf\":[{\"$ref\":\"#/definitions/nonNegativeInteger\"},{\"default\":0}]},\"simpleTypes\":{\"enum\":[\"array\",\"boolean\",\"integer\",\"null\",\"number\",\"object\",\"string\"]},\"stringArray\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"uniqueItems\":true,\"default\":[]}},\"type\":[\"object\",\"boolean\"],\"properties\":{\"$id\":{\"type\":\"string\",\"format\":\"uri-reference\"},\"$schema\":{\"type\":\"string\",\"format\":\"uri\"},\"$ref\":{\"type\":\"string\",\"format\":\"uri-reference\"},\"$comment\":{\"type\":\"string\"},\"title\":{\"type\":\"string\"},\"description\":{\"type\":\"string\"},\"default\":true,\"readOnly\":{\"type\":\"boolean\",\"default\":false},\"examples\":{\"type\":\"array\",\"items\":true},\"multipleOf\":{\"type\":\"number\",\"exclusiveMinimum\":0},\"maximum\":{\"type\":\"number\"},\"exclusiveMaximum\":{\"type\":\"number\"},\"minimum\":{\"type\":\"number\"},\"exclusiveMinimum\":{\"type\":\"number\"},\"maxLength\":{\"$ref\":\"#/definitions/nonNegativeInteger\"},\"minLength\":{\"$ref\":\"#/definitions/nonNegativeIntegerDefault0\"},\"pattern\":{\"type\":\"string\",\"format\":\"regex\"},\"additionalItems\":{\"$ref\":\"#\"},\"items\":{\"anyOf\":[{\"$ref\":\"#\"},{\"$ref\":\"#/definitions/schemaArray\"}],\"default\":true},\"maxItems\":{\"$ref\":\"#/definitions/nonNegativeInteger\"},\"minItems\":{\"$ref\":\"#/definitions/nonNegativeIntegerDefault0\"},\"uniqueItems\":{\"type\":\"boolean\",\"default\":false},\"contains\":{\"$ref\":\"#\"},\"maxProperties\":{\"$ref\":\"#/definitions/nonNegativeInteger\"},\"minProperties\":{\"$ref\":\"#/definitions/nonNegativeIntegerDefault0\"},\"required\":{\"$ref\":\"#/definitions/stringArray\"},\"additionalProperties\":{\"$ref\":\"#\"},\"definitions\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"properties\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"default\":{}},\"patternProperties\":{\"type\":\"object\",\"additionalProperties\":{\"$ref\":\"#\"},\"propertyNames\":{\"format\":\"regex\"},\"default\":{}},\"dependencies\":{\"type\":\"object\",\"additionalProperties\":{\"anyOf\":[{\"$ref\":\"#\"},{\"$ref\":\"#/definitions/stringArray\"}]}},\"propertyNames\":{\"$ref\":\"#\"},\"const\":true,\"enum\":{\"type\":\"array\",\"items\":true,\"minItems\":1,\"uniqueItems\":true},\"type\":{\"anyOf\":[{\"$ref\":\"#/definitions/simpleTypes\"},{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/simpleTypes\"},\"minItems\":1,\"uniqueItems\":true}]},\"format\":{\"type\":\"string\"},\"contentMediaType\":{\"type\":\"string\"},\"contentEncoding\":{\"type\":\"string\"},\"if\":{\"$ref\":\"#\"},\"then\":{\"$ref\":\"#\"},\"else\":{\"$ref\":\"#\"},\"allOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"anyOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"oneOf\":{\"$ref\":\"#/definitions/schemaArray\"},\"not\":{\"$ref\":\"#\"}},\"default\":true}");
+module.exports = JSON.parse('{"$schema":"http://json-schema.org/draft-07/schema#","$id":"http://json-schema.org/draft-07/schema#","title":"Core schema meta-schema","definitions":{"schemaArray":{"type":"array","minItems":1,"items":{"$ref":"#"}},"nonNegativeInteger":{"type":"integer","minimum":0},"nonNegativeIntegerDefault0":{"allOf":[{"$ref":"#/definitions/nonNegativeInteger"},{"default":0}]},"simpleTypes":{"enum":["array","boolean","integer","null","number","object","string"]},"stringArray":{"type":"array","items":{"type":"string"},"uniqueItems":true,"default":[]}},"type":["object","boolean"],"properties":{"$id":{"type":"string","format":"uri-reference"},"$schema":{"type":"string","format":"uri"},"$ref":{"type":"string","format":"uri-reference"},"$comment":{"type":"string"},"title":{"type":"string"},"description":{"type":"string"},"default":true,"readOnly":{"type":"boolean","default":false},"examples":{"type":"array","items":true},"multipleOf":{"type":"number","exclusiveMinimum":0},"maximum":{"type":"number"},"exclusiveMaximum":{"type":"number"},"minimum":{"type":"number"},"exclusiveMinimum":{"type":"number"},"maxLength":{"$ref":"#/definitions/nonNegativeInteger"},"minLength":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"pattern":{"type":"string","format":"regex"},"additionalItems":{"$ref":"#"},"items":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/schemaArray"}],"default":true},"maxItems":{"$ref":"#/definitions/nonNegativeInteger"},"minItems":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"uniqueItems":{"type":"boolean","default":false},"contains":{"$ref":"#"},"maxProperties":{"$ref":"#/definitions/nonNegativeInteger"},"minProperties":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"required":{"$ref":"#/definitions/stringArray"},"additionalProperties":{"$ref":"#"},"definitions":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"properties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"patternProperties":{"type":"object","additionalProperties":{"$ref":"#"},"propertyNames":{"format":"regex"},"default":{}},"dependencies":{"type":"object","additionalProperties":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/stringArray"}]}},"propertyNames":{"$ref":"#"},"const":true,"enum":{"type":"array","items":true,"minItems":1,"uniqueItems":true},"type":{"anyOf":[{"$ref":"#/definitions/simpleTypes"},{"type":"array","items":{"$ref":"#/definitions/simpleTypes"},"minItems":1,"uniqueItems":true}]},"format":{"type":"string"},"contentMediaType":{"type":"string"},"contentEncoding":{"type":"string"},"if":{"$ref":"#"},"then":{"$ref":"#"},"else":{"$ref":"#"},"allOf":{"$ref":"#/definitions/schemaArray"},"anyOf":{"$ref":"#/definitions/schemaArray"},"oneOf":{"$ref":"#/definitions/schemaArray"},"not":{"$ref":"#"}},"default":true}');
 
 /***/ }),
 
@@ -4662,7 +4662,7 @@ module.exports = 'data:application/javascript;base64,Im5vIHVzZSBzdHJpY3QiOwohKGZ
 /* eslint-disable no-template-curly-in-string */
 
 
-var _locales = ['en', 'pt-BR', 'zh-CN', 'tr', 'ja', 'fr-FR', 'de'];
+var _locales = ['en', 'pt-BR', 'zh-CN', 'tr', 'ja', 'fr-FR', 'de', 'ru'];
 var _defs = {
   en: {
     array: 'Array',
@@ -4677,7 +4677,7 @@ var _defs = {
     cannotParseFieldError: 'Cannot parse field into JSON',
     cannotParseValueError: 'Cannot parse value into JSON',
     collapseAll: 'Collapse all fields',
-    compactTitle: 'Compact JSON data, remove all whitespaces (Ctrl+Shift+\\)',
+    compactTitle: 'Compact JSON data, remove all whitespaces (Ctrl+Shift+I)',
     descending: 'Descending',
     descendingTitle: 'Sort the childs of this ${type} in descending order',
     drag: 'Drag to move this field (Alt+Shift+Arrows)',
@@ -4689,7 +4689,7 @@ var _defs = {
     empty: 'empty',
     expandAll: 'Expand all fields',
     expandTitle: 'Click to expand/collapse this field (Ctrl+E). \n' + 'Ctrl+Click to expand/collapse including all childs.',
-    formatTitle: 'Format JSON data, with proper indentation and line feeds (Ctrl+\\)',
+    formatTitle: 'Format JSON data, with proper indentation and line feeds (Ctrl+I)',
     insert: 'Insert',
     insertTitle: 'Insert a new field with type \'auto\' before this field (Ctrl+Ins)',
     insertSub: 'Select the type of the field to be inserted',
@@ -4770,7 +4770,7 @@ var _defs = {
     cannotParseFieldError: '无法将字段解析为JSON',
     cannotParseValueError: '无法将值解析为JSON',
     collapseAll: '缩进所有字段',
-    compactTitle: '压缩JSON数据，删除所有空格 (Ctrl+Shift+\\)',
+    compactTitle: '压缩JSON数据，删除所有空格 (Ctrl+Shift+I)',
     descending: '降序',
     descendingTitle: '降序排列${type}的子节点',
     drag: '拖拽移动该节点(Alt+Shift+Arrows)',
@@ -4782,7 +4782,7 @@ var _defs = {
     empty: '清空',
     expandAll: '展开所有字段',
     expandTitle: '点击 展开/收缩 该字段(Ctrl+E). \n' + 'Ctrl+Click 展开/收缩 包含所有子节点.',
-    formatTitle: '使用适当的缩进和换行符格式化JSON数据 (Ctrl+\\)',
+    formatTitle: '使用适当的缩进和换行符格式化JSON数据 (Ctrl+I)',
     insert: '插入',
     insertTitle: '在此字段前插入类型为“auto”的新字段 (Ctrl+Ins)',
     insertSub: '选择要插入的字段类型',
@@ -4859,7 +4859,7 @@ var _defs = {
     cannotParseFieldError: 'Não é possível analisar o campo no JSON',
     cannotParseValueError: 'Não é possível analisar o valor em JSON',
     collapseAll: 'Fechar todos campos',
-    compactTitle: 'Dados JSON compactos, remova todos os espaços em branco (Ctrl+Shift+\\)',
+    compactTitle: 'Dados JSON compactos, remova todos os espaços em branco (Ctrl+Shift+I)',
     descending: 'Descendente',
     descendingTitle: 'Organizar o filhos do tipo ${type} em decrescente',
     duplicateKey: 'chave duplicada',
@@ -4871,7 +4871,7 @@ var _defs = {
     empty: 'vazio',
     expandAll: 'Expandir todos campos',
     expandTitle: 'Clique para expandir/encolher este campo (Ctrl+E). \n' + 'Ctrl+Click para expandir/encolher incluindo todos os filhos.',
-    formatTitle: 'Formate dados JSON, com recuo e feeds de linha adequados (Ctrl+\\)',
+    formatTitle: 'Formate dados JSON, com recuo e feeds de linha adequados (Ctrl+I)',
     insert: 'Inserir',
     insertTitle: 'Inserir um novo campo do tipo \'auto\' antes deste campo (Ctrl+Ins)',
     insertSub: 'Selecionar o tipo de campo a ser inserido',
@@ -5271,6 +5271,99 @@ var _defs = {
     "default": 'Standardmäßig',
     containsInvalidProperties: 'Enthält ungültige Eigenschaften',
     containsInvalidItems: 'Enthält ungültige Elemente'
+  },
+  ru: {
+    array: 'Массив',
+    auto: 'Авто',
+    appendText: 'Добавить',
+    appendTitle: 'Добавить новое поле с типом \'авто\' после этого поля (Ctrl+Shift+Ins)',
+    appendSubmenuTitle: 'Выбрать тип поля для добавления',
+    appendTitleAuto: 'Добавить новое поле с типом \'авто\' (Ctrl+Shift+Ins)',
+    ascending: 'По возрастанию',
+    ascendingTitle: 'Сортировать ${type} по возрастанию',
+    actionsMenu: 'Нажмите для открытия меню действий (Ctrl+M)',
+    cannotParseFieldError: 'Невозможно преобразовать поле в JSON',
+    cannotParseValueError: 'Невозможно преобразовать значение в JSON',
+    collapseAll: 'Свернуть все',
+    compactTitle: 'Минификация JSON (Ctrl+Shift+I)',
+    descending: 'По убыванию',
+    descendingTitle: 'Сортировать ${type} по убыванию',
+    drag: 'Потяните для перемещения этого поля (Alt+Shift+Arrows)',
+    duplicateKey: 'повторяющийся ключ',
+    duplicateText: 'Дублировать',
+    duplicateTitle: 'Дублирование полей (Ctrl+D)',
+    duplicateField: 'Дублирование поля (Ctrl+D)',
+    duplicateFieldError: 'Дублирование названия поля',
+    empty: 'пусто',
+    expandAll: 'Развернуть все',
+    expandTitle: 'Нажмите для развертывания/свертывания этого поля (Ctrl+E). \n' + 'Ctrl+Click для развертывания/свертывания всех потомков.',
+    formatTitle: 'Форматирование JSON (Ctrl+I)',
+    insert: 'Вставить',
+    insertTitle: 'Вставить новое поле с типом \'авто\' после этого поля (Ctrl+Ins)',
+    insertSub: 'Выбрать тип поля для вставки',
+    object: 'Объект',
+    ok: 'ОК',
+    redo: 'Повторить (Ctrl+Shift+Z)',
+    removeText: 'Удалить',
+    removeTitle: 'Удалить выбранные поля (Ctrl+Del)',
+    removeField: 'Удалить поле (Ctrl+Del)',
+    repairTitle: 'Восстановите JSON: исправьте кавычки и escape-символы, удалите комментарии и нотацию JSONP, модифицируйте объекты JavaScript в JSON.',
+    searchTitle: 'Поиск',
+    searchNextResultTitle: 'Следующий результат (Enter)',
+    searchPreviousResultTitle: 'Предыдущий результат (Shift + Enter)',
+    selectNode: 'Выбор узла...',
+    showAll: 'показать все',
+    showMore: 'больше',
+    showMoreStatus: '${visibleChilds} из ${totalChilds}',
+    sort: 'Сортировка',
+    sortTitle: 'Сортировка потомков типа ${type}',
+    sortTitleShort: 'Сортировка содержимого',
+    sortFieldLabel: 'Поле:',
+    sortDirectionLabel: 'Направление:',
+    sortFieldTitle: 'Выберите поле для сортировки массива или объекта',
+    sortAscending: 'По возрастанию',
+    sortAscendingTitle: 'Сортировка выбранного поря по возрастанию',
+    sortDescending: 'По убыванию',
+    sortDescendingTitle: 'Сортировка выбранного поря по убыванию',
+    string: 'Строка',
+    transform: 'Преобразование',
+    transformTitle: 'Фильтрация, сортировка или преобразование данных типа ${type}',
+    transformTitleShort: 'Фильтрация, сортировка или преобразование данных',
+    extract: 'Извлечь',
+    extractTitle: 'Извлечь тип ${type}',
+    transformQueryTitle: 'Введите JMESpath запрос',
+    transformWizardLabel: 'Мастер',
+    transformWizardFilter: 'Фильтр',
+    transformWizardSortBy: 'Сортировка',
+    transformWizardSelectFields: 'Выбор полей',
+    transformQueryLabel: 'Запрос',
+    transformPreviewLabel: 'Просмотр',
+    type: 'Тип',
+    typeTitle: 'Изменить тип этого поля',
+    openUrl: 'Ctrl+Click или Ctrl+Enter для открытия url в новом окне',
+    undo: 'Отменить (Ctrl+Z)',
+    validationCannotMove: 'Поле не может быть перемещено в потомка',
+    autoType: 'Тип поля "авто". ' + 'Тип поля автоматически определяется по значению ' + 'и может быть строкой, числом, логическим значением или null.',
+    objectType: 'Тип поля "объект". ' + 'Объект содержит неупорядоченный набор пар ключ/значение.',
+    arrayType: 'Тип поля "массив". ' + 'Массив содержит упорядоченный набор значений.',
+    stringType: 'Тип поля "строка". ' + 'Тип поля не определяется из значения, ' + 'но всегда возвращается как строка.',
+    modeEditorTitle: 'Переключение режима редактора',
+    modeCodeText: 'Код',
+    modeCodeTitle: 'Переключить в режим редактора кода',
+    modeFormText: 'Форма',
+    modeFormTitle: 'Переключить в режим формы',
+    modeTextText: 'Текст',
+    modeTextTitle: 'Переключить в режим редактора текста',
+    modeTreeText: 'Дерево',
+    modeTreeTitle: 'Переключить в режим редактора дерева',
+    modeViewText: 'Просмотр дерева',
+    modeViewTitle: 'Переключить в режим просмотра дерева',
+    modePreviewText: 'Просмотр',
+    modePreviewTitle: 'Переключить в режим просмотра',
+    examples: 'Примеры',
+    "default": 'По умолчанию',
+    containsInvalidProperties: 'Содержит недопустимые свойства',
+    containsInvalidItems: 'Содержит недопустимые элементы'
   }
 };
 var _defaultLang = 'en';
@@ -7489,14 +7582,14 @@ textmode._onKeyDown = function (event) {
   var keynum = event.which || event.keyCode;
   var handled = false;
 
-  if (keynum === 220 && event.ctrlKey) {
+  if (keynum === 73 && event.ctrlKey) {
     if (event.shiftKey) {
-      // Ctrl+Shift+\
+      // Ctrl+Shift+I
       this.compact();
 
       this._onChange();
     } else {
-      // Ctrl+\
+      // Ctrl+I
       this.format();
 
       this._onChange();
@@ -9099,7 +9192,15 @@ var constants = __webpack_require__(4188);
 ;// CONCATENATED MODULE: ./src/js/Node.js
 
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -13947,6 +14048,8 @@ Node._findSchema = function (topLevelSchema, schemaRefs, path) {
       currentSchema = schema;
 
       if ('$ref' in currentSchema && typeof currentSchema.$ref === 'string') {
+        var _ref$match;
+
         var ref = currentSchema.$ref;
 
         if (ref in schemaRefs) {
@@ -13972,6 +14075,21 @@ Node._findSchema = function (topLevelSchema, schemaRefs, path) {
             _iterator2.e(err);
           } finally {
             _iterator2.f();
+          }
+        } else if (((_ref$match = ref.match(/#\//g)) === null || _ref$match === void 0 ? void 0 : _ref$match.length) === 1) {
+          var _ref$split = ref.split('#/'),
+              _ref$split2 = _slicedToArray(_ref$split, 2),
+              schemaUrl = _ref$split2[0],
+              relativePath = _ref$split2[1];
+
+          if (schemaUrl in schemaRefs) {
+            var referencedSchema = schemaRefs[schemaUrl];
+            var reference = {
+              $ref: '#/'.concat(relativePath)
+            };
+            return Node._findSchema(referencedSchema, schemaRefs, nextPath, reference);
+          } else {
+            throw Error("Unable to resolve reference ".concat(ref));
           }
         } else {
           throw Error("Unable to resolve reference ".concat(ref));
@@ -18029,7 +18147,7 @@ function getPositionForPath(text, paths) {
   }
 
   try {
-    jsmap = json_source_map__WEBPACK_IMPORTED_MODULE_4__/* .parse */ .Q(text);
+    jsmap = json_source_map__WEBPACK_IMPORTED_MODULE_4__.parse(text);
   } catch (err) {
     return result;
   }
@@ -48176,7 +48294,6 @@ function escapeJsonPtr(str) {
 /***/ (function(__unused_webpack_module, exports) {
 
 "use strict";
-var __webpack_unused_export__;
 
 
 var escapedChars = {
@@ -48193,7 +48310,7 @@ var escapedChars = {
 var A_CODE = 'a'.charCodeAt();
 
 
-exports.Q = function (source, _, options) {
+exports.parse = function (source, _, options) {
   var pointers = {};
   var line = 0;
   var column = 0;
@@ -48415,7 +48532,7 @@ exports.Q = function (source, _, options) {
 };
 
 
-__webpack_unused_export__ = function (data, _, options) {
+exports.stringify = function (data, _, options) {
   if (!validType(data)) return;
   var wsLine = 0;
   var wsPos, wsColumn;
@@ -51574,10 +51691,10 @@ Object.defineProperty(exports, '__esModule', { value: true });
 /***/ (function(module) {
 
 /*!
- * vanilla-picker v2.11.0
+ * vanilla-picker v2.11.2
  * https://vanilla-picker.js.org
  *
- * Copyright 2017-2020 Andreas Borgen (https://github.com/Sphinxxxx), Adam Brooks (https://github.com/dissimulate)
+ * Copyright 2017-2021 Andreas Borgen (https://github.com/Sphinxxxx), Adam Brooks (https://github.com/dissimulate)
  * Released under the ISC license.
  */
 (function (global, factory) {
@@ -52672,10 +52789,13 @@ Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	}();
 /******/ 	
 /************************************************************************/
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(3161);
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(3161);
+/******/ 	
+/******/ 	return __webpack_exports__;
 /******/ })()
 ;
 });

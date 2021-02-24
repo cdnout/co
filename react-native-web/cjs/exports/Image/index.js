@@ -47,20 +47,30 @@ var _filterId = 0;
 var svgDataUriPattern = /^(data:image\/svg\+xml;utf8,)(.*)/;
 
 function createTintColorSVG(tintColor, id) {
-  return tintColor && id != null ? _react.default.createElement("svg", {
+  return tintColor && id != null ?
+  /*#__PURE__*/
+  _react.default.createElement("svg", {
     style: {
       position: 'absolute',
       height: 0,
       visibility: 'hidden',
       width: 0
     }
-  }, _react.default.createElement("defs", null, _react.default.createElement("filter", {
+  },
+  /*#__PURE__*/
+  _react.default.createElement("defs", null,
+  /*#__PURE__*/
+  _react.default.createElement("filter", {
     id: "tint-" + id,
     suppressHydrationWarning: true
-  }, _react.default.createElement("feFlood", {
+  },
+  /*#__PURE__*/
+  _react.default.createElement("feFlood", {
     floodColor: "" + tintColor,
     key: tintColor
-  }), _react.default.createElement("feComposite", {
+  }),
+  /*#__PURE__*/
+  _react.default.createElement("feComposite", {
     in2: "SourceAlpha",
     operator: "atop"
   })))) : null;
@@ -175,7 +185,9 @@ function resolveAssetUri(source) {
   return uri;
 }
 
-var Image = (0, _react.forwardRef)(function (props, ref) {
+var Image =
+/*#__PURE__*/
+(0, _react.forwardRef)(function (props, ref) {
   var accessibilityLabel = props.accessibilityLabel,
       blurRadius = props.blurRadius,
       defaultSource = props.defaultSource,
@@ -317,21 +329,26 @@ var Image = (0, _react.forwardRef)(function (props, ref) {
 
     return abortPendingRequest;
   }, [uri, requestRef, updateState, onError, onLoad, onLoadEnd, onLoadStart]);
-  return _react.default.createElement(_View.default, _extends({}, rest, {
-    accessibilityLabel: accessibilityLabel,
-    onLayout: handleLayout,
-    pointerEvents: pointerEvents,
-    ref: ref,
-    style: [styles.root, hasTextAncestor && styles.inline, imageSizeStyle, flatStyle]
-  }), _react.default.createElement(_View.default, {
-    style: [styles.image, resizeModeStyles[resizeMode], {
-      backgroundImage: backgroundImage,
-      filter: filter
-    }, backgroundSize != null && {
-      backgroundSize: backgroundSize
-    }],
-    suppressHydrationWarning: true
-  }), hiddenImage, createTintColorSVG(tintColor, filterRef.current));
+  return (
+    /*#__PURE__*/
+    _react.default.createElement(_View.default, _extends({}, rest, {
+      accessibilityLabel: accessibilityLabel,
+      onLayout: handleLayout,
+      pointerEvents: pointerEvents,
+      ref: ref,
+      style: [styles.root, hasTextAncestor && styles.inline, imageSizeStyle, flatStyle]
+    }),
+    /*#__PURE__*/
+    _react.default.createElement(_View.default, {
+      style: [styles.image, resizeModeStyles[resizeMode], {
+        backgroundImage: backgroundImage,
+        filter: filter
+      }, backgroundSize != null && {
+        backgroundSize: backgroundSize
+      }],
+      suppressHydrationWarning: true
+    }), hiddenImage, createTintColorSVG(tintColor, filterRef.current))
+  );
 });
 Image.displayName = 'Image'; // $FlowFixMe
 
@@ -350,7 +367,7 @@ Image.queryCache = function (uris) {
 };
 
 var classes = _css.default.create({
-  accessibilityImage: _objectSpread({}, _StyleSheet.default.absoluteFillObject, {
+  accessibilityImage: _objectSpread(_objectSpread({}, _StyleSheet.default.absoluteFillObject), {}, {
     height: '100%',
     opacity: 0,
     width: '100%',
@@ -367,7 +384,7 @@ var styles = _StyleSheet.default.create({
   inline: {
     display: 'inline-flex'
   },
-  image: _objectSpread({}, _StyleSheet.default.absoluteFillObject, {
+  image: _objectSpread(_objectSpread({}, _StyleSheet.default.absoluteFillObject), {}, {
     backgroundColor: 'transparent',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',

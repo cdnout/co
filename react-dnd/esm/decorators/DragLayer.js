@@ -20,13 +20,18 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-import * as React from 'react';
+import { jsx as _jsx } from "react/jsx-runtime";
+import { createRef, Component } from 'react';
 import { shallowEqual } from '@react-dnd/shallowequal';
-import hoistStatics from 'hoist-non-react-statics';
 import { invariant } from '@react-dnd/invariant';
-import { DndContext } from '../common/DndContext';
-import { isPlainObject } from '../utils/js_utils';
-import { isRefable, checkDecoratorArguments } from './utils';
+import hoistStatics from 'hoist-non-react-statics';
+import { DndContext } from '../core';
+import { isRefable, checkDecoratorArguments, isPlainObject } from './utils';
+/**
+ * @param collect The props collector function
+ * @param options The DnD options
+ */
+
 export function DragLayer(collect) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   checkDecoratorArguments('DragLayer', 'collect[, options]', collect, options);
@@ -38,76 +43,74 @@ export function DragLayer(collect) {
         arePropsEqual = _options$arePropsEqua === void 0 ? shallowEqual : _options$arePropsEqua;
     var displayName = Decorated.displayName || Decorated.name || 'Component';
 
-    var DragLayerContainer =
-    /** @class */
-    function () {
-      var DragLayerContainer = /*#__PURE__*/function (_React$Component) {
-        _inherits(DragLayerContainer, _React$Component);
+    var DragLayerContainer = /*#__PURE__*/function (_Component) {
+      _inherits(DragLayerContainer, _Component);
 
-        var _super = _createSuper(DragLayerContainer);
+      var _super = _createSuper(DragLayerContainer);
 
-        function DragLayerContainer() {
-          var _this;
+      function DragLayerContainer() {
+        var _this;
 
-          _classCallCheck(this, DragLayerContainer);
+        _classCallCheck(this, DragLayerContainer);
 
-          _this = _super.apply(this, arguments);
-          _this.isCurrentlyMounted = false;
-          _this.ref = React.createRef();
+        _this = _super.apply(this, arguments);
+        _this.isCurrentlyMounted = false;
+        _this.ref = createRef();
 
-          _this.handleChange = function () {
-            if (!_this.isCurrentlyMounted) {
-              return;
-            }
+        _this.handleChange = function () {
+          if (!_this.isCurrentlyMounted) {
+            return;
+          }
 
-            var nextState = _this.getCurrentState();
+          var nextState = _this.getCurrentState();
 
-            if (!shallowEqual(nextState, _this.state)) {
-              _this.setState(nextState);
-            }
-          };
+          if (!shallowEqual(nextState, _this.state)) {
+            _this.setState(nextState);
+          }
+        };
 
-          return _this;
+        return _this;
+      }
+
+      _createClass(DragLayerContainer, [{
+        key: "getDecoratedComponentInstance",
+        value: function getDecoratedComponentInstance() {
+          invariant(this.ref.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
+          return this.ref.current;
         }
+      }, {
+        key: "shouldComponentUpdate",
+        value: function shouldComponentUpdate(nextProps, nextState) {
+          return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
+        }
+      }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+          this.isCurrentlyMounted = true;
+          this.handleChange();
+        }
+      }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+          this.isCurrentlyMounted = false;
 
-        _createClass(DragLayerContainer, [{
-          key: "getDecoratedComponentInstance",
-          value: function getDecoratedComponentInstance() {
-            invariant(this.ref.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
-            return this.ref.current;
+          if (this.unsubscribeFromOffsetChange) {
+            this.unsubscribeFromOffsetChange();
+            this.unsubscribeFromOffsetChange = undefined;
           }
-        }, {
-          key: "shouldComponentUpdate",
-          value: function shouldComponentUpdate(nextProps, nextState) {
-            return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
-          }
-        }, {
-          key: "componentDidMount",
-          value: function componentDidMount() {
-            this.isCurrentlyMounted = true;
-            this.handleChange();
-          }
-        }, {
-          key: "componentWillUnmount",
-          value: function componentWillUnmount() {
-            this.isCurrentlyMounted = false;
 
-            if (this.unsubscribeFromOffsetChange) {
-              this.unsubscribeFromOffsetChange();
-              this.unsubscribeFromOffsetChange = undefined;
-            }
-
-            if (this.unsubscribeFromStateChange) {
-              this.unsubscribeFromStateChange();
-              this.unsubscribeFromStateChange = undefined;
-            }
+          if (this.unsubscribeFromStateChange) {
+            this.unsubscribeFromStateChange();
+            this.unsubscribeFromStateChange = undefined;
           }
-        }, {
-          key: "render",
-          value: function render() {
-            var _this2 = this;
+        }
+      }, {
+        key: "render",
+        value: function render() {
+          var _this2 = this;
 
-            return React.createElement(DndContext.Consumer, null, function (_ref) {
+          return _jsx(DndContext.Consumer, {
+            children: function children(_ref) {
               var dragDropManager = _ref.dragDropManager;
 
               if (dragDropManager === undefined) {
@@ -121,44 +124,42 @@ export function DragLayer(collect) {
                 return null;
               }
 
-              return React.createElement(Decorated, Object.assign({}, _this2.props, _this2.state, {
+              return _jsx(Decorated, Object.assign({}, _this2.props, _this2.state, {
                 ref: isRefable(Decorated) ? _this2.ref : null
-              }));
-            });
-          }
-        }, {
-          key: "receiveDragDropManager",
-          value: function receiveDragDropManager(dragDropManager) {
-            if (this.manager !== undefined) {
-              return;
+              }), void 0);
             }
-
-            this.manager = dragDropManager;
-            invariant(_typeof(dragDropManager) === 'object', 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
-            var monitor = this.manager.getMonitor();
-            this.unsubscribeFromOffsetChange = monitor.subscribeToOffsetChange(this.handleChange);
-            this.unsubscribeFromStateChange = monitor.subscribeToStateChange(this.handleChange);
+          }, void 0);
+        }
+      }, {
+        key: "receiveDragDropManager",
+        value: function receiveDragDropManager(dragDropManager) {
+          if (this.manager !== undefined) {
+            return;
           }
-        }, {
-          key: "getCurrentState",
-          value: function getCurrentState() {
-            if (!this.manager) {
-              return {};
-            }
 
-            var monitor = this.manager.getMonitor();
-            return collect(monitor, this.props);
+          this.manager = dragDropManager;
+          invariant(_typeof(dragDropManager) === 'object', 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
+          var monitor = this.manager.getMonitor();
+          this.unsubscribeFromOffsetChange = monitor.subscribeToOffsetChange(this.handleChange);
+          this.unsubscribeFromStateChange = monitor.subscribeToStateChange(this.handleChange);
+        }
+      }, {
+        key: "getCurrentState",
+        value: function getCurrentState() {
+          if (!this.manager) {
+            return {};
           }
-        }]);
 
-        return DragLayerContainer;
-      }(React.Component);
+          var monitor = this.manager.getMonitor();
+          return collect(monitor, this.props);
+        }
+      }]);
 
-      DragLayerContainer.displayName = "DragLayer(".concat(displayName, ")");
-      DragLayerContainer.DecoratedComponent = DecoratedComponent;
       return DragLayerContainer;
-    }();
+    }(Component);
 
+    DragLayerContainer.displayName = "DragLayer(".concat(displayName, ")");
+    DragLayerContainer.DecoratedComponent = DecoratedComponent;
     return hoistStatics(DragLayerContainer, DecoratedComponent);
   };
 }

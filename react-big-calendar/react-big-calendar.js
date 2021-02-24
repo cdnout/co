@@ -3123,7 +3123,7 @@
         do {
           if (next && parent.isSameNode(next)) {
             return true;
-          } // $FlowFixMe: need a better way to handle this...
+          } // $FlowFixMe[prop-missing]: need a better way to handle this...
 
 
           next = next.parentNode || next.host;
@@ -3147,8 +3147,9 @@
   }
 
   function getDocumentElement(element) {
-    // $FlowFixMe: assume body is always available
-    return ((isElement(element) ? element.ownerDocument : element.document) || window.document).documentElement;
+    // $FlowFixMe[incompatible-return]: assume body is always available
+    return ((isElement(element) ? element.ownerDocument : // $FlowFixMe[prop-missing]
+    element.document) || window.document).documentElement;
   }
 
   function getParentNode(element) {
@@ -3156,12 +3157,14 @@
       return element;
     }
 
-    return (// $FlowFixMe: this is a quicker (but less type safe) way to save quite some bytes from the bundle
+    return (// this is a quicker (but less type safe) way to save quite some bytes from the bundle
+      // $FlowFixMe[incompatible-return]
+      // $FlowFixMe[prop-missing]
       element.assignedSlot || // step into the shadow DOM of the parent of a slotted node
       element.parentNode || // DOM Element detected
-      // $FlowFixMe: need a better way to handle this...
+      // $FlowFixMe[incompatible-return]: need a better way to handle this...
       element.host || // ShadowRoot detected
-      // $FlowFixMe: HTMLElement is a Node
+      // $FlowFixMe[incompatible-call]: HTMLElement is a Node
       getDocumentElement(element) // fallback
 
     );
@@ -3348,7 +3351,7 @@
   // Zooming can change the DPR, but it seems to report a value that will
   // cleanly divide the values into the appropriate subpixels.
 
-  function roundOffsets(_ref) {
+  function roundOffsetsByDPR(_ref) {
     var x = _ref.x,
         y = _ref.y;
     var win = window;
@@ -3368,11 +3371,14 @@
         offsets = _ref2.offsets,
         position = _ref2.position,
         gpuAcceleration = _ref2.gpuAcceleration,
-        adaptive = _ref2.adaptive;
+        adaptive = _ref2.adaptive,
+        roundOffsets = _ref2.roundOffsets;
 
-    var _roundOffsets = roundOffsets(offsets),
-        x = _roundOffsets.x,
-        y = _roundOffsets.y;
+    var _ref3 = roundOffsets ? roundOffsetsByDPR(offsets) : offsets,
+        _ref3$x = _ref3.x,
+        x = _ref3$x === void 0 ? 0 : _ref3$x,
+        _ref3$y = _ref3.y,
+        y = _ref3$y === void 0 ? 0 : _ref3$y;
 
     var hasX = offsets.hasOwnProperty('x');
     var hasY = offsets.hasOwnProperty('y');
@@ -3385,7 +3391,7 @@
 
       if (offsetParent === getWindow(popper)) {
         offsetParent = getDocumentElement(popper);
-      } // $FlowFixMe: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
+      } // $FlowFixMe[incompatible-cast]: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
 
       /*:: offsetParent = (offsetParent: Element); */
 
@@ -3416,13 +3422,15 @@
     return Object.assign(Object.assign({}, commonStyles), {}, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
   }
 
-  function computeStyles(_ref3) {
-    var state = _ref3.state,
-        options = _ref3.options;
+  function computeStyles(_ref4) {
+    var state = _ref4.state,
+        options = _ref4.options;
     var _options$gpuAccelerat = options.gpuAcceleration,
         gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
         _options$adaptive = options.adaptive,
-        adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
+        adaptive = _options$adaptive === void 0 ? true : _options$adaptive,
+        _options$roundOffsets = options.roundOffsets,
+        roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
 
     {
       var transitionProperty = getComputedStyle$1(state.elements.popper).transitionProperty || '';
@@ -3445,7 +3453,8 @@
       state.styles.popper = Object.assign(Object.assign({}, state.styles.popper), mapToStyles(Object.assign(Object.assign({}, commonStyles), {}, {
         offsets: state.modifiersData.popperOffsets,
         position: state.options.strategy,
-        adaptive: adaptive
+        adaptive: adaptive,
+        roundOffsets: roundOffsets
       })));
     }
 
@@ -3453,7 +3462,8 @@
       state.styles.arrow = Object.assign(Object.assign({}, state.styles.arrow), mapToStyles(Object.assign(Object.assign({}, commonStyles), {}, {
         offsets: state.modifiersData.arrow,
         position: 'absolute',
-        adaptive: false
+        adaptive: false,
+        roundOffsets: roundOffsets
       })));
     }
 
@@ -3649,7 +3659,7 @@
 
   function getScrollParent(node) {
     if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
-      // $FlowFixMe: assume body is always available
+      // $FlowFixMe[incompatible-return]: assume body is always available
       return node.ownerDocument.body;
     }
 
@@ -3663,7 +3673,7 @@
   /*
   given a DOM element, return the list of all scroll parents, up the list of ancesors
   until we get to the top window object. This list is what we attach scroll listeners
-  to, because if any of these parent elements scroll, we'll need to re-calculate the 
+  to, because if any of these parent elements scroll, we'll need to re-calculate the
   reference element's position.
   */
 
@@ -3677,7 +3687,7 @@
     var win = getWindow(scrollParent);
     var target = isBody ? [win].concat(win.visualViewport || [], isScrollParent(scrollParent) ? scrollParent : []) : scrollParent;
     var updatedList = list.concat(target);
-    return isBody ? updatedList : // $FlowFixMe: isBody tells us target will be an HTMLElement here
+    return isBody ? updatedList : // $FlowFixMe[incompatible-call]: isBody tells us target will be an HTMLElement here
     updatedList.concat(listScrollParents(getParentNode(target)));
   }
 
@@ -3717,7 +3727,7 @@
 
     if (!isElement(clipperElement)) {
       return [];
-    } // $FlowFixMe: https://github.com/facebook/flow/issues/1414
+    } // $FlowFixMe[incompatible-return]: https://github.com/facebook/flow/issues/1414
 
 
     return clippingParents.filter(function (clippingParent) {
@@ -3803,11 +3813,11 @@
 
       switch (variation) {
         case start:
-          offsets[mainAxis] = Math.floor(offsets[mainAxis]) - Math.floor(reference[len] / 2 - element[len] / 2);
+          offsets[mainAxis] = offsets[mainAxis] - (reference[len] / 2 - element[len] / 2);
           break;
 
         case end:
-          offsets[mainAxis] = Math.floor(offsets[mainAxis]) + Math.ceil(reference[len] / 2 - element[len] / 2);
+          offsets[mainAxis] = offsets[mainAxis] + (reference[len] / 2 - element[len] / 2);
           break;
 
         default:
@@ -3891,8 +3901,7 @@
     var variation = getVariation(placement);
     var placements$1 = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function (placement) {
       return getVariation(placement) === variation;
-    }) : basePlacements; // $FlowFixMe
-
+    }) : basePlacements;
     var allowedPlacements = placements$1.filter(function (placement) {
       return allowedAutoPlacements.indexOf(placement) >= 0;
     });
@@ -3903,7 +3912,7 @@
       {
         console.error(['Popper: The `allowedAutoPlacements` option did not allow any', 'placements. Ensure the `placement` option matches the variation', 'of the allowed placements.', 'For example, "auto" cannot be used to allow "bottom-start".', 'Use "auto-start" instead.'].join(' '));
       }
-    } // $FlowFixMe: Flow seems to have problems with two array unions...
+    } // $FlowFixMe[incompatible-type]: Flow seems to have problems with two array unions...
 
 
     var overflows = allowedPlacements.reduce(function (acc, placement) {
@@ -9427,7 +9436,8 @@
         resizable: resizable
       };
       return React__default.createElement("div", {
-        className: className
+        className: className,
+        role: "rowgroup"
       }, React__default.createElement(BackgroundCells, {
         date: date,
         getNow: getNow,
@@ -9443,7 +9453,8 @@
         longPressThreshold: longPressThreshold,
         resourceId: resourceId
       }), React__default.createElement("div", {
-        className: clsx('rbc-row-content', showAllEvents && 'rbc-row-content-scrollable')
+        className: clsx('rbc-row-content', showAllEvents && 'rbc-row-content-scrollable'),
+        role: "row"
       }, renderHeader && React__default.createElement("div", {
         className: "rbc-row ",
         ref: this.createHeadingRef
@@ -9501,7 +9512,10 @@
 
   var Header = function Header(_ref) {
     var label = _ref.label;
-    return React__default.createElement("span", null, label);
+    return React__default.createElement("span", {
+      role: "columnheader",
+      "aria-sort": "none"
+    }, label);
   };
 
   Header.propTypes = {
@@ -9519,7 +9533,8 @@
 
     return React__default.createElement("a", {
       href: "#",
-      onClick: onDrillDown
+      onClick: onDrillDown,
+      role: "cell"
     }, label);
   };
 
@@ -9620,7 +9635,8 @@
         var label = localizer.format(date, 'dateFormat');
         var DateHeaderComponent = _this.props.components.dateHeader || DateHeader;
         return React__default.createElement("div", _extends({}, props, {
-          className: clsx(className, isOffRange && 'rbc-off-range', isCurrent && 'rbc-current')
+          className: clsx(className, isOffRange && 'rbc-off-range', isCurrent && 'rbc-current'),
+          role: "cell"
         }), React__default.createElement(DateHeaderComponent, {
           label: label,
           date: date,
@@ -9766,9 +9782,12 @@
           weeks = chunk(month, 7);
       this._weekCount = weeks.length;
       return React__default.createElement("div", {
-        className: clsx('rbc-month-view', className)
+        className: clsx('rbc-month-view', className),
+        role: "table",
+        "aria-label": "Month View"
       }, React__default.createElement("div", {
-        className: "rbc-row rbc-month-header"
+        className: "rbc-row rbc-month-header",
+        role: "row"
       }, this.renderHeaders(weeks[0])), weeks.map(this.renderWeek), this.props.popup && this.renderOverlay());
     };
 
@@ -10947,7 +10966,7 @@
 
 
   function TimeGridEvent(props) {
-    var _extends2;
+    var _extends2, _extends3;
 
     var style = props.style,
         className = props.className,
@@ -10961,6 +10980,7 @@
         getters = props.getters,
         onClick = props.onClick,
         onDoubleClick = props.onDoubleClick,
+        isBackgroundEvent = props.isBackgroundEvent,
         onKeyPress = props.onKeyPress,
         _props$components = props.components,
         Event = _props$components.event,
@@ -10984,17 +11004,25 @@
       event: event,
       title: title
     }) : title)];
+    var eventStyle = isBackgroundEvent ? _extends({}, userProps.style, (_extends2 = {
+      top: stringifyPercent(top),
+      height: stringifyPercent(height),
+      // Adding 10px to take events container right margin into account
+      width: "calc(" + width + " + 10px)"
+    }, _extends2[rtl ? 'right' : 'left'] = stringifyPercent(Math.max(0, xOffset)), _extends2)) : _extends({}, userProps.style, (_extends3 = {
+      top: stringifyPercent(top),
+      width: stringifyPercent(width),
+      height: stringifyPercent(height)
+    }, _extends3[rtl ? 'right' : 'left'] = stringifyPercent(xOffset), _extends3));
     return React__default.createElement(EventWrapper, _extends({
       type: "time"
     }, props), React__default.createElement("div", {
       onClick: onClick,
       onDoubleClick: onDoubleClick,
+      style: eventStyle,
       onKeyPress: onKeyPress,
-      style: _extends({}, userProps.style, (_extends2 = {
-        top: stringifyPercent(top)
-      }, _extends2[rtl ? 'right' : 'left'] = stringifyPercent(xOffset), _extends2.width = stringifyPercent(width), _extends2.height = stringifyPercent(height), _extends2)),
       title: tooltip ? (typeof label === 'string' ? label + ': ' : '') + tooltip : undefined,
-      className: clsx('rbc-event', className, userProps.className, {
+      className: clsx(isBackgroundEvent ? 'rbc-background-event' : 'rbc-event', className, userProps.className, {
         'rbc-selected': selected,
         'rbc-event-continues-earlier': continuesEarlier,
         'rbc-event-continues-later': continuesLater
@@ -11021,9 +11049,10 @@
       };
       _this.intervalTriggered = false;
 
-      _this.renderEvents = function () {
+      _this.renderEvents = function (_ref) {
+        var events = _ref.events,
+            isBackgroundEvent = _ref.isBackgroundEvent;
         var _this$props = _this.props,
-            events = _this$props.events,
             rtl = _this$props.rtl,
             selected = _this$props.selected,
             accessors = _this$props.accessors,
@@ -11046,9 +11075,9 @@
           minimumStartDifference: Math.ceil(step * timeslots / 2),
           dayLayoutAlgorithm: dayLayoutAlgorithm
         });
-        return styledEvents.map(function (_ref, idx) {
-          var event = _ref.event,
-              style = _ref.style;
+        return styledEvents.map(function (_ref2, idx) {
+          var event = _ref2.event,
+              style = _ref2.style;
           var end = accessors.end(event);
           var start = accessors.start(event);
           var format = 'eventTimeRangeFormat';
@@ -11080,6 +11109,7 @@
             onDoubleClick: function onDoubleClick(e) {
               return _this._doubleClick(event, e);
             },
+            isBackgroundEvent: isBackgroundEvent,
             onKeyPress: function onKeyPress(e) {
               return _this._keyPress(event, e);
             },
@@ -11200,12 +11230,12 @@
         _this._selector = null;
       };
 
-      _this._selectSlot = function (_ref2) {
-        var startDate = _ref2.startDate,
-            endDate = _ref2.endDate,
-            action = _ref2.action,
-            bounds = _ref2.bounds,
-            box = _ref2.box;
+      _this._selectSlot = function (_ref3) {
+        var startDate = _ref3.startDate,
+            endDate = _ref3.endDate,
+            action = _ref3.action,
+            bounds = _ref3.bounds,
+            box = _ref3.box;
         var current = startDate,
             slots = [];
 
@@ -11390,7 +11420,12 @@
         slotMetrics: slotMetrics
       }, React__default.createElement("div", {
         className: clsx('rbc-events-container', rtl && 'rtl')
-      }, this.renderEvents())), selecting && React__default.createElement("div", {
+      }, this.renderEvents({
+        events: this.props.backgroundEvents,
+        isBackgroundEvent: true
+      }), this.renderEvents({
+        events: this.props.events
+      }))), selecting && React__default.createElement("div", {
         className: "rbc-slot-selection",
         style: {
           top: top,
@@ -11409,6 +11444,7 @@
 
   DayColumn.propTypes = {
     events: propTypes.array.isRequired,
+    backgroundEvents: propTypes.array.isRequired,
     step: propTypes.number.isRequired,
     date: propTypes.instanceOf(Date).isRequired,
     min: propTypes.instanceOf(Date).isRequired,
@@ -11929,7 +11965,7 @@
       }
     };
 
-    _proto.renderEvents = function renderEvents(range, events, now) {
+    _proto.renderEvents = function renderEvents(range, events, backgroundEvents, now) {
       var _this2 = this;
 
       var _this$props2 = this.props,
@@ -11941,11 +11977,15 @@
           dayLayoutAlgorithm = _this$props2.dayLayoutAlgorithm;
       var resources = this.memoizedResources(this.props.resources, accessors);
       var groupedEvents = resources.groupEvents(events);
+      var groupedBackgroundEvents = resources.groupEvents(backgroundEvents);
       return resources.map(function (_ref, i) {
         var id = _ref[0],
             resource = _ref[1];
         return range.map(function (date, jj) {
           var daysEvents = (groupedEvents.get(id) || []).filter(function (event) {
+            return inRange(date, accessors.start(event), accessors.end(event), 'day');
+          });
+          var daysBackgroundEvents = (groupedBackgroundEvents.get(id) || []).filter(function (event) {
             return inRange(date, accessors.start(event), accessors.end(event), 'day');
           });
           return React__default.createElement(DayColumn, _extends({}, _this2.props, {
@@ -11958,6 +11998,7 @@
             key: i + '-' + jj,
             date: date,
             events: daysEvents,
+            backgroundEvents: daysBackgroundEvents,
             dayLayoutAlgorithm: dayLayoutAlgorithm
           }));
         });
@@ -11967,6 +12008,7 @@
     _proto.render = function render() {
       var _this$props3 = this.props,
           events = _this$props3.events,
+          backgroundEvents = _this$props3.backgroundEvents,
           range = _this$props3.range,
           width = _this$props3.width,
           rtl = _this$props3.rtl,
@@ -11987,7 +12029,8 @@
           end = range[range.length - 1];
       this.slots = range.length;
       var allDayEvents = [],
-          rangeEvents = [];
+          rangeEvents = [],
+          rangeBackgroundEvents = [];
       events.forEach(function (event) {
         if (inRange$1(event, start, end, accessors)) {
           var eStart = accessors.start(event),
@@ -11998,6 +12041,11 @@
           } else {
             rangeEvents.push(event);
           }
+        }
+      });
+      backgroundEvents.forEach(function (event) {
+        if (inRange$1(event, start, end, accessors)) {
+          rangeBackgroundEvents.push(event);
         }
       });
       allDayEvents.sort(function (a, b) {
@@ -12044,7 +12092,7 @@
         components: components,
         className: "rbc-time-gutter",
         getters: getters
-      }), this.renderEvents(range, rangeEvents, getNow())));
+      }), this.renderEvents(range, rangeEvents, rangeBackgroundEvents, getNow())));
     };
 
     _proto.clearSelection = function clearSelection() {
@@ -12097,6 +12145,7 @@
   }(React.Component);
   TimeGrid.propTypes = {
     events: propTypes.array.isRequired,
+    backgroundEvents: propTypes.array.isRequired,
     resources: propTypes.array,
     step: propTypes.number,
     timeslots: propTypes.number,
@@ -13925,6 +13974,7 @@
           resourceIdAccessor = _ref2.resourceIdAccessor,
           resourceTitleAccessor = _ref2.resourceTitleAccessor,
           eventPropGetter = _ref2.eventPropGetter,
+          backgroundEventPropGetter = _ref2.backgroundEventPropGetter,
           slotPropGetter = _ref2.slotPropGetter,
           slotGroupPropGetter = _ref2.slotGroupPropGetter,
           dayPropGetter = _ref2.dayPropGetter,
@@ -13947,6 +13997,9 @@
           eventProp: function eventProp() {
             return eventPropGetter && eventPropGetter.apply(void 0, arguments) || {};
           },
+          backgroundEventProp: function backgroundEventProp() {
+            return backgroundEventPropGetter && backgroundEventPropGetter.apply(void 0, arguments) || {};
+          },
           slotProp: function slotProp() {
             return slotPropGetter && slotPropGetter.apply(void 0, arguments) || {};
           },
@@ -13959,6 +14012,7 @@
         },
         components: defaults(components[view] || {}, omit(components, names), {
           eventWrapper: NoopWrapper,
+          backgroundEventWrapper: NoopWrapper,
           eventContainerWrapper: NoopWrapper,
           dateCellWrapper: NoopWrapper,
           weekWrapper: NoopWrapper,
@@ -13982,6 +14036,8 @@
           view = _this$props4.view,
           toolbar = _this$props4.toolbar,
           events = _this$props4.events,
+          _this$props4$backgrou = _this$props4.backgroundEvents,
+          backgroundEvents = _this$props4$backgrou === void 0 ? [] : _this$props4$backgrou,
           style = _this$props4.style,
           className = _this$props4.className,
           elementProps = _this$props4.elementProps,
@@ -13994,7 +14050,7 @@
           _1 = _this$props4.formats,
           _2 = _this$props4.messages,
           _3 = _this$props4.culture,
-          props = _objectWithoutPropertiesLoose(_this$props4, ["view", "toolbar", "events", "style", "className", "elementProps", "date", "getNow", "length", "showMultiDayTimes", "onShowMore", "components", "formats", "messages", "culture"]);
+          props = _objectWithoutPropertiesLoose(_this$props4, ["view", "toolbar", "events", "backgroundEvents", "style", "className", "elementProps", "date", "getNow", "length", "showMultiDayTimes", "onShowMore", "components", "formats", "messages", "culture"]);
 
       current = current || getNow();
       var View = this.getView();
@@ -14022,6 +14078,7 @@
         localizer: localizer
       }), React__default.createElement(View, _extends({}, props, {
         events: events,
+        backgroundEvents: backgroundEvents,
         date: current,
         getNow: getNow,
         length: length,
@@ -14136,6 +14193,29 @@
      * ```
      */
     events: propTypes.arrayOf(propTypes.object),
+
+    /**
+     * An array of background event objects to display on the calendar. Background
+     * Events behave similarly to Events but are not factored into Event overlap logic,
+     * allowing them to sit behind any Events that may occur during the same period.
+     * Background Events objects can be any shape, as long as the Calendar knows how to
+     * retrieve the following details of the event:
+     *
+     *  - start time
+     *  - end time
+     *
+     * Each of these properties can be customized or generated dynamically by
+     * setting the various "accessor" props. Without any configuration the default
+     * event should look like:
+     *
+     * ```js
+     * BackgroundEvent {
+     *   start: Date,
+     *   end: Date,
+     * }
+     * ```
+     */
+    backgroundEvents: propTypes.arrayOf(propTypes.object),
 
     /**
      * Accessor for the event title, used to display event information. Should

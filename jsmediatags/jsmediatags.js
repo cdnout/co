@@ -683,7 +683,7 @@ function (_MediaTagReader) {
         var d = s.indexOf("=");
         var split = [s.slice(0, d), s.slice(d + 1)];
 
-        switch (split[0]) {
+        switch (split[0].toUpperCase()) {
           case "TITLE":
             title = split[1];
             break;
@@ -1157,7 +1157,7 @@ function () {
 
         var unsyncData;
 
-        if (flags && flags.format.unsynchronisation) {
+        if (flags && flags.format.unsynchronisation && !id3header.flags.unsynchronisation) {
           frameData = this.getUnsyncFileReader(frameData, frameDataOffset, frameSize);
           frameDataOffset = 0;
           frameSize = frameData.getSize();

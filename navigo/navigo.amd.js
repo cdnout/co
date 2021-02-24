@@ -97,7 +97,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _middlewares_checkForForceOp__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./middlewares/checkForForceOp */ "./src/middlewares/checkForForceOp.ts");
 /* harmony import */ var _middlewares_updateBrowserURL__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./middlewares/updateBrowserURL */ "./src/middlewares/updateBrowserURL.ts");
 /* harmony import */ var _middlewares_processMatches__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./middlewares/processMatches */ "./src/middlewares/processMatches.ts");
-/* harmony import */ var _lifecycles__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./lifecycles */ "./src/lifecycles.ts");
+/* harmony import */ var _middlewares_waitingList__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./middlewares/waitingList */ "./src/middlewares/waitingList.ts");
+/* harmony import */ var _lifecycles__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./lifecycles */ "./src/lifecycles.ts");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+
 
 
 
@@ -182,20 +186,44 @@ function Navigo(appRoute, resolveOptions) {
   }
 
   function resolve(to, options) {
+    if (self.__dirty) {
+      self.__waiting.push(function () {
+        return self.resolve(to, options);
+      });
+
+      return;
+    } else {
+      self.__dirty = true;
+    }
+
+    to = to ? (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(root) + "/" + (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(to) : undefined; // console.log("-- resolve --> " + to, self.__dirty);
+
     var context = {
       instance: self,
-      currentLocationPath: to ? (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(root) + "/" + (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(to) : undefined,
+      to: to,
+      currentLocationPath: to,
       navigateOptions: {},
-      resolveOptions: options || DEFAULT_RESOLVE_OPTIONS
+      resolveOptions: _extends({}, DEFAULT_RESOLVE_OPTIONS, options)
     };
     (0,_Q__WEBPACK_IMPORTED_MODULE_1__.default)([_middlewares_setLocationPath__WEBPACK_IMPORTED_MODULE_2__.default, _middlewares_matchPathToRegisteredRoutes__WEBPACK_IMPORTED_MODULE_3__.default, _Q__WEBPACK_IMPORTED_MODULE_1__.default.if(function (_ref) {
       var matches = _ref.matches;
       return matches && matches.length > 0;
-    }, _middlewares_processMatches__WEBPACK_IMPORTED_MODULE_7__.default, _lifecycles__WEBPACK_IMPORTED_MODULE_8__.notFoundLifeCycle)], context);
+    }, _middlewares_processMatches__WEBPACK_IMPORTED_MODULE_7__.default, _lifecycles__WEBPACK_IMPORTED_MODULE_9__.notFoundLifeCycle)], context, _middlewares_waitingList__WEBPACK_IMPORTED_MODULE_8__.default);
     return context.matches ? context.matches : false;
   }
 
   function navigate(to, navigateOptions) {
+    // console.log("-- navigate --> " + to, self.__dirty);
+    if (self.__dirty) {
+      self.__waiting.push(function () {
+        return self.navigate(to, navigateOptions);
+      });
+
+      return;
+    } else {
+      self.__dirty = true;
+    }
+
     to = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(root) + "/" + (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(to);
     var context = {
       instance: self,
@@ -207,7 +235,7 @@ function Navigo(appRoute, resolveOptions) {
     (0,_Q__WEBPACK_IMPORTED_MODULE_1__.default)([_middlewares_checkForDeprecationMethods__WEBPACK_IMPORTED_MODULE_4__.default, _middlewares_checkForForceOp__WEBPACK_IMPORTED_MODULE_5__.default, _middlewares_matchPathToRegisteredRoutes__WEBPACK_IMPORTED_MODULE_3__.default, _Q__WEBPACK_IMPORTED_MODULE_1__.default.if(function (_ref2) {
       var matches = _ref2.matches;
       return matches && matches.length > 0;
-    }, _middlewares_processMatches__WEBPACK_IMPORTED_MODULE_7__.default, _lifecycles__WEBPACK_IMPORTED_MODULE_8__.notFoundLifeCycle), _middlewares_updateBrowserURL__WEBPACK_IMPORTED_MODULE_6__.default], context);
+    }, _middlewares_processMatches__WEBPACK_IMPORTED_MODULE_7__.default, _lifecycles__WEBPACK_IMPORTED_MODULE_9__.notFoundLifeCycle), _middlewares_updateBrowserURL__WEBPACK_IMPORTED_MODULE_6__.default, _middlewares_waitingList__WEBPACK_IMPORTED_MODULE_8__.default], context, _middlewares_waitingList__WEBPACK_IMPORTED_MODULE_8__.default);
   }
 
   function navigateByName(name, data, options) {
@@ -237,7 +265,9 @@ function Navigo(appRoute, resolveOptions) {
   function listen() {
     if (isPushStateAvailable) {
       this.__popstateListener = function () {
-        resolve();
+        if (!self.__freezeListening) {
+          resolve();
+        }
       };
 
       window.addEventListener("popstate", this.__popstateListener);
@@ -358,10 +388,12 @@ function Navigo(appRoute, resolveOptions) {
         queryString = _extractGETParameters[1];
 
     var params = queryString === "" ? null : (0,_utils__WEBPACK_IMPORTED_MODULE_0__.parseQuery)(queryString);
+    var hashString = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.extractHashFromURL)(path);
     var route = createRoute(url, function () {}, [genericHooks], url);
     return {
       url: url,
       queryString: queryString,
+      hashString: hashString,
       route: route,
       data: null,
       params: params
@@ -376,6 +408,7 @@ function Navigo(appRoute, resolveOptions) {
     var context = {
       instance: self,
       currentLocationPath: path,
+      to: path,
       navigateOptions: {},
       resolveOptions: DEFAULT_RESOLVE_OPTIONS
     };
@@ -383,15 +416,24 @@ function Navigo(appRoute, resolveOptions) {
     return context.matches ? context.matches : false;
   }
 
-  function directMatchWithLocation(path, currentLocation) {
+  function directMatchWithLocation(path, currentLocation, annotatePathWithRoot) {
+    if (typeof currentLocation !== "undefined" && (typeof annotatePathWithRoot === "undefined" || annotatePathWithRoot)) {
+      currentLocation = composePathWithRoot(currentLocation);
+    }
+
     var context = {
       instance: self,
+      to: currentLocation,
       currentLocationPath: currentLocation
     };
     (0,_middlewares_setLocationPath__WEBPACK_IMPORTED_MODULE_2__.default)(context, function () {});
-    path = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(path);
-    var match = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.matchRoute)(context.currentLocationPath, {
-      name: path,
+
+    if (typeof path === "string") {
+      path = typeof annotatePathWithRoot === "undefined" || annotatePathWithRoot ? composePathWithRoot(path) : path;
+    }
+
+    var match = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.matchRoute)(context, {
+      name: String(path),
       path: path,
       handler: function handler() {},
       hooks: {}
@@ -435,6 +477,9 @@ function Navigo(appRoute, resolveOptions) {
   this.routes = routes;
   this.destroyed = destroyed;
   this.current = current;
+  this.__freezeListening = false;
+  this.__waiting = [];
+  this.__dirty = false;
   this.on = on;
   this.off = off;
   this.resolve = resolve;
@@ -495,6 +540,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _middlewares_checkForNotFoundHandler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./middlewares/checkForNotFoundHandler */ "./src/middlewares/checkForNotFoundHandler.ts");
 /* harmony import */ var _middlewares_errorOut__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./middlewares/errorOut */ "./src/middlewares/errorOut.ts");
 /* harmony import */ var _middlewares_flushCurrent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./middlewares/flushCurrent */ "./src/middlewares/flushCurrent.ts");
+/* harmony import */ var _middlewares_updateState__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./middlewares/updateState */ "./src/middlewares/updateState.ts");
+
 
 
 
@@ -508,7 +555,7 @@ var foundLifecycle = [_middlewares_checkForAlreadyHook__WEBPACK_IMPORTED_MODULE_
 var notFoundLifeCycle = [_middlewares_checkForLeaveHook__WEBPACK_IMPORTED_MODULE_1__.default, _middlewares_checkForNotFoundHandler__WEBPACK_IMPORTED_MODULE_6__.default, _Q__WEBPACK_IMPORTED_MODULE_0__.default.if(function (_ref) {
   var notFoundHandled = _ref.notFoundHandled;
   return notFoundHandled;
-}, foundLifecycle, [_middlewares_errorOut__WEBPACK_IMPORTED_MODULE_7__.default]), _middlewares_flushCurrent__WEBPACK_IMPORTED_MODULE_8__.default];
+}, foundLifecycle.concat([_middlewares_updateState__WEBPACK_IMPORTED_MODULE_9__.default]), [_middlewares_errorOut__WEBPACK_IMPORTED_MODULE_7__.default, _middlewares_flushCurrent__WEBPACK_IMPORTED_MODULE_8__.default])];
 
 /***/ }),
 
@@ -543,11 +590,11 @@ function callHandler(context, done) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ _checkForAfterHook
+/* harmony export */   "default": () => /* binding */ checkForAfterHook
 /* harmony export */ });
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 
-function _checkForAfterHook(context, done) {
+function checkForAfterHook(context, done) {
   if (context.match.route.hooks && context.match.route.hooks.after && (0,_utils__WEBPACK_IMPORTED_MODULE_0__.undefinedOrTrue)(context.navigateOptions, "callHooks")) {
     context.match.route.hooks.after.forEach(function (f) {
       return f(context.match);
@@ -612,7 +659,13 @@ function checkForBeforeHook(context, done) {
     (0,_Q__WEBPACK_IMPORTED_MODULE_0__.default)(context.match.route.hooks.before.map(function (f) {
       // just so we match the Q interface
       return function beforeHookInternal(_, d) {
-        return f(d, context.match);
+        return f(function (shouldStop) {
+          if (shouldStop === false) {
+            context.instance.__dirty = false;
+          } else {
+            d();
+          }
+        }, context.match);
       };
     }).concat([function () {
       return done();
@@ -703,7 +756,7 @@ function checkForLeaveHook(context, done) {
       }
 
       var runHook = false;
-      var newLocationVSOldMatch = context.instance.matchLocation(oldMatch.route.path, context.currentLocationPath);
+      var newLocationVSOldMatch = context.instance.matchLocation(oldMatch.route.path, context.currentLocationPath, false);
 
       if (oldMatch.route.path !== "*") {
         runHook = !newLocationVSOldMatch;
@@ -718,7 +771,13 @@ function checkForLeaveHook(context, done) {
         (0,_Q__WEBPACK_IMPORTED_MODULE_0__.default)(oldMatch.route.hooks.leave.map(function (f) {
           // just so we match the Q interface
           return function (_, d) {
-            return f(d, context.matches && context.matches.length > 0 ? context.matches.length === 1 ? context.matches[0] : context.matches : undefined);
+            return f(function (shouldStop) {
+              if (shouldStop === false) {
+                context.instance.__dirty = false;
+              } else {
+                d();
+              }
+            }, context.matches && context.matches.length > 0 ? context.matches.length === 1 ? context.matches[0] : context.matches : undefined);
           };
         }).concat([function () {
           return leaveLoopDone();
@@ -757,10 +816,12 @@ function checkForNotFoundHandler(context, done) {
         url = _extractGETParameters[0],
         queryString = _extractGETParameters[1];
 
+    var hashString = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.extractHashFromURL)(context.to);
     notFoundRoute.path = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.clean)(url);
     var notFoundMatch = {
       url: notFoundRoute.path,
       queryString: queryString,
+      hashString: hashString,
       data: null,
       route: notFoundRoute,
       params: queryString !== "" ? (0,_utils__WEBPACK_IMPORTED_MODULE_0__.parseQuery)(queryString) : null
@@ -824,7 +885,7 @@ __webpack_require__.r(__webpack_exports__);
 function matchPathToRegisteredRoutes(context, done) {
   for (var i = 0; i < context.instance.routes.length; i++) {
     var route = context.instance.routes[i];
-    var match = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.matchRoute)(context.currentLocationPath, route);
+    var match = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.matchRoute)(context, route);
 
     if (match) {
       if (!context.matches) context.matches = [];
@@ -892,13 +953,13 @@ function processMatches(context, done) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ _setLocationPath
+/* harmony export */   "default": () => /* binding */ setLocationPath
 /* harmony export */ });
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 
-function _setLocationPath(context, done) {
+function setLocationPath(context, done) {
   if (typeof context.currentLocationPath === "undefined") {
-    context.currentLocationPath = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getCurrentEnvURL)(context.instance.root);
+    context.currentLocationPath = context.to = (0,_utils__WEBPACK_IMPORTED_MODULE_0__.getCurrentEnvURL)(context.instance.root);
   }
 
   context.currentLocationPath = context.instance._checkForAHash(context.currentLocationPath);
@@ -932,10 +993,12 @@ function updateBrowserURL(context, done) {
       // We set a microtask to update the hash only.
 
       if (location && location.hash) {
+        context.instance.__freezeListening = true;
         setTimeout(function () {
           var tmp = location.hash;
           location.hash = "";
           location.hash = tmp;
+          context.instance.__freezeListening = false;
         }, 1);
       }
     } else if (isWindowAvailable) {
@@ -956,16 +1019,36 @@ function updateBrowserURL(context, done) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ callHandler
+/* harmony export */   "default": () => /* binding */ updateState
 /* harmony export */ });
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 
-function callHandler(context, done) {
+function updateState(context, done) {
   if ((0,_utils__WEBPACK_IMPORTED_MODULE_0__.undefinedOrTrue)(context.navigateOptions, "updateState")) {
     context.instance._setCurrent(context.matches);
   }
 
   done();
+}
+
+/***/ }),
+
+/***/ "./src/middlewares/waitingList.ts":
+/*!****************************************!*\
+  !*** ./src/middlewares/waitingList.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => /* binding */ waitingList
+/* harmony export */ });
+function waitingList(context) {
+  context.instance.__dirty = false;
+
+  if (context.instance.__waiting.length > 0) {
+    context.instance.__waiting.shift()();
+  }
 }
 
 /***/ }),
@@ -982,6 +1065,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "clean": () => /* binding */ clean,
 /* harmony export */   "isString": () => /* binding */ isString,
 /* harmony export */   "isFunction": () => /* binding */ isFunction,
+/* harmony export */   "extractHashFromURL": () => /* binding */ extractHashFromURL,
 /* harmony export */   "regExpResultToParams": () => /* binding */ regExpResultToParams,
 /* harmony export */   "extractGETParameters": () => /* binding */ extractGETParameters,
 /* harmony export */   "parseQuery": () => /* binding */ parseQuery,
@@ -1013,6 +1097,13 @@ function isString(s) {
 }
 function isFunction(s) {
   return typeof s === "function";
+}
+function extractHashFromURL(url) {
+  if (url && url.indexOf("#") >= 0) {
+    return url.split("#").pop() || "";
+  }
+
+  return "";
 }
 function regExpResultToParams(match, names) {
   if (names.length === 0) return null;
@@ -1048,8 +1139,8 @@ function parseQuery(queryString) {
 
   return query;
 }
-function matchRoute(currentPath, route) {
-  var _extractGETParameters = extractGETParameters(clean(currentPath)),
+function matchRoute(context, route) {
+  var _extractGETParameters = extractGETParameters(clean(context.currentLocationPath)),
       current = _extractGETParameters[0],
       GETParams = _extractGETParameters[1];
 
@@ -1068,6 +1159,7 @@ function matchRoute(currentPath, route) {
         return {
           url: current,
           queryString: GETParams,
+          hashString: extractHashFromURL(context.to),
           route: route,
           data: null,
           params: params
@@ -1079,13 +1171,14 @@ function matchRoute(currentPath, route) {
   }
 
   var regexp = new RegExp(pattern, _constants__WEBPACK_IMPORTED_MODULE_0__.MATCH_REGEXP_FLAGS);
-  var match = current.match(regexp); // console.log(current, regexp);
+  var match = current.match(regexp);
 
   if (match) {
-    var data = isString(route.path) ? regExpResultToParams(match, paramNames) : match.slice(1);
+    var data = isString(route.path) ? regExpResultToParams(match, paramNames) : match.groups ? match.groups : match.slice(1);
     return {
-      url: current,
+      url: clean(current.replace(new RegExp("^" + context.instance.root), "")),
       queryString: GETParams,
+      hashString: extractHashFromURL(context.to),
       route: route,
       data: data,
       params: params

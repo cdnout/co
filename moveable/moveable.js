@@ -4,7 +4,7 @@ name: moveable
 license: MIT
 author: Daybrush
 repository: git+https://github.com/daybrush/moveable.git
-version: 0.22.3
+version: 0.23.1
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -67,34 +67,11 @@ version: 0.22.3
     repository: git+https://github.com/daybrush/framework-utils.git
     version: 0.3.4
     */
-    function prefixNames(prefix) {
-      var classNames = [];
-
-      for (var _i = 1; _i < arguments.length; _i++) {
-        classNames[_i - 1] = arguments[_i];
-      }
-
-      return classNames.map(function (className) {
-        return className.split(" ").map(function (name) {
-          return name ? "" + prefix + name : "";
-        }).join(" ");
-      }).join(" ");
-    }
-    function prefixCSS(prefix, css) {
-      return css.replace(/([^}{]*){/mg, function (_, selector) {
-        return selector.replace(/\.([^{,\s\d.]+)/g, "." + prefix + "$1") + "{";
-      });
-    }
     /* react */
 
     function ref(target, name) {
       return function (e) {
         e && (target[name] = e);
-      };
-    }
-    function refs(target, name, i) {
-      return function (e) {
-        e && (target[name][i] = e);
       };
     }
     /* Class Decorator */
@@ -104,41 +81,6 @@ version: 0.22.3
         var prototype = component.prototype;
         properties.forEach(function (property) {
           action(prototype, property);
-        });
-      };
-    }
-    /* Property Decorator */
-
-    function withMethods(methods, duplicate) {
-      if (duplicate === void 0) {
-        duplicate = {};
-      }
-
-      return function (prototype, propertyName) {
-        methods.forEach(function (name) {
-          var methodName = duplicate[name] || name;
-
-          if (prototype[methodName]) {
-            return;
-          }
-
-          prototype[methodName] = function () {
-            var _a;
-
-            var args = [];
-
-            for (var _i = 0; _i < arguments.length; _i++) {
-              args[_i] = arguments[_i];
-            }
-
-            var result = (_a = this[propertyName])[name].apply(_a, args);
-
-            if (result === this[propertyName]) {
-              return this;
-            } else {
-              return result;
-            }
-          };
         });
       };
     }
@@ -657,7 +599,7 @@ version: 0.22.3
     license: MIT
     author: Daybrush
     repository: git+https://github.com/daybrush/react-simple-compat.git
-    version: 0.1.11
+    version: 1.1.0
     */
 
     /*! *****************************************************************************
@@ -1107,7 +1049,7 @@ version: 0.22.3
         var isMount = !this.base;
 
         if (isMount) {
-          this.base = document.createElement(this.type);
+          this.base = this.props.portalContainer || document.createElement(this.type);
         }
 
         renderProviders(this, this._providers, this.props.children, hooks, null);
@@ -1147,7 +1089,10 @@ version: 0.22.3
         });
 
         this.events = {};
-        base.parentNode.removeChild(base);
+
+        if (!this.props.portalContainer) {
+          base.parentNode.removeChild(base);
+        }
       };
 
       return ElementProvider;
@@ -1548,6 +1493,7 @@ version: 0.22.3
         container: container
       });
     }
+    var version = "simple-1.1.0";
 
     /*
     Copyright (c) 2015 NAVER Corp.
@@ -1879,6 +1825,80 @@ version: 0.22.3
       } else {
         return parseUserAgent(userAgent);
       }
+    }
+
+    /*
+    Copyright (c) 2019 Daybrush
+    name: framework-utils
+    license: MIT
+    author: Daybrush
+    repository: git+https://github.com/daybrush/framework-utils.git
+    version: 1.0.0
+    */
+    function prefixNames(prefix) {
+      var classNames = [];
+
+      for (var _i = 1; _i < arguments.length; _i++) {
+        classNames[_i - 1] = arguments[_i];
+      }
+
+      return classNames.map(function (className) {
+        return className.split(" ").map(function (name) {
+          return name ? "" + prefix + name : "";
+        }).join(" ");
+      }).join(" ");
+    }
+    function prefixCSS(prefix, css) {
+      return css.replace(/([^}{]*){/gm, function (_, selector) {
+        return selector.replace(/\.([^{,\s\d.]+)/g, "." + prefix + "$1") + "{";
+      });
+    }
+    /* react */
+
+    function ref$1(target, name) {
+      return function (e) {
+        e && (target[name] = e);
+      };
+    }
+    function refs(target, name, i) {
+      return function (e) {
+        e && (target[name][i] = e);
+      };
+    }
+    /* Property Decorator */
+
+    function withMethods(methods, duplicate) {
+      if (duplicate === void 0) {
+        duplicate = {};
+      }
+
+      return function (prototype, propertyName) {
+        methods.forEach(function (name) {
+          var methodName = duplicate[name] || name;
+
+          if (methodName in prototype) {
+            return;
+          }
+
+          prototype[methodName] = function () {
+            var _a;
+
+            var args = [];
+
+            for (var _i = 0; _i < arguments.length; _i++) {
+              args[_i] = arguments[_i];
+            }
+
+            var result = (_a = this[propertyName])[name].apply(_a, args);
+
+            if (result === this[propertyName]) {
+              return this;
+            } else {
+              return result;
+            }
+          };
+        });
+      };
     }
 
     /*
@@ -3942,6 +3962,139 @@ version: 0.22.3
     }
 
     /*
+    Copyright (c) 2019-present NAVER Corp.
+    name: @egjs/children-differ
+    license: MIT
+    author: NAVER Corp.
+    repository: https://github.com/naver/egjs-children-differ
+    version: 1.0.1
+    */
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation. All rights reserved.
+    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+    this file except in compliance with the License. You may obtain a copy of the
+    License at http://www.apache.org/licenses/LICENSE-2.0
+
+    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+    MERCHANTABLITY OR NON-INFRINGEMENT.
+
+    See the Apache Version 2.0 License for specific language governing permissions
+    and limitations under the License.
+    ***************************************************************************** */
+
+    /* global Reflect, Promise */
+    var extendStatics$2 = function (d, b) {
+      extendStatics$2 = Object.setPrototypeOf || {
+        __proto__: []
+      } instanceof Array && function (d, b) {
+        d.__proto__ = b;
+      } || function (d, b) {
+        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+      };
+
+      return extendStatics$2(d, b);
+    };
+
+    function __extends$2(d, b) {
+      extendStatics$2(d, b);
+
+      function __() {
+        this.constructor = d;
+      }
+
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+
+    /*
+    egjs-children-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+    var findKeyCallback = typeof Map === "function" ? undefined : function () {
+      var childrenCount = 0;
+      return function (el) {
+        return el.__DIFF_KEY__ || (el.__DIFF_KEY__ = ++childrenCount);
+      };
+    }();
+
+    /**
+     * A module that checks diff when child are added, removed, or changed .
+     * @ko 자식 노드들에서 자식 노드가 추가되거나 삭제되거나 순서가 변경된 사항을 체크하는 모듈입니다.
+     * @memberof eg
+     * @extends eg.ListDiffer
+     */
+
+    var ChildrenDiffer =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$2(ChildrenDiffer, _super);
+      /**
+       * @param - Initializing Children <ko> 초기 설정할 자식 노드들</ko>
+       */
+
+
+      function ChildrenDiffer(list) {
+        if (list === void 0) {
+          list = [];
+        }
+
+        return _super.call(this, list, findKeyCallback) || this;
+      }
+
+      return ChildrenDiffer;
+    }(ListDiffer);
+
+    /*
+    egjs-children-differ
+    Copyright (c) 2019-present NAVER Corp.
+    MIT license
+    */
+    /**
+     *
+     * @memberof eg.ChildrenDiffer
+     * @static
+     * @function
+     * @param - Previous List <ko> 이전 목록 </ko>
+     * @param - List to Update <ko> 업데이트 할 목록 </ko>
+     * @return - Returns the diff between `prevList` and `list` <ko> `prevList`와 `list`의 다른 점을 반환한다.</ko>
+     * @example
+     * import { diff } from "@egjs/children-differ";
+     * // script => eg.ChildrenDiffer.diff
+     * const result = diff([0, 1, 2, 3, 4, 5], [7, 8, 0, 4, 3, 6, 2, 1]);
+     * // List before update
+     * // [1, 2, 3, 4, 5]
+     * console.log(result.prevList);
+     * // Updated list
+     * // [4, 3, 6, 2, 1]
+     * console.log(result.list);
+     * // Index array of values added to `list`
+     * // [0, 1, 5]
+     * console.log(result.added);
+     * // Index array of values removed in `prevList`
+     * // [5]
+     * console.log(result.removed);
+     * // An array of index pairs of `prevList` and `list` with different indexes from `prevList` and `list`
+     * // [[0, 2], [4, 3], [3, 4], [2, 6], [1, 7]]
+     * console.log(result.changed);
+     * // The subset of `changed` and an array of index pairs that moved data directly. Indicate an array of absolute index pairs of `ordered`.(Formatted by: Array<[index of prevList, index of list]>)
+     * // [[4, 3], [3, 4], [2, 6]]
+     * console.log(result.pureChanged);
+     * // An array of index pairs to be `ordered` that can synchronize `list` before adding data. (Formatted by: Array<[prevIndex, nextIndex]>)
+     * // [[4, 1], [4, 2], [4, 3]]
+     * console.log(result.ordered);
+     * // An array of index pairs of `prevList` and `list` that have not been added/removed so data is preserved
+     * // [[0, 2], [4, 3], [3, 4], [2, 6], [1, 7]]
+     * console.log(result.maintained);
+     */
+
+    function diff$1(prevList, list) {
+      return diff(prevList, list, findKeyCallback);
+    }
+
+    /*
     Copyright (c) 2018 Daybrush
     @name: @daybrush/utils
     license: MIT
@@ -4349,7 +4502,7 @@ version: 0.22.3
     license: MIT
     author: Daybrush
     repository: git+https://github.com/daybrush/dragscroll.git
-    version: 0.3.1
+    version: 1.0.0
     */
 
     /*! *****************************************************************************
@@ -4368,8 +4521,8 @@ version: 0.22.3
     ***************************************************************************** */
 
     /* global Reflect, Promise */
-    var extendStatics$2 = function (d, b) {
-      extendStatics$2 = Object.setPrototypeOf || {
+    var extendStatics$3 = function (d, b) {
+      extendStatics$3 = Object.setPrototypeOf || {
         __proto__: []
       } instanceof Array && function (d, b) {
         d.__proto__ = b;
@@ -4377,11 +4530,11 @@ version: 0.22.3
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
       };
 
-      return extendStatics$2(d, b);
+      return extendStatics$3(d, b);
     };
 
-    function __extends$2(d, b) {
-      extendStatics$2(d, b);
+    function __extends$3(d, b) {
+      extendStatics$3(d, b);
 
       function __() {
         this.constructor = d;
@@ -4398,7 +4551,7 @@ version: 0.22.3
     var DragScroll =
     /*#__PURE__*/
     function (_super) {
-      __extends$2(DragScroll, _super);
+      __extends$3(DragScroll, _super);
 
       function DragScroll() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
@@ -4608,8 +4761,8 @@ version: 0.22.3
     ***************************************************************************** */
 
     /* global Reflect, Promise */
-    var extendStatics$3 = function (d, b) {
-      extendStatics$3 = Object.setPrototypeOf || {
+    var extendStatics$4 = function (d, b) {
+      extendStatics$4 = Object.setPrototypeOf || {
         __proto__: []
       } instanceof Array && function (d, b) {
         d.__proto__ = b;
@@ -4617,11 +4770,11 @@ version: 0.22.3
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
       };
 
-      return extendStatics$3(d, b);
+      return extendStatics$4(d, b);
     };
 
-    function __extends$3(d, b) {
-      extendStatics$3(d, b);
+    function __extends$4(d, b) {
+      extendStatics$4(d, b);
 
       function __() {
         this.constructor = d;
@@ -4854,7 +5007,7 @@ version: 0.22.3
     var Gesto =
     /*#__PURE__*/
     function (_super) {
-      __extends$3(Gesto, _super);
+      __extends$4(Gesto, _super);
       /**
        *
        */
@@ -5566,146 +5719,7 @@ version: 0.22.3
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/css-styled/tree/master/packages/react-css-styled
-    version: 1.0.0
-    */
-
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
-
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
-
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
-
-    /* global Reflect, Promise */
-    var extendStatics$4 = function (d, b) {
-      extendStatics$4 = Object.setPrototypeOf || {
-        __proto__: []
-      } instanceof Array && function (d, b) {
-        d.__proto__ = b;
-      } || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-      };
-
-      return extendStatics$4(d, b);
-    };
-
-    function __extends$4(d, b) {
-      extendStatics$4(d, b);
-
-      function __() {
-        this.constructor = d;
-      }
-
-      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    }
-    var __assign$4 = function () {
-      __assign$4 = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-          s = arguments[i];
-
-          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-
-        return t;
-      };
-
-      return __assign$4.apply(this, arguments);
-    };
-    function __rest$1(s, e) {
-      var t = {};
-
-      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-
-      if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
-      }
-      return t;
-    }
-
-    var StyledElement =
-    /*#__PURE__*/
-    function (_super) {
-      __extends$4(StyledElement, _super);
-
-      function StyledElement() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-
-        _this.injectResult = null;
-        _this.tag = "div";
-        return _this;
-      }
-
-      var __proto = StyledElement.prototype;
-
-      __proto.render = function () {
-        var _a = this.props,
-            _b = _a.className,
-            className = _b === void 0 ? "" : _b,
-            cspNonce = _a.cspNonce,
-            attributes = __rest$1(_a, ["className", "cspNonce"]);
-
-        var cssId = this.injector.className;
-        var Tag = this.tag;
-        return createElement(Tag, __assign$4({
-          "ref": ref(this, "element"),
-          "data-styled-id": cssId,
-          "className": className + " " + cssId
-        }, attributes));
-      };
-
-      __proto.componentDidMount = function () {
-        this.injectResult = this.injector.inject(this.element, {
-          nonce: this.props.cspNonce
-        });
-      };
-
-      __proto.componentWillUnmount = function () {
-        this.injectResult.destroy();
-        this.injectResult = null;
-      };
-
-      __proto.getElement = function () {
-        return this.element;
-      };
-
-      return StyledElement;
-    }(Component);
-
-    function styled$1(tag, css) {
-      var injector = styled(css);
-      return (
-        /*#__PURE__*/
-        function (_super) {
-          __extends$4(Styled, _super);
-
-          function Styled() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-
-            _this.injector = injector;
-            _this.tag = tag;
-            return _this;
-          }
-
-          return Styled;
-        }(StyledElement)
-      );
-    }
-
-    /*
-    Copyright (c) 2019-present NAVER Corp.
-    name: @egjs/children-differ
-    license: MIT
-    author: NAVER Corp.
-    repository: https://github.com/naver/egjs-children-differ
-    version: 1.0.1
+    version: 1.0.2
     */
 
     /*! *****************************************************************************
@@ -5745,45 +5759,107 @@ version: 0.22.3
 
       d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
+    var __assign$4 = function () {
+      __assign$4 = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
 
-    /*
-    egjs-children-differ
-    Copyright (c) 2019-present NAVER Corp.
-    MIT license
-    */
-    var findKeyCallback = typeof Map === "function" ? undefined : function () {
-      var childrenCount = 0;
-      return function (el) {
-        return el.__DIFF_KEY__ || (el.__DIFF_KEY__ = ++childrenCount);
-      };
-    }();
-
-    /**
-     * A module that checks diff when child are added, removed, or changed .
-     * @ko 자식 노드들에서 자식 노드가 추가되거나 삭제되거나 순서가 변경된 사항을 체크하는 모듈입니다.
-     * @memberof eg
-     * @extends eg.ListDiffer
-     */
-
-    var ChildrenDiffer =
-    /*#__PURE__*/
-    function (_super) {
-      __extends$5(ChildrenDiffer, _super);
-      /**
-       * @param - Initializing Children <ko> 초기 설정할 자식 노드들</ko>
-       */
-
-
-      function ChildrenDiffer(list) {
-        if (list === void 0) {
-          list = [];
+          for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
         }
 
-        return _super.call(this, list, findKeyCallback) || this;
+        return t;
+      };
+
+      return __assign$4.apply(this, arguments);
+    };
+    function __rest$1(s, e) {
+      var t = {};
+
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+
+      if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+      }
+      return t;
+    }
+
+    var StyledElement =
+    /*#__PURE__*/
+    function (_super) {
+      __extends$5(StyledElement, _super);
+
+      function StyledElement() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+
+        _this.injectResult = null;
+        _this.tag = "div";
+        return _this;
       }
 
-      return ChildrenDiffer;
-    }(ListDiffer);
+      var __proto = StyledElement.prototype;
+
+      __proto.render = function () {
+        var _a = this.props,
+            _b = _a.className,
+            className = _b === void 0 ? "" : _b,
+            cspNonce = _a.cspNonce,
+            portalContainer = _a.portalContainer,
+            attributes = __rest$1(_a, ["className", "cspNonce", "portalContainer"]);
+
+        var cssId = this.injector.className;
+        var Tag = this.tag;
+        var portalAttributes = {};
+
+        if ((version ).indexOf("simple") > -1 && portalContainer) {
+          portalAttributes = {
+            portalContainer: portalContainer
+          };
+        }
+
+        return createElement(Tag, __assign$4({
+          "ref": ref(this, "element"),
+          "data-styled-id": cssId,
+          "className": className + " " + cssId
+        }, portalAttributes, attributes));
+      };
+
+      __proto.componentDidMount = function () {
+        this.injectResult = this.injector.inject(this.element, {
+          nonce: this.props.cspNonce
+        });
+      };
+
+      __proto.componentWillUnmount = function () {
+        this.injectResult.destroy();
+        this.injectResult = null;
+      };
+
+      __proto.getElement = function () {
+        return this.element;
+      };
+
+      return StyledElement;
+    }(Component);
+
+    function styled$1(tag, css) {
+      var injector = styled(css);
+      return (
+        /*#__PURE__*/
+        function (_super) {
+          __extends$5(Styled, _super);
+
+          function Styled() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+
+            _this.injector = injector;
+            _this.tag = tag;
+            return _this;
+          }
+
+          return Styled;
+        }(StyledElement)
+      );
+    }
 
     /*
     Copyright (c) 2019 Daybrush
@@ -5791,7 +5867,7 @@ version: 0.22.3
     license: MIT
     author: Daybrush
     repository: https://github.com/daybrush/moveable/blob/master/packages/react-moveable
-    version: 0.25.2
+    version: 0.26.2
     */
 
     /*! *****************************************************************************
@@ -5890,7 +5966,7 @@ version: 0.22.3
       return res ? parseFloat(res[1]) < 605 : false;
     }();
     var PREFIX = "moveable-";
-    var MOVEABLE_CSS = "\n{\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tleft: 0;\n\ttop: 0;\n    z-index: 3000;\n    --moveable-color: #4af;\n    --zoom: 1;\n    --zoompx: 1px;\n    will-change: transform;\n}\n.control-box {\n    z-index: 0;\n}\n.line, .control {\n\tleft: 0;\n    top: 0;\n    will-change: transform;\n}\n.control {\n\tposition: absolute;\n\twidth: 14px;\n\theight: 14px;\n\tborder-radius: 50%;\n\tborder: 2px solid #fff;\n\tbox-sizing: border-box;\n    background: #4af;\n    background: var(--moveable-color);\n\tmargin-top: -7px;\n    margin-left: -7px;\n    border: 2px solid #fff;\n    z-index: 10;\n}\n.padding {\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    width: 100px;\n    height: 100px;\n    transform-origin: 0 0;\n}\n.line {\n\tposition: absolute;\n\twidth: 1px;\n    height: 1px;\n    background: #4af;\n    background: var(--moveable-color);\n\ttransform-origin: 0px 50%;\n}\n.line.dashed {\n    box-sizing: border-box;\n    background: transparent;\n}\n.line.dashed.horizontal {\n    border-top: 1px dashed #4af;\n    border-top-color: #4af;\n    border-top-color: var(--moveable-color);\n}\n.line.dashed.vertical {\n    border-left: 1px dashed #4af;\n    border-left-color: #4af;\n    border-left-color: var(--moveable-color);\n}\n.line.vertical {\n    transform: translateX(-50%);\n}\n.line.horizontal {\n    transform: translateY(-50%);\n}\n.line.vertical.bold {\n    width: 2px;\n}\n.line.horizontal.bold {\n    height: 2px;\n}\n\n.control.origin {\n\tborder-color: #f55;\n\tbackground: #fff;\n\twidth: 12px;\n\theight: 12px;\n\tmargin-top: -6px;\n    margin-left: -6px;\n\tpointer-events: none;\n}\n" + [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(function (degree) {
+    var MOVEABLE_CSS = "\n{\n\tposition: absolute;\n\twidth: 1px;\n\theight: 1px;\n\tleft: 0;\n\ttop: 0;\n    z-index: 3000;\n    --moveable-color: #4af;\n    --zoom: 1;\n    --zoompx: 1px;\n    will-change: transform;\n}\n.control-box {\n    z-index: 0;\n}\n.line, .control {\n    position: absolute;\n\tleft: 0;\n    top: 0;\n    will-change: transform;\n}\n.control {\n\twidth: 14px;\n\theight: 14px;\n\tborder-radius: 50%;\n\tborder: 2px solid #fff;\n\tbox-sizing: border-box;\n    background: #4af;\n    background: var(--moveable-color);\n\tmargin-top: -7px;\n    margin-left: -7px;\n    border: 2px solid #fff;\n    z-index: 10;\n}\n.padding {\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    width: 100px;\n    height: 100px;\n    transform-origin: 0 0;\n}\n.line {\n\twidth: 1px;\n    height: 1px;\n    background: #4af;\n    background: var(--moveable-color);\n\ttransform-origin: 0px 50%;\n}\n.line.dashed {\n    box-sizing: border-box;\n    background: transparent;\n}\n.line.dashed.horizontal {\n    border-top: 1px dashed #4af;\n    border-top-color: #4af;\n    border-top-color: var(--moveable-color);\n}\n.line.dashed.vertical {\n    border-left: 1px dashed #4af;\n    border-left-color: #4af;\n    border-left-color: var(--moveable-color);\n}\n.line.vertical {\n    transform: translateX(-50%);\n}\n.line.horizontal {\n    transform: translateY(-50%);\n}\n.line.vertical.bold {\n    width: 2px;\n}\n.line.horizontal.bold {\n    height: 2px;\n}\n\n.control.origin {\n\tborder-color: #f55;\n\tbackground: #fff;\n\twidth: 12px;\n\theight: 12px;\n\tmargin-top: -6px;\n    margin-left: -6px;\n\tpointer-events: none;\n}\n" + [0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165].map(function (degree) {
       return "\n.direction[data-rotation=\"" + degree + "\"] {\n\t" + getCursorCSS(degree) + "\n}\n";
     }).join("\n") + "\n.group {\n    z-index: -1;\n}\n.area {\n    position: absolute;\n}\n.area-pieces {\n    position: absolute;\n    top: 0;\n    left: 0;\n    display: none;\n}\n.area.avoid, .area.pass {\n    pointer-events: none;\n}\n.area.avoid+.area-pieces {\n    display: block;\n}\n.area-piece {\n    position: absolute;\n}\n\n" + (IS_WEBKIT605 ? ":global svg *:before {\n\tcontent:\"\";\n\ttransform-origin: inherit;\n}" : "") + "\n";
     var NEARBY_POS = [[0, 1, 2], [1, 0, 3], [2, 0, 3], [3, 1, 2]];
@@ -6028,13 +6104,7 @@ version: 0.22.3
         });
         targetOrigin = origin.slice();
         hasOffset = true;
-
-        if (tagName === "g") {
-          offsetLeft = 0;
-          offsetTop = 0;
-        } else {
-          _a = getSVGGraphicsOffset(el, origin), offsetLeft = _a[0], offsetTop = _a[1], origin[0] = _a[2], origin[1] = _a[3];
-        }
+        _a = getSVGGraphicsOffset(el, origin), offsetLeft = _a[0], offsetTop = _a[1], origin[0] = _a[2], origin[1] = _a[3];
       } else {
         origin = getTransformOrigin(style).map(function (pos) {
           return parseFloat(pos);
@@ -6043,6 +6113,7 @@ version: 0.22.3
       }
 
       return {
+        tagName: tagName,
         isSVG: isSVG,
         hasOffset: hasOffset,
         offset: [offsetLeft || 0, offsetTop || 0],
@@ -6097,7 +6168,6 @@ version: 0.22.3
 
       while (el && !isEnd) {
         var style = getComputedStyle$1(el);
-        var tagName = el.tagName.toLowerCase();
         var position = style.position;
         var isFixed = position === "fixed";
         var matrix = convertCSStoMatrix(getTransformMatrix(style.transform)); // convert 3 to 4
@@ -6119,6 +6189,7 @@ version: 0.22.3
         }
 
         var _a = getOffsetPosInfo(el, container, style, isFixed),
+            tagName = _a.tagName,
             hasOffset = _a.hasOffset,
             isSVG = _a.isSVG,
             origin = _a.origin,
@@ -6131,6 +6202,9 @@ version: 0.22.3
         if (tagName === "svg" && targetMatrix) {
           matrixes.push( // scale matrix for svg's SVGElements.
           getSVGMatrix(el, n), createIdentityMatrix(n));
+        } else if (tagName === "g" && target !== el) {
+          offsetLeft = 0;
+          offsetTop = 0;
         }
 
         var _b = getOffsetInfo(el, container),
@@ -6745,19 +6819,29 @@ version: 0.22.3
       };
     }
     function getClientRect(el, isExtends) {
-      var _a = el.getBoundingClientRect(),
-          left = _a.left,
-          width = _a.width,
-          top = _a.top,
-          bottom = _a.bottom,
-          right = _a.right,
-          height = _a.height;
+      var left = 0;
+      var top = 0;
+      var width = 0;
+      var height = 0;
+
+      if (el === document.body || el === document.documentElement) {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        left = -(document.documentElement.scrollLeft || document.body.scrollLeft);
+        top = -(document.documentElement.scrollTop || document.body.scrollTop);
+      } else {
+        var clientRect = el.getBoundingClientRect();
+        left = clientRect.left;
+        top = clientRect.top;
+        width = clientRect.width;
+        height = clientRect.height;
+      }
 
       var rect = {
         left: left,
-        right: right,
+        right: left + width,
         top: top,
-        bottom: bottom,
+        bottom: top + height,
         width: width,
         height: height
       };
@@ -7157,15 +7241,20 @@ version: 0.22.3
 
       return target;
     }
-    function getRefTargets(targets) {
+    function getRefTargets(targets, isSelector) {
       if (!targets) {
         return [];
       }
 
       var userTargets = isArrayFormat(targets) ? [].slice.call(targets) : [targets];
-      return userTargets.map(function (target) {
-        return getRefTarget(target);
-      });
+      return userTargets.reduce(function (prev, target) {
+        if (isString$1(target) && isSelector) {
+          return __spreadArrays$3(prev, [].slice.call(document.querySelectorAll(target)));
+        }
+
+        prev.push(getRefTarget(target, isSelector));
+        return prev;
+      }, []);
     }
     function getElementTargets(targets, selectorMap) {
       var elementTargets = [];
@@ -7191,6 +7280,35 @@ version: 0.22.3
       deg = direction >= 0 ? deg : 180 - deg;
       deg = deg >= 0 ? deg : 360 + deg;
       return deg;
+    }
+    function renderGuideline(info, React) {
+      var _a;
+
+      var direction = info.direction,
+          classNames = info.classNames,
+          size = info.size,
+          pos = info.pos,
+          zoom = info.zoom,
+          key = info.key;
+      var isHorizontal = direction === "horizontal";
+      var scaleDirection = isHorizontal ? "Y" : "X"; // const scaleDirection2 = isHorizontal ? "Y" : "X";
+
+      return React.createElement("div", {
+        key: key,
+        className: classNames.join(" "),
+        style: (_a = {}, _a[isHorizontal ? "width" : "height"] = "" + size, _a.transform = "translate(" + pos[0] + ", " + pos[1] + ") translate" + scaleDirection + "(-50%) scale" + scaleDirection + "(" + zoom + ")", _a)
+      });
+    }
+    function renderInnerGuideline(info, React) {
+      return renderGuideline(__assign$5(__assign$5({}, info), {
+        classNames: __spreadArrays$3([prefix("line", "guideline", info.direction)], info.classNames).filter(function (className) {
+          return className;
+        }),
+        size: info.size || info.sizeValue + "px",
+        pos: info.pos || info.posValue.map(function (v) {
+          return v + "px";
+        })
+      }), React);
     }
 
     /**
@@ -8104,10 +8222,11 @@ version: 0.22.3
       elementGuidelines.forEach(function (guideline1) {
         var elementStart = guideline1.pos[index];
         var elementEnd = elementStart + guideline1.sizes[index];
-        elementGuidelines.forEach(function (_a) {
-          var guideline2Pos = _a.pos,
-              guideline2Sizes = _a.sizes,
-              guideline2Element = _a.element;
+        elementGuidelines.forEach(function (guideline2) {
+          var guideline2Pos = guideline2.pos,
+              guideline2Sizes = guideline2.sizes,
+              guideline2Element = guideline2.element,
+              guidline2ClassName = guideline2.className;
           var targetStart = guideline2Pos[index];
           var targetEnd = targetStart + guideline2Sizes[index];
           var pos = 0;
@@ -8144,6 +8263,7 @@ version: 0.22.3
               size: 0,
               type: otherType,
               gap: gap,
+              className: guidline2ClassName,
               gapGuidelines: elementGuidelines
             });
           }
@@ -8155,6 +8275,7 @@ version: 0.22.3
             if (throttle$2(start - (centerPos - snapThreshold), 0.1) >= 0) {
               totalGuidelines.push({
                 pos: otherType === "vertical" ? [centerPos, guideline2Pos[1]] : [guideline2Pos[0], centerPos],
+                className: guidline2ClassName,
                 element: guideline2Element,
                 sizes: guideline2Sizes,
                 size: 0,
@@ -8193,63 +8314,46 @@ version: 0.22.3
       });
       return totalGuidelines;
     }
-    function getElementGuidelines(moveable, isRefresh) {
+    function caculateElementGuidelines(moveable, values) {
       var guidelines = [];
+
+      if (!values.length) {
+        return guidelines;
+      }
+
       var state = moveable.state;
-
-      if (isRefresh && state.guidelines && state.guidelines.length) {
-        return guidelines;
-      }
-
-      var _a = moveable.props,
-          _b = _a.elementGuidelines,
-          elementGuidelines = _b === void 0 ? [] : _b,
-          snapCenter = _a.snapCenter;
-
-      if (!elementGuidelines.length) {
-        return guidelines;
-      }
-
+      var snapCenter = moveable.props.snapCenter;
       var containerClientRect = state.containerClientRect,
-          _c = state.targetClientRect,
-          clientTop = _c.top,
-          clientLeft = _c.left,
+          _a = state.targetClientRect,
+          clientTop = _a.top,
+          clientLeft = _a.left,
           rootMatrix = state.rootMatrix,
           is3d = state.is3d;
       var n = is3d ? 4 : 3;
 
-      var _d = calculateContainerPos(rootMatrix, containerClientRect, n),
-          containerLeft = _d[0],
-          containerTop = _d[1];
+      var _b = calculateContainerPos(rootMatrix, containerClientRect, n),
+          containerLeft = _b[0],
+          containerTop = _b[1];
 
       var poses = getAbsolutePosesByState(state);
 
-      var _e = getMinMaxs(poses),
-          targetLeft = _e.minX,
-          targetTop = _e.minY;
+      var _c = getMinMaxs(poses),
+          targetLeft = _c.minX,
+          targetTop = _c.minY;
 
-      var _f = minus([targetLeft, targetTop], calculateInversePosition(rootMatrix, [clientLeft - containerLeft, clientTop - containerTop], n)).map(function (pos) {
+      var _d = minus([targetLeft, targetTop], calculateInversePosition(rootMatrix, [clientLeft - containerLeft, clientTop - containerTop], n)).map(function (pos) {
         return roundSign(pos);
       }),
-          distLeft = _f[0],
-          distTop = _f[1];
+          distLeft = _d[0],
+          distTop = _d[1];
 
-      elementGuidelines.map(function (el) {
-        if ("parentElement" in el) {
-          return {
-            element: el
-          };
-        }
-
-        return el;
-      }).filter(function (value) {
-        return value.refresh && isRefresh || !value.refresh && !isRefresh;
-      }).forEach(function (value) {
+      values.forEach(function (value) {
         var element = value.element,
             topValue = value.top,
             leftValue = value.left,
             rightValue = value.right,
-            bottomValue = value.bottom;
+            bottomValue = value.bottom,
+            className = value.className;
         var rect = element.getBoundingClientRect();
         var left = rect.left - containerLeft;
         var top = rect.top - containerTop;
@@ -8274,7 +8378,8 @@ version: 0.22.3
             element: element,
             pos: [throttle$2(elementLeft + distLeft, 0.1), elementTop],
             size: height,
-            sizes: sizes
+            sizes: sizes,
+            className: className
           });
         } // bottom
 
@@ -8285,7 +8390,8 @@ version: 0.22.3
             element: element,
             pos: [throttle$2(elementRight + distLeft, 0.1), elementTop],
             size: height,
-            sizes: sizes
+            sizes: sizes,
+            className: className
           });
         } // left
 
@@ -8296,7 +8402,8 @@ version: 0.22.3
             element: element,
             pos: [elementLeft, throttle$2(elementTop + distTop, 0.1)],
             size: width,
-            sizes: sizes
+            sizes: sizes,
+            className: className
           });
         } // right
 
@@ -8307,7 +8414,8 @@ version: 0.22.3
             element: element,
             pos: [elementLeft, throttle$2(elementBottom + distTop, 0.1)],
             size: width,
-            sizes: sizes
+            sizes: sizes,
+            className: className
           });
         }
 
@@ -8318,7 +8426,8 @@ version: 0.22.3
             pos: [throttle$2((elementLeft + elementRight) / 2 + distLeft, 0.1), elementTop],
             size: height,
             sizes: sizes,
-            center: true
+            center: true,
+            className: className
           });
           guidelines.push({
             type: "horizontal",
@@ -8326,11 +8435,63 @@ version: 0.22.3
             pos: [elementLeft, throttle$2((elementTop + elementBottom) / 2 + distTop, 0.1)],
             size: width,
             sizes: sizes,
-            center: true
+            center: true,
+            className: className
           });
         }
       });
       return guidelines;
+    }
+    function getElementGuidelines(moveable, isRefresh, prevGuidelines) {
+      if (prevGuidelines === void 0) {
+        prevGuidelines = [];
+      }
+
+      var guidelines = [];
+      var state = moveable.state;
+
+      if (isRefresh && state.guidelines && state.guidelines.length) {
+        return guidelines;
+      }
+
+      var _a = moveable.props.elementGuidelines,
+          elementGuidelines = _a === void 0 ? [] : _a;
+
+      if (!elementGuidelines.length) {
+        return guidelines;
+      }
+
+      var prevValues = state.elementGuidelineValues || [];
+      var nextValues = elementGuidelines.map(function (el) {
+        if ("parentElement" in el) {
+          return {
+            element: el
+          };
+        }
+
+        return el;
+      });
+      state.elementGuidelineValues = nextValues;
+
+      var _b = diff$1(prevValues.map(function (v) {
+        return v.element;
+      }), nextValues.map(function (v) {
+        return v.element;
+      })),
+          added = _b.added,
+          removed = _b.removed;
+
+      var removedElements = removed.map(function (index) {
+        return prevValues[index].element;
+      });
+      var addedGuidelines = caculateElementGuidelines(moveable, added.map(function (index) {
+        return nextValues[index];
+      }).filter(function (value) {
+        return value.refresh && isRefresh || !value.refresh && !isRefresh;
+      }));
+      return __spreadArrays$3(prevGuidelines.filter(function (guideline) {
+        return removedElements.indexOf(guideline.element) === -1;
+      }), addedGuidelines);
     }
     function getTotalGuidelines(moveable) {
       var _a = moveable.state,
@@ -9431,8 +9592,10 @@ version: 0.22.3
       return result;
     }
 
-    var HORIZONTAL_NAMES = ["horizontal", "left", "top", "width", "Y", "X"];
-    var VERTICAL_NAMES = ["vertical", "top", "left", "height", "X", "Y"];
+    var DIRECTION_NAMES = {
+      horizontal: ["left", "top", "width", "Y", "X"],
+      vertical: ["top", "left", "height", "X", "Y"]
+    };
     function snapStart(moveable) {
       var state = moveable.state;
 
@@ -9440,6 +9603,7 @@ version: 0.22.3
         return;
       }
 
+      state.elementGuidelineValues = [];
       state.staticGuidelines = getElementGuidelines(moveable, false);
       state.guidelines = getTotalGuidelines(moveable);
       state.enableSnap = true;
@@ -10225,28 +10389,27 @@ version: 0.22.3
       return group;
     }
 
-    function renderElementGroup(moveable, group, _a, minPos, clientPos, clientSize, targetPos, snapThreshold, snapDigit, index, snapDistFormat, React) {
-      var directionName = _a[0],
-          posName1 = _a[1],
-          posName2 = _a[2],
-          sizeName = _a[3],
-          scaleDirection1 = _a[4],
-          scaleDirection2 = _a[5];
-      var _b = moveable.props,
-          zoom = _b.zoom,
-          _c = _b.isDisplaySnapDigit,
-          isDisplaySnapDigit = _c === void 0 ? true : _c;
-      return flat$1(group.map(function (elementGuidelines, i) {
+    function renderElementGroup(moveable, direction, groups, minPos, clientPos, clientSize, targetPos, snapThreshold, snapDigit, index, snapDistFormat, React) {
+      var _a = moveable.props,
+          zoom = _a.zoom,
+          _b = _a.isDisplaySnapDigit,
+          isDisplaySnapDigit = _b === void 0 ? true : _b;
+      var _c = DIRECTION_NAMES[direction],
+          posName1 = _c[0],
+          posName2 = _c[1],
+          sizeName = _c[2],
+          scaleDirection = _c[4];
+      return flat$1(groups.map(function (elementGuidelines, i) {
         var isFirstRenderSize = true;
         return elementGuidelines.map(function (_a, j) {
-          var _b, _c;
+          var _b;
 
           var pos = _a.pos,
               size = _a.size;
 
-          var _d = getElementGuidelineDist(pos[index], size, clientPos, clientSize),
-              linePos = _d.pos,
-              lineSize = _d.size;
+          var _c = getElementGuidelineDist(pos[index], size, clientPos, clientSize),
+              linePos = _c.pos,
+              lineSize = _c.size;
 
           if (lineSize < snapThreshold) {
             return null;
@@ -10256,60 +10419,60 @@ version: 0.22.3
           isFirstRenderSize = false;
           var snapSize = isDisplaySnapDigit && isRenderSize ? parseFloat(lineSize.toFixed(snapDigit)) : 0;
           return React.createElement("div", {
-            key: directionName + "LinkGuideline" + i + "-" + j,
-            className: prefix("guideline-group", directionName),
+            key: direction + "LinkGuideline" + i + "-" + j,
+            className: prefix("guideline-group", direction),
             style: (_b = {}, _b[posName1] = minPos + linePos + "px", _b[posName2] = -targetPos + pos[index ? 0 : 1] + "px", _b[sizeName] = lineSize + "px", _b)
-          }, React.createElement("div", {
-            className: prefix("line", directionName, "guideline", "dashed"),
-            style: (_c = {}, _c[posName1] = "0%", _c[posName2] = "0%", _c[sizeName] = "100%", _c.transform = "translate" + scaleDirection1 + "(-50%) scale" + scaleDirection1 + "(" + zoom + ")", _c)
-          }), React.createElement("div", {
+          }, renderInnerGuideline({
+            direction: direction,
+            classNames: [prefix("dashed")],
+            size: "100%",
+            posValue: [0, 0],
+            sizeValue: lineSize,
+            zoom: zoom
+          }, React), React.createElement("div", {
             className: prefix("size-value"),
             style: {
-              transform: "translate" + scaleDirection2 + "(-50%) scale(" + zoom + ")"
+              transform: "translate" + scaleDirection + "(-50%) scale(" + zoom + ")"
             }
           }, snapSize > 0 ? snapDistFormat(snapSize) : ""));
         });
       }));
     }
 
-    function renderSnapPoses(moveable, snapPoses, _a, minPos, targetPos, size, React) {
-      var directionName = _a[0],
-          posName1 = _a[1],
-          posName2 = _a[2],
-          sizeName = _a[3],
-          scaleDirection1 = _a[4];
+    function renderSnapPoses(moveable, direction, snapPoses, minPos, targetPos, size, index, React) {
       var zoom = moveable.props.zoom;
       return snapPoses.map(function (_a, i) {
-        var _b;
-
         var type = _a.type,
             pos = _a.pos;
-        return React.createElement("div", {
-          className: prefix("line", directionName, "guideline", "target", "bold", type),
-          key: directionName + "TargetGuideline" + i,
-          style: (_b = {}, _b[posName1] = minPos + "px", _b[posName2] = -targetPos + pos + "px", _b[sizeName] = size + "px", _b.transform = "translate" + scaleDirection1 + "(-50%) scale" + scaleDirection1 + "(" + zoom + ")", _b)
-        });
+        var renderPos = [0, 0];
+        renderPos[index] = minPos;
+        renderPos[index ? 0 : 1] = -targetPos + pos;
+        return renderInnerGuideline({
+          key: direction + "TargetGuideline" + i,
+          classNames: [prefix("target", "bold", type)],
+          posValue: renderPos,
+          sizeValue: size,
+          zoom: zoom,
+          direction: direction
+        }, React);
       });
     }
 
-    function renderGuidelines(moveable, guidelines, _a, targetPos1, targetPos2, index, React) {
-      var directionName = _a[0],
-          posName1 = _a[1],
-          posName2 = _a[2],
-          sizeName = _a[3],
-          scaleDirection1 = _a[4];
+    function renderGuidelines(moveable, direction, guidelines, targetPos, React) {
       var zoom = moveable.props.zoom;
       return guidelines.map(function (guideline, i) {
-        var _a;
-
         var pos = guideline.pos,
             size = guideline.size,
             element = guideline.element;
-        return React.createElement("div", {
-          className: prefix("line", directionName, "guideline", element ? "bold" : ""),
-          key: directionName + "Guideline" + i,
-          style: (_a = {}, _a[posName1] = -targetPos1 + pos[index] + "px", _a[posName2] = -targetPos2 + pos[index ? 0 : 1] + "px", _a[sizeName] = size + "px", _a.transform = "translate" + scaleDirection1 + "(-50%) scale" + scaleDirection1 + "(" + zoom + ")", _a)
-        });
+        var renderPos = [-targetPos[0] + pos[0], -targetPos[1] + pos[1]];
+        return renderInnerGuideline({
+          key: direction + "Guideline" + i,
+          classNames: element ? [prefix("bold")] : [],
+          direction: direction,
+          posValue: renderPos,
+          sizeValue: size,
+          zoom: zoom
+        }, React);
       });
     }
 
@@ -10404,43 +10567,41 @@ version: 0.22.3
       }));
     }
 
-    function renderGapGuidelines(moveable, gapGuidelines, type, _a, snapDistFormat, React) {
-      var directionName = _a[0],
-          posName1 = _a[1],
-          posName2 = _a[2],
-          sizeName = _a[3],
-          scaleDirection1 = _a[4],
-          scaleDirection2 = _a[5];
-      var _b = moveable.props,
-          _c = _b.snapDigit,
-          snapDigit = _c === void 0 ? 0 : _c,
-          _d = _b.isDisplaySnapDigit,
-          isDisplaySnapDigit = _d === void 0 ? true : _d,
-          zoom = _b.zoom;
-      var otherType = type === "vertical" ? "horizontal" : "vertical";
-
-      var _e = type === "vertical" ? [0, 1] : [1, 0],
-          index = _e[0],
-          otherIndex = _e[1];
-
+    function renderGapGuidelines(moveable, direction, gapGuidelines, snapDistFormat, React) {
+      var _a = moveable.props,
+          _b = _a.snapDigit,
+          snapDigit = _b === void 0 ? 0 : _b,
+          _c = _a.isDisplaySnapDigit,
+          isDisplaySnapDigit = _c === void 0 ? true : _c,
+          zoom = _a.zoom;
+      var scaleDirection = direction === "horizontal" ? "X" : "Y";
+      var sizeName = direction === "horizontal" ? "width" : "height";
       return gapGuidelines.map(function (_a, i) {
-        var _b, _c;
+        var _b;
 
         var renderPos = _a.renderPos,
-            gap = _a.gap;
+            gap = _a.gap,
+            className = _a.className;
         var absGap = Math.abs(gap);
         var snapSize = isDisplaySnapDigit ? parseFloat(absGap.toFixed(snapDigit)) : 0;
         return React.createElement("div", {
-          key: otherType + "GapGuideline" + i,
-          className: prefix("guideline-group", directionName),
-          style: (_b = {}, _b[posName1] = renderPos[index] + "px", _b[posName2] = renderPos[otherIndex] + "px", _b[sizeName] = absGap + "px", _b)
-        }, React.createElement("div", {
-          className: prefix("line", directionName, "guideline", "gap"),
-          style: (_c = {}, _c[sizeName] = "100%", _c.transform = "translate" + scaleDirection1 + "(-50%) scale" + scaleDirection1 + "(" + zoom + ")", _c)
-        }), React.createElement("div", {
+          key: direction + "GapGuideline" + i,
+          className: prefix("guideline-group", direction),
+          style: (_b = {
+            left: renderPos[0] + "px",
+            top: renderPos[1] + "px"
+          }, _b[sizeName] = absGap + "px", _b)
+        }, renderInnerGuideline({
+          direction: direction,
+          classNames: [prefix("gap"), className],
+          size: "100%",
+          posValue: [0, 0],
+          sizeValue: absGap,
+          zoom: zoom
+        }, React), React.createElement("div", {
           className: prefix("size-value", "gap"),
           style: {
-            transform: "translate" + scaleDirection2 + "(-50%) scale(" + zoom + ")"
+            transform: "translate" + scaleDirection + "(-50%) scale(" + zoom + ")"
           }
         }, snapSize > 0 ? snapDistFormat(snapSize) : ""));
       });
@@ -10639,8 +10800,8 @@ version: 0.22.3
 
         var elementHorizontalGroup = groupByElementGuidelines(horizontalGuidelines, clientLeft, width, 0);
         var elementVerticalGroup = groupByElementGuidelines(verticalGuidelines, clientTop, height, 1);
-        var gapVerticalGuidelines = getGapGuidelines$1(verticalGuidelines, "vertical", [targetLeft, targetTop], [width, height]);
-        var gapHorizontalGuidelines = getGapGuidelines$1(horizontalGuidelines, "horizontal", [targetLeft, targetTop], [width, height]);
+        var gapHorizontalGuidelines = getGapGuidelines$1(verticalGuidelines, "vertical", [targetLeft, targetTop], [width, height]);
+        var gapVerticalGuidelines = getGapGuidelines$1(horizontalGuidelines, "horizontal", [targetLeft, targetTop], [width, height]);
 
         var allGuidelines = __spreadArrays$3(verticalGuidelines, horizontalGuidelines);
 
@@ -10658,7 +10819,7 @@ version: 0.22.3
           }),
           gaps: __spreadArrays$3(gapVerticalGuidelines, gapHorizontalGuidelines)
         }, true);
-        return __spreadArrays$3(renderGapGuidelines(moveable, gapVerticalGuidelines, "vertical", HORIZONTAL_NAMES, snapDistFormat, React), renderGapGuidelines(moveable, gapHorizontalGuidelines, "horizontal", VERTICAL_NAMES, snapDistFormat, React), renderElementGroup(moveable, elementHorizontalGroup, HORIZONTAL_NAMES, minLeft, clientLeft, width, targetTop, snapThreshold, snapDigit, 0, snapDistFormat, React), renderElementGroup(moveable, elementVerticalGroup, VERTICAL_NAMES, minTop, clientTop, height, targetLeft, snapThreshold, snapDigit, 1, snapDistFormat, React), renderSnapPoses(moveable, horizontalSnapPoses, HORIZONTAL_NAMES, minLeft, targetTop, width, React), renderSnapPoses(moveable, verticalSnapPoses, VERTICAL_NAMES, minTop, targetLeft, height, React), renderGuidelines(moveable, horizontalGuidelines, HORIZONTAL_NAMES, targetLeft, targetTop, 0, React), renderGuidelines(moveable, verticalGuidelines, VERTICAL_NAMES, targetTop, targetLeft, 1, React));
+        return __spreadArrays$3(renderGapGuidelines(moveable, "vertical", gapVerticalGuidelines, snapDistFormat, React), renderGapGuidelines(moveable, "horizontal", gapHorizontalGuidelines, snapDistFormat, React), renderElementGroup(moveable, "horizontal", elementHorizontalGroup, minLeft, clientLeft, width, targetTop, snapThreshold, snapDigit, 0, snapDistFormat, React), renderElementGroup(moveable, "vertical", elementVerticalGroup, minTop, clientTop, height, targetLeft, snapThreshold, snapDigit, 1, snapDistFormat, React), renderSnapPoses(moveable, "horizontal", horizontalSnapPoses, minLeft, targetTop, width, 0, React), renderSnapPoses(moveable, "vertical", verticalSnapPoses, minTop, targetLeft, height, 1, React), renderGuidelines(moveable, "horizontal", horizontalGuidelines, [targetLeft, targetTop], React), renderGuidelines(moveable, "vertical", verticalGuidelines, [targetLeft, targetTop], React));
       },
       dragStart: function (moveable, e) {
         moveable.state.snapRenderInfo = {
@@ -10668,8 +10829,10 @@ version: 0.22.3
         };
         snapStart(moveable);
       },
-      drag: function (moveable, e) {
-        moveable.state.guidelines = getTotalGuidelines(moveable);
+      drag: function (moveable) {
+        var state = moveable.state;
+        state.staticGuidelines = getElementGuidelines(moveable, false, state.staticGuidelines);
+        state.guidelines = getTotalGuidelines(moveable);
       },
       pinchStart: function (moveable) {
         this.unset(moveable);
@@ -10677,8 +10840,8 @@ version: 0.22.3
       dragEnd: function (moveable) {
         this.unset(moveable);
       },
-      dragControlCondition: function (e) {
-        if (directionCondition(e) || dragControlCondition(e)) {
+      dragControlCondition: function (e, moveable) {
+        if (directionCondition(e) || dragControlCondition(e, moveable)) {
           return true;
         }
 
@@ -10691,7 +10854,7 @@ version: 0.22.3
         snapStart(moveable);
       },
       dragControl: function (moveable) {
-        moveable.state.guidelines = getTotalGuidelines(moveable);
+        this.drag(moveable);
       },
       dragControlEnd: function (moveable) {
         this.unset(moveable);
@@ -10700,7 +10863,7 @@ version: 0.22.3
         this.dragStart(moveable, e);
       },
       dragGroup: function (moveable) {
-        moveable.state.guidelines = getTotalGuidelines(moveable);
+        this.drag(moveable);
       },
       dragGroupEnd: function (moveable) {
         this.unset(moveable);
@@ -10710,7 +10873,7 @@ version: 0.22.3
         snapStart(moveable);
       },
       dragGroupControl: function (moveable) {
-        moveable.state.guidelines = getTotalGuidelines(moveable);
+        this.drag(moveable);
       },
       dragGroupControlEnd: function (moveable) {
         this.unset(moveable);
@@ -10718,6 +10881,7 @@ version: 0.22.3
       unset: function (moveable) {
         var state = moveable.state;
         state.enableSnap = false;
+        state.staticGuidelines = [];
         state.guidelines = [];
         state.snapRenderInfo = null;
       }
@@ -11441,6 +11605,71 @@ version: 0.22.3
      * });
      */
 
+    function renderControls(moveable, defaultDirections, React) {
+      var _a = moveable.state,
+          renderPoses = _a.renderPoses,
+          radRotation = _a.rotation,
+          direction = _a.direction;
+      var _b = moveable.props,
+          _c = _b.renderDirections,
+          directions = _c === void 0 ? defaultDirections : _c,
+          zoom = _b.zoom;
+      var directionMap = {};
+
+      if (!directions) {
+        return [];
+      }
+
+      var sign = direction > 0 ? 1 : -1;
+      var renderDirections = directions === true ? DIRECTIONS : directions;
+      var degRotation = radRotation / Math.PI * 180;
+      renderDirections.forEach(function (dir) {
+        directionMap[dir] = true;
+      });
+      return renderDirections.map(function (dir) {
+        var indexes = DIRECTION_INDEXES[dir];
+
+        if (!indexes || !directionMap[dir]) {
+          return null;
+        }
+
+        var directionRotation = (throttle$2(degRotation, 15) + sign * DIRECTION_ROTATIONS[dir] + 720) % 180;
+        return React.createElement("div", {
+          className: prefix("control", "direction", dir),
+          "data-rotation": directionRotation,
+          "data-direction": dir,
+          key: "direction-" + dir,
+          style: getControlTransform.apply(void 0, __spreadArrays$3([radRotation, zoom], indexes.map(function (index) {
+            return renderPoses[index];
+          })))
+        });
+      });
+    }
+    function renderLine(React, direction, pos1, pos2, zoom, key) {
+      var classNames = [];
+
+      for (var _i = 6; _i < arguments.length; _i++) {
+        classNames[_i - 6] = arguments[_i];
+      }
+
+      var rad = getRad(pos1, pos2);
+      var rotation = direction ? throttle$2(rad / Math.PI * 180, 15) % 180 : -1;
+      return React.createElement("div", {
+        key: "line" + key,
+        className: prefix.apply(void 0, __spreadArrays$3(["line", "direction", direction], classNames)),
+        "data-rotation": rotation,
+        "data-line-index": key,
+        "data-direction": direction,
+        style: getLineStyle(pos1, pos2, zoom, rad)
+      });
+    }
+    function renderAllDirections(moveable, React) {
+      return renderControls(moveable, DIRECTIONS, React);
+    }
+    function renderDiagonalDirections(moveable, React) {
+      return renderControls(moveable, ["nw", "ne", "sw", "se"], React);
+    }
+
     /**
      * @namespace Rotatable
      * @memberof Moveable
@@ -11507,6 +11736,10 @@ version: 0.22.3
           pos3 = _a[2],
           pos4 = _a[3];
 
+      if (rotationPosition === "none") {
+        return;
+      }
+
       var _b = (rotationPosition || "top").split("-"),
           dir1 = _b[0],
           dir2 = _b[1];
@@ -11539,12 +11772,31 @@ version: 0.22.3
 
       return [pos, rad];
     }
-    function dragControlCondition(e) {
+    function dragControlCondition(e, moveable) {
       if (e.isRequest) {
         return e.requestAble === "rotatable";
       }
 
-      return hasClass(e.inputEvent.target, prefix("rotation-control"));
+      var target = e.inputEvent.target;
+
+      if (hasClass(target, prefix("rotation-control"))) {
+        return true;
+      }
+
+      var rotationTarget = moveable.props.rotationTarget;
+
+      if (rotationTarget) {
+        console.log(getRefTargets(rotationTarget, true));
+        return getRefTargets(rotationTarget, true).some(function (element) {
+          if (!element) {
+            return false;
+          }
+
+          return target === element || target.contains(element);
+        });
+      }
+
+      return false;
     }
     var Rotatable = {
       name: "rotatable",
@@ -11552,7 +11804,9 @@ version: 0.22.3
       props: {
         rotatable: Boolean,
         rotationPosition: String,
-        throttleRotate: Number
+        throttleRotate: Number,
+        renderDirections: Object,
+        rotationTarget: Object
       },
       events: {
         onRotateStart: "rotateStart",
@@ -11567,7 +11821,8 @@ version: 0.22.3
         var _a = moveable.props,
             rotatable = _a.rotatable,
             rotationPosition = _a.rotationPosition,
-            zoom = _a.zoom;
+            zoom = _a.zoom,
+            renderDirections = _a.renderDirections;
         var _b = moveable.state,
             renderPoses = _b.renderPoses,
             direction = _b.direction;
@@ -11576,28 +11831,37 @@ version: 0.22.3
           return null;
         }
 
-        var _c = getRotationPositions(rotationPosition, renderPoses, direction),
-            pos = _c[0],
-            rad = _c[1];
+        var positions = getRotationPositions(rotationPosition, renderPoses, direction);
+        var jsxs = [];
 
-        return React.createElement("div", {
-          key: "rotation",
-          className: prefix("rotation"),
-          style: {
-            // tslint:disable-next-line: max-line-length
-            transform: "translate(-50%) translate(" + pos[0] + "px, " + pos[1] + "px) rotate(" + rad + "rad)"
-          }
-        }, React.createElement("div", {
-          className: prefix("line rotation-line"),
-          style: {
-            transform: "scaleX(" + zoom + ")"
-          }
-        }), React.createElement("div", {
-          className: prefix("control rotation-control"),
-          style: {
-            transform: "translate(0.5px) scale(" + zoom + ")"
-          }
-        }));
+        if (positions) {
+          var pos = positions[0],
+              rad = positions[1];
+          jsxs.push(React.createElement("div", {
+            key: "rotation",
+            className: prefix("rotation"),
+            style: {
+              // tslint:disable-next-line: max-line-length
+              transform: "translate(-50%) translate(" + pos[0] + "px, " + pos[1] + "px) rotate(" + rad + "rad)"
+            }
+          }, React.createElement("div", {
+            className: prefix("line rotation-line"),
+            style: {
+              transform: "scaleX(" + zoom + ")"
+            }
+          }), React.createElement("div", {
+            className: prefix("control rotation-control"),
+            style: {
+              transform: "translate(0.5px) scale(" + zoom + ")"
+            }
+          })));
+        }
+
+        if (renderDirections) {
+          jsxs.push.apply(jsxs, renderControls(moveable, [], React));
+        }
+
+        return jsxs;
       },
       dragControlCondition: dragControlCondition,
       dragControlStart: function (moveable, e) {
@@ -12063,69 +12327,6 @@ version: 0.22.3
      *     console.log("onRotateGroupEnd", targets, isDrag);
      * });
      */
-
-    function renderControls(moveable, defaultDirections, React) {
-      var _a = moveable.state,
-          renderPoses = _a.renderPoses,
-          rotation = _a.rotation;
-      var _b = moveable.props,
-          _c = _b.renderDirections,
-          directions = _c === void 0 ? defaultDirections : _c,
-          zoom = _b.zoom;
-      var direction = moveable.state.direction;
-      var directionMap = {};
-      directions.forEach(function (dir) {
-        directionMap[dir] = true;
-      });
-      return directions.map(function (dir) {
-        var indexes = DIRECTION_INDEXES[dir];
-
-        if (!indexes || !directionMap[dir]) {
-          return null;
-        }
-
-        var directionRotation = throttle$2(rotation / Math.PI * 180, 15) + DIRECTION_ROTATIONS[dir];
-
-        if (direction < 1) {
-          directionRotation = 360 - directionRotation;
-        }
-
-        directionRotation %= 180;
-        return React.createElement("div", {
-          className: prefix("control", "direction", dir),
-          "data-rotation": directionRotation,
-          "data-direction": dir,
-          key: "direction-" + dir,
-          style: getControlTransform.apply(void 0, __spreadArrays$3([rotation, zoom], indexes.map(function (index) {
-            return renderPoses[index];
-          })))
-        });
-      });
-    }
-    function renderLine(React, direction, pos1, pos2, zoom, key) {
-      var classNames = [];
-
-      for (var _i = 6; _i < arguments.length; _i++) {
-        classNames[_i - 6] = arguments[_i];
-      }
-
-      var rad = getRad(pos1, pos2);
-      var rotation = direction ? throttle$2(rad / Math.PI * 180, 15) % 180 : -1;
-      return React.createElement("div", {
-        key: "line" + key,
-        className: prefix.apply(void 0, __spreadArrays$3(["line", "direction", direction], classNames)),
-        "data-rotation": rotation,
-        "data-line-index": key,
-        "data-direction": direction,
-        style: getLineStyle(pos1, pos2, zoom, rad)
-      });
-    }
-    function renderAllDirections(moveable, React) {
-      return renderControls(moveable, DIRECTIONS, React);
-    }
-    function renderDiagonalDirections(moveable, React) {
-      return renderControls(moveable, ["nw", "ne", "sw", "se"], React);
-    }
 
     /**
      * @namespace Resizable
@@ -13855,7 +14056,7 @@ version: 0.22.3
         if (groupable) {
           return [React.createElement("div", {
             key: "area",
-            ref: ref(moveable, "areaElement"),
+            ref: ref$1(moveable, "areaElement"),
             className: className
           }), renderPieces(React)];
         }
@@ -13868,7 +14069,7 @@ version: 0.22.3
         var transform = h.length ? makeMatrixCSS(h, true) : "none";
         return [React.createElement("div", {
           key: "area",
-          ref: ref(moveable, "areaElement"),
+          ref: ref$1(moveable, "areaElement"),
           className: className,
           style: {
             top: "0px",
@@ -14261,6 +14462,7 @@ version: 0.22.3
         target: Object,
         dragTarget: Object,
         container: Object,
+        portalContainer: Object,
         rootContainer: Object,
         zoom: Number,
         transformOrigin: Array,
@@ -17071,7 +17273,8 @@ version: 0.22.3
             zoom = props.zoom,
             cspNonce = props.cspNonce,
             translateZ = props.translateZ,
-            ControlBoxElement = props.cssStyled;
+            ControlBoxElement = props.cssStyled,
+            portalContainer = props.portalContainer;
         this.checkUpdate();
         this.updateRenderPoses();
 
@@ -17099,9 +17302,10 @@ version: 0.22.3
         });
         return createElement(ControlBoxElement, __assign$5({
           cspNonce: cspNonce,
-          ref: ref(this, "controlBox"),
+          ref: ref$1(this, "controlBox"),
           className: prefix("control-box", direction === -1 ? "reverse" : "", isDragging ? "dragging" : "") + " " + className
         }, ableAttributes, {
+          portalContainer: portalContainer,
           style: {
             "position": "absolute",
             "display": isDisplay ? "block" : "none",
@@ -17781,6 +17985,7 @@ version: 0.22.3
         parentMoveable: null,
         wrapperMoveable: null,
         parentPosition: null,
+        portalContainer: null,
         ables: [],
         pinchThreshold: 20,
         dragArea: false,
@@ -18446,7 +18651,7 @@ version: 0.22.3
             targets = _a.targets;
         return createElement(ControlBoxElement, {
           cspNonce: cspNonce,
-          ref: ref(this, "controlBox"),
+          ref: ref$1(this, "controlBox"),
           className: prefix("control-box")
         }, targets.map(function (target, i) {
           return createElement(MoveableManager, __assign$5({
@@ -18590,7 +18795,7 @@ version: 0.22.3
           if (props.individualGroupable) {
             return createElement(MoveableIndividualGroup, __assign$5({
               key: "individual-group",
-              ref: ref(this, "moveable")
+              ref: ref$1(this, "moveable")
             }, nextProps, {
               target: null,
               targets: elementTargets
@@ -18599,7 +18804,7 @@ version: 0.22.3
 
           return createElement(MoveableGroup, __assign$5({
             key: "group",
-            ref: ref(this, "moveable")
+            ref: ref$1(this, "moveable")
           }, nextProps, {
             target: null,
             targets: elementTargets
@@ -18607,7 +18812,7 @@ version: 0.22.3
         } else {
           return createElement(MoveableManager, __assign$5({
             key: "single",
-            ref: ref(this, "moveable")
+            ref: ref$1(this, "moveable")
           }, nextProps, {
             target: elementTargets[0]
           }));

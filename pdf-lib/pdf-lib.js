@@ -310,6 +310,19 @@
         var date = new Date(year + "-" + month + "-" + day + "T" + hours + ":" + mins + ":" + secs + tzOffset);
         return date;
     };
+    var findLastMatch = function (value, regex) {
+        var _a;
+        var position = 0;
+        var lastMatch;
+        while (position < value.length) {
+            var match = value.substring(position).match(regex);
+            if (!match)
+                return { match: lastMatch, pos: position };
+            lastMatch = match;
+            position += ((_a = match.index) !== null && _a !== void 0 ? _a : 0) + match[0].length;
+        }
+        return { match: lastMatch, pos: position };
+    };
 
     var last = function (array) { return array[array.length - 1]; };
     // export const dropLast = <T>(array: T[]): T[] =>
@@ -8054,6 +8067,17 @@
             throw new Error(backtick(valueName) + " must be a multiple of " + multiplier + ", but was actually " + value);
         }
     };
+    var assertInteger = function (value, valueName) {
+        if (!Number.isInteger(value)) {
+            throw new Error(backtick(valueName) + " must be an integer, but was actually " + value);
+        }
+    };
+    var assertPositive = function (value, valueName) {
+        if (![1, 0].includes(Math.sign(value))) {
+            // prettier-ignore
+            throw new Error(backtick(valueName) + " must be a positive number or 0, but was actually " + value);
+        }
+    };
 
     // Mapping from PDFDocEncoding to Unicode code point
     var pdfDocEncodingToUnicode = new Uint16Array(256);
@@ -8306,6 +8330,26 @@
             return _this;
         }
         return MultiSelectValueError;
+    }(Error));
+    var MissingDAEntryError = /** @class */ (function (_super) {
+        __extends(MissingDAEntryError, _super);
+        function MissingDAEntryError(fieldName) {
+            var _this = this;
+            var msg = "No /DA (default appearance) entry found for field: " + fieldName;
+            _this = _super.call(this, msg) || this;
+            return _this;
+        }
+        return MissingDAEntryError;
+    }(Error));
+    var MissingTfOperatorError = /** @class */ (function (_super) {
+        __extends(MissingTfOperatorError, _super);
+        function MissingTfOperatorError(fieldName) {
+            var _this = this;
+            var msg = "No Tf operator found for DA of field: " + fieldName;
+            _this = _super.call(this, msg) || this;
+            return _this;
+        }
+        return MissingTfOperatorError;
     }(Error));
     var NumberParsingError = /** @class */ (function (_super) {
         __extends(NumberParsingError, _super);
@@ -27084,6 +27128,492 @@
         return PDFPageEmbedder;
     }());
 
+    var asEnum = function (rawValue, enumType) {
+        if (rawValue === undefined)
+            return undefined;
+        return enumType[rawValue];
+    };
+    (function (NonFullScreenPageMode) {
+        /**
+         * After exiting FullScreen mode, neither the document outline nor thumbnail
+         * images should be visible.
+         */
+        NonFullScreenPageMode["UseNone"] = "UseNone";
+        /** After exiting FullScreen mode, the document outline should be visible. */
+        NonFullScreenPageMode["UseOutlines"] = "UseOutlines";
+        /** After exiting FullScreen mode, thumbnail images should be visible. */
+        NonFullScreenPageMode["UseThumbs"] = "UseThumbs";
+        /**
+         * After exiting FullScreen mode, the optional content group panel should be
+         * visible.
+         */
+        NonFullScreenPageMode["UseOC"] = "UseOC";
+    })(exports.NonFullScreenPageMode || (exports.NonFullScreenPageMode = {}));
+    (function (ReadingDirection) {
+        /** The predominant reading order is Left to Right. */
+        ReadingDirection["L2R"] = "L2R";
+        /**
+         * The predominant reading order is Right to left (including vertical writing
+         * systems, such as Chinese, Japanese and Korean).
+         */
+        ReadingDirection["R2L"] = "R2L";
+    })(exports.ReadingDirection || (exports.ReadingDirection = {}));
+    (function (PrintScaling) {
+        /** No page scaling. */
+        PrintScaling["None"] = "None";
+        /* Use the PDF reader's default print scaling. */
+        PrintScaling["AppDefault"] = "AppDefault";
+    })(exports.PrintScaling || (exports.PrintScaling = {}));
+    (function (Duplex) {
+        /** The PDF reader should print single-sided. */
+        Duplex["Simplex"] = "Simplex";
+        /**
+         * The PDF reader should print double sided and flip on the short edge of the
+         * sheet.
+         */
+        Duplex["DuplexFlipShortEdge"] = "DuplexFlipShortEdge";
+        /**
+         * The PDF reader should print double sided and flip on the long edge of the
+         * sheet.
+         */
+        Duplex["DuplexFlipLongEdge"] = "DuplexFlipLongEdge";
+    })(exports.Duplex || (exports.Duplex = {}));
+    var ViewerPreferences = /** @class */ (function () {
+        function ViewerPreferences(dict) {
+            this.dict = dict;
+        }
+        ViewerPreferences.prototype.lookupBool = function (key) {
+            var returnObj = this.dict.lookup(PDFName.of(key));
+            if (returnObj instanceof PDFBool)
+                return returnObj;
+            return undefined;
+        };
+        ViewerPreferences.prototype.lookupName = function (key) {
+            var returnObj = this.dict.lookup(PDFName.of(key));
+            if (returnObj instanceof PDFName)
+                return returnObj;
+            return undefined;
+        };
+        ViewerPreferences.prototype.HideToolbar = function () {
+            return this.lookupBool('HideToolbar');
+        };
+        ViewerPreferences.prototype.HideMenubar = function () {
+            return this.lookupBool('HideMenubar');
+        };
+        ViewerPreferences.prototype.HideWindowUI = function () {
+            return this.lookupBool('HideWindowUI');
+        };
+        ViewerPreferences.prototype.FitWindow = function () {
+            return this.lookupBool('FitWindow');
+        };
+        ViewerPreferences.prototype.CenterWindow = function () {
+            return this.lookupBool('CenterWindow');
+        };
+        ViewerPreferences.prototype.DisplayDocTitle = function () {
+            return this.lookupBool('DisplayDocTitle');
+        };
+        ViewerPreferences.prototype.NonFullScreenPageMode = function () {
+            return this.lookupName('NonFullScreenPageMode');
+        };
+        ViewerPreferences.prototype.Direction = function () {
+            return this.lookupName('Direction');
+        };
+        ViewerPreferences.prototype.PrintScaling = function () {
+            return this.lookupName('PrintScaling');
+        };
+        ViewerPreferences.prototype.Duplex = function () {
+            return this.lookupName('Duplex');
+        };
+        ViewerPreferences.prototype.PickTrayByPDFSize = function () {
+            return this.lookupBool('PickTrayByPDFSize');
+        };
+        ViewerPreferences.prototype.PrintPageRange = function () {
+            var PrintPageRange = this.dict.lookup(PDFName.of('PrintPageRange'));
+            if (PrintPageRange instanceof PDFArray)
+                return PrintPageRange;
+            return undefined;
+        };
+        ViewerPreferences.prototype.NumCopies = function () {
+            var NumCopies = this.dict.lookup(PDFName.of('NumCopies'));
+            if (NumCopies instanceof PDFNumber)
+                return NumCopies;
+            return undefined;
+        };
+        /**
+         * Returns `true` if PDF readers should hide the toolbar menus when displaying
+         * this document.
+         * @returns Whether or not toolbars should be hidden.
+         */
+        ViewerPreferences.prototype.getHideToolbar = function () {
+            var _a, _b;
+            return (_b = (_a = this.HideToolbar()) === null || _a === void 0 ? void 0 : _a.asBoolean()) !== null && _b !== void 0 ? _b : false;
+        };
+        /**
+         * Returns `true` if PDF readers should hide the menu bar when displaying this
+         * document.
+         * @returns Whether or not the menu bar should be hidden.
+         */
+        ViewerPreferences.prototype.getHideMenubar = function () {
+            var _a, _b;
+            return (_b = (_a = this.HideMenubar()) === null || _a === void 0 ? void 0 : _a.asBoolean()) !== null && _b !== void 0 ? _b : false;
+        };
+        /**
+         * Returns `true` if PDF readers should hide the user interface elements in
+         * the document's window (such as scroll bars and navigation controls),
+         * leaving only the document's contents displayed.
+         * @returns Whether or not user interface elements should be hidden.
+         */
+        ViewerPreferences.prototype.getHideWindowUI = function () {
+            var _a, _b;
+            return (_b = (_a = this.HideWindowUI()) === null || _a === void 0 ? void 0 : _a.asBoolean()) !== null && _b !== void 0 ? _b : false;
+        };
+        /**
+         * Returns `true` if PDF readers should resize the document's window to fit
+         * the size of the first displayed page.
+         * @returns Whether or not the window should be resized to fit.
+         */
+        ViewerPreferences.prototype.getFitWindow = function () {
+            var _a, _b;
+            return (_b = (_a = this.FitWindow()) === null || _a === void 0 ? void 0 : _a.asBoolean()) !== null && _b !== void 0 ? _b : false;
+        };
+        /**
+         * Returns `true` if PDF readers should position the document's window in the
+         * center of the screen.
+         * @returns Whether or not to center the document window.
+         */
+        ViewerPreferences.prototype.getCenterWindow = function () {
+            var _a, _b;
+            return (_b = (_a = this.CenterWindow()) === null || _a === void 0 ? void 0 : _a.asBoolean()) !== null && _b !== void 0 ? _b : false;
+        };
+        /**
+         * Returns `true` if the window's title bar should display the document
+         * `Title`, taken from the document metadata (see [[PDFDocument.getTitle]]).
+         * Returns `false` if the title bar should instead display the filename of the
+         * PDF file.
+         * @returns Whether to display the document title.
+         */
+        ViewerPreferences.prototype.getDisplayDocTitle = function () {
+            var _a, _b;
+            return (_b = (_a = this.DisplayDocTitle()) === null || _a === void 0 ? void 0 : _a.asBoolean()) !== null && _b !== void 0 ? _b : false;
+        };
+        /**
+         * Returns the page mode, which tells the PDF reader how to display the
+         * document after exiting full-screen mode.
+         * @returns The page mode after exiting full-screen mode.
+         */
+        ViewerPreferences.prototype.getNonFullScreenPageMode = function () {
+            var _a, _b;
+            var mode = (_a = this.NonFullScreenPageMode()) === null || _a === void 0 ? void 0 : _a.decodeText();
+            return (_b = asEnum(mode, exports.NonFullScreenPageMode)) !== null && _b !== void 0 ? _b : exports.NonFullScreenPageMode.UseNone;
+        };
+        /**
+         * Returns the predominant reading order for text.
+         * @returns The text reading order.
+         */
+        ViewerPreferences.prototype.getReadingDirection = function () {
+            var _a, _b;
+            var direction = (_a = this.Direction()) === null || _a === void 0 ? void 0 : _a.decodeText();
+            return (_b = asEnum(direction, exports.ReadingDirection)) !== null && _b !== void 0 ? _b : exports.ReadingDirection.L2R;
+        };
+        /**
+         * Returns the page scaling option that the PDF reader should select when the
+         * print dialog is displayed.
+         * @returns The page scaling option.
+         */
+        ViewerPreferences.prototype.getPrintScaling = function () {
+            var _a, _b;
+            var scaling = (_a = this.PrintScaling()) === null || _a === void 0 ? void 0 : _a.decodeText();
+            return (_b = asEnum(scaling, exports.PrintScaling)) !== null && _b !== void 0 ? _b : exports.PrintScaling.AppDefault;
+        };
+        /**
+         * Returns the paper handling option that should be used when printing the
+         * file from the print dialog.
+         * @returns The paper handling option.
+         */
+        ViewerPreferences.prototype.getDuplex = function () {
+            var _a;
+            var duplex = (_a = this.Duplex()) === null || _a === void 0 ? void 0 : _a.decodeText();
+            return asEnum(duplex, exports.Duplex);
+        };
+        /**
+         * Returns `true` if the PDF page size should be used to select the input
+         * paper tray.
+         * @returns Whether or not the PDF page size should be used to select the
+         *          input paper tray.
+         */
+        ViewerPreferences.prototype.getPickTrayByPDFSize = function () {
+            var _a;
+            return (_a = this.PickTrayByPDFSize()) === null || _a === void 0 ? void 0 : _a.asBoolean();
+        };
+        /**
+         * Returns an array of page number ranges, which are the values used to
+         * initialize the print dialog box when the file is printed. Each range
+         * specifies the first (`start`) and last (`end`) pages in a sub-range of
+         * pages to be printed. The first page of the PDF file is denoted by 0.
+         * For example:
+         * ```js
+         * const viewerPrefs = pdfDoc.catalog.getOrCreateViewerPreferences()
+         * const includesPage3 = viewerPrefs
+         *   .getPrintRanges()
+         *   .some(pr => pr.start =< 2 && pr.end >= 2)
+         * if (includesPage3) console.log('printRange includes page 3')
+         * ```
+         * @returns An array of objects, each with the properties `start` and `end`,
+         *          denoting page indices. If not, specified an empty array is
+         *          returned.
+         */
+        ViewerPreferences.prototype.getPrintPageRange = function () {
+            var rng = this.PrintPageRange();
+            if (!rng)
+                return [];
+            var pageRanges = [];
+            for (var i = 0; i < rng.size(); i += 2) {
+                // Despite the spec clearly stating that "The first page of the PDF file
+                // shall be donoted by 1", several test PDFs (spec 1.7) created in
+                // Acrobat XI 11.0 and also read with Reader DC 2020.013 indicate this is
+                // actually a 0 based index.
+                var start = rng.lookup(i, PDFNumber).asNumber();
+                var end = rng.lookup(i + 1, PDFNumber).asNumber();
+                pageRanges.push({ start: start, end: end });
+            }
+            return pageRanges;
+        };
+        /**
+         * Returns the number of copies to be printed when the print dialog is opened
+         * for this document.
+         * @returns The default number of copies to be printed.
+         */
+        ViewerPreferences.prototype.getNumCopies = function () {
+            var _a, _b;
+            return (_b = (_a = this.NumCopies()) === null || _a === void 0 ? void 0 : _a.asNumber()) !== null && _b !== void 0 ? _b : 1;
+        };
+        /**
+         * Choose whether the PDF reader's toolbars should be hidden while the
+         * document is active.
+         * @param hideToolbar `true` if the toolbar should be hidden.
+         */
+        ViewerPreferences.prototype.setHideToolbar = function (hideToolbar) {
+            var HideToolbar = this.dict.context.obj(hideToolbar);
+            this.dict.set(PDFName.of('HideToolbar'), HideToolbar);
+        };
+        /**
+         * Choose whether the PDF reader's menu bar should be hidden while the
+         * document is active.
+         * @param hideMenubar `true` if the menu bar should be hidden.
+         */
+        ViewerPreferences.prototype.setHideMenubar = function (hideMenubar) {
+            var HideMenubar = this.dict.context.obj(hideMenubar);
+            this.dict.set(PDFName.of('HideMenubar'), HideMenubar);
+        };
+        /**
+         * Choose whether the PDF reader should hide user interface elements in the
+         * document's window (such as scroll bars and navigation controls), leaving
+         * only the document's contents displayed.
+         * @param hideWindowUI `true` if the user interface elements should be hidden.
+         */
+        ViewerPreferences.prototype.setHideWindowUI = function (hideWindowUI) {
+            var HideWindowUI = this.dict.context.obj(hideWindowUI);
+            this.dict.set(PDFName.of('HideWindowUI'), HideWindowUI);
+        };
+        /**
+         * Choose whether the PDF reader should resize the document's window to fit
+         * the size of the first displayed page.
+         * @param fitWindow `true` if the window should be resized.
+         */
+        ViewerPreferences.prototype.setFitWindow = function (fitWindow) {
+            var FitWindow = this.dict.context.obj(fitWindow);
+            this.dict.set(PDFName.of('FitWindow'), FitWindow);
+        };
+        /**
+         * Choose whether the PDF reader should position the document's window in the
+         * center of the screen.
+         * @param centerWindow `true` if the window should be centered.
+         */
+        ViewerPreferences.prototype.setCenterWindow = function (centerWindow) {
+            var CenterWindow = this.dict.context.obj(centerWindow);
+            this.dict.set(PDFName.of('CenterWindow'), CenterWindow);
+        };
+        /**
+         * Choose whether the window's title bar should display the document `Title`
+         * taken from the document metadata (see [[PDFDocument.setTitle]]). If
+         * `false`, the title bar should instead display the PDF filename.
+         * @param displayTitle `true` if the document title should be displayed.
+         */
+        ViewerPreferences.prototype.setDisplayDocTitle = function (displayTitle) {
+            var DisplayDocTitle = this.dict.context.obj(displayTitle);
+            this.dict.set(PDFName.of('DisplayDocTitle'), DisplayDocTitle);
+        };
+        /**
+         * Choose how the PDF reader should display the document upon exiting
+         * full-screen mode. This entry is meaningful only if the value of the
+         * `PageMode` entry in the document's [[PDFCatalog]] is `FullScreen`.
+         *
+         * For example:
+         * ```js
+         * import { PDFDocument, NonFullScreenPageMode, PDFName } from 'pdf-lib'
+         *
+         * const pdfDoc = await PDFDocument.create()
+         *
+         * // Set the PageMode
+         * pdfDoc.catalog.set(PDFName.of('PageMode'),PDFName.of('FullScreen'))
+         *
+         * // Set what happens when full-screen is closed
+         * const viewerPrefs = pdfDoc.catalog.getOrCreateViewerPreferences()
+         * viewerPrefs.setNonFullScreenPageMode(NonFullScreenPageMode.UseOutlines)
+         * ```
+         *
+         * @param nonFullScreenPageMode How the document should be displayed upon
+         *                              exiting full screen mode.
+         */
+        ViewerPreferences.prototype.setNonFullScreenPageMode = function (nonFullScreenPageMode) {
+            assertIsOneOf(nonFullScreenPageMode, 'nonFullScreenPageMode', exports.NonFullScreenPageMode);
+            var mode = PDFName.of(nonFullScreenPageMode);
+            this.dict.set(PDFName.of('NonFullScreenPageMode'), mode);
+        };
+        /**
+         * Choose the predominant reading order for text.
+         *
+         * This entry has no direct effect on the document's contents or page
+         * numbering, but may be used to determine the relative positioning of pages
+         * when displayed side by side or printed n-up.
+         *
+         * For example:
+         * ```js
+         * import { PDFDocument, ReadingDirection } from 'pdf-lib'
+         *
+         * const pdfDoc = await PDFDocument.create()
+         * const viewerPrefs = pdfDoc.catalog.getOrCreateViewerPreferences()
+         * viewerPrefs.setReadingDirection(ReadingDirection.R2L)
+         * ```
+         *
+         * @param readingDirection The reading order for text.
+         */
+        ViewerPreferences.prototype.setReadingDirection = function (readingDirection) {
+            assertIsOneOf(readingDirection, 'readingDirection', exports.ReadingDirection);
+            var direction = PDFName.of(readingDirection);
+            this.dict.set(PDFName.of('Direction'), direction);
+        };
+        /**
+         * Choose the page scaling option that should be selected when a print dialog
+         * is displayed for this document.
+         *
+         * For example:
+         * ```js
+         * import { PDFDocument, PrintScaling } from 'pdf-lib'
+         *
+         * const pdfDoc = await PDFDocument.create()
+         * const viewerPrefs = pdfDoc.catalog.getOrCreateViewerPreferences()
+         * viewerPrefs.setPrintScaling(PrintScaling.None)
+         * ```
+         *
+         * @param printScaling The print scaling option.
+         */
+        ViewerPreferences.prototype.setPrintScaling = function (printScaling) {
+            assertIsOneOf(printScaling, 'printScaling', exports.PrintScaling);
+            var scaling = PDFName.of(printScaling);
+            this.dict.set(PDFName.of('PrintScaling'), scaling);
+        };
+        /**
+         * Choose the paper handling option that should be selected by default in the
+         * print dialog.
+         *
+         * For example:
+         * ```js
+         * import { PDFDocument, Duplex } from 'pdf-lib'
+         *
+         * const pdfDoc = await PDFDocument.create()
+         * const viewerPrefs = pdfDoc.catalog.getOrCreateViewerPreferences()
+         * viewerPrefs.setDuplex(Duplex.DuplexFlipShortEdge)
+         * ```
+         *
+         * @param duplex The double or single sided printing option.
+         */
+        ViewerPreferences.prototype.setDuplex = function (duplex) {
+            assertIsOneOf(duplex, 'duplex', exports.Duplex);
+            var dup = PDFName.of(duplex);
+            this.dict.set(PDFName.of('Duplex'), dup);
+        };
+        /**
+         * Choose whether the PDF document's page size should be used to select the
+         * input paper tray when printing. This setting influences only the preset
+         * values used to populate the print dialog presented by a PDF reader.
+         *
+         * If PickTrayByPDFSize is true, the check box in the print dialog associated
+         * with input paper tray should be checked. This setting has no effect on
+         * operating systems that do not provide the ability to pick the input tray
+         * by size.
+         *
+         * @param pickTrayByPDFSize `true` if the document's page size should be used
+         *                          to select the input paper tray.
+         */
+        ViewerPreferences.prototype.setPickTrayByPDFSize = function (pickTrayByPDFSize) {
+            var PickTrayByPDFSize = this.dict.context.obj(pickTrayByPDFSize);
+            this.dict.set(PDFName.of('PickTrayByPDFSize'), PickTrayByPDFSize);
+        };
+        /**
+         * Choose the page numbers used to initialize the print dialog box when the
+         * file is printed. The first page of the PDF file is denoted by 0.
+         *
+         * For example:
+         * ```js
+         * import { PDFDocument } from 'pdf-lib'
+         *
+         * const pdfDoc = await PDFDocument.create()
+         * const viewerPrefs = pdfDoc.catalog.getOrCreateViewerPreferences()
+         *
+         * // We can set the default print range to only the first page
+         * viewerPrefs.setPrintPageRange({ start: 0, end: 0 })
+         *
+         * // Or we can supply noncontiguous ranges (e.g. pages 1, 3, and 5-7)
+         * viewerPrefs.setPrintPageRange([
+         *   { start: 0, end: 0 },
+         *   { start: 2, end: 2 },
+         *   { start: 4, end: 6 },
+         * ])
+         * ```
+         *
+         * @param printPageRange An object or array of objects, each with the
+         *                       properties `start` and `end`, denoting a range of
+         *                       page indices.
+         */
+        ViewerPreferences.prototype.setPrintPageRange = function (printPageRange) {
+            if (!Array.isArray(printPageRange))
+                printPageRange = [printPageRange];
+            var flatRange = [];
+            for (var idx = 0, len = printPageRange.length; idx < len; idx++) {
+                flatRange.push(printPageRange[idx].start);
+                flatRange.push(printPageRange[idx].end);
+            }
+            assertEachIs(flatRange, 'printPageRange', ['number']);
+            var pageRanges = this.dict.context.obj(flatRange);
+            this.dict.set(PDFName.of('PrintPageRange'), pageRanges);
+        };
+        /**
+         * Choose the default number of copies to be printed when the print dialog is
+         * opened for this file.
+         * @param numCopies The default number of copies.
+         */
+        ViewerPreferences.prototype.setNumCopies = function (numCopies) {
+            assertRange(numCopies, 'numCopies', 1, Number.MAX_VALUE);
+            assertInteger(numCopies, 'numCopies');
+            var NumCopies = this.dict.context.obj(numCopies);
+            this.dict.set(PDFName.of('NumCopies'), NumCopies);
+        };
+        ViewerPreferences.fromDict = function (dict) {
+            return new ViewerPreferences(dict);
+        };
+        ViewerPreferences.create = function (context) {
+            var dict = context.obj({});
+            return new ViewerPreferences(dict);
+        };
+        return ViewerPreferences;
+    }());
+
+    // Examples:
+    //   `/Helv 12 Tf` -> ['Helv', '12']
+    //   `/HeBo 8.00 Tf` -> ['HeBo', '8.00']
+    //   `/HeBo Tf` -> ['HeBo', undefined]
+    var tfRegex = /\/([^\0\t\n\f\r\ ]+)[\0\t\n\f\r\ ]*(\d*\.\d+|\d+)?[\0\t\n\f\r\ ]+Tf/;
     var PDFAcroField = /** @class */ (function () {
         function PDFAcroField(dict, ref) {
             this.dict = dict;
@@ -27157,6 +27687,21 @@
                 return DA.decodeText();
             }
             return DA === null || DA === void 0 ? void 0 : DA.asString();
+        };
+        PDFAcroField.prototype.setFontSize = function (fontSize) {
+            var _a;
+            var name = (_a = this.getFullyQualifiedName()) !== null && _a !== void 0 ? _a : '';
+            var da = this.getDefaultAppearance();
+            if (!da)
+                throw new MissingDAEntryError(name);
+            var daMatch = findLastMatch(da, tfRegex);
+            if (!daMatch.match)
+                throw new MissingTfOperatorError(name);
+            var daStart = da.slice(0, daMatch.pos - daMatch.match[0].length);
+            var daEnd = daMatch.pos <= da.length ? da.slice(daMatch.pos) : '';
+            var fontName = daMatch.match[1];
+            var modifiedDa = daStart + " /" + fontName + " " + fontSize + " Tf " + daEnd;
+            this.setDefaultAppearance(modifiedDa);
         };
         PDFAcroField.prototype.getFlags = function () {
             var _a, _b;
@@ -28376,34 +28921,6 @@
             return new PDFAcroForm(dict);
         };
         return PDFAcroForm;
-    }());
-
-    var ViewerPreferences = /** @class */ (function () {
-        function ViewerPreferences(dict) {
-            this.dict = dict;
-        }
-        ViewerPreferences.prototype.DisplayDocTitle = function () {
-            var DisplayDocTitle = this.dict.lookup(PDFName.of('DisplayDocTitle'));
-            if (DisplayDocTitle instanceof PDFBool)
-                return DisplayDocTitle;
-            return undefined;
-        };
-        ViewerPreferences.prototype.getDisplayDocTitle = function () {
-            var _a, _b;
-            return (_b = (_a = this.DisplayDocTitle()) === null || _a === void 0 ? void 0 : _a.asBoolean()) !== null && _b !== void 0 ? _b : false;
-        };
-        ViewerPreferences.prototype.setDisplayDocTitle = function (displayTitle) {
-            var DisplayDocTitle = this.dict.context.obj(displayTitle);
-            this.dict.set(PDFName.of('DisplayDocTitle'), DisplayDocTitle);
-        };
-        ViewerPreferences.fromDict = function (dict) {
-            return new ViewerPreferences(dict);
-        };
-        ViewerPreferences.create = function (context) {
-            var dict = context.obj({});
-            return new ViewerPreferences(dict);
-        };
-        return ViewerPreferences;
     }());
 
     var PDFCatalog = /** @class */ (function (_super) {
@@ -31221,27 +31738,14 @@
             return appearance;
         return { normal: appearance };
     };
-    var findLastMatch = function (value, regex) {
-        var _a;
-        var position = 0;
-        var lastMatch;
-        while (position < value.length) {
-            var match = value.substring(position).match(regex);
-            if (!match)
-                return lastMatch;
-            lastMatch = match;
-            position += ((_a = match.index) !== null && _a !== void 0 ? _a : 0) + match[0].length;
-        }
-        return lastMatch;
-    };
     // Examples:
-    //   `/Helv 12 Tf` -> ['Helv', '12']
-    //   `/HeBo 8.00 Tf` -> ['HeBo', '8.00']
-    var tfRegex = /\/([^\0\t\n\f\r\ ]+)[\0\t\n\f\r\ ]+(\d*\.\d+|\d+)[\0\t\n\f\r\ ]+Tf/;
+    //   `/Helv 12 Tf` -> ['/Helv 12 Tf', 'Helv', '12']
+    //   `/HeBo 8.00 Tf` -> ['/HeBo 8 Tf', 'HeBo', '8.00']
+    var tfRegex$1 = /\/([^\0\t\n\f\r\ ]+)[\0\t\n\f\r\ ]+(\d*\.\d+|\d+)[\0\t\n\f\r\ ]+Tf/;
     var getDefaultFontSize = function (field) {
         var _a, _b;
         var da = (_a = field.getDefaultAppearance()) !== null && _a !== void 0 ? _a : '';
-        var daMatch = (_b = findLastMatch(da, tfRegex)) !== null && _b !== void 0 ? _b : [];
+        var daMatch = (_b = findLastMatch(da, tfRegex$1).match) !== null && _b !== void 0 ? _b : [];
         var defaultFontSize = Number(daMatch[2]);
         return isFinite(defaultFontSize) ? defaultFontSize : undefined;
     };
@@ -31253,7 +31757,7 @@
     var getDefaultColor = function (field) {
         var _a;
         var da = (_a = field.getDefaultAppearance()) !== null && _a !== void 0 ? _a : '';
-        var daMatch = findLastMatch(da, colorRegex);
+        var daMatch = findLastMatch(da, colorRegex).match;
         var _b = daMatch !== null && daMatch !== void 0 ? daMatch : [], c1 = _b[1], c2 = _b[2], c3 = _b[3], c4 = _b[4], colorSpace = _b[5];
         if (colorSpace === 'g' && c1) {
             return grayscale(Number(c1));
@@ -32773,6 +33277,31 @@
             this.acroField.setValues([]);
         };
         /**
+         * Set the font size for this field. Larger font sizes will result in larger
+         * text being displayed when PDF readers render this dropdown. Font sizes may
+         * be integer or floating point numbers. Supplying a negative font size will
+         * cause this method to throw an error.
+         *
+         * For example:
+         * ```js
+         * const dropdown = form.getDropdown('some.dropdown.field')
+         * dropdown.setFontSize(4)
+         * dropdown.setFontSize(15.7)
+         * ```
+         *
+         * > This method depends upon the existence of a default appearance
+         * > (`/DA`) string. If this field does not have a default appearance string,
+         * > or that string does not contain a font size (via the `Tf` operator),
+         * > then this method will throw an error.
+         *
+         * @param fontSize The font size to be used when rendering text in this field.
+         */
+        PDFDropdown.prototype.setFontSize = function (fontSize) {
+            assertPositive(fontSize, 'fontSize');
+            this.acroField.setFontSize(fontSize);
+            this.markAsDirty();
+        };
+        /**
          * Returns `true` if users are allowed to edit the selected value of this
          * dropdown directly and are not constrained by the list of available
          * options. See [[PDFDropdown.enableEditing]] and
@@ -33300,6 +33829,41 @@
         PDFOptionList.prototype.clear = function () {
             this.markAsDirty();
             this.acroField.setValues([]);
+        };
+        /**
+         * Set the font size for the text in this field. There needs to be a
+         * default appearance string (DA) set with a font value specified
+         * for this to work. For example:
+         * ```js
+         * const optionList = form.getOptionList('some.optionList.field')
+         * optionList.setFontSize(4);
+         * ```
+         * @param fontSize The font size to set the font to.
+         */
+        /**
+         * Set the font size for this field. Larger font sizes will result in larger
+         * text being displayed when PDF readers render this option list. Font sizes
+         * may be integer or floating point numbers. Supplying a negative font size
+         * will cause this method to throw an error.
+         *
+         * For example:
+         * ```js
+         * const optionList = form.getOptionList('some.optionList.field')
+         * optionList.setFontSize(4)
+         * optionList.setFontSize(15.7)
+         * ```
+         *
+         * > This method depends upon the existence of a default appearance
+         * > (`/DA`) string. If this field does not have a default appearance string,
+         * > or that string does not contain a font size (via the `Tf` operator),
+         * > then this method will throw an error.
+         *
+         * @param fontSize The font size to be used when rendering text in this field.
+         */
+        PDFOptionList.prototype.setFontSize = function (fontSize) {
+            assertPositive(fontSize, 'fontSize');
+            this.acroField.setFontSize(fontSize);
+            this.markAsDirty();
         };
         /**
          * Returns `true` if the options of this option list are always displayed
@@ -34226,6 +34790,55 @@
             this.acroField.removeMaxLength();
         };
         /**
+         * Display an image inside the bounds of this text field's widgets. For example:
+         * ```js
+         * const pngImage = await pdfDoc.embedPng(...)
+         * const textField = form.getTextField('some.text.field')
+         * textField.setImage(pngImage)
+         * ```
+         * This will update the appearances streams for each of this text field's widgets.
+         * @param image The image that should be displayed.
+         */
+        PDFTextField.prototype.setImage = function (image) {
+            var fieldAlignment = this.getAlignment();
+            // prettier-ignore
+            var alignment = fieldAlignment === exports.TextAlignment.Center ? ImageAlignment.Center
+                : fieldAlignment === exports.TextAlignment.Right ? ImageAlignment.Right
+                    : ImageAlignment.Left;
+            var widgets = this.acroField.getWidgets();
+            for (var idx = 0, len = widgets.length; idx < len; idx++) {
+                var widget = widgets[idx];
+                var streamRef = this.createImageAppearanceStream(widget, image, alignment);
+                this.updateWidgetAppearances(widget, { normal: streamRef });
+            }
+            this.markAsClean();
+        };
+        /**
+         * Set the font size for this field. Larger font sizes will result in larger
+         * text being displayed when PDF readers render this text field. Font sizes
+         * may be integer or floating point numbers. Supplying a negative font size
+         * will cause this method to throw an error.
+         *
+         * For example:
+         * ```js
+         * const textField = form.getTextField('some.text.field')
+         * textField.setFontSize(4)
+         * textField.setFontSize(15.7)
+         * ```
+         *
+         * > This method depends upon the existence of a default appearance
+         * > (`/DA`) string. If this field does not have a default appearance string,
+         * > or that string does not contain a font size (via the `Tf` operator),
+         * > then this method will throw an error.
+         *
+         * @param fontSize The font size to be used when rendering text in this field.
+         */
+        PDFTextField.prototype.setFontSize = function (fontSize) {
+            assertPositive(fontSize, 'fontSize');
+            this.acroField.setFontSize(fontSize);
+            this.markAsDirty();
+        };
+        /**
          * Returns `true` if each line of text is shown on a new line when this
          * field is displayed in a PDF reader. The alternative is that all lines of
          * text are merged onto a single line when displayed. See
@@ -34599,30 +35212,6 @@
             this.updateWidgetAppearance(widget, font);
             // Add widget to the given page
             page.node.addAnnot(widgetRef);
-        };
-        /**
-         * Display an image inside the bounds of this text field's widgets. For example:
-         * ```js
-         * const pngImage = await pdfDoc.embedPng(...)
-         * const textField = form.getTextField('some.text.field')
-         * textField.setImage(pngImage)
-         * ```
-         * This will update the appearances streams for each of this text field's widgets.
-         * @param image The image that should be displayed.
-         */
-        PDFTextField.prototype.setImage = function (image) {
-            var fieldAlignment = this.getAlignment();
-            // prettier-ignore
-            var alignment = fieldAlignment === exports.TextAlignment.Center ? ImageAlignment.Center
-                : fieldAlignment === exports.TextAlignment.Right ? ImageAlignment.Right
-                    : ImageAlignment.Left;
-            var widgets = this.acroField.getWidgets();
-            for (var idx = 0, len = widgets.length; idx < len; idx++) {
-                var widget = widgets[idx];
-                var streamRef = this.createImageAppearanceStream(widget, image, alignment);
-                this.updateWidgetAppearances(widget, { normal: streamRef });
-            }
-            this.markAsClean();
         };
         /**
          * Returns `true` if this text field has been marked as dirty, or if any of
@@ -35154,45 +35743,20 @@
          * ```
          */
         PDFForm.prototype.flatten = function (options) {
-            var _a;
             if (options === void 0) { options = { updateFieldAppearances: true }; }
             if (options.updateFieldAppearances) {
                 this.updateFieldAppearances();
             }
             var fields = this.getFields();
-            var pages = this.doc.getPages();
             for (var i = 0, lenFields = fields.length; i < lenFields; i++) {
                 var field = fields[i];
                 var widgets = field.acroField.getWidgets();
-                var _loop_1 = function (j, lenWidgets) {
+                for (var j = 0, lenWidgets = widgets.length; j < lenWidgets; j++) {
                     var widget = widgets[j];
-                    var pageRef = widget.P();
-                    var page = pages.find(function (x) { return x.ref === pageRef; });
-                    if (page === undefined) {
-                        var widgetRef = this_1.doc.context.getObjectRef(widget.dict);
-                        if (widgetRef === undefined) {
-                            throw new Error('Could not find PDFRef for PDFObject');
-                        }
-                        page = this_1.doc.findPageForAnnotationRef(widgetRef);
-                        if (page === undefined) {
-                            throw new Error("Could not find page for PDFRef " + widgetRef);
-                        }
-                    }
-                    var refOrDict = widget.getNormalAppearance();
-                    if (refOrDict instanceof PDFDict &&
-                        (field instanceof PDFCheckBox || field instanceof PDFRadioGroup)) {
-                        var value = field.acroField.getValue();
-                        var ref = (_a = refOrDict.get(value)) !== null && _a !== void 0 ? _a : refOrDict.get(PDFName.of('Off'));
-                        if (ref instanceof PDFRef) {
-                            refOrDict = ref;
-                        }
-                    }
-                    if (!(refOrDict instanceof PDFRef)) {
-                        var name_1 = field.getName();
-                        throw new Error("Failed to extract appearance ref for: " + name_1);
-                    }
+                    var page = this.findWidgetPage(widget);
+                    var widgetRef = this.findWidgetAppearanceRef(field, widget);
                     var xObjectKey = addRandomSuffix('FlatWidget', 10);
-                    page.node.setXObject(PDFName.of(xObjectKey), refOrDict);
+                    page.node.setXObject(PDFName.of(xObjectKey), widgetRef);
                     var rectangle = widget.getRectangle();
                     var operators = __spreadArrays([
                         pushGraphicsState(),
@@ -35202,11 +35766,6 @@
                         popGraphicsState(),
                     ]).filter(Boolean);
                     page.pushOperators.apply(page, operators);
-                    page.node.removeAnnot(refOrDict);
-                };
-                var this_1 = this;
-                for (var j = 0, lenWidgets = widgets.length; j < lenWidgets; j++) {
-                    _loop_1(j, lenWidgets);
                 }
                 this.removeField(field);
             }
@@ -35222,6 +35781,16 @@
          * ```
          */
         PDFForm.prototype.removeField = function (field) {
+            var widgets = field.acroField.getWidgets();
+            var pages = new Set();
+            for (var i = 0, len = widgets.length; i < len; i++) {
+                var widget = widgets[i];
+                var widgetRef = this.findWidgetAppearanceRef(field, widget);
+                var page = this.findWidgetPage(widget);
+                pages.add(page);
+                page.node.removeAnnot(widgetRef);
+            }
+            pages.forEach(function (page) { return page.node.removeAnnot(field.ref); });
             this.acroForm.removeField(field.acroField);
             this.doc.context.delete(field.ref);
         };
@@ -35309,6 +35878,38 @@
         };
         PDFForm.prototype.getDefaultFont = function () {
             return this.defaultFontCache.access();
+        };
+        PDFForm.prototype.findWidgetPage = function (widget) {
+            var pageRef = widget.P();
+            var page = this.doc.getPages().find(function (x) { return x.ref === pageRef; });
+            if (page === undefined) {
+                var widgetRef = this.doc.context.getObjectRef(widget.dict);
+                if (widgetRef === undefined) {
+                    throw new Error('Could not find PDFRef for PDFObject');
+                }
+                page = this.doc.findPageForAnnotationRef(widgetRef);
+                if (page === undefined) {
+                    throw new Error("Could not find page for PDFRef " + widgetRef);
+                }
+            }
+            return page;
+        };
+        PDFForm.prototype.findWidgetAppearanceRef = function (field, widget) {
+            var _a;
+            var refOrDict = widget.getNormalAppearance();
+            if (refOrDict instanceof PDFDict &&
+                (field instanceof PDFCheckBox || field instanceof PDFRadioGroup)) {
+                var value = field.acroField.getValue();
+                var ref = (_a = refOrDict.get(value)) !== null && _a !== void 0 ? _a : refOrDict.get(PDFName.of('Off'));
+                if (ref instanceof PDFRef) {
+                    refOrDict = ref;
+                }
+            }
+            if (!(refOrDict instanceof PDFRef)) {
+                var name_1 = field.getName();
+                throw new Error("Failed to extract appearance ref for: " + name_1);
+            }
+            return refOrDict;
         };
         PDFForm.prototype.findOrCreateNonTerminals = function (partialNames) {
             var nonTerminal = [
@@ -38323,6 +38924,31 @@
             this.markAsClean();
         };
         /**
+         * Set the font size for this field. Larger font sizes will result in larger
+         * text being displayed when PDF readers render this button. Font sizes may
+         * be integer or floating point numbers. Supplying a negative font size will
+         * cause this method to throw an error.
+         *
+         * For example:
+         * ```js
+         * const button = form.getButton('some.button.field')
+         * button.setFontSize(4)
+         * button.setFontSize(15.7)
+         * ```
+         *
+         * > This method depends upon the existence of a default appearance
+         * > (`/DA`) string. If this field does not have a default appearance string,
+         * > or that string does not contain a font size (via the `Tf` operator),
+         * > then this method will throw an error.
+         *
+         * @param fontSize The font size to be used when rendering text in this field.
+         */
+        PDFButton.prototype.setFontSize = function (fontSize) {
+            assertPositive(fontSize, 'fontSize');
+            this.acroField.setFontSize(fontSize);
+            this.markAsDirty();
+        };
+        /**
          * Show this button on the specified page with the given text. For example:
          * ```js
          * const ubuntuFont = await pdfDoc.embedFont(ubuntuFontBytes)
@@ -38486,10 +39112,12 @@
     exports.JpegEmbedder = JpegEmbedder;
     exports.MethodNotImplementedError = MethodNotImplementedError;
     exports.MissingCatalogError = MissingCatalogError;
+    exports.MissingDAEntryError = MissingDAEntryError;
     exports.MissingKeywordError = MissingKeywordError;
     exports.MissingOnValueCheckError = MissingOnValueCheckError;
     exports.MissingPDFHeaderError = MissingPDFHeaderError;
     exports.MissingPageContentsEmbeddingError = MissingPageContentsEmbeddingError;
+    exports.MissingTfOperatorError = MissingTfOperatorError;
     exports.MultiSelectValueError = MultiSelectValueError;
     exports.NextByteAssertionError = NextByteAssertionError;
     exports.NoSuchFieldError = NoSuchFieldError;
@@ -38579,6 +39207,7 @@
     exports.UnexpectedObjectTypeError = UnexpectedObjectTypeError;
     exports.UnrecognizedStreamTypeError = UnrecognizedStreamTypeError;
     exports.UnsupportedEncodingError = UnsupportedEncodingError;
+    exports.ViewerPreferences = ViewerPreferences;
     exports.addRandomSuffix = addRandomSuffix;
     exports.adjustDimsForRotation = adjustDimsForRotation;
     exports.appendBezierCurve = appendBezierCurve;
@@ -38588,12 +39217,14 @@
     exports.asPDFName = asPDFName;
     exports.asPDFNumber = asPDFNumber;
     exports.assertEachIs = assertEachIs;
+    exports.assertInteger = assertInteger;
     exports.assertIs = assertIs;
     exports.assertIsOneOf = assertIsOneOf;
     exports.assertIsOneOfOrUndefined = assertIsOneOfOrUndefined;
     exports.assertIsSubset = assertIsSubset;
     exports.assertMultiple = assertMultiple;
     exports.assertOrUndefined = assertOrUndefined;
+    exports.assertPositive = assertPositive;
     exports.assertRange = assertRange;
     exports.assertRangeOrUndefined = assertRangeOrUndefined;
     exports.backtick = backtick;
@@ -38657,6 +39288,7 @@
     exports.escapedNewlineChars = escapedNewlineChars;
     exports.fill = fill;
     exports.fillAndStroke = fillAndStroke;
+    exports.findLastMatch = findLastMatch;
     exports.getType = getType;
     exports.grayscale = grayscale;
     exports.hasSurrogates = hasSurrogates;

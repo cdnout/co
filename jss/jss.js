@@ -2050,7 +2050,7 @@
   function () {
     function Jss(options) {
       this.id = instanceCounter++;
-      this.version = "10.5.0";
+      this.version = "10.5.1";
       this.plugins = new PluginsRegistry();
       this.options = {
         id: {

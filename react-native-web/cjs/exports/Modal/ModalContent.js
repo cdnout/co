@@ -26,7 +26,9 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
  *
  * 
  */
-var ModalContent = (0, _react.forwardRef)(function (props, forwardedRef) {
+var ModalContent =
+/*#__PURE__*/
+(0, _react.forwardRef)(function (props, forwardedRef) {
   var active = props.active,
       children = props.children,
       onRequestClose = props.onRequestClose,
@@ -52,14 +54,19 @@ var ModalContent = (0, _react.forwardRef)(function (props, forwardedRef) {
   var style = (0, _react.useMemo)(function () {
     return [styles.modal, transparent ? styles.modalTransparent : styles.modalOpaque];
   }, [transparent]);
-  return _react.default.createElement(_View.default, {
-    accessibilityRole: active ? 'dialog' : null,
-    "aria-modal": true,
-    ref: forwardedRef,
-    style: style
-  }, _react.default.createElement(_View.default, {
-    style: styles.container
-  }, children));
+  return (
+    /*#__PURE__*/
+    _react.default.createElement(_View.default, {
+      accessibilityRole: active ? 'dialog' : null,
+      "aria-modal": true,
+      ref: forwardedRef,
+      style: style
+    },
+    /*#__PURE__*/
+    _react.default.createElement(_View.default, {
+      style: styles.container
+    }, children))
+  );
 });
 
 var styles = _StyleSheet.default.create({

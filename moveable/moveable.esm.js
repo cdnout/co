@@ -4,7 +4,7 @@ name: moveable
 license: MIT
 author: Daybrush
 repository: git+https://github.com/daybrush/moveable.git
-version: 0.22.3
+version: 0.23.1
 */
 import { ref, Properties } from 'framework-utils';
 import { createPortal, createElement, Component, render } from 'react-simple-compat';

@@ -2,62 +2,62 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-require('@babel/runtime/helpers/extends');
-require('@babel/runtime/helpers/defineProperty');
-var _classCallCheck = _interopDefault(require('@babel/runtime/helpers/classCallCheck'));
-var _createClass = _interopDefault(require('@babel/runtime/helpers/createClass'));
-var _inherits = _interopDefault(require('@babel/runtime/helpers/inherits'));
-var _possibleConstructorReturn = _interopDefault(require('@babel/runtime/helpers/possibleConstructorReturn'));
-var _getPrototypeOf = _interopDefault(require('@babel/runtime/helpers/getPrototypeOf'));
-require('@babel/runtime/helpers/toConsumableArray');
+var base_dist_reactSelect = require('./Select-b017c811.browser.cjs.js');
+var stateManager = require('./stateManager-46fb877c.browser.cjs.js');
+var _classCallCheck = require('@babel/runtime/helpers/classCallCheck');
+var _createClass = require('@babel/runtime/helpers/createClass');
+var _inherits = require('@babel/runtime/helpers/inherits');
+var index$1 = require('./index-fbaf6c2e.browser.cjs.js');
 var React = require('react');
-var React__default = _interopDefault(React);
 var react = require('@emotion/react');
-require('react-dom');
-require('@babel/runtime/helpers/typeof');
-var index$1 = require('./index-6ea0f043.browser.cjs.js');
-var reactSelect = require('./Select-da6a6bf6.browser.cjs.js');
+var createCache = require('@emotion/cache');
+var memoizeOne = require('memoize-one');
+require('@babel/runtime/helpers/extends');
+require('@babel/runtime/helpers/toConsumableArray');
 require('@babel/runtime/helpers/objectWithoutProperties');
 require('@babel/runtime/helpers/taggedTemplateLiteral');
 require('react-input-autosize');
-var stateManager = require('./stateManager-bd9afbba.browser.cjs.js');
-var createCache = _interopDefault(require('@emotion/cache'));
-var memoizeOne = _interopDefault(require('memoize-one'));
+require('@babel/runtime/helpers/defineProperty');
+require('react-dom');
+require('@babel/runtime/helpers/typeof');
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _interopDefault (e) { return e && e.__esModule ? e : { 'default': e }; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+var _classCallCheck__default = /*#__PURE__*/_interopDefault(_classCallCheck);
+var _createClass__default = /*#__PURE__*/_interopDefault(_createClass);
+var _inherits__default = /*#__PURE__*/_interopDefault(_inherits);
+var React__default = /*#__PURE__*/_interopDefault(React);
+var createCache__default = /*#__PURE__*/_interopDefault(createCache);
+var memoizeOne__default = /*#__PURE__*/_interopDefault(memoizeOne);
 
 var NonceProvider = /*#__PURE__*/function (_Component) {
-  _inherits(NonceProvider, _Component);
+  _inherits__default['default'](NonceProvider, _Component);
 
-  var _super = _createSuper(NonceProvider);
+  var _super = index$1._createSuper(NonceProvider);
 
   function NonceProvider(props) {
     var _this;
 
-    _classCallCheck(this, NonceProvider);
+    _classCallCheck__default['default'](this, NonceProvider);
 
     _this = _super.call(this, props);
 
     _this.createEmotionCache = function (nonce, key) {
-      return createCache({
+      return createCache__default['default']({
         nonce: nonce,
         key: key
       });
     };
 
-    _this.createEmotionCache = memoizeOne(_this.createEmotionCache);
+    _this.createEmotionCache = memoizeOne__default['default'](_this.createEmotionCache);
     return _this;
   }
 
-  _createClass(NonceProvider, [{
+  _createClass__default['default'](NonceProvider, [{
     key: "render",
     value: function render() {
       var emotionCache = this.createEmotionCache(this.props.nonce, this.props.cacheKey);
-      return /*#__PURE__*/React__default.createElement(react.CacheProvider, {
+      return /*#__PURE__*/React__default['default'].createElement(react.CacheProvider, {
         value: emotionCache
       }, this.props.children);
     }
@@ -66,11 +66,11 @@ var NonceProvider = /*#__PURE__*/function (_Component) {
   return NonceProvider;
 }(React.Component);
 
-var index = stateManager.manageState(reactSelect.Select);
+var index = stateManager.manageState(base_dist_reactSelect.Select);
 
+exports.createFilter = base_dist_reactSelect.createFilter;
+exports.defaultTheme = base_dist_reactSelect.defaultTheme;
+exports.mergeStyles = base_dist_reactSelect.mergeStyles;
 exports.components = index$1.components;
-exports.createFilter = reactSelect.createFilter;
-exports.defaultTheme = reactSelect.defaultTheme;
-exports.mergeStyles = reactSelect.mergeStyles;
 exports.NonceProvider = NonceProvider;
 exports.default = index;

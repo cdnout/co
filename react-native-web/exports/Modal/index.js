@@ -52,7 +52,9 @@ function addActiveModal(modalId, listener) {
   notifyActiveModalListeners();
 }
 
-var Modal = forwardRef(function (props, forwardedRef) {
+var Modal =
+/*#__PURE__*/
+forwardRef(function (props, forwardedRef) {
   var animationType = props.animationType,
       children = props.children,
       onDismiss = props.onDismiss,
@@ -90,18 +92,27 @@ var Modal = forwardRef(function (props, forwardedRef) {
       return removeActiveModal(modalId);
     };
   }, [modalId]);
-  return React.createElement(ModalPortal, null, React.createElement(ModalAnimation, {
-    animationType: animationType,
-    onDismiss: onDismissCallback,
-    onShow: onShowCallback,
-    visible: visible
-  }, React.createElement(ModalFocusTrap, {
-    active: isActive
-  }, React.createElement(ModalContent, {
-    active: isActive,
-    onRequestClose: onRequestClose,
-    ref: forwardedRef,
-    transparent: transparent
-  }, children))));
+  return (
+    /*#__PURE__*/
+    React.createElement(ModalPortal, null,
+    /*#__PURE__*/
+    React.createElement(ModalAnimation, {
+      animationType: animationType,
+      onDismiss: onDismissCallback,
+      onShow: onShowCallback,
+      visible: visible
+    },
+    /*#__PURE__*/
+    React.createElement(ModalFocusTrap, {
+      active: isActive
+    },
+    /*#__PURE__*/
+    React.createElement(ModalContent, {
+      active: isActive,
+      onRequestClose: onRequestClose,
+      ref: forwardedRef,
+      transparent: transparent
+    }, children))))
+  );
 });
 export default Modal;

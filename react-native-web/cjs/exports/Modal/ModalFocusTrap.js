@@ -137,10 +137,31 @@ var ModalFocusTrap = function ModalFocusTrap(_ref) {
         return document.removeEventListener('focus', trapFocus, true);
       };
     }
-  }, [active]);
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(FocusBracket, null), _react.default.createElement(_View.default, {
-    ref: trapElementRef
-  }, children), _react.default.createElement(FocusBracket, null));
+  }, [active]); // To be fully compliant with WCAG we need to refocus element that triggered opening modal
+  // after closing it
+
+  (0, _react.useEffect)(function () {
+    if (_ExecutionEnvironment.canUseDOM) {
+      var lastFocusedElementOutsideTrap = document.activeElement;
+      return function () {
+        if (lastFocusedElementOutsideTrap && document.contains(lastFocusedElementOutsideTrap)) {
+          _UIManager.default.focus(lastFocusedElementOutsideTrap);
+        }
+      };
+    }
+  }, []);
+  return (
+    /*#__PURE__*/
+    _react.default.createElement(_react.default.Fragment, null,
+    /*#__PURE__*/
+    _react.default.createElement(FocusBracket, null),
+    /*#__PURE__*/
+    _react.default.createElement(_View.default, {
+      ref: trapElementRef
+    }, children),
+    /*#__PURE__*/
+    _react.default.createElement(FocusBracket, null))
+  );
 };
 
 var _default = ModalFocusTrap;

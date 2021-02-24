@@ -34,7 +34,9 @@ function ModalPortal(props) {
       };
     }
   }, []);
-  return elementRef.current && canUseDOM ? ReactDOM.createPortal(children, elementRef.current) : null;
+  return elementRef.current && canUseDOM ?
+  /*#__PURE__*/
+  ReactDOM.createPortal(children, elementRef.current) : null;
 }
 
 export default ModalPortal;

@@ -116,5 +116,3 @@ var withQuicklink = function withQuicklink(Component) {
 };
 
 exports.withQuicklink = withQuicklink;
-
-//# sourceMappingURL=hoc.js.map

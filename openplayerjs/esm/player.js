@@ -70,6 +70,9 @@ class Player {
             },
             mode: 'responsive',
             onError: () => { },
+            progress: {
+                duration: 0,
+            },
             showLoaderOnInit: false,
             startTime: 0,
             startVolume: 1,
@@ -236,6 +239,23 @@ class Player {
     addControl(args) {
         args.custom = true;
         this.customControlItems.push(args);
+        const e = addEvent('controlschanged');
+        this.element.dispatchEvent(e);
+    }
+    removeControl(controlName) {
+        const { layers } = this.getOptions().controls;
+        Object.keys(layers).forEach(layer => {
+            layers[layer].forEach((item, idx) => {
+                if (item === controlName) {
+                    layers[layer].splice(idx, 1);
+                }
+            });
+        });
+        this.customControlItems.forEach((item, idx) => {
+            if (item.id === controlName) {
+                this.customControlItems.splice(idx, 1);
+            }
+        });
         const e = addEvent('controlschanged');
         this.element.dispatchEvent(e);
     }

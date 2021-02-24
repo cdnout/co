@@ -1,3 +1,7 @@
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 /**
  * Copyright (c) Nicolas Gallagher.
  *
@@ -59,18 +63,12 @@ function shouldEmitScrollEvent(lastTick, eventThrottle) {
  */
 
 
-var ScrollViewBase = forwardRef(function (props, forwardedRef) {
-  var accessibilityLabel = props.accessibilityLabel,
-      accessibilityRole = props.accessibilityRole,
-      accessibilityState = props.accessibilityState,
-      children = props.children,
-      importantForAccessibility = props.importantForAccessibility,
-      nativeID = props.nativeID,
-      onLayout = props.onLayout,
-      onScroll = props.onScroll,
+var ScrollViewBase =
+/*#__PURE__*/
+forwardRef(function (props, forwardedRef) {
+  var onScroll = props.onScroll,
       onTouchMove = props.onTouchMove,
       onWheel = props.onWheel,
-      pointerEvents = props.pointerEvents,
       _props$scrollEnabled = props.scrollEnabled,
       scrollEnabled = _props$scrollEnabled === void 0 ? true : _props$scrollEnabled,
       _props$scrollEventThr = props.scrollEventThrottle,
@@ -78,8 +76,8 @@ var ScrollViewBase = forwardRef(function (props, forwardedRef) {
       showsHorizontalScrollIndicator = props.showsHorizontalScrollIndicator,
       showsVerticalScrollIndicator = props.showsVerticalScrollIndicator,
       style = props.style,
-      dataSet = props.dataSet,
-      testID = props.testID;
+      rest = _objectWithoutPropertiesLoose(props, ["onScroll", "onTouchMove", "onWheel", "scrollEnabled", "scrollEventThrottle", "showsHorizontalScrollIndicator", "showsVerticalScrollIndicator", "style"]);
+
   var scrollState = useRef({
     isScrolling: false,
     scrollLastTick: 0
@@ -145,23 +143,16 @@ var ScrollViewBase = forwardRef(function (props, forwardedRef) {
   }
 
   var hideScrollbar = showsHorizontalScrollIndicator === false || showsVerticalScrollIndicator === false;
-  return React.createElement(View, {
-    accessibilityLabel: accessibilityLabel,
-    accessibilityRole: accessibilityRole,
-    accessibilityState: accessibilityState,
-    children: children,
-    dataSet: dataSet,
-    importantForAccessibility: importantForAccessibility,
-    nativeID: nativeID,
-    onLayout: onLayout,
-    onScroll: handleScroll,
-    onTouchMove: createPreventableScrollHandler(onTouchMove),
-    onWheel: createPreventableScrollHandler(onWheel),
-    pointerEvents: pointerEvents,
-    ref: useMergeRefs(scrollRef, forwardedRef),
-    style: [style, !scrollEnabled && styles.scrollDisabled, hideScrollbar && styles.hideScrollbar],
-    testID: testID
-  });
+  return (
+    /*#__PURE__*/
+    React.createElement(View, _extends({}, rest, {
+      onScroll: handleScroll,
+      onTouchMove: createPreventableScrollHandler(onTouchMove),
+      onWheel: createPreventableScrollHandler(onWheel),
+      ref: useMergeRefs(scrollRef, forwardedRef),
+      style: [style, !scrollEnabled && styles.scrollDisabled, hideScrollbar && styles.hideScrollbar]
+    }))
+  );
 }); // Chrome doesn't support e.preventDefault in this case; touch-action must be
 // used to disable scrolling.
 // https://developers.google.com/web/updates/2017/01/scrolling-intervention

@@ -32,14 +32,15 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-import * as React from 'react';
+import { jsx as _jsx } from "react/jsx-runtime";
+import { createRef, Component } from 'react';
 import { shallowEqual } from '@react-dnd/shallowequal';
 import { invariant } from '@react-dnd/invariant';
-import hoistStatics from 'hoist-non-react-statics';
-import { DndContext } from '../common/DndContext';
-import { isPlainObject } from '../utils/js_utils';
+import { DndContext } from '../core';
+import { isPlainObject } from './utils';
 import { Disposable, CompositeDisposable, SerialDisposable } from './disposables';
 import { isRefable } from './utils';
+import hoistStatics from 'hoist-non-react-statics';
 export function decorateHandler(_ref) {
   var DecoratedComponent = _ref.DecoratedComponent,
       createHandler = _ref.createHandler,
@@ -55,143 +56,141 @@ export function decorateHandler(_ref) {
   var Decorated = DecoratedComponent;
   var displayName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
 
-  var DragDropContainer =
-  /** @class */
-  function () {
-    var DragDropContainer = /*#__PURE__*/function (_React$Component) {
-      _inherits(DragDropContainer, _React$Component);
+  var DragDropContainer = /*#__PURE__*/function (_Component) {
+    _inherits(DragDropContainer, _Component);
 
-      var _super = _createSuper(DragDropContainer);
+    var _super = _createSuper(DragDropContainer);
 
-      function DragDropContainer(props) {
-        var _this;
+    function DragDropContainer(props) {
+      var _this;
 
-        _classCallCheck(this, DragDropContainer);
+      _classCallCheck(this, DragDropContainer);
 
-        _this = _super.call(this, props);
-        _this.decoratedRef = React.createRef();
+      _this = _super.call(this, props);
+      _this.decoratedRef = createRef();
 
-        _this.handleChange = function () {
-          var nextState = _this.getCurrentState();
+      _this.handleChange = function () {
+        var nextState = _this.getCurrentState();
 
-          if (!shallowEqual(nextState, _this.state)) {
-            _this.setState(nextState);
-          }
-        };
+        if (!shallowEqual(nextState, _this.state)) {
+          _this.setState(nextState);
+        }
+      };
 
-        _this.disposable = new SerialDisposable();
+      _this.disposable = new SerialDisposable();
 
-        _this.receiveProps(props);
+      _this.receiveProps(props);
 
-        _this.dispose();
+      _this.dispose();
 
-        return _this;
+      return _this;
+    }
+
+    _createClass(DragDropContainer, [{
+      key: "getHandlerId",
+      value: function getHandlerId() {
+        return this.handlerId;
       }
-
-      _createClass(DragDropContainer, [{
-        key: "getHandlerId",
-        value: function getHandlerId() {
-          return this.handlerId;
-        }
-      }, {
-        key: "getDecoratedComponentInstance",
-        value: function getDecoratedComponentInstance() {
-          invariant(this.decoratedRef.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
-          return this.decoratedRef.current;
-        }
-      }, {
-        key: "shouldComponentUpdate",
-        value: function shouldComponentUpdate(nextProps, nextState) {
-          return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
-        }
-      }, {
-        key: "componentDidMount",
-        value: function componentDidMount() {
-          this.disposable = new SerialDisposable();
-          this.currentType = undefined;
+    }, {
+      key: "getDecoratedComponentInstance",
+      value: function getDecoratedComponentInstance() {
+        invariant(this.decoratedRef.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
+        return this.decoratedRef.current;
+      }
+    }, {
+      key: "shouldComponentUpdate",
+      value: function shouldComponentUpdate(nextProps, nextState) {
+        return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
+      }
+    }, {
+      key: "componentDidMount",
+      value: function componentDidMount() {
+        this.disposable = new SerialDisposable();
+        this.currentType = undefined;
+        this.receiveProps(this.props);
+        this.handleChange();
+      }
+    }, {
+      key: "componentDidUpdate",
+      value: function componentDidUpdate(prevProps) {
+        if (!arePropsEqual(this.props, prevProps)) {
           this.receiveProps(this.props);
           this.handleChange();
         }
-      }, {
-        key: "componentDidUpdate",
-        value: function componentDidUpdate(prevProps) {
-          if (!arePropsEqual(this.props, prevProps)) {
-            this.receiveProps(this.props);
-            this.handleChange();
-          }
+      }
+    }, {
+      key: "componentWillUnmount",
+      value: function componentWillUnmount() {
+        this.dispose();
+      }
+    }, {
+      key: "receiveProps",
+      value: function receiveProps(props) {
+        if (!this.handler) {
+          return;
         }
-      }, {
-        key: "componentWillUnmount",
-        value: function componentWillUnmount() {
-          this.dispose();
+
+        this.handler.receiveProps(props);
+        this.receiveType(getType(props));
+      }
+    }, {
+      key: "receiveType",
+      value: function receiveType(type) {
+        if (!this.handlerMonitor || !this.manager || !this.handlerConnector) {
+          return;
         }
-      }, {
-        key: "receiveProps",
-        value: function receiveProps(props) {
-          if (!this.handler) {
-            return;
-          }
 
-          this.handler.receiveProps(props);
-          this.receiveType(getType(props));
+        if (type === this.currentType) {
+          return;
         }
-      }, {
-        key: "receiveType",
-        value: function receiveType(type) {
-          if (!this.handlerMonitor || !this.manager || !this.handlerConnector) {
-            return;
-          }
 
-          if (type === this.currentType) {
-            return;
-          }
+        this.currentType = type;
 
-          this.currentType = type;
+        var _registerHandler = registerHandler(type, this.handler, this.manager),
+            _registerHandler2 = _slicedToArray(_registerHandler, 2),
+            handlerId = _registerHandler2[0],
+            unregister = _registerHandler2[1];
 
-          var _registerHandler = registerHandler(type, this.handler, this.manager),
-              _registerHandler2 = _slicedToArray(_registerHandler, 2),
-              handlerId = _registerHandler2[0],
-              unregister = _registerHandler2[1];
+        this.handlerId = handlerId;
+        this.handlerMonitor.receiveHandlerId(handlerId);
+        this.handlerConnector.receiveHandlerId(handlerId);
+        var globalMonitor = this.manager.getMonitor();
+        var unsubscribe = globalMonitor.subscribeToStateChange(this.handleChange, {
+          handlerIds: [handlerId]
+        });
+        this.disposable.setDisposable(new CompositeDisposable(new Disposable(unsubscribe), new Disposable(unregister)));
+      }
+    }, {
+      key: "dispose",
+      value: function dispose() {
+        this.disposable.dispose();
 
-          this.handlerId = handlerId;
-          this.handlerMonitor.receiveHandlerId(handlerId);
-          this.handlerConnector.receiveHandlerId(handlerId);
-          var globalMonitor = this.manager.getMonitor();
-          var unsubscribe = globalMonitor.subscribeToStateChange(this.handleChange, {
-            handlerIds: [handlerId]
-          });
-          this.disposable.setDisposable(new CompositeDisposable(new Disposable(unsubscribe), new Disposable(unregister)));
+        if (this.handlerConnector) {
+          this.handlerConnector.receiveHandlerId(null);
         }
-      }, {
-        key: "dispose",
-        value: function dispose() {
-          this.disposable.dispose();
-
-          if (this.handlerConnector) {
-            this.handlerConnector.receiveHandlerId(null);
-          }
+      }
+    }, {
+      key: "getCurrentState",
+      value: function getCurrentState() {
+        if (!this.handlerConnector) {
+          return {};
         }
-      }, {
-        key: "getCurrentState",
-        value: function getCurrentState() {
-          if (!this.handlerConnector) {
-            return {};
-          }
 
-          var nextState = collect(this.handlerConnector.hooks, this.handlerMonitor, this.props);
+        var nextState = collect(this.handlerConnector.hooks, this.handlerMonitor, this.props);
 
-          if (process.env.NODE_ENV !== 'production') {
-            invariant(isPlainObject(nextState), 'Expected `collect` specified as the second argument to ' + '%s for %s to return a plain object of props to inject. ' + 'Instead, received %s.', containerDisplayName, displayName, nextState);
-          }
-
-          return nextState;
+        if (process.env.NODE_ENV !== 'production') {
+          invariant(isPlainObject(nextState), 'Expected `collect` specified as the second argument to ' + '%s for %s to return a plain object of props to inject. ' + 'Instead, received %s.', containerDisplayName, displayName, nextState);
         }
-      }, {
-        key: "render",
-        value: function render() {
-          var _this2 = this;
 
-          return React.createElement(DndContext.Consumer, null, function (_ref2) {
+        return nextState;
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var _this2 = this;
+
+        return _jsx(DndContext.Consumer, {
+          children: function children(_ref2) {
             var dragDropManager = _ref2.dragDropManager;
 
             _this2.receiveDragDropManager(dragDropManager);
@@ -204,39 +203,37 @@ export function decorateHandler(_ref) {
               });
             }
 
-            return React.createElement(Decorated, Object.assign({}, _this2.props, _this2.getCurrentState(), {
+            return _jsx(Decorated, Object.assign({}, _this2.props, _this2.getCurrentState(), {
               // NOTE: if Decorated is a Function Component, decoratedRef will not be populated unless it's a refforwarding component.
               ref: isRefable(Decorated) ? _this2.decoratedRef : null
-            }));
-          });
-        }
-      }, {
-        key: "receiveDragDropManager",
-        value: function receiveDragDropManager(dragDropManager) {
-          if (this.manager !== undefined) {
-            return;
+            }), void 0);
           }
-
-          invariant(dragDropManager !== undefined, 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
-
-          if (dragDropManager === undefined) {
-            return;
-          }
-
-          this.manager = dragDropManager;
-          this.handlerMonitor = createMonitor(dragDropManager);
-          this.handlerConnector = createConnector(dragDropManager.getBackend());
-          this.handler = createHandler(this.handlerMonitor, this.decoratedRef);
+        }, void 0);
+      }
+    }, {
+      key: "receiveDragDropManager",
+      value: function receiveDragDropManager(dragDropManager) {
+        if (this.manager !== undefined) {
+          return;
         }
-      }]);
 
-      return DragDropContainer;
-    }(React.Component);
+        invariant(dragDropManager !== undefined, 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
 
-    DragDropContainer.DecoratedComponent = DecoratedComponent;
-    DragDropContainer.displayName = "".concat(containerDisplayName, "(").concat(displayName, ")");
+        if (dragDropManager === undefined) {
+          return;
+        }
+
+        this.manager = dragDropManager;
+        this.handlerMonitor = createMonitor(dragDropManager);
+        this.handlerConnector = createConnector(dragDropManager.getBackend());
+        this.handler = createHandler(this.handlerMonitor, this.decoratedRef);
+      }
+    }]);
+
     return DragDropContainer;
-  }();
+  }(Component);
 
+  DragDropContainer.DecoratedComponent = DecoratedComponent;
+  DragDropContainer.displayName = "".concat(containerDisplayName, "(").concat(displayName, ")");
   return hoistStatics(DragDropContainer, DecoratedComponent);
 }

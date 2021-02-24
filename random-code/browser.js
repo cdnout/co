@@ -1,4 +1,4 @@
-/* @codedipper/random-code v2.1.1 */
+/* @codedipper/random-code v2.1.2 */
 const _chars = [
     "a",
     "b",
@@ -66,6 +66,11 @@ const _chars = [
     "_"
 ];
 
+const {
+    floor,
+    random
+} = Math;
+
 function generateCode(_num, _characters){
 	if (!_num) _num = 10;
 	if (!_characters) _characters = _chars;
@@ -74,9 +79,8 @@ function generateCode(_num, _characters){
 
 	let _code = "";
 
-	for (let i = 0; i < parseInt(_num); i++) {
-		_code = _code + _characters[Math.floor(Math.random() * _characters.length)];
-	}
+	for (let i = 0; i < parseInt(_num); i++)
+		_code = _code + _characters[floor(random() * _characters.length)];
 
 	return _code;
 };

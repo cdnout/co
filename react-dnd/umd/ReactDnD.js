@@ -1,8 +1,1354 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
   typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
-  (global = global || self, factory(global.ReactDnD = {}, global.React));
-}(this, (function (exports, React) { 'use strict';
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ReactDnD = {}, global.React));
+}(this, (function (exports, f) { 'use strict';
+
+  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+  var f__default = /*#__PURE__*/_interopDefaultLegacy(f);
+
+  /**
+   * Create the React Context
+   */
+
+  var DndContext = f.createContext({
+    dragDropManager: undefined
+  });
+
+  function createCommonjsModule(fn) {
+    var module = { exports: {} };
+  	return fn(module, module.exports), module.exports;
+  }
+
+  /*
+  object-assign
+  (c) Sindre Sorhus
+  @license MIT
+  */
+  /* eslint-disable no-unused-vars */
+  var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+  var hasOwnProperty = Object.prototype.hasOwnProperty;
+  var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+  function toObject(val) {
+  	if (val === null || val === undefined) {
+  		throw new TypeError('Object.assign cannot be called with null or undefined');
+  	}
+
+  	return Object(val);
+  }
+
+  function shouldUseNative() {
+  	try {
+  		if (!Object.assign) {
+  			return false;
+  		}
+
+  		// Detect buggy property enumeration order in older V8 versions.
+
+  		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+  		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+  		test1[5] = 'de';
+  		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+  			return false;
+  		}
+
+  		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+  		var test2 = {};
+  		for (var i = 0; i < 10; i++) {
+  			test2['_' + String.fromCharCode(i)] = i;
+  		}
+  		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+  			return test2[n];
+  		});
+  		if (order2.join('') !== '0123456789') {
+  			return false;
+  		}
+
+  		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+  		var test3 = {};
+  		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+  			test3[letter] = letter;
+  		});
+  		if (Object.keys(Object.assign({}, test3)).join('') !==
+  				'abcdefghijklmnopqrst') {
+  			return false;
+  		}
+
+  		return true;
+  	} catch (err) {
+  		// We don't expect any of the above to throw, but better to be safe.
+  		return false;
+  	}
+  }
+
+  var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
+  	var from;
+  	var to = toObject(target);
+  	var symbols;
+
+  	for (var s = 1; s < arguments.length; s++) {
+  		from = Object(arguments[s]);
+
+  		for (var key in from) {
+  			if (hasOwnProperty.call(from, key)) {
+  				to[key] = from[key];
+  			}
+  		}
+
+  		if (getOwnPropertySymbols) {
+  			symbols = getOwnPropertySymbols(from);
+  			for (var i = 0; i < symbols.length; i++) {
+  				if (propIsEnumerable.call(from, symbols[i])) {
+  					to[symbols[i]] = from[symbols[i]];
+  				}
+  			}
+  		}
+  	}
+
+  	return to;
+  };
+
+  /** @license React v17.0.1
+   * react-jsx-runtime.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+
+  createCommonjsModule(function (module, exports) {
+  var g=60103;exports.Fragment=60107;if("function"===typeof Symbol&&Symbol.for){var h=Symbol.for;g=h("react.element");exports.Fragment=h("react.fragment");}var m=f__default['default'].__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,n=Object.prototype.hasOwnProperty,p={key:!0,ref:!0,__self:!0,__source:!0};
+  function q(c,a,k){var b,d={},e=null,l=null;void 0!==k&&(e=""+k);void 0!==a.key&&(e=""+a.key);void 0!==a.ref&&(l=a.ref);for(b in a)n.call(a,b)&&!p.hasOwnProperty(b)&&(d[b]=a[b]);if(c&&c.defaultProps)for(b in a=c.defaultProps,a)void 0===d[b]&&(d[b]=a[b]);return {$$typeof:g,type:c,key:e,ref:l,props:d,_owner:m.current}}exports.jsx=q;exports.jsxs=q;
+  });
+
+  /** @license React v17.0.1
+   * react-jsx-runtime.development.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+
+  var reactJsxRuntime_development = createCommonjsModule(function (module, exports) {
+
+  {
+    (function() {
+
+  var React = f__default['default'];
+  var _assign = objectAssign;
+
+  // ATTENTION
+  // When adding new symbols to this file,
+  // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
+  // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+  // nor polyfill, then a plain number is used for performance.
+  var REACT_ELEMENT_TYPE = 0xeac7;
+  var REACT_PORTAL_TYPE = 0xeaca;
+  exports.Fragment = 0xeacb;
+  var REACT_STRICT_MODE_TYPE = 0xeacc;
+  var REACT_PROFILER_TYPE = 0xead2;
+  var REACT_PROVIDER_TYPE = 0xeacd;
+  var REACT_CONTEXT_TYPE = 0xeace;
+  var REACT_FORWARD_REF_TYPE = 0xead0;
+  var REACT_SUSPENSE_TYPE = 0xead1;
+  var REACT_SUSPENSE_LIST_TYPE = 0xead8;
+  var REACT_MEMO_TYPE = 0xead3;
+  var REACT_LAZY_TYPE = 0xead4;
+  var REACT_BLOCK_TYPE = 0xead9;
+  var REACT_SERVER_BLOCK_TYPE = 0xeada;
+  var REACT_FUNDAMENTAL_TYPE = 0xead5;
+  var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
+  var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
+
+  if (typeof Symbol === 'function' && Symbol.for) {
+    var symbolFor = Symbol.for;
+    REACT_ELEMENT_TYPE = symbolFor('react.element');
+    REACT_PORTAL_TYPE = symbolFor('react.portal');
+    exports.Fragment = symbolFor('react.fragment');
+    REACT_STRICT_MODE_TYPE = symbolFor('react.strict_mode');
+    REACT_PROFILER_TYPE = symbolFor('react.profiler');
+    REACT_PROVIDER_TYPE = symbolFor('react.provider');
+    REACT_CONTEXT_TYPE = symbolFor('react.context');
+    REACT_FORWARD_REF_TYPE = symbolFor('react.forward_ref');
+    REACT_SUSPENSE_TYPE = symbolFor('react.suspense');
+    REACT_SUSPENSE_LIST_TYPE = symbolFor('react.suspense_list');
+    REACT_MEMO_TYPE = symbolFor('react.memo');
+    REACT_LAZY_TYPE = symbolFor('react.lazy');
+    REACT_BLOCK_TYPE = symbolFor('react.block');
+    REACT_SERVER_BLOCK_TYPE = symbolFor('react.server.block');
+    REACT_FUNDAMENTAL_TYPE = symbolFor('react.fundamental');
+    symbolFor('react.scope');
+    symbolFor('react.opaque.id');
+    REACT_DEBUG_TRACING_MODE_TYPE = symbolFor('react.debug_trace_mode');
+    symbolFor('react.offscreen');
+    REACT_LEGACY_HIDDEN_TYPE = symbolFor('react.legacy_hidden');
+  }
+
+  var MAYBE_ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+  var FAUX_ITERATOR_SYMBOL = '@@iterator';
+  function getIteratorFn(maybeIterable) {
+    if (maybeIterable === null || typeof maybeIterable !== 'object') {
+      return null;
+    }
+
+    var maybeIterator = MAYBE_ITERATOR_SYMBOL && maybeIterable[MAYBE_ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL];
+
+    if (typeof maybeIterator === 'function') {
+      return maybeIterator;
+    }
+
+    return null;
+  }
+
+  var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+  function error(format) {
+    {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
+      printWarning('error', format, args);
+    }
+  }
+
+  function printWarning(level, format, args) {
+    // When changing this logic, you might want to also
+    // update consoleWithStackDev.www.js as well.
+    {
+      var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+      var stack = ReactDebugCurrentFrame.getStackAddendum();
+
+      if (stack !== '') {
+        format += '%s';
+        args = args.concat([stack]);
+      }
+
+      var argsWithFormat = args.map(function (item) {
+        return '' + item;
+      }); // Careful: RN currently depends on this prefix
+
+      argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
+      // breaks IE9: https://github.com/facebook/react/issues/13610
+      // eslint-disable-next-line react-internal/no-production-logging
+
+      Function.prototype.apply.call(console[level], console, argsWithFormat);
+    }
+  }
+
+  // Filter certain DOM attributes (e.g. src, href) if their values are empty strings.
+
+  var enableScopeAPI = false; // Experimental Create Event Handle API.
+
+  function isValidElementType(type) {
+    if (typeof type === 'string' || typeof type === 'function') {
+      return true;
+    } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
+
+
+    if (type === exports.Fragment || type === REACT_PROFILER_TYPE || type === REACT_DEBUG_TRACING_MODE_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || type === REACT_LEGACY_HIDDEN_TYPE || enableScopeAPI ) {
+      return true;
+    }
+
+    if (typeof type === 'object' && type !== null) {
+      if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_BLOCK_TYPE || type[0] === REACT_SERVER_BLOCK_TYPE) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function getWrappedName(outerType, innerType, wrapperName) {
+    var functionName = innerType.displayName || innerType.name || '';
+    return outerType.displayName || (functionName !== '' ? wrapperName + "(" + functionName + ")" : wrapperName);
+  }
+
+  function getContextName(type) {
+    return type.displayName || 'Context';
+  }
+
+  function getComponentName(type) {
+    if (type == null) {
+      // Host root, text node or just invalid type.
+      return null;
+    }
+
+    {
+      if (typeof type.tag === 'number') {
+        error('Received an unexpected object in getComponentName(). ' + 'This is likely a bug in React. Please file an issue.');
+      }
+    }
+
+    if (typeof type === 'function') {
+      return type.displayName || type.name || null;
+    }
+
+    if (typeof type === 'string') {
+      return type;
+    }
+
+    switch (type) {
+      case exports.Fragment:
+        return 'Fragment';
+
+      case REACT_PORTAL_TYPE:
+        return 'Portal';
+
+      case REACT_PROFILER_TYPE:
+        return 'Profiler';
+
+      case REACT_STRICT_MODE_TYPE:
+        return 'StrictMode';
+
+      case REACT_SUSPENSE_TYPE:
+        return 'Suspense';
+
+      case REACT_SUSPENSE_LIST_TYPE:
+        return 'SuspenseList';
+    }
+
+    if (typeof type === 'object') {
+      switch (type.$$typeof) {
+        case REACT_CONTEXT_TYPE:
+          var context = type;
+          return getContextName(context) + '.Consumer';
+
+        case REACT_PROVIDER_TYPE:
+          var provider = type;
+          return getContextName(provider._context) + '.Provider';
+
+        case REACT_FORWARD_REF_TYPE:
+          return getWrappedName(type, type.render, 'ForwardRef');
+
+        case REACT_MEMO_TYPE:
+          return getComponentName(type.type);
+
+        case REACT_BLOCK_TYPE:
+          return getComponentName(type._render);
+
+        case REACT_LAZY_TYPE:
+          {
+            var lazyComponent = type;
+            var payload = lazyComponent._payload;
+            var init = lazyComponent._init;
+
+            try {
+              return getComponentName(init(payload));
+            } catch (x) {
+              return null;
+            }
+          }
+      }
+    }
+
+    return null;
+  }
+
+  // Helpers to patch console.logs to avoid logging during side-effect free
+  // replaying on render function. This currently only patches the object
+  // lazily which won't cover if the log function was extracted eagerly.
+  // We could also eagerly patch the method.
+  var disabledDepth = 0;
+  var prevLog;
+  var prevInfo;
+  var prevWarn;
+  var prevError;
+  var prevGroup;
+  var prevGroupCollapsed;
+  var prevGroupEnd;
+
+  function disabledLog() {}
+
+  disabledLog.__reactDisabledLog = true;
+  function disableLogs() {
+    {
+      if (disabledDepth === 0) {
+        /* eslint-disable react-internal/no-production-logging */
+        prevLog = console.log;
+        prevInfo = console.info;
+        prevWarn = console.warn;
+        prevError = console.error;
+        prevGroup = console.group;
+        prevGroupCollapsed = console.groupCollapsed;
+        prevGroupEnd = console.groupEnd; // https://github.com/facebook/react/issues/19099
+
+        var props = {
+          configurable: true,
+          enumerable: true,
+          value: disabledLog,
+          writable: true
+        }; // $FlowFixMe Flow thinks console is immutable.
+
+        Object.defineProperties(console, {
+          info: props,
+          log: props,
+          warn: props,
+          error: props,
+          group: props,
+          groupCollapsed: props,
+          groupEnd: props
+        });
+        /* eslint-enable react-internal/no-production-logging */
+      }
+
+      disabledDepth++;
+    }
+  }
+  function reenableLogs() {
+    {
+      disabledDepth--;
+
+      if (disabledDepth === 0) {
+        /* eslint-disable react-internal/no-production-logging */
+        var props = {
+          configurable: true,
+          enumerable: true,
+          writable: true
+        }; // $FlowFixMe Flow thinks console is immutable.
+
+        Object.defineProperties(console, {
+          log: _assign({}, props, {
+            value: prevLog
+          }),
+          info: _assign({}, props, {
+            value: prevInfo
+          }),
+          warn: _assign({}, props, {
+            value: prevWarn
+          }),
+          error: _assign({}, props, {
+            value: prevError
+          }),
+          group: _assign({}, props, {
+            value: prevGroup
+          }),
+          groupCollapsed: _assign({}, props, {
+            value: prevGroupCollapsed
+          }),
+          groupEnd: _assign({}, props, {
+            value: prevGroupEnd
+          })
+        });
+        /* eslint-enable react-internal/no-production-logging */
+      }
+
+      if (disabledDepth < 0) {
+        error('disabledDepth fell below zero. ' + 'This is a bug in React. Please file an issue.');
+      }
+    }
+  }
+
+  var ReactCurrentDispatcher = ReactSharedInternals.ReactCurrentDispatcher;
+  var prefix;
+  function describeBuiltInComponentFrame(name, source, ownerFn) {
+    {
+      if (prefix === undefined) {
+        // Extract the VM specific prefix used by each line.
+        try {
+          throw Error();
+        } catch (x) {
+          var match = x.stack.trim().match(/\n( *(at )?)/);
+          prefix = match && match[1] || '';
+        }
+      } // We use the prefix to ensure our stacks line up with native stack frames.
+
+
+      return '\n' + prefix + name;
+    }
+  }
+  var reentry = false;
+  var componentFrameCache;
+
+  {
+    var PossiblyWeakMap = typeof WeakMap === 'function' ? WeakMap : Map;
+    componentFrameCache = new PossiblyWeakMap();
+  }
+
+  function describeNativeComponentFrame(fn, construct) {
+    // If something asked for a stack inside a fake render, it should get ignored.
+    if (!fn || reentry) {
+      return '';
+    }
+
+    {
+      var frame = componentFrameCache.get(fn);
+
+      if (frame !== undefined) {
+        return frame;
+      }
+    }
+
+    var control;
+    reentry = true;
+    var previousPrepareStackTrace = Error.prepareStackTrace; // $FlowFixMe It does accept undefined.
+
+    Error.prepareStackTrace = undefined;
+    var previousDispatcher;
+
+    {
+      previousDispatcher = ReactCurrentDispatcher.current; // Set the dispatcher in DEV because this might be call in the render function
+      // for warnings.
+
+      ReactCurrentDispatcher.current = null;
+      disableLogs();
+    }
+
+    try {
+      // This should throw.
+      if (construct) {
+        // Something should be setting the props in the constructor.
+        var Fake = function () {
+          throw Error();
+        }; // $FlowFixMe
+
+
+        Object.defineProperty(Fake.prototype, 'props', {
+          set: function () {
+            // We use a throwing setter instead of frozen or non-writable props
+            // because that won't throw in a non-strict mode function.
+            throw Error();
+          }
+        });
+
+        if (typeof Reflect === 'object' && Reflect.construct) {
+          // We construct a different control for this case to include any extra
+          // frames added by the construct call.
+          try {
+            Reflect.construct(Fake, []);
+          } catch (x) {
+            control = x;
+          }
+
+          Reflect.construct(fn, [], Fake);
+        } else {
+          try {
+            Fake.call();
+          } catch (x) {
+            control = x;
+          }
+
+          fn.call(Fake.prototype);
+        }
+      } else {
+        try {
+          throw Error();
+        } catch (x) {
+          control = x;
+        }
+
+        fn();
+      }
+    } catch (sample) {
+      // This is inlined manually because closure doesn't do it for us.
+      if (sample && control && typeof sample.stack === 'string') {
+        // This extracts the first frame from the sample that isn't also in the control.
+        // Skipping one frame that we assume is the frame that calls the two.
+        var sampleLines = sample.stack.split('\n');
+        var controlLines = control.stack.split('\n');
+        var s = sampleLines.length - 1;
+        var c = controlLines.length - 1;
+
+        while (s >= 1 && c >= 0 && sampleLines[s] !== controlLines[c]) {
+          // We expect at least one stack frame to be shared.
+          // Typically this will be the root most one. However, stack frames may be
+          // cut off due to maximum stack limits. In this case, one maybe cut off
+          // earlier than the other. We assume that the sample is longer or the same
+          // and there for cut off earlier. So we should find the root most frame in
+          // the sample somewhere in the control.
+          c--;
+        }
+
+        for (; s >= 1 && c >= 0; s--, c--) {
+          // Next we find the first one that isn't the same which should be the
+          // frame that called our sample function and the control.
+          if (sampleLines[s] !== controlLines[c]) {
+            // In V8, the first line is describing the message but other VMs don't.
+            // If we're about to return the first line, and the control is also on the same
+            // line, that's a pretty good indicator that our sample threw at same line as
+            // the control. I.e. before we entered the sample frame. So we ignore this result.
+            // This can happen if you passed a class to function component, or non-function.
+            if (s !== 1 || c !== 1) {
+              do {
+                s--;
+                c--; // We may still have similar intermediate frames from the construct call.
+                // The next one that isn't the same should be our match though.
+
+                if (c < 0 || sampleLines[s] !== controlLines[c]) {
+                  // V8 adds a "new" prefix for native classes. Let's remove it to make it prettier.
+                  var _frame = '\n' + sampleLines[s].replace(' at new ', ' at ');
+
+                  {
+                    if (typeof fn === 'function') {
+                      componentFrameCache.set(fn, _frame);
+                    }
+                  } // Return the line we found.
+
+
+                  return _frame;
+                }
+              } while (s >= 1 && c >= 0);
+            }
+
+            break;
+          }
+        }
+      }
+    } finally {
+      reentry = false;
+
+      {
+        ReactCurrentDispatcher.current = previousDispatcher;
+        reenableLogs();
+      }
+
+      Error.prepareStackTrace = previousPrepareStackTrace;
+    } // Fallback to just using the name if we couldn't make it throw.
+
+
+    var name = fn ? fn.displayName || fn.name : '';
+    var syntheticFrame = name ? describeBuiltInComponentFrame(name) : '';
+
+    {
+      if (typeof fn === 'function') {
+        componentFrameCache.set(fn, syntheticFrame);
+      }
+    }
+
+    return syntheticFrame;
+  }
+  function describeFunctionComponentFrame(fn, source, ownerFn) {
+    {
+      return describeNativeComponentFrame(fn, false);
+    }
+  }
+
+  function shouldConstruct(Component) {
+    var prototype = Component.prototype;
+    return !!(prototype && prototype.isReactComponent);
+  }
+
+  function describeUnknownElementTypeFrameInDEV(type, source, ownerFn) {
+
+    if (type == null) {
+      return '';
+    }
+
+    if (typeof type === 'function') {
+      {
+        return describeNativeComponentFrame(type, shouldConstruct(type));
+      }
+    }
+
+    if (typeof type === 'string') {
+      return describeBuiltInComponentFrame(type);
+    }
+
+    switch (type) {
+      case REACT_SUSPENSE_TYPE:
+        return describeBuiltInComponentFrame('Suspense');
+
+      case REACT_SUSPENSE_LIST_TYPE:
+        return describeBuiltInComponentFrame('SuspenseList');
+    }
+
+    if (typeof type === 'object') {
+      switch (type.$$typeof) {
+        case REACT_FORWARD_REF_TYPE:
+          return describeFunctionComponentFrame(type.render);
+
+        case REACT_MEMO_TYPE:
+          // Memo may contain any component type so we recursively resolve it.
+          return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
+
+        case REACT_BLOCK_TYPE:
+          return describeFunctionComponentFrame(type._render);
+
+        case REACT_LAZY_TYPE:
+          {
+            var lazyComponent = type;
+            var payload = lazyComponent._payload;
+            var init = lazyComponent._init;
+
+            try {
+              // Lazy may contain any component type so we recursively resolve it.
+              return describeUnknownElementTypeFrameInDEV(init(payload), source, ownerFn);
+            } catch (x) {}
+          }
+      }
+    }
+
+    return '';
+  }
+
+  var loggedTypeFailures = {};
+  var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+
+  function setCurrentlyValidatingElement(element) {
+    {
+      if (element) {
+        var owner = element._owner;
+        var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
+        ReactDebugCurrentFrame.setExtraStackFrame(stack);
+      } else {
+        ReactDebugCurrentFrame.setExtraStackFrame(null);
+      }
+    }
+  }
+
+  function checkPropTypes(typeSpecs, values, location, componentName, element) {
+    {
+      // $FlowFixMe This is okay but Flow doesn't know it.
+      var has = Function.call.bind(Object.prototype.hasOwnProperty);
+
+      for (var typeSpecName in typeSpecs) {
+        if (has(typeSpecs, typeSpecName)) {
+          var error$1 = void 0; // Prop type validation may throw. In case they do, we don't want to
+          // fail the render phase where it didn't fail before. So we log it.
+          // After these have been cleaned up, we'll let them throw.
+
+          try {
+            // This is intentionally an invariant that gets caught. It's the same
+            // behavior as without this statement except with a better message.
+            if (typeof typeSpecs[typeSpecName] !== 'function') {
+              var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
+              err.name = 'Invariant Violation';
+              throw err;
+            }
+
+            error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED');
+          } catch (ex) {
+            error$1 = ex;
+          }
+
+          if (error$1 && !(error$1 instanceof Error)) {
+            setCurrentlyValidatingElement(element);
+
+            error('%s: type specification of %s' + ' `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error$1);
+
+            setCurrentlyValidatingElement(null);
+          }
+
+          if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
+            // Only monitor this failure once because there tends to be a lot of the
+            // same error.
+            loggedTypeFailures[error$1.message] = true;
+            setCurrentlyValidatingElement(element);
+
+            error('Failed %s type: %s', location, error$1.message);
+
+            setCurrentlyValidatingElement(null);
+          }
+        }
+      }
+    }
+  }
+
+  var ReactCurrentOwner = ReactSharedInternals.ReactCurrentOwner;
+  var hasOwnProperty = Object.prototype.hasOwnProperty;
+  var RESERVED_PROPS = {
+    key: true,
+    ref: true,
+    __self: true,
+    __source: true
+  };
+  var specialPropKeyWarningShown;
+  var specialPropRefWarningShown;
+  var didWarnAboutStringRefs;
+
+  {
+    didWarnAboutStringRefs = {};
+  }
+
+  function hasValidRef(config) {
+    {
+      if (hasOwnProperty.call(config, 'ref')) {
+        var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
+
+        if (getter && getter.isReactWarning) {
+          return false;
+        }
+      }
+    }
+
+    return config.ref !== undefined;
+  }
+
+  function hasValidKey(config) {
+    {
+      if (hasOwnProperty.call(config, 'key')) {
+        var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
+
+        if (getter && getter.isReactWarning) {
+          return false;
+        }
+      }
+    }
+
+    return config.key !== undefined;
+  }
+
+  function warnIfStringRefCannotBeAutoConverted(config, self) {
+    {
+      if (typeof config.ref === 'string' && ReactCurrentOwner.current && self && ReactCurrentOwner.current.stateNode !== self) {
+        var componentName = getComponentName(ReactCurrentOwner.current.type);
+
+        if (!didWarnAboutStringRefs[componentName]) {
+          error('Component "%s" contains the string ref "%s". ' + 'Support for string refs will be removed in a future major release. ' + 'This case cannot be automatically converted to an arrow function. ' + 'We ask you to manually fix this case by using useRef() or createRef() instead. ' + 'Learn more about using refs safely here: ' + 'https://reactjs.org/link/strict-mode-string-ref', getComponentName(ReactCurrentOwner.current.type), config.ref);
+
+          didWarnAboutStringRefs[componentName] = true;
+        }
+      }
+    }
+  }
+
+  function defineKeyPropWarningGetter(props, displayName) {
+    {
+      var warnAboutAccessingKey = function () {
+        if (!specialPropKeyWarningShown) {
+          specialPropKeyWarningShown = true;
+
+          error('%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
+        }
+      };
+
+      warnAboutAccessingKey.isReactWarning = true;
+      Object.defineProperty(props, 'key', {
+        get: warnAboutAccessingKey,
+        configurable: true
+      });
+    }
+  }
+
+  function defineRefPropWarningGetter(props, displayName) {
+    {
+      var warnAboutAccessingRef = function () {
+        if (!specialPropRefWarningShown) {
+          specialPropRefWarningShown = true;
+
+          error('%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
+        }
+      };
+
+      warnAboutAccessingRef.isReactWarning = true;
+      Object.defineProperty(props, 'ref', {
+        get: warnAboutAccessingRef,
+        configurable: true
+      });
+    }
+  }
+  /**
+   * Factory method to create a new React element. This no longer adheres to
+   * the class pattern, so do not use new to call it. Also, instanceof check
+   * will not work. Instead test $$typeof field against Symbol.for('react.element') to check
+   * if something is a React Element.
+   *
+   * @param {*} type
+   * @param {*} props
+   * @param {*} key
+   * @param {string|object} ref
+   * @param {*} owner
+   * @param {*} self A *temporary* helper to detect places where `this` is
+   * different from the `owner` when React.createElement is called, so that we
+   * can warn. We want to get rid of owner and replace string `ref`s with arrow
+   * functions, and as long as `this` and owner are the same, there will be no
+   * change in behavior.
+   * @param {*} source An annotation object (added by a transpiler or otherwise)
+   * indicating filename, line number, and/or other information.
+   * @internal
+   */
+
+
+  var ReactElement = function (type, key, ref, self, source, owner, props) {
+    var element = {
+      // This tag allows us to uniquely identify this as a React Element
+      $$typeof: REACT_ELEMENT_TYPE,
+      // Built-in properties that belong on the element
+      type: type,
+      key: key,
+      ref: ref,
+      props: props,
+      // Record the component responsible for creating this element.
+      _owner: owner
+    };
+
+    {
+      // The validation flag is currently mutative. We put it on
+      // an external backing store so that we can freeze the whole object.
+      // This can be replaced with a WeakMap once they are implemented in
+      // commonly used development environments.
+      element._store = {}; // To make comparing ReactElements easier for testing purposes, we make
+      // the validation flag non-enumerable (where possible, which should
+      // include every environment we run tests in), so the test framework
+      // ignores it.
+
+      Object.defineProperty(element._store, 'validated', {
+        configurable: false,
+        enumerable: false,
+        writable: true,
+        value: false
+      }); // self and source are DEV only properties.
+
+      Object.defineProperty(element, '_self', {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: self
+      }); // Two elements created in two different places should be considered
+      // equal for testing purposes and therefore we hide it from enumeration.
+
+      Object.defineProperty(element, '_source', {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: source
+      });
+
+      if (Object.freeze) {
+        Object.freeze(element.props);
+        Object.freeze(element);
+      }
+    }
+
+    return element;
+  };
+  /**
+   * https://github.com/reactjs/rfcs/pull/107
+   * @param {*} type
+   * @param {object} props
+   * @param {string} key
+   */
+
+  function jsxDEV(type, config, maybeKey, source, self) {
+    {
+      var propName; // Reserved names are extracted
+
+      var props = {};
+      var key = null;
+      var ref = null; // Currently, key can be spread in as a prop. This causes a potential
+      // issue if key is also explicitly declared (ie. <div {...props} key="Hi" />
+      // or <div key="Hi" {...props} /> ). We want to deprecate key spread,
+      // but as an intermediary step, we will use jsxDEV for everything except
+      // <div {...props} key="Hi" />, because we aren't currently able to tell if
+      // key is explicitly declared to be undefined or not.
+
+      if (maybeKey !== undefined) {
+        key = '' + maybeKey;
+      }
+
+      if (hasValidKey(config)) {
+        key = '' + config.key;
+      }
+
+      if (hasValidRef(config)) {
+        ref = config.ref;
+        warnIfStringRefCannotBeAutoConverted(config, self);
+      } // Remaining properties are added to a new props object
+
+
+      for (propName in config) {
+        if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+          props[propName] = config[propName];
+        }
+      } // Resolve default props
+
+
+      if (type && type.defaultProps) {
+        var defaultProps = type.defaultProps;
+
+        for (propName in defaultProps) {
+          if (props[propName] === undefined) {
+            props[propName] = defaultProps[propName];
+          }
+        }
+      }
+
+      if (key || ref) {
+        var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
+
+        if (key) {
+          defineKeyPropWarningGetter(props, displayName);
+        }
+
+        if (ref) {
+          defineRefPropWarningGetter(props, displayName);
+        }
+      }
+
+      return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
+    }
+  }
+
+  var ReactCurrentOwner$1 = ReactSharedInternals.ReactCurrentOwner;
+  var ReactDebugCurrentFrame$1 = ReactSharedInternals.ReactDebugCurrentFrame;
+
+  function setCurrentlyValidatingElement$1(element) {
+    {
+      if (element) {
+        var owner = element._owner;
+        var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
+        ReactDebugCurrentFrame$1.setExtraStackFrame(stack);
+      } else {
+        ReactDebugCurrentFrame$1.setExtraStackFrame(null);
+      }
+    }
+  }
+
+  var propTypesMisspellWarningShown;
+
+  {
+    propTypesMisspellWarningShown = false;
+  }
+  /**
+   * Verifies the object is a ReactElement.
+   * See https://reactjs.org/docs/react-api.html#isvalidelement
+   * @param {?object} object
+   * @return {boolean} True if `object` is a ReactElement.
+   * @final
+   */
+
+  function isValidElement(object) {
+    {
+      return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+    }
+  }
+
+  function getDeclarationErrorAddendum() {
+    {
+      if (ReactCurrentOwner$1.current) {
+        var name = getComponentName(ReactCurrentOwner$1.current.type);
+
+        if (name) {
+          return '\n\nCheck the render method of `' + name + '`.';
+        }
+      }
+
+      return '';
+    }
+  }
+
+  function getSourceInfoErrorAddendum(source) {
+    {
+      if (source !== undefined) {
+        var fileName = source.fileName.replace(/^.*[\\\/]/, '');
+        var lineNumber = source.lineNumber;
+        return '\n\nCheck your code at ' + fileName + ':' + lineNumber + '.';
+      }
+
+      return '';
+    }
+  }
+  /**
+   * Warn if there's no key explicitly set on dynamic arrays of children or
+   * object keys are not valid. This allows us to keep track of children between
+   * updates.
+   */
+
+
+  var ownerHasKeyUseWarning = {};
+
+  function getCurrentComponentErrorInfo(parentType) {
+    {
+      var info = getDeclarationErrorAddendum();
+
+      if (!info) {
+        var parentName = typeof parentType === 'string' ? parentType : parentType.displayName || parentType.name;
+
+        if (parentName) {
+          info = "\n\nCheck the top-level render call using <" + parentName + ">.";
+        }
+      }
+
+      return info;
+    }
+  }
+  /**
+   * Warn if the element doesn't have an explicit key assigned to it.
+   * This element is in an array. The array could grow and shrink or be
+   * reordered. All children that haven't already been validated are required to
+   * have a "key" property assigned to it. Error statuses are cached so a warning
+   * will only be shown once.
+   *
+   * @internal
+   * @param {ReactElement} element Element that requires a key.
+   * @param {*} parentType element's parent's type.
+   */
+
+
+  function validateExplicitKey(element, parentType) {
+    {
+      if (!element._store || element._store.validated || element.key != null) {
+        return;
+      }
+
+      element._store.validated = true;
+      var currentComponentErrorInfo = getCurrentComponentErrorInfo(parentType);
+
+      if (ownerHasKeyUseWarning[currentComponentErrorInfo]) {
+        return;
+      }
+
+      ownerHasKeyUseWarning[currentComponentErrorInfo] = true; // Usually the current owner is the offender, but if it accepts children as a
+      // property, it may be the creator of the child that's responsible for
+      // assigning it a key.
+
+      var childOwner = '';
+
+      if (element && element._owner && element._owner !== ReactCurrentOwner$1.current) {
+        // Give the component that originally created this child.
+        childOwner = " It was passed a child from " + getComponentName(element._owner.type) + ".";
+      }
+
+      setCurrentlyValidatingElement$1(element);
+
+      error('Each child in a list should have a unique "key" prop.' + '%s%s See https://reactjs.org/link/warning-keys for more information.', currentComponentErrorInfo, childOwner);
+
+      setCurrentlyValidatingElement$1(null);
+    }
+  }
+  /**
+   * Ensure that every element either is passed in a static location, in an
+   * array with an explicit keys property defined, or in an object literal
+   * with valid key property.
+   *
+   * @internal
+   * @param {ReactNode} node Statically passed child of any type.
+   * @param {*} parentType node's parent's type.
+   */
+
+
+  function validateChildKeys(node, parentType) {
+    {
+      if (typeof node !== 'object') {
+        return;
+      }
+
+      if (Array.isArray(node)) {
+        for (var i = 0; i < node.length; i++) {
+          var child = node[i];
+
+          if (isValidElement(child)) {
+            validateExplicitKey(child, parentType);
+          }
+        }
+      } else if (isValidElement(node)) {
+        // This element was passed in a valid location.
+        if (node._store) {
+          node._store.validated = true;
+        }
+      } else if (node) {
+        var iteratorFn = getIteratorFn(node);
+
+        if (typeof iteratorFn === 'function') {
+          // Entry iterators used to provide implicit keys,
+          // but now we print a separate warning for them later.
+          if (iteratorFn !== node.entries) {
+            var iterator = iteratorFn.call(node);
+            var step;
+
+            while (!(step = iterator.next()).done) {
+              if (isValidElement(step.value)) {
+                validateExplicitKey(step.value, parentType);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /**
+   * Given an element, validate that its props follow the propTypes definition,
+   * provided by the type.
+   *
+   * @param {ReactElement} element
+   */
+
+
+  function validatePropTypes(element) {
+    {
+      var type = element.type;
+
+      if (type === null || type === undefined || typeof type === 'string') {
+        return;
+      }
+
+      var propTypes;
+
+      if (typeof type === 'function') {
+        propTypes = type.propTypes;
+      } else if (typeof type === 'object' && (type.$$typeof === REACT_FORWARD_REF_TYPE || // Note: Memo only checks outer props here.
+      // Inner props are checked in the reconciler.
+      type.$$typeof === REACT_MEMO_TYPE)) {
+        propTypes = type.propTypes;
+      } else {
+        return;
+      }
+
+      if (propTypes) {
+        // Intentionally inside to avoid triggering lazy initializers:
+        var name = getComponentName(type);
+        checkPropTypes(propTypes, element.props, 'prop', name, element);
+      } else if (type.PropTypes !== undefined && !propTypesMisspellWarningShown) {
+        propTypesMisspellWarningShown = true; // Intentionally inside to avoid triggering lazy initializers:
+
+        var _name = getComponentName(type);
+
+        error('Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?', _name || 'Unknown');
+      }
+
+      if (typeof type.getDefaultProps === 'function' && !type.getDefaultProps.isReactClassApproved) {
+        error('getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.');
+      }
+    }
+  }
+  /**
+   * Given a fragment, validate that it can only be provided with fragment props
+   * @param {ReactElement} fragment
+   */
+
+
+  function validateFragmentProps(fragment) {
+    {
+      var keys = Object.keys(fragment.props);
+
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+
+        if (key !== 'children' && key !== 'key') {
+          setCurrentlyValidatingElement$1(fragment);
+
+          error('Invalid prop `%s` supplied to `React.Fragment`. ' + 'React.Fragment can only have `key` and `children` props.', key);
+
+          setCurrentlyValidatingElement$1(null);
+          break;
+        }
+      }
+
+      if (fragment.ref !== null) {
+        setCurrentlyValidatingElement$1(fragment);
+
+        error('Invalid attribute `ref` supplied to `React.Fragment`.');
+
+        setCurrentlyValidatingElement$1(null);
+      }
+    }
+  }
+
+  function jsxWithValidation(type, props, key, isStaticChildren, source, self) {
+    {
+      var validType = isValidElementType(type); // We warn in this case but don't throw. We expect the element creation to
+      // succeed and there will likely be errors in render.
+
+      if (!validType) {
+        var info = '';
+
+        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+          info += ' You likely forgot to export your component from the file ' + "it's defined in, or you might have mixed up default and named imports.";
+        }
+
+        var sourceInfo = getSourceInfoErrorAddendum(source);
+
+        if (sourceInfo) {
+          info += sourceInfo;
+        } else {
+          info += getDeclarationErrorAddendum();
+        }
+
+        var typeString;
+
+        if (type === null) {
+          typeString = 'null';
+        } else if (Array.isArray(type)) {
+          typeString = 'array';
+        } else if (type !== undefined && type.$$typeof === REACT_ELEMENT_TYPE) {
+          typeString = "<" + (getComponentName(type.type) || 'Unknown') + " />";
+          info = ' Did you accidentally export a JSX literal instead of a component?';
+        } else {
+          typeString = typeof type;
+        }
+
+        error('React.jsx: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
+      }
+
+      var element = jsxDEV(type, props, key, source, self); // The result can be nullish if a mock or a custom function is used.
+      // TODO: Drop this when these are no longer allowed as the type argument.
+
+      if (element == null) {
+        return element;
+      } // Skip key warning if the type isn't valid since our key validation logic
+      // doesn't expect a non-string/function type and can throw confusing errors.
+      // We don't want exception behavior to differ between dev and prod.
+      // (Rendering will throw with a helpful message and as soon as the type is
+      // fixed, the key warnings will appear.)
+
+
+      if (validType) {
+        var children = props.children;
+
+        if (children !== undefined) {
+          if (isStaticChildren) {
+            if (Array.isArray(children)) {
+              for (var i = 0; i < children.length; i++) {
+                validateChildKeys(children[i], type);
+              }
+
+              if (Object.freeze) {
+                Object.freeze(children);
+              }
+            } else {
+              error('React.jsx: Static children should always be an array. ' + 'You are likely explicitly calling React.jsxs or React.jsxDEV. ' + 'Use the Babel transform instead.');
+            }
+          } else {
+            validateChildKeys(children, type);
+          }
+        }
+      }
+
+      if (type === exports.Fragment) {
+        validateFragmentProps(element);
+      } else {
+        validatePropTypes(element);
+      }
+
+      return element;
+    }
+  } // These two functions exist to still get child warnings in dev
+  // even with the prod transform. This means that jsxDEV is purely
+  // opt-in behavior for better messages but that we won't stop
+  // giving you warnings if you use production apis.
+
+  function jsxWithValidationStatic(type, props, key) {
+    {
+      return jsxWithValidation(type, props, key, true);
+    }
+  }
+  function jsxWithValidationDynamic(type, props, key) {
+    {
+      return jsxWithValidation(type, props, key, false);
+    }
+  }
+
+  var jsx =  jsxWithValidationDynamic ; // we may want to special case jsxs internally to take advantage of static children.
+  // for now we can ship identical prod functions
+
+  var jsxs =  jsxWithValidationStatic ;
+
+  exports.jsx = jsx;
+  exports.jsxs = jsxs;
+    })();
+  }
+  });
+
+  var jsxRuntime = createCommonjsModule(function (module) {
+
+  {
+    module.exports = reactJsxRuntime_development;
+  }
+  });
 
   var HandlerRole;
 
@@ -10,383 +1356,6 @@
     HandlerRole["SOURCE"] = "SOURCE";
     HandlerRole["TARGET"] = "TARGET";
   })(HandlerRole || (HandlerRole = {}));
-
-  function symbolObservablePonyfill(root) {
-  	var result;
-  	var Symbol = root.Symbol;
-
-  	if (typeof Symbol === 'function') {
-  		if (Symbol.observable) {
-  			result = Symbol.observable;
-  		} else {
-  			result = Symbol('observable');
-  			Symbol.observable = result;
-  		}
-  	} else {
-  		result = '@@observable';
-  	}
-
-  	return result;
-  }
-
-  /* global window */
-
-  var root;
-
-  if (typeof self !== 'undefined') {
-    root = self;
-  } else if (typeof window !== 'undefined') {
-    root = window;
-  } else if (typeof global !== 'undefined') {
-    root = global;
-  } else if (typeof module !== 'undefined') {
-    root = module;
-  } else {
-    root = Function('return this')();
-  }
-
-  var result = symbolObservablePonyfill(root);
-
-  /**
-   * These are private action types reserved by Redux.
-   * For any unknown actions, you must return the current state.
-   * If the current state is undefined, you must return the initial state.
-   * Do not reference these action types directly in your code.
-   */
-  var randomString = function randomString() {
-    return Math.random().toString(36).substring(7).split('').join('.');
-  };
-
-  var ActionTypes = {
-    INIT: "@@redux/INIT" + randomString(),
-    REPLACE: "@@redux/REPLACE" + randomString(),
-    PROBE_UNKNOWN_ACTION: function PROBE_UNKNOWN_ACTION() {
-      return "@@redux/PROBE_UNKNOWN_ACTION" + randomString();
-    }
-  };
-
-  /**
-   * @param {any} obj The object to inspect.
-   * @returns {boolean} True if the argument appears to be a plain object.
-   */
-  function isPlainObject(obj) {
-    if (typeof obj !== 'object' || obj === null) return false;
-    var proto = obj;
-
-    while (Object.getPrototypeOf(proto) !== null) {
-      proto = Object.getPrototypeOf(proto);
-    }
-
-    return Object.getPrototypeOf(obj) === proto;
-  }
-
-  /**
-   * Creates a Redux store that holds the state tree.
-   * The only way to change the data in the store is to call `dispatch()` on it.
-   *
-   * There should only be a single store in your app. To specify how different
-   * parts of the state tree respond to actions, you may combine several reducers
-   * into a single reducer function by using `combineReducers`.
-   *
-   * @param {Function} reducer A function that returns the next state tree, given
-   * the current state tree and the action to handle.
-   *
-   * @param {any} [preloadedState] The initial state. You may optionally specify it
-   * to hydrate the state from the server in universal apps, or to restore a
-   * previously serialized user session.
-   * If you use `combineReducers` to produce the root reducer function, this must be
-   * an object with the same shape as `combineReducers` keys.
-   *
-   * @param {Function} [enhancer] The store enhancer. You may optionally specify it
-   * to enhance the store with third-party capabilities such as middleware,
-   * time travel, persistence, etc. The only store enhancer that ships with Redux
-   * is `applyMiddleware()`.
-   *
-   * @returns {Store} A Redux store that lets you read the state, dispatch actions
-   * and subscribe to changes.
-   */
-
-  function createStore(reducer, preloadedState, enhancer) {
-    var _ref2;
-
-    if (typeof preloadedState === 'function' && typeof enhancer === 'function' || typeof enhancer === 'function' && typeof arguments[3] === 'function') {
-      throw new Error('It looks like you are passing several store enhancers to ' + 'createStore(). This is not supported. Instead, compose them ' + 'together to a single function.');
-    }
-
-    if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
-      enhancer = preloadedState;
-      preloadedState = undefined;
-    }
-
-    if (typeof enhancer !== 'undefined') {
-      if (typeof enhancer !== 'function') {
-        throw new Error('Expected the enhancer to be a function.');
-      }
-
-      return enhancer(createStore)(reducer, preloadedState);
-    }
-
-    if (typeof reducer !== 'function') {
-      throw new Error('Expected the reducer to be a function.');
-    }
-
-    var currentReducer = reducer;
-    var currentState = preloadedState;
-    var currentListeners = [];
-    var nextListeners = currentListeners;
-    var isDispatching = false;
-    /**
-     * This makes a shallow copy of currentListeners so we can use
-     * nextListeners as a temporary list while dispatching.
-     *
-     * This prevents any bugs around consumers calling
-     * subscribe/unsubscribe in the middle of a dispatch.
-     */
-
-    function ensureCanMutateNextListeners() {
-      if (nextListeners === currentListeners) {
-        nextListeners = currentListeners.slice();
-      }
-    }
-    /**
-     * Reads the state tree managed by the store.
-     *
-     * @returns {any} The current state tree of your application.
-     */
-
-
-    function getState() {
-      if (isDispatching) {
-        throw new Error('You may not call store.getState() while the reducer is executing. ' + 'The reducer has already received the state as an argument. ' + 'Pass it down from the top reducer instead of reading it from the store.');
-      }
-
-      return currentState;
-    }
-    /**
-     * Adds a change listener. It will be called any time an action is dispatched,
-     * and some part of the state tree may potentially have changed. You may then
-     * call `getState()` to read the current state tree inside the callback.
-     *
-     * You may call `dispatch()` from a change listener, with the following
-     * caveats:
-     *
-     * 1. The subscriptions are snapshotted just before every `dispatch()` call.
-     * If you subscribe or unsubscribe while the listeners are being invoked, this
-     * will not have any effect on the `dispatch()` that is currently in progress.
-     * However, the next `dispatch()` call, whether nested or not, will use a more
-     * recent snapshot of the subscription list.
-     *
-     * 2. The listener should not expect to see all state changes, as the state
-     * might have been updated multiple times during a nested `dispatch()` before
-     * the listener is called. It is, however, guaranteed that all subscribers
-     * registered before the `dispatch()` started will be called with the latest
-     * state by the time it exits.
-     *
-     * @param {Function} listener A callback to be invoked on every dispatch.
-     * @returns {Function} A function to remove this change listener.
-     */
-
-
-    function subscribe(listener) {
-      if (typeof listener !== 'function') {
-        throw new Error('Expected the listener to be a function.');
-      }
-
-      if (isDispatching) {
-        throw new Error('You may not call store.subscribe() while the reducer is executing. ' + 'If you would like to be notified after the store has been updated, subscribe from a ' + 'component and invoke store.getState() in the callback to access the latest state. ' + 'See https://redux.js.org/api-reference/store#subscribelistener for more details.');
-      }
-
-      var isSubscribed = true;
-      ensureCanMutateNextListeners();
-      nextListeners.push(listener);
-      return function unsubscribe() {
-        if (!isSubscribed) {
-          return;
-        }
-
-        if (isDispatching) {
-          throw new Error('You may not unsubscribe from a store listener while the reducer is executing. ' + 'See https://redux.js.org/api-reference/store#subscribelistener for more details.');
-        }
-
-        isSubscribed = false;
-        ensureCanMutateNextListeners();
-        var index = nextListeners.indexOf(listener);
-        nextListeners.splice(index, 1);
-        currentListeners = null;
-      };
-    }
-    /**
-     * Dispatches an action. It is the only way to trigger a state change.
-     *
-     * The `reducer` function, used to create the store, will be called with the
-     * current state tree and the given `action`. Its return value will
-     * be considered the **next** state of the tree, and the change listeners
-     * will be notified.
-     *
-     * The base implementation only supports plain object actions. If you want to
-     * dispatch a Promise, an Observable, a thunk, or something else, you need to
-     * wrap your store creating function into the corresponding middleware. For
-     * example, see the documentation for the `redux-thunk` package. Even the
-     * middleware will eventually dispatch plain object actions using this method.
-     *
-     * @param {Object} action A plain object representing “what changed”. It is
-     * a good idea to keep actions serializable so you can record and replay user
-     * sessions, or use the time travelling `redux-devtools`. An action must have
-     * a `type` property which may not be `undefined`. It is a good idea to use
-     * string constants for action types.
-     *
-     * @returns {Object} For convenience, the same action object you dispatched.
-     *
-     * Note that, if you use a custom middleware, it may wrap `dispatch()` to
-     * return something else (for example, a Promise you can await).
-     */
-
-
-    function dispatch(action) {
-      if (!isPlainObject(action)) {
-        throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
-      }
-
-      if (typeof action.type === 'undefined') {
-        throw new Error('Actions may not have an undefined "type" property. ' + 'Have you misspelled a constant?');
-      }
-
-      if (isDispatching) {
-        throw new Error('Reducers may not dispatch actions.');
-      }
-
-      try {
-        isDispatching = true;
-        currentState = currentReducer(currentState, action);
-      } finally {
-        isDispatching = false;
-      }
-
-      var listeners = currentListeners = nextListeners;
-
-      for (var i = 0; i < listeners.length; i++) {
-        var listener = listeners[i];
-        listener();
-      }
-
-      return action;
-    }
-    /**
-     * Replaces the reducer currently used by the store to calculate the state.
-     *
-     * You might need this if your app implements code splitting and you want to
-     * load some of the reducers dynamically. You might also need this if you
-     * implement a hot reloading mechanism for Redux.
-     *
-     * @param {Function} nextReducer The reducer for the store to use instead.
-     * @returns {void}
-     */
-
-
-    function replaceReducer(nextReducer) {
-      if (typeof nextReducer !== 'function') {
-        throw new Error('Expected the nextReducer to be a function.');
-      }
-
-      currentReducer = nextReducer; // This action has a similiar effect to ActionTypes.INIT.
-      // Any reducers that existed in both the new and old rootReducer
-      // will receive the previous state. This effectively populates
-      // the new state tree with any relevant data from the old one.
-
-      dispatch({
-        type: ActionTypes.REPLACE
-      });
-    }
-    /**
-     * Interoperability point for observable/reactive libraries.
-     * @returns {observable} A minimal observable of state changes.
-     * For more information, see the observable proposal:
-     * https://github.com/tc39/proposal-observable
-     */
-
-
-    function observable() {
-      var _ref;
-
-      var outerSubscribe = subscribe;
-      return _ref = {
-        /**
-         * The minimal observable subscription method.
-         * @param {Object} observer Any object that can be used as an observer.
-         * The observer object should have a `next` method.
-         * @returns {subscription} An object with an `unsubscribe` method that can
-         * be used to unsubscribe the observable from the store, and prevent further
-         * emission of values from the observable.
-         */
-        subscribe: function subscribe(observer) {
-          if (typeof observer !== 'object' || observer === null) {
-            throw new TypeError('Expected the observer to be an object.');
-          }
-
-          function observeState() {
-            if (observer.next) {
-              observer.next(getState());
-            }
-          }
-
-          observeState();
-          var unsubscribe = outerSubscribe(observeState);
-          return {
-            unsubscribe: unsubscribe
-          };
-        }
-      }, _ref[result] = function () {
-        return this;
-      }, _ref;
-    } // When a store is created, an "INIT" action is dispatched so that every
-    // reducer returns their initial state. This effectively populates
-    // the initial state tree.
-
-
-    dispatch({
-      type: ActionTypes.INIT
-    });
-    return _ref2 = {
-      dispatch: dispatch,
-      subscribe: subscribe,
-      getState: getState,
-      replaceReducer: replaceReducer
-    }, _ref2[result] = observable, _ref2;
-  }
-
-  /**
-   * Prints a warning in the console if it exists.
-   *
-   * @param {String} message The warning message.
-   * @returns {void}
-   */
-  function warning(message) {
-    /* eslint-disable no-console */
-    if (typeof console !== 'undefined' && typeof console.error === 'function') {
-      console.error(message);
-    }
-    /* eslint-enable no-console */
-
-
-    try {
-      // This error was thrown as a convenience so that if you enable
-      // "break on all exceptions" in your console,
-      // it would pause the execution at this line.
-      throw new Error(message);
-    } catch (e) {} // eslint-disable-line no-empty
-
-  }
-
-  /*
-   * This is a dummy function to check if the function name has been altered by minification.
-   * If the function has been minified and NODE_ENV !== 'production', warn the user.
-   */
-
-  function isCrushed() {}
-
-  if ( typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
-    warning('You are currently using minified code outside of NODE_ENV === "production". ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or setting mode to production in webpack (https://webpack.js.org/concepts/mode/) ' + 'to ensure you have the correct code for your production build.');
-  }
 
   /**
    * Use invariant() to assert state which your program assumes to be true.
@@ -772,6 +1741,475 @@
     };
   }
 
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+  function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+  var DragDropManagerImpl = /*#__PURE__*/function () {
+    function DragDropManagerImpl(store, monitor) {
+      var _this = this;
+
+      _classCallCheck(this, DragDropManagerImpl);
+
+      this.isSetUp = false;
+
+      this.handleRefCountChange = function () {
+        var shouldSetUp = _this.store.getState().refCount > 0;
+
+        if (_this.backend) {
+          if (shouldSetUp && !_this.isSetUp) {
+            _this.backend.setup();
+
+            _this.isSetUp = true;
+          } else if (!shouldSetUp && _this.isSetUp) {
+            _this.backend.teardown();
+
+            _this.isSetUp = false;
+          }
+        }
+      };
+
+      this.store = store;
+      this.monitor = monitor;
+      store.subscribe(this.handleRefCountChange);
+    }
+
+    _createClass(DragDropManagerImpl, [{
+      key: "receiveBackend",
+      value: function receiveBackend(backend) {
+        this.backend = backend;
+      }
+    }, {
+      key: "getMonitor",
+      value: function getMonitor() {
+        return this.monitor;
+      }
+    }, {
+      key: "getBackend",
+      value: function getBackend() {
+        return this.backend;
+      }
+    }, {
+      key: "getRegistry",
+      value: function getRegistry() {
+        return this.monitor.registry;
+      }
+    }, {
+      key: "getActions",
+      value: function getActions() {
+        /* eslint-disable-next-line @typescript-eslint/no-this-alias */
+        var manager = this;
+        var dispatch = this.store.dispatch;
+
+        function bindActionCreator(actionCreator) {
+          return function () {
+            for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+
+            var action = actionCreator.apply(manager, args);
+
+            if (typeof action !== 'undefined') {
+              dispatch(action);
+            }
+          };
+        }
+
+        var actions = createDragDropActions(this);
+        return Object.keys(actions).reduce(function (boundActions, key) {
+          var action = actions[key];
+          boundActions[key] = bindActionCreator(action);
+          return boundActions;
+        }, {});
+      }
+    }, {
+      key: "dispatch",
+      value: function dispatch(action) {
+        this.store.dispatch(action);
+      }
+    }]);
+
+    return DragDropManagerImpl;
+  }();
+
+  function symbolObservablePonyfill(root) {
+  	var result;
+  	var Symbol = root.Symbol;
+
+  	if (typeof Symbol === 'function') {
+  		if (Symbol.observable) {
+  			result = Symbol.observable;
+  		} else {
+  			result = Symbol('observable');
+  			Symbol.observable = result;
+  		}
+  	} else {
+  		result = '@@observable';
+  	}
+
+  	return result;
+  }
+
+  /* global window */
+
+  var root;
+
+  if (typeof self !== 'undefined') {
+    root = self;
+  } else if (typeof window !== 'undefined') {
+    root = window;
+  } else if (typeof global !== 'undefined') {
+    root = global;
+  } else if (typeof module !== 'undefined') {
+    root = module;
+  } else {
+    root = Function('return this')();
+  }
+
+  var result = symbolObservablePonyfill(root);
+
+  /**
+   * These are private action types reserved by Redux.
+   * For any unknown actions, you must return the current state.
+   * If the current state is undefined, you must return the initial state.
+   * Do not reference these action types directly in your code.
+   */
+  var randomString = function randomString() {
+    return Math.random().toString(36).substring(7).split('').join('.');
+  };
+
+  var ActionTypes = {
+    INIT: "@@redux/INIT" + randomString(),
+    REPLACE: "@@redux/REPLACE" + randomString(),
+    PROBE_UNKNOWN_ACTION: function PROBE_UNKNOWN_ACTION() {
+      return "@@redux/PROBE_UNKNOWN_ACTION" + randomString();
+    }
+  };
+
+  /**
+   * @param {any} obj The object to inspect.
+   * @returns {boolean} True if the argument appears to be a plain object.
+   */
+  function isPlainObject(obj) {
+    if (typeof obj !== 'object' || obj === null) return false;
+    var proto = obj;
+
+    while (Object.getPrototypeOf(proto) !== null) {
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return Object.getPrototypeOf(obj) === proto;
+  }
+
+  /**
+   * Creates a Redux store that holds the state tree.
+   * The only way to change the data in the store is to call `dispatch()` on it.
+   *
+   * There should only be a single store in your app. To specify how different
+   * parts of the state tree respond to actions, you may combine several reducers
+   * into a single reducer function by using `combineReducers`.
+   *
+   * @param {Function} reducer A function that returns the next state tree, given
+   * the current state tree and the action to handle.
+   *
+   * @param {any} [preloadedState] The initial state. You may optionally specify it
+   * to hydrate the state from the server in universal apps, or to restore a
+   * previously serialized user session.
+   * If you use `combineReducers` to produce the root reducer function, this must be
+   * an object with the same shape as `combineReducers` keys.
+   *
+   * @param {Function} [enhancer] The store enhancer. You may optionally specify it
+   * to enhance the store with third-party capabilities such as middleware,
+   * time travel, persistence, etc. The only store enhancer that ships with Redux
+   * is `applyMiddleware()`.
+   *
+   * @returns {Store} A Redux store that lets you read the state, dispatch actions
+   * and subscribe to changes.
+   */
+
+  function createStore(reducer, preloadedState, enhancer) {
+    var _ref2;
+
+    if (typeof preloadedState === 'function' && typeof enhancer === 'function' || typeof enhancer === 'function' && typeof arguments[3] === 'function') {
+      throw new Error('It looks like you are passing several store enhancers to ' + 'createStore(). This is not supported. Instead, compose them ' + 'together to a single function.');
+    }
+
+    if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
+      enhancer = preloadedState;
+      preloadedState = undefined;
+    }
+
+    if (typeof enhancer !== 'undefined') {
+      if (typeof enhancer !== 'function') {
+        throw new Error('Expected the enhancer to be a function.');
+      }
+
+      return enhancer(createStore)(reducer, preloadedState);
+    }
+
+    if (typeof reducer !== 'function') {
+      throw new Error('Expected the reducer to be a function.');
+    }
+
+    var currentReducer = reducer;
+    var currentState = preloadedState;
+    var currentListeners = [];
+    var nextListeners = currentListeners;
+    var isDispatching = false;
+    /**
+     * This makes a shallow copy of currentListeners so we can use
+     * nextListeners as a temporary list while dispatching.
+     *
+     * This prevents any bugs around consumers calling
+     * subscribe/unsubscribe in the middle of a dispatch.
+     */
+
+    function ensureCanMutateNextListeners() {
+      if (nextListeners === currentListeners) {
+        nextListeners = currentListeners.slice();
+      }
+    }
+    /**
+     * Reads the state tree managed by the store.
+     *
+     * @returns {any} The current state tree of your application.
+     */
+
+
+    function getState() {
+      if (isDispatching) {
+        throw new Error('You may not call store.getState() while the reducer is executing. ' + 'The reducer has already received the state as an argument. ' + 'Pass it down from the top reducer instead of reading it from the store.');
+      }
+
+      return currentState;
+    }
+    /**
+     * Adds a change listener. It will be called any time an action is dispatched,
+     * and some part of the state tree may potentially have changed. You may then
+     * call `getState()` to read the current state tree inside the callback.
+     *
+     * You may call `dispatch()` from a change listener, with the following
+     * caveats:
+     *
+     * 1. The subscriptions are snapshotted just before every `dispatch()` call.
+     * If you subscribe or unsubscribe while the listeners are being invoked, this
+     * will not have any effect on the `dispatch()` that is currently in progress.
+     * However, the next `dispatch()` call, whether nested or not, will use a more
+     * recent snapshot of the subscription list.
+     *
+     * 2. The listener should not expect to see all state changes, as the state
+     * might have been updated multiple times during a nested `dispatch()` before
+     * the listener is called. It is, however, guaranteed that all subscribers
+     * registered before the `dispatch()` started will be called with the latest
+     * state by the time it exits.
+     *
+     * @param {Function} listener A callback to be invoked on every dispatch.
+     * @returns {Function} A function to remove this change listener.
+     */
+
+
+    function subscribe(listener) {
+      if (typeof listener !== 'function') {
+        throw new Error('Expected the listener to be a function.');
+      }
+
+      if (isDispatching) {
+        throw new Error('You may not call store.subscribe() while the reducer is executing. ' + 'If you would like to be notified after the store has been updated, subscribe from a ' + 'component and invoke store.getState() in the callback to access the latest state. ' + 'See https://redux.js.org/api-reference/store#subscribelistener for more details.');
+      }
+
+      var isSubscribed = true;
+      ensureCanMutateNextListeners();
+      nextListeners.push(listener);
+      return function unsubscribe() {
+        if (!isSubscribed) {
+          return;
+        }
+
+        if (isDispatching) {
+          throw new Error('You may not unsubscribe from a store listener while the reducer is executing. ' + 'See https://redux.js.org/api-reference/store#subscribelistener for more details.');
+        }
+
+        isSubscribed = false;
+        ensureCanMutateNextListeners();
+        var index = nextListeners.indexOf(listener);
+        nextListeners.splice(index, 1);
+        currentListeners = null;
+      };
+    }
+    /**
+     * Dispatches an action. It is the only way to trigger a state change.
+     *
+     * The `reducer` function, used to create the store, will be called with the
+     * current state tree and the given `action`. Its return value will
+     * be considered the **next** state of the tree, and the change listeners
+     * will be notified.
+     *
+     * The base implementation only supports plain object actions. If you want to
+     * dispatch a Promise, an Observable, a thunk, or something else, you need to
+     * wrap your store creating function into the corresponding middleware. For
+     * example, see the documentation for the `redux-thunk` package. Even the
+     * middleware will eventually dispatch plain object actions using this method.
+     *
+     * @param {Object} action A plain object representing “what changed”. It is
+     * a good idea to keep actions serializable so you can record and replay user
+     * sessions, or use the time travelling `redux-devtools`. An action must have
+     * a `type` property which may not be `undefined`. It is a good idea to use
+     * string constants for action types.
+     *
+     * @returns {Object} For convenience, the same action object you dispatched.
+     *
+     * Note that, if you use a custom middleware, it may wrap `dispatch()` to
+     * return something else (for example, a Promise you can await).
+     */
+
+
+    function dispatch(action) {
+      if (!isPlainObject(action)) {
+        throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
+      }
+
+      if (typeof action.type === 'undefined') {
+        throw new Error('Actions may not have an undefined "type" property. ' + 'Have you misspelled a constant?');
+      }
+
+      if (isDispatching) {
+        throw new Error('Reducers may not dispatch actions.');
+      }
+
+      try {
+        isDispatching = true;
+        currentState = currentReducer(currentState, action);
+      } finally {
+        isDispatching = false;
+      }
+
+      var listeners = currentListeners = nextListeners;
+
+      for (var i = 0; i < listeners.length; i++) {
+        var listener = listeners[i];
+        listener();
+      }
+
+      return action;
+    }
+    /**
+     * Replaces the reducer currently used by the store to calculate the state.
+     *
+     * You might need this if your app implements code splitting and you want to
+     * load some of the reducers dynamically. You might also need this if you
+     * implement a hot reloading mechanism for Redux.
+     *
+     * @param {Function} nextReducer The reducer for the store to use instead.
+     * @returns {void}
+     */
+
+
+    function replaceReducer(nextReducer) {
+      if (typeof nextReducer !== 'function') {
+        throw new Error('Expected the nextReducer to be a function.');
+      }
+
+      currentReducer = nextReducer; // This action has a similiar effect to ActionTypes.INIT.
+      // Any reducers that existed in both the new and old rootReducer
+      // will receive the previous state. This effectively populates
+      // the new state tree with any relevant data from the old one.
+
+      dispatch({
+        type: ActionTypes.REPLACE
+      });
+    }
+    /**
+     * Interoperability point for observable/reactive libraries.
+     * @returns {observable} A minimal observable of state changes.
+     * For more information, see the observable proposal:
+     * https://github.com/tc39/proposal-observable
+     */
+
+
+    function observable() {
+      var _ref;
+
+      var outerSubscribe = subscribe;
+      return _ref = {
+        /**
+         * The minimal observable subscription method.
+         * @param {Object} observer Any object that can be used as an observer.
+         * The observer object should have a `next` method.
+         * @returns {subscription} An object with an `unsubscribe` method that can
+         * be used to unsubscribe the observable from the store, and prevent further
+         * emission of values from the observable.
+         */
+        subscribe: function subscribe(observer) {
+          if (typeof observer !== 'object' || observer === null) {
+            throw new TypeError('Expected the observer to be an object.');
+          }
+
+          function observeState() {
+            if (observer.next) {
+              observer.next(getState());
+            }
+          }
+
+          observeState();
+          var unsubscribe = outerSubscribe(observeState);
+          return {
+            unsubscribe: unsubscribe
+          };
+        }
+      }, _ref[result] = function () {
+        return this;
+      }, _ref;
+    } // When a store is created, an "INIT" action is dispatched so that every
+    // reducer returns their initial state. This effectively populates
+    // the initial state tree.
+
+
+    dispatch({
+      type: ActionTypes.INIT
+    });
+    return _ref2 = {
+      dispatch: dispatch,
+      subscribe: subscribe,
+      getState: getState,
+      replaceReducer: replaceReducer
+    }, _ref2[result] = observable, _ref2;
+  }
+
+  /**
+   * Prints a warning in the console if it exists.
+   *
+   * @param {String} message The warning message.
+   * @returns {void}
+   */
+  function warning(message) {
+    /* eslint-disable no-console */
+    if (typeof console !== 'undefined' && typeof console.error === 'function') {
+      console.error(message);
+    }
+    /* eslint-enable no-console */
+
+
+    try {
+      // This error was thrown as a convenience so that if you enable
+      // "break on all exceptions" in your console,
+      // it would pause the execution at this line.
+      throw new Error(message);
+    } catch (e) {} // eslint-disable-line no-empty
+
+  }
+
+  /*
+   * This is a dummy function to check if the function name has been altered by minification.
+   * If the function has been minified and NODE_ENV !== 'production', warn the user.
+   */
+
+  function isCrushed() {}
+
+  if (typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
+    warning('You are currently using minified code outside of NODE_ENV === "production". ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or setting mode to production in webpack (https://webpack.js.org/concepts/mode/) ' + 'to ensure you have the correct code for your production build.');
+  }
+
   var strictEquality = function strictEquality(a, b) {
     return a === b;
   };
@@ -1144,20 +2582,20 @@
     return subtract(clientOffset, initialClientOffset);
   }
 
-  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  function _defineProperties$1(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+  function _createClass$1(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$1(Constructor.prototype, protoProps); if (staticProps) _defineProperties$1(Constructor, staticProps); return Constructor; }
   var DragDropMonitorImpl = /*#__PURE__*/function () {
     function DragDropMonitorImpl(store, registry) {
-      _classCallCheck(this, DragDropMonitorImpl);
+      _classCallCheck$1(this, DragDropMonitorImpl);
 
       this.store = store;
       this.registry = registry;
     }
 
-    _createClass(DragDropMonitorImpl, [{
+    _createClass$1(DragDropMonitorImpl, [{
       key: "subscribeToStateChange",
       value: function subscribeToStateChange(listener) {
         var _this = this;
@@ -1217,7 +2655,7 @@
         }
 
         var source = this.registry.getSource(sourceId);
-        invariant(source, 'Expected to find a valid source.');
+        invariant(source, "Expected to find a valid source. sourceId=".concat(sourceId));
 
         if (this.isDragging()) {
           return false;
@@ -1234,7 +2672,7 @@
         }
 
         var target = this.registry.getTarget(targetId);
-        invariant(target, 'Expected to find a valid target.');
+        invariant(target, "Expected to find a valid target. targetId=".concat(targetId));
 
         if (!this.isDragging() || this.didDrop()) {
           return false;
@@ -1258,7 +2696,7 @@
         }
 
         var source = this.registry.getSource(sourceId, true);
-        invariant(source, 'Expected to find a valid source.');
+        invariant(source, "Expected to find a valid source. sourceId=".concat(sourceId));
 
         if (!this.isDragging() || !this.isSourcePublic()) {
           return false;
@@ -1674,11 +3112,11 @@
     return RawTask;
   }();
 
-  function _classCallCheck$1(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  function _defineProperties$1(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  function _defineProperties$2(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  function _createClass$1(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$1(Constructor.prototype, protoProps); if (staticProps) _defineProperties$1(Constructor, staticProps); return Constructor; }
+  function _createClass$2(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$2(Constructor.prototype, protoProps); if (staticProps) _defineProperties$2(Constructor, staticProps); return Constructor; }
 
   function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -1742,7 +3180,7 @@
 
   var HandlerRegistryImpl = /*#__PURE__*/function () {
     function HandlerRegistryImpl(store) {
-      _classCallCheck$1(this, HandlerRegistryImpl);
+      _classCallCheck$2(this, HandlerRegistryImpl);
 
       this.types = new Map();
       this.dragSources = new Map();
@@ -1752,7 +3190,7 @@
       this.store = store;
     }
 
-    _createClass$1(HandlerRegistryImpl, [{
+    _createClass$2(HandlerRegistryImpl, [{
       key: "addSource",
       value: function addSource$1(type, source) {
         validateType(type);
@@ -1869,11 +3307,17 @@
     return HandlerRegistryImpl;
   }();
 
-  function _classCallCheck$2(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-  function _defineProperties$2(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-  function _createClass$2(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$2(Constructor.prototype, protoProps); if (staticProps) _defineProperties$2(Constructor, staticProps); return Constructor; }
+  function createDragDropManager(backendFactory) {
+    var globalContext = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+    var backendOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var debugMode = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    var store = makeStoreInstance(debugMode);
+    var monitor = new DragDropMonitorImpl(store, new HandlerRegistryImpl(store));
+    var manager = new DragDropManagerImpl(store, monitor);
+    var backend = backendFactory(manager, globalContext, backendOptions);
+    manager.receiveBackend(backend);
+    return manager;
+  }
 
   function makeStoreInstance(debugMode) {
     // TODO: if we ever make a react-native version of this,
@@ -1883,122 +3327,6 @@
       name: 'dnd-core',
       instanceId: 'dnd-core'
     }));
-  }
-
-  var DragDropManagerImpl = /*#__PURE__*/function () {
-    function DragDropManagerImpl() {
-      var _this = this;
-
-      var debugMode = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-      _classCallCheck$2(this, DragDropManagerImpl);
-
-      this.isSetUp = false;
-
-      this.handleRefCountChange = function () {
-        var shouldSetUp = _this.store.getState().refCount > 0;
-
-        if (_this.backend) {
-          if (shouldSetUp && !_this.isSetUp) {
-            _this.backend.setup();
-
-            _this.isSetUp = true;
-          } else if (!shouldSetUp && _this.isSetUp) {
-            _this.backend.teardown();
-
-            _this.isSetUp = false;
-          }
-        }
-      };
-
-      var store = makeStoreInstance(debugMode);
-      this.store = store;
-      this.monitor = new DragDropMonitorImpl(store, new HandlerRegistryImpl(store));
-      store.subscribe(this.handleRefCountChange);
-    }
-
-    _createClass$2(DragDropManagerImpl, [{
-      key: "receiveBackend",
-      value: function receiveBackend(backend) {
-        this.backend = backend;
-      }
-    }, {
-      key: "getMonitor",
-      value: function getMonitor() {
-        return this.monitor;
-      }
-    }, {
-      key: "getBackend",
-      value: function getBackend() {
-        return this.backend;
-      }
-    }, {
-      key: "getRegistry",
-      value: function getRegistry() {
-        return this.monitor.registry;
-      }
-    }, {
-      key: "getActions",
-      value: function getActions() {
-        /* eslint-disable-next-line @typescript-eslint/no-this-alias */
-        var manager = this;
-        var dispatch = this.store.dispatch;
-
-        function bindActionCreator(actionCreator) {
-          return function () {
-            for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-              args[_key] = arguments[_key];
-            }
-
-            var action = actionCreator.apply(manager, args);
-
-            if (typeof action !== 'undefined') {
-              dispatch(action);
-            }
-          };
-        }
-
-        var actions = createDragDropActions(this);
-        return Object.keys(actions).reduce(function (boundActions, key) {
-          var action = actions[key];
-          boundActions[key] = bindActionCreator(action);
-          return boundActions;
-        }, {});
-      }
-    }, {
-      key: "dispatch",
-      value: function dispatch(action) {
-        this.store.dispatch(action);
-      }
-    }]);
-
-    return DragDropManagerImpl;
-  }();
-
-  function createDragDropManager(backendFactory, globalContext, backendOptions, debugMode) {
-    var manager = new DragDropManagerImpl(debugMode);
-    var backend = backendFactory(manager, globalContext, backendOptions);
-    manager.receiveBackend(backend);
-    return manager;
-  }
-
-  /**
-   * Create the React Context
-   */
-
-  var DndContext = React.createContext({
-    dragDropManager: undefined
-  });
-  /**
-   * Creates the context object we're providing
-   * @param backend
-   * @param context
-   */
-
-  function createDndContext(backend, context, options, debugMode) {
-    return {
-      dragDropManager: createDragDropManager(backend, context, options, debugMode)
-    };
   }
 
   function _slicedToArray$1(arr, i) { return _arrayWithHoles$1(arr) || _iterableToArrayLimit$1(arr, i) || _unsupportedIterableToArray$1(arr, i) || _nonIterableRest$1(); }
@@ -2017,11 +3345,12 @@
 
   function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
   var refCount = 0;
+  var INSTANCE_SYM = Symbol.for('__REACT_DND_CONTEXT_INSTANCE__');
   /**
    * A React component that provides the React-DnD context
    */
 
-  var DndProvider = React.memo(function (_ref) {
+  var DndProvider = f.memo(function DndProvider(_ref) {
     var children = _ref.children,
         props = _objectWithoutProperties(_ref, ["children"]);
 
@@ -2037,27 +3366,23 @@
      */
 
 
-    React.useEffect(function () {
+    f.useEffect(function () {
       if (isGlobalInstance) {
-        refCount++;
-      }
-
-      return function () {
-        if (isGlobalInstance) {
-          refCount--;
-
-          if (refCount === 0) {
-            var context = getGlobalContext();
-            context[instanceSymbol] = null;
+        var context = getGlobalContext();
+        ++refCount;
+        return function () {
+          if (--refCount === 0) {
+            context[INSTANCE_SYM] = null;
           }
-        }
-      };
+        };
+      }
     }, []);
-    return React.createElement(DndContext.Provider, {
+    return jsxRuntime.jsx(DndContext.Provider, Object.assign({
       value: manager
-    }, children);
+    }, {
+      children: children
+    }), void 0);
   });
-  DndProvider.displayName = 'DndProvider';
 
   function getDndContextValue(props) {
     if ('manager' in props) {
@@ -2072,33 +3397,33 @@
     return [manager, isGlobalInstance];
   }
 
-  var instanceSymbol = Symbol.for('__REACT_DND_CONTEXT_INSTANCE__');
-
   function createSingletonDndContext(backend) {
     var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : getGlobalContext();
     var options = arguments.length > 2 ? arguments[2] : undefined;
     var debugMode = arguments.length > 3 ? arguments[3] : undefined;
     var ctx = context;
 
-    if (!ctx[instanceSymbol]) {
-      ctx[instanceSymbol] = createDndContext(backend, context, options, debugMode);
+    if (!ctx[INSTANCE_SYM]) {
+      ctx[INSTANCE_SYM] = {
+        dragDropManager: createDragDropManager(backend, context, options, debugMode)
+      };
     }
 
-    return ctx[instanceSymbol];
+    return ctx[INSTANCE_SYM];
   }
 
   function getGlobalContext() {
     return typeof global !== 'undefined' ? global : window;
   }
 
-  /*
+  /**
    * A utility for rendering a drag preview image
    */
 
-  var DragPreviewImage = React.memo(function (_ref) {
+  var DragPreviewImage = f.memo(function DragPreviewImage(_ref) {
     var connect = _ref.connect,
         src = _ref.src;
-    React.useEffect(function () {
+    f.useEffect(function () {
       if (typeof Image === 'undefined') return;
       var connected = false;
       var img = new Image();
@@ -2117,153 +3442,6 @@
     });
     return null;
   });
-  DragPreviewImage.displayName = 'DragPreviewImage';
-
-  var useIsomorphicLayoutEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
-
-  function shallowEqual(objA, objB, compare, compareContext) {
-    var compareResult = compare ? compare.call(compareContext, objA, objB) : void 0;
-
-    if (compareResult !== void 0) {
-      return !!compareResult;
-    }
-
-    if (objA === objB) {
-      return true;
-    }
-
-    if (typeof objA !== 'object' || !objA || typeof objB !== 'object' || !objB) {
-      return false;
-    }
-
-    var keysA = Object.keys(objA);
-    var keysB = Object.keys(objB);
-
-    if (keysA.length !== keysB.length) {
-      return false;
-    }
-
-    var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB); // Test for A's keys different from B.
-
-    for (var idx = 0; idx < keysA.length; idx++) {
-      var key = keysA[idx];
-
-      if (!bHasOwnProperty(key)) {
-        return false;
-      }
-
-      var valueA = objA[key];
-      var valueB = objB[key];
-      compareResult = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
-
-      if (compareResult === false || compareResult === void 0 && valueA !== valueB) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  function _slicedToArray$2(arr, i) { return _arrayWithHoles$2(arr) || _iterableToArrayLimit$2(arr, i) || _unsupportedIterableToArray$2(arr, i) || _nonIterableRest$2(); }
-
-  function _nonIterableRest$2() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray$2(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$2(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen); }
-
-  function _arrayLikeToArray$2(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$2(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$2(arr) { if (Array.isArray(arr)) return arr; }
-  /**
-   *
-   * @param monitor The monitor to collect state from
-   * @param collect The collecting function
-   * @param onUpdate A method to invoke when updates occur
-   */
-
-  function useCollector(monitor, collect, onUpdate) {
-    var _useState = React.useState(function () {
-      return collect(monitor);
-    }),
-        _useState2 = _slicedToArray$2(_useState, 2),
-        collected = _useState2[0],
-        setCollected = _useState2[1];
-
-    var updateCollected = React.useCallback(function () {
-      var nextValue = collect(monitor);
-
-      if (!shallowEqual(collected, nextValue)) {
-        setCollected(nextValue);
-
-        if (onUpdate) {
-          onUpdate();
-        }
-      }
-    }, [collected, monitor, onUpdate]); // update the collected properties after the first render
-    // and the components are attached to dnd-core
-
-    useIsomorphicLayoutEffect(updateCollected, []);
-    return [collected, updateCollected];
-  }
-
-  function _slicedToArray$3(arr, i) { return _arrayWithHoles$3(arr) || _iterableToArrayLimit$3(arr, i) || _unsupportedIterableToArray$3(arr, i) || _nonIterableRest$3(); }
-
-  function _nonIterableRest$3() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray$3(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$3(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$3(o, minLen); }
-
-  function _arrayLikeToArray$3(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$3(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$3(arr) { if (Array.isArray(arr)) return arr; }
-  function useMonitorOutput(monitor, collect, onCollect) {
-    var _useCollector = useCollector(monitor, collect, onCollect),
-        _useCollector2 = _slicedToArray$3(_useCollector, 2),
-        collected = _useCollector2[0],
-        updateCollected = _useCollector2[1];
-
-    useIsomorphicLayoutEffect(function subscribeToMonitorStateChange() {
-      var handlerId = monitor.getHandlerId();
-
-      if (handlerId == null) {
-        return undefined;
-      }
-
-      return monitor.subscribeToStateChange(updateCollected, {
-        handlerIds: [handlerId]
-      });
-    }, [monitor, updateCollected]);
-    return collected;
-  }
-
-  function registerTarget(type, target, manager) {
-    var registry = manager.getRegistry();
-    var targetId = registry.addTarget(type, target);
-    return [targetId, function () {
-      return registry.removeTarget(targetId);
-    }];
-  }
-  function registerSource(type, source, manager) {
-    var registry = manager.getRegistry();
-    var sourceId = registry.addSource(type, source);
-    return [sourceId, function () {
-      return registry.removeSource(sourceId);
-    }];
-  }
-
-  /**
-   * A hook to retrieve the DragDropManager from Context
-   */
-
-  function useDragDropManager() {
-    var _useContext = React.useContext(DndContext),
-        dragDropManager = _useContext.dragDropManager;
-
-    invariant(dragDropManager != null, 'Expected drag drop context');
-    return dragDropManager;
-  }
 
   function _classCallCheck$3(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2413,32 +3591,112 @@
     return DragSourceMonitorImpl;
   }();
 
-  function setRef(ref, node) {
-    if (typeof ref === 'function') {
-      ref(node);
-    } else {
-      ref.current = node;
+  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _defineProperties$4(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+  function _createClass$4(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$4(Constructor.prototype, protoProps); if (staticProps) _defineProperties$4(Constructor, staticProps); return Constructor; }
+  var isCallingCanDrop = false;
+  var DropTargetMonitorImpl = /*#__PURE__*/function () {
+    function DropTargetMonitorImpl(manager) {
+      _classCallCheck$4(this, DropTargetMonitorImpl);
+
+      this.targetId = null;
+      this.internalMonitor = manager.getMonitor();
     }
-  }
 
-  function cloneWithRef(element, newRef) {
-    var previousRef = element.ref;
-    invariant(typeof previousRef !== 'string', 'Cannot connect React DnD to an element with an existing string ref. ' + 'Please convert it to use a callback ref instead, or wrap it into a <span> or <div>. ' + 'Read more: https://facebook.github.io/react/docs/more-about-refs.html#the-ref-callback-attribute');
-
-    if (!previousRef) {
-      // When there is no ref on the element, use the new ref directly
-      return React.cloneElement(element, {
-        ref: newRef
-      });
-    } else {
-      return React.cloneElement(element, {
-        ref: function ref(node) {
-          setRef(previousRef, node);
-          setRef(newRef, node);
+    _createClass$4(DropTargetMonitorImpl, [{
+      key: "receiveHandlerId",
+      value: function receiveHandlerId(targetId) {
+        this.targetId = targetId;
+      }
+    }, {
+      key: "getHandlerId",
+      value: function getHandlerId() {
+        return this.targetId;
+      }
+    }, {
+      key: "subscribeToStateChange",
+      value: function subscribeToStateChange(listener, options) {
+        return this.internalMonitor.subscribeToStateChange(listener, options);
+      }
+    }, {
+      key: "canDrop",
+      value: function canDrop() {
+        // Cut out early if the target id has not been set. This should prevent errors
+        // where the user has an older version of dnd-core like in
+        // https://github.com/react-dnd/react-dnd/issues/1310
+        if (!this.targetId) {
+          return false;
         }
-      });
-    }
-  }
+
+        invariant(!isCallingCanDrop, 'You may not call monitor.canDrop() inside your canDrop() implementation. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/api/drop-target-monitor');
+
+        try {
+          isCallingCanDrop = true;
+          return this.internalMonitor.canDropOnTarget(this.targetId);
+        } finally {
+          isCallingCanDrop = false;
+        }
+      }
+    }, {
+      key: "isOver",
+      value: function isOver(options) {
+        if (!this.targetId) {
+          return false;
+        }
+
+        return this.internalMonitor.isOverTarget(this.targetId, options);
+      }
+    }, {
+      key: "getItemType",
+      value: function getItemType() {
+        return this.internalMonitor.getItemType();
+      }
+    }, {
+      key: "getItem",
+      value: function getItem() {
+        return this.internalMonitor.getItem();
+      }
+    }, {
+      key: "getDropResult",
+      value: function getDropResult() {
+        return this.internalMonitor.getDropResult();
+      }
+    }, {
+      key: "didDrop",
+      value: function didDrop() {
+        return this.internalMonitor.didDrop();
+      }
+    }, {
+      key: "getInitialClientOffset",
+      value: function getInitialClientOffset() {
+        return this.internalMonitor.getInitialClientOffset();
+      }
+    }, {
+      key: "getInitialSourceClientOffset",
+      value: function getInitialSourceClientOffset() {
+        return this.internalMonitor.getInitialSourceClientOffset();
+      }
+    }, {
+      key: "getSourceClientOffset",
+      value: function getSourceClientOffset() {
+        return this.internalMonitor.getSourceClientOffset();
+      }
+    }, {
+      key: "getClientOffset",
+      value: function getClientOffset() {
+        return this.internalMonitor.getClientOffset();
+      }
+    }, {
+      key: "getDifferenceFromInitialOffset",
+      value: function getDifferenceFromInitialOffset() {
+        return this.internalMonitor.getDifferenceFromInitialOffset();
+      }
+    }]);
+
+    return DropTargetMonitorImpl;
+  }();
 
   function throwIfCompositeComponentElement(element) {
     // Custom components can no longer be wrapped directly in React DnD 2.0
@@ -2457,7 +3715,7 @@
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
       // When passed a node, call the hook straight away.
-      if (!React.isValidElement(elementOrNode)) {
+      if (!f.isValidElement(elementOrNode)) {
         var node = elementOrNode;
         hook(node, options); // return the node so it can be chained (e.g. when within callback refs
         // <div ref={node => connectDragSource(connectDropTarget(node))}/>
@@ -2496,6 +3754,33 @@
     return wrappedHooks;
   }
 
+  function setRef(ref, node) {
+    if (typeof ref === 'function') {
+      ref(node);
+    } else {
+      ref.current = node;
+    }
+  }
+
+  function cloneWithRef(element, newRef) {
+    var previousRef = element.ref;
+    invariant(typeof previousRef !== 'string', 'Cannot connect React DnD to an element with an existing string ref. ' + 'Please convert it to use a callback ref instead, or wrap it into a <span> or <div>. ' + 'Read more: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs');
+
+    if (!previousRef) {
+      // When there is no ref on the element, use the new ref directly
+      return f.cloneElement(element, {
+        ref: newRef
+      });
+    } else {
+      return f.cloneElement(element, {
+        ref: function ref(node) {
+          setRef(previousRef, node);
+          setRef(newRef, node);
+        }
+      });
+    }
+  }
+
   function _typeof$2(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$2 = function _typeof(obj) { return typeof obj; }; } else { _typeof$2 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$2(obj); }
 
   function isRef(obj) {
@@ -2504,16 +3789,59 @@
     );
   }
 
-  function _classCallCheck$4(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function shallowEqual(objA, objB, compare, compareContext) {
+    var compareResult = compare ? compare.call(compareContext, objA, objB) : void 0;
 
-  function _defineProperties$4(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+    if (compareResult !== void 0) {
+      return !!compareResult;
+    }
 
-  function _createClass$4(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$4(Constructor.prototype, protoProps); if (staticProps) _defineProperties$4(Constructor, staticProps); return Constructor; }
+    if (objA === objB) {
+      return true;
+    }
+
+    if (typeof objA !== 'object' || !objA || typeof objB !== 'object' || !objB) {
+      return false;
+    }
+
+    var keysA = Object.keys(objA);
+    var keysB = Object.keys(objB);
+
+    if (keysA.length !== keysB.length) {
+      return false;
+    }
+
+    var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB); // Test for A's keys different from B.
+
+    for (var idx = 0; idx < keysA.length; idx++) {
+      var key = keysA[idx];
+
+      if (!bHasOwnProperty(key)) {
+        return false;
+      }
+
+      var valueA = objA[key];
+      var valueB = objB[key];
+      compareResult = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
+
+      if (compareResult === false || compareResult === void 0 && valueA !== valueB) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _defineProperties$5(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+  function _createClass$5(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$5(Constructor.prototype, protoProps); if (staticProps) _defineProperties$5(Constructor, staticProps); return Constructor; }
   var SourceConnector = /*#__PURE__*/function () {
     function SourceConnector(backend) {
       var _this = this;
 
-      _classCallCheck$4(this, SourceConnector);
+      _classCallCheck$5(this, SourceConnector);
 
       this.hooks = wrapConnectorHooks({
         dragSource: function dragSource(node, options) {
@@ -2558,7 +3886,7 @@
       this.backend = backend;
     }
 
-    _createClass$4(SourceConnector, [{
+    _createClass$5(SourceConnector, [{
       key: "receiveHandlerId",
       value: function receiveHandlerId(newHandlerId) {
         if (this.handlerId === newHandlerId) {
@@ -2567,6 +3895,27 @@
 
         this.handlerId = newHandlerId;
         this.reconnect();
+      }
+    }, {
+      key: "connectTarget",
+      get: function get() {
+        return this.dragSource;
+      }
+    }, {
+      key: "dragSourceOptions",
+      get: function get() {
+        return this.dragSourceOptionsInternal;
+      },
+      set: function set(options) {
+        this.dragSourceOptionsInternal = options;
+      }
+    }, {
+      key: "dragPreviewOptions",
+      get: function get() {
+        return this.dragPreviewOptionsInternal;
+      },
+      set: function set(options) {
+        this.dragPreviewOptionsInternal = options;
       }
     }, {
       key: "reconnect",
@@ -2672,6 +4021,16 @@
         }
       }
     }, {
+      key: "dragSource",
+      get: function get() {
+        return this.dragSourceNode || this.dragSourceRef && this.dragSourceRef.current;
+      }
+    }, {
+      key: "dragPreview",
+      get: function get() {
+        return this.dragPreviewNode || this.dragPreviewRef && this.dragPreviewRef.current;
+      }
+    }, {
       key: "clearDragSource",
       value: function clearDragSource() {
         this.dragSourceNode = null;
@@ -2683,179 +4042,21 @@
         this.dragPreviewNode = null;
         this.dragPreviewRef = null;
       }
-    }, {
-      key: "connectTarget",
-      get: function get() {
-        return this.dragSource;
-      }
-    }, {
-      key: "dragSourceOptions",
-      get: function get() {
-        return this.dragSourceOptionsInternal;
-      },
-      set: function set(options) {
-        this.dragSourceOptionsInternal = options;
-      }
-    }, {
-      key: "dragPreviewOptions",
-      get: function get() {
-        return this.dragPreviewOptionsInternal;
-      },
-      set: function set(options) {
-        this.dragPreviewOptionsInternal = options;
-      }
-    }, {
-      key: "dragSource",
-      get: function get() {
-        return this.dragSourceNode || this.dragSourceRef && this.dragSourceRef.current;
-      }
-    }, {
-      key: "dragPreview",
-      get: function get() {
-        return this.dragPreviewNode || this.dragPreviewRef && this.dragPreviewRef.current;
-      }
     }]);
 
     return SourceConnector;
   }();
 
-  function _slicedToArray$4(arr, i) { return _arrayWithHoles$4(arr) || _iterableToArrayLimit$4(arr, i) || _unsupportedIterableToArray$4(arr, i) || _nonIterableRest$4(); }
+  function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  function _nonIterableRest$4() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+  function _defineProperties$6(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  function _unsupportedIterableToArray$4(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$4(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$4(o, minLen); }
-
-  function _arrayLikeToArray$4(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$4(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$4(arr) { if (Array.isArray(arr)) return arr; }
-
-  function _typeof$3(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$3 = function _typeof(obj) { return typeof obj; }; } else { _typeof$3 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$3(obj); }
-  function useDragSourceMonitor() {
-    var manager = useDragDropManager();
-    var monitor = React.useMemo(function () {
-      return new DragSourceMonitorImpl(manager);
-    }, [manager]);
-    var connector = React.useMemo(function () {
-      return new SourceConnector(manager.getBackend());
-    }, [manager]);
-    return [monitor, connector];
-  }
-  function useDragHandler(spec, monitor, connector) {
-    var manager = useDragDropManager();
-    var handler = React.useMemo(function () {
-      return {
-        beginDrag: function beginDrag() {
-          var _spec$current = spec.current,
-              begin = _spec$current.begin,
-              item = _spec$current.item;
-
-          if (begin) {
-            var beginResult = begin(monitor);
-            invariant(beginResult == null || _typeof$3(beginResult) === 'object', 'dragSpec.begin() must either return an object, undefined, or null');
-            return beginResult || item || {};
-          }
-
-          return item || {};
-        },
-        canDrag: function canDrag() {
-          if (typeof spec.current.canDrag === 'boolean') {
-            return spec.current.canDrag;
-          } else if (typeof spec.current.canDrag === 'function') {
-            return spec.current.canDrag(monitor);
-          } else {
-            return true;
-          }
-        },
-        isDragging: function isDragging(globalMonitor, target) {
-          var isDragging = spec.current.isDragging;
-          return isDragging ? isDragging(monitor) : target === globalMonitor.getSourceId();
-        },
-        endDrag: function endDrag() {
-          var end = spec.current.end;
-
-          if (end) {
-            end(monitor.getItem(), monitor);
-          }
-
-          connector.reconnect();
-        }
-      };
-    }, []);
-    useIsomorphicLayoutEffect(function registerHandler() {
-      var _registerSource = registerSource(spec.current.item.type, handler, manager),
-          _registerSource2 = _slicedToArray$4(_registerSource, 2),
-          handlerId = _registerSource2[0],
-          unregister = _registerSource2[1];
-
-      monitor.receiveHandlerId(handlerId);
-      connector.receiveHandlerId(handlerId);
-      return unregister;
-    }, []);
-  }
-
-  function _slicedToArray$5(arr, i) { return _arrayWithHoles$5(arr) || _iterableToArrayLimit$5(arr, i) || _unsupportedIterableToArray$5(arr, i) || _nonIterableRest$5(); }
-
-  function _nonIterableRest$5() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray$5(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$5(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$5(o, minLen); }
-
-  function _arrayLikeToArray$5(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$5(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$5(arr) { if (Array.isArray(arr)) return arr; }
-  /**
-   * useDragSource hook
-   * @param sourceSpec The drag source specification *
-   */
-
-  function useDrag(spec) {
-    var specRef = React.useRef(spec);
-    specRef.current = spec; // TODO: wire options into createSourceConnector
-
-    invariant(spec.item != null, 'item must be defined');
-    invariant(spec.item.type != null, 'item type must be defined');
-
-    var _useDragSourceMonitor = useDragSourceMonitor(),
-        _useDragSourceMonitor2 = _slicedToArray$5(_useDragSourceMonitor, 2),
-        monitor = _useDragSourceMonitor2[0],
-        connector = _useDragSourceMonitor2[1];
-
-    useDragHandler(specRef, monitor, connector);
-    var result = useMonitorOutput(monitor, specRef.current.collect || function () {
-      return {};
-    }, function () {
-      return connector.reconnect();
-    });
-    var connectDragSource = React.useMemo(function () {
-      return connector.hooks.dragSource();
-    }, [connector]);
-    var connectDragPreview = React.useMemo(function () {
-      return connector.hooks.dragPreview();
-    }, [connector]);
-    useIsomorphicLayoutEffect(function () {
-      connector.dragSourceOptions = specRef.current.options || null;
-      connector.reconnect();
-    }, [connector]);
-    useIsomorphicLayoutEffect(function () {
-      connector.dragPreviewOptions = specRef.current.previewOptions || null;
-      connector.reconnect();
-    }, [connector]);
-    return [result, connectDragSource, connectDragPreview];
-  }
-
-  function _classCallCheck$5(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-  function _defineProperties$5(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-  function _createClass$5(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$5(Constructor.prototype, protoProps); if (staticProps) _defineProperties$5(Constructor, staticProps); return Constructor; }
+  function _createClass$6(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$6(Constructor.prototype, protoProps); if (staticProps) _defineProperties$6(Constructor, staticProps); return Constructor; }
   var TargetConnector = /*#__PURE__*/function () {
     function TargetConnector(backend) {
       var _this = this;
 
-      _classCallCheck$5(this, TargetConnector);
+      _classCallCheck$6(this, TargetConnector);
 
       this.hooks = wrapConnectorHooks({
         dropTarget: function dropTarget(node, options) {
@@ -2882,7 +4083,12 @@
       this.backend = backend;
     }
 
-    _createClass$5(TargetConnector, [{
+    _createClass$6(TargetConnector, [{
+      key: "connectTarget",
+      get: function get() {
+        return this.dropTarget;
+      }
+    }, {
       key: "reconnect",
       value: function reconnect() {
         // if nothing has changed then don't resubscribe
@@ -2921,6 +4127,14 @@
         this.reconnect();
       }
     }, {
+      key: "dropTargetOptions",
+      get: function get() {
+        return this.dropTargetOptionsInternal;
+      },
+      set: function set(options) {
+        this.dropTargetOptionsInternal = options;
+      }
+    }, {
       key: "didHandlerIdChange",
       value: function didHandlerIdChange() {
         return this.lastConnectedHandlerId !== this.handlerId;
@@ -2944,304 +4158,37 @@
         }
       }
     }, {
+      key: "dropTarget",
+      get: function get() {
+        return this.dropTargetNode || this.dropTargetRef && this.dropTargetRef.current;
+      }
+    }, {
       key: "clearDropTarget",
       value: function clearDropTarget() {
         this.dropTargetRef = null;
         this.dropTargetNode = null;
-      }
-    }, {
-      key: "connectTarget",
-      get: function get() {
-        return this.dropTarget;
-      }
-    }, {
-      key: "dropTargetOptions",
-      get: function get() {
-        return this.dropTargetOptionsInternal;
-      },
-      set: function set(options) {
-        this.dropTargetOptionsInternal = options;
-      }
-    }, {
-      key: "dropTarget",
-      get: function get() {
-        return this.dropTargetNode || this.dropTargetRef && this.dropTargetRef.current;
       }
     }]);
 
     return TargetConnector;
   }();
 
-  function _classCallCheck$6(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-  function _defineProperties$6(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-  function _createClass$6(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$6(Constructor.prototype, protoProps); if (staticProps) _defineProperties$6(Constructor, staticProps); return Constructor; }
-  var isCallingCanDrop = false;
-  var DropTargetMonitorImpl = /*#__PURE__*/function () {
-    function DropTargetMonitorImpl(manager) {
-      _classCallCheck$6(this, DropTargetMonitorImpl);
-
-      this.targetId = null;
-      this.internalMonitor = manager.getMonitor();
-    }
-
-    _createClass$6(DropTargetMonitorImpl, [{
-      key: "receiveHandlerId",
-      value: function receiveHandlerId(targetId) {
-        this.targetId = targetId;
-      }
-    }, {
-      key: "getHandlerId",
-      value: function getHandlerId() {
-        return this.targetId;
-      }
-    }, {
-      key: "subscribeToStateChange",
-      value: function subscribeToStateChange(listener, options) {
-        return this.internalMonitor.subscribeToStateChange(listener, options);
-      }
-    }, {
-      key: "canDrop",
-      value: function canDrop() {
-        // Cut out early if the target id has not been set. This should prevent errors
-        // where the user has an older version of dnd-core like in
-        // https://github.com/react-dnd/react-dnd/issues/1310
-        if (!this.targetId) {
-          return false;
-        }
-
-        invariant(!isCallingCanDrop, 'You may not call monitor.canDrop() inside your canDrop() implementation. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/api/drop-target-monitor');
-
-        try {
-          isCallingCanDrop = true;
-          return this.internalMonitor.canDropOnTarget(this.targetId);
-        } finally {
-          isCallingCanDrop = false;
-        }
-      }
-    }, {
-      key: "isOver",
-      value: function isOver(options) {
-        if (!this.targetId) {
-          return false;
-        }
-
-        return this.internalMonitor.isOverTarget(this.targetId, options);
-      }
-    }, {
-      key: "getItemType",
-      value: function getItemType() {
-        return this.internalMonitor.getItemType();
-      }
-    }, {
-      key: "getItem",
-      value: function getItem() {
-        return this.internalMonitor.getItem();
-      }
-    }, {
-      key: "getDropResult",
-      value: function getDropResult() {
-        return this.internalMonitor.getDropResult();
-      }
-    }, {
-      key: "didDrop",
-      value: function didDrop() {
-        return this.internalMonitor.didDrop();
-      }
-    }, {
-      key: "getInitialClientOffset",
-      value: function getInitialClientOffset() {
-        return this.internalMonitor.getInitialClientOffset();
-      }
-    }, {
-      key: "getInitialSourceClientOffset",
-      value: function getInitialSourceClientOffset() {
-        return this.internalMonitor.getInitialSourceClientOffset();
-      }
-    }, {
-      key: "getSourceClientOffset",
-      value: function getSourceClientOffset() {
-        return this.internalMonitor.getSourceClientOffset();
-      }
-    }, {
-      key: "getClientOffset",
-      value: function getClientOffset() {
-        return this.internalMonitor.getClientOffset();
-      }
-    }, {
-      key: "getDifferenceFromInitialOffset",
-      value: function getDifferenceFromInitialOffset() {
-        return this.internalMonitor.getDifferenceFromInitialOffset();
-      }
-    }]);
-
-    return DropTargetMonitorImpl;
-  }();
-
-  function _slicedToArray$6(arr, i) { return _arrayWithHoles$6(arr) || _iterableToArrayLimit$6(arr, i) || _unsupportedIterableToArray$6(arr, i) || _nonIterableRest$6(); }
-
-  function _nonIterableRest$6() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray$6(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$6(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$6(o, minLen); }
-
-  function _arrayLikeToArray$6(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$6(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$6(arr) { if (Array.isArray(arr)) return arr; }
-  function useDropTargetMonitor() {
-    var manager = useDragDropManager();
-    var monitor = React.useMemo(function () {
-      return new DropTargetMonitorImpl(manager);
-    }, [manager]);
-    var connector = React.useMemo(function () {
-      return new TargetConnector(manager.getBackend());
-    }, [manager]);
-    return [monitor, connector];
+  function registerTarget(type, target, manager) {
+    var registry = manager.getRegistry();
+    var targetId = registry.addTarget(type, target);
+    return [targetId, function () {
+      return registry.removeTarget(targetId);
+    }];
   }
-  function useDropHandler(spec, monitor, connector) {
-    var manager = useDragDropManager();
-    var handler = React.useMemo(function () {
-      return {
-        canDrop: function canDrop() {
-          var canDrop = spec.current.canDrop;
-          return canDrop ? canDrop(monitor.getItem(), monitor) : true;
-        },
-        hover: function hover() {
-          var hover = spec.current.hover;
-
-          if (hover) {
-            hover(monitor.getItem(), monitor);
-          }
-        },
-        drop: function drop() {
-          var drop = spec.current.drop;
-
-          if (drop) {
-            return drop(monitor.getItem(), monitor);
-          }
-        }
-      };
-    }, [monitor]);
-    useIsomorphicLayoutEffect(function registerHandler() {
-      var _registerTarget = registerTarget(spec.current.accept, handler, manager),
-          _registerTarget2 = _slicedToArray$6(_registerTarget, 2),
-          handlerId = _registerTarget2[0],
-          unregister = _registerTarget2[1];
-
-      monitor.receiveHandlerId(handlerId);
-      connector.receiveHandlerId(handlerId);
-      return unregister;
-    }, [monitor, connector]);
+  function registerSource(type, source, manager) {
+    var registry = manager.getRegistry();
+    var sourceId = registry.addSource(type, source);
+    return [sourceId, function () {
+      return registry.removeSource(sourceId);
+    }];
   }
 
-  function _slicedToArray$7(arr, i) { return _arrayWithHoles$7(arr) || _iterableToArrayLimit$7(arr, i) || _unsupportedIterableToArray$7(arr, i) || _nonIterableRest$7(); }
-
-  function _nonIterableRest$7() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray$7(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$7(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$7(o, minLen); }
-
-  function _arrayLikeToArray$7(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$7(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$7(arr) { if (Array.isArray(arr)) return arr; }
-  /**
-   * useDropTarget Hook
-   * @param spec The drop target specification
-   */
-
-  function useDrop(spec) {
-    var specRef = React.useRef(spec);
-    specRef.current = spec;
-    invariant(spec.accept != null, 'accept must be defined');
-
-    var _useDropTargetMonitor = useDropTargetMonitor(),
-        _useDropTargetMonitor2 = _slicedToArray$7(_useDropTargetMonitor, 2),
-        monitor = _useDropTargetMonitor2[0],
-        connector = _useDropTargetMonitor2[1];
-
-    useDropHandler(specRef, monitor, connector);
-    var result = useMonitorOutput(monitor, specRef.current.collect || function () {
-      return {};
-    }, function () {
-      return connector.reconnect();
-    });
-    var connectDropTarget = React.useMemo(function () {
-      return connector.hooks.dropTarget();
-    }, [connector]);
-    useIsomorphicLayoutEffect(function () {
-      connector.dropTargetOptions = spec.options || null;
-      connector.reconnect();
-    }, [spec.options]);
-    return [result, connectDropTarget];
-  }
-
-  function _slicedToArray$8(arr, i) { return _arrayWithHoles$8(arr) || _iterableToArrayLimit$8(arr, i) || _unsupportedIterableToArray$8(arr, i) || _nonIterableRest$8(); }
-
-  function _nonIterableRest$8() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray$8(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$8(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$8(o, minLen); }
-
-  function _arrayLikeToArray$8(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$8(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$8(arr) { if (Array.isArray(arr)) return arr; }
-  /**
-   * useDragLayer Hook
-   * @param collector The property collector
-   */
-
-  function useDragLayer(collect) {
-    var dragDropManager = useDragDropManager();
-    var monitor = dragDropManager.getMonitor();
-
-    var _useCollector = useCollector(monitor, collect),
-        _useCollector2 = _slicedToArray$8(_useCollector, 2),
-        collected = _useCollector2[0],
-        updateCollected = _useCollector2[1];
-
-    React.useEffect(function () {
-      return monitor.subscribeToOffsetChange(updateCollected);
-    });
-    React.useEffect(function () {
-      return monitor.subscribeToStateChange(updateCollected);
-    });
-    return collected;
-  }
-
-  function _typeof$4(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$4 = function _typeof(obj) { return typeof obj; }; } else { _typeof$4 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$4(obj); }
-
-  // cheap lodash replacements
-  function isFunction(input) {
-    return typeof input === 'function';
-  }
-  function noop() {// noop
-  }
-
-  function isObjectLike(input) {
-    return _typeof$4(input) === 'object' && input !== null;
-  }
-
-  function isPlainObject$1(input) {
-    if (!isObjectLike(input)) {
-      return false;
-    }
-
-    if (Object.getPrototypeOf(input) === null) {
-      return true;
-    }
-
-    var proto = input;
-
-    while (Object.getPrototypeOf(proto) !== null) {
-      proto = Object.getPrototypeOf(proto);
-    }
-
-    return Object.getPrototypeOf(input) === proto;
-  }
+  function _typeof$3(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$3 = function _typeof(obj) { return typeof obj; }; } else { _typeof$3 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$3(obj); }
 
   function getDecoratedComponent(instanceRef) {
     var currentRef = instanceRef.current;
@@ -3280,20 +4227,281 @@
       }
     }
   }
+  function isFunction(input) {
+    return typeof input === 'function';
+  }
+  function noop() {// noop
+  }
 
-  function createCommonjsModule(fn, basedir, module) {
-  	return module = {
-  	  path: basedir,
-  	  exports: {},
-  	  require: function (path, base) {
-        return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
+  function isObjectLike(input) {
+    return _typeof$3(input) === 'object' && input !== null;
+  }
+
+  function isPlainObject$1(input) {
+    if (!isObjectLike(input)) {
+      return false;
+    }
+
+    if (Object.getPrototypeOf(input) === null) {
+      return true;
+    }
+
+    var proto = input;
+
+    while (Object.getPrototypeOf(proto) !== null) {
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return Object.getPrototypeOf(input) === proto;
+  }
+  function isValidType(type, allowArray) {
+    return typeof type === 'string' || _typeof$3(type) === 'symbol' || !!allowArray && Array.isArray(type) && type.every(function (t) {
+      return isValidType(t, false);
+    });
+  }
+
+  function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _defineProperties$7(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+  function _createClass$7(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$7(Constructor.prototype, protoProps); if (staticProps) _defineProperties$7(Constructor, staticProps); return Constructor; }
+  /**
+   * Provides a set of static methods for creating Disposables.
+   * @param {Function} action Action to run during the first call to dispose.
+   * The action is guaranteed to be run at most once.
+   */
+
+  var Disposable = /*#__PURE__*/function () {
+    function Disposable(action) {
+      _classCallCheck$7(this, Disposable);
+
+      this.isDisposed = false;
+      this.action = isFunction(action) ? action : noop;
+    }
+    /**
+     * Validates whether the given object is a disposable
+     * @param {Object} Object to test whether it has a dispose method
+     * @returns {Boolean} true if a disposable object, else false.
+     */
+
+
+    _createClass$7(Disposable, [{
+      key: "dispose",
+      value:
+      /** Performs the task of cleaning up resources. */
+      function dispose() {
+        if (!this.isDisposed) {
+          this.action();
+          this.isDisposed = true;
+        }
       }
-  	}, fn(module, module.exports), module.exports;
-  }
+    }], [{
+      key: "isDisposable",
+      value: function isDisposable(d) {
+        return Boolean(d && isFunction(d.dispose));
+      }
+    }, {
+      key: "_fixup",
+      value: function _fixup(result) {
+        return Disposable.isDisposable(result) ? result : Disposable.empty;
+      }
+      /**
+       * Creates a disposable object that invokes the specified action when disposed.
+       * @param {Function} dispose Action to run during the first call to dispose.
+       * The action is guaranteed to be run at most once.
+       * @return {Disposable} The disposable object that runs the given action upon disposal.
+       */
 
-  function commonjsRequire () {
-  	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
-  }
+    }, {
+      key: "create",
+      value: function create(action) {
+        return new Disposable(action);
+      }
+    }]);
+
+    return Disposable;
+  }();
+  /**
+   * Gets the disposable that does nothing when disposed.
+   */
+
+  Disposable.empty = {
+    dispose: noop
+  };
+  /**
+   * Represents a group of disposable resources that are disposed together.
+   * @constructor
+   */
+
+  var CompositeDisposable = /*#__PURE__*/function () {
+    function CompositeDisposable() {
+      _classCallCheck$7(this, CompositeDisposable);
+
+      this.isDisposed = false;
+
+      for (var _len = arguments.length, disposables = new Array(_len), _key = 0; _key < _len; _key++) {
+        disposables[_key] = arguments[_key];
+      }
+
+      this.disposables = disposables;
+    }
+    /**
+     * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
+     * @param {Any} item Disposable to add.
+     */
+
+
+    _createClass$7(CompositeDisposable, [{
+      key: "add",
+      value: function add(item) {
+        if (this.isDisposed) {
+          item.dispose();
+        } else {
+          this.disposables.push(item);
+        }
+      }
+      /**
+       * Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
+       * @param {Any} item Disposable to remove.
+       * @returns {Boolean} true if found; false otherwise.
+       */
+
+    }, {
+      key: "remove",
+      value: function remove(item) {
+        var shouldDispose = false;
+
+        if (!this.isDisposed) {
+          var idx = this.disposables.indexOf(item);
+
+          if (idx !== -1) {
+            shouldDispose = true;
+            this.disposables.splice(idx, 1);
+            item.dispose();
+          }
+        }
+
+        return shouldDispose;
+      }
+      /**
+       *  Disposes all disposables in the group and removes them from the group but
+       *  does not dispose the CompositeDisposable.
+       */
+
+    }, {
+      key: "clear",
+      value: function clear() {
+        if (!this.isDisposed) {
+          var len = this.disposables.length;
+          var currentDisposables = new Array(len);
+
+          for (var i = 0; i < len; i++) {
+            currentDisposables[i] = this.disposables[i];
+          }
+
+          this.disposables = [];
+
+          for (var _i = 0; _i < len; _i++) {
+            currentDisposables[_i].dispose();
+          }
+        }
+      }
+      /**
+       *  Disposes all disposables in the group and removes them from the group.
+       */
+
+    }, {
+      key: "dispose",
+      value: function dispose() {
+        if (!this.isDisposed) {
+          this.isDisposed = true;
+          var len = this.disposables.length;
+          var currentDisposables = new Array(len);
+
+          for (var i = 0; i < len; i++) {
+            currentDisposables[i] = this.disposables[i];
+          }
+
+          this.disposables = [];
+
+          for (var _i2 = 0; _i2 < len; _i2++) {
+            currentDisposables[_i2].dispose();
+          }
+        }
+      }
+    }]);
+
+    return CompositeDisposable;
+  }();
+  /**
+   * Represents a disposable resource whose underlying disposable resource can
+   * be replaced by another disposable resource, causing automatic disposal of
+   * the previous underlying disposable resource.
+   */
+
+  var SerialDisposable = /*#__PURE__*/function () {
+    function SerialDisposable() {
+      _classCallCheck$7(this, SerialDisposable);
+
+      this.isDisposed = false;
+    }
+    /**
+     * Gets the underlying disposable.
+     * @returns {Any} the underlying disposable.
+     */
+
+
+    _createClass$7(SerialDisposable, [{
+      key: "getDisposable",
+      value: function getDisposable() {
+        return this.current;
+      }
+    }, {
+      key: "setDisposable",
+      value: function setDisposable(value) {
+        var shouldDispose = this.isDisposed;
+
+        if (!shouldDispose) {
+          var old = this.current;
+          this.current = value;
+
+          if (old) {
+            old.dispose();
+          }
+        }
+
+        if (shouldDispose && value) {
+          value.dispose();
+        }
+      }
+      /** Performs the task of cleaning up resources. */
+
+    }, {
+      key: "dispose",
+      value: function dispose() {
+        if (!this.isDisposed) {
+          this.isDisposed = true;
+          var old = this.current;
+          this.current = undefined;
+
+          if (old) {
+            old.dispose();
+          }
+        }
+      }
+    }]);
+
+    return SerialDisposable;
+  }();
+
+  /** @license React v16.13.1
+   * react-is.development.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
 
   var reactIs_development = createCommonjsModule(function (module, exports) {
 
@@ -3467,34 +4675,6 @@
     })();
   }
   });
-  var reactIs_development_1 = reactIs_development.AsyncMode;
-  var reactIs_development_2 = reactIs_development.ConcurrentMode;
-  var reactIs_development_3 = reactIs_development.ContextConsumer;
-  var reactIs_development_4 = reactIs_development.ContextProvider;
-  var reactIs_development_5 = reactIs_development.Element;
-  var reactIs_development_6 = reactIs_development.ForwardRef;
-  var reactIs_development_7 = reactIs_development.Fragment;
-  var reactIs_development_8 = reactIs_development.Lazy;
-  var reactIs_development_9 = reactIs_development.Memo;
-  var reactIs_development_10 = reactIs_development.Portal;
-  var reactIs_development_11 = reactIs_development.Profiler;
-  var reactIs_development_12 = reactIs_development.StrictMode;
-  var reactIs_development_13 = reactIs_development.Suspense;
-  var reactIs_development_14 = reactIs_development.isAsyncMode;
-  var reactIs_development_15 = reactIs_development.isConcurrentMode;
-  var reactIs_development_16 = reactIs_development.isContextConsumer;
-  var reactIs_development_17 = reactIs_development.isContextProvider;
-  var reactIs_development_18 = reactIs_development.isElement;
-  var reactIs_development_19 = reactIs_development.isForwardRef;
-  var reactIs_development_20 = reactIs_development.isFragment;
-  var reactIs_development_21 = reactIs_development.isLazy;
-  var reactIs_development_22 = reactIs_development.isMemo;
-  var reactIs_development_23 = reactIs_development.isPortal;
-  var reactIs_development_24 = reactIs_development.isProfiler;
-  var reactIs_development_25 = reactIs_development.isStrictMode;
-  var reactIs_development_26 = reactIs_development.isSuspense;
-  var reactIs_development_27 = reactIs_development.isValidElementType;
-  var reactIs_development_28 = reactIs_development.typeOf;
 
   var reactIs = createCommonjsModule(function (module) {
 
@@ -3560,7 +4740,7 @@
 
   var defineProperty = Object.defineProperty;
   var getOwnPropertyNames = Object.getOwnPropertyNames;
-  var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+  var getOwnPropertySymbols$1 = Object.getOwnPropertySymbols;
   var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
   var getPrototypeOf = Object.getPrototypeOf;
   var objectPrototype = Object.prototype;
@@ -3577,8 +4757,8 @@
 
       var keys = getOwnPropertyNames(sourceComponent);
 
-      if (getOwnPropertySymbols) {
-        keys = keys.concat(getOwnPropertySymbols(sourceComponent));
+      if (getOwnPropertySymbols$1) {
+        keys = keys.concat(getOwnPropertySymbols$1(sourceComponent));
       }
 
       var targetStatics = getStatics(targetComponent);
@@ -3603,259 +4783,19 @@
 
   var hoistNonReactStatics_cjs = hoistNonReactStatics;
 
-  function _classCallCheck$7(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  function _typeof$4(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$4 = function _typeof(obj) { return typeof obj; }; } else { _typeof$4 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$4(obj); }
 
-  function _defineProperties$7(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  function _slicedToArray$2(arr, i) { return _arrayWithHoles$2(arr) || _iterableToArrayLimit$2(arr, i) || _unsupportedIterableToArray$2(arr, i) || _nonIterableRest$2(); }
 
-  function _createClass$7(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$7(Constructor.prototype, protoProps); if (staticProps) _defineProperties$7(Constructor, staticProps); return Constructor; }
-  /**
-   * Provides a set of static methods for creating Disposables.
-   * @param {Function} action Action to run during the first call to dispose.
-   * The action is guaranteed to be run at most once.
-   */
+  function _nonIterableRest$2() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-  var Disposable =
-  /** @class */
-  function () {
-    var Disposable = /*#__PURE__*/function () {
-      function Disposable(action) {
-        _classCallCheck$7(this, Disposable);
+  function _unsupportedIterableToArray$2(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$2(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen); }
 
-        this.isDisposed = false;
-        this.action = isFunction(action) ? action : noop;
-      }
-      /**
-       * Validates whether the given object is a disposable
-       * @param {Object} Object to test whether it has a dispose method
-       * @returns {Boolean} true if a disposable object, else false.
-       */
+  function _arrayLikeToArray$2(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+  function _iterableToArrayLimit$2(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-      _createClass$7(Disposable, [{
-        key: "dispose",
-
-        /** Performs the task of cleaning up resources. */
-        value: function dispose() {
-          if (!this.isDisposed) {
-            this.action();
-            this.isDisposed = true;
-          }
-        }
-      }], [{
-        key: "isDisposable",
-        value: function isDisposable(d) {
-          return Boolean(d && isFunction(d.dispose));
-        }
-      }, {
-        key: "_fixup",
-        value: function _fixup(result) {
-          return Disposable.isDisposable(result) ? result : Disposable.empty;
-        }
-        /**
-         * Creates a disposable object that invokes the specified action when disposed.
-         * @param {Function} dispose Action to run during the first call to dispose.
-         * The action is guaranteed to be run at most once.
-         * @return {Disposable} The disposable object that runs the given action upon disposal.
-         */
-
-      }, {
-        key: "create",
-        value: function create(action) {
-          return new Disposable(action);
-        }
-      }]);
-
-      return Disposable;
-    }();
-    /**
-     * Gets the disposable that does nothing when disposed.
-     */
-
-
-    Disposable.empty = {
-      dispose: noop
-    };
-    return Disposable;
-  }();
-  /**
-   * Represents a group of disposable resources that are disposed together.
-   * @constructor
-   */
-
-  var CompositeDisposable = /*#__PURE__*/function () {
-    function CompositeDisposable() {
-      _classCallCheck$7(this, CompositeDisposable);
-
-      this.isDisposed = false;
-
-      for (var _len = arguments.length, disposables = new Array(_len), _key = 0; _key < _len; _key++) {
-        disposables[_key] = arguments[_key];
-      }
-
-      this.disposables = disposables;
-    }
-    /**
-     * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
-     * @param {Any} item Disposable to add.
-     */
-
-
-    _createClass$7(CompositeDisposable, [{
-      key: "add",
-      value: function add(item) {
-        if (this.isDisposed) {
-          item.dispose();
-        } else {
-          this.disposables.push(item);
-        }
-      }
-      /**
-       * Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
-       * @param {Any} item Disposable to remove.
-       * @returns {Boolean} true if found; false otherwise.
-       */
-
-    }, {
-      key: "remove",
-      value: function remove(item) {
-        var shouldDispose = false;
-
-        if (!this.isDisposed) {
-          var idx = this.disposables.indexOf(item);
-
-          if (idx !== -1) {
-            shouldDispose = true;
-            this.disposables.splice(idx, 1);
-            item.dispose();
-          }
-        }
-
-        return shouldDispose;
-      }
-      /**
-       *  Disposes all disposables in the group and removes them from the group but
-       *  does not dispose the CompositeDisposable.
-       */
-
-    }, {
-      key: "clear",
-      value: function clear() {
-        if (!this.isDisposed) {
-          var len = this.disposables.length;
-          var currentDisposables = new Array(len);
-
-          for (var i = 0; i < len; i++) {
-            currentDisposables[i] = this.disposables[i];
-          }
-
-          this.disposables = [];
-
-          for (var _i = 0; _i < len; _i++) {
-            currentDisposables[_i].dispose();
-          }
-        }
-      }
-      /**
-       *  Disposes all disposables in the group and removes them from the group.
-       */
-
-    }, {
-      key: "dispose",
-      value: function dispose() {
-        if (!this.isDisposed) {
-          this.isDisposed = true;
-          var len = this.disposables.length;
-          var currentDisposables = new Array(len);
-
-          for (var i = 0; i < len; i++) {
-            currentDisposables[i] = this.disposables[i];
-          }
-
-          this.disposables = [];
-
-          for (var _i2 = 0; _i2 < len; _i2++) {
-            currentDisposables[_i2].dispose();
-          }
-        }
-      }
-    }]);
-
-    return CompositeDisposable;
-  }();
-  /**
-   * Represents a disposable resource whose underlying disposable resource can
-   * be replaced by another disposable resource, causing automatic disposal of
-   * the previous underlying disposable resource.
-   */
-
-  var SerialDisposable = /*#__PURE__*/function () {
-    function SerialDisposable() {
-      _classCallCheck$7(this, SerialDisposable);
-
-      this.isDisposed = false;
-    }
-    /**
-     * Gets the underlying disposable.
-     * @returns {Any} the underlying disposable.
-     */
-
-
-    _createClass$7(SerialDisposable, [{
-      key: "getDisposable",
-      value: function getDisposable() {
-        return this.current;
-      }
-    }, {
-      key: "setDisposable",
-      value: function setDisposable(value) {
-        var shouldDispose = this.isDisposed;
-
-        if (!shouldDispose) {
-          var old = this.current;
-          this.current = value;
-
-          if (old) {
-            old.dispose();
-          }
-        }
-
-        if (shouldDispose && value) {
-          value.dispose();
-        }
-      }
-      /** Performs the task of cleaning up resources. */
-
-    }, {
-      key: "dispose",
-      value: function dispose() {
-        if (!this.isDisposed) {
-          this.isDisposed = true;
-          var old = this.current;
-          this.current = undefined;
-
-          if (old) {
-            old.dispose();
-          }
-        }
-      }
-    }]);
-
-    return SerialDisposable;
-  }();
-
-  function _typeof$5(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$5 = function _typeof(obj) { return typeof obj; }; } else { _typeof$5 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$5(obj); }
-
-  function _slicedToArray$9(arr, i) { return _arrayWithHoles$9(arr) || _iterableToArrayLimit$9(arr, i) || _unsupportedIterableToArray$9(arr, i) || _nonIterableRest$9(); }
-
-  function _nonIterableRest$9() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-  function _unsupportedIterableToArray$9(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$9(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$9(o, minLen); }
-
-  function _arrayLikeToArray$9(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-  function _iterableToArrayLimit$9(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-  function _arrayWithHoles$9(arr) { if (Array.isArray(arr)) return arr; }
+  function _arrayWithHoles$2(arr) { if (Array.isArray(arr)) return arr; }
 
   function _classCallCheck$8(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3869,7 +4809,7 @@
 
   function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-  function _possibleConstructorReturn(self, call) { if (call && (_typeof$5(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+  function _possibleConstructorReturn(self, call) { if (call && (_typeof$4(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
   function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -3891,143 +4831,141 @@
     var Decorated = DecoratedComponent;
     var displayName = DecoratedComponent.displayName || DecoratedComponent.name || 'Component';
 
-    var DragDropContainer =
-    /** @class */
-    function () {
-      var DragDropContainer = /*#__PURE__*/function (_React$Component) {
-        _inherits(DragDropContainer, _React$Component);
+    var DragDropContainer = /*#__PURE__*/function (_Component) {
+      _inherits(DragDropContainer, _Component);
 
-        var _super = _createSuper(DragDropContainer);
+      var _super = _createSuper(DragDropContainer);
 
-        function DragDropContainer(props) {
-          var _this;
+      function DragDropContainer(props) {
+        var _this;
 
-          _classCallCheck$8(this, DragDropContainer);
+        _classCallCheck$8(this, DragDropContainer);
 
-          _this = _super.call(this, props);
-          _this.decoratedRef = React.createRef();
+        _this = _super.call(this, props);
+        _this.decoratedRef = f.createRef();
 
-          _this.handleChange = function () {
-            var nextState = _this.getCurrentState();
+        _this.handleChange = function () {
+          var nextState = _this.getCurrentState();
 
-            if (!shallowEqual(nextState, _this.state)) {
-              _this.setState(nextState);
-            }
-          };
+          if (!shallowEqual(nextState, _this.state)) {
+            _this.setState(nextState);
+          }
+        };
 
-          _this.disposable = new SerialDisposable();
+        _this.disposable = new SerialDisposable();
 
-          _this.receiveProps(props);
+        _this.receiveProps(props);
 
-          _this.dispose();
+        _this.dispose();
 
-          return _this;
+        return _this;
+      }
+
+      _createClass$8(DragDropContainer, [{
+        key: "getHandlerId",
+        value: function getHandlerId() {
+          return this.handlerId;
         }
-
-        _createClass$8(DragDropContainer, [{
-          key: "getHandlerId",
-          value: function getHandlerId() {
-            return this.handlerId;
-          }
-        }, {
-          key: "getDecoratedComponentInstance",
-          value: function getDecoratedComponentInstance() {
-            invariant(this.decoratedRef.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
-            return this.decoratedRef.current;
-          }
-        }, {
-          key: "shouldComponentUpdate",
-          value: function shouldComponentUpdate(nextProps, nextState) {
-            return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
-          }
-        }, {
-          key: "componentDidMount",
-          value: function componentDidMount() {
-            this.disposable = new SerialDisposable();
-            this.currentType = undefined;
+      }, {
+        key: "getDecoratedComponentInstance",
+        value: function getDecoratedComponentInstance() {
+          invariant(this.decoratedRef.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
+          return this.decoratedRef.current;
+        }
+      }, {
+        key: "shouldComponentUpdate",
+        value: function shouldComponentUpdate(nextProps, nextState) {
+          return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
+        }
+      }, {
+        key: "componentDidMount",
+        value: function componentDidMount() {
+          this.disposable = new SerialDisposable();
+          this.currentType = undefined;
+          this.receiveProps(this.props);
+          this.handleChange();
+        }
+      }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate(prevProps) {
+          if (!arePropsEqual(this.props, prevProps)) {
             this.receiveProps(this.props);
             this.handleChange();
           }
-        }, {
-          key: "componentDidUpdate",
-          value: function componentDidUpdate(prevProps) {
-            if (!arePropsEqual(this.props, prevProps)) {
-              this.receiveProps(this.props);
-              this.handleChange();
-            }
+        }
+      }, {
+        key: "componentWillUnmount",
+        value: function componentWillUnmount() {
+          this.dispose();
+        }
+      }, {
+        key: "receiveProps",
+        value: function receiveProps(props) {
+          if (!this.handler) {
+            return;
           }
-        }, {
-          key: "componentWillUnmount",
-          value: function componentWillUnmount() {
-            this.dispose();
+
+          this.handler.receiveProps(props);
+          this.receiveType(getType(props));
+        }
+      }, {
+        key: "receiveType",
+        value: function receiveType(type) {
+          if (!this.handlerMonitor || !this.manager || !this.handlerConnector) {
+            return;
           }
-        }, {
-          key: "receiveProps",
-          value: function receiveProps(props) {
-            if (!this.handler) {
-              return;
-            }
 
-            this.handler.receiveProps(props);
-            this.receiveType(getType(props));
+          if (type === this.currentType) {
+            return;
           }
-        }, {
-          key: "receiveType",
-          value: function receiveType(type) {
-            if (!this.handlerMonitor || !this.manager || !this.handlerConnector) {
-              return;
-            }
 
-            if (type === this.currentType) {
-              return;
-            }
+          this.currentType = type;
 
-            this.currentType = type;
+          var _registerHandler = registerHandler(type, this.handler, this.manager),
+              _registerHandler2 = _slicedToArray$2(_registerHandler, 2),
+              handlerId = _registerHandler2[0],
+              unregister = _registerHandler2[1];
 
-            var _registerHandler = registerHandler(type, this.handler, this.manager),
-                _registerHandler2 = _slicedToArray$9(_registerHandler, 2),
-                handlerId = _registerHandler2[0],
-                unregister = _registerHandler2[1];
+          this.handlerId = handlerId;
+          this.handlerMonitor.receiveHandlerId(handlerId);
+          this.handlerConnector.receiveHandlerId(handlerId);
+          var globalMonitor = this.manager.getMonitor();
+          var unsubscribe = globalMonitor.subscribeToStateChange(this.handleChange, {
+            handlerIds: [handlerId]
+          });
+          this.disposable.setDisposable(new CompositeDisposable(new Disposable(unsubscribe), new Disposable(unregister)));
+        }
+      }, {
+        key: "dispose",
+        value: function dispose() {
+          this.disposable.dispose();
 
-            this.handlerId = handlerId;
-            this.handlerMonitor.receiveHandlerId(handlerId);
-            this.handlerConnector.receiveHandlerId(handlerId);
-            var globalMonitor = this.manager.getMonitor();
-            var unsubscribe = globalMonitor.subscribeToStateChange(this.handleChange, {
-              handlerIds: [handlerId]
-            });
-            this.disposable.setDisposable(new CompositeDisposable(new Disposable(unsubscribe), new Disposable(unregister)));
+          if (this.handlerConnector) {
+            this.handlerConnector.receiveHandlerId(null);
           }
-        }, {
-          key: "dispose",
-          value: function dispose() {
-            this.disposable.dispose();
-
-            if (this.handlerConnector) {
-              this.handlerConnector.receiveHandlerId(null);
-            }
+        }
+      }, {
+        key: "getCurrentState",
+        value: function getCurrentState() {
+          if (!this.handlerConnector) {
+            return {};
           }
-        }, {
-          key: "getCurrentState",
-          value: function getCurrentState() {
-            if (!this.handlerConnector) {
-              return {};
-            }
 
-            var nextState = collect(this.handlerConnector.hooks, this.handlerMonitor, this.props);
+          var nextState = collect(this.handlerConnector.hooks, this.handlerMonitor, this.props);
 
-            {
-              invariant(isPlainObject$1(nextState), 'Expected `collect` specified as the second argument to ' + '%s for %s to return a plain object of props to inject. ' + 'Instead, received %s.', containerDisplayName, displayName, nextState);
-            }
-
-            return nextState;
+          {
+            invariant(isPlainObject$1(nextState), 'Expected `collect` specified as the second argument to ' + '%s for %s to return a plain object of props to inject. ' + 'Instead, received %s.', containerDisplayName, displayName, nextState);
           }
-        }, {
-          key: "render",
-          value: function render() {
-            var _this2 = this;
 
-            return React.createElement(DndContext.Consumer, null, function (_ref2) {
+          return nextState;
+        }
+      }, {
+        key: "render",
+        value: function render() {
+          var _this2 = this;
+
+          return jsxRuntime.jsx(DndContext.Consumer, {
+            children: function children(_ref2) {
               var dragDropManager = _ref2.dragDropManager;
 
               _this2.receiveDragDropManager(dragDropManager);
@@ -4040,49 +4978,39 @@
                 });
               }
 
-              return React.createElement(Decorated, Object.assign({}, _this2.props, _this2.getCurrentState(), {
+              return jsxRuntime.jsx(Decorated, Object.assign({}, _this2.props, _this2.getCurrentState(), {
                 // NOTE: if Decorated is a Function Component, decoratedRef will not be populated unless it's a refforwarding component.
                 ref: isRefable(Decorated) ? _this2.decoratedRef : null
-              }));
-            });
-          }
-        }, {
-          key: "receiveDragDropManager",
-          value: function receiveDragDropManager(dragDropManager) {
-            if (this.manager !== undefined) {
-              return;
+              }), void 0);
             }
-
-            invariant(dragDropManager !== undefined, 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
-
-            if (dragDropManager === undefined) {
-              return;
-            }
-
-            this.manager = dragDropManager;
-            this.handlerMonitor = createMonitor(dragDropManager);
-            this.handlerConnector = createConnector(dragDropManager.getBackend());
-            this.handler = createHandler(this.handlerMonitor, this.decoratedRef);
+          }, void 0);
+        }
+      }, {
+        key: "receiveDragDropManager",
+        value: function receiveDragDropManager(dragDropManager) {
+          if (this.manager !== undefined) {
+            return;
           }
-        }]);
 
-        return DragDropContainer;
-      }(React.Component);
+          invariant(dragDropManager !== undefined, 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
 
-      DragDropContainer.DecoratedComponent = DecoratedComponent;
-      DragDropContainer.displayName = "".concat(containerDisplayName, "(").concat(displayName, ")");
+          if (dragDropManager === undefined) {
+            return;
+          }
+
+          this.manager = dragDropManager;
+          this.handlerMonitor = createMonitor(dragDropManager);
+          this.handlerConnector = createConnector(dragDropManager.getBackend());
+          this.handler = createHandler(this.handlerMonitor, this.decoratedRef);
+        }
+      }]);
+
       return DragDropContainer;
-    }();
+    }(f.Component);
 
+    DragDropContainer.DecoratedComponent = DecoratedComponent;
+    DragDropContainer.displayName = "".concat(containerDisplayName, "(").concat(displayName, ")");
     return hoistNonReactStatics_cjs(DragDropContainer, DecoratedComponent);
-  }
-
-  function _typeof$6(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$6 = function _typeof(obj) { return typeof obj; }; } else { _typeof$6 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$6(obj); }
-
-  function isValidType(type, allowArray) {
-    return typeof type === 'string' || _typeof$6(type) === 'symbol' || !!allowArray && Array.isArray(type) && type.every(function (t) {
-      return isValidType(t, false);
-    });
   }
 
   function _classCallCheck$9(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4301,6 +5229,13 @@
     };
   }
 
+  /**
+   * @param type The accepted target type
+   * @param spec The DropTarget specification
+   * @param collect The props collector function
+   * @param options Options
+   */
+
   function DropTarget(type, spec, collect) {
     var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
     checkDecoratorArguments('DropTarget', 'type, spec, collect[, options]', type, spec, collect, options);
@@ -4337,7 +5272,7 @@
     };
   }
 
-  function _typeof$7(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$7 = function _typeof(obj) { return typeof obj; }; } else { _typeof$7 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$7(obj); }
+  function _typeof$5(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$5 = function _typeof(obj) { return typeof obj; }; } else { _typeof$5 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$5(obj); }
 
   function _classCallCheck$b(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -4351,13 +5286,18 @@
 
   function _createSuper$1(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct$1(); return function _createSuperInternal() { var Super = _getPrototypeOf$1(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf$1(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn$1(this, result); }; }
 
-  function _possibleConstructorReturn$1(self, call) { if (call && (_typeof$7(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized$1(self); }
+  function _possibleConstructorReturn$1(self, call) { if (call && (_typeof$5(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized$1(self); }
 
   function _assertThisInitialized$1(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
   function _isNativeReflectConstruct$1() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
   function _getPrototypeOf$1(o) { _getPrototypeOf$1 = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf$1(o); }
+  /**
+   * @param collect The props collector function
+   * @param options The DnD options
+   */
+
   function DragLayer(collect) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     checkDecoratorArguments('DragLayer', 'collect[, options]', collect, options);
@@ -4369,76 +5309,74 @@
           arePropsEqual = _options$arePropsEqua === void 0 ? shallowEqual : _options$arePropsEqua;
       var displayName = Decorated.displayName || Decorated.name || 'Component';
 
-      var DragLayerContainer =
-      /** @class */
-      function () {
-        var DragLayerContainer = /*#__PURE__*/function (_React$Component) {
-          _inherits$1(DragLayerContainer, _React$Component);
+      var DragLayerContainer = /*#__PURE__*/function (_Component) {
+        _inherits$1(DragLayerContainer, _Component);
 
-          var _super = _createSuper$1(DragLayerContainer);
+        var _super = _createSuper$1(DragLayerContainer);
 
-          function DragLayerContainer() {
-            var _this;
+        function DragLayerContainer() {
+          var _this;
 
-            _classCallCheck$b(this, DragLayerContainer);
+          _classCallCheck$b(this, DragLayerContainer);
 
-            _this = _super.apply(this, arguments);
-            _this.isCurrentlyMounted = false;
-            _this.ref = React.createRef();
+          _this = _super.apply(this, arguments);
+          _this.isCurrentlyMounted = false;
+          _this.ref = f.createRef();
 
-            _this.handleChange = function () {
-              if (!_this.isCurrentlyMounted) {
-                return;
-              }
+          _this.handleChange = function () {
+            if (!_this.isCurrentlyMounted) {
+              return;
+            }
 
-              var nextState = _this.getCurrentState();
+            var nextState = _this.getCurrentState();
 
-              if (!shallowEqual(nextState, _this.state)) {
-                _this.setState(nextState);
-              }
-            };
+            if (!shallowEqual(nextState, _this.state)) {
+              _this.setState(nextState);
+            }
+          };
 
-            return _this;
+          return _this;
+        }
+
+        _createClass$b(DragLayerContainer, [{
+          key: "getDecoratedComponentInstance",
+          value: function getDecoratedComponentInstance() {
+            invariant(this.ref.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
+            return this.ref.current;
           }
+        }, {
+          key: "shouldComponentUpdate",
+          value: function shouldComponentUpdate(nextProps, nextState) {
+            return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
+          }
+        }, {
+          key: "componentDidMount",
+          value: function componentDidMount() {
+            this.isCurrentlyMounted = true;
+            this.handleChange();
+          }
+        }, {
+          key: "componentWillUnmount",
+          value: function componentWillUnmount() {
+            this.isCurrentlyMounted = false;
 
-          _createClass$b(DragLayerContainer, [{
-            key: "getDecoratedComponentInstance",
-            value: function getDecoratedComponentInstance() {
-              invariant(this.ref.current, 'In order to access an instance of the decorated component, it must either be a class component or use React.forwardRef()');
-              return this.ref.current;
+            if (this.unsubscribeFromOffsetChange) {
+              this.unsubscribeFromOffsetChange();
+              this.unsubscribeFromOffsetChange = undefined;
             }
-          }, {
-            key: "shouldComponentUpdate",
-            value: function shouldComponentUpdate(nextProps, nextState) {
-              return !arePropsEqual(nextProps, this.props) || !shallowEqual(nextState, this.state);
-            }
-          }, {
-            key: "componentDidMount",
-            value: function componentDidMount() {
-              this.isCurrentlyMounted = true;
-              this.handleChange();
-            }
-          }, {
-            key: "componentWillUnmount",
-            value: function componentWillUnmount() {
-              this.isCurrentlyMounted = false;
 
-              if (this.unsubscribeFromOffsetChange) {
-                this.unsubscribeFromOffsetChange();
-                this.unsubscribeFromOffsetChange = undefined;
-              }
-
-              if (this.unsubscribeFromStateChange) {
-                this.unsubscribeFromStateChange();
-                this.unsubscribeFromStateChange = undefined;
-              }
+            if (this.unsubscribeFromStateChange) {
+              this.unsubscribeFromStateChange();
+              this.unsubscribeFromStateChange = undefined;
             }
-          }, {
-            key: "render",
-            value: function render() {
-              var _this2 = this;
+          }
+        }, {
+          key: "render",
+          value: function render() {
+            var _this2 = this;
 
-              return React.createElement(DndContext.Consumer, null, function (_ref) {
+            return jsxRuntime.jsx(DndContext.Consumer, {
+              children: function children(_ref) {
                 var dragDropManager = _ref.dragDropManager;
 
                 if (dragDropManager === undefined) {
@@ -4452,46 +5390,497 @@
                   return null;
                 }
 
-                return React.createElement(Decorated, Object.assign({}, _this2.props, _this2.state, {
+                return jsxRuntime.jsx(Decorated, Object.assign({}, _this2.props, _this2.state, {
                   ref: isRefable(Decorated) ? _this2.ref : null
-                }));
-              });
-            }
-          }, {
-            key: "receiveDragDropManager",
-            value: function receiveDragDropManager(dragDropManager) {
-              if (this.manager !== undefined) {
-                return;
+                }), void 0);
               }
-
-              this.manager = dragDropManager;
-              invariant(_typeof$7(dragDropManager) === 'object', 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
-              var monitor = this.manager.getMonitor();
-              this.unsubscribeFromOffsetChange = monitor.subscribeToOffsetChange(this.handleChange);
-              this.unsubscribeFromStateChange = monitor.subscribeToStateChange(this.handleChange);
+            }, void 0);
+          }
+        }, {
+          key: "receiveDragDropManager",
+          value: function receiveDragDropManager(dragDropManager) {
+            if (this.manager !== undefined) {
+              return;
             }
-          }, {
-            key: "getCurrentState",
-            value: function getCurrentState() {
-              if (!this.manager) {
-                return {};
-              }
 
-              var monitor = this.manager.getMonitor();
-              return collect(monitor, this.props);
+            this.manager = dragDropManager;
+            invariant(_typeof$5(dragDropManager) === 'object', 'Could not find the drag and drop manager in the context of %s. ' + 'Make sure to render a DndProvider component in your top-level component. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/troubleshooting#could-not-find-the-drag-and-drop-manager-in-the-context', displayName, displayName);
+            var monitor = this.manager.getMonitor();
+            this.unsubscribeFromOffsetChange = monitor.subscribeToOffsetChange(this.handleChange);
+            this.unsubscribeFromStateChange = monitor.subscribeToStateChange(this.handleChange);
+          }
+        }, {
+          key: "getCurrentState",
+          value: function getCurrentState() {
+            if (!this.manager) {
+              return {};
             }
-          }]);
 
-          return DragLayerContainer;
-        }(React.Component);
+            var monitor = this.manager.getMonitor();
+            return collect(monitor, this.props);
+          }
+        }]);
 
-        DragLayerContainer.displayName = "DragLayer(".concat(displayName, ")");
-        DragLayerContainer.DecoratedComponent = DecoratedComponent;
         return DragLayerContainer;
-      }();
+      }(f.Component);
 
+      DragLayerContainer.displayName = "DragLayer(".concat(displayName, ")");
+      DragLayerContainer.DecoratedComponent = DecoratedComponent;
       return hoistNonReactStatics_cjs(DragLayerContainer, DecoratedComponent);
     };
+  }
+
+  var useIsomorphicLayoutEffect = typeof window !== 'undefined' ? f.useLayoutEffect : f.useEffect;
+
+  function _typeof$6(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof$6 = function _typeof(obj) { return typeof obj; }; } else { _typeof$6 = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof$6(obj); }
+
+  function _classCallCheck$c(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _defineProperties$c(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+  function _createClass$c(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$c(Constructor.prototype, protoProps); if (staticProps) _defineProperties$c(Constructor, staticProps); return Constructor; }
+  var DragSourceImpl = /*#__PURE__*/function () {
+    function DragSourceImpl(spec, monitor, connector) {
+      _classCallCheck$c(this, DragSourceImpl);
+
+      this.spec = spec;
+      this.monitor = monitor;
+      this.connector = connector;
+    }
+
+    _createClass$c(DragSourceImpl, [{
+      key: "beginDrag",
+      value: function beginDrag() {
+        var spec = this.spec;
+        var monitor = this.monitor;
+        var begin = spec.begin,
+            item = spec.item;
+
+        if (begin) {
+          var _ref;
+
+          var beginResult = begin(monitor);
+          invariant(beginResult == null || _typeof$6(beginResult) === 'object', 'dragSpec.begin() must either return an object, undefined, or null');
+          return (_ref = beginResult !== null && beginResult !== void 0 ? beginResult : item) !== null && _ref !== void 0 ? _ref : {};
+        }
+
+        return item !== null && item !== void 0 ? item : {};
+      }
+    }, {
+      key: "canDrag",
+      value: function canDrag() {
+        var spec = this.spec;
+        var monitor = this.monitor;
+
+        if (typeof spec.canDrag === 'boolean') {
+          return spec.canDrag;
+        } else if (typeof spec.canDrag === 'function') {
+          return spec.canDrag(monitor);
+        } else {
+          return true;
+        }
+      }
+    }, {
+      key: "isDragging",
+      value: function isDragging(globalMonitor, target) {
+        var spec = this.spec;
+        var monitor = this.monitor;
+        var isDragging = spec.isDragging;
+        return isDragging ? isDragging(monitor) : target === globalMonitor.getSourceId();
+      }
+    }, {
+      key: "endDrag",
+      value: function endDrag() {
+        var spec = this.spec;
+        var monitor = this.monitor;
+        var connector = this.connector;
+        var end = spec.end;
+
+        if (end) {
+          end(monitor.getItem(), monitor);
+        }
+
+        connector.reconnect();
+      }
+    }]);
+
+    return DragSourceImpl;
+  }();
+
+  function useDragSource(spec, monitor, connector) {
+    var handler = f.useMemo(function () {
+      return new DragSourceImpl(spec, monitor, connector);
+    }, [monitor, connector]);
+    f.useEffect(function () {
+      handler.spec = spec;
+    }, [spec]);
+    return handler;
+  }
+
+  /**
+   * A hook to retrieve the DragDropManager from Context
+   */
+
+  function useDragDropManager() {
+    var _useContext = f.useContext(DndContext),
+        dragDropManager = _useContext.dragDropManager;
+
+    invariant(dragDropManager != null, 'Expected drag drop context');
+    return dragDropManager;
+  }
+
+  function _slicedToArray$3(arr, i) { return _arrayWithHoles$3(arr) || _iterableToArrayLimit$3(arr, i) || _unsupportedIterableToArray$3(arr, i) || _nonIterableRest$3(); }
+
+  function _nonIterableRest$3() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _unsupportedIterableToArray$3(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$3(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$3(o, minLen); }
+
+  function _arrayLikeToArray$3(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+  function _iterableToArrayLimit$3(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles$3(arr) { if (Array.isArray(arr)) return arr; }
+  function useRegisteredDragSource(spec, monitor, connector) {
+    var manager = useDragDropManager();
+    var handler = useDragSource(spec, monitor, connector);
+    var itemType = spec.item.type;
+    useIsomorphicLayoutEffect(function registerDragSource() {
+      var _registerSource = registerSource(itemType, handler, manager),
+          _registerSource2 = _slicedToArray$3(_registerSource, 2),
+          handlerId = _registerSource2[0],
+          unregister = _registerSource2[1];
+
+      monitor.receiveHandlerId(handlerId);
+      connector.receiveHandlerId(handlerId);
+      return unregister;
+    }, [manager, monitor, connector, handler, itemType]);
+  }
+
+  function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray$4(arr) || _nonIterableSpread(); }
+
+  function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _unsupportedIterableToArray$4(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$4(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$4(o, minLen); }
+
+  function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+  function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray$4(arr); }
+
+  function _arrayLikeToArray$4(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+  function useOptionalFactory(arg, deps) {
+    var memoDeps = _toConsumableArray(deps || []);
+
+    if (deps == null && typeof arg !== 'function') {
+      memoDeps.push(arg);
+    }
+
+    return f.useMemo(function () {
+      return typeof arg === 'function' ? arg() : arg;
+    }, memoDeps);
+  }
+
+  function useDragSourceMonitor() {
+    var manager = useDragDropManager();
+    return f.useMemo(function () {
+      return new DragSourceMonitorImpl(manager);
+    }, [manager]);
+  }
+
+  function useDragSourceConnector(dragSourceOptions, dragPreviewOptions) {
+    var manager = useDragDropManager();
+    var connector = f.useMemo(function () {
+      return new SourceConnector(manager.getBackend());
+    }, [manager]);
+    useIsomorphicLayoutEffect(function () {
+      connector.dragSourceOptions = dragSourceOptions || null;
+      connector.reconnect();
+    }, [connector, dragSourceOptions]);
+    useIsomorphicLayoutEffect(function () {
+      connector.dragPreviewOptions = dragPreviewOptions || null;
+      connector.reconnect();
+    }, [connector, dragPreviewOptions]);
+    return connector;
+  }
+
+  function _slicedToArray$4(arr, i) { return _arrayWithHoles$4(arr) || _iterableToArrayLimit$4(arr, i) || _unsupportedIterableToArray$5(arr, i) || _nonIterableRest$4(); }
+
+  function _nonIterableRest$4() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _unsupportedIterableToArray$5(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$5(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$5(o, minLen); }
+
+  function _arrayLikeToArray$5(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+  function _iterableToArrayLimit$4(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles$4(arr) { if (Array.isArray(arr)) return arr; }
+  /**
+   *
+   * @param monitor The monitor to collect state from
+   * @param collect The collecting function
+   * @param onUpdate A method to invoke when updates occur
+   */
+
+  function useCollector(monitor, collect, onUpdate) {
+    var _useState = f.useState(function () {
+      return collect(monitor);
+    }),
+        _useState2 = _slicedToArray$4(_useState, 2),
+        collected = _useState2[0],
+        setCollected = _useState2[1];
+
+    var updateCollected = f.useCallback(function () {
+      var nextValue = collect(monitor);
+
+      if (!shallowEqual(collected, nextValue)) {
+        setCollected(nextValue);
+
+        if (onUpdate) {
+          onUpdate();
+        }
+      }
+    }, [collected, monitor, onUpdate]); // update the collected properties after the first render
+    // and the components are attached to dnd-core
+
+    useIsomorphicLayoutEffect(updateCollected, []);
+    return [collected, updateCollected];
+  }
+
+  function _slicedToArray$5(arr, i) { return _arrayWithHoles$5(arr) || _iterableToArrayLimit$5(arr, i) || _unsupportedIterableToArray$6(arr, i) || _nonIterableRest$5(); }
+
+  function _nonIterableRest$5() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _unsupportedIterableToArray$6(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$6(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$6(o, minLen); }
+
+  function _arrayLikeToArray$6(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+  function _iterableToArrayLimit$5(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles$5(arr) { if (Array.isArray(arr)) return arr; }
+  function useMonitorOutput(monitor, collect, onCollect) {
+    var _useCollector = useCollector(monitor, collect, onCollect),
+        _useCollector2 = _slicedToArray$5(_useCollector, 2),
+        collected = _useCollector2[0],
+        updateCollected = _useCollector2[1];
+
+    useIsomorphicLayoutEffect(function subscribeToMonitorStateChange() {
+      var handlerId = monitor.getHandlerId();
+
+      if (handlerId == null) {
+        return undefined;
+      }
+
+      return monitor.subscribeToStateChange(updateCollected, {
+        handlerIds: [handlerId]
+      });
+    }, [monitor, updateCollected]);
+    return collected;
+  }
+
+  function useCollectedProps(collector, monitor, connector) {
+    return useMonitorOutput(monitor, collector || function () {
+      return {};
+    }, function () {
+      return connector.reconnect();
+    });
+  }
+
+  function useConnectDragSource(connector) {
+    return f.useMemo(function () {
+      return connector.hooks.dragSource();
+    }, [connector]);
+  }
+  function useConnectDragPreview(connector) {
+    return f.useMemo(function () {
+      return connector.hooks.dragPreview();
+    }, [connector]);
+  }
+
+  /**
+   * useDragSource hook
+   * @param sourceSpec The drag source specification (object or function, function preferred)
+   * @param deps The memoization deps array to use when evaluating spec changes
+   */
+
+  function useDrag(specArg, deps) {
+    var spec = useOptionalFactory(specArg, deps);
+    invariant(spec.item != null, 'item must be defined');
+    invariant(spec.item.type != null, 'item type must be defined');
+    var monitor = useDragSourceMonitor();
+    var connector = useDragSourceConnector(spec.options, spec.previewOptions);
+    useRegisteredDragSource(spec, monitor, connector);
+    return [useCollectedProps(spec.collect, monitor, connector), useConnectDragSource(connector), useConnectDragPreview(connector)];
+  }
+
+  function useAccept(spec) {
+    var specAccept = spec.accept;
+    return f.useMemo(function () {
+      return Array.isArray(specAccept) ? specAccept : [specAccept];
+    }, [specAccept]);
+  }
+
+  function _classCallCheck$d(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _defineProperties$d(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+  function _createClass$d(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties$d(Constructor.prototype, protoProps); if (staticProps) _defineProperties$d(Constructor, staticProps); return Constructor; }
+
+  var DropTargetImpl = /*#__PURE__*/function () {
+    function DropTargetImpl(spec, monitor) {
+      _classCallCheck$d(this, DropTargetImpl);
+
+      this.spec = spec;
+      this.monitor = monitor;
+    }
+
+    _createClass$d(DropTargetImpl, [{
+      key: "canDrop",
+      value: function canDrop() {
+        var spec = this.spec;
+        var monitor = this.monitor;
+        return spec.canDrop ? spec.canDrop(monitor.getItem(), monitor) : true;
+      }
+    }, {
+      key: "hover",
+      value: function hover() {
+        var spec = this.spec;
+        var monitor = this.monitor;
+
+        if (spec.hover) {
+          spec.hover(monitor.getItem(), monitor);
+        }
+      }
+    }, {
+      key: "drop",
+      value: function drop() {
+        var spec = this.spec;
+        var monitor = this.monitor;
+
+        if (spec.drop) {
+          return spec.drop(monitor.getItem(), monitor);
+        }
+      }
+    }]);
+
+    return DropTargetImpl;
+  }();
+
+  function useDropTarget(spec, monitor) {
+    var dropTarget = f.useMemo(function () {
+      return new DropTargetImpl(spec, monitor);
+    }, [monitor]);
+    f.useEffect(function () {
+      dropTarget.spec = spec;
+    }, [spec]);
+    return dropTarget;
+  }
+
+  function _toConsumableArray$1(arr) { return _arrayWithoutHoles$1(arr) || _iterableToArray$1(arr) || _unsupportedIterableToArray$7(arr) || _nonIterableSpread$1(); }
+
+  function _nonIterableSpread$1() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _iterableToArray$1(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+  function _arrayWithoutHoles$1(arr) { if (Array.isArray(arr)) return _arrayLikeToArray$7(arr); }
+
+  function _slicedToArray$6(arr, i) { return _arrayWithHoles$6(arr) || _iterableToArrayLimit$6(arr, i) || _unsupportedIterableToArray$7(arr, i) || _nonIterableRest$6(); }
+
+  function _nonIterableRest$6() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _unsupportedIterableToArray$7(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$7(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$7(o, minLen); }
+
+  function _arrayLikeToArray$7(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+  function _iterableToArrayLimit$6(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles$6(arr) { if (Array.isArray(arr)) return arr; }
+  function useRegisteredDropTarget(spec, monitor, connector) {
+    var manager = useDragDropManager();
+    var dropTarget = useDropTarget(spec, monitor);
+    var accept = useAccept(spec);
+    useIsomorphicLayoutEffect(function registerDropTarget() {
+      var _registerTarget = registerTarget(accept, dropTarget, manager),
+          _registerTarget2 = _slicedToArray$6(_registerTarget, 2),
+          handlerId = _registerTarget2[0],
+          unregister = _registerTarget2[1];
+
+      monitor.receiveHandlerId(handlerId);
+      connector.receiveHandlerId(handlerId);
+      return unregister;
+    }, [manager, monitor, dropTarget, connector].concat(_toConsumableArray$1(accept)));
+  }
+
+  function useDropTargetMonitor() {
+    var manager = useDragDropManager();
+    return f.useMemo(function () {
+      return new DropTargetMonitorImpl(manager);
+    }, [manager]);
+  }
+
+  function useDropTargetConnector(options) {
+    var manager = useDragDropManager();
+    var connector = f.useMemo(function () {
+      return new TargetConnector(manager.getBackend());
+    }, [manager]);
+    useIsomorphicLayoutEffect(function () {
+      connector.dropTargetOptions = options || null;
+      connector.reconnect();
+    }, [options]);
+    return connector;
+  }
+
+  function useConnectDropTarget(connector) {
+    return f.useMemo(function () {
+      return connector.hooks.dropTarget();
+    }, [connector]);
+  }
+
+  /**
+   * useDropTarget Hook
+   * @param spec The drop target specification (object or function, function preferred)
+   * @param deps The memoization deps array to use when evaluating spec changes
+   */
+
+  function useDrop(specArg, deps) {
+    var spec = useOptionalFactory(specArg, deps);
+    invariant(spec.accept != null, 'accept must be defined');
+    var monitor = useDropTargetMonitor();
+    var connector = useDropTargetConnector(spec.options);
+    useRegisteredDropTarget(spec, monitor, connector);
+    return [useCollectedProps(spec.collect, monitor, connector), useConnectDropTarget(connector)];
+  }
+
+  function _slicedToArray$7(arr, i) { return _arrayWithHoles$7(arr) || _iterableToArrayLimit$7(arr, i) || _unsupportedIterableToArray$8(arr, i) || _nonIterableRest$7(); }
+
+  function _nonIterableRest$7() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+  function _unsupportedIterableToArray$8(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$8(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$8(o, minLen); }
+
+  function _arrayLikeToArray$8(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+  function _iterableToArrayLimit$7(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+  function _arrayWithHoles$7(arr) { if (Array.isArray(arr)) return arr; }
+  /**
+   * useDragLayer Hook
+   * @param collector The property collector
+   */
+
+  function useDragLayer(collect) {
+    var dragDropManager = useDragDropManager();
+    var monitor = dragDropManager.getMonitor();
+
+    var _useCollector = useCollector(monitor, collect),
+        _useCollector2 = _slicedToArray$7(_useCollector, 2),
+        collected = _useCollector2[0],
+        updateCollected = _useCollector2[1];
+
+    f.useEffect(function () {
+      return monitor.subscribeToOffsetChange(updateCollected);
+    });
+    f.useEffect(function () {
+      return monitor.subscribeToStateChange(updateCollected);
+    });
+    return collected;
   }
 
   exports.DndContext = DndContext;
@@ -4500,7 +5889,6 @@
   exports.DragPreviewImage = DragPreviewImage;
   exports.DragSource = DragSource;
   exports.DropTarget = DropTarget;
-  exports.createDndContext = createDndContext;
   exports.useDrag = useDrag;
   exports.useDragDropManager = useDragDropManager;
   exports.useDragLayer = useDragLayer;

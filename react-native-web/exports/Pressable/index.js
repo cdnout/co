@@ -11,12 +11,6 @@
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 import * as React from 'react';
@@ -32,8 +26,7 @@ import View from '../View';
  * component is currently pressed or not.
  */
 function Pressable(props, forwardedRef) {
-  var accessible = props.accessible,
-      children = props.children,
+  var children = props.children,
       delayLongPress = props.delayLongPress,
       delayPressIn = props.delayPressIn,
       delayPressOut = props.delayPressOut,
@@ -41,16 +34,19 @@ function Pressable(props, forwardedRef) {
       focusable = props.focusable,
       onBlur = props.onBlur,
       onFocus = props.onFocus,
+      onHoverIn = props.onHoverIn,
+      onHoverOut = props.onHoverOut,
       onLongPress = props.onLongPress,
       onPress = props.onPress,
       onPressMove = props.onPressMove,
       onPressIn = props.onPressIn,
       onPressOut = props.onPressOut,
       style = props.style,
+      testOnly_hovered = props.testOnly_hovered,
       testOnly_pressed = props.testOnly_pressed,
-      rest = _objectWithoutPropertiesLoose(props, ["accessible", "children", "delayLongPress", "delayPressIn", "delayPressOut", "disabled", "focusable", "onBlur", "onFocus", "onLongPress", "onPress", "onPressMove", "onPressIn", "onPressOut", "style", "testOnly_pressed"]);
+      rest = _objectWithoutPropertiesLoose(props, ["children", "delayLongPress", "delayPressIn", "delayPressOut", "disabled", "focusable", "onBlur", "onFocus", "onHoverIn", "onHoverOut", "onLongPress", "onPress", "onPressMove", "onPressIn", "onPressOut", "style", "testOnly_hovered", "testOnly_pressed"]);
 
-  var _useForceableState = useForceableState(false),
+  var _useForceableState = useForceableState(testOnly_hovered === true),
       hovered = _useForceableState[0],
       setHovered = _useForceableState[1];
 
@@ -82,13 +78,10 @@ function Pressable(props, forwardedRef) {
   useHover(hostRef, {
     contain: true,
     disabled: disabled,
-    onHoverChange: setHovered
+    onHoverChange: setHovered,
+    onHoverStart: onHoverIn,
+    onHoverEnd: onHoverOut
   });
-
-  var accessibilityState = _objectSpread({
-    disabled: disabled
-  }, props.accessibilityState);
-
   var interactionState = {
     hovered: hovered,
     focused: focused,
@@ -107,15 +100,17 @@ function Pressable(props, forwardedRef) {
     };
   }
 
-  return React.createElement(View, _extends({}, rest, pressEventHandlers, {
-    accessibilityState: accessibilityState,
-    accessible: accessible !== false,
-    focusable: focusable !== false,
-    onBlur: createFocusHandler(onBlur, false),
-    onFocus: createFocusHandler(onFocus, true),
-    ref: setRef,
-    style: [!disabled && styles.root, typeof style === 'function' ? style(interactionState) : style]
-  }), typeof children === 'function' ? children(interactionState) : children);
+  return (
+    /*#__PURE__*/
+    React.createElement(View, _extends({}, rest, pressEventHandlers, {
+      accessibilityDisabled: disabled,
+      focusable: !disabled && focusable !== false,
+      onBlur: createFocusHandler(onBlur, false),
+      onFocus: createFocusHandler(onFocus, true),
+      ref: setRef,
+      style: [!disabled && styles.root, typeof style === 'function' ? style(interactionState) : style]
+    }), typeof children === 'function' ? children(interactionState) : children)
+  );
 }
 
 function useForceableState(forced) {
@@ -132,6 +127,10 @@ var styles = StyleSheet.create({
     touchAction: 'manipulation'
   }
 });
-var MemoedPressable = memo(forwardRef(Pressable));
+var MemoedPressable =
+/*#__PURE__*/
+memo(
+/*#__PURE__*/
+forwardRef(Pressable));
 MemoedPressable.displayName = 'Pressable';
 export default MemoedPressable;

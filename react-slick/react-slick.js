@@ -757,7 +757,7 @@ var InnerSlider = /*#__PURE__*/function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "checkImagesLoad", function () {
-      var images = _this.list.querySelectorAll && _this.list.querySelectorAll(".slick-slide img") || [];
+      var images = _this.list && _this.list.querySelectorAll && _this.list.querySelectorAll(".slick-slide img") || [];
       var imagesCount = images.length,
           loadedCount = 0;
       Array.prototype.forEach.call(images, function (image) {
@@ -1791,6 +1791,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clamp", function() { return clamp; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "safePreventDefault", function() { return safePreventDefault; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getOnDemandLazySlides", function() { return getOnDemandLazySlides; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRequiredLazySlides", function() { return getRequiredLazySlides; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "lazyStartIndex", function() { return lazyStartIndex; });
@@ -1835,6 +1836,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function clamp(number, lowerBound, upperBound) {
   return Math.max(lowerBound, Math.min(number, upperBound));
 }
+var safePreventDefault = function safePreventDefault(event) {
+  var passiveEvents = ["onTouchStart", "onTouchMove", "onWheel"];
+
+  if (!passiveEvents.includes(event._reactName)) {
+    event.preventDefault();
+  }
+};
 var getOnDemandLazySlides = function getOnDemandLazySlides(spec) {
   var onDemandSlides = [];
   var startIndex = lazyStartIndex(spec);
@@ -1967,7 +1975,7 @@ var initializedState = function initializedState(spec) {
     currentSlide: currentSlide,
     lazyLoadedList: lazyLoadedList
   }));
-  lazyLoadedList.concat(slidesToLoad);
+  lazyLoadedList = lazyLoadedList.concat(slidesToLoad);
   var state = {
     slideCount: slideCount,
     slideWidth: slideWidth,
@@ -1992,13 +2000,13 @@ var slideHandler = function slideHandler(spec) {
       infinite = spec.infinite,
       index = spec.index,
       slideCount = spec.slideCount,
-      lazyLoadedList = spec.lazyLoadedList,
       lazyLoad = spec.lazyLoad,
       currentSlide = spec.currentSlide,
       centerMode = spec.centerMode,
       slidesToScroll = spec.slidesToScroll,
       slidesToShow = spec.slidesToShow,
       useCSS = spec.useCSS;
+  var lazyLoadedList = spec.lazyLoadedList;
   if (waitForAnimate && animating) return {};
   var animationSlide = index,
       finalSlide,
@@ -2018,7 +2026,7 @@ var slideHandler = function slideHandler(spec) {
     }
 
     if (lazyLoad && lazyLoadedList.indexOf(animationSlide) < 0) {
-      lazyLoadedList.push(animationSlide);
+      lazyLoadedList = lazyLoadedList.concat(animationSlide);
     }
 
     state = {
@@ -2063,9 +2071,11 @@ var slideHandler = function slideHandler(spec) {
       animationLeft = finalLeft;
     }
 
-    lazyLoad && lazyLoadedList.concat(getOnDemandLazySlides(_objectSpread(_objectSpread({}, spec), {}, {
-      currentSlide: animationSlide
-    })));
+    if (lazyLoad) {
+      lazyLoadedList = lazyLoadedList.concat(getOnDemandLazySlides(_objectSpread(_objectSpread({}, spec), {}, {
+        currentSlide: animationSlide
+      })));
+    }
 
     if (!useCSS) {
       state = {
@@ -2169,7 +2179,7 @@ var keyHandler = function keyHandler(e, accessibility, rtl) {
   return "";
 };
 var swipeStart = function swipeStart(e, swipe, draggable) {
-  e.target.tagName === "IMG" && e.preventDefault();
+  e.target.tagName === "IMG" && safePreventDefault(e);
   if (!swipe || !draggable && e.type.indexOf("mouse") !== -1) return "";
   return {
     dragging: true,
@@ -2203,8 +2213,8 @@ var swipeMove = function swipeMove(e, spec) {
       listHeight = spec.listHeight,
       listWidth = spec.listWidth;
   if (scrolling) return;
-  if (animating) return e.preventDefault();
-  if (vertical && swipeToSlide && verticalSwiping) e.preventDefault();
+  if (animating) return safePreventDefault(e);
+  if (vertical && swipeToSlide && verticalSwiping) safePreventDefault(e);
   var swipeLeft,
       state = {};
   var curLeft = getTrackLeft(spec);
@@ -2270,7 +2280,7 @@ var swipeMove = function swipeMove(e, spec) {
 
   if (touchObject.swipeLength > 10) {
     state["swiping"] = true;
-    e.preventDefault();
+    safePreventDefault(e);
   }
 
   return state;
@@ -2291,7 +2301,7 @@ var swipeEnd = function swipeEnd(e, spec) {
       infinite = spec.infinite;
 
   if (!dragging) {
-    if (swipe) e.preventDefault();
+    if (swipe) safePreventDefault(e);
     return {};
   }
 
@@ -2317,7 +2327,7 @@ var swipeEnd = function swipeEnd(e, spec) {
   }
 
   if (touchObject.swipeLength > minSwipe) {
-    e.preventDefault();
+    safePreventDefault(e);
 
     if (onSwipe) {
       onSwipe(swipeDirection);

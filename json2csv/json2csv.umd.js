@@ -6409,14 +6409,18 @@
         }
 
         if (typeof value === 'string') {
-          if (value.includes(this.opts.quote)) {
-            value = value.replace(new RegExp(this.opts.quote, 'g'), this.opts.escapedQuote);
-          }
-
-          value = "".concat(this.opts.quote).concat(value).concat(this.opts.quote);
-
           if (this.opts.excelStrings) {
-            value = "\"=\"".concat(value, "\"\"");
+            if (value.includes(this.opts.quote)) {
+              value = value.replace(new RegExp(this.opts.quote, 'g'), "".concat(this.opts.escapedQuote).concat(this.opts.escapedQuote));
+            }
+
+            value = "\"=\"\"".concat(value, "\"\"\"");
+          } else {
+            if (value.includes(this.opts.quote)) {
+              value = value.replace(new RegExp(this.opts.quote, 'g'), this.opts.escapedQuote);
+            }
+
+            value = "".concat(this.opts.quote).concat(value).concat(this.opts.quote);
           }
         }
 

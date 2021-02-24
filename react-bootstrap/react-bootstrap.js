@@ -1635,129 +1635,6 @@ function css_style(node, property) {
 }
 
 /* harmony default export */ var esm_css = (css_style);
-// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/canUseDOM.js
-/* harmony default export */ var canUseDOM = (!!(typeof window !== 'undefined' && window.document && window.document.createElement));
-// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/addEventListener.js
-/* eslint-disable no-return-assign */
-
-var optionsSupported = false;
-var onceSupported = false;
-
-try {
-  var addEventListener_options = {
-    get passive() {
-      return optionsSupported = true;
-    },
-
-    get once() {
-      // eslint-disable-next-line no-multi-assign
-      return onceSupported = optionsSupported = true;
-    }
-
-  };
-
-  if (canUseDOM) {
-    window.addEventListener('test', addEventListener_options, addEventListener_options);
-    window.removeEventListener('test', addEventListener_options, true);
-  }
-} catch (e) {
-  /* */
-}
-/**
- * An `addEventListener` ponyfill, supports the `once` option
- */
-
-
-function addEventListener(node, eventName, handler, options) {
-  if (options && typeof options !== 'boolean' && !onceSupported) {
-    var once = options.once,
-        capture = options.capture;
-    var wrappedHandler = handler;
-
-    if (!onceSupported && once) {
-      wrappedHandler = handler.__once || function onceHandler(event) {
-        this.removeEventListener(eventName, onceHandler, capture);
-        handler.call(this, event);
-      };
-
-      handler.__once = wrappedHandler;
-    }
-
-    node.addEventListener(eventName, wrappedHandler, optionsSupported ? options : capture);
-  }
-
-  node.addEventListener(eventName, handler, options);
-}
-
-/* harmony default export */ var esm_addEventListener = (addEventListener);
-// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/removeEventListener.js
-function removeEventListener(node, eventName, handler, options) {
-  var capture = options && typeof options !== 'boolean' ? options.capture : options;
-  node.removeEventListener(eventName, handler, capture);
-
-  if (handler.__once) {
-    node.removeEventListener(eventName, handler.__once, capture);
-  }
-}
-
-/* harmony default export */ var esm_removeEventListener = (removeEventListener);
-// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/listen.js
-
-
-
-function listen(node, eventName, handler, options) {
-  esm_addEventListener(node, eventName, handler, options);
-  return function () {
-    esm_removeEventListener(node, eventName, handler, options);
-  };
-}
-
-/* harmony default export */ var esm_listen = (listen);
-// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/transitionEnd.js
-
-
-
-function parseDuration(node) {
-  var str = esm_css(node, 'transitionDuration') || '';
-  var mult = str.indexOf('ms') === -1 ? 1000 : 1;
-  return parseFloat(str) * mult;
-}
-
-function triggerTransitionEnd(element) {
-  var evt = document.createEvent('HTMLEvents');
-  evt.initEvent('transitionend', true, true);
-  element.dispatchEvent(evt);
-}
-
-function emulateTransitionEnd(element, duration, padding) {
-  if (padding === void 0) {
-    padding = 5;
-  }
-
-  var called = false;
-  var handle = setTimeout(function () {
-    if (!called) triggerTransitionEnd(element);
-  }, duration + padding);
-  var remove = esm_listen(element, 'transitionend', function () {
-    called = true;
-  }, {
-    once: true
-  });
-  return function () {
-    clearTimeout(handle);
-    remove();
-  };
-}
-
-function transitionEnd(element, handler, duration, padding) {
-  if (duration == null) duration = parseDuration(element) || 0;
-  var removeEmulate = emulateTransitionEnd(element, duration, padding);
-  var remove = esm_listen(element, 'transitionend', handler);
-  return function () {
-    removeEmulate();
-    remove();
-  };
-}
 // EXTERNAL MODULE: external {"root":"ReactDOM","commonjs2":"react-dom","commonjs":"react-dom","amd":"react-dom"}
 var external_root_ReactDOM_commonjs2_react_dom_commonjs_react_dom_amd_react_dom_ = __webpack_require__(5);
 var external_root_ReactDOM_commonjs2_react_dom_commonjs_react_dom_amd_react_dom_default = /*#__PURE__*/__webpack_require__.n(external_root_ReactDOM_commonjs2_react_dom_commonjs_react_dom_amd_react_dom_);
@@ -2200,6 +2077,139 @@ Transition_Transition.ENTERING = ENTERING;
 Transition_Transition.ENTERED = ENTERED;
 Transition_Transition.EXITING = EXITING;
 /* harmony default export */ var esm_Transition = (Transition_Transition);
+// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/canUseDOM.js
+/* harmony default export */ var canUseDOM = (!!(typeof window !== 'undefined' && window.document && window.document.createElement));
+// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/addEventListener.js
+/* eslint-disable no-return-assign */
+
+var optionsSupported = false;
+var onceSupported = false;
+
+try {
+  var addEventListener_options = {
+    get passive() {
+      return optionsSupported = true;
+    },
+
+    get once() {
+      // eslint-disable-next-line no-multi-assign
+      return onceSupported = optionsSupported = true;
+    }
+
+  };
+
+  if (canUseDOM) {
+    window.addEventListener('test', addEventListener_options, addEventListener_options);
+    window.removeEventListener('test', addEventListener_options, true);
+  }
+} catch (e) {
+  /* */
+}
+/**
+ * An `addEventListener` ponyfill, supports the `once` option
+ */
+
+
+function addEventListener(node, eventName, handler, options) {
+  if (options && typeof options !== 'boolean' && !onceSupported) {
+    var once = options.once,
+        capture = options.capture;
+    var wrappedHandler = handler;
+
+    if (!onceSupported && once) {
+      wrappedHandler = handler.__once || function onceHandler(event) {
+        this.removeEventListener(eventName, onceHandler, capture);
+        handler.call(this, event);
+      };
+
+      handler.__once = wrappedHandler;
+    }
+
+    node.addEventListener(eventName, wrappedHandler, optionsSupported ? options : capture);
+  }
+
+  node.addEventListener(eventName, handler, options);
+}
+
+/* harmony default export */ var esm_addEventListener = (addEventListener);
+// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/removeEventListener.js
+function removeEventListener(node, eventName, handler, options) {
+  var capture = options && typeof options !== 'boolean' ? options.capture : options;
+  node.removeEventListener(eventName, handler, capture);
+
+  if (handler.__once) {
+    node.removeEventListener(eventName, handler.__once, capture);
+  }
+}
+
+/* harmony default export */ var esm_removeEventListener = (removeEventListener);
+// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/listen.js
+
+
+
+function listen(node, eventName, handler, options) {
+  esm_addEventListener(node, eventName, handler, options);
+  return function () {
+    esm_removeEventListener(node, eventName, handler, options);
+  };
+}
+
+/* harmony default export */ var esm_listen = (listen);
+// CONCATENATED MODULE: ./node_modules/dom-helpers/esm/transitionEnd.js
+
+
+
+function parseDuration(node) {
+  var str = esm_css(node, 'transitionDuration') || '';
+  var mult = str.indexOf('ms') === -1 ? 1000 : 1;
+  return parseFloat(str) * mult;
+}
+
+function triggerTransitionEnd(element) {
+  var evt = document.createEvent('HTMLEvents');
+  evt.initEvent('transitionend', true, true);
+  element.dispatchEvent(evt);
+}
+
+function emulateTransitionEnd(element, duration, padding) {
+  if (padding === void 0) {
+    padding = 5;
+  }
+
+  var called = false;
+  var handle = setTimeout(function () {
+    if (!called) triggerTransitionEnd(element);
+  }, duration + padding);
+  var remove = esm_listen(element, 'transitionend', function () {
+    called = true;
+  }, {
+    once: true
+  });
+  return function () {
+    clearTimeout(handle);
+    remove();
+  };
+}
+
+function transitionEnd(element, handler, duration, padding) {
+  if (duration == null) duration = parseDuration(element) || 0;
+  var removeEmulate = emulateTransitionEnd(element, duration, padding);
+  var remove = esm_listen(element, 'transitionend', handler);
+  return function () {
+    removeEmulate();
+    remove();
+  };
+}
+// CONCATENATED MODULE: ./src/transitionEndListener.ts
+
+function transitionEndListener(element, handler) {
+  var remove = transitionEnd(element, function (e) {
+    if (e.target === element) {
+      remove();
+      handler(e);
+    }
+  });
+}
 // CONCATENATED MODULE: ./src/createChainedFunction.tsx
 /**
  * Safe chained function
@@ -2417,7 +2427,7 @@ var Collapse = /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_a
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(esm_Transition // @ts-ignore
   , _extends({
     ref: ref,
-    addEndListener: transitionEnd
+    addEndListener: transitionEndListener
   }, props, {
     "aria-expanded": props.role ? props.in : null,
     onEnter: handleEnter,
@@ -2702,7 +2712,7 @@ var Fade = /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_r
   }, [props]);
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(esm_Transition, _extends({
     ref: ref,
-    addEndListener: transitionEnd
+    addEndListener: transitionEndListener
   }, props, {
     onEnter: handleEnter,
     __self: Fade_this,
@@ -4147,7 +4157,7 @@ var Carousel_defaultProps = {
     __self: undefined,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 183,
+      lineNumber: 190,
       columnNumber: 13
     }
   }),
@@ -4158,7 +4168,7 @@ var Carousel_defaultProps = {
     __self: undefined,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 186,
+      lineNumber: 193,
       columnNumber: 13
     }
   }),
@@ -4474,7 +4484,7 @@ function CarouselFunc(uncontrolledProps, ref) {
     __self: this,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 526,
+      lineNumber: 533,
       columnNumber: 5
     }
   }), indicators && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement("ol", {
@@ -4482,7 +4492,7 @@ function CarouselFunc(uncontrolledProps, ref) {
     __self: this,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 543,
+      lineNumber: 550,
       columnNumber: 9
     }
   }, map(children, function (_child, index) {
@@ -4493,7 +4503,7 @@ function CarouselFunc(uncontrolledProps, ref) {
       __self: _this,
       __source: {
         fileName: Carousel_jsxFileName,
-        lineNumber: 545,
+        lineNumber: 552,
         columnNumber: 13
       }
     });
@@ -4502,7 +4512,7 @@ function CarouselFunc(uncontrolledProps, ref) {
     __self: this,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 554,
+      lineNumber: 561,
       columnNumber: 7
     }
   }, map(children, function (child, index) {
@@ -4515,7 +4525,7 @@ function CarouselFunc(uncontrolledProps, ref) {
       __self: _this,
       __source: {
         fileName: Carousel_jsxFileName,
-        lineNumber: 559,
+        lineNumber: 566,
         columnNumber: 13
       }
     }, function (status) {
@@ -4531,7 +4541,7 @@ function CarouselFunc(uncontrolledProps, ref) {
     __self: this,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 591,
+      lineNumber: 598,
       columnNumber: 13
     }
   }, prevIcon, prevLabel && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement("span", {
@@ -4539,7 +4549,7 @@ function CarouselFunc(uncontrolledProps, ref) {
     __self: this,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 593,
+      lineNumber: 600,
       columnNumber: 29
     }
   }, prevLabel)), (wrap || activeIndex !== numChildren - 1) && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(src_SafeAnchor, {
@@ -4548,7 +4558,7 @@ function CarouselFunc(uncontrolledProps, ref) {
     __self: this,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 597,
+      lineNumber: 604,
       columnNumber: 13
     }
   }, nextIcon, nextLabel && /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement("span", {
@@ -4556,7 +4566,7 @@ function CarouselFunc(uncontrolledProps, ref) {
     __self: this,
     __source: {
       fileName: Carousel_jsxFileName,
-      lineNumber: 599,
+      lineNumber: 606,
       columnNumber: 29
     }
   }, nextLabel))));
@@ -9851,11 +9861,18 @@ var InputGroup_propTypes = {
   bsPrefix: prop_types_default.a.string,
 
   /**
-   * Control the size of buttons and form elements from the top-level .
+   * Control the size of buttons and form elements from the top-level.
    *
    * @type {('sm'|'lg')}
    */
   size: prop_types_default.a.string,
+
+  /**
+   * Handles the input's rounded corners when using form validation.
+   *
+   * Use this when your input group contains both an input and feedback element.
+   */
+  hasValidation: prop_types_default.a.bool,
   as: prop_types_default.a.elementType
 };
 /**
@@ -9870,20 +9887,21 @@ var InputGroup_propTypes = {
 var InputGroup = /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.forwardRef(function (_ref, ref) {
   var bsPrefix = _ref.bsPrefix,
       size = _ref.size,
+      hasValidation = _ref.hasValidation,
       className = _ref.className,
       _ref$as = _ref.as,
       Component = _ref$as === void 0 ? 'div' : _ref$as,
-      props = _objectWithoutPropertiesLoose(_ref, ["bsPrefix", "size", "className", "as"]);
+      props = _objectWithoutPropertiesLoose(_ref, ["bsPrefix", "size", "hasValidation", "className", "as"]);
 
   bsPrefix = useBootstrapPrefix(bsPrefix, 'input-group');
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(Component, _extends({
     ref: ref
   }, props, {
-    className: classnames_default()(className, bsPrefix, size && bsPrefix + "-" + size),
+    className: classnames_default()(className, bsPrefix, size && bsPrefix + "-" + size, hasValidation && 'has-validation'),
     __self: InputGroup_this,
     __source: {
       fileName: InputGroup_jsxFileName,
-      lineNumber: 84,
+      lineNumber: 93,
       columnNumber: 7
     }
   }));
@@ -12492,12 +12510,12 @@ var Navbar_propTypes = {
   fixed: prop_types_default.a.oneOf(['top', 'bottom']),
 
   /**
-   * Position the navbar at the top or bottom of the viewport,
-   * but only after scrolling past it. . A convenience prop for the `sticky-*` positioning classes.
+   * Position the navbar at the top of the viewport, but only after scrolling past it.
+   * A convenience prop for the `sticky-top` positioning class.
    *
    *  __Not supported in <= IE11 and other older browsers without a polyfill__
    */
-  sticky: prop_types_default.a.oneOf(['top', 'bottom']),
+  sticky: prop_types_default.a.oneOf(['top']),
 
   /**
    * Set a custom element for this component.
@@ -12662,6 +12680,7 @@ var NavDropdown_this = undefined,
 
 
 
+
 var NavDropdown_propTypes = {
   /**
    * An html id attribute for the Toggle button, necessary for assistive technologies, such as screen readers.
@@ -12703,22 +12722,25 @@ var NavDropdown = /*#__PURE__*/external_root_React_commonjs2_react_commonjs_reac
       title = _ref.title,
       children = _ref.children,
       bsPrefix = _ref.bsPrefix,
+      className = _ref.className,
       rootCloseEvent = _ref.rootCloseEvent,
       menuRole = _ref.menuRole,
       disabled = _ref.disabled,
       active = _ref.active,
       renderMenuOnMount = _ref.renderMenuOnMount,
-      props = _objectWithoutPropertiesLoose(_ref, ["id", "title", "children", "bsPrefix", "rootCloseEvent", "menuRole", "disabled", "active", "renderMenuOnMount"]);
+      props = _objectWithoutPropertiesLoose(_ref, ["id", "title", "children", "bsPrefix", "className", "rootCloseEvent", "menuRole", "disabled", "active", "renderMenuOnMount"]);
 
+  /* NavItem has no additional logic, it's purely presentational. Can set nav item class here to support "as" */
+  var navItemPrefix = useBootstrapPrefix(undefined, 'nav-item');
   return /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(src_Dropdown, _extends({
     ref: ref
   }, props, {
-    as: src_NavItem,
+    className: classnames_default()(className, navItemPrefix),
     __self: NavDropdown_this,
     __source: {
       fileName: NavDropdown_jsxFileName,
-      lineNumber: 81,
-      columnNumber: 5
+      lineNumber: 87,
+      columnNumber: 7
     }
   }), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(src_Dropdown.Toggle, {
     id: id,
@@ -12730,8 +12752,8 @@ var NavDropdown = /*#__PURE__*/external_root_React_commonjs2_react_commonjs_reac
     __self: NavDropdown_this,
     __source: {
       fileName: NavDropdown_jsxFileName,
-      lineNumber: 82,
-      columnNumber: 7
+      lineNumber: 92,
+      columnNumber: 9
     }
   }, title), /*#__PURE__*/external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(src_Dropdown.Menu, {
     role: menuRole,
@@ -12740,8 +12762,8 @@ var NavDropdown = /*#__PURE__*/external_root_React_commonjs2_react_commonjs_reac
     __self: NavDropdown_this,
     __source: {
       fileName: NavDropdown_jsxFileName,
-      lineNumber: 93,
-      columnNumber: 7
+      lineNumber: 103,
+      columnNumber: 9
     }
   }, children));
 });
@@ -13164,7 +13186,10 @@ function Overlay_Overlay(_ref) {
     });
     if (typeof overlay === 'function') return overlay(_extends({}, props, overlayProps, {
       placement: placement,
-      show: show,
+      show: show
+    }, !transition && show && {
+      className: 'show'
+    }, {
       popper: popper,
       arrowProps: arrowProps
     }));

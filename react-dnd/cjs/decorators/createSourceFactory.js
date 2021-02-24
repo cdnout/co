@@ -7,8 +7,6 @@ exports.createSourceFactory = createSourceFactory;
 
 var _invariant = require("@react-dnd/invariant");
 
-var _js_utils = require("../utils/js_utils");
-
 var _utils = require("./utils");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -36,7 +34,7 @@ var SourceImpl = /*#__PURE__*/function () {
       var item = _this.spec.beginDrag(_this.props, _this.monitor, _this.ref.current);
 
       if (process.env.NODE_ENV !== 'production') {
-        (0, _invariant.invariant)((0, _js_utils.isPlainObject)(item), 'beginDrag() must return a plain object that represents the dragged item. ' + 'Instead received %s. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/api/drag-source', item);
+        (0, _invariant.invariant)((0, _utils.isPlainObject)(item), 'beginDrag() must return a plain object that represents the dragged item. ' + 'Instead received %s. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/api/drag-source', item);
       }
 
       return item;

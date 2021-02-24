@@ -1,6 +1,6 @@
 <?php 
-//$npm_check = "";
-$keyfiles_add = array("");
+$npm_check = "pagepiling.js";
+$keyfiles_add = array("jquery.pagepiling.min.css");
 $version_limit = "-10";
 $type_s = "jquery";
 ?>

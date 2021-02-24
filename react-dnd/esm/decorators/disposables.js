@@ -4,78 +4,70 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-import { isFunction, noop } from '../utils/js_utils';
+import { isFunction, noop } from './utils';
 /**
  * Provides a set of static methods for creating Disposables.
  * @param {Function} action Action to run during the first call to dispose.
  * The action is guaranteed to be run at most once.
  */
 
-var Disposable =
-/** @class */
-function () {
-  var Disposable = /*#__PURE__*/function () {
-    function Disposable(action) {
-      _classCallCheck(this, Disposable);
+export var Disposable = /*#__PURE__*/function () {
+  function Disposable(action) {
+    _classCallCheck(this, Disposable);
 
-      this.isDisposed = false;
-      this.action = isFunction(action) ? action : noop;
-    }
-    /**
-     * Validates whether the given object is a disposable
-     * @param {Object} Object to test whether it has a dispose method
-     * @returns {Boolean} true if a disposable object, else false.
-     */
-
-
-    _createClass(Disposable, [{
-      key: "dispose",
-
-      /** Performs the task of cleaning up resources. */
-      value: function dispose() {
-        if (!this.isDisposed) {
-          this.action();
-          this.isDisposed = true;
-        }
-      }
-    }], [{
-      key: "isDisposable",
-      value: function isDisposable(d) {
-        return Boolean(d && isFunction(d.dispose));
-      }
-    }, {
-      key: "_fixup",
-      value: function _fixup(result) {
-        return Disposable.isDisposable(result) ? result : Disposable.empty;
-      }
-      /**
-       * Creates a disposable object that invokes the specified action when disposed.
-       * @param {Function} dispose Action to run during the first call to dispose.
-       * The action is guaranteed to be run at most once.
-       * @return {Disposable} The disposable object that runs the given action upon disposal.
-       */
-
-    }, {
-      key: "create",
-      value: function create(action) {
-        return new Disposable(action);
-      }
-    }]);
-
-    return Disposable;
-  }();
+    this.isDisposed = false;
+    this.action = isFunction(action) ? action : noop;
+  }
   /**
-   * Gets the disposable that does nothing when disposed.
+   * Validates whether the given object is a disposable
+   * @param {Object} Object to test whether it has a dispose method
+   * @returns {Boolean} true if a disposable object, else false.
    */
 
 
-  Disposable.empty = {
-    dispose: noop
-  };
+  _createClass(Disposable, [{
+    key: "dispose",
+    value:
+    /** Performs the task of cleaning up resources. */
+    function dispose() {
+      if (!this.isDisposed) {
+        this.action();
+        this.isDisposed = true;
+      }
+    }
+  }], [{
+    key: "isDisposable",
+    value: function isDisposable(d) {
+      return Boolean(d && isFunction(d.dispose));
+    }
+  }, {
+    key: "_fixup",
+    value: function _fixup(result) {
+      return Disposable.isDisposable(result) ? result : Disposable.empty;
+    }
+    /**
+     * Creates a disposable object that invokes the specified action when disposed.
+     * @param {Function} dispose Action to run during the first call to dispose.
+     * The action is guaranteed to be run at most once.
+     * @return {Disposable} The disposable object that runs the given action upon disposal.
+     */
+
+  }, {
+    key: "create",
+    value: function create(action) {
+      return new Disposable(action);
+    }
+  }]);
+
   return Disposable;
 }();
+/**
+ * Gets the disposable that does nothing when disposed.
+ */
 
-export { Disposable };
+Disposable.empty = {
+  dispose: noop
+};
 /**
  * Represents a group of disposable resources that are disposed together.
  * @constructor

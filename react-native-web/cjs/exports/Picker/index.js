@@ -25,7 +25,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-var Picker = (0, _react.forwardRef)(function (props, forwardedRef) {
+var Picker =
+/*#__PURE__*/
+(0, _react.forwardRef)(function (props, forwardedRef) {
   var children = props.children,
       enabled = props.enabled,
       onValueChange = props.onValueChange,

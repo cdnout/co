@@ -1,12 +1,16 @@
 import { invariant } from '@react-dnd/invariant';
-import { isPlainObject } from '../utils/js_utils';
-import { registerTarget } from '../common/registration';
-import { isValidType } from '../utils/isValidType';
-import { TargetConnector } from '../common/TargetConnector';
-import { DropTargetMonitorImpl } from '../common/DropTargetMonitorImpl';
+import { TargetConnector, DropTargetMonitorImpl, registerTarget } from '../internals';
+import { isPlainObject, isValidType } from './utils';
 import { checkDecoratorArguments } from './utils';
 import { decorateHandler } from './decorateHandler';
 import { createTargetFactory } from './createTargetFactory';
+/**
+ * @param type The accepted target type
+ * @param spec The DropTarget specification
+ * @param collect The props collector function
+ * @param options Options
+ */
+
 export function DropTarget(type, spec, collect) {
   var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   checkDecoratorArguments('DropTarget', 'type, spec, collect[, options]', type, spec, collect, options);

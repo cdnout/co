@@ -11,7 +11,9 @@ import React, { forwardRef, useMemo, useEffect } from 'react';
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import View from '../View';
 import StyleSheet from '../StyleSheet';
-var ModalContent = forwardRef(function (props, forwardedRef) {
+var ModalContent =
+/*#__PURE__*/
+forwardRef(function (props, forwardedRef) {
   var active = props.active,
       children = props.children,
       onRequestClose = props.onRequestClose,
@@ -37,14 +39,19 @@ var ModalContent = forwardRef(function (props, forwardedRef) {
   var style = useMemo(function () {
     return [styles.modal, transparent ? styles.modalTransparent : styles.modalOpaque];
   }, [transparent]);
-  return React.createElement(View, {
-    accessibilityRole: active ? 'dialog' : null,
-    "aria-modal": true,
-    ref: forwardedRef,
-    style: style
-  }, React.createElement(View, {
-    style: styles.container
-  }, children));
+  return (
+    /*#__PURE__*/
+    React.createElement(View, {
+      accessibilityRole: active ? 'dialog' : null,
+      "aria-modal": true,
+      ref: forwardedRef,
+      style: style
+    },
+    /*#__PURE__*/
+    React.createElement(View, {
+      style: styles.container
+    }, children))
+  );
 });
 var styles = StyleSheet.create({
   modal: {

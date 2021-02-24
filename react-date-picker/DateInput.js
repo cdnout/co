@@ -83,10 +83,20 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-var defaultMinDate = new Date('0001-01-01');
+var defaultMinDate = new Date();
+defaultMinDate.setFullYear(1, 0, 1);
+defaultMinDate.setHours(0, 0, 0, 0);
 var defaultMaxDate = new Date(8.64e15);
 var allViews = ['century', 'decade', 'year', 'month'];
 var allValueTypes = [].concat(_toConsumableArray(allViews.slice(1)), ['day']);
+
+function toDate(value) {
+  if (value instanceof Date) {
+    return value;
+  }
+
+  return new Date(value);
+}
 
 function datesAreDifferent(date1, date2) {
   return date1 && !date2 || !date1 && date2 || date1 && date2 && date1.getTime() !== date2.getTime();
@@ -105,13 +115,13 @@ function getValue(value, index) {
     return null;
   }
 
-  var rawValue = value instanceof Array && value.length === 2 ? value[index] : value;
+  var rawValue = Array.isArray(value) && value.length === 2 ? value[index] : value;
 
   if (!rawValue) {
     return null;
   }
 
-  var valueDate = new Date(rawValue);
+  var valueDate = toDate(rawValue);
 
   if (isNaN(valueDate.getTime())) {
     throw new Error("Invalid date: ".concat(value));
@@ -147,7 +157,7 @@ var getDetailValueTo = function getDetailValueTo(args) {
 var getDetailValueArray = function getDetailValueArray(args) {
   var value = args.value;
 
-  if (value instanceof Array) {
+  if (Array.isArray(value)) {
     return value;
   }
 

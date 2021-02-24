@@ -23,9 +23,9 @@ var emptyObject = {};
 
 function setNativeProps(node, nativeProps, classList, pointerEvents, style, previousStyleRef) {
   if (node != null && nativeProps) {
-    var domProps = (0, _createDOMProps.default)(null, _objectSpread({
+    var domProps = (0, _createDOMProps.default)(null, _objectSpread(_objectSpread({
       pointerEvents: pointerEvents
-    }, nativeProps, {
+    }, nativeProps), {}, {
       classList: [classList, nativeProps.className],
       style: [style, nativeProps.style]
     }));

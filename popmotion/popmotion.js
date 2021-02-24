@@ -300,7 +300,7 @@
 
     var isColorString = function (type, testProp) { return function (v) {
         return ((isString(v) && singleColorRegex.test(v) && v.startsWith(type)) ||
-            (testProp && v.hasOwnProperty(testProp)));
+            (testProp && Object.prototype.hasOwnProperty.call(v, testProp)));
     }; };
     var splitColor = function (aName, bName, cName) { return function (v) {
         var _a;
@@ -813,11 +813,16 @@
     }
 
     var defaultTimestep = 1 / 60 * 1000;
+    var getCurrentTime = typeof performance !== "undefined" ? function () {
+        return performance.now();
+    } : function () {
+        return Date.now();
+    };
     var onNextFrame = typeof window !== "undefined" ? function (callback) {
         return window.requestAnimationFrame(callback);
     } : function (callback) {
         return setTimeout(function () {
-            return callback(performance.now());
+            return callback(getCurrentTime());
         }, defaultTimestep);
     };
 

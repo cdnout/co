@@ -1,11 +1,7 @@
 import { invariant } from '@react-dnd/invariant';
-import { isPlainObject } from '../utils/js_utils';
-import { checkDecoratorArguments } from './utils';
+import { registerSource, DragSourceMonitorImpl, SourceConnector } from '../internals';
+import { checkDecoratorArguments, isPlainObject, isValidType } from './utils';
 import { decorateHandler } from './decorateHandler';
-import { registerSource } from '../common/registration';
-import { DragSourceMonitorImpl } from '../common/DragSourceMonitorImpl';
-import { SourceConnector } from '../common/SourceConnector';
-import { isValidType } from '../utils/isValidType';
 import { createSourceFactory } from './createSourceFactory';
 /**
  * Decorates a component as a dragsource

@@ -56,10 +56,6 @@ var $root = {
 			intensity: 0.4
 		}
 	},
-	terrain: {
-		type: "terrain",
-		doc: "A global modifier that elevates layers and markers based on a DEM data source."
-	},
 	sources: {
 		required: true,
 		type: "sources",
@@ -606,14 +602,6 @@ var layer = {
 						macos: "0.1.0"
 					}
 				}
-			},
-			sky: {
-				doc: "A spherical dome around the map that is always rendered behind all other layers.",
-				"sdk-support": {
-					"basic functionality": {
-						js: "2.0.0"
-					}
-				}
 			}
 		},
 		doc: "Rendering type of this layer.",
@@ -665,8 +653,7 @@ var layout = [
 	"layout_symbol",
 	"layout_raster",
 	"layout_hillshade",
-	"layout_background",
-	"layout_sky"
+	"layout_background"
 ];
 var layout_background = {
 	visibility: {
@@ -687,27 +674,6 @@ var layout_background = {
 				android: "2.0.1",
 				ios: "2.0.0",
 				macos: "0.1.0"
-			}
-		},
-		"property-type": "constant"
-	}
-};
-var layout_sky = {
-	visibility: {
-		type: "enum",
-		values: {
-			visible: {
-				doc: "The layer is shown."
-			},
-			none: {
-				doc: "The layer is not shown."
-			}
-		},
-		"default": "visible",
-		doc: "Whether this layer is displayed.",
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
 			}
 		},
 		"property-type": "constant"
@@ -3077,15 +3043,6 @@ var expression_name = {
 				}
 			}
 		},
-		"sky-radial-progress": {
-			doc: "Gets the distance of a point on the sky from the sun position. Returns 0 at sun position and 1 when the distance reaches `sky-gradient-radius`. Can only be used in the `sky-gradient` property.",
-			group: "sky",
-			"sdk-support": {
-				"basic functionality": {
-					js: "2.0.0"
-				}
-			}
-		},
 		accumulated: {
 			doc: "Gets the value of a cluster property accumulated so far. Can only be used in the `clusterProperties` option of a clustered GeoJSON source.",
 			group: "Feature data",
@@ -3694,33 +3651,6 @@ var light = {
 		}
 	}
 };
-var terrain = {
-	source: {
-		type: "string",
-		doc: "Name of a source of `raster_dem` type to be used for terrain elevation.",
-		required: true
-	},
-	exaggeration: {
-		type: "number",
-		"property-type": "data-constant",
-		"default": 1,
-		minimum: 0,
-		maximum: 1000,
-		expression: {
-			interpolated: true,
-			parameters: [
-				"zoom"
-			]
-		},
-		transition: true,
-		doc: "Exaggerates the elevation of the terrain by multiplying the data from the DEM with this value.",
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		}
-	}
-};
 var paint = [
 	"paint_fill",
 	"paint_line",
@@ -3730,8 +3660,7 @@ var paint = [
 	"paint_symbol",
 	"paint_raster",
 	"paint_hillshade",
-	"paint_background",
-	"paint_sky"
+	"paint_background"
 ];
 var paint_fill = {
 	"fill-antialias": {
@@ -5622,220 +5551,6 @@ var paint_background = {
 		"property-type": "data-constant"
 	}
 };
-var paint_sky = {
-	"sky-type": {
-		type: "enum",
-		values: {
-			gradient: {
-				doc: "Renders the sky with a gradient that can be configured with `sky-gradient-radius` and `sky-gradient`."
-			},
-			atmosphere: {
-				doc: "Renders the sky with a simulated atmospheric scattering algorithm, the sun direction can be attached to the light position or explicitly set through `sky-atmosphere-sun`."
-			}
-		},
-		"default": "atmosphere",
-		doc: "The type of the sky",
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		expression: {
-			interpolated: false,
-			parameters: [
-				"zoom"
-			]
-		},
-		"property-type": "data-constant"
-	},
-	"sky-atmosphere-sun": {
-		type: "array",
-		value: "number",
-		length: 2,
-		transition: false,
-		doc: "Position of the sun center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the sun relative to 0° north, where degrees proceed clockwise. The polar angle indicates the height of the sun, where 0° is directly above, at zenith, and 90° at the horizon. When this property is ommitted, the sun center is directly inherited from the light position.",
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		requires: [
-			{
-				"sky-type": "atmosphere"
-			}
-		],
-		expression: {
-			interpolated: false,
-			parameters: [
-				"zoom"
-			]
-		},
-		"property-type": "data-constant"
-	},
-	"sky-atmosphere-sun-intensity": {
-		type: "number",
-		requires: [
-			{
-				"sky-type": "atmosphere"
-			}
-		],
-		"default": 10,
-		minimum: 0,
-		maximum: 100,
-		transition: false,
-		doc: "Intensity of the sun as a light source in the atmosphere (on a scale from 0 to a 100). Setting higher values will brighten up the sky.",
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		"property-type": "data-constant"
-	},
-	"sky-gradient-center": {
-		type: "array",
-		requires: [
-			{
-				"sky-type": "gradient"
-			}
-		],
-		value: "number",
-		"default": [
-			0,
-			0
-		],
-		length: 2,
-		transition: false,
-		doc: "Position of the gradient center [a azimuthal angle, p polar angle]. The azimuthal angle indicates the position of the gradient center relative to 0° north, where degrees proceed clockwise. The polar angle indicates the height of the gradient center, where 0° is directly above, at zenith, and 90° at the horizon.",
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		expression: {
-			interpolated: false,
-			parameters: [
-				"zoom"
-			]
-		},
-		"property-type": "data-constant"
-	},
-	"sky-gradient-radius": {
-		type: "number",
-		requires: [
-			{
-				"sky-type": "gradient"
-			}
-		],
-		"default": 90,
-		minimum: 0,
-		maximum: 180,
-		transition: false,
-		doc: "The angular distance (measured in degrees) from `sky-gradient-center` up to which the gradient extends. A value of 180 causes the gradient to wrap around to the opposite direction from `sky-gradient-center`.",
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		expression: {
-			interpolated: false,
-			parameters: [
-				"zoom"
-			]
-		},
-		"property-type": "data-constant"
-	},
-	"sky-gradient": {
-		type: "color",
-		"default": [
-			"interpolate",
-			[
-				"linear"
-			],
-			[
-				"sky-radial-progress"
-			],
-			0.8,
-			"#87ceeb",
-			1,
-			"white"
-		],
-		doc: "Defines a radial color gradient with which to color the sky. The color values can be interpolated with an expression using `sky-radial-progress`. The range [0, 1] for the interpolant covers a radial distance (in degrees) of [0, `sky-gradient-radius`] centered at the position specified by `sky-gradient-center`.",
-		transition: false,
-		requires: [
-			{
-				"sky-type": "gradient"
-			}
-		],
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			},
-			"data-driven styling": {
-			}
-		},
-		expression: {
-			interpolated: true,
-			parameters: [
-				"sky-radial-progress"
-			]
-		},
-		"property-type": "color-ramp"
-	},
-	"sky-atmosphere-halo-color": {
-		type: "color",
-		"default": "white",
-		doc: "A color applied to the atmosphere sun halo. The alpha channel describes how strongly the sun halo is represented in an atmosphere sky layer.",
-		transition: false,
-		requires: [
-			{
-				"sky-type": "atmosphere"
-			}
-		],
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		"property-type": "data-constant"
-	},
-	"sky-atmosphere-color": {
-		type: "color",
-		"default": "white",
-		doc: "A color used to tweak the main atmospheric scattering coefficients. Using white applies the default coefficients giving the natural blue color to the atmosphere. This color affects how heavily the corresponding wavelength is represented during scattering. The alpha channel describes the density of the atmosphere, with 1 maximum density and 0 no density.",
-		transition: false,
-		requires: [
-			{
-				"sky-type": "atmosphere"
-			}
-		],
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		"property-type": "data-constant"
-	},
-	"sky-opacity": {
-		type: "number",
-		"default": 1,
-		minimum: 0,
-		maximum: 1,
-		doc: "The opacity of the entire sky layer.",
-		transition: true,
-		"sdk-support": {
-			"basic functionality": {
-				js: "2.0.0"
-			}
-		},
-		expression: {
-			interpolated: true,
-			parameters: [
-				"zoom"
-			]
-		},
-		"property-type": "data-constant"
-	}
-};
 var transition = {
 	duration: {
 		type: "number",
@@ -5872,7 +5587,6 @@ var v8 = {
 	layer: layer,
 	layout: layout,
 	layout_background: layout_background,
-	layout_sky: layout_sky,
 	layout_fill: layout_fill,
 	layout_circle: layout_circle,
 	layout_heatmap: layout_heatmap,
@@ -5973,7 +5687,6 @@ var v8 = {
 	expression: expression,
 	expression_name: expression_name,
 	light: light,
-	terrain: terrain,
 	paint: paint,
 	paint_fill: paint_fill,
 	"paint_fill-extrusion": {
@@ -6212,7 +5925,6 @@ var v8 = {
 	paint_raster: paint_raster,
 	paint_hillshade: paint_hillshade,
 	paint_background: paint_background,
-	paint_sky: paint_sky,
 	transition: transition,
 	"property-type": {
 	"data-driven": {
@@ -6342,23 +6054,27 @@ var jsonStringifyPrettyCompact = function stringify(passedObj, options) {
 };
 
 function sortKeysBy(obj, reference) {
-    const result = {};
-    for (const key in reference) {
+    var result = {};
+    for (var key in reference) {
         if (obj[key] !== undefined) {
             result[key] = obj[key];
         }
     }
-    for (const key in obj) {
-        if (result[key] === undefined) {
-            result[key] = obj[key];
+    for (var key$1 in obj) {
+        if (result[key$1] === undefined) {
+            result[key$1] = obj[key$1];
         }
     }
     return result;
 }
-function format(style, space = 2) {
+function format(style, space) {
+    if (space === void 0)
+        space = 2;
     style = sortKeysBy(style, v8.$root);
     if (style.layers) {
-        style.layers = style.layers.map(layer => sortKeysBy(layer, v8.layer));
+        style.layers = style.layers.map(function (layer) {
+            return sortKeysBy(layer, v8.layer);
+        });
     }
     return jsonStringifyPrettyCompact(style, { indent: space });
 }
@@ -7011,7 +6727,7 @@ var encode = function(obj, sep, eq, name) {
 
   }
 
-  if (!name) return '';
+  if (!name) { return ''; }
   return encodeURIComponent(stringifyPrimitive(name)) + eq +
          encodeURIComponent(stringifyPrimitive(obj));
 };
@@ -7101,7 +6817,7 @@ var protocolPattern = /^([a-z0-9.+-]+:)/i,
     };
 
 function urlParse(url, parseQueryString, slashesDenoteHost) {
-  if (url && util.isObject(url) && url instanceof Url) return url;
+  if (url && util.isObject(url) && url instanceof Url) { return url; }
 
   var u = new Url;
   u.parse(url, parseQueryString, slashesDenoteHost);
@@ -7195,7 +6911,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
     for (var i = 0; i < hostEndingChars.length; i++) {
       var hec = rest.indexOf(hostEndingChars[i]);
       if (hec !== -1 && (hostEnd === -1 || hec < hostEnd))
-        hostEnd = hec;
+        { hostEnd = hec; }
     }
 
     // at this point, either we have an explicit point where the
@@ -7223,11 +6939,11 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
     for (var i = 0; i < nonHostChars.length; i++) {
       var hec = rest.indexOf(nonHostChars[i]);
       if (hec !== -1 && (hostEnd === -1 || hec < hostEnd))
-        hostEnd = hec;
+        { hostEnd = hec; }
     }
     // if we still have not hit it, then the entire thing is a host.
     if (hostEnd === -1)
-      hostEnd = rest.length;
+      { hostEnd = rest.length; }
 
     this.host = rest.slice(0, hostEnd);
     rest = rest.slice(hostEnd);
@@ -7249,7 +6965,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
       var hostparts = this.hostname.split(/\./);
       for (var i = 0, l = hostparts.length; i < l; i++) {
         var part = hostparts[i];
-        if (!part) continue;
+        if (!part) { continue; }
         if (!part.match(hostnamePartPattern)) {
           var newpart = '';
           for (var j = 0, k = part.length; j < k; j++) {
@@ -7321,7 +7037,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
     for (var i = 0, l = autoEscape.length; i < l; i++) {
       var ae = autoEscape[i];
       if (rest.indexOf(ae) === -1)
-        continue;
+        { continue; }
       var esc = encodeURIComponent(ae);
       if (esc === ae) {
         esc = escape(ae);
@@ -7351,7 +7067,7 @@ Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
     this.search = '';
     this.query = {};
   }
-  if (rest) this.pathname = rest;
+  if (rest) { this.pathname = rest; }
   if (slashedProtocol[lowerProto] &&
       this.hostname && !this.pathname) {
     this.pathname = '/';
@@ -7375,8 +7091,8 @@ function urlFormat(obj) {
   // If it's an obj, this is a no-op.
   // this way, you can call url_format() on strings
   // to clean up potentially wonky urls.
-  if (util.isString(obj)) obj = urlParse(obj);
-  if (!(obj instanceof Url)) return Url.prototype.format.call(obj);
+  if (util.isString(obj)) { obj = urlParse(obj); }
+  if (!(obj instanceof Url)) { return Url.prototype.format.call(obj); }
   return obj.format();
 }
 
@@ -7413,20 +7129,20 @@ Url.prototype.format = function() {
 
   var search = this.search || (query && ('?' + query)) || '';
 
-  if (protocol && protocol.substr(-1) !== ':') protocol += ':';
+  if (protocol && protocol.substr(-1) !== ':') { protocol += ':'; }
 
   // only the slashedProtocols get the //.  Not mailto:, xmpp:, etc.
   // unless they had them to begin with.
   if (this.slashes ||
       (!protocol || slashedProtocol[protocol]) && host !== false) {
     host = '//' + (host || '');
-    if (pathname && pathname.charAt(0) !== '/') pathname = '/' + pathname;
+    if (pathname && pathname.charAt(0) !== '/') { pathname = '/' + pathname; }
   } else if (!host) {
     host = '';
   }
 
-  if (hash && hash.charAt(0) !== '#') hash = '#' + hash;
-  if (search && search.charAt(0) !== '?') search = '?' + search;
+  if (hash && hash.charAt(0) !== '#') { hash = '#' + hash; }
+  if (search && search.charAt(0) !== '?') { search = '?' + search; }
 
   pathname = pathname.replace(/[?#]/g, function(match) {
     return encodeURIComponent(match);
@@ -7445,7 +7161,7 @@ Url.prototype.resolve = function(relative) {
 };
 
 function urlResolveObject(source, relative) {
-  if (!source) return relative;
+  if (!source) { return relative; }
   return urlParse(source, false, true).resolveObject(relative);
 }
 
@@ -7480,7 +7196,7 @@ Url.prototype.resolveObject = function(relative) {
     for (var rk = 0; rk < rkeys.length; rk++) {
       var rkey = rkeys[rk];
       if (rkey !== 'protocol')
-        result[rkey] = relative[rkey];
+        { result[rkey] = relative[rkey]; }
     }
 
     //urlParse appends trailing / to urls like http://www.example.com
@@ -7515,11 +7231,11 @@ Url.prototype.resolveObject = function(relative) {
     result.protocol = relative.protocol;
     if (!relative.host && !hostlessProtocol[relative.protocol]) {
       var relPath = (relative.pathname || '').split('/');
-      while (relPath.length && !(relative.host = relPath.shift()));
-      if (!relative.host) relative.host = '';
-      if (!relative.hostname) relative.hostname = '';
-      if (relPath[0] !== '') relPath.unshift('');
-      if (relPath.length < 2) relPath.unshift('');
+      while (relPath.length && !(relative.host = relPath.shift())){ }
+      if (!relative.host) { relative.host = ''; }
+      if (!relative.hostname) { relative.hostname = ''; }
+      if (relPath[0] !== '') { relPath.unshift(''); }
+      if (relPath.length < 2) { relPath.unshift(''); }
       result.pathname = relPath.join('/');
     } else {
       result.pathname = relative.pathname;
@@ -7562,16 +7278,16 @@ Url.prototype.resolveObject = function(relative) {
     result.hostname = '';
     result.port = null;
     if (result.host) {
-      if (srcPath[0] === '') srcPath[0] = result.host;
-      else srcPath.unshift(result.host);
+      if (srcPath[0] === '') { srcPath[0] = result.host; }
+      else { srcPath.unshift(result.host); }
     }
     result.host = '';
     if (relative.protocol) {
       relative.hostname = null;
       relative.port = null;
       if (relative.host) {
-        if (relPath[0] === '') relPath[0] = relative.host;
-        else relPath.unshift(relative.host);
+        if (relPath[0] === '') { relPath[0] = relative.host; }
+        else { relPath.unshift(relative.host); }
       }
       relative.host = null;
     }
@@ -7591,7 +7307,7 @@ Url.prototype.resolveObject = function(relative) {
   } else if (relPath.length) {
     // it's relative
     // throw away the existing file, and take the new path instead.
-    if (!srcPath) srcPath = [];
+    if (!srcPath) { srcPath = []; }
     srcPath.pop();
     srcPath = srcPath.concat(relPath);
     result.search = relative.search;
@@ -7729,7 +7445,7 @@ Url.prototype.parseHost = function() {
     }
     host = host.substr(0, host.length - port.length);
   }
-  if (host) this.hostname = host;
+  if (host) { this.hostname = host; }
 };
 
 var url = {
@@ -7741,52 +7457,56 @@ var url = {
 };
 
 function getPropertyReference(propertyName) {
-    for (let i = 0; i < v8.layout.length; i++) {
-        for (const key in v8[v8.layout[i]]) {
-            if (key === propertyName)
+    for (var i = 0; i < v8.layout.length; i++) {
+        for (var key in v8[v8.layout[i]]) {
+            if (key === propertyName) {
                 return v8[v8.layout[i]][key];
+            }
         }
     }
-    for (let i = 0; i < v8.paint.length; i++) {
-        for (const key in v8[v8.paint[i]]) {
-            if (key === propertyName)
-                return v8[v8.paint[i]][key];
+    for (var i$1 = 0; i$1 < v8.paint.length; i$1++) {
+        for (var key$1 in v8[v8.paint[i$1]]) {
+            if (key$1 === propertyName) {
+                return v8[v8.paint[i$1]][key$1];
+            }
         }
     }
     return null;
 }
 function eachSource(style, callback) {
-    for (const k in style.sources) {
+    for (var k in style.sources) {
         callback(style.sources[k]);
     }
 }
 function eachLayer(style, callback) {
-    for (const layer of style.layers) {
+    for (var i = 0, list = style.layers; i < list.length; i += 1) {
+        var layer = list[i];
         callback(layer);
     }
 }
 function eachProperty(style, options, callback) {
     function inner(layer, propertyType) {
-        const properties = layer[propertyType];
-        if (!properties)
+        var properties = layer[propertyType];
+        if (!properties) {
             return;
-        Object.keys(properties).forEach(key => {
+        }
+        Object.keys(properties).forEach(function (key) {
             callback({
                 path: [
                     layer.id,
                     propertyType,
                     key
                 ],
-                key,
+                key: key,
                 value: properties[key],
                 reference: getPropertyReference(key),
-                set(x) {
+                set: function set(x) {
                     properties[key] = x;
                 }
             });
         });
     }
-    eachLayer(style, layer => {
+    eachLayer(style, function (layer) {
         if (options.paint) {
             inner(layer, 'paint');
         }
@@ -7797,14 +7517,14 @@ function eachProperty(style, options, callback) {
 }
 
 function eachLayout(layer, callback) {
-    for (const k in layer) {
+    for (var k in layer) {
         if (k.indexOf('layout') === 0) {
             callback(layer[k], k);
         }
     }
 }
 function eachPaint(layer, callback) {
-    for (const k in layer) {
+    for (var k in layer) {
         if (k.indexOf('paint') === 0) {
             callback(layer[k], k);
         }
@@ -7826,23 +7546,23 @@ function renameProperty(obj, from, to) {
 }
 function migrateToV8 (style) {
     style.version = 8;
-    eachSource(style, source => {
+    eachSource(style, function (source) {
         if (source.type === 'video' && source.url !== undefined) {
             renameProperty(source, 'url', 'urls');
         }
         if (source.type === 'video') {
-            source.coordinates.forEach(coord => {
+            source.coordinates.forEach(function (coord) {
                 return coord.reverse();
             });
         }
     });
-    eachLayer(style, layer => {
-        eachLayout(layer, layout => {
+    eachLayer(style, function (layer) {
+        eachLayout(layer, function (layout) {
             if (layout['symbol-min-distance'] !== undefined) {
                 renameProperty(layout, 'symbol-min-distance', 'symbol-spacing');
             }
         });
-        eachPaint(layer, paint => {
+        eachPaint(layer, function (paint) {
             if (paint['background-image'] !== undefined) {
                 renameProperty(paint, 'background-image', 'background-pattern');
             }
@@ -7857,45 +7577,47 @@ function migrateToV8 (style) {
     eachProperty(style, {
         paint: true,
         layout: true
-    }, property => {
-        const value = resolveConstant(style, property.value);
+    }, function (property) {
+        var value = resolveConstant(style, property.value);
         if (isFunction(value)) {
-            value.stops.forEach(stop => {
+            value.stops.forEach(function (stop) {
                 stop[1] = resolveConstant(style, stop[1]);
             });
         }
         property.set(value);
     });
     delete style.constants;
-    eachLayer(style, layer => {
-        eachLayout(layer, layout => {
+    eachLayer(style, function (layer) {
+        eachLayout(layer, function (layout) {
             delete layout['text-max-size'];
             delete layout['icon-max-size'];
         });
-        eachPaint(layer, paint => {
+        eachPaint(layer, function (paint) {
             if (paint['text-size']) {
-                if (!layer.layout)
+                if (!layer.layout) {
                     layer.layout = {};
+                }
                 layer.layout['text-size'] = paint['text-size'];
                 delete paint['text-size'];
             }
             if (paint['icon-size']) {
-                if (!layer.layout)
+                if (!layer.layout) {
                     layer.layout = {};
+                }
                 layer.layout['icon-size'] = paint['icon-size'];
                 delete paint['icon-size'];
             }
         });
     });
     function migrateFontstackURL(input) {
-        const inputParsed = url.parse(input);
-        const inputPathnameParts = inputParsed.pathname.split('/');
+        var inputParsed = url.parse(input);
+        var inputPathnameParts = inputParsed.pathname.split('/');
         if (inputParsed.protocol !== 'mapbox:') {
             return input;
         } else if (inputParsed.hostname === 'fontstack') {
             return 'mapbox://fonts/mapbox/{fontstack}/{range}.pbf';
         } else if (inputParsed.hostname === 'fonts') {
-            return `mapbox://fonts/${ inputPathnameParts[2] }/{fontstack}/{range}.pbf`;
+            return 'mapbox://fonts/' + inputPathnameParts[2] + '/{fontstack}/{range}.pbf';
         }
     }
     if (style.glyphs) {
@@ -7903,7 +7625,7 @@ function migrateToV8 (style) {
     }
     function migrateFontStack(font) {
         function splitAndTrim(string) {
-            return string.split(',').map(s => {
+            return string.split(',').map(function (s) {
                 return s.trim();
             });
         }
@@ -7912,7 +7634,7 @@ function migrateToV8 (style) {
         } else if (typeof font === 'string') {
             return splitAndTrim(font);
         } else if (typeof font === 'object') {
-            font.stops.forEach(stop => {
+            font.stops.forEach(function (stop) {
                 stop[1] = splitAndTrim(stop[1]);
             });
             return font;
@@ -7920,98 +7642,111 @@ function migrateToV8 (style) {
             throw new Error('unexpected font value');
         }
     }
-    eachLayer(style, layer => {
-        eachLayout(layer, layout => {
+    eachLayer(style, function (layer) {
+        eachLayout(layer, function (layout) {
             if (layout['text-font']) {
                 layout['text-font'] = migrateFontStack(layout['text-font']);
             }
         });
     });
-    let firstSymbolLayer = 0;
-    for (let i = style.layers.length - 1; i >= 0; i--) {
-        const layer = style.layers[i];
+    var firstSymbolLayer = 0;
+    for (var i = style.layers.length - 1; i >= 0; i--) {
+        var layer = style.layers[i];
         if (layer.type !== 'symbol') {
             firstSymbolLayer = i + 1;
             break;
         }
     }
-    const symbolLayers = style.layers.splice(firstSymbolLayer);
+    var symbolLayers = style.layers.splice(firstSymbolLayer);
     symbolLayers.reverse();
     style.layers = style.layers.concat(symbolLayers);
     return style;
 }
 
-function extend (output, ...inputs) {
-    for (const input of inputs) {
-        for (const k in input) {
+function extend (output) {
+    var inputs = [], len = arguments.length - 1;
+    while (len-- > 0)
+        inputs[len] = arguments[len + 1];
+    for (var i = 0, list = inputs; i < list.length; i += 1) {
+        var input = list[i];
+        for (var k in input) {
             output[k] = input[k];
         }
     }
     return output;
 }
 
-class ParsingError extends Error {
-    constructor(key, message) {
-        super(message);
+var ParsingError = function (Error) {
+    function ParsingError(key, message) {
+        Error.call(this, message);
         this.message = message;
         this.key = key;
     }
-}
+    if (Error)
+        ParsingError.__proto__ = Error;
+    ParsingError.prototype = Object.create(Error && Error.prototype);
+    ParsingError.prototype.constructor = ParsingError;
+    return ParsingError;
+}(Error);
 
-class Scope {
-    constructor(parent, bindings = []) {
-        this.parent = parent;
-        this.bindings = {};
-        for (const [name, expression] of bindings) {
-            this.bindings[name] = expression;
-        }
+var Scope = function Scope(parent, bindings) {
+    if (bindings === void 0)
+        bindings = [];
+    this.parent = parent;
+    this.bindings = {};
+    for (var i = 0, list = bindings; i < list.length; i += 1) {
+        var ref = list[i];
+        var name = ref[0];
+        var expression = ref[1];
+        this.bindings[name] = expression;
     }
-    concat(bindings) {
-        return new Scope(this, bindings);
+};
+Scope.prototype.concat = function concat(bindings) {
+    return new Scope(this, bindings);
+};
+Scope.prototype.get = function get(name) {
+    if (this.bindings[name]) {
+        return this.bindings[name];
     }
-    get(name) {
-        if (this.bindings[name]) {
-            return this.bindings[name];
-        }
-        if (this.parent) {
-            return this.parent.get(name);
-        }
-        throw new Error(`${ name } not found in scope.`);
+    if (this.parent) {
+        return this.parent.get(name);
     }
-    has(name) {
-        if (this.bindings[name])
-            return true;
-        return this.parent ? this.parent.has(name) : false;
+    throw new Error(name + ' not found in scope.');
+};
+Scope.prototype.has = function has(name) {
+    if (this.bindings[name]) {
+        return true;
     }
-}
+    return this.parent ? this.parent.has(name) : false;
+};
 
-const NullType = { kind: 'null' };
-const NumberType = { kind: 'number' };
-const StringType = { kind: 'string' };
-const BooleanType = { kind: 'boolean' };
-const ColorType = { kind: 'color' };
-const ObjectType = { kind: 'object' };
-const ValueType = { kind: 'value' };
-const ErrorType = { kind: 'error' };
-const CollatorType = { kind: 'collator' };
-const FormattedType = { kind: 'formatted' };
-const ResolvedImageType = { kind: 'resolvedImage' };
+var NullType = { kind: 'null' };
+var NumberType = { kind: 'number' };
+var StringType = { kind: 'string' };
+var BooleanType = { kind: 'boolean' };
+var ColorType = { kind: 'color' };
+var ObjectType = { kind: 'object' };
+var ValueType = { kind: 'value' };
+var ErrorType = { kind: 'error' };
+var CollatorType = { kind: 'collator' };
+var FormattedType = { kind: 'formatted' };
+var ResolvedImageType = { kind: 'resolvedImage' };
 function array(itemType, N) {
     return {
         kind: 'array',
-        itemType,
-        N
+        itemType: itemType,
+        N: N
     };
 }
 function toString(type) {
     if (type.kind === 'array') {
-        const itemType = toString(type.itemType);
-        return typeof type.N === 'number' ? `array<${ itemType }, ${ type.N }>` : type.itemType.kind === 'value' ? 'array' : `array<${ itemType }>`;
+        var itemType = toString(type.itemType);
+        return typeof type.N === 'number' ? 'array<' + itemType + ', ' + type.N + '>' : type.itemType.kind === 'value' ? 'array' : 'array<' + itemType + '>';
     } else {
         return type.kind;
     }
 }
-const valueMemberTypes = [
+var valueMemberTypes = [
     NullType,
     NumberType,
     StringType,
@@ -8032,19 +7767,22 @@ function checkSubtype(expected, t) {
     } else if (expected.kind === t.kind) {
         return null;
     } else if (expected.kind === 'value') {
-        for (const memberType of valueMemberTypes) {
+        for (var i = 0, list = valueMemberTypes; i < list.length; i += 1) {
+            var memberType = list[i];
             if (!checkSubtype(memberType, t)) {
                 return null;
             }
         }
     }
-    return `Expected ${ toString(expected) } but found ${ toString(t) } instead.`;
+    return 'Expected ' + toString(expected) + ' but found ' + toString(t) + ' instead.';
 }
 function isValidType(provided, allowedTypes) {
-    return allowedTypes.some(t => t.kind === provided.kind);
+    return allowedTypes.some(function (t) {
+        return t.kind === provided.kind;
+    });
 }
 function isValidNativeType(provided, allowedTypes) {
-    return allowedTypes.some(t => {
+    return allowedTypes.some(function (t) {
         if (t === 'null') {
             return provided === null;
         } else if (t === 'array') {
@@ -8169,23 +7907,23 @@ function clamp_css_float(f) {  // Clamp to float 0.0 .. 1.0.
 
 function parse_css_int(str) {  // int or percentage.
   if (str[str.length - 1] === '%')
-    return clamp_css_byte(parseFloat(str) / 100 * 255);
+    { return clamp_css_byte(parseFloat(str) / 100 * 255); }
   return clamp_css_byte(parseInt(str));
 }
 
 function parse_css_float(str) {  // float or percentage.
   if (str[str.length - 1] === '%')
-    return clamp_css_float(parseFloat(str) / 100);
+    { return clamp_css_float(parseFloat(str) / 100); }
   return clamp_css_float(parseFloat(str));
 }
 
 function css_hue_to_rgb(m1, m2, h) {
-  if (h < 0) h += 1;
-  else if (h > 1) h -= 1;
+  if (h < 0) { h += 1; }
+  else if (h > 1) { h -= 1; }
 
-  if (h * 6 < 1) return m1 + (m2 - m1) * h * 6;
-  if (h * 2 < 1) return m2;
-  if (h * 3 < 2) return m1 + (m2 - m1) * (2/3 - h) * 6;
+  if (h * 6 < 1) { return m1 + (m2 - m1) * h * 6; }
+  if (h * 2 < 1) { return m2; }
+  if (h * 3 < 2) { return m1 + (m2 - m1) * (2/3 - h) * 6; }
   return m1;
 }
 
@@ -8194,20 +7932,20 @@ function parseCSSColor(css_str) {
   var str = css_str.replace(/ /g, '').toLowerCase();
 
   // Color keywords (and transparent) lookup.
-  if (str in kCSSColorTable) return kCSSColorTable[str].slice();  // dup.
+  if (str in kCSSColorTable) { return kCSSColorTable[str].slice(); }  // dup.
 
   // #abc and #abc123 syntax.
   if (str[0] === '#') {
     if (str.length === 4) {
       var iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
-      if (!(iv >= 0 && iv <= 0xfff)) return null;  // Covers NaN.
+      if (!(iv >= 0 && iv <= 0xfff)) { return null; }  // Covers NaN.
       return [((iv & 0xf00) >> 4) | ((iv & 0xf00) >> 8),
               (iv & 0xf0) | ((iv & 0xf0) >> 4),
               (iv & 0xf) | ((iv & 0xf) << 4),
               1];
     } else if (str.length === 7) {
       var iv = parseInt(str.substr(1), 16);  // TODO(deanm): Stricter parsing.
-      if (!(iv >= 0 && iv <= 0xffffff)) return null;  // Covers NaN.
+      if (!(iv >= 0 && iv <= 0xffffff)) { return null; }  // Covers NaN.
       return [(iv & 0xff0000) >> 16,
               (iv & 0xff00) >> 8,
               iv & 0xff,
@@ -8224,21 +7962,21 @@ function parseCSSColor(css_str) {
     var alpha = 1;  // To allow case fallthrough.
     switch (fname) {
       case 'rgba':
-        if (params.length !== 4) return null;
+        if (params.length !== 4) { return null; }
         alpha = parse_css_float(params.pop());
         // Fall through.
       case 'rgb':
-        if (params.length !== 3) return null;
+        if (params.length !== 3) { return null; }
         return [parse_css_int(params[0]),
                 parse_css_int(params[1]),
                 parse_css_int(params[2]),
                 alpha];
       case 'hsla':
-        if (params.length !== 4) return null;
+        if (params.length !== 4) { return null; }
         alpha = parse_css_float(params.pop());
         // Fall through.
       case 'hsl':
-        if (params.length !== 3) return null;
+        if (params.length !== 3) { return null; }
         var h = (((parseFloat(params[0]) % 360) + 360) % 360) / 360;  // 0 .. 1
         // NOTE(deanm): According to the CSS spec s/l should only be
         // percentages, but we don't bother and let float or percentage.
@@ -8262,164 +8000,172 @@ try { exports.parseCSSColor = parseCSSColor; } catch(e) { }
 });
 var csscolorparser_1 = csscolorparser.parseCSSColor;
 
-class Color {
-    constructor(r, g, b, a = 1) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+var Color = function Color(r, g, b, a) {
+    if (a === void 0)
+        a = 1;
+    this.r = r;
+    this.g = g;
+    this.b = b;
+    this.a = a;
+};
+Color.parse = function parse(input) {
+    if (!input) {
+        return undefined;
     }
-    static parse(input) {
-        if (!input) {
-            return undefined;
-        }
-        if (input instanceof Color) {
-            return input;
-        }
-        if (typeof input !== 'string') {
-            return undefined;
-        }
-        const rgba = csscolorparser_1(input);
-        if (!rgba) {
-            return undefined;
-        }
-        return new Color(rgba[0] / 255 * rgba[3], rgba[1] / 255 * rgba[3], rgba[2] / 255 * rgba[3], rgba[3]);
+    if (input instanceof Color) {
+        return input;
     }
-    toString() {
-        const [r, g, b, a] = this.toArray();
-        return `rgba(${ Math.round(r) },${ Math.round(g) },${ Math.round(b) },${ a })`;
+    if (typeof input !== 'string') {
+        return undefined;
     }
-    toArray() {
-        const {r, g, b, a} = this;
-        return a === 0 ? [
-            0,
-            0,
-            0,
-            0
-        ] : [
-            r * 255 / a,
-            g * 255 / a,
-            b * 255 / a,
-            a
-        ];
+    var rgba = csscolorparser_1(input);
+    if (!rgba) {
+        return undefined;
     }
-}
+    return new Color(rgba[0] / 255 * rgba[3], rgba[1] / 255 * rgba[3], rgba[2] / 255 * rgba[3], rgba[3]);
+};
+Color.prototype.toString = function toString() {
+    var ref = this.toArray();
+    var r = ref[0];
+    var g = ref[1];
+    var b = ref[2];
+    var a = ref[3];
+    return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a + ')';
+};
+Color.prototype.toArray = function toArray() {
+    var ref = this;
+    var r = ref.r;
+    var g = ref.g;
+    var b = ref.b;
+    var a = ref.a;
+    return a === 0 ? [
+        0,
+        0,
+        0,
+        0
+    ] : [
+        r * 255 / a,
+        g * 255 / a,
+        b * 255 / a,
+        a
+    ];
+};
 Color.black = new Color(0, 0, 0, 1);
 Color.white = new Color(1, 1, 1, 1);
 Color.transparent = new Color(0, 0, 0, 0);
 Color.red = new Color(1, 0, 0, 1);
-Color.blue = new Color(0, 0, 1, 1);
 
-class Collator {
-    constructor(caseSensitive, diacriticSensitive, locale) {
-        if (caseSensitive)
-            this.sensitivity = diacriticSensitive ? 'variant' : 'case';
-        else
-            this.sensitivity = diacriticSensitive ? 'accent' : 'base';
-        this.locale = locale;
-        this.collator = new Intl.Collator(this.locale ? this.locale : [], {
-            sensitivity: this.sensitivity,
-            usage: 'search'
-        });
+var Collator = function Collator(caseSensitive, diacriticSensitive, locale) {
+    if (caseSensitive) {
+        this.sensitivity = diacriticSensitive ? 'variant' : 'case';
+    } else {
+        this.sensitivity = diacriticSensitive ? 'accent' : 'base';
     }
-    compare(lhs, rhs) {
-        return this.collator.compare(lhs, rhs);
-    }
-    resolvedLocale() {
-        return new Intl.Collator(this.locale ? this.locale : []).resolvedOptions().locale;
-    }
-}
+    this.locale = locale;
+    this.collator = new Intl.Collator(this.locale ? this.locale : [], {
+        sensitivity: this.sensitivity,
+        usage: 'search'
+    });
+};
+Collator.prototype.compare = function compare(lhs, rhs) {
+    return this.collator.compare(lhs, rhs);
+};
+Collator.prototype.resolvedLocale = function resolvedLocale() {
+    return new Intl.Collator(this.locale ? this.locale : []).resolvedOptions().locale;
+};
 
-class FormattedSection {
-    constructor(text, image, scale, fontStack, textColor) {
-        this.text = text;
-        this.image = image;
-        this.scale = scale;
-        this.fontStack = fontStack;
-        this.textColor = textColor;
+var FormattedSection = function FormattedSection(text, image, scale, fontStack, textColor) {
+    this.text = text;
+    this.image = image;
+    this.scale = scale;
+    this.fontStack = fontStack;
+    this.textColor = textColor;
+};
+var Formatted = function Formatted(sections) {
+    this.sections = sections;
+};
+Formatted.fromString = function fromString(unformatted) {
+    return new Formatted([new FormattedSection(unformatted, null, null, null, null)]);
+};
+Formatted.prototype.isEmpty = function isEmpty() {
+    if (this.sections.length === 0) {
+        return true;
     }
-}
-class Formatted {
-    constructor(sections) {
-        this.sections = sections;
+    return !this.sections.some(function (section) {
+        return section.text.length !== 0 || section.image && section.image.name.length !== 0;
+    });
+};
+Formatted.factory = function factory(text) {
+    if (text instanceof Formatted) {
+        return text;
+    } else {
+        return Formatted.fromString(text);
     }
-    static fromString(unformatted) {
-        return new Formatted([new FormattedSection(unformatted, null, null, null, null)]);
+};
+Formatted.prototype.toString = function toString() {
+    if (this.sections.length === 0) {
+        return '';
     }
-    isEmpty() {
-        if (this.sections.length === 0)
-            return true;
-        return !this.sections.some(section => section.text.length !== 0 || section.image && section.image.name.length !== 0);
-    }
-    static factory(text) {
-        if (text instanceof Formatted) {
-            return text;
-        } else {
-            return Formatted.fromString(text);
+    return this.sections.map(function (section) {
+        return section.text;
+    }).join('');
+};
+Formatted.prototype.serialize = function serialize() {
+    var serialized = ['format'];
+    for (var i = 0, list = this.sections; i < list.length; i += 1) {
+        var section = list[i];
+        if (section.image) {
+            serialized.push([
+                'image',
+                section.image.name
+            ]);
+            continue;
         }
-    }
-    toString() {
-        if (this.sections.length === 0)
-            return '';
-        return this.sections.map(section => section.text).join('');
-    }
-    serialize() {
-        const serialized = ['format'];
-        for (const section of this.sections) {
-            if (section.image) {
-                serialized.push([
-                    'image',
-                    section.image.name
-                ]);
-                continue;
-            }
-            serialized.push(section.text);
-            const options = {};
-            if (section.fontStack) {
-                options['text-font'] = [
-                    'literal',
-                    section.fontStack.split(',')
-                ];
-            }
-            if (section.scale) {
-                options['font-scale'] = section.scale;
-            }
-            if (section.textColor) {
-                options['text-color'] = ['rgba'].concat(section.textColor.toArray());
-            }
-            serialized.push(options);
+        serialized.push(section.text);
+        var options = {};
+        if (section.fontStack) {
+            options['text-font'] = [
+                'literal',
+                section.fontStack.split(',')
+            ];
         }
-        return serialized;
+        if (section.scale) {
+            options['font-scale'] = section.scale;
+        }
+        if (section.textColor) {
+            options['text-color'] = ['rgba'].concat(section.textColor.toArray());
+        }
+        serialized.push(options);
     }
-}
+    return serialized;
+};
 
-class ResolvedImage {
-    constructor(options) {
-        this.name = options.name;
-        this.available = options.available;
+var ResolvedImage = function ResolvedImage(options) {
+    this.name = options.name;
+    this.available = options.available;
+};
+ResolvedImage.prototype.toString = function toString() {
+    return this.name;
+};
+ResolvedImage.fromString = function fromString(name) {
+    if (!name) {
+        return null;
     }
-    toString() {
-        return this.name;
-    }
-    static fromString(name) {
-        if (!name)
-            return null;
-        return new ResolvedImage({
-            name,
-            available: false
-        });
-    }
-    serialize() {
-        return [
-            'image',
-            this.name
-        ];
-    }
-}
+    return new ResolvedImage({
+        name: name,
+        available: false
+    });
+};
+ResolvedImage.prototype.serialize = function serialize() {
+    return [
+        'image',
+        this.name
+    ];
+};
 
 function validateRGBA(r, g, b, a) {
     if (!(typeof r === 'number' && r >= 0 && r <= 255 && typeof g === 'number' && g >= 0 && g <= 255 && typeof b === 'number' && b >= 0 && b <= 255)) {
-        const value = typeof a === 'number' ? [
+        var value = typeof a === 'number' ? [
             r,
             g,
             b,
@@ -8429,15 +8175,15 @@ function validateRGBA(r, g, b, a) {
             g,
             b
         ];
-        return `Invalid rgba value [${ value.join(', ') }]: 'r', 'g', and 'b' must be between 0 and 255.`;
+        return 'Invalid rgba value [' + value.join(', ') + ']: \'r\', \'g\', and \'b\' must be between 0 and 255.';
     }
     if (!(typeof a === 'undefined' || typeof a === 'number' && a >= 0 && a <= 1)) {
-        return `Invalid rgba value [${ [
+        return 'Invalid rgba value [' + [
             r,
             g,
             b,
             a
-        ].join(', ') }]: 'a' must be between 0 and 1.`;
+        ].join(', ') + ']: \'a\' must be between 0 and 1.';
     }
     return null;
 }
@@ -8459,14 +8205,15 @@ function isValue(mixed) {
     } else if (mixed instanceof ResolvedImage) {
         return true;
     } else if (Array.isArray(mixed)) {
-        for (const item of mixed) {
+        for (var i = 0, list = mixed; i < list.length; i += 1) {
+            var item = list[i];
             if (!isValue(item)) {
                 return false;
             }
         }
         return true;
     } else if (typeof mixed === 'object') {
-        for (const key in mixed) {
+        for (var key in mixed) {
             if (!isValue(mixed[key])) {
                 return false;
             }
@@ -8494,10 +8241,11 @@ function typeOf(value) {
     } else if (value instanceof ResolvedImage) {
         return ResolvedImageType;
     } else if (Array.isArray(value)) {
-        const length = value.length;
-        let itemType;
-        for (const item of value) {
-            const t = typeOf(item);
+        var length = value.length;
+        var itemType;
+        for (var i = 0, list = value; i < list.length; i += 1) {
+            var item = list[i];
+            var t = typeOf(item);
             if (!itemType) {
                 itemType = t;
             } else if (itemType === t) {
@@ -8513,7 +8261,7 @@ function typeOf(value) {
     }
 }
 function toString$1(value) {
-    const type = typeof value;
+    var type = typeof value;
     if (value === null) {
         return '';
     } else if (type === 'string' || type === 'number' || type === 'boolean') {
@@ -8525,573 +8273,601 @@ function toString$1(value) {
     }
 }
 
-class Literal {
-    constructor(type, value) {
-        this.type = type;
-        this.value = value;
+var Literal = function Literal(type, value) {
+    this.type = type;
+    this.value = value;
+};
+Literal.parse = function parse(args, context) {
+    if (args.length !== 2) {
+        return context.error('\'literal\' expression requires exactly one argument, but found ' + (args.length - 1) + ' instead.');
     }
-    static parse(args, context) {
-        if (args.length !== 2)
-            return context.error(`'literal' expression requires exactly one argument, but found ${ args.length - 1 } instead.`);
-        if (!isValue(args[1]))
-            return context.error(`invalid value`);
-        const value = args[1];
-        let type = typeOf(value);
-        const expected = context.expectedType;
-        if (type.kind === 'array' && type.N === 0 && expected && expected.kind === 'array' && (typeof expected.N !== 'number' || expected.N === 0)) {
-            type = expected;
-        }
-        return new Literal(type, value);
+    if (!isValue(args[1])) {
+        return context.error('invalid value');
     }
-    evaluate() {
+    var value = args[1];
+    var type = typeOf(value);
+    var expected = context.expectedType;
+    if (type.kind === 'array' && type.N === 0 && expected && expected.kind === 'array' && (typeof expected.N !== 'number' || expected.N === 0)) {
+        type = expected;
+    }
+    return new Literal(type, value);
+};
+Literal.prototype.evaluate = function evaluate() {
+    return this.value;
+};
+Literal.prototype.eachChild = function eachChild() {
+};
+Literal.prototype.outputDefined = function outputDefined() {
+    return true;
+};
+Literal.prototype.serialize = function serialize() {
+    if (this.type.kind === 'array' || this.type.kind === 'object') {
+        return [
+            'literal',
+            this.value
+        ];
+    } else if (this.value instanceof Color) {
+        return ['rgba'].concat(this.value.toArray());
+    } else if (this.value instanceof Formatted) {
+        return this.value.serialize();
+    } else {
         return this.value;
     }
-    eachChild() {
-    }
-    outputDefined() {
-        return true;
-    }
-    serialize() {
-        if (this.type.kind === 'array' || this.type.kind === 'object') {
-            return [
-                'literal',
-                this.value
-            ];
-        } else if (this.value instanceof Color) {
-            return ['rgba'].concat(this.value.toArray());
-        } else if (this.value instanceof Formatted) {
-            return this.value.serialize();
-        } else {
-            return this.value;
-        }
-    }
-}
+};
 
-class RuntimeError {
-    constructor(message) {
-        this.name = 'ExpressionEvaluationError';
-        this.message = message;
-    }
-    toJSON() {
-        return this.message;
-    }
-}
+var RuntimeError = function RuntimeError(message) {
+    this.name = 'ExpressionEvaluationError';
+    this.message = message;
+};
+RuntimeError.prototype.toJSON = function toJSON() {
+    return this.message;
+};
 
-const types = {
+var types = {
     string: StringType,
     number: NumberType,
     boolean: BooleanType,
     object: ObjectType
 };
-class Assertion {
-    constructor(type, args) {
-        this.type = type;
-        this.args = args;
+var Assertion = function Assertion(type, args) {
+    this.type = type;
+    this.args = args;
+};
+Assertion.parse = function parse(args, context) {
+    if (args.length < 2) {
+        return context.error('Expected at least one argument.');
     }
-    static parse(args, context) {
-        if (args.length < 2)
-            return context.error(`Expected at least one argument.`);
-        let i = 1;
-        let type;
-        const name = args[0];
-        if (name === 'array') {
-            let itemType;
-            if (args.length > 2) {
-                const type = args[1];
-                if (typeof type !== 'string' || !(type in types) || type === 'object')
-                    return context.error('The item type argument of "array" must be one of string, number, boolean', 1);
-                itemType = types[type];
-                i++;
-            } else {
-                itemType = ValueType;
+    var i = 1;
+    var type;
+    var name = args[0];
+    if (name === 'array') {
+        var itemType;
+        if (args.length > 2) {
+            var type$1 = args[1];
+            if (typeof type$1 !== 'string' || !(type$1 in types) || type$1 === 'object') {
+                return context.error('The item type argument of "array" must be one of string, number, boolean', 1);
             }
-            let N;
-            if (args.length > 3) {
-                if (args[2] !== null && (typeof args[2] !== 'number' || args[2] < 0 || args[2] !== Math.floor(args[2]))) {
-                    return context.error('The length argument to "array" must be a positive integer literal', 2);
-                }
-                N = args[2];
-                i++;
-            }
-            type = array(itemType, N);
+            itemType = types[type$1];
+            i++;
         } else {
-            type = types[name];
+            itemType = ValueType;
         }
-        const parsed = [];
-        for (; i < args.length; i++) {
-            const input = context.parse(args[i], i, ValueType);
-            if (!input)
-                return null;
-            parsed.push(input);
+        var N;
+        if (args.length > 3) {
+            if (args[2] !== null && (typeof args[2] !== 'number' || args[2] < 0 || args[2] !== Math.floor(args[2]))) {
+                return context.error('The length argument to "array" must be a positive integer literal', 2);
+            }
+            N = args[2];
+            i++;
         }
-        return new Assertion(type, parsed);
+        type = array(itemType, N);
+    } else {
+        type = types[name];
     }
-    evaluate(ctx) {
-        for (let i = 0; i < this.args.length; i++) {
-            const value = this.args[i].evaluate(ctx);
-            const error = checkSubtype(this.type, typeOf(value));
-            if (!error) {
-                return value;
-            } else if (i === this.args.length - 1) {
-                throw new RuntimeError(`Expected value to be of type ${ toString(this.type) }, but found ${ toString(typeOf(value)) } instead.`);
+    var parsed = [];
+    for (; i < args.length; i++) {
+        var input = context.parse(args[i], i, ValueType);
+        if (!input) {
+            return null;
+        }
+        parsed.push(input);
+    }
+    return new Assertion(type, parsed);
+};
+Assertion.prototype.evaluate = function evaluate(ctx) {
+    for (var i = 0; i < this.args.length; i++) {
+        var value = this.args[i].evaluate(ctx);
+        var error = checkSubtype(this.type, typeOf(value));
+        if (!error) {
+            return value;
+        } else if (i === this.args.length - 1) {
+            throw new RuntimeError('Expected value to be of type ' + toString(this.type) + ', but found ' + toString(typeOf(value)) + ' instead.');
+        }
+    }
+    return null;
+};
+Assertion.prototype.eachChild = function eachChild(fn) {
+    this.args.forEach(fn);
+};
+Assertion.prototype.outputDefined = function outputDefined() {
+    return this.args.every(function (arg) {
+        return arg.outputDefined();
+    });
+};
+Assertion.prototype.serialize = function serialize() {
+    var type = this.type;
+    var serialized = [type.kind];
+    if (type.kind === 'array') {
+        var itemType = type.itemType;
+        if (itemType.kind === 'string' || itemType.kind === 'number' || itemType.kind === 'boolean') {
+            serialized.push(itemType.kind);
+            var N = type.N;
+            if (typeof N === 'number' || this.args.length > 1) {
+                serialized.push(N);
             }
         }
-        return null;
     }
-    eachChild(fn) {
-        this.args.forEach(fn);
-    }
-    outputDefined() {
-        return this.args.every(arg => arg.outputDefined());
-    }
-    serialize() {
-        const type = this.type;
-        const serialized = [type.kind];
-        if (type.kind === 'array') {
-            const itemType = type.itemType;
-            if (itemType.kind === 'string' || itemType.kind === 'number' || itemType.kind === 'boolean') {
-                serialized.push(itemType.kind);
-                const N = type.N;
-                if (typeof N === 'number' || this.args.length > 1) {
-                    serialized.push(N);
-                }
-            }
-        }
-        return serialized.concat(this.args.map(arg => arg.serialize()));
-    }
-}
+    return serialized.concat(this.args.map(function (arg) {
+        return arg.serialize();
+    }));
+};
 
-class FormatExpression {
-    constructor(sections) {
-        this.type = FormattedType;
-        this.sections = sections;
+var FormatExpression = function FormatExpression(sections) {
+    this.type = FormattedType;
+    this.sections = sections;
+};
+FormatExpression.parse = function parse(args, context) {
+    if (args.length < 2) {
+        return context.error('Expected at least one argument.');
     }
-    static parse(args, context) {
-        if (args.length < 2) {
-            return context.error(`Expected at least one argument.`);
-        }
-        const firstArg = args[1];
-        if (!Array.isArray(firstArg) && typeof firstArg === 'object') {
-            return context.error(`First argument must be an image or text section.`);
-        }
-        const sections = [];
-        let nextTokenMayBeObject = false;
-        for (let i = 1; i <= args.length - 1; ++i) {
-            const arg = args[i];
-            if (nextTokenMayBeObject && typeof arg === 'object' && !Array.isArray(arg)) {
-                nextTokenMayBeObject = false;
-                let scale = null;
-                if (arg['font-scale']) {
-                    scale = context.parse(arg['font-scale'], 1, NumberType);
-                    if (!scale)
-                        return null;
-                }
-                let font = null;
-                if (arg['text-font']) {
-                    font = context.parse(arg['text-font'], 1, array(StringType));
-                    if (!font)
-                        return null;
-                }
-                let textColor = null;
-                if (arg['text-color']) {
-                    textColor = context.parse(arg['text-color'], 1, ColorType);
-                    if (!textColor)
-                        return null;
-                }
-                const lastExpression = sections[sections.length - 1];
-                lastExpression.scale = scale;
-                lastExpression.font = font;
-                lastExpression.textColor = textColor;
-            } else {
-                const content = context.parse(args[i], 1, ValueType);
-                if (!content)
+    var firstArg = args[1];
+    if (!Array.isArray(firstArg) && typeof firstArg === 'object') {
+        return context.error('First argument must be an image or text section.');
+    }
+    var sections = [];
+    var nextTokenMayBeObject = false;
+    for (var i = 1; i <= args.length - 1; ++i) {
+        var arg = args[i];
+        if (nextTokenMayBeObject && typeof arg === 'object' && !Array.isArray(arg)) {
+            nextTokenMayBeObject = false;
+            var scale = null;
+            if (arg['font-scale']) {
+                scale = context.parse(arg['font-scale'], 1, NumberType);
+                if (!scale) {
                     return null;
-                const kind = content.type.kind;
-                if (kind !== 'string' && kind !== 'value' && kind !== 'null' && kind !== 'resolvedImage')
-                    return context.error(`Formatted text type must be 'string', 'value', 'image' or 'null'.`);
-                nextTokenMayBeObject = true;
-                sections.push({
-                    content,
-                    scale: null,
-                    font: null,
-                    textColor: null
-                });
+                }
             }
+            var font = null;
+            if (arg['text-font']) {
+                font = context.parse(arg['text-font'], 1, array(StringType));
+                if (!font) {
+                    return null;
+                }
+            }
+            var textColor = null;
+            if (arg['text-color']) {
+                textColor = context.parse(arg['text-color'], 1, ColorType);
+                if (!textColor) {
+                    return null;
+                }
+            }
+            var lastExpression = sections[sections.length - 1];
+            lastExpression.scale = scale;
+            lastExpression.font = font;
+            lastExpression.textColor = textColor;
+        } else {
+            var content = context.parse(args[i], 1, ValueType);
+            if (!content) {
+                return null;
+            }
+            var kind = content.type.kind;
+            if (kind !== 'string' && kind !== 'value' && kind !== 'null' && kind !== 'resolvedImage') {
+                return context.error('Formatted text type must be \'string\', \'value\', \'image\' or \'null\'.');
+            }
+            nextTokenMayBeObject = true;
+            sections.push({
+                content: content,
+                scale: null,
+                font: null,
+                textColor: null
+            });
         }
-        return new FormatExpression(sections);
     }
-    evaluate(ctx) {
-        const evaluateSection = section => {
-            const evaluatedContent = section.content.evaluate(ctx);
-            if (typeOf(evaluatedContent) === ResolvedImageType) {
-                return new FormattedSection('', evaluatedContent, null, null, null);
-            }
-            return new FormattedSection(toString$1(evaluatedContent), null, section.scale ? section.scale.evaluate(ctx) : null, section.font ? section.font.evaluate(ctx).join(',') : null, section.textColor ? section.textColor.evaluate(ctx) : null);
-        };
-        return new Formatted(this.sections.map(evaluateSection));
-    }
-    eachChild(fn) {
-        for (const section of this.sections) {
-            fn(section.content);
-            if (section.scale) {
-                fn(section.scale);
-            }
-            if (section.font) {
-                fn(section.font);
-            }
-            if (section.textColor) {
-                fn(section.textColor);
-            }
+    return new FormatExpression(sections);
+};
+FormatExpression.prototype.evaluate = function evaluate(ctx) {
+    var evaluateSection = function (section) {
+        var evaluatedContent = section.content.evaluate(ctx);
+        if (typeOf(evaluatedContent) === ResolvedImageType) {
+            return new FormattedSection('', evaluatedContent, null, null, null);
+        }
+        return new FormattedSection(toString$1(evaluatedContent), null, section.scale ? section.scale.evaluate(ctx) : null, section.font ? section.font.evaluate(ctx).join(',') : null, section.textColor ? section.textColor.evaluate(ctx) : null);
+    };
+    return new Formatted(this.sections.map(evaluateSection));
+};
+FormatExpression.prototype.eachChild = function eachChild(fn) {
+    for (var i = 0, list = this.sections; i < list.length; i += 1) {
+        var section = list[i];
+        fn(section.content);
+        if (section.scale) {
+            fn(section.scale);
+        }
+        if (section.font) {
+            fn(section.font);
+        }
+        if (section.textColor) {
+            fn(section.textColor);
         }
     }
-    outputDefined() {
-        return false;
-    }
-    serialize() {
-        const serialized = ['format'];
-        for (const section of this.sections) {
-            serialized.push(section.content.serialize());
-            const options = {};
-            if (section.scale) {
-                options['font-scale'] = section.scale.serialize();
-            }
-            if (section.font) {
-                options['text-font'] = section.font.serialize();
-            }
-            if (section.textColor) {
-                options['text-color'] = section.textColor.serialize();
-            }
-            serialized.push(options);
+};
+FormatExpression.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+FormatExpression.prototype.serialize = function serialize() {
+    var serialized = ['format'];
+    for (var i = 0, list = this.sections; i < list.length; i += 1) {
+        var section = list[i];
+        serialized.push(section.content.serialize());
+        var options = {};
+        if (section.scale) {
+            options['font-scale'] = section.scale.serialize();
         }
-        return serialized;
+        if (section.font) {
+            options['text-font'] = section.font.serialize();
+        }
+        if (section.textColor) {
+            options['text-color'] = section.textColor.serialize();
+        }
+        serialized.push(options);
     }
-}
+    return serialized;
+};
 
-class ImageExpression {
-    constructor(input) {
-        this.type = ResolvedImageType;
-        this.input = input;
+var ImageExpression = function ImageExpression(input) {
+    this.type = ResolvedImageType;
+    this.input = input;
+};
+ImageExpression.parse = function parse(args, context) {
+    if (args.length !== 2) {
+        return context.error('Expected two arguments.');
     }
-    static parse(args, context) {
-        if (args.length !== 2) {
-            return context.error(`Expected two arguments.`);
-        }
-        const name = context.parse(args[1], 1, StringType);
-        if (!name)
-            return context.error(`No image name provided.`);
-        return new ImageExpression(name);
+    var name = context.parse(args[1], 1, StringType);
+    if (!name) {
+        return context.error('No image name provided.');
     }
-    evaluate(ctx) {
-        const evaluatedImageName = this.input.evaluate(ctx);
-        const value = ResolvedImage.fromString(evaluatedImageName);
-        if (value && ctx.availableImages)
-            value.available = ctx.availableImages.indexOf(evaluatedImageName) > -1;
-        return value;
+    return new ImageExpression(name);
+};
+ImageExpression.prototype.evaluate = function evaluate(ctx) {
+    var evaluatedImageName = this.input.evaluate(ctx);
+    var value = ResolvedImage.fromString(evaluatedImageName);
+    if (value && ctx.availableImages) {
+        value.available = ctx.availableImages.indexOf(evaluatedImageName) > -1;
     }
-    eachChild(fn) {
-        fn(this.input);
-    }
-    outputDefined() {
-        return false;
-    }
-    serialize() {
-        return [
-            'image',
-            this.input.serialize()
-        ];
-    }
-}
+    return value;
+};
+ImageExpression.prototype.eachChild = function eachChild(fn) {
+    fn(this.input);
+};
+ImageExpression.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+ImageExpression.prototype.serialize = function serialize() {
+    return [
+        'image',
+        this.input.serialize()
+    ];
+};
 
-const types$1 = {
+var types$1 = {
     'to-boolean': BooleanType,
     'to-color': ColorType,
     'to-number': NumberType,
     'to-string': StringType
 };
-class Coercion {
-    constructor(type, args) {
-        this.type = type;
-        this.args = args;
+var Coercion = function Coercion(type, args) {
+    this.type = type;
+    this.args = args;
+};
+Coercion.parse = function parse(args, context) {
+    if (args.length < 2) {
+        return context.error('Expected at least one argument.');
     }
-    static parse(args, context) {
-        if (args.length < 2)
-            return context.error(`Expected at least one argument.`);
-        const name = args[0];
-        if ((name === 'to-boolean' || name === 'to-string') && args.length !== 2)
-            return context.error(`Expected one argument.`);
-        const type = types$1[name];
-        const parsed = [];
-        for (let i = 1; i < args.length; i++) {
-            const input = context.parse(args[i], i, ValueType);
-            if (!input)
-                return null;
-            parsed.push(input);
+    var name = args[0];
+    if ((name === 'to-boolean' || name === 'to-string') && args.length !== 2) {
+        return context.error('Expected one argument.');
+    }
+    var type = types$1[name];
+    var parsed = [];
+    for (var i = 1; i < args.length; i++) {
+        var input = context.parse(args[i], i, ValueType);
+        if (!input) {
+            return null;
         }
-        return new Coercion(type, parsed);
+        parsed.push(input);
     }
-    evaluate(ctx) {
-        if (this.type.kind === 'boolean') {
-            return Boolean(this.args[0].evaluate(ctx));
-        } else if (this.type.kind === 'color') {
-            let input;
-            let error;
-            for (const arg of this.args) {
-                input = arg.evaluate(ctx);
-                error = null;
-                if (input instanceof Color) {
-                    return input;
-                } else if (typeof input === 'string') {
-                    const c = ctx.parseColor(input);
-                    if (c)
-                        return c;
-                } else if (Array.isArray(input)) {
-                    if (input.length < 3 || input.length > 4) {
-                        error = `Invalid rbga value ${ JSON.stringify(input) }: expected an array containing either three or four numeric values.`;
-                    } else {
-                        error = validateRGBA(input[0], input[1], input[2], input[3]);
-                    }
-                    if (!error) {
-                        return new Color(input[0] / 255, input[1] / 255, input[2] / 255, input[3]);
-                    }
+    return new Coercion(type, parsed);
+};
+Coercion.prototype.evaluate = function evaluate(ctx) {
+    if (this.type.kind === 'boolean') {
+        return Boolean(this.args[0].evaluate(ctx));
+    } else if (this.type.kind === 'color') {
+        var input;
+        var error;
+        for (var i = 0, list = this.args; i < list.length; i += 1) {
+            var arg = list[i];
+            input = arg.evaluate(ctx);
+            error = null;
+            if (input instanceof Color) {
+                return input;
+            } else if (typeof input === 'string') {
+                var c = ctx.parseColor(input);
+                if (c) {
+                    return c;
+                }
+            } else if (Array.isArray(input)) {
+                if (input.length < 3 || input.length > 4) {
+                    error = 'Invalid rbga value ' + JSON.stringify(input) + ': expected an array containing either three or four numeric values.';
+                } else {
+                    error = validateRGBA(input[0], input[1], input[2], input[3]);
+                }
+                if (!error) {
+                    return new Color(input[0] / 255, input[1] / 255, input[2] / 255, input[3]);
                 }
             }
-            throw new RuntimeError(error || `Could not parse color from value '${ typeof input === 'string' ? input : String(JSON.stringify(input)) }'`);
-        } else if (this.type.kind === 'number') {
-            let value = null;
-            for (const arg of this.args) {
-                value = arg.evaluate(ctx);
-                if (value === null)
-                    return 0;
-                const num = Number(value);
-                if (isNaN(num))
-                    continue;
-                return num;
+        }
+        throw new RuntimeError(error || 'Could not parse color from value \'' + (typeof input === 'string' ? input : String(JSON.stringify(input))) + '\'');
+    } else if (this.type.kind === 'number') {
+        var value = null;
+        for (var i$1 = 0, list$1 = this.args; i$1 < list$1.length; i$1 += 1) {
+            var arg$1 = list$1[i$1];
+            value = arg$1.evaluate(ctx);
+            if (value === null) {
+                return 0;
             }
-            throw new RuntimeError(`Could not convert ${ JSON.stringify(value) } to number.`);
-        } else if (this.type.kind === 'formatted') {
-            return Formatted.fromString(toString$1(this.args[0].evaluate(ctx)));
-        } else if (this.type.kind === 'resolvedImage') {
-            return ResolvedImage.fromString(toString$1(this.args[0].evaluate(ctx)));
-        } else {
-            return toString$1(this.args[0].evaluate(ctx));
+            var num = Number(value);
+            if (isNaN(num)) {
+                continue;
+            }
+            return num;
         }
+        throw new RuntimeError('Could not convert ' + JSON.stringify(value) + ' to number.');
+    } else if (this.type.kind === 'formatted') {
+        return Formatted.fromString(toString$1(this.args[0].evaluate(ctx)));
+    } else if (this.type.kind === 'resolvedImage') {
+        return ResolvedImage.fromString(toString$1(this.args[0].evaluate(ctx)));
+    } else {
+        return toString$1(this.args[0].evaluate(ctx));
     }
-    eachChild(fn) {
-        this.args.forEach(fn);
+};
+Coercion.prototype.eachChild = function eachChild(fn) {
+    this.args.forEach(fn);
+};
+Coercion.prototype.outputDefined = function outputDefined() {
+    return this.args.every(function (arg) {
+        return arg.outputDefined();
+    });
+};
+Coercion.prototype.serialize = function serialize() {
+    if (this.type.kind === 'formatted') {
+        return new FormatExpression([{
+                content: this.args[0],
+                scale: null,
+                font: null,
+                textColor: null
+            }]).serialize();
     }
-    outputDefined() {
-        return this.args.every(arg => arg.outputDefined());
+    if (this.type.kind === 'resolvedImage') {
+        return new ImageExpression(this.args[0]).serialize();
     }
-    serialize() {
-        if (this.type.kind === 'formatted') {
-            return new FormatExpression([{
-                    content: this.args[0],
-                    scale: null,
-                    font: null,
-                    textColor: null
-                }]).serialize();
-        }
-        if (this.type.kind === 'resolvedImage') {
-            return new ImageExpression(this.args[0]).serialize();
-        }
-        const serialized = [`to-${ this.type.kind }`];
-        this.eachChild(child => {
-            serialized.push(child.serialize());
-        });
-        return serialized;
-    }
-}
+    var serialized = ['to-' + this.type.kind];
+    this.eachChild(function (child) {
+        serialized.push(child.serialize());
+    });
+    return serialized;
+};
 
-const geometryTypes = [
+var geometryTypes = [
     'Unknown',
     'Point',
     'LineString',
     'Polygon'
 ];
-class EvaluationContext {
-    constructor() {
-        this.globals = null;
-        this.feature = null;
-        this.featureState = null;
-        this.formattedSection = null;
-        this._parseColorCache = {};
-        this.availableImages = null;
-        this.canonical = null;
+var EvaluationContext = function EvaluationContext() {
+    this.globals = null;
+    this.feature = null;
+    this.featureState = null;
+    this.formattedSection = null;
+    this._parseColorCache = {};
+    this.availableImages = null;
+    this.canonical = null;
+};
+EvaluationContext.prototype.id = function id() {
+    return this.feature && 'id' in this.feature ? this.feature.id : null;
+};
+EvaluationContext.prototype.geometryType = function geometryType() {
+    return this.feature ? typeof this.feature.type === 'number' ? geometryTypes[this.feature.type] : this.feature.type : null;
+};
+EvaluationContext.prototype.geometry = function geometry() {
+    return this.feature && 'geometry' in this.feature ? this.feature.geometry : null;
+};
+EvaluationContext.prototype.canonicalID = function canonicalID() {
+    return this.canonical;
+};
+EvaluationContext.prototype.properties = function properties() {
+    return this.feature && this.feature.properties || {};
+};
+EvaluationContext.prototype.parseColor = function parseColor(input) {
+    var cached = this._parseColorCache[input];
+    if (!cached) {
+        cached = this._parseColorCache[input] = Color.parse(input);
     }
-    id() {
-        return this.feature && 'id' in this.feature ? this.feature.id : null;
-    }
-    geometryType() {
-        return this.feature ? typeof this.feature.type === 'number' ? geometryTypes[this.feature.type] : this.feature.type : null;
-    }
-    geometry() {
-        return this.feature && 'geometry' in this.feature ? this.feature.geometry : null;
-    }
-    canonicalID() {
-        return this.canonical;
-    }
-    properties() {
-        return this.feature && this.feature.properties || {};
-    }
-    parseColor(input) {
-        let cached = this._parseColorCache[input];
-        if (!cached) {
-            cached = this._parseColorCache[input] = Color.parse(input);
-        }
-        return cached;
-    }
-}
+    return cached;
+};
 
-class CompoundExpression {
-    constructor(name, type, evaluate, args) {
-        this.name = name;
-        this.type = type;
-        this._evaluate = evaluate;
-        this.args = args;
+var CompoundExpression = function CompoundExpression(name, type, evaluate, args) {
+    this.name = name;
+    this.type = type;
+    this._evaluate = evaluate;
+    this.args = args;
+};
+CompoundExpression.prototype.evaluate = function evaluate(ctx) {
+    return this._evaluate(ctx, this.args);
+};
+CompoundExpression.prototype.eachChild = function eachChild(fn) {
+    this.args.forEach(fn);
+};
+CompoundExpression.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+CompoundExpression.prototype.serialize = function serialize() {
+    return [this.name].concat(this.args.map(function (arg) {
+        return arg.serialize();
+    }));
+};
+CompoundExpression.parse = function parse(args, context) {
+    var ref$1;
+    var op = args[0];
+    var definition = CompoundExpression.definitions[op];
+    if (!definition) {
+        return context.error('Unknown expression "' + op + '". If you wanted a literal array, use ["literal", [...]].', 0);
     }
-    evaluate(ctx) {
-        return this._evaluate(ctx, this.args);
-    }
-    eachChild(fn) {
-        this.args.forEach(fn);
-    }
-    outputDefined() {
-        return false;
-    }
-    serialize() {
-        return [this.name].concat(this.args.map(arg => arg.serialize()));
-    }
-    static parse(args, context) {
-        const op = args[0];
-        const definition = CompoundExpression.definitions[op];
-        if (!definition) {
-            return context.error(`Unknown expression "${ op }". If you wanted a literal array, use ["literal", [...]].`, 0);
-        }
-        const type = Array.isArray(definition) ? definition[0] : definition.type;
-        const availableOverloads = Array.isArray(definition) ? [[
-                definition[1],
-                definition[2]
-            ]] : definition.overloads;
-        const overloads = availableOverloads.filter(([signature]) => !Array.isArray(signature) || signature.length === args.length - 1);
-        let signatureContext = null;
-        for (const [params, evaluate] of overloads) {
-            signatureContext = new ParsingContext(context.registry, context.path, null, context.scope);
-            const parsedArgs = [];
-            let argParseFailed = false;
-            for (let i = 1; i < args.length; i++) {
-                const arg = args[i];
-                const expectedType = Array.isArray(params) ? params[i - 1] : params.type;
-                const parsed = signatureContext.parse(arg, 1 + parsedArgs.length, expectedType);
-                if (!parsed) {
-                    argParseFailed = true;
-                    break;
-                }
-                parsedArgs.push(parsed);
+    var type = Array.isArray(definition) ? definition[0] : definition.type;
+    var availableOverloads = Array.isArray(definition) ? [[
+            definition[1],
+            definition[2]
+        ]] : definition.overloads;
+    var overloads = availableOverloads.filter(function (ref) {
+        var signature = ref[0];
+        return !Array.isArray(signature) || signature.length === args.length - 1;
+    });
+    var signatureContext = null;
+    for (var i$3 = 0, list = overloads; i$3 < list.length; i$3 += 1) {
+        var ref = list[i$3];
+        var params = ref[0];
+        var evaluate = ref[1];
+        signatureContext = new ParsingContext(context.registry, context.path, null, context.scope);
+        var parsedArgs = [];
+        var argParseFailed = false;
+        for (var i = 1; i < args.length; i++) {
+            var arg = args[i];
+            var expectedType = Array.isArray(params) ? params[i - 1] : params.type;
+            var parsed = signatureContext.parse(arg, 1 + parsedArgs.length, expectedType);
+            if (!parsed) {
+                argParseFailed = true;
+                break;
             }
-            if (argParseFailed) {
+            parsedArgs.push(parsed);
+        }
+        if (argParseFailed) {
+            continue;
+        }
+        if (Array.isArray(params)) {
+            if (params.length !== parsedArgs.length) {
+                signatureContext.error('Expected ' + params.length + ' arguments, but found ' + parsedArgs.length + ' instead.');
                 continue;
             }
-            if (Array.isArray(params)) {
-                if (params.length !== parsedArgs.length) {
-                    signatureContext.error(`Expected ${ params.length } arguments, but found ${ parsedArgs.length } instead.`);
-                    continue;
-                }
-            }
-            for (let i = 0; i < parsedArgs.length; i++) {
-                const expected = Array.isArray(params) ? params[i] : params.type;
-                const arg = parsedArgs[i];
-                signatureContext.concat(i + 1).checkSubtype(expected, arg.type);
-            }
-            if (signatureContext.errors.length === 0) {
-                return new CompoundExpression(op, type, evaluate, parsedArgs);
-            }
         }
-        if (overloads.length === 1) {
-            context.errors.push(...signatureContext.errors);
-        } else {
-            const expected = overloads.length ? overloads : availableOverloads;
-            const signatures = expected.map(([params]) => stringifySignature(params)).join(' | ');
-            const actualTypes = [];
-            for (let i = 1; i < args.length; i++) {
-                const parsed = context.parse(args[i], 1 + actualTypes.length);
-                if (!parsed)
-                    return null;
-                actualTypes.push(toString(parsed.type));
-            }
-            context.error(`Expected arguments of type ${ signatures }, but found (${ actualTypes.join(', ') }) instead.`);
+        for (var i$1 = 0; i$1 < parsedArgs.length; i$1++) {
+            var expected = Array.isArray(params) ? params[i$1] : params.type;
+            var arg$1 = parsedArgs[i$1];
+            signatureContext.concat(i$1 + 1).checkSubtype(expected, arg$1.type);
         }
-        return null;
-    }
-    static register(registry, definitions) {
-        CompoundExpression.definitions = definitions;
-        for (const name in definitions) {
-            registry[name] = CompoundExpression;
+        if (signatureContext.errors.length === 0) {
+            return new CompoundExpression(op, type, evaluate, parsedArgs);
         }
     }
-}
+    if (overloads.length === 1) {
+        (ref$1 = context.errors).push.apply(ref$1, signatureContext.errors);
+    } else {
+        var expected$1 = overloads.length ? overloads : availableOverloads;
+        var signatures = expected$1.map(function (ref) {
+            var params = ref[0];
+            return stringifySignature(params);
+        }).join(' | ');
+        var actualTypes = [];
+        for (var i$2 = 1; i$2 < args.length; i$2++) {
+            var parsed$1 = context.parse(args[i$2], 1 + actualTypes.length);
+            if (!parsed$1) {
+                return null;
+            }
+            actualTypes.push(toString(parsed$1.type));
+        }
+        context.error('Expected arguments of type ' + signatures + ', but found (' + actualTypes.join(', ') + ') instead.');
+    }
+    return null;
+};
+CompoundExpression.register = function register(registry, definitions) {
+    CompoundExpression.definitions = definitions;
+    for (var name in definitions) {
+        registry[name] = CompoundExpression;
+    }
+};
 function stringifySignature(signature) {
     if (Array.isArray(signature)) {
-        return `(${ signature.map(toString).join(', ') })`;
+        return '(' + signature.map(toString).join(', ') + ')';
     } else {
-        return `(${ toString(signature.type) }...)`;
+        return '(' + toString(signature.type) + '...)';
     }
 }
 
-class CollatorExpression {
-    constructor(caseSensitive, diacriticSensitive, locale) {
-        this.type = CollatorType;
-        this.locale = locale;
-        this.caseSensitive = caseSensitive;
-        this.diacriticSensitive = diacriticSensitive;
+var CollatorExpression = function CollatorExpression(caseSensitive, diacriticSensitive, locale) {
+    this.type = CollatorType;
+    this.locale = locale;
+    this.caseSensitive = caseSensitive;
+    this.diacriticSensitive = diacriticSensitive;
+};
+CollatorExpression.parse = function parse(args, context) {
+    if (args.length !== 2) {
+        return context.error('Expected one argument.');
     }
-    static parse(args, context) {
-        if (args.length !== 2)
-            return context.error(`Expected one argument.`);
-        const options = args[1];
-        if (typeof options !== 'object' || Array.isArray(options))
-            return context.error(`Collator options argument must be an object.`);
-        const caseSensitive = context.parse(options['case-sensitive'] === undefined ? false : options['case-sensitive'], 1, BooleanType);
-        if (!caseSensitive)
+    var options = args[1];
+    if (typeof options !== 'object' || Array.isArray(options)) {
+        return context.error('Collator options argument must be an object.');
+    }
+    var caseSensitive = context.parse(options['case-sensitive'] === undefined ? false : options['case-sensitive'], 1, BooleanType);
+    if (!caseSensitive) {
+        return null;
+    }
+    var diacriticSensitive = context.parse(options['diacritic-sensitive'] === undefined ? false : options['diacritic-sensitive'], 1, BooleanType);
+    if (!diacriticSensitive) {
+        return null;
+    }
+    var locale = null;
+    if (options['locale']) {
+        locale = context.parse(options['locale'], 1, StringType);
+        if (!locale) {
             return null;
-        const diacriticSensitive = context.parse(options['diacritic-sensitive'] === undefined ? false : options['diacritic-sensitive'], 1, BooleanType);
-        if (!diacriticSensitive)
-            return null;
-        let locale = null;
-        if (options['locale']) {
-            locale = context.parse(options['locale'], 1, StringType);
-            if (!locale)
-                return null;
-        }
-        return new CollatorExpression(caseSensitive, diacriticSensitive, locale);
-    }
-    evaluate(ctx) {
-        return new Collator(this.caseSensitive.evaluate(ctx), this.diacriticSensitive.evaluate(ctx), this.locale ? this.locale.evaluate(ctx) : null);
-    }
-    eachChild(fn) {
-        fn(this.caseSensitive);
-        fn(this.diacriticSensitive);
-        if (this.locale) {
-            fn(this.locale);
         }
     }
-    outputDefined() {
-        return false;
+    return new CollatorExpression(caseSensitive, diacriticSensitive, locale);
+};
+CollatorExpression.prototype.evaluate = function evaluate(ctx) {
+    return new Collator(this.caseSensitive.evaluate(ctx), this.diacriticSensitive.evaluate(ctx), this.locale ? this.locale.evaluate(ctx) : null);
+};
+CollatorExpression.prototype.eachChild = function eachChild(fn) {
+    fn(this.caseSensitive);
+    fn(this.diacriticSensitive);
+    if (this.locale) {
+        fn(this.locale);
     }
-    serialize() {
-        const options = {};
-        options['case-sensitive'] = this.caseSensitive.serialize();
-        options['diacritic-sensitive'] = this.diacriticSensitive.serialize();
-        if (this.locale) {
-            options['locale'] = this.locale.serialize();
-        }
-        return [
-            'collator',
-            options
-        ];
+};
+CollatorExpression.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+CollatorExpression.prototype.serialize = function serialize() {
+    var options = {};
+    options['case-sensitive'] = this.caseSensitive.serialize();
+    options['diacritic-sensitive'] = this.diacriticSensitive.serialize();
+    if (this.locale) {
+        options['locale'] = this.locale.serialize();
     }
-}
+    return [
+        'collator',
+        options
+    ];
+};
 
-const EXTENT = 8192;
+var EXTENT = 8192;
 function updateBBox(bbox, coord) {
     bbox[0] = Math.min(bbox[0], coord[0]);
     bbox[1] = Math.min(bbox[1], coord[1]);
@@ -9105,52 +8881,59 @@ function mercatorYfromLat(lat) {
     return (180 - 180 / Math.PI * Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360))) / 360;
 }
 function boxWithinBox(bbox1, bbox2) {
-    if (bbox1[0] <= bbox2[0])
+    if (bbox1[0] <= bbox2[0]) {
         return false;
-    if (bbox1[2] >= bbox2[2])
+    }
+    if (bbox1[2] >= bbox2[2]) {
         return false;
-    if (bbox1[1] <= bbox2[1])
+    }
+    if (bbox1[1] <= bbox2[1]) {
         return false;
-    if (bbox1[3] >= bbox2[3])
+    }
+    if (bbox1[3] >= bbox2[3]) {
         return false;
+    }
     return true;
 }
 function getTileCoordinates(p, canonical) {
-    const x = mercatorXfromLng(p[0]);
-    const y = mercatorYfromLat(p[1]);
-    const tilesAtZoom = Math.pow(2, canonical.z);
+    var x = mercatorXfromLng(p[0]);
+    var y = mercatorYfromLat(p[1]);
+    var tilesAtZoom = Math.pow(2, canonical.z);
     return [
         Math.round(x * tilesAtZoom * EXTENT),
         Math.round(y * tilesAtZoom * EXTENT)
     ];
 }
 function onBoundary(p, p1, p2) {
-    const x1 = p[0] - p1[0];
-    const y1 = p[1] - p1[1];
-    const x2 = p[0] - p2[0];
-    const y2 = p[1] - p2[1];
+    var x1 = p[0] - p1[0];
+    var y1 = p[1] - p1[1];
+    var x2 = p[0] - p2[0];
+    var y2 = p[1] - p2[1];
     return x1 * y2 - x2 * y1 === 0 && x1 * x2 <= 0 && y1 * y2 <= 0;
 }
 function rayIntersect(p, p1, p2) {
     return p1[1] > p[1] !== p2[1] > p[1] && p[0] < (p2[0] - p1[0]) * (p[1] - p1[1]) / (p2[1] - p1[1]) + p1[0];
 }
 function pointWithinPolygon(point, rings) {
-    let inside = false;
-    for (let i = 0, len = rings.length; i < len; i++) {
-        const ring = rings[i];
-        for (let j = 0, len2 = ring.length; j < len2 - 1; j++) {
-            if (onBoundary(point, ring[j], ring[j + 1]))
+    var inside = false;
+    for (var i = 0, len = rings.length; i < len; i++) {
+        var ring = rings[i];
+        for (var j = 0, len2 = ring.length; j < len2 - 1; j++) {
+            if (onBoundary(point, ring[j], ring[j + 1])) {
                 return false;
-            if (rayIntersect(point, ring[j], ring[j + 1]))
+            }
+            if (rayIntersect(point, ring[j], ring[j + 1])) {
                 inside = !inside;
+            }
         }
     }
     return inside;
 }
 function pointWithinPolygons(point, polygons) {
-    for (let i = 0; i < polygons.length; i++) {
-        if (pointWithinPolygon(point, polygons[i]))
+    for (var i = 0; i < polygons.length; i++) {
+        if (pointWithinPolygon(point, polygons[i])) {
             return true;
+        }
     }
     return false;
 }
@@ -9158,36 +8941,40 @@ function perp(v1, v2) {
     return v1[0] * v2[1] - v1[1] * v2[0];
 }
 function twoSided(p1, p2, q1, q2) {
-    const x1 = p1[0] - q1[0];
-    const y1 = p1[1] - q1[1];
-    const x2 = p2[0] - q1[0];
-    const y2 = p2[1] - q1[1];
-    const x3 = q2[0] - q1[0];
-    const y3 = q2[1] - q1[1];
-    const det1 = x1 * y3 - x3 * y1;
-    const det2 = x2 * y3 - x3 * y2;
-    if (det1 > 0 && det2 < 0 || det1 < 0 && det2 > 0)
+    var x1 = p1[0] - q1[0];
+    var y1 = p1[1] - q1[1];
+    var x2 = p2[0] - q1[0];
+    var y2 = p2[1] - q1[1];
+    var x3 = q2[0] - q1[0];
+    var y3 = q2[1] - q1[1];
+    var det1 = x1 * y3 - x3 * y1;
+    var det2 = x2 * y3 - x3 * y2;
+    if (det1 > 0 && det2 < 0 || det1 < 0 && det2 > 0) {
         return true;
+    }
     return false;
 }
 function lineIntersectLine(a, b, c, d) {
-    const vectorP = [
+    var vectorP = [
         b[0] - a[0],
         b[1] - a[1]
     ];
-    const vectorQ = [
+    var vectorQ = [
         d[0] - c[0],
         d[1] - c[1]
     ];
-    if (perp(vectorQ, vectorP) === 0)
+    if (perp(vectorQ, vectorP) === 0) {
         return false;
-    if (twoSided(a, b, c, d) && twoSided(c, d, a, b))
+    }
+    if (twoSided(a, b, c, d) && twoSided(c, d, a, b)) {
         return true;
+    }
     return false;
 }
 function lineIntersectPolygon(p1, p2, polygon) {
-    for (const ring of polygon) {
-        for (let j = 0; j < ring.length - 1; ++j) {
+    for (var i = 0, list = polygon; i < list.length; i += 1) {
+        var ring = list[i];
+        for (var j = 0; j < ring.length - 1; ++j) {
             if (lineIntersectLine(p1, p2, ring[j], ring[j + 1])) {
                 return true;
             }
@@ -9196,31 +8983,32 @@ function lineIntersectPolygon(p1, p2, polygon) {
     return false;
 }
 function lineStringWithinPolygon(line, polygon) {
-    for (let i = 0; i < line.length; ++i) {
+    for (var i = 0; i < line.length; ++i) {
         if (!pointWithinPolygon(line[i], polygon)) {
             return false;
         }
     }
-    for (let i = 0; i < line.length - 1; ++i) {
-        if (lineIntersectPolygon(line[i], line[i + 1], polygon)) {
+    for (var i$1 = 0; i$1 < line.length - 1; ++i$1) {
+        if (lineIntersectPolygon(line[i$1], line[i$1 + 1], polygon)) {
             return false;
         }
     }
     return true;
 }
 function lineStringWithinPolygons(line, polygons) {
-    for (let i = 0; i < polygons.length; i++) {
-        if (lineStringWithinPolygon(line, polygons[i]))
+    for (var i = 0; i < polygons.length; i++) {
+        if (lineStringWithinPolygon(line, polygons[i])) {
             return true;
+        }
     }
     return false;
 }
 function getTilePolygon(coordinates, bbox, canonical) {
-    const polygon = [];
-    for (let i = 0; i < coordinates.length; i++) {
-        const ring = [];
-        for (let j = 0; j < coordinates[i].length; j++) {
-            const coord = getTileCoordinates(coordinates[i][j], canonical);
+    var polygon = [];
+    for (var i = 0; i < coordinates.length; i++) {
+        var ring = [];
+        for (var j = 0; j < coordinates[i].length; j++) {
+            var coord = getTileCoordinates(coordinates[i][j], canonical);
             updateBBox(bbox, coord);
             ring.push(coord);
         }
@@ -9229,17 +9017,17 @@ function getTilePolygon(coordinates, bbox, canonical) {
     return polygon;
 }
 function getTilePolygons(coordinates, bbox, canonical) {
-    const polygons = [];
-    for (let i = 0; i < coordinates.length; i++) {
-        const polygon = getTilePolygon(coordinates[i], bbox, canonical);
+    var polygons = [];
+    for (var i = 0; i < coordinates.length; i++) {
+        var polygon = getTilePolygon(coordinates[i], bbox, canonical);
         polygons.push(polygon);
     }
     return polygons;
 }
 function updatePoint(p, bbox, polyBBox, worldSize) {
     if (p[0] < polyBBox[0] || p[0] > polyBBox[2]) {
-        const halfWorldSize = worldSize * 0.5;
-        let shift = p[0] - polyBBox[0] > halfWorldSize ? -worldSize : polyBBox[0] - p[0] > halfWorldSize ? worldSize : 0;
+        var halfWorldSize = worldSize * 0.5;
+        var shift = p[0] - polyBBox[0] > halfWorldSize ? -worldSize : polyBBox[0] - p[0] > halfWorldSize ? worldSize : 0;
         if (shift === 0) {
             shift = p[0] - polyBBox[2] > halfWorldSize ? -worldSize : polyBBox[2] - p[0] > halfWorldSize ? worldSize : 0;
         }
@@ -9252,15 +9040,17 @@ function resetBBox(bbox) {
     bbox[2] = bbox[3] = -Infinity;
 }
 function getTilePoints(geometry, pointBBox, polyBBox, canonical) {
-    const worldSize = Math.pow(2, canonical.z) * EXTENT;
-    const shifts = [
+    var worldSize = Math.pow(2, canonical.z) * EXTENT;
+    var shifts = [
         canonical.x * EXTENT,
         canonical.y * EXTENT
     ];
-    const tilePoints = [];
-    for (const points of geometry) {
-        for (const point of points) {
-            const p = [
+    var tilePoints = [];
+    for (var i$1 = 0, list$1 = geometry; i$1 < list$1.length; i$1 += 1) {
+        var points = list$1[i$1];
+        for (var i = 0, list = points; i < list.length; i += 1) {
+            var point = list[i];
+            var p = [
                 point.x + shifts[0],
                 point.y + shifts[1]
             ];
@@ -9271,16 +9061,18 @@ function getTilePoints(geometry, pointBBox, polyBBox, canonical) {
     return tilePoints;
 }
 function getTileLines(geometry, lineBBox, polyBBox, canonical) {
-    const worldSize = Math.pow(2, canonical.z) * EXTENT;
-    const shifts = [
+    var worldSize = Math.pow(2, canonical.z) * EXTENT;
+    var shifts = [
         canonical.x * EXTENT,
         canonical.y * EXTENT
     ];
-    const tileLines = [];
-    for (const line of geometry) {
-        const tileLine = [];
-        for (const point of line) {
-            const p = [
+    var tileLines = [];
+    for (var i$1 = 0, list$1 = geometry; i$1 < list$1.length; i$1 += 1) {
+        var line = list$1[i$1];
+        var tileLine = [];
+        for (var i = 0, list = line; i < list.length; i += 1) {
+            var point = list[i];
+            var p = [
                 point.x + shifts[0],
                 point.y + shifts[1]
             ];
@@ -9291,137 +9083,150 @@ function getTileLines(geometry, lineBBox, polyBBox, canonical) {
     }
     if (lineBBox[2] - lineBBox[0] <= worldSize / 2) {
         resetBBox(lineBBox);
-        for (const line of tileLines) {
-            for (const p of line) {
-                updatePoint(p, lineBBox, polyBBox, worldSize);
+        for (var i$3 = 0, list$3 = tileLines; i$3 < list$3.length; i$3 += 1) {
+            var line$1 = list$3[i$3];
+            for (var i$2 = 0, list$2 = line$1; i$2 < list$2.length; i$2 += 1) {
+                var p$1 = list$2[i$2];
+                updatePoint(p$1, lineBBox, polyBBox, worldSize);
             }
         }
     }
     return tileLines;
 }
 function pointsWithinPolygons(ctx, polygonGeometry) {
-    const pointBBox = [
+    var pointBBox = [
         Infinity,
         Infinity,
         -Infinity,
         -Infinity
     ];
-    const polyBBox = [
+    var polyBBox = [
         Infinity,
         Infinity,
         -Infinity,
         -Infinity
     ];
-    const canonical = ctx.canonicalID();
+    var canonical = ctx.canonicalID();
     if (polygonGeometry.type === 'Polygon') {
-        const tilePolygon = getTilePolygon(polygonGeometry.coordinates, polyBBox, canonical);
-        const tilePoints = getTilePoints(ctx.geometry(), pointBBox, polyBBox, canonical);
-        if (!boxWithinBox(pointBBox, polyBBox))
+        var tilePolygon = getTilePolygon(polygonGeometry.coordinates, polyBBox, canonical);
+        var tilePoints = getTilePoints(ctx.geometry(), pointBBox, polyBBox, canonical);
+        if (!boxWithinBox(pointBBox, polyBBox)) {
             return false;
-        for (const point of tilePoints) {
-            if (!pointWithinPolygon(point, tilePolygon))
+        }
+        for (var i = 0, list = tilePoints; i < list.length; i += 1) {
+            var point = list[i];
+            if (!pointWithinPolygon(point, tilePolygon)) {
                 return false;
+            }
         }
     }
     if (polygonGeometry.type === 'MultiPolygon') {
-        const tilePolygons = getTilePolygons(polygonGeometry.coordinates, polyBBox, canonical);
-        const tilePoints = getTilePoints(ctx.geometry(), pointBBox, polyBBox, canonical);
-        if (!boxWithinBox(pointBBox, polyBBox))
+        var tilePolygons = getTilePolygons(polygonGeometry.coordinates, polyBBox, canonical);
+        var tilePoints$1 = getTilePoints(ctx.geometry(), pointBBox, polyBBox, canonical);
+        if (!boxWithinBox(pointBBox, polyBBox)) {
             return false;
-        for (const point of tilePoints) {
-            if (!pointWithinPolygons(point, tilePolygons))
+        }
+        for (var i$1 = 0, list$1 = tilePoints$1; i$1 < list$1.length; i$1 += 1) {
+            var point$1 = list$1[i$1];
+            if (!pointWithinPolygons(point$1, tilePolygons)) {
                 return false;
+            }
         }
     }
     return true;
 }
 function linesWithinPolygons(ctx, polygonGeometry) {
-    const lineBBox = [
+    var lineBBox = [
         Infinity,
         Infinity,
         -Infinity,
         -Infinity
     ];
-    const polyBBox = [
+    var polyBBox = [
         Infinity,
         Infinity,
         -Infinity,
         -Infinity
     ];
-    const canonical = ctx.canonicalID();
+    var canonical = ctx.canonicalID();
     if (polygonGeometry.type === 'Polygon') {
-        const tilePolygon = getTilePolygon(polygonGeometry.coordinates, polyBBox, canonical);
-        const tileLines = getTileLines(ctx.geometry(), lineBBox, polyBBox, canonical);
-        if (!boxWithinBox(lineBBox, polyBBox))
+        var tilePolygon = getTilePolygon(polygonGeometry.coordinates, polyBBox, canonical);
+        var tileLines = getTileLines(ctx.geometry(), lineBBox, polyBBox, canonical);
+        if (!boxWithinBox(lineBBox, polyBBox)) {
             return false;
-        for (const line of tileLines) {
-            if (!lineStringWithinPolygon(line, tilePolygon))
+        }
+        for (var i = 0, list = tileLines; i < list.length; i += 1) {
+            var line = list[i];
+            if (!lineStringWithinPolygon(line, tilePolygon)) {
                 return false;
+            }
         }
     }
     if (polygonGeometry.type === 'MultiPolygon') {
-        const tilePolygons = getTilePolygons(polygonGeometry.coordinates, polyBBox, canonical);
-        const tileLines = getTileLines(ctx.geometry(), lineBBox, polyBBox, canonical);
-        if (!boxWithinBox(lineBBox, polyBBox))
+        var tilePolygons = getTilePolygons(polygonGeometry.coordinates, polyBBox, canonical);
+        var tileLines$1 = getTileLines(ctx.geometry(), lineBBox, polyBBox, canonical);
+        if (!boxWithinBox(lineBBox, polyBBox)) {
             return false;
-        for (const line of tileLines) {
-            if (!lineStringWithinPolygons(line, tilePolygons))
+        }
+        for (var i$1 = 0, list$1 = tileLines$1; i$1 < list$1.length; i$1 += 1) {
+            var line$1 = list$1[i$1];
+            if (!lineStringWithinPolygons(line$1, tilePolygons)) {
                 return false;
+            }
         }
     }
     return true;
 }
-class Within {
-    constructor(geojson, geometries) {
-        this.type = BooleanType;
-        this.geojson = geojson;
-        this.geometries = geometries;
+var Within = function Within(geojson, geometries) {
+    this.type = BooleanType;
+    this.geojson = geojson;
+    this.geometries = geometries;
+};
+Within.parse = function parse(args, context) {
+    if (args.length !== 2) {
+        return context.error('\'within\' expression requires exactly one argument, but found ' + (args.length - 1) + ' instead.');
     }
-    static parse(args, context) {
-        if (args.length !== 2)
-            return context.error(`'within' expression requires exactly one argument, but found ${ args.length - 1 } instead.`);
-        if (isValue(args[1])) {
-            const geojson = args[1];
-            if (geojson.type === 'FeatureCollection') {
-                for (let i = 0; i < geojson.features.length; ++i) {
-                    const type = geojson.features[i].geometry.type;
-                    if (type === 'Polygon' || type === 'MultiPolygon') {
-                        return new Within(geojson, geojson.features[i].geometry);
-                    }
-                }
-            } else if (geojson.type === 'Feature') {
-                const type = geojson.geometry.type;
+    if (isValue(args[1])) {
+        var geojson = args[1];
+        if (geojson.type === 'FeatureCollection') {
+            for (var i = 0; i < geojson.features.length; ++i) {
+                var type = geojson.features[i].geometry.type;
                 if (type === 'Polygon' || type === 'MultiPolygon') {
-                    return new Within(geojson, geojson.geometry);
+                    return new Within(geojson, geojson.features[i].geometry);
                 }
-            } else if (geojson.type === 'Polygon' || geojson.type === 'MultiPolygon') {
-                return new Within(geojson, geojson);
             }
-        }
-        return context.error(`'within' expression requires valid geojson object that contains polygon geometry type.`);
-    }
-    evaluate(ctx) {
-        if (ctx.geometry() != null && ctx.canonicalID() != null) {
-            if (ctx.geometryType() === 'Point') {
-                return pointsWithinPolygons(ctx, this.geometries);
-            } else if (ctx.geometryType() === 'LineString') {
-                return linesWithinPolygons(ctx, this.geometries);
+        } else if (geojson.type === 'Feature') {
+            var type$1 = geojson.geometry.type;
+            if (type$1 === 'Polygon' || type$1 === 'MultiPolygon') {
+                return new Within(geojson, geojson.geometry);
             }
+        } else if (geojson.type === 'Polygon' || geojson.type === 'MultiPolygon') {
+            return new Within(geojson, geojson);
         }
-        return false;
     }
-    eachChild() {
+    return context.error('\'within\' expression requires valid geojson object that contains polygon geometry type.');
+};
+Within.prototype.evaluate = function evaluate(ctx) {
+    if (ctx.geometry() != null && ctx.canonicalID() != null) {
+        if (ctx.geometryType() === 'Point') {
+            return pointsWithinPolygons(ctx, this.geometries);
+        } else if (ctx.geometryType() === 'LineString') {
+            return linesWithinPolygons(ctx, this.geometries);
+        }
     }
-    outputDefined() {
-        return true;
-    }
-    serialize() {
-        return [
-            'within',
-            this.geojson
-        ];
-    }
-}
+    return false;
+};
+Within.prototype.eachChild = function eachChild() {
+};
+Within.prototype.outputDefined = function outputDefined() {
+    return true;
+};
+Within.prototype.serialize = function serialize() {
+    return [
+        'within',
+        this.geojson
+    ];
+};
 
 function isFeatureConstant(e) {
     if (e instanceof CompoundExpression) {
@@ -9440,8 +9245,8 @@ function isFeatureConstant(e) {
     if (e instanceof Within) {
         return false;
     }
-    let result = true;
-    e.eachChild(arg => {
+    var result = true;
+    e.eachChild(function (arg) {
         if (result && !isFeatureConstant(arg)) {
             result = false;
         }
@@ -9454,8 +9259,8 @@ function isStateConstant(e) {
             return false;
         }
     }
-    let result = true;
-    e.eachChild(arg => {
+    var result = true;
+    e.eachChild(function (arg) {
         if (result && !isStateConstant(arg)) {
             result = false;
         }
@@ -9466,8 +9271,8 @@ function isGlobalPropertyConstant(e, properties) {
     if (e instanceof CompoundExpression && properties.indexOf(e.name) >= 0) {
         return false;
     }
-    let result = true;
-    e.eachChild(arg => {
+    var result = true;
+    e.eachChild(function (arg) {
         if (result && !isGlobalPropertyConstant(arg, properties)) {
             result = false;
         }
@@ -9475,129 +9280,143 @@ function isGlobalPropertyConstant(e, properties) {
     return result;
 }
 
-class Var {
-    constructor(name, boundExpression) {
-        this.type = boundExpression.type;
-        this.name = name;
-        this.boundExpression = boundExpression;
+var Var = function Var(name, boundExpression) {
+    this.type = boundExpression.type;
+    this.name = name;
+    this.boundExpression = boundExpression;
+};
+Var.parse = function parse(args, context) {
+    if (args.length !== 2 || typeof args[1] !== 'string') {
+        return context.error('\'var\' expression requires exactly one string literal argument.');
     }
-    static parse(args, context) {
-        if (args.length !== 2 || typeof args[1] !== 'string')
-            return context.error(`'var' expression requires exactly one string literal argument.`);
-        const name = args[1];
-        if (!context.scope.has(name)) {
-            return context.error(`Unknown variable "${ name }". Make sure "${ name }" has been bound in an enclosing "let" expression before using it.`, 1);
-        }
-        return new Var(name, context.scope.get(name));
+    var name = args[1];
+    if (!context.scope.has(name)) {
+        return context.error('Unknown variable "' + name + '". Make sure "' + name + '" has been bound in an enclosing "let" expression before using it.', 1);
     }
-    evaluate(ctx) {
-        return this.boundExpression.evaluate(ctx);
+    return new Var(name, context.scope.get(name));
+};
+Var.prototype.evaluate = function evaluate(ctx) {
+    return this.boundExpression.evaluate(ctx);
+};
+Var.prototype.eachChild = function eachChild() {
+};
+Var.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+Var.prototype.serialize = function serialize() {
+    return [
+        'var',
+        this.name
+    ];
+};
+
+var ParsingContext = function ParsingContext(registry, path, expectedType, scope, errors) {
+    if (path === void 0)
+        path = [];
+    if (scope === void 0)
+        scope = new Scope();
+    if (errors === void 0)
+        errors = [];
+    this.registry = registry;
+    this.path = path;
+    this.key = path.map(function (part) {
+        return '[' + part + ']';
+    }).join('');
+    this.scope = scope;
+    this.errors = errors;
+    this.expectedType = expectedType;
+};
+ParsingContext.prototype.parse = function parse(expr, index, expectedType, bindings, options) {
+    if (options === void 0)
+        options = {};
+    if (index) {
+        return this.concat(index, expectedType, bindings)._parse(expr, options);
     }
-    eachChild() {
-    }
-    outputDefined() {
-        return false;
-    }
-    serialize() {
-        return [
-            'var',
-            this.name
+    return this._parse(expr, options);
+};
+ParsingContext.prototype._parse = function _parse(expr, options) {
+    if (expr === null || typeof expr === 'string' || typeof expr === 'boolean' || typeof expr === 'number') {
+        expr = [
+            'literal',
+            expr
         ];
     }
-}
-
-class ParsingContext {
-    constructor(registry, path = [], expectedType, scope = new Scope(), errors = []) {
-        this.registry = registry;
-        this.path = path;
-        this.key = path.map(part => `[${ part }]`).join('');
-        this.scope = scope;
-        this.errors = errors;
-        this.expectedType = expectedType;
+    function annotate(parsed, type, typeAnnotation) {
+        if (typeAnnotation === 'assert') {
+            return new Assertion(type, [parsed]);
+        } else if (typeAnnotation === 'coerce') {
+            return new Coercion(type, [parsed]);
+        } else {
+            return parsed;
+        }
     }
-    parse(expr, index, expectedType, bindings, options = {}) {
-        if (index) {
-            return this.concat(index, expectedType, bindings)._parse(expr, options);
+    if (Array.isArray(expr)) {
+        if (expr.length === 0) {
+            return this.error('Expected an array with at least one element. If you wanted a literal array, use ["literal", []].');
         }
-        return this._parse(expr, options);
-    }
-    _parse(expr, options) {
-        if (expr === null || typeof expr === 'string' || typeof expr === 'boolean' || typeof expr === 'number') {
-            expr = [
-                'literal',
-                expr
-            ];
+        var op = expr[0];
+        if (typeof op !== 'string') {
+            this.error('Expression name must be a string, but found ' + typeof op + ' instead. If you wanted a literal array, use ["literal", [...]].', 0);
+            return null;
         }
-        function annotate(parsed, type, typeAnnotation) {
-            if (typeAnnotation === 'assert') {
-                return new Assertion(type, [parsed]);
-            } else if (typeAnnotation === 'coerce') {
-                return new Coercion(type, [parsed]);
-            } else {
-                return parsed;
-            }
-        }
-        if (Array.isArray(expr)) {
-            if (expr.length === 0) {
-                return this.error(`Expected an array with at least one element. If you wanted a literal array, use ["literal", []].`);
-            }
-            const op = expr[0];
-            if (typeof op !== 'string') {
-                this.error(`Expression name must be a string, but found ${ typeof op } instead. If you wanted a literal array, use ["literal", [...]].`, 0);
+        var Expr = this.registry[op];
+        if (Expr) {
+            var parsed = Expr.parse(expr, this);
+            if (!parsed) {
                 return null;
             }
-            const Expr = this.registry[op];
-            if (Expr) {
-                let parsed = Expr.parse(expr, this);
-                if (!parsed)
+            if (this.expectedType) {
+                var expected = this.expectedType;
+                var actual = parsed.type;
+                if ((expected.kind === 'string' || expected.kind === 'number' || expected.kind === 'boolean' || expected.kind === 'object' || expected.kind === 'array') && actual.kind === 'value') {
+                    parsed = annotate(parsed, expected, options.typeAnnotation || 'assert');
+                } else if ((expected.kind === 'color' || expected.kind === 'formatted' || expected.kind === 'resolvedImage') && (actual.kind === 'value' || actual.kind === 'string')) {
+                    parsed = annotate(parsed, expected, options.typeAnnotation || 'coerce');
+                } else if (this.checkSubtype(expected, actual)) {
                     return null;
-                if (this.expectedType) {
-                    const expected = this.expectedType;
-                    const actual = parsed.type;
-                    if ((expected.kind === 'string' || expected.kind === 'number' || expected.kind === 'boolean' || expected.kind === 'object' || expected.kind === 'array') && actual.kind === 'value') {
-                        parsed = annotate(parsed, expected, options.typeAnnotation || 'assert');
-                    } else if ((expected.kind === 'color' || expected.kind === 'formatted' || expected.kind === 'resolvedImage') && (actual.kind === 'value' || actual.kind === 'string')) {
-                        parsed = annotate(parsed, expected, options.typeAnnotation || 'coerce');
-                    } else if (this.checkSubtype(expected, actual)) {
-                        return null;
-                    }
                 }
-                if (!(parsed instanceof Literal) && parsed.type.kind !== 'resolvedImage' && isConstant(parsed)) {
-                    const ec = new EvaluationContext();
-                    try {
-                        parsed = new Literal(parsed.type, parsed.evaluate(ec));
-                    } catch (e) {
-                        this.error(e.message);
-                        return null;
-                    }
-                }
-                return parsed;
             }
-            return this.error(`Unknown expression "${ op }". If you wanted a literal array, use ["literal", [...]].`, 0);
-        } else if (typeof expr === 'undefined') {
-            return this.error(`'undefined' value invalid. Use null instead.`);
-        } else if (typeof expr === 'object') {
-            return this.error(`Bare objects invalid. Use ["literal", {...}] instead.`);
-        } else {
-            return this.error(`Expected an array, but found ${ typeof expr } instead.`);
+            if (!(parsed instanceof Literal) && parsed.type.kind !== 'resolvedImage' && isConstant(parsed)) {
+                var ec = new EvaluationContext();
+                try {
+                    parsed = new Literal(parsed.type, parsed.evaluate(ec));
+                } catch (e) {
+                    this.error(e.message);
+                    return null;
+                }
+            }
+            return parsed;
         }
+        return this.error('Unknown expression "' + op + '". If you wanted a literal array, use ["literal", [...]].', 0);
+    } else if (typeof expr === 'undefined') {
+        return this.error('\'undefined\' value invalid. Use null instead.');
+    } else if (typeof expr === 'object') {
+        return this.error('Bare objects invalid. Use ["literal", {...}] instead.');
+    } else {
+        return this.error('Expected an array, but found ' + typeof expr + ' instead.');
     }
-    concat(index, expectedType, bindings) {
-        const path = typeof index === 'number' ? this.path.concat(index) : this.path;
-        const scope = bindings ? this.scope.concat(bindings) : this.scope;
-        return new ParsingContext(this.registry, path, expectedType || null, scope, this.errors);
+};
+ParsingContext.prototype.concat = function concat(index, expectedType, bindings) {
+    var path = typeof index === 'number' ? this.path.concat(index) : this.path;
+    var scope = bindings ? this.scope.concat(bindings) : this.scope;
+    return new ParsingContext(this.registry, path, expectedType || null, scope, this.errors);
+};
+ParsingContext.prototype.error = function error(error$1) {
+    var keys = [], len = arguments.length - 1;
+    while (len-- > 0)
+        keys[len] = arguments[len + 1];
+    var key = '' + this.key + keys.map(function (k) {
+        return '[' + k + ']';
+    }).join('');
+    this.errors.push(new ParsingError(key, error$1));
+};
+ParsingContext.prototype.checkSubtype = function checkSubtype$1(expected, t) {
+    var error = checkSubtype(expected, t);
+    if (error) {
+        this.error(error);
     }
-    error(error, ...keys) {
-        const key = `${ this.key }${ keys.map(k => `[${ k }]`).join('') }`;
-        this.errors.push(new ParsingError(key, error));
-    }
-    checkSubtype(expected, t) {
-        const error = checkSubtype(expected, t);
-        if (error)
-            this.error(error);
-        return error;
-    }
-}
+    return error;
+};
 function isConstant(expression) {
     if (expression instanceof Var) {
         return isConstant(expression.boundExpression);
@@ -9608,9 +9427,9 @@ function isConstant(expression) {
     } else if (expression instanceof Within) {
         return false;
     }
-    const isTypeAnnotation = expression instanceof Coercion || expression instanceof Assertion;
-    let childrenConstant = true;
-    expression.eachChild(child => {
+    var isTypeAnnotation = expression instanceof Coercion || expression instanceof Assertion;
+    var childrenConstant = true;
+    expression.eachChild(function (child) {
         if (isTypeAnnotation) {
             childrenConstant = childrenConstant && isConstant(child);
         } else {
@@ -9624,18 +9443,17 @@ function isConstant(expression) {
         'zoom',
         'heatmap-density',
         'line-progress',
-        'sky-radial-progress',
         'accumulated',
         'is-supported-script'
     ]);
 }
 
 function findStopLessThanOrEqualTo(stops, input) {
-    const lastIndex = stops.length - 1;
-    let lowerIndex = 0;
-    let upperIndex = lastIndex;
-    let currentIndex = 0;
-    let currentValue, nextValue;
+    var lastIndex = stops.length - 1;
+    var lowerIndex = 0;
+    var upperIndex = lastIndex;
+    var currentIndex = 0;
+    var currentValue, nextValue;
     while (lowerIndex <= upperIndex) {
         currentIndex = Math.floor((lowerIndex + upperIndex) / 2);
         currentValue = stops[currentIndex];
@@ -9654,94 +9472,100 @@ function findStopLessThanOrEqualTo(stops, input) {
     return 0;
 }
 
-class Step {
-    constructor(type, input, stops) {
-        this.type = type;
-        this.input = input;
-        this.labels = [];
-        this.outputs = [];
-        for (const [label, expression] of stops) {
-            this.labels.push(label);
-            this.outputs.push(expression);
-        }
+var Step = function Step(type, input, stops) {
+    this.type = type;
+    this.input = input;
+    this.labels = [];
+    this.outputs = [];
+    for (var i = 0, list = stops; i < list.length; i += 1) {
+        var ref = list[i];
+        var label = ref[0];
+        var expression = ref[1];
+        this.labels.push(label);
+        this.outputs.push(expression);
     }
-    static parse(args, context) {
-        if (args.length - 1 < 4) {
-            return context.error(`Expected at least 4 arguments, but found only ${ args.length - 1 }.`);
+};
+Step.parse = function parse(args, context) {
+    if (args.length - 1 < 4) {
+        return context.error('Expected at least 4 arguments, but found only ' + (args.length - 1) + '.');
+    }
+    if ((args.length - 1) % 2 !== 0) {
+        return context.error('Expected an even number of arguments.');
+    }
+    var input = context.parse(args[1], 1, NumberType);
+    if (!input) {
+        return null;
+    }
+    var stops = [];
+    var outputType = null;
+    if (context.expectedType && context.expectedType.kind !== 'value') {
+        outputType = context.expectedType;
+    }
+    for (var i = 1; i < args.length; i += 2) {
+        var label = i === 1 ? -Infinity : args[i];
+        var value = args[i + 1];
+        var labelKey = i;
+        var valueKey = i + 1;
+        if (typeof label !== 'number') {
+            return context.error('Input/output pairs for "step" expressions must be defined using literal numeric values (not computed expressions) for the input values.', labelKey);
         }
-        if ((args.length - 1) % 2 !== 0) {
-            return context.error(`Expected an even number of arguments.`);
+        if (stops.length && stops[stops.length - 1][0] >= label) {
+            return context.error('Input/output pairs for "step" expressions must be arranged with input values in strictly ascending order.', labelKey);
         }
-        const input = context.parse(args[1], 1, NumberType);
-        if (!input)
+        var parsed = context.parse(value, valueKey, outputType);
+        if (!parsed) {
             return null;
-        const stops = [];
-        let outputType = null;
-        if (context.expectedType && context.expectedType.kind !== 'value') {
-            outputType = context.expectedType;
         }
-        for (let i = 1; i < args.length; i += 2) {
-            const label = i === 1 ? -Infinity : args[i];
-            const value = args[i + 1];
-            const labelKey = i;
-            const valueKey = i + 1;
-            if (typeof label !== 'number') {
-                return context.error('Input/output pairs for "step" expressions must be defined using literal numeric values (not computed expressions) for the input values.', labelKey);
-            }
-            if (stops.length && stops[stops.length - 1][0] >= label) {
-                return context.error('Input/output pairs for "step" expressions must be arranged with input values in strictly ascending order.', labelKey);
-            }
-            const parsed = context.parse(value, valueKey, outputType);
-            if (!parsed)
-                return null;
-            outputType = outputType || parsed.type;
-            stops.push([
-                label,
-                parsed
-            ]);
-        }
-        return new Step(outputType, input, stops);
+        outputType = outputType || parsed.type;
+        stops.push([
+            label,
+            parsed
+        ]);
     }
-    evaluate(ctx) {
-        const labels = this.labels;
-        const outputs = this.outputs;
-        if (labels.length === 1) {
-            return outputs[0].evaluate(ctx);
-        }
-        const value = this.input.evaluate(ctx);
-        if (value <= labels[0]) {
-            return outputs[0].evaluate(ctx);
-        }
-        const stopCount = labels.length;
-        if (value >= labels[stopCount - 1]) {
-            return outputs[stopCount - 1].evaluate(ctx);
-        }
-        const index = findStopLessThanOrEqualTo(labels, value);
-        return outputs[index].evaluate(ctx);
+    return new Step(outputType, input, stops);
+};
+Step.prototype.evaluate = function evaluate(ctx) {
+    var labels = this.labels;
+    var outputs = this.outputs;
+    if (labels.length === 1) {
+        return outputs[0].evaluate(ctx);
     }
-    eachChild(fn) {
-        fn(this.input);
-        for (const expression of this.outputs) {
-            fn(expression);
+    var value = this.input.evaluate(ctx);
+    if (value <= labels[0]) {
+        return outputs[0].evaluate(ctx);
+    }
+    var stopCount = labels.length;
+    if (value >= labels[stopCount - 1]) {
+        return outputs[stopCount - 1].evaluate(ctx);
+    }
+    var index = findStopLessThanOrEqualTo(labels, value);
+    return outputs[index].evaluate(ctx);
+};
+Step.prototype.eachChild = function eachChild(fn) {
+    fn(this.input);
+    for (var i = 0, list = this.outputs; i < list.length; i += 1) {
+        var expression = list[i];
+        fn(expression);
+    }
+};
+Step.prototype.outputDefined = function outputDefined() {
+    return this.outputs.every(function (out) {
+        return out.outputDefined();
+    });
+};
+Step.prototype.serialize = function serialize() {
+    var serialized = [
+        'step',
+        this.input.serialize()
+    ];
+    for (var i = 0; i < this.labels.length; i++) {
+        if (i > 0) {
+            serialized.push(this.labels[i]);
         }
+        serialized.push(this.outputs[i].serialize());
     }
-    outputDefined() {
-        return this.outputs.every(out => out.outputDefined());
-    }
-    serialize() {
-        const serialized = [
-            'step',
-            this.input.serialize()
-        ];
-        for (let i = 0; i < this.labels.length; i++) {
-            if (i > 0) {
-                serialized.push(this.labels[i]);
-            }
-            serialized.push(this.outputs[i].serialize());
-        }
-        return serialized;
-    }
-}
+    return serialized;
+};
 
 /*
  * Copyright (C) 2008 Apple Inc. All Rights Reserved.
@@ -9803,7 +9627,7 @@ UnitBezier.prototype.sampleCurveDerivativeX = function(t) {
 };
 
 UnitBezier.prototype.solveCurveX = function(x, epsilon) {
-    if (typeof epsilon === 'undefined') epsilon = 1e-6;
+    if (typeof epsilon === 'undefined') { epsilon = 1e-6; }
 
     var t0, t1, t2, x2, i;
 
@@ -9811,10 +9635,10 @@ UnitBezier.prototype.solveCurveX = function(x, epsilon) {
     for (t2 = x, i = 0; i < 8; i++) {
 
         x2 = this.sampleCurveX(t2) - x;
-        if (Math.abs(x2) < epsilon) return t2;
+        if (Math.abs(x2) < epsilon) { return t2; }
 
         var d2 = this.sampleCurveDerivativeX(t2);
-        if (Math.abs(d2) < 1e-6) break;
+        if (Math.abs(d2) < 1e-6) { break; }
 
         t2 = t2 - x2 / d2;
     }
@@ -9824,13 +9648,13 @@ UnitBezier.prototype.solveCurveX = function(x, epsilon) {
     t1 = 1.0;
     t2 = x;
 
-    if (t2 < t0) return t0;
-    if (t2 > t1) return t1;
+    if (t2 < t0) { return t0; }
+    if (t2 > t1) { return t1; }
 
     while (t0 < t1) {
 
         x2 = this.sampleCurveX(t2);
-        if (Math.abs(x2 - x) < epsilon) return t2;
+        if (Math.abs(x2 - x) < epsilon) { return t2; }
 
         if (x > x2) {
             t0 = t2;
@@ -9856,7 +9680,7 @@ function color(from, to, t) {
     return new Color(number(from.r, to.r, t), number(from.g, to.g, t), number(from.b, to.b, t), number(from.a, to.a, t));
 }
 function array$1(from, to, t) {
-    return from.map((d, i) => {
+    return from.map(function (d, i) {
         return number(d, to[i], t);
     });
 }
@@ -9868,7 +9692,7 @@ var interpolate = /*#__PURE__*/Object.freeze({
   array: array$1
 });
 
-const Xn = 0.95047, Yn = 1, Zn = 1.08883, t0 = 4 / 29, t1 = 6 / 29, t2 = 3 * t1 * t1, t3 = t1 * t1 * t1, deg2rad = Math.PI / 180, rad2deg = 180 / Math.PI;
+var Xn = 0.95047, Yn = 1, Zn = 1.08883, t0 = 4 / 29, t1 = 6 / 29, t2 = 3 * t1 * t1, t3 = t1 * t1 * t1, deg2rad = Math.PI / 180, rad2deg = 180 / Math.PI;
 function xyz2lab(t) {
     return t > t3 ? Math.pow(t, 1 / 3) : t / t2 + t0;
 }
@@ -9883,7 +9707,7 @@ function rgb2xyz(x) {
     return x <= 0.04045 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
 }
 function rgbToLab(rgbColor) {
-    const b = rgb2xyz(rgbColor.r), a = rgb2xyz(rgbColor.g), l = rgb2xyz(rgbColor.b), x = xyz2lab((0.4124564 * b + 0.3575761 * a + 0.1804375 * l) / Xn), y = xyz2lab((0.2126729 * b + 0.7151522 * a + 0.072175 * l) / Yn), z = xyz2lab((0.0193339 * b + 0.119192 * a + 0.9503041 * l) / Zn);
+    var b = rgb2xyz(rgbColor.r), a = rgb2xyz(rgbColor.g), l = rgb2xyz(rgbColor.b), x = xyz2lab((0.4124564 * b + 0.3575761 * a + 0.1804375 * l) / Xn), y = xyz2lab((0.2126729 * b + 0.7151522 * a + 0.072175 * l) / Yn), z = xyz2lab((0.0193339 * b + 0.119192 * a + 0.9503041 * l) / Zn);
     return {
         l: 116 * y - 16,
         a: 500 * (x - y),
@@ -9892,7 +9716,7 @@ function rgbToLab(rgbColor) {
     };
 }
 function labToRgb(labColor) {
-    let y = (labColor.l + 16) / 116, x = isNaN(labColor.a) ? y : y + labColor.a / 500, z = isNaN(labColor.b) ? y : y - labColor.b / 200;
+    var y = (labColor.l + 16) / 116, x = isNaN(labColor.a) ? y : y + labColor.a / 500, z = isNaN(labColor.b) ? y : y - labColor.b / 200;
     y = Yn * lab2xyz(y);
     x = Xn * lab2xyz(x);
     z = Zn * lab2xyz(z);
@@ -9907,26 +9731,29 @@ function interpolateLab(from, to, t) {
     };
 }
 function rgbToHcl(rgbColor) {
-    const {l, a, b} = rgbToLab(rgbColor);
-    const h = Math.atan2(b, a) * rad2deg;
+    var ref = rgbToLab(rgbColor);
+    var l = ref.l;
+    var a = ref.a;
+    var b = ref.b;
+    var h = Math.atan2(b, a) * rad2deg;
     return {
         h: h < 0 ? h + 360 : h,
         c: Math.sqrt(a * a + b * b),
-        l,
+        l: l,
         alpha: rgbColor.a
     };
 }
 function hclToRgb(hclColor) {
-    const h = hclColor.h * deg2rad, c = hclColor.c, l = hclColor.l;
+    var h = hclColor.h * deg2rad, c = hclColor.c, l = hclColor.l;
     return labToRgb({
-        l,
+        l: l,
         a: Math.cos(h) * c,
         b: Math.sin(h) * c,
         alpha: hclColor.alpha
     });
 }
 function interpolateHue(a, b, t) {
-    const d = b - a;
+    var d = b - a;
     return a + t * (d > 180 || d < -180 ? d - 360 * Math.round(d / 360) : d);
 }
 function interpolateHcl(from, to, t) {
@@ -9937,12 +9764,12 @@ function interpolateHcl(from, to, t) {
         alpha: number(from.alpha, to.alpha, t)
     };
 }
-const lab = {
+var lab = {
     forward: rgbToLab,
     reverse: labToRgb,
     interpolate: interpolateLab
 };
-const hcl = {
+var hcl = {
     forward: rgbToHcl,
     reverse: hclToRgb,
     interpolate: interpolateHcl
@@ -9954,167 +9781,179 @@ var colorSpaces = /*#__PURE__*/Object.freeze({
   hcl: hcl
 });
 
-class Interpolate {
-    constructor(type, operator, interpolation, input, stops) {
-        this.type = type;
-        this.operator = operator;
-        this.interpolation = interpolation;
-        this.input = input;
-        this.labels = [];
-        this.outputs = [];
-        for (const [label, expression] of stops) {
-            this.labels.push(label);
-            this.outputs.push(expression);
-        }
+var Interpolate = function Interpolate(type, operator, interpolation, input, stops) {
+    this.type = type;
+    this.operator = operator;
+    this.interpolation = interpolation;
+    this.input = input;
+    this.labels = [];
+    this.outputs = [];
+    for (var i = 0, list = stops; i < list.length; i += 1) {
+        var ref = list[i];
+        var label = ref[0];
+        var expression = ref[1];
+        this.labels.push(label);
+        this.outputs.push(expression);
     }
-    static interpolationFactor(interpolation, input, lower, upper) {
-        let t = 0;
-        if (interpolation.name === 'exponential') {
-            t = exponentialInterpolation(input, interpolation.base, lower, upper);
-        } else if (interpolation.name === 'linear') {
-            t = exponentialInterpolation(input, 1, lower, upper);
-        } else if (interpolation.name === 'cubic-bezier') {
-            const c = interpolation.controlPoints;
-            const ub = new unitbezier(c[0], c[1], c[2], c[3]);
-            t = ub.solve(exponentialInterpolation(input, 1, lower, upper));
-        }
-        return t;
+};
+Interpolate.interpolationFactor = function interpolationFactor(interpolation, input, lower, upper) {
+    var t = 0;
+    if (interpolation.name === 'exponential') {
+        t = exponentialInterpolation(input, interpolation.base, lower, upper);
+    } else if (interpolation.name === 'linear') {
+        t = exponentialInterpolation(input, 1, lower, upper);
+    } else if (interpolation.name === 'cubic-bezier') {
+        var c = interpolation.controlPoints;
+        var ub = new unitbezier(c[0], c[1], c[2], c[3]);
+        t = ub.solve(exponentialInterpolation(input, 1, lower, upper));
     }
-    static parse(args, context) {
-        let [operator, interpolation, input, ...rest] = args;
-        if (!Array.isArray(interpolation) || interpolation.length === 0) {
-            return context.error(`Expected an interpolation type expression.`, 1);
+    return t;
+};
+Interpolate.parse = function parse(args, context) {
+    var operator = args[0];
+    var interpolation = args[1];
+    var input = args[2];
+    var rest = args.slice(3);
+    if (!Array.isArray(interpolation) || interpolation.length === 0) {
+        return context.error('Expected an interpolation type expression.', 1);
+    }
+    if (interpolation[0] === 'linear') {
+        interpolation = { name: 'linear' };
+    } else if (interpolation[0] === 'exponential') {
+        var base = interpolation[1];
+        if (typeof base !== 'number') {
+            return context.error('Exponential interpolation requires a numeric base.', 1, 1);
         }
-        if (interpolation[0] === 'linear') {
-            interpolation = { name: 'linear' };
-        } else if (interpolation[0] === 'exponential') {
-            const base = interpolation[1];
-            if (typeof base !== 'number')
-                return context.error(`Exponential interpolation requires a numeric base.`, 1, 1);
-            interpolation = {
-                name: 'exponential',
-                base
-            };
-        } else if (interpolation[0] === 'cubic-bezier') {
-            const controlPoints = interpolation.slice(1);
-            if (controlPoints.length !== 4 || controlPoints.some(t => typeof t !== 'number' || t < 0 || t > 1)) {
-                return context.error('Cubic bezier interpolation requires four numeric arguments with values between 0 and 1.', 1);
-            }
-            interpolation = {
-                name: 'cubic-bezier',
-                controlPoints: controlPoints
-            };
-        } else {
-            return context.error(`Unknown interpolation type ${ String(interpolation[0]) }`, 1, 0);
+        interpolation = {
+            name: 'exponential',
+            base: base
+        };
+    } else if (interpolation[0] === 'cubic-bezier') {
+        var controlPoints = interpolation.slice(1);
+        if (controlPoints.length !== 4 || controlPoints.some(function (t) {
+                return typeof t !== 'number' || t < 0 || t > 1;
+            })) {
+            return context.error('Cubic bezier interpolation requires four numeric arguments with values between 0 and 1.', 1);
         }
-        if (args.length - 1 < 4) {
-            return context.error(`Expected at least 4 arguments, but found only ${ args.length - 1 }.`);
+        interpolation = {
+            name: 'cubic-bezier',
+            controlPoints: controlPoints
+        };
+    } else {
+        return context.error('Unknown interpolation type ' + String(interpolation[0]), 1, 0);
+    }
+    if (args.length - 1 < 4) {
+        return context.error('Expected at least 4 arguments, but found only ' + (args.length - 1) + '.');
+    }
+    if ((args.length - 1) % 2 !== 0) {
+        return context.error('Expected an even number of arguments.');
+    }
+    input = context.parse(input, 2, NumberType);
+    if (!input) {
+        return null;
+    }
+    var stops = [];
+    var outputType = null;
+    if (operator === 'interpolate-hcl' || operator === 'interpolate-lab') {
+        outputType = ColorType;
+    } else if (context.expectedType && context.expectedType.kind !== 'value') {
+        outputType = context.expectedType;
+    }
+    for (var i = 0; i < rest.length; i += 2) {
+        var label = rest[i];
+        var value = rest[i + 1];
+        var labelKey = i + 3;
+        var valueKey = i + 4;
+        if (typeof label !== 'number') {
+            return context.error('Input/output pairs for "interpolate" expressions must be defined using literal numeric values (not computed expressions) for the input values.', labelKey);
         }
-        if ((args.length - 1) % 2 !== 0) {
-            return context.error(`Expected an even number of arguments.`);
+        if (stops.length && stops[stops.length - 1][0] >= label) {
+            return context.error('Input/output pairs for "interpolate" expressions must be arranged with input values in strictly ascending order.', labelKey);
         }
-        input = context.parse(input, 2, NumberType);
-        if (!input)
+        var parsed = context.parse(value, valueKey, outputType);
+        if (!parsed) {
             return null;
-        const stops = [];
-        let outputType = null;
-        if (operator === 'interpolate-hcl' || operator === 'interpolate-lab') {
-            outputType = ColorType;
-        } else if (context.expectedType && context.expectedType.kind !== 'value') {
-            outputType = context.expectedType;
         }
-        for (let i = 0; i < rest.length; i += 2) {
-            const label = rest[i];
-            const value = rest[i + 1];
-            const labelKey = i + 3;
-            const valueKey = i + 4;
-            if (typeof label !== 'number') {
-                return context.error('Input/output pairs for "interpolate" expressions must be defined using literal numeric values (not computed expressions) for the input values.', labelKey);
-            }
-            if (stops.length && stops[stops.length - 1][0] >= label) {
-                return context.error('Input/output pairs for "interpolate" expressions must be arranged with input values in strictly ascending order.', labelKey);
-            }
-            const parsed = context.parse(value, valueKey, outputType);
-            if (!parsed)
-                return null;
-            outputType = outputType || parsed.type;
-            stops.push([
-                label,
-                parsed
-            ]);
-        }
-        if (outputType.kind !== 'number' && outputType.kind !== 'color' && !(outputType.kind === 'array' && outputType.itemType.kind === 'number' && typeof outputType.N === 'number')) {
-            return context.error(`Type ${ toString(outputType) } is not interpolatable.`);
-        }
-        return new Interpolate(outputType, operator, interpolation, input, stops);
+        outputType = outputType || parsed.type;
+        stops.push([
+            label,
+            parsed
+        ]);
     }
-    evaluate(ctx) {
-        const labels = this.labels;
-        const outputs = this.outputs;
-        if (labels.length === 1) {
-            return outputs[0].evaluate(ctx);
-        }
-        const value = this.input.evaluate(ctx);
-        if (value <= labels[0]) {
-            return outputs[0].evaluate(ctx);
-        }
-        const stopCount = labels.length;
-        if (value >= labels[stopCount - 1]) {
-            return outputs[stopCount - 1].evaluate(ctx);
-        }
-        const index = findStopLessThanOrEqualTo(labels, value);
-        const lower = labels[index];
-        const upper = labels[index + 1];
-        const t = Interpolate.interpolationFactor(this.interpolation, value, lower, upper);
-        const outputLower = outputs[index].evaluate(ctx);
-        const outputUpper = outputs[index + 1].evaluate(ctx);
-        if (this.operator === 'interpolate') {
-            return interpolate[this.type.kind.toLowerCase()](outputLower, outputUpper, t);
-        } else if (this.operator === 'interpolate-hcl') {
-            return hcl.reverse(hcl.interpolate(hcl.forward(outputLower), hcl.forward(outputUpper), t));
-        } else {
-            return lab.reverse(lab.interpolate(lab.forward(outputLower), lab.forward(outputUpper), t));
-        }
+    if (outputType.kind !== 'number' && outputType.kind !== 'color' && !(outputType.kind === 'array' && outputType.itemType.kind === 'number' && typeof outputType.N === 'number')) {
+        return context.error('Type ' + toString(outputType) + ' is not interpolatable.');
     }
-    eachChild(fn) {
-        fn(this.input);
-        for (const expression of this.outputs) {
-            fn(expression);
-        }
+    return new Interpolate(outputType, operator, interpolation, input, stops);
+};
+Interpolate.prototype.evaluate = function evaluate(ctx) {
+    var labels = this.labels;
+    var outputs = this.outputs;
+    if (labels.length === 1) {
+        return outputs[0].evaluate(ctx);
     }
-    outputDefined() {
-        return this.outputs.every(out => out.outputDefined());
+    var value = this.input.evaluate(ctx);
+    if (value <= labels[0]) {
+        return outputs[0].evaluate(ctx);
     }
-    serialize() {
-        let interpolation;
-        if (this.interpolation.name === 'linear') {
+    var stopCount = labels.length;
+    if (value >= labels[stopCount - 1]) {
+        return outputs[stopCount - 1].evaluate(ctx);
+    }
+    var index = findStopLessThanOrEqualTo(labels, value);
+    var lower = labels[index];
+    var upper = labels[index + 1];
+    var t = Interpolate.interpolationFactor(this.interpolation, value, lower, upper);
+    var outputLower = outputs[index].evaluate(ctx);
+    var outputUpper = outputs[index + 1].evaluate(ctx);
+    if (this.operator === 'interpolate') {
+        return interpolate[this.type.kind.toLowerCase()](outputLower, outputUpper, t);
+    } else if (this.operator === 'interpolate-hcl') {
+        return hcl.reverse(hcl.interpolate(hcl.forward(outputLower), hcl.forward(outputUpper), t));
+    } else {
+        return lab.reverse(lab.interpolate(lab.forward(outputLower), lab.forward(outputUpper), t));
+    }
+};
+Interpolate.prototype.eachChild = function eachChild(fn) {
+    fn(this.input);
+    for (var i = 0, list = this.outputs; i < list.length; i += 1) {
+        var expression = list[i];
+        fn(expression);
+    }
+};
+Interpolate.prototype.outputDefined = function outputDefined() {
+    return this.outputs.every(function (out) {
+        return out.outputDefined();
+    });
+};
+Interpolate.prototype.serialize = function serialize() {
+    var interpolation;
+    if (this.interpolation.name === 'linear') {
+        interpolation = ['linear'];
+    } else if (this.interpolation.name === 'exponential') {
+        if (this.interpolation.base === 1) {
             interpolation = ['linear'];
-        } else if (this.interpolation.name === 'exponential') {
-            if (this.interpolation.base === 1) {
-                interpolation = ['linear'];
-            } else {
-                interpolation = [
-                    'exponential',
-                    this.interpolation.base
-                ];
-            }
         } else {
-            interpolation = ['cubic-bezier'].concat(this.interpolation.controlPoints);
+            interpolation = [
+                'exponential',
+                this.interpolation.base
+            ];
         }
-        const serialized = [
-            this.operator,
-            interpolation,
-            this.input.serialize()
-        ];
-        for (let i = 0; i < this.labels.length; i++) {
-            serialized.push(this.labels[i], this.outputs[i].serialize());
-        }
-        return serialized;
+    } else {
+        interpolation = ['cubic-bezier'].concat(this.interpolation.controlPoints);
     }
-}
+    var serialized = [
+        this.operator,
+        interpolation,
+        this.input.serialize()
+    ];
+    for (var i = 0; i < this.labels.length; i++) {
+        serialized.push(this.labels[i], this.outputs[i].serialize());
+    }
+    return serialized;
+};
 function exponentialInterpolation(input, base, lowerValue, upperValue) {
-    const difference = upperValue - lowerValue;
-    const progress = input - lowerValue;
+    var difference = upperValue - lowerValue;
+    var progress = input - lowerValue;
     if (difference === 0) {
         return 0;
     } else if (base === 1) {
@@ -10124,558 +9963,595 @@ function exponentialInterpolation(input, base, lowerValue, upperValue) {
     }
 }
 
-class Coalesce {
-    constructor(type, args) {
-        this.type = type;
-        this.args = args;
+var Coalesce = function Coalesce(type, args) {
+    this.type = type;
+    this.args = args;
+};
+Coalesce.parse = function parse(args, context) {
+    if (args.length < 2) {
+        return context.error('Expectected at least one argument.');
     }
-    static parse(args, context) {
-        if (args.length < 2) {
-            return context.error('Expectected at least one argument.');
-        }
-        let outputType = null;
-        const expectedType = context.expectedType;
-        if (expectedType && expectedType.kind !== 'value') {
-            outputType = expectedType;
-        }
-        const parsedArgs = [];
-        for (const arg of args.slice(1)) {
-            const parsed = context.parse(arg, 1 + parsedArgs.length, outputType, undefined, { typeAnnotation: 'omit' });
-            if (!parsed)
-                return null;
-            outputType = outputType || parsed.type;
-            parsedArgs.push(parsed);
-        }
-        const needsAnnotation = expectedType && parsedArgs.some(arg => checkSubtype(expectedType, arg.type));
-        return needsAnnotation ? new Coalesce(ValueType, parsedArgs) : new Coalesce(outputType, parsedArgs);
+    var outputType = null;
+    var expectedType = context.expectedType;
+    if (expectedType && expectedType.kind !== 'value') {
+        outputType = expectedType;
     }
-    evaluate(ctx) {
-        let result = null;
-        let argCount = 0;
-        let requestedImageName;
-        for (const arg of this.args) {
-            argCount++;
-            result = arg.evaluate(ctx);
-            if (result && result instanceof ResolvedImage && !result.available) {
-                if (!requestedImageName) {
-                    requestedImageName = result.name;
-                }
-                result = null;
-                if (argCount === this.args.length) {
-                    result = requestedImageName;
-                }
-            }
-            if (result !== null)
-                break;
-        }
-        return result;
-    }
-    eachChild(fn) {
-        this.args.forEach(fn);
-    }
-    outputDefined() {
-        return this.args.every(arg => arg.outputDefined());
-    }
-    serialize() {
-        const serialized = ['coalesce'];
-        this.eachChild(child => {
-            serialized.push(child.serialize());
-        });
-        return serialized;
-    }
-}
-
-class Let {
-    constructor(bindings, result) {
-        this.type = result.type;
-        this.bindings = [].concat(bindings);
-        this.result = result;
-    }
-    evaluate(ctx) {
-        return this.result.evaluate(ctx);
-    }
-    eachChild(fn) {
-        for (const binding of this.bindings) {
-            fn(binding[1]);
-        }
-        fn(this.result);
-    }
-    static parse(args, context) {
-        if (args.length < 4)
-            return context.error(`Expected at least 3 arguments, but found ${ args.length - 1 } instead.`);
-        const bindings = [];
-        for (let i = 1; i < args.length - 1; i += 2) {
-            const name = args[i];
-            if (typeof name !== 'string') {
-                return context.error(`Expected string, but found ${ typeof name } instead.`, i);
-            }
-            if (/[^a-zA-Z0-9_]/.test(name)) {
-                return context.error(`Variable names must contain only alphanumeric characters or '_'.`, i);
-            }
-            const value = context.parse(args[i + 1], i + 1);
-            if (!value)
-                return null;
-            bindings.push([
-                name,
-                value
-            ]);
-        }
-        const result = context.parse(args[args.length - 1], args.length - 1, context.expectedType, bindings);
-        if (!result)
+    var parsedArgs = [];
+    for (var i = 0, list = args.slice(1); i < list.length; i += 1) {
+        var arg = list[i];
+        var parsed = context.parse(arg, 1 + parsedArgs.length, outputType, undefined, { typeAnnotation: 'omit' });
+        if (!parsed) {
             return null;
-        return new Let(bindings, result);
-    }
-    outputDefined() {
-        return this.result.outputDefined();
-    }
-    serialize() {
-        const serialized = ['let'];
-        for (const [name, expr] of this.bindings) {
-            serialized.push(name, expr.serialize());
         }
-        serialized.push(this.result.serialize());
-        return serialized;
+        outputType = outputType || parsed.type;
+        parsedArgs.push(parsed);
     }
-}
+    var needsAnnotation = expectedType && parsedArgs.some(function (arg) {
+        return checkSubtype(expectedType, arg.type);
+    });
+    return needsAnnotation ? new Coalesce(ValueType, parsedArgs) : new Coalesce(outputType, parsedArgs);
+};
+Coalesce.prototype.evaluate = function evaluate(ctx) {
+    var result = null;
+    var argCount = 0;
+    var requestedImageName;
+    for (var i = 0, list = this.args; i < list.length; i += 1) {
+        var arg = list[i];
+        argCount++;
+        result = arg.evaluate(ctx);
+        if (result && result instanceof ResolvedImage && !result.available) {
+            if (!requestedImageName) {
+                requestedImageName = result.name;
+            }
+            result = null;
+            if (argCount === this.args.length) {
+                result = requestedImageName;
+            }
+        }
+        if (result !== null) {
+            break;
+        }
+    }
+    return result;
+};
+Coalesce.prototype.eachChild = function eachChild(fn) {
+    this.args.forEach(fn);
+};
+Coalesce.prototype.outputDefined = function outputDefined() {
+    return this.args.every(function (arg) {
+        return arg.outputDefined();
+    });
+};
+Coalesce.prototype.serialize = function serialize() {
+    var serialized = ['coalesce'];
+    this.eachChild(function (child) {
+        serialized.push(child.serialize());
+    });
+    return serialized;
+};
 
-class At {
-    constructor(type, index, input) {
-        this.type = type;
-        this.index = index;
-        this.input = input;
+var Let = function Let(bindings, result) {
+    this.type = result.type;
+    this.bindings = [].concat(bindings);
+    this.result = result;
+};
+Let.prototype.evaluate = function evaluate(ctx) {
+    return this.result.evaluate(ctx);
+};
+Let.prototype.eachChild = function eachChild(fn) {
+    for (var i = 0, list = this.bindings; i < list.length; i += 1) {
+        var binding = list[i];
+        fn(binding[1]);
     }
-    static parse(args, context) {
-        if (args.length !== 3)
-            return context.error(`Expected 2 arguments, but found ${ args.length - 1 } instead.`);
-        const index = context.parse(args[1], 1, NumberType);
-        const input = context.parse(args[2], 2, array(context.expectedType || ValueType));
-        if (!index || !input)
+    fn(this.result);
+};
+Let.parse = function parse(args, context) {
+    if (args.length < 4) {
+        return context.error('Expected at least 3 arguments, but found ' + (args.length - 1) + ' instead.');
+    }
+    var bindings = [];
+    for (var i = 1; i < args.length - 1; i += 2) {
+        var name = args[i];
+        if (typeof name !== 'string') {
+            return context.error('Expected string, but found ' + typeof name + ' instead.', i);
+        }
+        if (/[^a-zA-Z0-9_]/.test(name)) {
+            return context.error('Variable names must contain only alphanumeric characters or \'_\'.', i);
+        }
+        var value = context.parse(args[i + 1], i + 1);
+        if (!value) {
             return null;
-        const t = input.type;
-        return new At(t.itemType, index, input);
-    }
-    evaluate(ctx) {
-        const index = this.index.evaluate(ctx);
-        const array = this.input.evaluate(ctx);
-        if (index < 0) {
-            throw new RuntimeError(`Array index out of bounds: ${ index } < 0.`);
         }
-        if (index >= array.length) {
-            throw new RuntimeError(`Array index out of bounds: ${ index } > ${ array.length - 1 }.`);
-        }
-        if (index !== Math.floor(index)) {
-            throw new RuntimeError(`Array index must be an integer, but found ${ index } instead.`);
-        }
-        return array[index];
+        bindings.push([
+            name,
+            value
+        ]);
     }
-    eachChild(fn) {
-        fn(this.index);
-        fn(this.input);
+    var result = context.parse(args[args.length - 1], args.length - 1, context.expectedType, bindings);
+    if (!result) {
+        return null;
     }
-    outputDefined() {
+    return new Let(bindings, result);
+};
+Let.prototype.outputDefined = function outputDefined() {
+    return this.result.outputDefined();
+};
+Let.prototype.serialize = function serialize() {
+    var serialized = ['let'];
+    for (var i = 0, list = this.bindings; i < list.length; i += 1) {
+        var ref = list[i];
+        var name = ref[0];
+        var expr = ref[1];
+        serialized.push(name, expr.serialize());
+    }
+    serialized.push(this.result.serialize());
+    return serialized;
+};
+
+var At = function At(type, index, input) {
+    this.type = type;
+    this.index = index;
+    this.input = input;
+};
+At.parse = function parse(args, context) {
+    if (args.length !== 3) {
+        return context.error('Expected 2 arguments, but found ' + (args.length - 1) + ' instead.');
+    }
+    var index = context.parse(args[1], 1, NumberType);
+    var input = context.parse(args[2], 2, array(context.expectedType || ValueType));
+    if (!index || !input) {
+        return null;
+    }
+    var t = input.type;
+    return new At(t.itemType, index, input);
+};
+At.prototype.evaluate = function evaluate(ctx) {
+    var index = this.index.evaluate(ctx);
+    var array = this.input.evaluate(ctx);
+    if (index < 0) {
+        throw new RuntimeError('Array index out of bounds: ' + index + ' < 0.');
+    }
+    if (index >= array.length) {
+        throw new RuntimeError('Array index out of bounds: ' + index + ' > ' + (array.length - 1) + '.');
+    }
+    if (index !== Math.floor(index)) {
+        throw new RuntimeError('Array index must be an integer, but found ' + index + ' instead.');
+    }
+    return array[index];
+};
+At.prototype.eachChild = function eachChild(fn) {
+    fn(this.index);
+    fn(this.input);
+};
+At.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+At.prototype.serialize = function serialize() {
+    return [
+        'at',
+        this.index.serialize(),
+        this.input.serialize()
+    ];
+};
+
+var In = function In(needle, haystack) {
+    this.type = BooleanType;
+    this.needle = needle;
+    this.haystack = haystack;
+};
+In.parse = function parse(args, context) {
+    if (args.length !== 3) {
+        return context.error('Expected 2 arguments, but found ' + (args.length - 1) + ' instead.');
+    }
+    var needle = context.parse(args[1], 1, ValueType);
+    var haystack = context.parse(args[2], 2, ValueType);
+    if (!needle || !haystack) {
+        return null;
+    }
+    if (!isValidType(needle.type, [
+            BooleanType,
+            StringType,
+            NumberType,
+            NullType,
+            ValueType
+        ])) {
+        return context.error('Expected first argument to be of type boolean, string, number or null, but found ' + toString(needle.type) + ' instead');
+    }
+    return new In(needle, haystack);
+};
+In.prototype.evaluate = function evaluate(ctx) {
+    var needle = this.needle.evaluate(ctx);
+    var haystack = this.haystack.evaluate(ctx);
+    if (!haystack) {
         return false;
     }
-    serialize() {
-        return [
-            'at',
-            this.index.serialize(),
-            this.input.serialize()
-        ];
+    if (!isValidNativeType(needle, [
+            'boolean',
+            'string',
+            'number',
+            'null'
+        ])) {
+        throw new RuntimeError('Expected first argument to be of type boolean, string, number or null, but found ' + toString(typeOf(needle)) + ' instead.');
     }
-}
+    if (!isValidNativeType(haystack, [
+            'string',
+            'array'
+        ])) {
+        throw new RuntimeError('Expected second argument to be of type array or string, but found ' + toString(typeOf(haystack)) + ' instead.');
+    }
+    return haystack.indexOf(needle) >= 0;
+};
+In.prototype.eachChild = function eachChild(fn) {
+    fn(this.needle);
+    fn(this.haystack);
+};
+In.prototype.outputDefined = function outputDefined() {
+    return true;
+};
+In.prototype.serialize = function serialize() {
+    return [
+        'in',
+        this.needle.serialize(),
+        this.haystack.serialize()
+    ];
+};
 
-class In {
-    constructor(needle, haystack) {
-        this.type = BooleanType;
-        this.needle = needle;
-        this.haystack = haystack;
+var IndexOf = function IndexOf(needle, haystack, fromIndex) {
+    this.type = NumberType;
+    this.needle = needle;
+    this.haystack = haystack;
+    this.fromIndex = fromIndex;
+};
+IndexOf.parse = function parse(args, context) {
+    if (args.length <= 2 || args.length >= 5) {
+        return context.error('Expected 3 or 4 arguments, but found ' + (args.length - 1) + ' instead.');
     }
-    static parse(args, context) {
-        if (args.length !== 3) {
-            return context.error(`Expected 2 arguments, but found ${ args.length - 1 } instead.`);
-        }
-        const needle = context.parse(args[1], 1, ValueType);
-        const haystack = context.parse(args[2], 2, ValueType);
-        if (!needle || !haystack)
+    var needle = context.parse(args[1], 1, ValueType);
+    var haystack = context.parse(args[2], 2, ValueType);
+    if (!needle || !haystack) {
+        return null;
+    }
+    if (!isValidType(needle.type, [
+            BooleanType,
+            StringType,
+            NumberType,
+            NullType,
+            ValueType
+        ])) {
+        return context.error('Expected first argument to be of type boolean, string, number or null, but found ' + toString(needle.type) + ' instead');
+    }
+    if (args.length === 4) {
+        var fromIndex = context.parse(args[3], 3, NumberType);
+        if (!fromIndex) {
             return null;
-        if (!isValidType(needle.type, [
-                BooleanType,
-                StringType,
-                NumberType,
-                NullType,
-                ValueType
-            ])) {
-            return context.error(`Expected first argument to be of type boolean, string, number or null, but found ${ toString(needle.type) } instead`);
         }
-        return new In(needle, haystack);
+        return new IndexOf(needle, haystack, fromIndex);
+    } else {
+        return new IndexOf(needle, haystack);
     }
-    evaluate(ctx) {
-        const needle = this.needle.evaluate(ctx);
-        const haystack = this.haystack.evaluate(ctx);
-        if (!haystack)
-            return false;
-        if (!isValidNativeType(needle, [
-                'boolean',
-                'string',
-                'number',
-                'null'
-            ])) {
-            throw new RuntimeError(`Expected first argument to be of type boolean, string, number or null, but found ${ toString(typeOf(needle)) } instead.`);
-        }
-        if (!isValidNativeType(haystack, [
-                'string',
-                'array'
-            ])) {
-            throw new RuntimeError(`Expected second argument to be of type array or string, but found ${ toString(typeOf(haystack)) } instead.`);
-        }
-        return haystack.indexOf(needle) >= 0;
+};
+IndexOf.prototype.evaluate = function evaluate(ctx) {
+    var needle = this.needle.evaluate(ctx);
+    var haystack = this.haystack.evaluate(ctx);
+    if (!isValidNativeType(needle, [
+            'boolean',
+            'string',
+            'number',
+            'null'
+        ])) {
+        throw new RuntimeError('Expected first argument to be of type boolean, string, number or null, but found ' + toString(typeOf(needle)) + ' instead.');
     }
-    eachChild(fn) {
-        fn(this.needle);
-        fn(this.haystack);
+    if (!isValidNativeType(haystack, [
+            'string',
+            'array'
+        ])) {
+        throw new RuntimeError('Expected second argument to be of type array or string, but found ' + toString(typeOf(haystack)) + ' instead.');
     }
-    outputDefined() {
-        return true;
+    if (this.fromIndex) {
+        var fromIndex = this.fromIndex.evaluate(ctx);
+        return haystack.indexOf(needle, fromIndex);
     }
-    serialize() {
-        return [
-            'in',
-            this.needle.serialize(),
-            this.haystack.serialize()
-        ];
+    return haystack.indexOf(needle);
+};
+IndexOf.prototype.eachChild = function eachChild(fn) {
+    fn(this.needle);
+    fn(this.haystack);
+    if (this.fromIndex) {
+        fn(this.fromIndex);
     }
-}
-
-class IndexOf {
-    constructor(needle, haystack, fromIndex) {
-        this.type = NumberType;
-        this.needle = needle;
-        this.haystack = haystack;
-        this.fromIndex = fromIndex;
-    }
-    static parse(args, context) {
-        if (args.length <= 2 || args.length >= 5) {
-            return context.error(`Expected 3 or 4 arguments, but found ${ args.length - 1 } instead.`);
-        }
-        const needle = context.parse(args[1], 1, ValueType);
-        const haystack = context.parse(args[2], 2, ValueType);
-        if (!needle || !haystack)
-            return null;
-        if (!isValidType(needle.type, [
-                BooleanType,
-                StringType,
-                NumberType,
-                NullType,
-                ValueType
-            ])) {
-            return context.error(`Expected first argument to be of type boolean, string, number or null, but found ${ toString(needle.type) } instead`);
-        }
-        if (args.length === 4) {
-            const fromIndex = context.parse(args[3], 3, NumberType);
-            if (!fromIndex)
-                return null;
-            return new IndexOf(needle, haystack, fromIndex);
-        } else {
-            return new IndexOf(needle, haystack);
-        }
-    }
-    evaluate(ctx) {
-        const needle = this.needle.evaluate(ctx);
-        const haystack = this.haystack.evaluate(ctx);
-        if (!isValidNativeType(needle, [
-                'boolean',
-                'string',
-                'number',
-                'null'
-            ])) {
-            throw new RuntimeError(`Expected first argument to be of type boolean, string, number or null, but found ${ toString(typeOf(needle)) } instead.`);
-        }
-        if (!isValidNativeType(haystack, [
-                'string',
-                'array'
-            ])) {
-            throw new RuntimeError(`Expected second argument to be of type array or string, but found ${ toString(typeOf(haystack)) } instead.`);
-        }
-        if (this.fromIndex) {
-            const fromIndex = this.fromIndex.evaluate(ctx);
-            return haystack.indexOf(needle, fromIndex);
-        }
-        return haystack.indexOf(needle);
-    }
-    eachChild(fn) {
-        fn(this.needle);
-        fn(this.haystack);
-        if (this.fromIndex) {
-            fn(this.fromIndex);
-        }
-    }
-    outputDefined() {
-        return false;
-    }
-    serialize() {
-        if (this.fromIndex != null && this.fromIndex !== undefined) {
-            const fromIndex = this.fromIndex.serialize();
-            return [
-                'index-of',
-                this.needle.serialize(),
-                this.haystack.serialize(),
-                fromIndex
-            ];
-        }
+};
+IndexOf.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+IndexOf.prototype.serialize = function serialize() {
+    if (this.fromIndex != null && this.fromIndex !== undefined) {
+        var fromIndex = this.fromIndex.serialize();
         return [
             'index-of',
             this.needle.serialize(),
-            this.haystack.serialize()
+            this.haystack.serialize(),
+            fromIndex
         ];
     }
-}
+    return [
+        'index-of',
+        this.needle.serialize(),
+        this.haystack.serialize()
+    ];
+};
 
-class Match {
-    constructor(inputType, outputType, input, cases, outputs, otherwise) {
-        this.inputType = inputType;
-        this.type = outputType;
-        this.input = input;
-        this.cases = cases;
-        this.outputs = outputs;
-        this.otherwise = otherwise;
+var Match = function Match(inputType, outputType, input, cases, outputs, otherwise) {
+    this.inputType = inputType;
+    this.type = outputType;
+    this.input = input;
+    this.cases = cases;
+    this.outputs = outputs;
+    this.otherwise = otherwise;
+};
+Match.parse = function parse(args, context) {
+    if (args.length < 5) {
+        return context.error('Expected at least 4 arguments, but found only ' + (args.length - 1) + '.');
     }
-    static parse(args, context) {
-        if (args.length < 5)
-            return context.error(`Expected at least 4 arguments, but found only ${ args.length - 1 }.`);
-        if (args.length % 2 !== 1)
-            return context.error(`Expected an even number of arguments.`);
-        let inputType;
-        let outputType;
-        if (context.expectedType && context.expectedType.kind !== 'value') {
-            outputType = context.expectedType;
+    if (args.length % 2 !== 1) {
+        return context.error('Expected an even number of arguments.');
+    }
+    var inputType;
+    var outputType;
+    if (context.expectedType && context.expectedType.kind !== 'value') {
+        outputType = context.expectedType;
+    }
+    var cases = {};
+    var outputs = [];
+    for (var i = 2; i < args.length - 1; i += 2) {
+        var labels = args[i];
+        var value = args[i + 1];
+        if (!Array.isArray(labels)) {
+            labels = [labels];
         }
-        const cases = {};
-        const outputs = [];
-        for (let i = 2; i < args.length - 1; i += 2) {
-            let labels = args[i];
-            const value = args[i + 1];
-            if (!Array.isArray(labels)) {
-                labels = [labels];
-            }
-            const labelContext = context.concat(i);
-            if (labels.length === 0) {
-                return labelContext.error('Expected at least one branch label.');
-            }
-            for (const label of labels) {
-                if (typeof label !== 'number' && typeof label !== 'string') {
-                    return labelContext.error(`Branch labels must be numbers or strings.`);
-                } else if (typeof label === 'number' && Math.abs(label) > Number.MAX_SAFE_INTEGER) {
-                    return labelContext.error(`Branch labels must be integers no larger than ${ Number.MAX_SAFE_INTEGER }.`);
-                } else if (typeof label === 'number' && Math.floor(label) !== label) {
-                    return labelContext.error(`Numeric branch labels must be integer values.`);
-                } else if (!inputType) {
-                    inputType = typeOf(label);
-                } else if (labelContext.checkSubtype(inputType, typeOf(label))) {
-                    return null;
-                }
-                if (typeof cases[String(label)] !== 'undefined') {
-                    return labelContext.error('Branch labels must be unique.');
-                }
-                cases[String(label)] = outputs.length;
-            }
-            const result = context.parse(value, i, outputType);
-            if (!result)
+        var labelContext = context.concat(i);
+        if (labels.length === 0) {
+            return labelContext.error('Expected at least one branch label.');
+        }
+        for (var i$1 = 0, list = labels; i$1 < list.length; i$1 += 1) {
+            var label = list[i$1];
+            if (typeof label !== 'number' && typeof label !== 'string') {
+                return labelContext.error('Branch labels must be numbers or strings.');
+            } else if (typeof label === 'number' && Math.abs(label) > Number.MAX_SAFE_INTEGER) {
+                return labelContext.error('Branch labels must be integers no larger than ' + Number.MAX_SAFE_INTEGER + '.');
+            } else if (typeof label === 'number' && Math.floor(label) !== label) {
+                return labelContext.error('Numeric branch labels must be integer values.');
+            } else if (!inputType) {
+                inputType = typeOf(label);
+            } else if (labelContext.checkSubtype(inputType, typeOf(label))) {
                 return null;
-            outputType = outputType || result.type;
-            outputs.push(result);
+            }
+            if (typeof cases[String(label)] !== 'undefined') {
+                return labelContext.error('Branch labels must be unique.');
+            }
+            cases[String(label)] = outputs.length;
         }
-        const input = context.parse(args[1], 1, ValueType);
-        if (!input)
-            return null;
-        const otherwise = context.parse(args[args.length - 1], args.length - 1, outputType);
-        if (!otherwise)
-            return null;
-        if (input.type.kind !== 'value' && context.concat(1).checkSubtype(inputType, input.type)) {
+        var result = context.parse(value, i, outputType);
+        if (!result) {
             return null;
         }
-        return new Match(inputType, outputType, input, cases, outputs, otherwise);
+        outputType = outputType || result.type;
+        outputs.push(result);
     }
-    evaluate(ctx) {
-        const input = this.input.evaluate(ctx);
-        const output = typeOf(input) === this.inputType && this.outputs[this.cases[input]] || this.otherwise;
-        return output.evaluate(ctx);
+    var input = context.parse(args[1], 1, ValueType);
+    if (!input) {
+        return null;
     }
-    eachChild(fn) {
-        fn(this.input);
-        this.outputs.forEach(fn);
-        fn(this.otherwise);
+    var otherwise = context.parse(args[args.length - 1], args.length - 1, outputType);
+    if (!otherwise) {
+        return null;
     }
-    outputDefined() {
-        return this.outputs.every(out => out.outputDefined()) && this.otherwise.outputDefined();
+    if (input.type.kind !== 'value' && context.concat(1).checkSubtype(inputType, input.type)) {
+        return null;
     }
-    serialize() {
-        const serialized = [
-            'match',
-            this.input.serialize()
-        ];
-        const sortedLabels = Object.keys(this.cases).sort();
-        const groupedByOutput = [];
-        const outputLookup = {};
-        for (const label of sortedLabels) {
-            const outputIndex = outputLookup[this.cases[label]];
-            if (outputIndex === undefined) {
-                outputLookup[this.cases[label]] = groupedByOutput.length;
-                groupedByOutput.push([
-                    this.cases[label],
-                    [label]
-                ]);
-            } else {
-                groupedByOutput[outputIndex][1].push(label);
-            }
-        }
-        const coerceLabel = label => this.inputType.kind === 'number' ? Number(label) : label;
-        for (const [outputIndex, labels] of groupedByOutput) {
-            if (labels.length === 1) {
-                serialized.push(coerceLabel(labels[0]));
-            } else {
-                serialized.push(labels.map(coerceLabel));
-            }
-            serialized.push(this.outputs[outputIndex].serialize());
-        }
-        serialized.push(this.otherwise.serialize());
-        return serialized;
-    }
-}
-
-class Case {
-    constructor(type, branches, otherwise) {
-        this.type = type;
-        this.branches = branches;
-        this.otherwise = otherwise;
-    }
-    static parse(args, context) {
-        if (args.length < 4)
-            return context.error(`Expected at least 3 arguments, but found only ${ args.length - 1 }.`);
-        if (args.length % 2 !== 0)
-            return context.error(`Expected an odd number of arguments.`);
-        let outputType;
-        if (context.expectedType && context.expectedType.kind !== 'value') {
-            outputType = context.expectedType;
-        }
-        const branches = [];
-        for (let i = 1; i < args.length - 1; i += 2) {
-            const test = context.parse(args[i], i, BooleanType);
-            if (!test)
-                return null;
-            const result = context.parse(args[i + 1], i + 1, outputType);
-            if (!result)
-                return null;
-            branches.push([
-                test,
-                result
+    return new Match(inputType, outputType, input, cases, outputs, otherwise);
+};
+Match.prototype.evaluate = function evaluate(ctx) {
+    var input = this.input.evaluate(ctx);
+    var output = typeOf(input) === this.inputType && this.outputs[this.cases[input]] || this.otherwise;
+    return output.evaluate(ctx);
+};
+Match.prototype.eachChild = function eachChild(fn) {
+    fn(this.input);
+    this.outputs.forEach(fn);
+    fn(this.otherwise);
+};
+Match.prototype.outputDefined = function outputDefined() {
+    return this.outputs.every(function (out) {
+        return out.outputDefined();
+    }) && this.otherwise.outputDefined();
+};
+Match.prototype.serialize = function serialize() {
+    var this$1 = this;
+    var serialized = [
+        'match',
+        this.input.serialize()
+    ];
+    var sortedLabels = Object.keys(this.cases).sort();
+    var groupedByOutput = [];
+    var outputLookup = {};
+    for (var i = 0, list = sortedLabels; i < list.length; i += 1) {
+        var label = list[i];
+        var outputIndex = outputLookup[this.cases[label]];
+        if (outputIndex === undefined) {
+            outputLookup[this.cases[label]] = groupedByOutput.length;
+            groupedByOutput.push([
+                this.cases[label],
+                [label]
             ]);
-            outputType = outputType || result.type;
-        }
-        const otherwise = context.parse(args[args.length - 1], args.length - 1, outputType);
-        if (!otherwise)
-            return null;
-        return new Case(outputType, branches, otherwise);
-    }
-    evaluate(ctx) {
-        for (const [test, expression] of this.branches) {
-            if (test.evaluate(ctx)) {
-                return expression.evaluate(ctx);
-            }
-        }
-        return this.otherwise.evaluate(ctx);
-    }
-    eachChild(fn) {
-        for (const [test, expression] of this.branches) {
-            fn(test);
-            fn(expression);
-        }
-        fn(this.otherwise);
-    }
-    outputDefined() {
-        return this.branches.every(([_, out]) => out.outputDefined()) && this.otherwise.outputDefined();
-    }
-    serialize() {
-        const serialized = ['case'];
-        this.eachChild(child => {
-            serialized.push(child.serialize());
-        });
-        return serialized;
-    }
-}
-
-class Slice {
-    constructor(type, input, beginIndex, endIndex) {
-        this.type = type;
-        this.input = input;
-        this.beginIndex = beginIndex;
-        this.endIndex = endIndex;
-    }
-    static parse(args, context) {
-        if (args.length <= 2 || args.length >= 5) {
-            return context.error(`Expected 3 or 4 arguments, but found ${ args.length - 1 } instead.`);
-        }
-        const input = context.parse(args[1], 1, ValueType);
-        const beginIndex = context.parse(args[2], 2, NumberType);
-        if (!input || !beginIndex)
-            return null;
-        if (!isValidType(input.type, [
-                array(ValueType),
-                StringType,
-                ValueType
-            ])) {
-            return context.error(`Expected first argument to be of type array or string, but found ${ toString(input.type) } instead`);
-        }
-        if (args.length === 4) {
-            const endIndex = context.parse(args[3], 3, NumberType);
-            if (!endIndex)
-                return null;
-            return new Slice(input.type, input, beginIndex, endIndex);
         } else {
-            return new Slice(input.type, input, beginIndex);
+            groupedByOutput[outputIndex][1].push(label);
         }
     }
-    evaluate(ctx) {
-        const input = this.input.evaluate(ctx);
-        const beginIndex = this.beginIndex.evaluate(ctx);
-        if (!isValidNativeType(input, [
-                'string',
-                'array'
-            ])) {
-            throw new RuntimeError(`Expected first argument to be of type array or string, but found ${ toString(typeOf(input)) } instead.`);
+    var coerceLabel = function (label) {
+        return this$1.inputType.kind === 'number' ? Number(label) : label;
+    };
+    for (var i$1 = 0, list$1 = groupedByOutput; i$1 < list$1.length; i$1 += 1) {
+        var ref = list$1[i$1];
+        var outputIndex = ref[0];
+        var labels = ref[1];
+        if (labels.length === 1) {
+            serialized.push(coerceLabel(labels[0]));
+        } else {
+            serialized.push(labels.map(coerceLabel));
         }
-        if (this.endIndex) {
-            const endIndex = this.endIndex.evaluate(ctx);
-            return input.slice(beginIndex, endIndex);
-        }
-        return input.slice(beginIndex);
+        serialized.push(this.outputs[outputIndex$1].serialize());
     }
-    eachChild(fn) {
-        fn(this.input);
-        fn(this.beginIndex);
-        if (this.endIndex) {
-            fn(this.endIndex);
+    serialized.push(this.otherwise.serialize());
+    return serialized;
+};
+
+var Case = function Case(type, branches, otherwise) {
+    this.type = type;
+    this.branches = branches;
+    this.otherwise = otherwise;
+};
+Case.parse = function parse(args, context) {
+    if (args.length < 4) {
+        return context.error('Expected at least 3 arguments, but found only ' + (args.length - 1) + '.');
+    }
+    if (args.length % 2 !== 0) {
+        return context.error('Expected an odd number of arguments.');
+    }
+    var outputType;
+    if (context.expectedType && context.expectedType.kind !== 'value') {
+        outputType = context.expectedType;
+    }
+    var branches = [];
+    for (var i = 1; i < args.length - 1; i += 2) {
+        var test = context.parse(args[i], i, BooleanType);
+        if (!test) {
+            return null;
+        }
+        var result = context.parse(args[i + 1], i + 1, outputType);
+        if (!result) {
+            return null;
+        }
+        branches.push([
+            test,
+            result
+        ]);
+        outputType = outputType || result.type;
+    }
+    var otherwise = context.parse(args[args.length - 1], args.length - 1, outputType);
+    if (!otherwise) {
+        return null;
+    }
+    return new Case(outputType, branches, otherwise);
+};
+Case.prototype.evaluate = function evaluate(ctx) {
+    for (var i = 0, list = this.branches; i < list.length; i += 1) {
+        var ref = list[i];
+        var test = ref[0];
+        var expression = ref[1];
+        if (test.evaluate(ctx)) {
+            return expression.evaluate(ctx);
         }
     }
-    outputDefined() {
-        return false;
+    return this.otherwise.evaluate(ctx);
+};
+Case.prototype.eachChild = function eachChild(fn) {
+    for (var i = 0, list = this.branches; i < list.length; i += 1) {
+        var ref = list[i];
+        var test = ref[0];
+        var expression = ref[1];
+        fn(test);
+        fn(expression);
     }
-    serialize() {
-        if (this.endIndex != null && this.endIndex !== undefined) {
-            const endIndex = this.endIndex.serialize();
-            return [
-                'slice',
-                this.input.serialize(),
-                this.beginIndex.serialize(),
-                endIndex
-            ];
+    fn(this.otherwise);
+};
+Case.prototype.outputDefined = function outputDefined() {
+    return this.branches.every(function (ref) {
+        var _ = ref[0];
+        var out = ref[1];
+        return out.outputDefined();
+    }) && this.otherwise.outputDefined();
+};
+Case.prototype.serialize = function serialize() {
+    var serialized = ['case'];
+    this.eachChild(function (child) {
+        serialized.push(child.serialize());
+    });
+    return serialized;
+};
+
+var Slice = function Slice(type, input, beginIndex, endIndex) {
+    this.type = type;
+    this.input = input;
+    this.beginIndex = beginIndex;
+    this.endIndex = endIndex;
+};
+Slice.parse = function parse(args, context) {
+    if (args.length <= 2 || args.length >= 5) {
+        return context.error('Expected 3 or 4 arguments, but found ' + (args.length - 1) + ' instead.');
+    }
+    var input = context.parse(args[1], 1, ValueType);
+    var beginIndex = context.parse(args[2], 2, NumberType);
+    if (!input || !beginIndex) {
+        return null;
+    }
+    if (!isValidType(input.type, [
+            array(ValueType),
+            StringType,
+            ValueType
+        ])) {
+        return context.error('Expected first argument to be of type array or string, but found ' + toString(input.type) + ' instead');
+    }
+    if (args.length === 4) {
+        var endIndex = context.parse(args[3], 3, NumberType);
+        if (!endIndex) {
+            return null;
         }
+        return new Slice(input.type, input, beginIndex, endIndex);
+    } else {
+        return new Slice(input.type, input, beginIndex);
+    }
+};
+Slice.prototype.evaluate = function evaluate(ctx) {
+    var input = this.input.evaluate(ctx);
+    var beginIndex = this.beginIndex.evaluate(ctx);
+    if (!isValidNativeType(input, [
+            'string',
+            'array'
+        ])) {
+        throw new RuntimeError('Expected first argument to be of type array or string, but found ' + toString(typeOf(input)) + ' instead.');
+    }
+    if (this.endIndex) {
+        var endIndex = this.endIndex.evaluate(ctx);
+        return input.slice(beginIndex, endIndex);
+    }
+    return input.slice(beginIndex);
+};
+Slice.prototype.eachChild = function eachChild(fn) {
+    fn(this.input);
+    fn(this.beginIndex);
+    if (this.endIndex) {
+        fn(this.endIndex);
+    }
+};
+Slice.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+Slice.prototype.serialize = function serialize() {
+    if (this.endIndex != null && this.endIndex !== undefined) {
+        var endIndex = this.endIndex.serialize();
         return [
             'slice',
             this.input.serialize(),
-            this.beginIndex.serialize()
+            this.beginIndex.serialize(),
+            endIndex
         ];
     }
-}
+    return [
+        'slice',
+        this.input.serialize(),
+        this.beginIndex.serialize()
+    ];
+};
 
 function isComparableType(op, type) {
     if (op === '==' || op === '!=') {
@@ -10721,33 +10597,36 @@ function gteqCollate(ctx, a, b, c) {
     return c.compare(a, b) >= 0;
 }
 function makeComparison(op, compareBasic, compareWithCollator) {
-    const isOrderComparison = op !== '==' && op !== '!=';
-    return class Comparison {
-        constructor(lhs, rhs, collator) {
+    var isOrderComparison = op !== '==' && op !== '!=';
+    return function () {
+        function Comparison(lhs, rhs, collator) {
             this.type = BooleanType;
             this.lhs = lhs;
             this.rhs = rhs;
             this.collator = collator;
             this.hasUntypedArgument = lhs.type.kind === 'value' || rhs.type.kind === 'value';
         }
-        static parse(args, context) {
-            if (args.length !== 3 && args.length !== 4)
-                return context.error(`Expected two or three arguments.`);
-            const op = args[0];
-            let lhs = context.parse(args[1], 1, ValueType);
-            if (!lhs)
-                return null;
-            if (!isComparableType(op, lhs.type)) {
-                return context.concat(1).error(`"${ op }" comparisons are not supported for type '${ toString(lhs.type) }'.`);
+        Comparison.parse = function parse(args, context) {
+            if (args.length !== 3 && args.length !== 4) {
+                return context.error('Expected two or three arguments.');
             }
-            let rhs = context.parse(args[2], 2, ValueType);
-            if (!rhs)
+            var op = args[0];
+            var lhs = context.parse(args[1], 1, ValueType);
+            if (!lhs) {
                 return null;
+            }
+            if (!isComparableType(op, lhs.type)) {
+                return context.concat(1).error('"' + op + '" comparisons are not supported for type \'' + toString(lhs.type) + '\'.');
+            }
+            var rhs = context.parse(args[2], 2, ValueType);
+            if (!rhs) {
+                return null;
+            }
             if (!isComparableType(op, rhs.type)) {
-                return context.concat(2).error(`"${ op }" comparisons are not supported for type '${ toString(rhs.type) }'.`);
+                return context.concat(2).error('"' + op + '" comparisons are not supported for type \'' + toString(rhs.type) + '\'.');
             }
             if (lhs.type.kind !== rhs.type.kind && lhs.type.kind !== 'value' && rhs.type.kind !== 'value') {
-                return context.error(`Cannot compare types '${ toString(lhs.type) }' and '${ toString(rhs.type) }'.`);
+                return context.error('Cannot compare types \'' + toString(lhs.type) + '\' and \'' + toString(rhs.type) + '\'.');
             }
             if (isOrderComparison) {
                 if (lhs.type.kind === 'value' && rhs.type.kind !== 'value') {
@@ -10756,195 +10635,203 @@ function makeComparison(op, compareBasic, compareWithCollator) {
                     rhs = new Assertion(lhs.type, [rhs]);
                 }
             }
-            let collator = null;
+            var collator = null;
             if (args.length === 4) {
                 if (lhs.type.kind !== 'string' && rhs.type.kind !== 'string' && lhs.type.kind !== 'value' && rhs.type.kind !== 'value') {
-                    return context.error(`Cannot use collator to compare non-string types.`);
+                    return context.error('Cannot use collator to compare non-string types.');
                 }
                 collator = context.parse(args[3], 3, CollatorType);
-                if (!collator)
+                if (!collator) {
                     return null;
+                }
             }
             return new Comparison(lhs, rhs, collator);
-        }
-        evaluate(ctx) {
-            const lhs = this.lhs.evaluate(ctx);
-            const rhs = this.rhs.evaluate(ctx);
+        };
+        Comparison.prototype.evaluate = function evaluate(ctx) {
+            var lhs = this.lhs.evaluate(ctx);
+            var rhs = this.rhs.evaluate(ctx);
             if (isOrderComparison && this.hasUntypedArgument) {
-                const lt = typeOf(lhs);
-                const rt = typeOf(rhs);
+                var lt = typeOf(lhs);
+                var rt = typeOf(rhs);
                 if (lt.kind !== rt.kind || !(lt.kind === 'string' || lt.kind === 'number')) {
-                    throw new RuntimeError(`Expected arguments for "${ op }" to be (string, string) or (number, number), but found (${ lt.kind }, ${ rt.kind }) instead.`);
+                    throw new RuntimeError('Expected arguments for "' + op + '" to be (string, string) or (number, number), but found (' + lt.kind + ', ' + rt.kind + ') instead.');
                 }
             }
             if (this.collator && !isOrderComparison && this.hasUntypedArgument) {
-                const lt = typeOf(lhs);
-                const rt = typeOf(rhs);
-                if (lt.kind !== 'string' || rt.kind !== 'string') {
+                var lt$1 = typeOf(lhs);
+                var rt$1 = typeOf(rhs);
+                if (lt$1.kind !== 'string' || rt$1.kind !== 'string') {
                     return compareBasic(ctx, lhs, rhs);
                 }
             }
             return this.collator ? compareWithCollator(ctx, lhs, rhs, this.collator.evaluate(ctx)) : compareBasic(ctx, lhs, rhs);
-        }
-        eachChild(fn) {
+        };
+        Comparison.prototype.eachChild = function eachChild(fn) {
             fn(this.lhs);
             fn(this.rhs);
             if (this.collator) {
                 fn(this.collator);
             }
-        }
-        outputDefined() {
+        };
+        Comparison.prototype.outputDefined = function outputDefined() {
             return true;
-        }
-        serialize() {
-            const serialized = [op];
-            this.eachChild(child => {
+        };
+        Comparison.prototype.serialize = function serialize() {
+            var serialized = [op];
+            this.eachChild(function (child) {
                 serialized.push(child.serialize());
             });
             return serialized;
-        }
-    };
+        };
+        return Comparison;
+    }();
 }
-const Equals = makeComparison('==', eq, eqCollate);
-const NotEquals = makeComparison('!=', neq, neqCollate);
-const LessThan = makeComparison('<', lt, ltCollate);
-const GreaterThan = makeComparison('>', gt, gtCollate);
-const LessThanOrEqual = makeComparison('<=', lteq, lteqCollate);
-const GreaterThanOrEqual = makeComparison('>=', gteq, gteqCollate);
+var Equals = makeComparison('==', eq, eqCollate);
+var NotEquals = makeComparison('!=', neq, neqCollate);
+var LessThan = makeComparison('<', lt, ltCollate);
+var GreaterThan = makeComparison('>', gt, gtCollate);
+var LessThanOrEqual = makeComparison('<=', lteq, lteqCollate);
+var GreaterThanOrEqual = makeComparison('>=', gteq, gteqCollate);
 
-class NumberFormat {
-    constructor(number, locale, currency, minFractionDigits, maxFractionDigits) {
-        this.type = StringType;
-        this.number = number;
-        this.locale = locale;
-        this.currency = currency;
-        this.minFractionDigits = minFractionDigits;
-        this.maxFractionDigits = maxFractionDigits;
+var NumberFormat = function NumberFormat(number, locale, currency, minFractionDigits, maxFractionDigits) {
+    this.type = StringType;
+    this.number = number;
+    this.locale = locale;
+    this.currency = currency;
+    this.minFractionDigits = minFractionDigits;
+    this.maxFractionDigits = maxFractionDigits;
+};
+NumberFormat.parse = function parse(args, context) {
+    if (args.length !== 3) {
+        return context.error('Expected two arguments.');
     }
-    static parse(args, context) {
-        if (args.length !== 3)
-            return context.error(`Expected two arguments.`);
-        const number = context.parse(args[1], 1, NumberType);
-        if (!number)
+    var number = context.parse(args[1], 1, NumberType);
+    if (!number) {
+        return null;
+    }
+    var options = args[2];
+    if (typeof options !== 'object' || Array.isArray(options)) {
+        return context.error('NumberFormat options argument must be an object.');
+    }
+    var locale = null;
+    if (options['locale']) {
+        locale = context.parse(options['locale'], 1, StringType);
+        if (!locale) {
             return null;
-        const options = args[2];
-        if (typeof options !== 'object' || Array.isArray(options))
-            return context.error(`NumberFormat options argument must be an object.`);
-        let locale = null;
-        if (options['locale']) {
-            locale = context.parse(options['locale'], 1, StringType);
-            if (!locale)
-                return null;
-        }
-        let currency = null;
-        if (options['currency']) {
-            currency = context.parse(options['currency'], 1, StringType);
-            if (!currency)
-                return null;
-        }
-        let minFractionDigits = null;
-        if (options['min-fraction-digits']) {
-            minFractionDigits = context.parse(options['min-fraction-digits'], 1, NumberType);
-            if (!minFractionDigits)
-                return null;
-        }
-        let maxFractionDigits = null;
-        if (options['max-fraction-digits']) {
-            maxFractionDigits = context.parse(options['max-fraction-digits'], 1, NumberType);
-            if (!maxFractionDigits)
-                return null;
-        }
-        return new NumberFormat(number, locale, currency, minFractionDigits, maxFractionDigits);
-    }
-    evaluate(ctx) {
-        return new Intl.NumberFormat(this.locale ? this.locale.evaluate(ctx) : [], {
-            style: this.currency ? 'currency' : 'decimal',
-            currency: this.currency ? this.currency.evaluate(ctx) : undefined,
-            minimumFractionDigits: this.minFractionDigits ? this.minFractionDigits.evaluate(ctx) : undefined,
-            maximumFractionDigits: this.maxFractionDigits ? this.maxFractionDigits.evaluate(ctx) : undefined
-        }).format(this.number.evaluate(ctx));
-    }
-    eachChild(fn) {
-        fn(this.number);
-        if (this.locale) {
-            fn(this.locale);
-        }
-        if (this.currency) {
-            fn(this.currency);
-        }
-        if (this.minFractionDigits) {
-            fn(this.minFractionDigits);
-        }
-        if (this.maxFractionDigits) {
-            fn(this.maxFractionDigits);
         }
     }
-    outputDefined() {
-        return false;
-    }
-    serialize() {
-        const options = {};
-        if (this.locale) {
-            options['locale'] = this.locale.serialize();
-        }
-        if (this.currency) {
-            options['currency'] = this.currency.serialize();
-        }
-        if (this.minFractionDigits) {
-            options['min-fraction-digits'] = this.minFractionDigits.serialize();
-        }
-        if (this.maxFractionDigits) {
-            options['max-fraction-digits'] = this.maxFractionDigits.serialize();
-        }
-        return [
-            'number-format',
-            this.number.serialize(),
-            options
-        ];
-    }
-}
-
-class Length {
-    constructor(input) {
-        this.type = NumberType;
-        this.input = input;
-    }
-    static parse(args, context) {
-        if (args.length !== 2)
-            return context.error(`Expected 1 argument, but found ${ args.length - 1 } instead.`);
-        const input = context.parse(args[1], 1);
-        if (!input)
+    var currency = null;
+    if (options['currency']) {
+        currency = context.parse(options['currency'], 1, StringType);
+        if (!currency) {
             return null;
-        if (input.type.kind !== 'array' && input.type.kind !== 'string' && input.type.kind !== 'value')
-            return context.error(`Expected argument of type string or array, but found ${ toString(input.type) } instead.`);
-        return new Length(input);
-    }
-    evaluate(ctx) {
-        const input = this.input.evaluate(ctx);
-        if (typeof input === 'string') {
-            return input.length;
-        } else if (Array.isArray(input)) {
-            return input.length;
-        } else {
-            throw new RuntimeError(`Expected value to be of type string or array, but found ${ toString(typeOf(input)) } instead.`);
         }
     }
-    eachChild(fn) {
-        fn(this.input);
+    var minFractionDigits = null;
+    if (options['min-fraction-digits']) {
+        minFractionDigits = context.parse(options['min-fraction-digits'], 1, NumberType);
+        if (!minFractionDigits) {
+            return null;
+        }
     }
-    outputDefined() {
-        return false;
+    var maxFractionDigits = null;
+    if (options['max-fraction-digits']) {
+        maxFractionDigits = context.parse(options['max-fraction-digits'], 1, NumberType);
+        if (!maxFractionDigits) {
+            return null;
+        }
     }
-    serialize() {
-        const serialized = ['length'];
-        this.eachChild(child => {
-            serialized.push(child.serialize());
-        });
-        return serialized;
+    return new NumberFormat(number, locale, currency, minFractionDigits, maxFractionDigits);
+};
+NumberFormat.prototype.evaluate = function evaluate(ctx) {
+    return new Intl.NumberFormat(this.locale ? this.locale.evaluate(ctx) : [], {
+        style: this.currency ? 'currency' : 'decimal',
+        currency: this.currency ? this.currency.evaluate(ctx) : undefined,
+        minimumFractionDigits: this.minFractionDigits ? this.minFractionDigits.evaluate(ctx) : undefined,
+        maximumFractionDigits: this.maxFractionDigits ? this.maxFractionDigits.evaluate(ctx) : undefined
+    }).format(this.number.evaluate(ctx));
+};
+NumberFormat.prototype.eachChild = function eachChild(fn) {
+    fn(this.number);
+    if (this.locale) {
+        fn(this.locale);
     }
-}
+    if (this.currency) {
+        fn(this.currency);
+    }
+    if (this.minFractionDigits) {
+        fn(this.minFractionDigits);
+    }
+    if (this.maxFractionDigits) {
+        fn(this.maxFractionDigits);
+    }
+};
+NumberFormat.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+NumberFormat.prototype.serialize = function serialize() {
+    var options = {};
+    if (this.locale) {
+        options['locale'] = this.locale.serialize();
+    }
+    if (this.currency) {
+        options['currency'] = this.currency.serialize();
+    }
+    if (this.minFractionDigits) {
+        options['min-fraction-digits'] = this.minFractionDigits.serialize();
+    }
+    if (this.maxFractionDigits) {
+        options['max-fraction-digits'] = this.maxFractionDigits.serialize();
+    }
+    return [
+        'number-format',
+        this.number.serialize(),
+        options
+    ];
+};
 
-const expressions = {
+var Length = function Length(input) {
+    this.type = NumberType;
+    this.input = input;
+};
+Length.parse = function parse(args, context) {
+    if (args.length !== 2) {
+        return context.error('Expected 1 argument, but found ' + (args.length - 1) + ' instead.');
+    }
+    var input = context.parse(args[1], 1);
+    if (!input) {
+        return null;
+    }
+    if (input.type.kind !== 'array' && input.type.kind !== 'string' && input.type.kind !== 'value') {
+        return context.error('Expected argument of type string or array, but found ' + toString(input.type) + ' instead.');
+    }
+    return new Length(input);
+};
+Length.prototype.evaluate = function evaluate(ctx) {
+    var input = this.input.evaluate(ctx);
+    if (typeof input === 'string') {
+        return input.length;
+    } else if (Array.isArray(input)) {
+        return input.length;
+    } else {
+        throw new RuntimeError('Expected value to be of type string or array, but found ' + toString(typeOf(input)) + ' instead.');
+    }
+};
+Length.prototype.eachChild = function eachChild(fn) {
+    fn(this.input);
+};
+Length.prototype.outputDefined = function outputDefined() {
+    return false;
+};
+Length.prototype.serialize = function serialize() {
+    var serialized = ['length'];
+    this.eachChild(function (child) {
+        serialized.push(child.serialize());
+    });
+    return serialized;
+};
+
+var expressions = {
     '==': Equals,
     '!=': NotEquals,
     '>': GreaterThan,
@@ -10981,55 +10868,67 @@ const expressions = {
     'var': Var,
     'within': Within
 };
-function rgba(ctx, [r, g, b, a]) {
+function rgba(ctx, ref) {
+    var r = ref[0];
+    var g = ref[1];
+    var b = ref[2];
+    var a = ref[3];
     r = r.evaluate(ctx);
     g = g.evaluate(ctx);
     b = b.evaluate(ctx);
-    const alpha = a ? a.evaluate(ctx) : 1;
-    const error = validateRGBA(r, g, b, alpha);
-    if (error)
+    var alpha = a ? a.evaluate(ctx) : 1;
+    var error = validateRGBA(r, g, b, alpha);
+    if (error) {
         throw new RuntimeError(error);
+    }
     return new Color(r / 255 * alpha, g / 255 * alpha, b / 255 * alpha, alpha);
 }
 function has(key, obj) {
     return key in obj;
 }
 function get(key, obj) {
-    const v = obj[key];
+    var v = obj[key];
     return typeof v === 'undefined' ? null : v;
 }
 function binarySearch(v, a, i, j) {
     while (i <= j) {
-        const m = i + j >> 1;
-        if (a[m] === v)
+        var m = i + j >> 1;
+        if (a[m] === v) {
             return true;
-        if (a[m] > v)
+        }
+        if (a[m] > v) {
             j = m - 1;
-        else
+        } else {
             i = m + 1;
+        }
     }
     return false;
 }
 function varargs(type) {
-    return { type };
+    return { type: type };
 }
 CompoundExpression.register(expressions, {
     'error': [
         ErrorType,
         [StringType],
-        (ctx, [v]) => {
+        function (ctx, ref) {
+            var v = ref[0];
             throw new RuntimeError(v.evaluate(ctx));
         }
     ],
     'typeof': [
         StringType,
         [ValueType],
-        (ctx, [v]) => toString(typeOf(v.evaluate(ctx)))
+        function (ctx, ref) {
+            var v = ref[0];
+            return toString(typeOf(v.evaluate(ctx)));
+        }
     ],
     'to-rgba': [
         array(NumberType, 4),
         [ColorType],
-        (ctx, [v]) => {
+        function (ctx, ref) {
+            var v = ref[0];
             return v.evaluate(ctx).toArray();
         }
     ],
@@ -11057,14 +10956,21 @@ CompoundExpression.register(expressions, {
         overloads: [
             [
                 [StringType],
-                (ctx, [key]) => has(key.evaluate(ctx), ctx.properties())
+                function (ctx, ref) {
+                    var key = ref[0];
+                    return has(key.evaluate(ctx), ctx.properties());
+                }
             ],
             [
                 [
                     StringType,
                     ObjectType
                 ],
-                (ctx, [key, obj]) => has(key.evaluate(ctx), obj.evaluate(ctx))
+                function (ctx, ref) {
+                    var key = ref[0];
+                    var obj = ref[1];
+                    return has(key.evaluate(ctx), obj.evaluate(ctx));
+                }
             ]
         ]
     },
@@ -11073,68 +10979,88 @@ CompoundExpression.register(expressions, {
         overloads: [
             [
                 [StringType],
-                (ctx, [key]) => get(key.evaluate(ctx), ctx.properties())
+                function (ctx, ref) {
+                    var key = ref[0];
+                    return get(key.evaluate(ctx), ctx.properties());
+                }
             ],
             [
                 [
                     StringType,
                     ObjectType
                 ],
-                (ctx, [key, obj]) => get(key.evaluate(ctx), obj.evaluate(ctx))
+                function (ctx, ref) {
+                    var key = ref[0];
+                    var obj = ref[1];
+                    return get(key.evaluate(ctx), obj.evaluate(ctx));
+                }
             ]
         ]
     },
     'feature-state': [
         ValueType,
         [StringType],
-        (ctx, [key]) => get(key.evaluate(ctx), ctx.featureState || {})
+        function (ctx, ref) {
+            var key = ref[0];
+            return get(key.evaluate(ctx), ctx.featureState || {});
+        }
     ],
     'properties': [
         ObjectType,
         [],
-        ctx => ctx.properties()
+        function (ctx) {
+            return ctx.properties();
+        }
     ],
     'geometry-type': [
         StringType,
         [],
-        ctx => ctx.geometryType()
+        function (ctx) {
+            return ctx.geometryType();
+        }
     ],
     'id': [
         ValueType,
         [],
-        ctx => ctx.id()
+        function (ctx) {
+            return ctx.id();
+        }
     ],
     'zoom': [
         NumberType,
         [],
-        ctx => ctx.globals.zoom
+        function (ctx) {
+            return ctx.globals.zoom;
+        }
     ],
     'heatmap-density': [
         NumberType,
         [],
-        ctx => ctx.globals.heatmapDensity || 0
+        function (ctx) {
+            return ctx.globals.heatmapDensity || 0;
+        }
     ],
     'line-progress': [
         NumberType,
         [],
-        ctx => ctx.globals.lineProgress || 0
-    ],
-    'sky-radial-progress': [
-        NumberType,
-        [],
-        ctx => ctx.globals.skyRadialProgress || 0
+        function (ctx) {
+            return ctx.globals.lineProgress || 0;
+        }
     ],
     'accumulated': [
         ValueType,
         [],
-        ctx => ctx.globals.accumulated === undefined ? null : ctx.globals.accumulated
+        function (ctx) {
+            return ctx.globals.accumulated === undefined ? null : ctx.globals.accumulated;
+        }
     ],
     '+': [
         NumberType,
         varargs(NumberType),
-        (ctx, args) => {
-            let result = 0;
-            for (const arg of args) {
+        function (ctx, args) {
+            var result = 0;
+            for (var i = 0, list = args; i < list.length; i += 1) {
+                var arg = list[i];
                 result += arg.evaluate(ctx);
             }
             return result;
@@ -11143,9 +11069,10 @@ CompoundExpression.register(expressions, {
     '*': [
         NumberType,
         varargs(NumberType),
-        (ctx, args) => {
-            let result = 1;
-            for (const arg of args) {
+        function (ctx, args) {
+            var result = 1;
+            for (var i = 0, list = args; i < list.length; i += 1) {
+                var arg = list[i];
                 result *= arg.evaluate(ctx);
             }
             return result;
@@ -11159,11 +11086,18 @@ CompoundExpression.register(expressions, {
                     NumberType,
                     NumberType
                 ],
-                (ctx, [a, b]) => a.evaluate(ctx) - b.evaluate(ctx)
+                function (ctx, ref) {
+                    var a = ref[0];
+                    var b = ref[1];
+                    return a.evaluate(ctx) - b.evaluate(ctx);
+                }
             ],
             [
                 [NumberType],
-                (ctx, [a]) => -a.evaluate(ctx)
+                function (ctx, ref) {
+                    var a = ref[0];
+                    return -a.evaluate(ctx);
+                }
             ]
         ]
     },
@@ -11173,7 +11107,11 @@ CompoundExpression.register(expressions, {
             NumberType,
             NumberType
         ],
-        (ctx, [a, b]) => a.evaluate(ctx) / b.evaluate(ctx)
+        function (ctx, ref) {
+            var a = ref[0];
+            var b = ref[1];
+            return a.evaluate(ctx) / b.evaluate(ctx);
+        }
     ],
     '%': [
         NumberType,
@@ -11181,22 +11119,32 @@ CompoundExpression.register(expressions, {
             NumberType,
             NumberType
         ],
-        (ctx, [a, b]) => a.evaluate(ctx) % b.evaluate(ctx)
+        function (ctx, ref) {
+            var a = ref[0];
+            var b = ref[1];
+            return a.evaluate(ctx) % b.evaluate(ctx);
+        }
     ],
     'ln2': [
         NumberType,
         [],
-        () => Math.LN2
+        function () {
+            return Math.LN2;
+        }
     ],
     'pi': [
         NumberType,
         [],
-        () => Math.PI
+        function () {
+            return Math.PI;
+        }
     ],
     'e': [
         NumberType,
         [],
-        () => Math.E
+        function () {
+            return Math.E;
+        }
     ],
     '^': [
         NumberType,
@@ -11204,90 +11152,142 @@ CompoundExpression.register(expressions, {
             NumberType,
             NumberType
         ],
-        (ctx, [b, e]) => Math.pow(b.evaluate(ctx), e.evaluate(ctx))
+        function (ctx, ref) {
+            var b = ref[0];
+            var e = ref[1];
+            return Math.pow(b.evaluate(ctx), e.evaluate(ctx));
+        }
     ],
     'sqrt': [
         NumberType,
         [NumberType],
-        (ctx, [x]) => Math.sqrt(x.evaluate(ctx))
+        function (ctx, ref) {
+            var x = ref[0];
+            return Math.sqrt(x.evaluate(ctx));
+        }
     ],
     'log10': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.log(n.evaluate(ctx)) / Math.LN10
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.log(n.evaluate(ctx)) / Math.LN10;
+        }
     ],
     'ln': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.log(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.log(n.evaluate(ctx));
+        }
     ],
     'log2': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.log(n.evaluate(ctx)) / Math.LN2
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.log(n.evaluate(ctx)) / Math.LN2;
+        }
     ],
     'sin': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.sin(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.sin(n.evaluate(ctx));
+        }
     ],
     'cos': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.cos(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.cos(n.evaluate(ctx));
+        }
     ],
     'tan': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.tan(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.tan(n.evaluate(ctx));
+        }
     ],
     'asin': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.asin(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.asin(n.evaluate(ctx));
+        }
     ],
     'acos': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.acos(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.acos(n.evaluate(ctx));
+        }
     ],
     'atan': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.atan(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.atan(n.evaluate(ctx));
+        }
     ],
     'min': [
         NumberType,
         varargs(NumberType),
-        (ctx, args) => Math.min(...args.map(arg => arg.evaluate(ctx)))
+        function (ctx, args) {
+            return Math.min.apply(Math, args.map(function (arg) {
+                return arg.evaluate(ctx);
+            }));
+        }
     ],
     'max': [
         NumberType,
         varargs(NumberType),
-        (ctx, args) => Math.max(...args.map(arg => arg.evaluate(ctx)))
+        function (ctx, args) {
+            return Math.max.apply(Math, args.map(function (arg) {
+                return arg.evaluate(ctx);
+            }));
+        }
     ],
     'abs': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.abs(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.abs(n.evaluate(ctx));
+        }
     ],
     'round': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => {
-            const v = n.evaluate(ctx);
+        function (ctx, ref) {
+            var n = ref[0];
+            var v = n.evaluate(ctx);
             return v < 0 ? -Math.round(-v) : Math.round(v);
         }
     ],
     'floor': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.floor(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.floor(n.evaluate(ctx));
+        }
     ],
     'ceil': [
         NumberType,
         [NumberType],
-        (ctx, [n]) => Math.ceil(n.evaluate(ctx))
+        function (ctx, ref) {
+            var n = ref[0];
+            return Math.ceil(n.evaluate(ctx));
+        }
     ],
     'filter-==': [
         BooleanType,
@@ -11295,17 +11295,27 @@ CompoundExpression.register(expressions, {
             StringType,
             ValueType
         ],
-        (ctx, [k, v]) => ctx.properties()[k.value] === v.value
+        function (ctx, ref) {
+            var k = ref[0];
+            var v = ref[1];
+            return ctx.properties()[k.value] === v.value;
+        }
     ],
     'filter-id-==': [
         BooleanType,
         [ValueType],
-        (ctx, [v]) => ctx.id() === v.value
+        function (ctx, ref) {
+            var v = ref[0];
+            return ctx.id() === v.value;
+        }
     ],
     'filter-type-==': [
         BooleanType,
         [StringType],
-        (ctx, [v]) => ctx.geometryType() === v.value
+        function (ctx, ref) {
+            var v = ref[0];
+            return ctx.geometryType() === v.value;
+        }
     ],
     'filter-<': [
         BooleanType,
@@ -11313,18 +11323,21 @@ CompoundExpression.register(expressions, {
             StringType,
             ValueType
         ],
-        (ctx, [k, v]) => {
-            const a = ctx.properties()[k.value];
-            const b = v.value;
+        function (ctx, ref) {
+            var k = ref[0];
+            var v = ref[1];
+            var a = ctx.properties()[k.value];
+            var b = v.value;
             return typeof a === typeof b && a < b;
         }
     ],
     'filter-id-<': [
         BooleanType,
         [ValueType],
-        (ctx, [v]) => {
-            const a = ctx.id();
-            const b = v.value;
+        function (ctx, ref) {
+            var v = ref[0];
+            var a = ctx.id();
+            var b = v.value;
             return typeof a === typeof b && a < b;
         }
     ],
@@ -11334,18 +11347,21 @@ CompoundExpression.register(expressions, {
             StringType,
             ValueType
         ],
-        (ctx, [k, v]) => {
-            const a = ctx.properties()[k.value];
-            const b = v.value;
+        function (ctx, ref) {
+            var k = ref[0];
+            var v = ref[1];
+            var a = ctx.properties()[k.value];
+            var b = v.value;
             return typeof a === typeof b && a > b;
         }
     ],
     'filter-id->': [
         BooleanType,
         [ValueType],
-        (ctx, [v]) => {
-            const a = ctx.id();
-            const b = v.value;
+        function (ctx, ref) {
+            var v = ref[0];
+            var a = ctx.id();
+            var b = v.value;
             return typeof a === typeof b && a > b;
         }
     ],
@@ -11355,18 +11371,21 @@ CompoundExpression.register(expressions, {
             StringType,
             ValueType
         ],
-        (ctx, [k, v]) => {
-            const a = ctx.properties()[k.value];
-            const b = v.value;
+        function (ctx, ref) {
+            var k = ref[0];
+            var v = ref[1];
+            var a = ctx.properties()[k.value];
+            var b = v.value;
             return typeof a === typeof b && a <= b;
         }
     ],
     'filter-id-<=': [
         BooleanType,
         [ValueType],
-        (ctx, [v]) => {
-            const a = ctx.id();
-            const b = v.value;
+        function (ctx, ref) {
+            var v = ref[0];
+            var a = ctx.id();
+            var b = v.value;
             return typeof a === typeof b && a <= b;
         }
     ],
@@ -11376,40 +11395,54 @@ CompoundExpression.register(expressions, {
             StringType,
             ValueType
         ],
-        (ctx, [k, v]) => {
-            const a = ctx.properties()[k.value];
-            const b = v.value;
+        function (ctx, ref) {
+            var k = ref[0];
+            var v = ref[1];
+            var a = ctx.properties()[k.value];
+            var b = v.value;
             return typeof a === typeof b && a >= b;
         }
     ],
     'filter-id->=': [
         BooleanType,
         [ValueType],
-        (ctx, [v]) => {
-            const a = ctx.id();
-            const b = v.value;
+        function (ctx, ref) {
+            var v = ref[0];
+            var a = ctx.id();
+            var b = v.value;
             return typeof a === typeof b && a >= b;
         }
     ],
     'filter-has': [
         BooleanType,
         [ValueType],
-        (ctx, [k]) => k.value in ctx.properties()
+        function (ctx, ref) {
+            var k = ref[0];
+            return k.value in ctx.properties();
+        }
     ],
     'filter-has-id': [
         BooleanType,
         [],
-        ctx => ctx.id() !== null && ctx.id() !== undefined
+        function (ctx) {
+            return ctx.id() !== null && ctx.id() !== undefined;
+        }
     ],
     'filter-type-in': [
         BooleanType,
         [array(StringType)],
-        (ctx, [v]) => v.value.indexOf(ctx.geometryType()) >= 0
+        function (ctx, ref) {
+            var v = ref[0];
+            return v.value.indexOf(ctx.geometryType()) >= 0;
+        }
     ],
     'filter-id-in': [
         BooleanType,
         [array(ValueType)],
-        (ctx, [v]) => v.value.indexOf(ctx.id()) >= 0
+        function (ctx, ref) {
+            var v = ref[0];
+            return v.value.indexOf(ctx.id()) >= 0;
+        }
     ],
     'filter-in-small': [
         BooleanType,
@@ -11417,7 +11450,11 @@ CompoundExpression.register(expressions, {
             StringType,
             array(ValueType)
         ],
-        (ctx, [k, v]) => v.value.indexOf(ctx.properties()[k.value]) >= 0
+        function (ctx, ref) {
+            var k = ref[0];
+            var v = ref[1];
+            return v.value.indexOf(ctx.properties()[k.value]) >= 0;
+        }
     ],
     'filter-in-large': [
         BooleanType,
@@ -11425,7 +11462,11 @@ CompoundExpression.register(expressions, {
             StringType,
             array(ValueType)
         ],
-        (ctx, [k, v]) => binarySearch(ctx.properties()[k.value], v.value, 0, v.value.length - 1)
+        function (ctx, ref) {
+            var k = ref[0];
+            var v = ref[1];
+            return binarySearch(ctx.properties()[k.value], v.value, 0, v.value.length - 1);
+        }
     ],
     'all': {
         type: BooleanType,
@@ -11435,14 +11476,20 @@ CompoundExpression.register(expressions, {
                     BooleanType,
                     BooleanType
                 ],
-                (ctx, [a, b]) => a.evaluate(ctx) && b.evaluate(ctx)
+                function (ctx, ref) {
+                    var a = ref[0];
+                    var b = ref[1];
+                    return a.evaluate(ctx) && b.evaluate(ctx);
+                }
             ],
             [
                 varargs(BooleanType),
-                (ctx, args) => {
-                    for (const arg of args) {
-                        if (!arg.evaluate(ctx))
+                function (ctx, args) {
+                    for (var i = 0, list = args; i < list.length; i += 1) {
+                        var arg = list[i];
+                        if (!arg.evaluate(ctx)) {
                             return false;
+                        }
                     }
                     return true;
                 }
@@ -11457,14 +11504,20 @@ CompoundExpression.register(expressions, {
                     BooleanType,
                     BooleanType
                 ],
-                (ctx, [a, b]) => a.evaluate(ctx) || b.evaluate(ctx)
+                function (ctx, ref) {
+                    var a = ref[0];
+                    var b = ref[1];
+                    return a.evaluate(ctx) || b.evaluate(ctx);
+                }
             ],
             [
                 varargs(BooleanType),
-                (ctx, args) => {
-                    for (const arg of args) {
-                        if (arg.evaluate(ctx))
+                function (ctx, args) {
+                    for (var i = 0, list = args; i < list.length; i += 1) {
+                        var arg = list[i];
+                        if (arg.evaluate(ctx)) {
                             return true;
+                        }
                     }
                     return false;
                 }
@@ -11474,13 +11527,17 @@ CompoundExpression.register(expressions, {
     '!': [
         BooleanType,
         [BooleanType],
-        (ctx, [b]) => !b.evaluate(ctx)
+        function (ctx, ref) {
+            var b = ref[0];
+            return !b.evaluate(ctx);
+        }
     ],
     'is-supported-script': [
         BooleanType,
         [StringType],
-        (ctx, [s]) => {
-            const isSupportedScript = ctx.globals && ctx.globals.isSupportedScript;
+        function (ctx, ref) {
+            var s = ref[0];
+            var isSupportedScript = ctx.globals && ctx.globals.isSupportedScript;
             if (isSupportedScript) {
                 return isSupportedScript(s.evaluate(ctx));
             }
@@ -11490,35 +11547,48 @@ CompoundExpression.register(expressions, {
     'upcase': [
         StringType,
         [StringType],
-        (ctx, [s]) => s.evaluate(ctx).toUpperCase()
+        function (ctx, ref) {
+            var s = ref[0];
+            return s.evaluate(ctx).toUpperCase();
+        }
     ],
     'downcase': [
         StringType,
         [StringType],
-        (ctx, [s]) => s.evaluate(ctx).toLowerCase()
+        function (ctx, ref) {
+            var s = ref[0];
+            return s.evaluate(ctx).toLowerCase();
+        }
     ],
     'concat': [
         StringType,
         varargs(ValueType),
-        (ctx, args) => args.map(arg => toString$1(arg.evaluate(ctx))).join('')
+        function (ctx, args) {
+            return args.map(function (arg) {
+                return toString$1(arg.evaluate(ctx));
+            }).join('');
+        }
     ],
     'resolved-locale': [
         StringType,
         [CollatorType],
-        (ctx, [collator]) => collator.evaluate(ctx).resolvedLocale()
+        function (ctx, ref) {
+            var collator = ref[0];
+            return collator.evaluate(ctx).resolvedLocale();
+        }
     ]
 });
 
 function success(value) {
     return {
         result: 'success',
-        value
+        value: value
     };
 }
 function error(value) {
     return {
         result: 'error',
-        value
+        value: value
     };
 }
 
@@ -11555,15 +11625,15 @@ function identityFunction(x) {
     return x;
 }
 function createFunction(parameters, propertySpec) {
-    const isColor = propertySpec.type === 'color';
-    const zoomAndFeatureDependent = parameters.stops && typeof parameters.stops[0][0] === 'object';
-    const featureDependent = zoomAndFeatureDependent || parameters.property !== undefined;
-    const zoomDependent = zoomAndFeatureDependent || !featureDependent;
-    const type = parameters.type || (supportsInterpolation(propertySpec) ? 'exponential' : 'interval');
+    var isColor = propertySpec.type === 'color';
+    var zoomAndFeatureDependent = parameters.stops && typeof parameters.stops[0][0] === 'object';
+    var featureDependent = zoomAndFeatureDependent || parameters.property !== undefined;
+    var zoomDependent = zoomAndFeatureDependent || !featureDependent;
+    var type = parameters.type || (supportsInterpolation(propertySpec) ? 'exponential' : 'interval');
     if (isColor) {
         parameters = extend({}, parameters);
         if (parameters.stops) {
-            parameters.stops = parameters.stops.map(stop => {
+            parameters.stops = parameters.stops.map(function (stop) {
                 return [
                     stop[0],
                     Color.parse(stop[1])
@@ -11577,11 +11647,11 @@ function createFunction(parameters, propertySpec) {
         }
     }
     if (parameters.colorSpace && parameters.colorSpace !== 'rgb' && !colorSpaces[parameters.colorSpace]) {
-        throw new Error(`Unknown color space: ${ parameters.colorSpace }`);
+        throw new Error('Unknown color space: ' + parameters.colorSpace);
     }
-    let innerFun;
-    let hashedStops;
-    let categoricalKeyType;
+    var innerFun;
+    var hashedStops;
+    var categoricalKeyType;
     if (type === 'exponential') {
         innerFun = evaluateExponentialFunction;
     } else if (type === 'interval') {
@@ -11589,24 +11659,25 @@ function createFunction(parameters, propertySpec) {
     } else if (type === 'categorical') {
         innerFun = evaluateCategoricalFunction;
         hashedStops = Object.create(null);
-        for (const stop of parameters.stops) {
+        for (var i = 0, list = parameters.stops; i < list.length; i += 1) {
+            var stop = list[i];
             hashedStops[stop[0]] = stop[1];
         }
         categoricalKeyType = typeof parameters.stops[0][0];
     } else if (type === 'identity') {
         innerFun = evaluateIdentityFunction;
     } else {
-        throw new Error(`Unknown function type "${ type }"`);
+        throw new Error('Unknown function type "' + type + '"');
     }
     if (zoomAndFeatureDependent) {
-        const featureFunctions = {};
-        const zoomStops = [];
-        for (let s = 0; s < parameters.stops.length; s++) {
-            const stop = parameters.stops[s];
-            const zoom = stop[0].zoom;
+        var featureFunctions = {};
+        var zoomStops = [];
+        for (var s = 0; s < parameters.stops.length; s++) {
+            var stop$1 = parameters.stops[s];
+            var zoom = stop$1[0].zoom;
             if (featureFunctions[zoom] === undefined) {
                 featureFunctions[zoom] = {
-                    zoom,
+                    zoom: zoom,
                     type: parameters.type,
                     property: parameters.property,
                     default: parameters.default,
@@ -11615,24 +11686,28 @@ function createFunction(parameters, propertySpec) {
                 zoomStops.push(zoom);
             }
             featureFunctions[zoom].stops.push([
-                stop[0].value,
-                stop[1]
+                stop$1[0].value,
+                stop$1[1]
             ]);
         }
-        const featureFunctionStops = [];
-        for (const z of zoomStops) {
+        var featureFunctionStops = [];
+        for (var i$1 = 0, list$1 = zoomStops; i$1 < list$1.length; i$1 += 1) {
+            var z = list$1[i$1];
             featureFunctionStops.push([
                 featureFunctions[z].zoom,
                 createFunction(featureFunctions[z], propertySpec)
             ]);
         }
-        const interpolationType = { name: 'linear' };
+        var interpolationType = { name: 'linear' };
         return {
             kind: 'composite',
-            interpolationType,
+            interpolationType: interpolationType,
             interpolationFactor: Interpolate.interpolationFactor.bind(undefined, interpolationType),
-            zoomStops: featureFunctionStops.map(s => s[0]),
-            evaluate({zoom}, properties) {
+            zoomStops: featureFunctionStops.map(function (s) {
+                return s[0];
+            }),
+            evaluate: function evaluate(ref, properties) {
+                var zoom = ref.zoom;
                 return evaluateExponentialFunction({
                     stops: featureFunctionStops,
                     base: parameters.base
@@ -11640,22 +11715,27 @@ function createFunction(parameters, propertySpec) {
             }
         };
     } else if (zoomDependent) {
-        const interpolationType = type === 'exponential' ? {
+        var interpolationType$1 = type === 'exponential' ? {
             name: 'exponential',
             base: parameters.base !== undefined ? parameters.base : 1
         } : null;
         return {
             kind: 'camera',
-            interpolationType,
-            interpolationFactor: Interpolate.interpolationFactor.bind(undefined, interpolationType),
-            zoomStops: parameters.stops.map(s => s[0]),
-            evaluate: ({zoom}) => innerFun(parameters, propertySpec, zoom, hashedStops, categoricalKeyType)
+            interpolationType: interpolationType$1,
+            interpolationFactor: Interpolate.interpolationFactor.bind(undefined, interpolationType$1),
+            zoomStops: parameters.stops.map(function (s) {
+                return s[0];
+            }),
+            evaluate: function (ref) {
+                var zoom = ref.zoom;
+                return innerFun(parameters, propertySpec, zoom, hashedStops, categoricalKeyType);
+            }
         };
     } else {
         return {
             kind: 'source',
-            evaluate(_, feature) {
-                const value = feature && feature.properties ? feature.properties[parameters.property] : undefined;
+            evaluate: function evaluate(_, feature) {
+                var value = feature && feature.properties ? feature.properties[parameters.property] : undefined;
                 if (value === undefined) {
                     return coalesce(parameters.default, propertySpec.default);
                 }
@@ -11665,55 +11745,75 @@ function createFunction(parameters, propertySpec) {
     }
 }
 function coalesce(a, b, c) {
-    if (a !== undefined)
+    if (a !== undefined) {
         return a;
-    if (b !== undefined)
+    }
+    if (b !== undefined) {
         return b;
-    if (c !== undefined)
+    }
+    if (c !== undefined) {
         return c;
+    }
 }
 function evaluateCategoricalFunction(parameters, propertySpec, input, hashedStops, keyType) {
-    const evaluated = typeof input === keyType ? hashedStops[input] : undefined;
+    var evaluated = typeof input === keyType ? hashedStops[input] : undefined;
     return coalesce(evaluated, parameters.default, propertySpec.default);
 }
 function evaluateIntervalFunction(parameters, propertySpec, input) {
-    if (getType(input) !== 'number')
+    if (getType(input) !== 'number') {
         return coalesce(parameters.default, propertySpec.default);
-    const n = parameters.stops.length;
-    if (n === 1)
+    }
+    var n = parameters.stops.length;
+    if (n === 1) {
         return parameters.stops[0][1];
-    if (input <= parameters.stops[0][0])
+    }
+    if (input <= parameters.stops[0][0]) {
         return parameters.stops[0][1];
-    if (input >= parameters.stops[n - 1][0])
+    }
+    if (input >= parameters.stops[n - 1][0]) {
         return parameters.stops[n - 1][1];
-    const index = findStopLessThanOrEqualTo(parameters.stops.map(stop => stop[0]), input);
+    }
+    var index = findStopLessThanOrEqualTo(parameters.stops.map(function (stop) {
+        return stop[0];
+    }), input);
     return parameters.stops[index][1];
 }
 function evaluateExponentialFunction(parameters, propertySpec, input) {
-    const base = parameters.base !== undefined ? parameters.base : 1;
-    if (getType(input) !== 'number')
+    var base = parameters.base !== undefined ? parameters.base : 1;
+    if (getType(input) !== 'number') {
         return coalesce(parameters.default, propertySpec.default);
-    const n = parameters.stops.length;
-    if (n === 1)
+    }
+    var n = parameters.stops.length;
+    if (n === 1) {
         return parameters.stops[0][1];
-    if (input <= parameters.stops[0][0])
+    }
+    if (input <= parameters.stops[0][0]) {
         return parameters.stops[0][1];
-    if (input >= parameters.stops[n - 1][0])
+    }
+    if (input >= parameters.stops[n - 1][0]) {
         return parameters.stops[n - 1][1];
-    const index = findStopLessThanOrEqualTo(parameters.stops.map(stop => stop[0]), input);
-    const t = interpolationFactor(input, base, parameters.stops[index][0], parameters.stops[index + 1][0]);
-    const outputLower = parameters.stops[index][1];
-    const outputUpper = parameters.stops[index + 1][1];
-    let interp = interpolate[propertySpec.type] || identityFunction;
+    }
+    var index = findStopLessThanOrEqualTo(parameters.stops.map(function (stop) {
+        return stop[0];
+    }), input);
+    var t = interpolationFactor(input, base, parameters.stops[index][0], parameters.stops[index + 1][0]);
+    var outputLower = parameters.stops[index][1];
+    var outputUpper = parameters.stops[index + 1][1];
+    var interp = interpolate[propertySpec.type] || identityFunction;
     if (parameters.colorSpace && parameters.colorSpace !== 'rgb') {
-        const colorspace = colorSpaces[parameters.colorSpace];
-        interp = (a, b) => colorspace.reverse(colorspace.interpolate(colorspace.forward(a), colorspace.forward(b), t));
+        var colorspace = colorSpaces[parameters.colorSpace];
+        interp = function (a, b) {
+            return colorspace.reverse(colorspace.interpolate(colorspace.forward(a), colorspace.forward(b), t));
+        };
     }
     if (typeof outputLower.evaluate === 'function') {
         return {
-            evaluate(...args) {
-                const evaluatedLower = outputLower.evaluate.apply(undefined, args);
-                const evaluatedUpper = outputUpper.evaluate.apply(undefined, args);
+            evaluate: function evaluate() {
+                var args = [], len = arguments.length;
+                while (len--)
+                    args[len] = arguments[len];
+                var evaluatedLower = outputLower.evaluate.apply(undefined, args);
+                var evaluatedUpper = outputUpper.evaluate.apply(undefined, args);
                 if (evaluatedLower === undefined || evaluatedUpper === undefined) {
                     return undefined;
                 }
@@ -11736,8 +11836,8 @@ function evaluateIdentityFunction(parameters, propertySpec, input) {
     return coalesce(input, parameters.default, propertySpec.default);
 }
 function interpolationFactor(input, base, lowerValue, upperValue) {
-    const difference = upperValue - lowerValue;
-    const progress = input - lowerValue;
+    var difference = upperValue - lowerValue;
+    var progress = input - lowerValue;
     if (difference === 0) {
         return 0;
     } else if (base === 1) {
@@ -11747,111 +11847,107 @@ function interpolationFactor(input, base, lowerValue, upperValue) {
     }
 }
 
-class StyleExpression {
-    constructor(expression, propertySpec) {
-        this.expression = expression;
-        this._warningHistory = {};
-        this._evaluator = new EvaluationContext();
-        this._defaultValue = propertySpec ? getDefaultValue(propertySpec) : null;
-        this._enumValues = propertySpec && propertySpec.type === 'enum' ? propertySpec.values : null;
-    }
-    evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection) {
-        this._evaluator.globals = globals;
-        this._evaluator.feature = feature;
-        this._evaluator.featureState = featureState;
-        this._evaluator.canonical = canonical;
-        this._evaluator.availableImages = availableImages || null;
-        this._evaluator.formattedSection = formattedSection;
-        return this.expression.evaluate(this._evaluator);
-    }
-    evaluate(globals, feature, featureState, canonical, availableImages, formattedSection) {
-        this._evaluator.globals = globals;
-        this._evaluator.feature = feature || null;
-        this._evaluator.featureState = featureState || null;
-        this._evaluator.canonical = canonical;
-        this._evaluator.availableImages = availableImages || null;
-        this._evaluator.formattedSection = formattedSection || null;
-        try {
-            const val = this.expression.evaluate(this._evaluator);
-            if (val === null || val === undefined || typeof val === 'number' && val !== val) {
-                return this._defaultValue;
-            }
-            if (this._enumValues && !(val in this._enumValues)) {
-                throw new RuntimeError(`Expected value to be one of ${ Object.keys(this._enumValues).map(v => JSON.stringify(v)).join(', ') }, but found ${ JSON.stringify(val) } instead.`);
-            }
-            return val;
-        } catch (e) {
-            if (!this._warningHistory[e.message]) {
-                this._warningHistory[e.message] = true;
-                if (typeof console !== 'undefined') {
-                    console.warn(e.message);
-                }
-            }
+var StyleExpression = function StyleExpression(expression, propertySpec) {
+    this.expression = expression;
+    this._warningHistory = {};
+    this._evaluator = new EvaluationContext();
+    this._defaultValue = propertySpec ? getDefaultValue(propertySpec) : null;
+    this._enumValues = propertySpec && propertySpec.type === 'enum' ? propertySpec.values : null;
+};
+StyleExpression.prototype.evaluateWithoutErrorHandling = function evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection) {
+    this._evaluator.globals = globals;
+    this._evaluator.feature = feature;
+    this._evaluator.featureState = featureState;
+    this._evaluator.canonical = canonical;
+    this._evaluator.availableImages = availableImages || null;
+    this._evaluator.formattedSection = formattedSection;
+    return this.expression.evaluate(this._evaluator);
+};
+StyleExpression.prototype.evaluate = function evaluate(globals, feature, featureState, canonical, availableImages, formattedSection) {
+    this._evaluator.globals = globals;
+    this._evaluator.feature = feature || null;
+    this._evaluator.featureState = featureState || null;
+    this._evaluator.canonical = canonical;
+    this._evaluator.availableImages = availableImages || null;
+    this._evaluator.formattedSection = formattedSection || null;
+    try {
+        var val = this.expression.evaluate(this._evaluator);
+        if (val === null || val === undefined || typeof val === 'number' && val !== val) {
             return this._defaultValue;
         }
+        if (this._enumValues && !(val in this._enumValues)) {
+            throw new RuntimeError('Expected value to be one of ' + Object.keys(this._enumValues).map(function (v) {
+                return JSON.stringify(v);
+            }).join(', ') + ', but found ' + JSON.stringify(val) + ' instead.');
+        }
+        return val;
+    } catch (e) {
+        if (!this._warningHistory[e.message]) {
+            this._warningHistory[e.message] = true;
+            if (typeof console !== 'undefined') {
+                console.warn(e.message);
+            }
+        }
+        return this._defaultValue;
     }
-}
+};
 function isExpression(expression) {
     return Array.isArray(expression) && expression.length > 0 && typeof expression[0] === 'string' && expression[0] in expressions;
 }
 function createExpression(expression, propertySpec) {
-    const parser = new ParsingContext(expressions, [], propertySpec ? getExpectedType(propertySpec) : undefined);
-    const parsed = parser.parse(expression, undefined, undefined, undefined, propertySpec && propertySpec.type === 'string' ? { typeAnnotation: 'coerce' } : undefined);
+    var parser = new ParsingContext(expressions, [], propertySpec ? getExpectedType(propertySpec) : undefined);
+    var parsed = parser.parse(expression, undefined, undefined, undefined, propertySpec && propertySpec.type === 'string' ? { typeAnnotation: 'coerce' } : undefined);
     if (!parsed) {
         return error(parser.errors);
     }
     return success(new StyleExpression(parsed, propertySpec));
 }
-class ZoomConstantExpression {
-    constructor(kind, expression) {
-        this.kind = kind;
-        this._styleExpression = expression;
-        this.isStateDependent = kind !== 'constant' && !isStateConstant(expression.expression);
+var ZoomConstantExpression = function ZoomConstantExpression(kind, expression) {
+    this.kind = kind;
+    this._styleExpression = expression;
+    this.isStateDependent = kind !== 'constant' && !isStateConstant(expression.expression);
+};
+ZoomConstantExpression.prototype.evaluateWithoutErrorHandling = function evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection) {
+    return this._styleExpression.evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection);
+};
+ZoomConstantExpression.prototype.evaluate = function evaluate(globals, feature, featureState, canonical, availableImages, formattedSection) {
+    return this._styleExpression.evaluate(globals, feature, featureState, canonical, availableImages, formattedSection);
+};
+var ZoomDependentExpression = function ZoomDependentExpression(kind, expression, zoomStops, interpolationType) {
+    this.kind = kind;
+    this.zoomStops = zoomStops;
+    this._styleExpression = expression;
+    this.isStateDependent = kind !== 'camera' && !isStateConstant(expression.expression);
+    this.interpolationType = interpolationType;
+};
+ZoomDependentExpression.prototype.evaluateWithoutErrorHandling = function evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection) {
+    return this._styleExpression.evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection);
+};
+ZoomDependentExpression.prototype.evaluate = function evaluate(globals, feature, featureState, canonical, availableImages, formattedSection) {
+    return this._styleExpression.evaluate(globals, feature, featureState, canonical, availableImages, formattedSection);
+};
+ZoomDependentExpression.prototype.interpolationFactor = function interpolationFactor(input, lower, upper) {
+    if (this.interpolationType) {
+        return Interpolate.interpolationFactor(this.interpolationType, input, lower, upper);
+    } else {
+        return 0;
     }
-    evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection) {
-        return this._styleExpression.evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection);
-    }
-    evaluate(globals, feature, featureState, canonical, availableImages, formattedSection) {
-        return this._styleExpression.evaluate(globals, feature, featureState, canonical, availableImages, formattedSection);
-    }
-}
-class ZoomDependentExpression {
-    constructor(kind, expression, zoomStops, interpolationType) {
-        this.kind = kind;
-        this.zoomStops = zoomStops;
-        this._styleExpression = expression;
-        this.isStateDependent = kind !== 'camera' && !isStateConstant(expression.expression);
-        this.interpolationType = interpolationType;
-    }
-    evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection) {
-        return this._styleExpression.evaluateWithoutErrorHandling(globals, feature, featureState, canonical, availableImages, formattedSection);
-    }
-    evaluate(globals, feature, featureState, canonical, availableImages, formattedSection) {
-        return this._styleExpression.evaluate(globals, feature, featureState, canonical, availableImages, formattedSection);
-    }
-    interpolationFactor(input, lower, upper) {
-        if (this.interpolationType) {
-            return Interpolate.interpolationFactor(this.interpolationType, input, lower, upper);
-        } else {
-            return 0;
-        }
-    }
-}
+};
 function createPropertyExpression(expression, propertySpec) {
     expression = createExpression(expression, propertySpec);
     if (expression.result === 'error') {
         return expression;
     }
-    const parsed = expression.value.expression;
-    const isFeatureConstant$1 = isFeatureConstant(parsed);
+    var parsed = expression.value.expression;
+    var isFeatureConstant$1 = isFeatureConstant(parsed);
     if (!isFeatureConstant$1 && !supportsPropertyExpression(propertySpec)) {
         return error([new ParsingError('', 'data expressions not supported')]);
     }
-    const isZoomConstant = isGlobalPropertyConstant(parsed, ['zoom']);
+    var isZoomConstant = isGlobalPropertyConstant(parsed, ['zoom']);
     if (!isZoomConstant && !supportsZoomExpression(propertySpec)) {
         return error([new ParsingError('', 'zoom expressions not supported')]);
     }
-    const zoomCurve = findZoomCurve(parsed);
+    var zoomCurve = findZoomCurve(parsed);
     if (!zoomCurve && !isZoomConstant) {
         return error([new ParsingError('', '"zoom" expression may only be used as input to a top-level "step" or "interpolate" expression.')]);
     } else if (zoomCurve instanceof ParsingError) {
@@ -11862,51 +11958,54 @@ function createPropertyExpression(expression, propertySpec) {
     if (!zoomCurve) {
         return success(isFeatureConstant$1 ? new ZoomConstantExpression('constant', expression.value) : new ZoomConstantExpression('source', expression.value));
     }
-    const interpolationType = zoomCurve instanceof Interpolate ? zoomCurve.interpolation : undefined;
+    var interpolationType = zoomCurve instanceof Interpolate ? zoomCurve.interpolation : undefined;
     return success(isFeatureConstant$1 ? new ZoomDependentExpression('camera', expression.value, zoomCurve.labels, interpolationType) : new ZoomDependentExpression('composite', expression.value, zoomCurve.labels, interpolationType));
 }
-class StylePropertyFunction {
-    constructor(parameters, specification) {
-        this._parameters = parameters;
-        this._specification = specification;
-        extend(this, createFunction(this._parameters, this._specification));
-    }
-    static deserialize(serialized) {
-        return new StylePropertyFunction(serialized._parameters, serialized._specification);
-    }
-    static serialize(input) {
-        return {
-            _parameters: input._parameters,
-            _specification: input._specification
-        };
-    }
-}
+var StylePropertyFunction = function StylePropertyFunction(parameters, specification) {
+    this._parameters = parameters;
+    this._specification = specification;
+    extend(this, createFunction(this._parameters, this._specification));
+};
+StylePropertyFunction.deserialize = function deserialize(serialized) {
+    return new StylePropertyFunction(serialized._parameters, serialized._specification);
+};
+StylePropertyFunction.serialize = function serialize(input) {
+    return {
+        _parameters: input._parameters,
+        _specification: input._specification
+    };
+};
 function normalizePropertyExpression(value, specification) {
     if (isFunction$1(value)) {
         return new StylePropertyFunction(value, specification);
     } else if (isExpression(value)) {
-        const expression = createPropertyExpression(value, specification);
+        var expression = createPropertyExpression(value, specification);
         if (expression.result === 'error') {
-            throw new Error(expression.value.map(err => `${ err.key }: ${ err.message }`).join(', '));
+            throw new Error(expression.value.map(function (err) {
+                return err.key + ': ' + err.message;
+            }).join(', '));
         }
         return expression.value;
     } else {
-        let constant = value;
+        var constant = value;
         if (typeof value === 'string' && specification.type === 'color') {
             constant = Color.parse(value);
         }
         return {
             kind: 'constant',
-            evaluate: () => constant
+            evaluate: function () {
+                return constant;
+            }
         };
     }
 }
 function findZoomCurve(expression) {
-    let result = null;
+    var result = null;
     if (expression instanceof Let) {
         result = findZoomCurve(expression.result);
     } else if (expression instanceof Coalesce) {
-        for (const arg of expression.args) {
+        for (var i = 0, list = expression.args; i < list.length; i += 1) {
+            var arg = list[i];
             result = findZoomCurve(arg);
             if (result) {
                 break;
@@ -11918,8 +12017,8 @@ function findZoomCurve(expression) {
     if (result instanceof ParsingError) {
         return result;
     }
-    expression.eachChild(child => {
-        const childResult = findZoomCurve(child);
+    expression.eachChild(function (child) {
+        var childResult = findZoomCurve(child);
         if (childResult instanceof ParsingError) {
             result = childResult;
         } else if (!result && childResult) {
@@ -11931,7 +12030,7 @@ function findZoomCurve(expression) {
     return result;
 }
 function getExpectedType(spec) {
-    const types = {
+    var types = {
         color: ColorType,
         string: StringType,
         number: NumberType,
@@ -11964,14 +12063,14 @@ function convertLiteral(value) {
     ] : value;
 }
 function convertFunction(parameters, propertySpec) {
-    let stops = parameters.stops;
+    var stops = parameters.stops;
     if (!stops) {
         return convertIdentityFunction(parameters, propertySpec);
     }
-    const zoomAndFeatureDependent = stops && typeof stops[0][0] === 'object';
-    const featureDependent = zoomAndFeatureDependent || parameters.property !== undefined;
-    const zoomDependent = zoomAndFeatureDependent || !featureDependent;
-    stops = stops.map(stop => {
+    var zoomAndFeatureDependent = stops && typeof stops[0][0] === 'object';
+    var featureDependent = zoomAndFeatureDependent || parameters.property !== undefined;
+    var zoomDependent = zoomAndFeatureDependent || !featureDependent;
+    stops = stops.map(function (stop) {
         if (!featureDependent && propertySpec.tokens && typeof stop[1] === 'string') {
             return [
                 stop[0],
@@ -11992,7 +12091,7 @@ function convertFunction(parameters, propertySpec) {
     }
 }
 function convertIdentityFunction(parameters, propertySpec) {
-    const get = [
+    var get = [
         'get',
         parameters.property
     ];
@@ -12010,7 +12109,7 @@ function convertIdentityFunction(parameters, propertySpec) {
             parameters.default
         ];
     } else {
-        const expression = [
+        var expression = [
             propertySpec.type === 'color' ? 'to-color' : propertySpec.type,
             get,
             convertLiteral(parameters.default)
@@ -12032,15 +12131,15 @@ function getInterpolateOperator(parameters) {
     }
 }
 function convertZoomAndPropertyFunction(parameters, propertySpec, stops) {
-    const featureFunctionParameters = {};
-    const featureFunctionStops = {};
-    const zoomStops = [];
-    for (let s = 0; s < stops.length; s++) {
-        const stop = stops[s];
-        const zoom = stop[0].zoom;
+    var featureFunctionParameters = {};
+    var featureFunctionStops = {};
+    var zoomStops = [];
+    for (var s = 0; s < stops.length; s++) {
+        var stop = stops[s];
+        var zoom = stop[0].zoom;
         if (featureFunctionParameters[zoom] === undefined) {
             featureFunctionParameters[zoom] = {
-                zoom,
+                zoom: zoom,
                 type: parameters.type,
                 property: parameters.property,
                 default: parameters.default
@@ -12053,53 +12152,58 @@ function convertZoomAndPropertyFunction(parameters, propertySpec, stops) {
             stop[1]
         ]);
     }
-    const functionType = getFunctionType({}, propertySpec);
+    var functionType = getFunctionType({}, propertySpec);
     if (functionType === 'exponential') {
-        const expression = [
+        var expression = [
             getInterpolateOperator(parameters),
             ['linear'],
             ['zoom']
         ];
-        for (const z of zoomStops) {
-            const output = convertPropertyFunction(featureFunctionParameters[z], propertySpec, featureFunctionStops[z]);
+        for (var i = 0, list = zoomStops; i < list.length; i += 1) {
+            var z = list[i];
+            var output = convertPropertyFunction(featureFunctionParameters[z], propertySpec, featureFunctionStops[z]);
             appendStopPair(expression, z, output, false);
         }
         return expression;
     } else {
-        const expression = [
+        var expression$1 = [
             'step',
             ['zoom']
         ];
-        for (const z of zoomStops) {
-            const output = convertPropertyFunction(featureFunctionParameters[z], propertySpec, featureFunctionStops[z]);
-            appendStopPair(expression, z, output, true);
+        for (var i$1 = 0, list$1 = zoomStops; i$1 < list$1.length; i$1 += 1) {
+            var z$1 = list$1[i$1];
+            var output$1 = convertPropertyFunction(featureFunctionParameters[z$1], propertySpec, featureFunctionStops[z$1]);
+            appendStopPair(expression$1, z$1, output$1, true);
         }
-        fixupDegenerateStepCurve(expression);
-        return expression;
+        fixupDegenerateStepCurve(expression$1);
+        return expression$1;
     }
 }
 function coalesce$1(a, b) {
-    if (a !== undefined)
+    if (a !== undefined) {
         return a;
-    if (b !== undefined)
+    }
+    if (b !== undefined) {
         return b;
+    }
 }
 function getFallback(parameters, propertySpec) {
-    const defaultValue = convertLiteral(coalesce$1(parameters.default, propertySpec.default));
+    var defaultValue = convertLiteral(coalesce$1(parameters.default, propertySpec.default));
     if (defaultValue === undefined && propertySpec.type === 'resolvedImage') {
         return '';
     }
     return defaultValue;
 }
 function convertPropertyFunction(parameters, propertySpec, stops) {
-    const type = getFunctionType(parameters, propertySpec);
-    const get = [
+    var type = getFunctionType(parameters, propertySpec);
+    var get = [
         'get',
         parameters.property
     ];
     if (type === 'categorical' && typeof stops[0][0] === 'boolean') {
-        const expression = ['case'];
-        for (const stop of stops) {
+        var expression = ['case'];
+        for (var i = 0, list = stops; i < list.length; i += 1) {
+            var stop = list[i];
             expression.push([
                 '==',
                 get,
@@ -12109,28 +12213,30 @@ function convertPropertyFunction(parameters, propertySpec, stops) {
         expression.push(getFallback(parameters, propertySpec));
         return expression;
     } else if (type === 'categorical') {
-        const expression = [
+        var expression$1 = [
             'match',
             get
         ];
-        for (const stop of stops) {
-            appendStopPair(expression, stop[0], stop[1], false);
+        for (var i$1 = 0, list$1 = stops; i$1 < list$1.length; i$1 += 1) {
+            var stop$1 = list$1[i$1];
+            appendStopPair(expression$1, stop$1[0], stop$1[1], false);
         }
-        expression.push(getFallback(parameters, propertySpec));
-        return expression;
+        expression$1.push(getFallback(parameters, propertySpec));
+        return expression$1;
     } else if (type === 'interval') {
-        const expression = [
+        var expression$2 = [
             'step',
             [
                 'number',
                 get
             ]
         ];
-        for (const stop of stops) {
-            appendStopPair(expression, stop[0], stop[1], true);
+        for (var i$2 = 0, list$2 = stops; i$2 < list$2.length; i$2 += 1) {
+            var stop$2 = list$2[i$2];
+            appendStopPair(expression$2, stop$2[0], stop$2[1], true);
         }
-        fixupDegenerateStepCurve(expression);
-        return parameters.default === undefined ? expression : [
+        fixupDegenerateStepCurve(expression$2);
+        return parameters.default === undefined ? expression$2 : [
             'case',
             [
                 '==',
@@ -12140,12 +12246,12 @@ function convertPropertyFunction(parameters, propertySpec, stops) {
                 ],
                 'number'
             ],
-            expression,
+            expression$2,
             convertLiteral(parameters.default)
         ];
     } else if (type === 'exponential') {
-        const base = parameters.base !== undefined ? parameters.base : 1;
-        const expression = [
+        var base = parameters.base !== undefined ? parameters.base : 1;
+        var expression$3 = [
             getInterpolateOperator(parameters),
             base === 1 ? ['linear'] : [
                 'exponential',
@@ -12156,10 +12262,11 @@ function convertPropertyFunction(parameters, propertySpec, stops) {
                 get
             ]
         ];
-        for (const stop of stops) {
-            appendStopPair(expression, stop[0], stop[1], false);
+        for (var i$3 = 0, list$3 = stops; i$3 < list$3.length; i$3 += 1) {
+            var stop$3 = list$3[i$3];
+            appendStopPair(expression$3, stop$3[0], stop$3[1], false);
         }
-        return parameters.default === undefined ? expression : [
+        return parameters.default === undefined ? expression$3 : [
             'case',
             [
                 '==',
@@ -12169,17 +12276,19 @@ function convertPropertyFunction(parameters, propertySpec, stops) {
                 ],
                 'number'
             ],
-            expression,
+            expression$3,
             convertLiteral(parameters.default)
         ];
     } else {
-        throw new Error(`Unknown property function type ${ type }`);
+        throw new Error('Unknown property function type ' + type);
     }
 }
-function convertZoomFunction(parameters, propertySpec, stops, input = ['zoom']) {
-    const type = getFunctionType(parameters, propertySpec);
-    let expression;
-    let isStep = false;
+function convertZoomFunction(parameters, propertySpec, stops, input) {
+    if (input === void 0)
+        input = ['zoom'];
+    var type = getFunctionType(parameters, propertySpec);
+    var expression;
+    var isStep = false;
     if (type === 'interval') {
         expression = [
             'step',
@@ -12187,7 +12296,7 @@ function convertZoomFunction(parameters, propertySpec, stops, input = ['zoom']) 
         ];
         isStep = true;
     } else if (type === 'exponential') {
-        const base = parameters.base !== undefined ? parameters.base : 1;
+        var base = parameters.base !== undefined ? parameters.base : 1;
         expression = [
             getInterpolateOperator(parameters),
             base === 1 ? ['linear'] : [
@@ -12197,9 +12306,10 @@ function convertZoomFunction(parameters, propertySpec, stops, input = ['zoom']) 
             input
         ];
     } else {
-        throw new Error(`Unknown zoom function type "${ type }"`);
+        throw new Error('Unknown zoom function type "' + type + '"');
     }
-    for (const stop of stops) {
+    for (var i = 0, list = stops; i < list.length; i += 1) {
+        var stop = list[i];
         appendStopPair(expression, stop[0], stop[1], isStep);
     }
     fixupDegenerateStepCurve(expression);
@@ -12228,14 +12338,15 @@ function getFunctionType(parameters, propertySpec) {
     }
 }
 function convertTokenString(s) {
-    const result = ['concat'];
-    const re = /{([^{}]+)}/g;
-    let pos = 0;
-    for (let match = re.exec(s); match !== null; match = re.exec(s)) {
-        const literal = s.slice(pos, re.lastIndex - match[0].length);
+    var result = ['concat'];
+    var re = /{([^{}]+)}/g;
+    var pos = 0;
+    for (var match = re.exec(s); match !== null; match = re.exec(s)) {
+        var literal = s.slice(pos, re.lastIndex - match[0].length);
         pos = re.lastIndex;
-        if (literal.length > 0)
+        if (literal.length > 0) {
             result.push(literal);
+        }
         result.push([
             'get',
             match[1]
@@ -12280,7 +12391,8 @@ function isExpressionFilter(filter) {
         return filter.length !== 3 || (Array.isArray(filter[1]) || Array.isArray(filter[2]));
     case 'any':
     case 'all':
-        for (const f of filter.slice(1)) {
+        for (var i = 0, list = filter.slice(1); i < list.length; i += 1) {
+            var f = list[i];
             if (!isExpressionFilter(f) && typeof f !== 'boolean') {
                 return false;
             }
@@ -12290,7 +12402,7 @@ function isExpressionFilter(filter) {
         return true;
     }
 }
-const filterSpec = {
+var filterSpec = {
     'type': 'boolean',
     'default': false,
     'transition': false,
@@ -12306,21 +12418,27 @@ const filterSpec = {
 function createFilter(filter) {
     if (filter === null || filter === undefined) {
         return {
-            filter: () => true,
+            filter: function () {
+                return true;
+            },
             needGeometry: false
         };
     }
     if (!isExpressionFilter(filter)) {
         filter = convertFilter(filter);
     }
-    const compiled = createExpression(filter, filterSpec);
+    var compiled = createExpression(filter, filterSpec);
     if (compiled.result === 'error') {
-        throw new Error(compiled.value.map(err => `${ err.key }: ${ err.message }`).join(', '));
+        throw new Error(compiled.value.map(function (err) {
+            return err.key + ': ' + err.message;
+        }).join(', '));
     } else {
-        const needGeometry = geometryNeeded(filter);
+        var needGeometry = geometryNeeded(filter);
         return {
-            filter: (globalProperties, feature, canonical) => compiled.value.evaluate(globalProperties, feature, {}, canonical),
-            needGeometry
+            filter: function (globalProperties, feature, canonical) {
+                return compiled.value.evaluate(globalProperties, feature, {}, canonical);
+            },
+            needGeometry: needGeometry
         };
     }
 }
@@ -12328,40 +12446,45 @@ function compare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
 }
 function geometryNeeded(filter) {
-    if (!Array.isArray(filter))
+    if (!Array.isArray(filter)) {
         return false;
-    if (filter[0] === 'within')
+    }
+    if (filter[0] === 'within') {
         return true;
-    for (let index = 1; index < filter.length; index++) {
-        if (geometryNeeded(filter[index]))
+    }
+    for (var index = 1; index < filter.length; index++) {
+        if (geometryNeeded(filter[index])) {
             return true;
+        }
     }
     return false;
 }
 function convertFilter(filter) {
-    if (!filter)
+    if (!filter) {
         return true;
-    const op = filter[0];
-    if (filter.length <= 1)
+    }
+    var op = filter[0];
+    if (filter.length <= 1) {
         return op !== 'any';
-    const converted = op === '==' ? convertComparisonOp(filter[1], filter[2], '==') : op === '!=' ? convertNegation(convertComparisonOp(filter[1], filter[2], '==')) : op === '<' || op === '>' || op === '<=' || op === '>=' ? convertComparisonOp(filter[1], filter[2], op) : op === 'any' ? convertDisjunctionOp(filter.slice(1)) : op === 'all' ? ['all'].concat(filter.slice(1).map(convertFilter)) : op === 'none' ? ['all'].concat(filter.slice(1).map(convertFilter).map(convertNegation)) : op === 'in' ? convertInOp(filter[1], filter.slice(2)) : op === '!in' ? convertNegation(convertInOp(filter[1], filter.slice(2))) : op === 'has' ? convertHasOp(filter[1]) : op === '!has' ? convertNegation(convertHasOp(filter[1])) : op === 'within' ? filter : true;
+    }
+    var converted = op === '==' ? convertComparisonOp(filter[1], filter[2], '==') : op === '!=' ? convertNegation(convertComparisonOp(filter[1], filter[2], '==')) : op === '<' || op === '>' || op === '<=' || op === '>=' ? convertComparisonOp(filter[1], filter[2], op) : op === 'any' ? convertDisjunctionOp(filter.slice(1)) : op === 'all' ? ['all'].concat(filter.slice(1).map(convertFilter)) : op === 'none' ? ['all'].concat(filter.slice(1).map(convertFilter).map(convertNegation)) : op === 'in' ? convertInOp(filter[1], filter.slice(2)) : op === '!in' ? convertNegation(convertInOp(filter[1], filter.slice(2))) : op === 'has' ? convertHasOp(filter[1]) : op === '!has' ? convertNegation(convertHasOp(filter[1])) : op === 'within' ? filter : true;
     return converted;
 }
 function convertComparisonOp(property, value, op) {
     switch (property) {
     case '$type':
         return [
-            `filter-type-${ op }`,
+            'filter-type-' + op,
             value
         ];
     case '$id':
         return [
-            `filter-id-${ op }`,
+            'filter-id-' + op,
             value
         ];
     default:
         return [
-            `filter-${ op }`,
+            'filter-' + op,
             property,
             value
         ];
@@ -12377,7 +12500,7 @@ function convertInOp(property, values) {
     switch (property) {
     case '$type':
         return [
-            `filter-type-in`,
+            'filter-type-in',
             [
                 'literal',
                 values
@@ -12385,14 +12508,16 @@ function convertInOp(property, values) {
         ];
     case '$id':
         return [
-            `filter-id-in`,
+            'filter-id-in',
             [
                 'literal',
                 values
             ]
         ];
     default:
-        if (values.length > 200 && !values.some(v => typeof v !== typeof values[0])) {
+        if (values.length > 200 && !values.some(function (v) {
+                return typeof v !== typeof values[0];
+            })) {
             return [
                 'filter-in-large',
                 property,
@@ -12418,10 +12543,10 @@ function convertHasOp(property) {
     case '$type':
         return true;
     case '$id':
-        return [`filter-has-id`];
+        return ['filter-has-id'];
     default:
         return [
-            `filter-has`,
+            'filter-has',
             property
         ];
     }
@@ -12437,23 +12562,28 @@ function convertFilter$1(filter) {
     return _convertFilter(filter, {});
 }
 function _convertFilter(filter, expectedTypes) {
+    var ref$1;
     if (isExpressionFilter(filter)) {
         return filter;
     }
-    if (!filter)
+    if (!filter) {
         return true;
-    const op = filter[0];
-    if (filter.length <= 1)
+    }
+    var op = filter[0];
+    if (filter.length <= 1) {
         return op !== 'any';
-    let converted;
+    }
+    var converted;
     if (op === '==' || op === '!=' || op === '<' || op === '>' || op === '<=' || op === '>=') {
-        const [, property, value] = filter;
+        var ref = filter;
+        var property = ref[1];
+        var value = ref[2];
         converted = convertComparisonOp$1(property, value, op, expectedTypes);
     } else if (op === 'any') {
-        const children = filter.slice(1).map(f => {
-            const types = {};
-            const child = _convertFilter(f, types);
-            const typechecks = runtimeTypeChecks(types);
+        var children = filter.slice(1).map(function (f) {
+            var types = {};
+            var child = _convertFilter(f, types);
+            var typechecks = runtimeTypeChecks(types);
             return typechecks === true ? child : [
                 'case',
                 typechecks,
@@ -12463,8 +12593,10 @@ function _convertFilter(filter, expectedTypes) {
         });
         return ['any'].concat(children);
     } else if (op === 'all') {
-        const children = filter.slice(1).map(f => _convertFilter(f, expectedTypes));
-        return children.length > 1 ? ['all'].concat(children) : [].concat(...children);
+        var children$1 = filter.slice(1).map(function (f) {
+            return _convertFilter(f, expectedTypes);
+        });
+        return children$1.length > 1 ? ['all'].concat(children$1) : (ref$1 = []).concat.apply(ref$1, children$1);
     } else if (op === 'none') {
         return [
             '!',
@@ -12487,9 +12619,9 @@ function _convertFilter(filter, expectedTypes) {
     return converted;
 }
 function runtimeTypeChecks(expectedTypes) {
-    const conditions = [];
-    for (const property in expectedTypes) {
-        const get = property === '$id' ? ['id'] : [
+    var conditions = [];
+    for (var property in expectedTypes) {
+        var get = property === '$id' ? ['id'] : [
             'get',
             property
         ];
@@ -12502,14 +12634,16 @@ function runtimeTypeChecks(expectedTypes) {
             expectedTypes[property]
         ]);
     }
-    if (conditions.length === 0)
+    if (conditions.length === 0) {
         return true;
-    if (conditions.length === 1)
+    }
+    if (conditions.length === 1) {
         return conditions[0];
+    }
     return ['all'].concat(conditions);
 }
 function convertComparisonOp$1(property, value, op, expectedTypes) {
-    let get;
+    var get;
     if (property === '$type') {
         return [
             op,
@@ -12525,7 +12659,7 @@ function convertComparisonOp$1(property, value, op, expectedTypes) {
         ];
     }
     if (expectedTypes && value !== null) {
-        const type = typeof value;
+        var type = typeof value;
         expectedTypes[property] = type;
     }
     if (op === '==' && property !== '$id' && value === null) {
@@ -12564,10 +12698,13 @@ function convertComparisonOp$1(property, value, op, expectedTypes) {
         value
     ];
 }
-function convertInOp$1(property, values, negate = false) {
-    if (values.length === 0)
+function convertInOp$1(property, values, negate) {
+    if (negate === void 0)
+        negate = false;
+    if (values.length === 0) {
         return negate;
-    let get;
+    }
+    var get;
     if (property === '$type') {
         get = ['geometry-type'];
     } else if (property === '$id') {
@@ -12578,16 +12715,19 @@ function convertInOp$1(property, values, negate = false) {
             property
         ];
     }
-    let uniformTypes = true;
-    const type = typeof values[0];
-    for (const value of values) {
+    var uniformTypes = true;
+    var type = typeof values[0];
+    for (var i = 0, list = values; i < list.length; i += 1) {
+        var value = list[i];
         if (typeof value !== type) {
             uniformTypes = false;
             break;
         }
     }
     if (uniformTypes && (type === 'string' || type === 'number')) {
-        const uniqueValues = values.sort().filter((v, i) => i === 0 || values[i - 1] !== v);
+        var uniqueValues = values.sort().filter(function (v, i) {
+            return i === 0 || values[i - 1] !== v;
+        });
         return [
             'match',
             get,
@@ -12596,11 +12736,13 @@ function convertInOp$1(property, values, negate = false) {
             negate
         ];
     }
-    return [negate ? 'all' : 'any'].concat(values.map(v => [
-        negate ? '!=' : '==',
-        get,
-        v
-    ]));
+    return [negate ? 'all' : 'any'].concat(values.map(function (v) {
+        return [
+            negate ? '!=' : '==',
+            get,
+            v
+        ];
+    }));
 }
 function convertHasOp$1(property) {
     if (property === '$type') {
@@ -12620,8 +12762,8 @@ function convertHasOp$1(property) {
 }
 
 function migrateToExpressions (style) {
-    const converted = [];
-    eachLayer(style, layer => {
+    var converted = [];
+    eachLayer(style, function (layer) {
         if (layer.filter) {
             layer.filter = convertFilter$1(layer.filter);
         }
@@ -12629,9 +12771,14 @@ function migrateToExpressions (style) {
     eachProperty(style, {
         paint: true,
         layout: true
-    }, ({path, value, reference, set}) => {
-        if (isExpression(value))
+    }, function (ref) {
+        var path = ref.path;
+        var value = ref.value;
+        var reference = ref.reference;
+        var set = ref.set;
+        if (isExpression(value)) {
             return;
+        }
         if (typeof value === 'object' && !Array.isArray(value)) {
             set(convertFunction(value, reference));
             converted.push(path.join('.'));
@@ -12643,7 +12790,7 @@ function migrateToExpressions (style) {
 }
 
 function migrate (style) {
-    let migrated = false;
+    var migrated = false;
     if (style.version === 7) {
         style = migrateToV8(style);
         migrated = true;
@@ -12659,30 +12806,33 @@ function migrate (style) {
 }
 
 function composite (style) {
-    const styleIDs = [];
-    const sourceIDs = [];
-    const compositedSourceLayers = [];
-    for (const id in style.sources) {
-        const source = style.sources[id];
-        if (source.type !== 'vector')
+    var styleIDs = [];
+    var sourceIDs = [];
+    var compositedSourceLayers = [];
+    for (var id in style.sources) {
+        var source = style.sources[id];
+        if (source.type !== 'vector') {
             continue;
-        const match = /^mapbox:\/\/(.*)/.exec(source.url);
-        if (!match)
+        }
+        var match = /^mapbox:\/\/(.*)/.exec(source.url);
+        if (!match) {
             continue;
+        }
         styleIDs.push(id);
         sourceIDs.push(match[1]);
     }
-    if (styleIDs.length < 2)
+    if (styleIDs.length < 2) {
         return style;
-    styleIDs.forEach(id => {
+    }
+    styleIDs.forEach(function (id) {
         delete style.sources[id];
     });
-    const compositeID = sourceIDs.join(',');
+    var compositeID = sourceIDs.join(',');
     style.sources[compositeID] = {
         'type': 'vector',
-        'url': `mapbox://${ compositeID }`
+        'url': 'mapbox://' + compositeID
     };
-    style.layers.forEach(layer => {
+    style.layers.forEach(function (layer) {
         if (styleIDs.indexOf(layer.source) >= 0) {
             layer.source = compositeID;
             if ('source-layer' in layer) {
@@ -12708,13 +12858,13 @@ var refProperties = [
 ];
 
 function deref(layer, parent) {
-    const result = {};
-    for (const k in layer) {
+    var result = {};
+    for (var k in layer) {
         if (k !== 'ref') {
             result[k] = layer[k];
         }
     }
-    refProperties.forEach(k => {
+    refProperties.forEach(function (k) {
         if (k in parent) {
             result[k] = parent[k];
         }
@@ -12723,13 +12873,13 @@ function deref(layer, parent) {
 }
 function derefLayers(layers) {
     layers = layers.slice();
-    const map = Object.create(null);
-    for (let i = 0; i < layers.length; i++) {
+    var map = Object.create(null);
+    for (var i = 0; i < layers.length; i++) {
         map[layers[i].id] = layers[i];
     }
-    for (let i = 0; i < layers.length; i++) {
-        if ('ref' in layers[i]) {
-            layers[i] = deref(layers[i], map[layers[i].ref]);
+    for (var i$1 = 0; i$1 < layers.length; i$1++) {
+        if ('ref' in layers[i$1]) {
+            layers[i$1] = deref(layers[i$1], map[layers[i$1].ref]);
         }
     }
     return layers;
@@ -12737,30 +12887,35 @@ function derefLayers(layers) {
 
 function deepEqual(a, b) {
     if (Array.isArray(a)) {
-        if (!Array.isArray(b) || a.length !== b.length)
+        if (!Array.isArray(b) || a.length !== b.length) {
             return false;
-        for (let i = 0; i < a.length; i++) {
-            if (!deepEqual(a[i], b[i]))
+        }
+        for (var i = 0; i < a.length; i++) {
+            if (!deepEqual(a[i], b[i])) {
                 return false;
+            }
         }
         return true;
     }
     if (typeof a === 'object' && a !== null && b !== null) {
-        if (!(typeof b === 'object'))
+        if (!(typeof b === 'object')) {
             return false;
-        const keys = Object.keys(a);
-        if (keys.length !== Object.keys(b).length)
+        }
+        var keys = Object.keys(a);
+        if (keys.length !== Object.keys(b).length) {
             return false;
-        for (const key in a) {
-            if (!deepEqual(a[key], b[key]))
+        }
+        for (var key in a) {
+            if (!deepEqual(a[key], b[key])) {
                 return false;
+            }
         }
         return true;
     }
     return a === b;
 }
 
-const operations = {
+var operations = {
     setStyle: 'setStyle',
     addLayer: 'addLayer',
     removeLayer: 'removeLayer',
@@ -12779,8 +12934,7 @@ const operations = {
     setSprite: 'setSprite',
     setGlyphs: 'setGlyphs',
     setTransition: 'setTransition',
-    setLight: 'setLight',
-    setTerrain: 'setTerrain'
+    setLight: 'setLight'
 };
 function addSource(sourceId, after, commands) {
     commands.push({
@@ -12803,17 +12957,19 @@ function updateSource(sourceId, after, commands, sourcesRemoved) {
     addSource(sourceId, after, commands);
 }
 function canUpdateGeoJSON(before, after, sourceId) {
-    let prop;
+    var prop;
     for (prop in before[sourceId]) {
-        if (!before[sourceId].hasOwnProperty(prop))
+        if (!before[sourceId].hasOwnProperty(prop)) {
             continue;
+        }
         if (prop !== 'data' && !deepEqual(before[sourceId][prop], after[sourceId][prop])) {
             return false;
         }
     }
     for (prop in after[sourceId]) {
-        if (!after[sourceId].hasOwnProperty(prop))
+        if (!after[sourceId].hasOwnProperty(prop)) {
             continue;
+        }
         if (prop !== 'data' && !deepEqual(before[sourceId][prop], after[sourceId][prop])) {
             return false;
         }
@@ -12823,17 +12979,19 @@ function canUpdateGeoJSON(before, after, sourceId) {
 function diffSources(before, after, commands, sourcesRemoved) {
     before = before || {};
     after = after || {};
-    let sourceId;
+    var sourceId;
     for (sourceId in before) {
-        if (!before.hasOwnProperty(sourceId))
+        if (!before.hasOwnProperty(sourceId)) {
             continue;
+        }
         if (!after.hasOwnProperty(sourceId)) {
             removeSource(sourceId, commands, sourcesRemoved);
         }
     }
     for (sourceId in after) {
-        if (!after.hasOwnProperty(sourceId))
+        if (!after.hasOwnProperty(sourceId)) {
             continue;
+        }
         if (!before.hasOwnProperty(sourceId)) {
             addSource(sourceId, after, commands);
         } else if (!deepEqual(before[sourceId], after[sourceId])) {
@@ -12854,13 +13012,14 @@ function diffSources(before, after, commands, sourcesRemoved) {
 function diffLayerPropertyChanges(before, after, commands, layerId, klass, command) {
     before = before || {};
     after = after || {};
-    let prop;
+    var prop;
     for (prop in before) {
-        if (!before.hasOwnProperty(prop))
+        if (!before.hasOwnProperty(prop)) {
             continue;
+        }
         if (!deepEqual(before[prop], after[prop])) {
             commands.push({
-                command,
+                command: command,
                 args: [
                     layerId,
                     prop,
@@ -12871,11 +13030,12 @@ function diffLayerPropertyChanges(before, after, commands, layerId, klass, comma
         }
     }
     for (prop in after) {
-        if (!after.hasOwnProperty(prop) || before.hasOwnProperty(prop))
+        if (!after.hasOwnProperty(prop) || before.hasOwnProperty(prop)) {
             continue;
+        }
         if (!deepEqual(before[prop], after[prop])) {
             commands.push({
-                command,
+                command: command,
                 args: [
                     layerId,
                     prop,
@@ -12896,13 +13056,13 @@ function indexById(group, layer) {
 function diffLayers(before, after, commands) {
     before = before || [];
     after = after || [];
-    const beforeOrder = before.map(pluckId);
-    const afterOrder = after.map(pluckId);
-    const beforeIndex = before.reduce(indexById, {});
-    const afterIndex = after.reduce(indexById, {});
-    const tracker = beforeOrder.slice();
-    const clean = Object.create(null);
-    let i, d, layerId, beforeLayer, afterLayer, insertBeforeLayerId, prop;
+    var beforeOrder = before.map(pluckId);
+    var afterOrder = after.map(pluckId);
+    var beforeIndex = before.reduce(indexById, {});
+    var afterIndex = after.reduce(indexById, {});
+    var tracker = beforeOrder.slice();
+    var clean = Object.create(null);
+    var i, d, layerId, beforeLayer, afterLayer, insertBeforeLayerId, prop;
     for (i = 0, d = 0; i < beforeOrder.length; i++) {
         layerId = beforeOrder[i];
         if (!afterIndex.hasOwnProperty(layerId)) {
@@ -12917,8 +13077,9 @@ function diffLayers(before, after, commands) {
     }
     for (i = 0, d = 0; i < afterOrder.length; i++) {
         layerId = afterOrder[afterOrder.length - 1 - i];
-        if (tracker[tracker.length - 1 - i] === layerId)
+        if (tracker[tracker.length - 1 - i] === layerId) {
             continue;
+        }
         if (beforeIndex.hasOwnProperty(layerId)) {
             commands.push({
                 command: operations.removeLayer,
@@ -12943,8 +13104,9 @@ function diffLayers(before, after, commands) {
         layerId = afterOrder[i];
         beforeLayer = beforeIndex[layerId];
         afterLayer = afterIndex[layerId];
-        if (clean[layerId] || deepEqual(beforeLayer, afterLayer))
+        if (clean[layerId] || deepEqual(beforeLayer, afterLayer)) {
             continue;
+        }
         if (!deepEqual(beforeLayer.source, afterLayer.source) || !deepEqual(beforeLayer['source-layer'], afterLayer['source-layer']) || !deepEqual(beforeLayer.type, afterLayer.type)) {
             commands.push({
                 command: operations.removeLayer,
@@ -12982,10 +13144,12 @@ function diffLayers(before, after, commands) {
             });
         }
         for (prop in beforeLayer) {
-            if (!beforeLayer.hasOwnProperty(prop))
+            if (!beforeLayer.hasOwnProperty(prop)) {
                 continue;
-            if (prop === 'layout' || prop === 'paint' || prop === 'filter' || prop === 'metadata' || prop === 'minzoom' || prop === 'maxzoom')
+            }
+            if (prop === 'layout' || prop === 'paint' || prop === 'filter' || prop === 'metadata' || prop === 'minzoom' || prop === 'maxzoom') {
                 continue;
+            }
             if (prop.indexOf('paint.') === 0) {
                 diffLayerPropertyChanges(beforeLayer[prop], afterLayer[prop], commands, layerId, prop.slice(6), operations.setPaintProperty);
             } else if (!deepEqual(beforeLayer[prop], afterLayer[prop])) {
@@ -13000,10 +13164,12 @@ function diffLayers(before, after, commands) {
             }
         }
         for (prop in afterLayer) {
-            if (!afterLayer.hasOwnProperty(prop) || beforeLayer.hasOwnProperty(prop))
+            if (!afterLayer.hasOwnProperty(prop) || beforeLayer.hasOwnProperty(prop)) {
                 continue;
-            if (prop === 'layout' || prop === 'paint' || prop === 'filter' || prop === 'metadata' || prop === 'minzoom' || prop === 'maxzoom')
+            }
+            if (prop === 'layout' || prop === 'paint' || prop === 'filter' || prop === 'metadata' || prop === 'minzoom' || prop === 'maxzoom') {
                 continue;
+            }
             if (prop.indexOf('paint.') === 0) {
                 diffLayerPropertyChanges(beforeLayer[prop], afterLayer[prop], commands, layerId, prop.slice(6), operations.setPaintProperty);
             } else if (!deepEqual(beforeLayer[prop], afterLayer[prop])) {
@@ -13020,12 +13186,13 @@ function diffLayers(before, after, commands) {
     }
 }
 function diffStyles(before, after) {
-    if (!before)
+    if (!before) {
         return [{
                 command: operations.setStyle,
                 args: [after]
             }];
-    let commands = [];
+    }
+    var commands = [];
     try {
         if (!deepEqual(before.version, after.version)) {
             return [{
@@ -13081,12 +13248,12 @@ function diffStyles(before, after) {
                 args: [after.light]
             });
         }
-        const sourcesRemoved = {};
-        const removeOrAddSourceCommands = [];
+        var sourcesRemoved = {};
+        var removeOrAddSourceCommands = [];
         diffSources(before.sources, after.sources, removeOrAddSourceCommands, sourcesRemoved);
-        const beforeLayers = [];
+        var beforeLayers = [];
         if (before.layers) {
-            before.layers.forEach(layer => {
+            before.layers.forEach(function (layer) {
                 if (sourcesRemoved[layer.source]) {
                     commands.push({
                         command: operations.removeLayer,
@@ -13097,23 +13264,7 @@ function diffStyles(before, after) {
                 }
             });
         }
-        let beforeTerrain = before.terrain;
-        if (beforeTerrain) {
-            if (sourcesRemoved[beforeTerrain.source]) {
-                commands.push({
-                    command: operations.setTerrain,
-                    args: [undefined]
-                });
-                beforeTerrain = undefined;
-            }
-        }
         commands = commands.concat(removeOrAddSourceCommands);
-        if (!deepEqual(beforeTerrain, after.terrain)) {
-            commands.push({
-                command: operations.setTerrain,
-                args: [after.terrain]
-            });
-        }
         diffLayers(beforeLayers, after.layers, commands);
     } catch (e) {
         console.warn('Unable to compute style diff:', e);
@@ -13125,29 +13276,26 @@ function diffStyles(before, after) {
     return commands;
 }
 
-class ValidationError {
-    constructor(key, value, message, identifier) {
-        this.message = (key ? `${ key }: ` : '') + message;
-        if (identifier)
-            this.identifier = identifier;
-        if (value !== null && value !== undefined && value.__line__) {
-            this.line = value.__line__;
-        }
+var ValidationError = function ValidationError(key, value, message, identifier) {
+    this.message = (key ? key + ': ' : '') + message;
+    if (identifier) {
+        this.identifier = identifier;
     }
-}
+    if (value !== null && value !== undefined && value.__line__) {
+        this.line = value.__line__;
+    }
+};
 
-class ParsingError$1 {
-    constructor(error) {
-        this.error = error;
-        this.message = error.message;
-        const match = error.message.match(/line (\d+)/);
-        this.line = match ? parseInt(match[1], 10) : 0;
-    }
-}
+var ParsingError$1 = function ParsingError(error) {
+    this.error = error;
+    this.message = error.message;
+    var match = error.message.match(/line (\d+)/);
+    this.line = match ? parseInt(match[1], 10) : 0;
+};
 
 function validateConstants(options) {
-    const key = options.key;
-    const constants = options.value;
+    var key = options.key;
+    var constants = options.value;
     if (constants) {
         return [new ValidationError(key, constants, 'constants have been deprecated as of v8')];
     } else {
@@ -13166,8 +13314,8 @@ function deepUnbundle(value) {
     if (Array.isArray(value)) {
         return value.map(deepUnbundle);
     } else if (value instanceof Object && !(value instanceof Number || value instanceof String || value instanceof Boolean)) {
-        const unbundledValue = {};
-        for (const key in value) {
+        var unbundledValue = {};
+        for (var key in value) {
             unbundledValue[key] = deepUnbundle(value[key]);
         }
         return unbundledValue;
@@ -13176,21 +13324,21 @@ function deepUnbundle(value) {
 }
 
 function validateObject(options) {
-    const key = options.key;
-    const object = options.value;
-    const elementSpecs = options.valueSpec || {};
-    const elementValidators = options.objectElementValidators || {};
-    const style = options.style;
-    const styleSpec = options.styleSpec;
-    let errors = [];
-    const type = getType(object);
+    var key = options.key;
+    var object = options.value;
+    var elementSpecs = options.valueSpec || {};
+    var elementValidators = options.objectElementValidators || {};
+    var style = options.style;
+    var styleSpec = options.styleSpec;
+    var errors = [];
+    var type = getType(object);
     if (type !== 'object') {
-        return [new ValidationError(key, object, `object expected, ${ type } found`)];
+        return [new ValidationError(key, object, 'object expected, ' + type + ' found')];
     }
-    for (const objectKey in object) {
-        const elementSpecKey = objectKey.split('.')[0];
-        const elementSpec = elementSpecs[elementSpecKey] || elementSpecs['*'];
-        let validateElement;
+    for (var objectKey in object) {
+        var elementSpecKey = objectKey.split('.')[0];
+        var elementSpec = elementSpecs[elementSpecKey] || elementSpecs['*'];
+        var validateElement = void 0;
         if (elementValidators[elementSpecKey]) {
             validateElement = elementValidators[elementSpecKey];
         } else if (elementSpecs[elementSpecKey]) {
@@ -13200,47 +13348,47 @@ function validateObject(options) {
         } else if (elementSpecs['*']) {
             validateElement = validate;
         } else {
-            errors.push(new ValidationError(key, object[objectKey], `unknown property "${ objectKey }"`));
+            errors.push(new ValidationError(key, object[objectKey], 'unknown property "' + objectKey + '"'));
             continue;
         }
         errors = errors.concat(validateElement({
-            key: (key ? `${ key }.` : key) + objectKey,
+            key: (key ? key + '.' : key) + objectKey,
             value: object[objectKey],
             valueSpec: elementSpec,
-            style,
-            styleSpec,
-            object,
-            objectKey
+            style: style,
+            styleSpec: styleSpec,
+            object: object,
+            objectKey: objectKey
         }, object));
     }
-    for (const elementSpecKey in elementSpecs) {
-        if (elementValidators[elementSpecKey]) {
+    for (var elementSpecKey$1 in elementSpecs) {
+        if (elementValidators[elementSpecKey$1]) {
             continue;
         }
-        if (elementSpecs[elementSpecKey].required && elementSpecs[elementSpecKey]['default'] === undefined && object[elementSpecKey] === undefined) {
-            errors.push(new ValidationError(key, object, `missing required property "${ elementSpecKey }"`));
+        if (elementSpecs[elementSpecKey$1].required && elementSpecs[elementSpecKey$1]['default'] === undefined && object[elementSpecKey$1] === undefined) {
+            errors.push(new ValidationError(key, object, 'missing required property "' + elementSpecKey$1 + '"'));
         }
     }
     return errors;
 }
 
 function validateArray(options) {
-    const array = options.value;
-    const arraySpec = options.valueSpec;
-    const style = options.style;
-    const styleSpec = options.styleSpec;
-    const key = options.key;
-    const validateArrayElement = options.arrayElementValidator || validate;
+    var array = options.value;
+    var arraySpec = options.valueSpec;
+    var style = options.style;
+    var styleSpec = options.styleSpec;
+    var key = options.key;
+    var validateArrayElement = options.arrayElementValidator || validate;
     if (getType(array) !== 'array') {
-        return [new ValidationError(key, array, `array expected, ${ getType(array) } found`)];
+        return [new ValidationError(key, array, 'array expected, ' + getType(array) + ' found')];
     }
     if (arraySpec.length && array.length !== arraySpec.length) {
-        return [new ValidationError(key, array, `array length ${ arraySpec.length } expected, length ${ array.length } found`)];
+        return [new ValidationError(key, array, 'array length ' + arraySpec.length + ' expected, length ' + array.length + ' found')];
     }
     if (arraySpec['min-length'] && array.length < arraySpec['min-length']) {
-        return [new ValidationError(key, array, `array length at least ${ arraySpec['min-length'] } expected, length ${ array.length } found`)];
+        return [new ValidationError(key, array, 'array length at least ' + arraySpec['min-length'] + ' expected, length ' + array.length + ' found')];
     }
-    let arrayElementSpec = {
+    var arrayElementSpec = {
         'type': arraySpec.value,
         'values': arraySpec.values
     };
@@ -13250,52 +13398,52 @@ function validateArray(options) {
     if (getType(arraySpec.value) === 'object') {
         arrayElementSpec = arraySpec.value;
     }
-    let errors = [];
-    for (let i = 0; i < array.length; i++) {
+    var errors = [];
+    for (var i = 0; i < array.length; i++) {
         errors = errors.concat(validateArrayElement({
-            array,
+            array: array,
             arrayIndex: i,
             value: array[i],
             valueSpec: arrayElementSpec,
-            style,
-            styleSpec,
-            key: `${ key }[${ i }]`
+            style: style,
+            styleSpec: styleSpec,
+            key: key + '[' + i + ']'
         }));
     }
     return errors;
 }
 
 function validateNumber(options) {
-    const key = options.key;
-    const value = options.value;
-    const valueSpec = options.valueSpec;
-    let type = getType(value);
+    var key = options.key;
+    var value = options.value;
+    var valueSpec = options.valueSpec;
+    var type = getType(value);
     if (type === 'number' && value !== value) {
         type = 'NaN';
     }
     if (type !== 'number') {
-        return [new ValidationError(key, value, `number expected, ${ type } found`)];
+        return [new ValidationError(key, value, 'number expected, ' + type + ' found')];
     }
     if ('minimum' in valueSpec && value < valueSpec.minimum) {
-        return [new ValidationError(key, value, `${ value } is less than the minimum value ${ valueSpec.minimum }`)];
+        return [new ValidationError(key, value, value + ' is less than the minimum value ' + valueSpec.minimum)];
     }
     if ('maximum' in valueSpec && value > valueSpec.maximum) {
-        return [new ValidationError(key, value, `${ value } is greater than the maximum value ${ valueSpec.maximum }`)];
+        return [new ValidationError(key, value, value + ' is greater than the maximum value ' + valueSpec.maximum)];
     }
     return [];
 }
 
 function validateFunction(options) {
-    const functionValueSpec = options.valueSpec;
-    const functionType = unbundle(options.value.type);
-    let stopKeyType;
-    let stopDomainValues = {};
-    let previousStopDomainValue;
-    let previousStopDomainZoom;
-    const isZoomFunction = functionType !== 'categorical' && options.value.property === undefined;
-    const isPropertyFunction = !isZoomFunction;
-    const isZoomAndPropertyFunction = getType(options.value.stops) === 'array' && getType(options.value.stops[0]) === 'array' && getType(options.value.stops[0][0]) === 'object';
-    const errors = validateObject({
+    var functionValueSpec = options.valueSpec;
+    var functionType = unbundle(options.value.type);
+    var stopKeyType;
+    var stopDomainValues = {};
+    var previousStopDomainValue;
+    var previousStopDomainZoom;
+    var isZoomFunction = functionType !== 'categorical' && options.value.property === undefined;
+    var isPropertyFunction = !isZoomFunction;
+    var isZoomAndPropertyFunction = getType(options.value.stops) === 'array' && getType(options.value.stops[0]) === 'array' && getType(options.value.stops[0][0]) === 'object';
+    var errors = validateObject({
         key: options.key,
         value: options.value,
         valueSpec: options.styleSpec.function,
@@ -13330,11 +13478,11 @@ function validateFunction(options) {
         if (functionType === 'identity') {
             return [new ValidationError(options.key, options.value, 'identity function may not have a "stops" property')];
         }
-        let errors = [];
-        const value = options.value;
+        var errors = [];
+        var value = options.value;
         errors = errors.concat(validateArray({
             key: options.key,
-            value,
+            value: value,
             valueSpec: options.valueSpec,
             style: options.style,
             styleSpec: options.styleSpec,
@@ -13346,18 +13494,18 @@ function validateFunction(options) {
         return errors;
     }
     function validateFunctionStop(options) {
-        let errors = [];
-        const value = options.value;
-        const key = options.key;
+        var errors = [];
+        var value = options.value;
+        var key = options.key;
         if (getType(value) !== 'array') {
-            return [new ValidationError(key, value, `array expected, ${ getType(value) } found`)];
+            return [new ValidationError(key, value, 'array expected, ' + getType(value) + ' found')];
         }
         if (value.length !== 2) {
-            return [new ValidationError(key, value, `array length 2 expected, length ${ value.length } found`)];
+            return [new ValidationError(key, value, 'array length 2 expected, length ' + value.length + ' found')];
         }
         if (isZoomAndPropertyFunction) {
             if (getType(value[0]) !== 'object') {
-                return [new ValidationError(key, value, `object expected, ${ getType(value[0]) } found`)];
+                return [new ValidationError(key, value, 'object expected, ' + getType(value[0]) + ' found')];
             }
             if (value[0].zoom === undefined) {
                 return [new ValidationError(key, value, 'object stop key must have zoom')];
@@ -13374,7 +13522,7 @@ function validateFunction(options) {
                 stopDomainValues = {};
             }
             errors = errors.concat(validateObject({
-                key: `${ key }[0]`,
+                key: key + '[0]',
                 value: value[0],
                 valueSpec: { zoom: {} },
                 style: options.style,
@@ -13386,7 +13534,7 @@ function validateFunction(options) {
             }));
         } else {
             errors = errors.concat(validateStopDomainValue({
-                key: `${ key }[0]`,
+                key: key + '[0]',
                 value: value[0],
                 valueSpec: {},
                 style: options.style,
@@ -13394,10 +13542,10 @@ function validateFunction(options) {
             }, value));
         }
         if (isExpression(deepUnbundle(value[1]))) {
-            return errors.concat([new ValidationError(`${ key }[1]`, value[1], 'expressions are not allowed in function stops.')]);
+            return errors.concat([new ValidationError(key + '[1]', value[1], 'expressions are not allowed in function stops.')]);
         }
         return errors.concat(validate({
-            key: `${ key }[1]`,
+            key: key + '[1]',
             value: value[1],
             valueSpec: functionValueSpec,
             style: options.style,
@@ -13405,26 +13553,26 @@ function validateFunction(options) {
         }));
     }
     function validateStopDomainValue(options, stop) {
-        const type = getType(options.value);
-        const value = unbundle(options.value);
-        const reportValue = options.value !== null ? options.value : stop;
+        var type = getType(options.value);
+        var value = unbundle(options.value);
+        var reportValue = options.value !== null ? options.value : stop;
         if (!stopKeyType) {
             stopKeyType = type;
         } else if (type !== stopKeyType) {
-            return [new ValidationError(options.key, reportValue, `${ type } stop domain type must match previous stop domain type ${ stopKeyType }`)];
+            return [new ValidationError(options.key, reportValue, type + ' stop domain type must match previous stop domain type ' + stopKeyType)];
         }
         if (type !== 'number' && type !== 'string' && type !== 'boolean') {
             return [new ValidationError(options.key, reportValue, 'stop domain value must be a number, string, or boolean')];
         }
         if (type !== 'number' && functionType !== 'categorical') {
-            let message = `number expected, ${ type } found`;
+            var message = 'number expected, ' + type + ' found';
             if (supportsPropertyExpression(functionValueSpec) && functionType === undefined) {
                 message += '\nIf you intended to use a categorical function, specify `"type": "categorical"`.';
             }
             return [new ValidationError(options.key, reportValue, message)];
         }
         if (functionType === 'categorical' && type === 'number' && (!isFinite(value) || Math.floor(value) !== value)) {
-            return [new ValidationError(options.key, reportValue, `integer expected, found ${ value }`)];
+            return [new ValidationError(options.key, reportValue, 'integer expected, found ' + value)];
         }
         if (functionType !== 'categorical' && type === 'number' && previousStopDomainValue !== undefined && value < previousStopDomainValue) {
             return [new ValidationError(options.key, reportValue, 'stop domain values must appear in ascending order')];
@@ -13450,15 +13598,15 @@ function validateFunction(options) {
 }
 
 function validateExpression(options) {
-    const expression = (options.expressionContext === 'property' ? createPropertyExpression : createExpression)(deepUnbundle(options.value), options.valueSpec);
+    var expression = (options.expressionContext === 'property' ? createPropertyExpression : createExpression)(deepUnbundle(options.value), options.valueSpec);
     if (expression.result === 'error') {
-        return expression.value.map(error => {
-            return new ValidationError(`${ options.key }${ error.key }`, options.value, error.message);
+        return expression.value.map(function (error) {
+            return new ValidationError('' + options.key + error.key, options.value, error.message);
         });
     }
-    const expressionObj = expression.value.expression || expression.value._styleExpression.expression;
+    var expressionObj = expression.value.expression || expression.value._styleExpression.expression;
     if (options.expressionContext === 'property' && options.propertyKey === 'text-font' && !expressionObj.outputDefined()) {
-        return [new ValidationError(options.key, options.value, `Invalid data expression for "${ options.propertyKey }". Output values must be contained as literals within the expression.`)];
+        return [new ValidationError(options.key, options.value, 'Invalid data expression for "' + options.propertyKey + '". Output values must be contained as literals within the expression.')];
     }
     if (options.expressionContext === 'property' && options.propertyType === 'layout' && !isStateConstant(expressionObj)) {
         return [new ValidationError(options.key, options.value, '"feature-state" data expressions are not supported with layout properties.')];
@@ -13481,40 +13629,40 @@ function validateExpression(options) {
 }
 
 function validateBoolean(options) {
-    const value = options.value;
-    const key = options.key;
-    const type = getType(value);
+    var value = options.value;
+    var key = options.key;
+    var type = getType(value);
     if (type !== 'boolean') {
-        return [new ValidationError(key, value, `boolean expected, ${ type } found`)];
+        return [new ValidationError(key, value, 'boolean expected, ' + type + ' found')];
     }
     return [];
 }
 
 function validateColor(options) {
-    const key = options.key;
-    const value = options.value;
-    const type = getType(value);
+    var key = options.key;
+    var value = options.value;
+    var type = getType(value);
     if (type !== 'string') {
-        return [new ValidationError(key, value, `color expected, ${ type } found`)];
+        return [new ValidationError(key, value, 'color expected, ' + type + ' found')];
     }
     if (csscolorparser_1(value) === null) {
-        return [new ValidationError(key, value, `color expected, "${ value }" found`)];
+        return [new ValidationError(key, value, 'color expected, "' + value + '" found')];
     }
     return [];
 }
 
 function validateEnum(options) {
-    const key = options.key;
-    const value = options.value;
-    const valueSpec = options.valueSpec;
-    const errors = [];
+    var key = options.key;
+    var value = options.value;
+    var valueSpec = options.valueSpec;
+    var errors = [];
     if (Array.isArray(valueSpec.values)) {
         if (valueSpec.values.indexOf(unbundle(value)) === -1) {
-            errors.push(new ValidationError(key, value, `expected one of [${ valueSpec.values.join(', ') }], ${ JSON.stringify(value) } found`));
+            errors.push(new ValidationError(key, value, 'expected one of [' + valueSpec.values.join(', ') + '], ' + JSON.stringify(value) + ' found'));
         }
     } else {
         if (Object.keys(valueSpec.values).indexOf(unbundle(value)) === -1) {
-            errors.push(new ValidationError(key, value, `expected one of [${ Object.keys(valueSpec.values).join(', ') }], ${ JSON.stringify(value) } found`));
+            errors.push(new ValidationError(key, value, 'expected one of [' + Object.keys(valueSpec.values).join(', ') + '], ' + JSON.stringify(value) + ' found'));
         }
     }
     return errors;
@@ -13531,19 +13679,19 @@ function validateFilter(options) {
     }
 }
 function validateNonExpressionFilter(options) {
-    const value = options.value;
-    const key = options.key;
+    var value = options.value;
+    var key = options.key;
     if (getType(value) !== 'array') {
-        return [new ValidationError(key, value, `array expected, ${ getType(value) } found`)];
+        return [new ValidationError(key, value, 'array expected, ' + getType(value) + ' found')];
     }
-    const styleSpec = options.styleSpec;
-    let type;
-    let errors = [];
+    var styleSpec = options.styleSpec;
+    var type;
+    var errors = [];
     if (value.length < 1) {
         return [new ValidationError(key, value, 'filter array must have at least 1 element')];
     }
     errors = errors.concat(validateEnum({
-        key: `${ key }[0]`,
+        key: key + '[0]',
         value: value[0],
         valueSpec: styleSpec.filter_operator,
         style: options.style,
@@ -13555,43 +13703,43 @@ function validateNonExpressionFilter(options) {
     case '>':
     case '>=':
         if (value.length >= 2 && unbundle(value[1]) === '$type') {
-            errors.push(new ValidationError(key, value, `"$type" cannot be use with operator "${ value[0] }"`));
+            errors.push(new ValidationError(key, value, '"$type" cannot be use with operator "' + value[0] + '"'));
         }
     case '==':
     case '!=':
         if (value.length !== 3) {
-            errors.push(new ValidationError(key, value, `filter array for operator "${ value[0] }" must have 3 elements`));
+            errors.push(new ValidationError(key, value, 'filter array for operator "' + value[0] + '" must have 3 elements'));
         }
     case 'in':
     case '!in':
         if (value.length >= 2) {
             type = getType(value[1]);
             if (type !== 'string') {
-                errors.push(new ValidationError(`${ key }[1]`, value[1], `string expected, ${ type } found`));
+                errors.push(new ValidationError(key + '[1]', value[1], 'string expected, ' + type + ' found'));
             }
         }
-        for (let i = 2; i < value.length; i++) {
+        for (var i = 2; i < value.length; i++) {
             type = getType(value[i]);
             if (unbundle(value[1]) === '$type') {
                 errors = errors.concat(validateEnum({
-                    key: `${ key }[${ i }]`,
+                    key: key + '[' + i + ']',
                     value: value[i],
                     valueSpec: styleSpec.geometry_type,
                     style: options.style,
                     styleSpec: options.styleSpec
                 }));
             } else if (type !== 'string' && type !== 'number' && type !== 'boolean') {
-                errors.push(new ValidationError(`${ key }[${ i }]`, value[i], `string, number, or boolean expected, ${ type } found`));
+                errors.push(new ValidationError(key + '[' + i + ']', value[i], 'string, number, or boolean expected, ' + type + ' found'));
             }
         }
         break;
     case 'any':
     case 'all':
     case 'none':
-        for (let i = 1; i < value.length; i++) {
+        for (var i$1 = 1; i$1 < value.length; i$1++) {
             errors = errors.concat(validateNonExpressionFilter({
-                key: `${ key }[${ i }]`,
-                value: value[i],
+                key: key + '[' + i$1 + ']',
+                value: value[i$1],
                 style: options.style,
                 styleSpec: options.styleSpec
             }));
@@ -13601,17 +13749,17 @@ function validateNonExpressionFilter(options) {
     case '!has':
         type = getType(value[1]);
         if (value.length !== 2) {
-            errors.push(new ValidationError(key, value, `filter array for "${ value[0] }" operator must have 2 elements`));
+            errors.push(new ValidationError(key, value, 'filter array for "' + value[0] + '" operator must have 2 elements'));
         } else if (type !== 'string') {
-            errors.push(new ValidationError(`${ key }[1]`, value[1], `string expected, ${ type } found`));
+            errors.push(new ValidationError(key + '[1]', value[1], 'string expected, ' + type + ' found'));
         }
         break;
     case 'within':
         type = getType(value[1]);
         if (value.length !== 2) {
-            errors.push(new ValidationError(key, value, `filter array for "${ value[0] }" operator must have 2 elements`));
+            errors.push(new ValidationError(key, value, 'filter array for "' + value[0] + '" operator must have 2 elements'));
         } else if (type !== 'object') {
-            errors.push(new ValidationError(`${ key }[1]`, value[1], `object expected, ${ type } found`));
+            errors.push(new ValidationError(key + '[1]', value[1], 'object expected, ' + type + ' found'));
         }
         break;
     }
@@ -13619,33 +13767,34 @@ function validateNonExpressionFilter(options) {
 }
 
 function validateProperty(options, propertyType) {
-    const key = options.key;
-    const style = options.style;
-    const styleSpec = options.styleSpec;
-    const value = options.value;
-    const propertyKey = options.objectKey;
-    const layerSpec = styleSpec[`${ propertyType }_${ options.layerType }`];
-    if (!layerSpec)
+    var key = options.key;
+    var style = options.style;
+    var styleSpec = options.styleSpec;
+    var value = options.value;
+    var propertyKey = options.objectKey;
+    var layerSpec = styleSpec[propertyType + '_' + options.layerType];
+    if (!layerSpec) {
         return [];
-    const transitionMatch = propertyKey.match(/^(.*)-transition$/);
+    }
+    var transitionMatch = propertyKey.match(/^(.*)-transition$/);
     if (propertyType === 'paint' && transitionMatch && layerSpec[transitionMatch[1]] && layerSpec[transitionMatch[1]].transition) {
         return validate({
-            key,
-            value,
+            key: key,
+            value: value,
             valueSpec: styleSpec.transition,
-            style,
-            styleSpec
+            style: style,
+            styleSpec: styleSpec
         });
     }
-    const valueSpec = options.valueSpec || layerSpec[propertyKey];
+    var valueSpec = options.valueSpec || layerSpec[propertyKey];
     if (!valueSpec) {
-        return [new ValidationError(key, value, `unknown property "${ propertyKey }"`)];
+        return [new ValidationError(key, value, 'unknown property "' + propertyKey + '"')];
     }
-    let tokenMatch;
+    var tokenMatch;
     if (getType(value) === 'string' && supportsPropertyExpression(valueSpec) && !valueSpec.tokens && (tokenMatch = /^{([^}]+)}$/.exec(value))) {
-        return [new ValidationError(key, value, `"${ propertyKey }" does not support interpolation syntax\n` + `Use an identity property function instead: \`{ "type": "identity", "property": ${ JSON.stringify(tokenMatch[1]) } }\`.`)];
+        return [new ValidationError(key, value, '"' + propertyKey + '" does not support interpolation syntax\n' + 'Use an identity property function instead: `{ "type": "identity", "property": ' + JSON.stringify(tokenMatch[1]) + ' }`.')];
     }
-    const errors = [];
+    var errors = [];
     if (options.layerType === 'symbol') {
         if (propertyKey === 'text-field' && style && !style.glyphs) {
             errors.push(new ValidationError(key, value, 'use of "text-field" requires a style "glyphs" property'));
@@ -13656,13 +13805,13 @@ function validateProperty(options, propertyType) {
     }
     return errors.concat(validate({
         key: options.key,
-        value,
-        valueSpec,
-        style,
-        styleSpec,
+        value: value,
+        valueSpec: valueSpec,
+        style: style,
+        styleSpec: styleSpec,
         expressionContext: 'property',
-        propertyType,
-        propertyKey
+        propertyType: propertyType,
+        propertyKey: propertyKey
     }));
 }
 
@@ -13675,22 +13824,22 @@ function validateLayoutProperty(options) {
 }
 
 function validateLayer(options) {
-    let errors = [];
-    const layer = options.value;
-    const key = options.key;
-    const style = options.style;
-    const styleSpec = options.styleSpec;
+    var errors = [];
+    var layer = options.value;
+    var key = options.key;
+    var style = options.style;
+    var styleSpec = options.styleSpec;
     if (!layer.type && !layer.ref) {
         errors.push(new ValidationError(key, layer, 'either "type" or "ref" is required'));
     }
-    let type = unbundle(layer.type);
-    const ref = unbundle(layer.ref);
+    var type = unbundle(layer.type);
+    var ref = unbundle(layer.ref);
     if (layer.id) {
-        const layerId = unbundle(layer.id);
-        for (let i = 0; i < options.arrayIndex; i++) {
-            const otherLayer = style.layers[i];
+        var layerId = unbundle(layer.id);
+        for (var i = 0; i < options.arrayIndex; i++) {
+            var otherLayer = style.layers[i];
             if (unbundle(otherLayer.id) === layerId) {
-                errors.push(new ValidationError(key, layer.id, `duplicate layer id "${ layer.id }", previously used at line ${ otherLayer.id.__line__ }`));
+                errors.push(new ValidationError(key, layer.id, 'duplicate layer id "' + layer.id + '", previously used at line ' + otherLayer.id.__line__));
             }
         }
     }
@@ -13701,57 +13850,58 @@ function validateLayer(options) {
             'source-layer',
             'filter',
             'layout'
-        ].forEach(p => {
+        ].forEach(function (p) {
             if (p in layer) {
-                errors.push(new ValidationError(key, layer[p], `"${ p }" is prohibited for ref layers`));
+                errors.push(new ValidationError(key, layer[p], '"' + p + '" is prohibited for ref layers'));
             }
         });
-        let parent;
-        style.layers.forEach(layer => {
-            if (unbundle(layer.id) === ref)
+        var parent;
+        style.layers.forEach(function (layer) {
+            if (unbundle(layer.id) === ref) {
                 parent = layer;
+            }
         });
         if (!parent) {
-            errors.push(new ValidationError(key, layer.ref, `ref layer "${ ref }" not found`));
+            errors.push(new ValidationError(key, layer.ref, 'ref layer "' + ref + '" not found'));
         } else if (parent.ref) {
             errors.push(new ValidationError(key, layer.ref, 'ref cannot reference another ref layer'));
         } else {
             type = unbundle(parent.type);
         }
-    } else if (!(type === 'background' || type === 'sky')) {
+    } else if (type !== 'background') {
         if (!layer.source) {
             errors.push(new ValidationError(key, layer, 'missing required property "source"'));
         } else {
-            const source = style.sources && style.sources[layer.source];
-            const sourceType = source && unbundle(source.type);
+            var source = style.sources && style.sources[layer.source];
+            var sourceType = source && unbundle(source.type);
             if (!source) {
-                errors.push(new ValidationError(key, layer.source, `source "${ layer.source }" not found`));
+                errors.push(new ValidationError(key, layer.source, 'source "' + layer.source + '" not found'));
             } else if (sourceType === 'vector' && type === 'raster') {
-                errors.push(new ValidationError(key, layer.source, `layer "${ layer.id }" requires a raster source`));
+                errors.push(new ValidationError(key, layer.source, 'layer "' + layer.id + '" requires a raster source'));
             } else if (sourceType === 'raster' && type !== 'raster') {
-                errors.push(new ValidationError(key, layer.source, `layer "${ layer.id }" requires a vector source`));
+                errors.push(new ValidationError(key, layer.source, 'layer "' + layer.id + '" requires a vector source'));
             } else if (sourceType === 'vector' && !layer['source-layer']) {
-                errors.push(new ValidationError(key, layer, `layer "${ layer.id }" must specify a "source-layer"`));
+                errors.push(new ValidationError(key, layer, 'layer "' + layer.id + '" must specify a "source-layer"'));
             } else if (sourceType === 'raster-dem' && type !== 'hillshade') {
                 errors.push(new ValidationError(key, layer.source, 'raster-dem source can only be used with layer type \'hillshade\'.'));
             } else if (type === 'line' && layer.paint && layer.paint['line-gradient'] && (sourceType !== 'geojson' || !source.lineMetrics)) {
-                errors.push(new ValidationError(key, layer, `layer "${ layer.id }" specifies a line-gradient, which requires a GeoJSON source with \`lineMetrics\` enabled.`));
+                errors.push(new ValidationError(key, layer, 'layer "' + layer.id + '" specifies a line-gradient, which requires a GeoJSON source with `lineMetrics` enabled.'));
             }
         }
     }
     errors = errors.concat(validateObject({
-        key,
+        key: key,
         value: layer,
         valueSpec: styleSpec.layer,
         style: options.style,
         styleSpec: options.styleSpec,
         objectElementValidators: {
-            '*'() {
+            '*': function _() {
                 return [];
             },
-            type() {
+            type: function type() {
                 return validate({
-                    key: `${ key }.type`,
+                    key: key + '.type',
                     value: layer.type,
                     valueSpec: styleSpec.layer.type,
                     style: options.style,
@@ -13761,29 +13911,29 @@ function validateLayer(options) {
                 });
             },
             filter: validateFilter,
-            layout(options) {
+            layout: function layout(options) {
                 return validateObject({
-                    layer,
+                    layer: layer,
                     key: options.key,
                     value: options.value,
                     style: options.style,
                     styleSpec: options.styleSpec,
                     objectElementValidators: {
-                        '*'(options) {
+                        '*': function _(options) {
                             return validateLayoutProperty(extend({ layerType: type }, options));
                         }
                     }
                 });
             },
-            paint(options) {
+            paint: function paint(options) {
                 return validateObject({
-                    layer,
+                    layer: layer,
                     key: options.key,
                     value: options.value,
                     style: options.style,
                     styleSpec: options.styleSpec,
                     objectElementValidators: {
-                        '*'(options) {
+                        '*': function _(options) {
                             return validatePaintProperty(extend({ layerType: type }, options));
                         }
                     }
@@ -13795,52 +13945,54 @@ function validateLayer(options) {
 }
 
 function validateString(options) {
-    const value = options.value;
-    const key = options.key;
-    const type = getType(value);
+    var value = options.value;
+    var key = options.key;
+    var type = getType(value);
     if (type !== 'string') {
-        return [new ValidationError(key, value, `string expected, ${ type } found`)];
+        return [new ValidationError(key, value, 'string expected, ' + type + ' found')];
     }
     return [];
 }
 
-const objectElementValidators = { promoteId: validatePromoteId };
+var objectElementValidators = { promoteId: validatePromoteId };
 function validateSource(options) {
-    const value = options.value;
-    const key = options.key;
-    const styleSpec = options.styleSpec;
-    const style = options.style;
+    var value = options.value;
+    var key = options.key;
+    var styleSpec = options.styleSpec;
+    var style = options.style;
     if (!value.type) {
         return [new ValidationError(key, value, '"type" is required')];
     }
-    const type = unbundle(value.type);
-    let errors;
+    var type = unbundle(value.type);
+    var errors;
     switch (type) {
     case 'vector':
     case 'raster':
     case 'raster-dem':
         errors = validateObject({
-            key,
-            value,
-            valueSpec: styleSpec[`source_${ type.replace('-', '_') }`],
+            key: key,
+            value: value,
+            valueSpec: styleSpec['source_' + type.replace('-', '_')],
             style: options.style,
-            styleSpec,
-            objectElementValidators
+            styleSpec: styleSpec,
+            objectElementValidators: objectElementValidators
         });
         return errors;
     case 'geojson':
         errors = validateObject({
-            key,
-            value,
+            key: key,
+            value: value,
             valueSpec: styleSpec.source_geojson,
-            style,
-            styleSpec,
-            objectElementValidators
+            style: style,
+            styleSpec: styleSpec,
+            objectElementValidators: objectElementValidators
         });
         if (value.cluster) {
-            for (const prop in value.clusterProperties) {
-                const [operator, mapExpr] = value.clusterProperties[prop];
-                const reduceExpr = typeof operator === 'string' ? [
+            for (var prop in value.clusterProperties) {
+                var ref = value.clusterProperties[prop];
+                var operator = ref[0];
+                var mapExpr = ref[1];
+                var reduceExpr = typeof operator === 'string' ? [
                     operator,
                     ['accumulated'],
                     [
@@ -13848,13 +14000,13 @@ function validateSource(options) {
                         prop
                     ]
                 ] : operator;
-                errors.push(...validateExpression({
-                    key: `${ key }.${ prop }.map`,
+                errors.push.apply(errors, validateExpression({
+                    key: key + '.' + prop + '.map',
                     value: mapExpr,
                     expressionContext: 'cluster-map'
                 }));
-                errors.push(...validateExpression({
-                    key: `${ key }.${ prop }.reduce`,
+                errors.push.apply(errors, validateExpression({
+                    key: key + '.' + prop + '.reduce',
                     value: reduceExpr,
                     expressionContext: 'cluster-reduce'
                 }));
@@ -13863,25 +14015,25 @@ function validateSource(options) {
         return errors;
     case 'video':
         return validateObject({
-            key,
-            value,
+            key: key,
+            value: value,
             valueSpec: styleSpec.source_video,
-            style,
-            styleSpec
+            style: style,
+            styleSpec: styleSpec
         });
     case 'image':
         return validateObject({
-            key,
-            value,
+            key: key,
+            value: value,
             valueSpec: styleSpec.source_image,
-            style,
-            styleSpec
+            style: style,
+            styleSpec: styleSpec
         });
     case 'canvas':
-        return [new ValidationError(key, null, `Please use runtime APIs to add canvas sources, rather than including them in stylesheets.`, 'source.canvas')];
+        return [new ValidationError(key, null, 'Please use runtime APIs to add canvas sources, rather than including them in stylesheets.', 'source.canvas')];
     default:
         return validateEnum({
-            key: `${ key }.type`,
+            key: key + '.type',
             value: value.type,
             valueSpec: {
                 values: [
@@ -13893,22 +14045,24 @@ function validateSource(options) {
                     'image'
                 ]
             },
-            style,
-            styleSpec
+            style: style,
+            styleSpec: styleSpec
         });
     }
 }
-function validatePromoteId({key, value}) {
+function validatePromoteId(ref) {
+    var key = ref.key;
+    var value = ref.value;
     if (getType(value) === 'string') {
         return validateString({
-            key,
-            value
+            key: key,
+            value: value
         });
     } else {
-        const errors = [];
-        for (const prop in value) {
-            errors.push(...validateString({
-                key: `${ key }.${ prop }`,
+        var errors = [];
+        for (var prop in value) {
+            errors.push.apply(errors, validateString({
+                key: key + '.' + prop,
                 value: value[prop]
             }));
         }
@@ -13917,88 +14071,38 @@ function validatePromoteId({key, value}) {
 }
 
 function validateLight(options) {
-    const light = options.value;
-    const styleSpec = options.styleSpec;
-    const lightSpec = styleSpec.light;
-    const style = options.style;
-    let errors = [];
-    const rootType = getType(light);
+    var light = options.value;
+    var styleSpec = options.styleSpec;
+    var lightSpec = styleSpec.light;
+    var style = options.style;
+    var errors = [];
+    var rootType = getType(light);
     if (light === undefined) {
         return errors;
     } else if (rootType !== 'object') {
-        errors = errors.concat([new ValidationError('light', light, `object expected, ${ rootType } found`)]);
+        errors = errors.concat([new ValidationError('light', light, 'object expected, ' + rootType + ' found')]);
         return errors;
     }
-    for (const key in light) {
-        const transitionMatch = key.match(/^(.*)-transition$/);
+    for (var key in light) {
+        var transitionMatch = key.match(/^(.*)-transition$/);
         if (transitionMatch && lightSpec[transitionMatch[1]] && lightSpec[transitionMatch[1]].transition) {
             errors = errors.concat(validate({
-                key,
+                key: key,
                 value: light[key],
                 valueSpec: styleSpec.transition,
-                style,
-                styleSpec
+                style: style,
+                styleSpec: styleSpec
             }));
         } else if (lightSpec[key]) {
             errors = errors.concat(validate({
-                key,
+                key: key,
                 value: light[key],
                 valueSpec: lightSpec[key],
-                style,
-                styleSpec
+                style: style,
+                styleSpec: styleSpec
             }));
         } else {
-            errors = errors.concat([new ValidationError(key, light[key], `unknown property "${ key }"`)]);
-        }
-    }
-    return errors;
-}
-
-function validateTerrain(options) {
-    const terrain = options.value;
-    const key = options.key;
-    const style = options.style;
-    const styleSpec = options.styleSpec;
-    const terrainSpec = styleSpec.terrain;
-    let errors = [];
-    const rootType = getType(terrain);
-    if (terrain === undefined) {
-        return errors;
-    } else if (rootType !== 'object') {
-        errors = errors.concat([new ValidationError('terrain', terrain, `object expected, ${ rootType } found`)]);
-        return errors;
-    }
-    for (const key in terrain) {
-        const transitionMatch = key.match(/^(.*)-transition$/);
-        if (transitionMatch && terrainSpec[transitionMatch[1]] && terrainSpec[transitionMatch[1]].transition) {
-            errors = errors.concat(validate({
-                key,
-                value: terrain[key],
-                valueSpec: styleSpec.transition,
-                style,
-                styleSpec
-            }));
-        } else if (terrainSpec[key]) {
-            errors = errors.concat(validate({
-                key,
-                value: terrain[key],
-                valueSpec: terrainSpec[key],
-                style,
-                styleSpec
-            }));
-        } else {
-            errors = errors.concat([new ValidationError(key, terrain[key], `unknown property "${ key }"`)]);
-        }
-    }
-    if (!terrain.source) {
-        errors.push(new ValidationError(key, terrain, `terrain is missing required property "source"`));
-    } else {
-        const source = style.sources && style.sources[terrain.source];
-        const sourceType = source && unbundle(source.type);
-        if (!source) {
-            errors.push(new ValidationError(key, terrain.source, `source "${ terrain.source }" not found`));
-        } else if (sourceType !== 'raster-dem') {
-            errors.push(new ValidationError(key, terrain.source, `terrain cannot be used with a source of type ${ sourceType }, it only be used with a "raster-dem" source type`));
+            errors = errors.concat([new ValidationError(key, light[key], 'unknown property "' + key + '"')]);
         }
     }
     return errors;
@@ -14018,8 +14122,8 @@ function validateImage(options) {
     return validateExpression(options);
 }
 
-const VALIDATORS = {
-    '*'() {
+var VALIDATORS = {
+    '*': function _() {
         return [];
     },
     'array': validateArray,
@@ -14034,15 +14138,14 @@ const VALIDATORS = {
     'object': validateObject,
     'source': validateSource,
     'light': validateLight,
-    'terrain': validateTerrain,
     'string': validateString,
     'formatted': validateFormatted,
     'resolvedImage': validateImage
 };
 function validate(options) {
-    const value = options.value;
-    const valueSpec = options.valueSpec;
-    const styleSpec = options.styleSpec;
+    var value = options.value;
+    var valueSpec = options.valueSpec;
+    var styleSpec = options.styleSpec;
     if (valueSpec.expression && isFunction$1(unbundle(value))) {
         return validateFunction(options);
     } else if (valueSpec.expression && isExpression(deepUnbundle(value))) {
@@ -14050,17 +14153,18 @@ function validate(options) {
     } else if (valueSpec.type && VALIDATORS[valueSpec.type]) {
         return VALIDATORS[valueSpec.type](options);
     } else {
-        const valid = validateObject(extend({}, options, { valueSpec: valueSpec.type ? styleSpec[valueSpec.type] : valueSpec }));
+        var valid = validateObject(extend({}, options, { valueSpec: valueSpec.type ? styleSpec[valueSpec.type] : valueSpec }));
         return valid;
     }
 }
 
 function validateGlyphsURL (options) {
-    const value = options.value;
-    const key = options.key;
-    const errors = validateString(options);
-    if (errors.length)
+    var value = options.value;
+    var key = options.key;
+    var errors = validateString(options);
+    if (errors.length) {
         return errors;
+    }
     if (value.indexOf('{fontstack}') === -1) {
         errors.push(new ValidationError(key, value, '"glyphs" url must include a "{fontstack}" token'));
     }
@@ -14070,17 +14174,19 @@ function validateGlyphsURL (options) {
     return errors;
 }
 
-function validateStyleMin(style, styleSpec = v8) {
-    let errors = [];
+function validateStyleMin(style, styleSpec) {
+    if (styleSpec === void 0)
+        styleSpec = v8;
+    var errors = [];
     errors = errors.concat(validate({
         key: '',
         value: style,
         valueSpec: styleSpec.$root,
-        styleSpec,
-        style,
+        styleSpec: styleSpec,
+        style: style,
         objectElementValidators: {
             glyphs: validateGlyphsURL,
-            '*'() {
+            '*': function _() {
                 return [];
             }
         }
@@ -14089,26 +14195,28 @@ function validateStyleMin(style, styleSpec = v8) {
         errors = errors.concat(validateConstants({
             key: 'constants',
             value: style.constants,
-            style,
-            styleSpec
+            style: style,
+            styleSpec: styleSpec
         }));
     }
     return sortErrors(errors);
 }
 validateStyleMin.source = wrapCleanErrors(validateSource);
 validateStyleMin.light = wrapCleanErrors(validateLight);
-validateStyleMin.terrain = wrapCleanErrors(validateTerrain);
 validateStyleMin.layer = wrapCleanErrors(validateLayer);
 validateStyleMin.filter = wrapCleanErrors(validateFilter);
 validateStyleMin.paintProperty = wrapCleanErrors(validatePaintProperty);
 validateStyleMin.layoutProperty = wrapCleanErrors(validateLayoutProperty);
 function sortErrors(errors) {
-    return [].concat(errors).sort((a, b) => {
+    return [].concat(errors).sort(function (a, b) {
         return a.line - b.line;
     });
 }
 function wrapCleanErrors(inner) {
-    return function (...args) {
+    return function () {
+        var args = [], len = arguments.length;
+        while (len--)
+            args[len] = arguments[len];
         return sortErrors(inner.apply(this, args));
     };
 }
@@ -14188,7 +14296,7 @@ var jsonlint = createCommonjsModule(function (module, exports) {
   }
 */
 var parser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,12],$V1=[1,13],$V2=[1,9],$V3=[1,10],$V4=[1,11],$V5=[1,14],$V6=[1,15],$V7=[14,18,22,24],$V8=[18,22],$V9=[22,24];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v){ }return o},$V0=[1,12],$V1=[1,13],$V2=[1,9],$V3=[1,10],$V4=[1,11],$V5=[1,14],$V6=[1,15],$V7=[14,18,22,24],$V8=[18,22],$V9=[22,24];
 var parser = {trace: function trace() { },
 yy: {},
 symbols_: {"error":2,"JSONString":3,"STRING":4,"JSONNumber":5,"NUMBER":6,"JSONNullLiteral":7,"NULL":8,"JSONBooleanLiteral":9,"TRUE":10,"FALSE":11,"JSONText":12,"JSONValue":13,"EOF":14,"JSONObject":15,"JSONArray":16,"{":17,"}":18,"JSONMemberList":19,"JSONMember":20,":":21,",":22,"[":23,"]":24,"JSONElementList":25,"$accept":0,"$end":1},
@@ -14785,8 +14893,10 @@ function readStyle(style) {
     return style;
 }
 
-function validateStyle(style, styleSpec = v8) {
-    let s = style;
+function validateStyle(style, styleSpec) {
+    if (styleSpec === void 0)
+        styleSpec = v8;
+    var s = style;
     try {
         s = readStyle(s);
     } catch (e) {
@@ -14795,11 +14905,12 @@ function validateStyle(style, styleSpec = v8) {
     return validateStyleMin(s, styleSpec);
 }
 
-const SUPPORTED_SPEC_VERSION = 8;
-const MAX_SOURCES_IN_STYLE = 15;
+var SUPPORTED_SPEC_VERSION = 8;
+var MAX_SOURCES_IN_STYLE = 15;
 function isValid(value, regex) {
-    if (!value || getType(value) !== 'string')
+    if (!value || getType(value) !== 'string') {
         return true;
+    }
     return !!value.match(regex);
 }
 function getSourceCount(source) {
@@ -14810,48 +14921,48 @@ function getSourceCount(source) {
     }
 }
 function getAllowedKeyErrors(obj, keys, path) {
-    const allowed = new Set(keys);
-    const errors = [];
-    Object.keys(obj).forEach(k => {
+    var allowed = new Set(keys);
+    var errors = [];
+    Object.keys(obj).forEach(function (k) {
         if (!allowed.has(k)) {
-            const prop = path ? `${ path }.${ k }` : null;
-            errors.push(new ValidationError(prop, obj[k], `Unsupported property "${ k }"`));
+            var prop = path ? path + '.' + k : null;
+            errors.push(new ValidationError(prop, obj[k], 'Unsupported property "' + k + '"'));
         }
     });
     return errors;
 }
 function getSourceErrors(source, i) {
-    const errors = [];
-    const sourceKeys = [
+    var errors = [];
+    var sourceKeys = [
         'type',
         'url',
         'tileSize'
     ];
-    errors.push(...getAllowedKeyErrors(source, sourceKeys, 'source'));
-    const sourceUrlPattern = /^mapbox:\/\/([^/]*)$/;
+    errors.push.apply(errors, getAllowedKeyErrors(source, sourceKeys, 'source'));
+    var sourceUrlPattern = /^mapbox:\/\/([^/]*)$/;
     if (!isValid(source.url, sourceUrlPattern)) {
-        errors.push(new ValidationError(`sources[${ i }]`, source.url, 'Source url must be a valid Mapbox tileset url'));
+        errors.push(new ValidationError('sources[' + i + ']', source.url, 'Source url must be a valid Mapbox tileset url'));
     }
     return errors;
 }
 function getSourcesErrors(sources) {
-    const errors = [];
-    let count = 0;
-    Object.keys(sources).forEach((s, i) => {
-        const sourceErrors = getSourceErrors(sources[s], i);
+    var errors = [];
+    var count = 0;
+    Object.keys(sources).forEach(function (s, i) {
+        var sourceErrors = getSourceErrors(sources[s], i);
         if (!sourceErrors.length) {
             count = count + getSourceCount(sources[s]);
         }
-        errors.push(...sourceErrors);
+        errors.push.apply(errors, sourceErrors);
     });
     if (count > MAX_SOURCES_IN_STYLE) {
-        errors.push(new ValidationError('sources', null, `Styles must contain ${ MAX_SOURCES_IN_STYLE } or fewer sources`));
+        errors.push(new ValidationError('sources', null, 'Styles must contain ' + MAX_SOURCES_IN_STYLE + ' or fewer sources'));
     }
     return errors;
 }
 function getRootErrors(style, specKeys) {
-    const errors = [];
-    const optionalRootProperties = [
+    var errors = [];
+    var optionalRootProperties = [
         'owner',
         'id',
         'cacheControl',
@@ -14860,62 +14971,59 @@ function getRootErrors(style, specKeys) {
         'modified',
         'visibility'
     ];
-    const allowedKeyErrors = getAllowedKeyErrors(style, [
-        ...specKeys,
-        ...optionalRootProperties
-    ]);
-    errors.push(...allowedKeyErrors);
+    var allowedKeyErrors = getAllowedKeyErrors(style, specKeys.concat(optionalRootProperties));
+    errors.push.apply(errors, allowedKeyErrors);
     if (style.version > SUPPORTED_SPEC_VERSION || style.version < SUPPORTED_SPEC_VERSION) {
-        errors.push(new ValidationError('version', style.version, `Style version must be ${ SUPPORTED_SPEC_VERSION }`));
+        errors.push(new ValidationError('version', style.version, 'Style version must be ' + SUPPORTED_SPEC_VERSION));
     }
-    const glyphUrlPattern = /^mapbox:\/\/fonts\/([^/]*)\/{fontstack}\/{range}.pbf$/;
+    var glyphUrlPattern = /^mapbox:\/\/fonts\/([^/]*)\/{fontstack}\/{range}.pbf$/;
     if (!isValid(style.glyphs, glyphUrlPattern)) {
         errors.push(new ValidationError('glyphs', style.glyphs, 'Styles must reference glyphs hosted by Mapbox'));
     }
-    const spriteUrlPattern = /^mapbox:\/\/sprites\/([^/]*)\/([^/]*)\/?([^/]*)?$/;
+    var spriteUrlPattern = /^mapbox:\/\/sprites\/([^/]*)\/([^/]*)\/?([^/]*)?$/;
     if (!isValid(style.sprite, spriteUrlPattern)) {
         errors.push(new ValidationError('sprite', style.sprite, 'Styles must reference sprites hosted by Mapbox'));
     }
-    const visibilityPattern = /^(public|private)$/;
+    var visibilityPattern = /^(public|private)$/;
     if (!isValid(style.visibility, visibilityPattern)) {
         errors.push(new ValidationError('visibility', style.visibility, 'Style visibility must be public or private'));
     }
     return errors;
 }
 function validateMapboxApiSupported(style) {
-    let s = style;
+    var s = style;
     try {
         s = readStyle(s);
     } catch (e) {
         return [e];
     }
-    let errors = validateStyleMin(s, v8).concat(getRootErrors(s, Object.keys(v8.$root)));
+    var errors = validateStyleMin(s, v8).concat(getRootErrors(s, Object.keys(v8.$root)));
     if (s.sources) {
         errors = errors.concat(getSourcesErrors(s.sources));
     }
     return errors;
 }
 
-const expression$1 = {
-    StyleExpression,
-    isExpression,
-    isExpressionFilter,
-    createExpression,
-    createPropertyExpression,
-    normalizePropertyExpression,
-    ZoomConstantExpression,
-    ZoomDependentExpression,
-    StylePropertyFunction
+var expression$1 = {
+    StyleExpression: StyleExpression,
+    isExpression: isExpression,
+    isExpressionFilter: isExpressionFilter,
+    createExpression: createExpression,
+    createPropertyExpression: createPropertyExpression,
+    normalizePropertyExpression: normalizePropertyExpression,
+    ZoomConstantExpression: ZoomConstantExpression,
+    ZoomDependentExpression: ZoomDependentExpression,
+    StylePropertyFunction: StylePropertyFunction
 };
-const styleFunction = {
-    convertFunction,
-    createFunction,
+var styleFunction = {
+    convertFunction: convertFunction,
+    createFunction: createFunction,
     isFunction: isFunction$1
 };
-const visit = {
-    eachSource,
-    eachLayer,
-    eachProperty
+var visit = {
+    eachSource: eachSource,
+    eachLayer: eachLayer,
+    eachProperty: eachProperty
 };
 validateStyle.parsed = validateStyle;
 validateStyle.latest = validateStyle;

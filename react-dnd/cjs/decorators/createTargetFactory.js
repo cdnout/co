@@ -7,8 +7,6 @@ exports.createTargetFactory = createTargetFactory;
 
 var _invariant = require("@react-dnd/invariant");
 
-var _js_utils = require("../utils/js_utils");
-
 var _utils = require("./utils");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -67,7 +65,7 @@ var TargetImpl = /*#__PURE__*/function () {
       var dropResult = this.spec.drop(this.props, this.monitor, this.ref.current);
 
       if (process.env.NODE_ENV !== 'production') {
-        (0, _invariant.invariant)(typeof dropResult === 'undefined' || (0, _js_utils.isPlainObject)(dropResult), 'drop() must either return undefined, or an object that represents the drop result. ' + 'Instead received %s. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/api/drop-target', dropResult);
+        (0, _invariant.invariant)(typeof dropResult === 'undefined' || (0, _utils.isPlainObject)(dropResult), 'drop() must either return undefined, or an object that represents the drop result. ' + 'Instead received %s. ' + 'Read more: http://react-dnd.github.io/react-dnd/docs/api/drop-target', dropResult);
       }
 
       return dropResult;

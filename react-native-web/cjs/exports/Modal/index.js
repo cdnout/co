@@ -68,7 +68,9 @@ function addActiveModal(modalId, listener) {
   notifyActiveModalListeners();
 }
 
-var Modal = (0, _react.forwardRef)(function (props, forwardedRef) {
+var Modal =
+/*#__PURE__*/
+(0, _react.forwardRef)(function (props, forwardedRef) {
   var animationType = props.animationType,
       children = props.children,
       onDismiss = props.onDismiss,
@@ -106,19 +108,28 @@ var Modal = (0, _react.forwardRef)(function (props, forwardedRef) {
       return removeActiveModal(modalId);
     };
   }, [modalId]);
-  return _react.default.createElement(_ModalPortal.default, null, _react.default.createElement(_ModalAnimation.default, {
-    animationType: animationType,
-    onDismiss: onDismissCallback,
-    onShow: onShowCallback,
-    visible: visible
-  }, _react.default.createElement(_ModalFocusTrap.default, {
-    active: isActive
-  }, _react.default.createElement(_ModalContent.default, {
-    active: isActive,
-    onRequestClose: onRequestClose,
-    ref: forwardedRef,
-    transparent: transparent
-  }, children))));
+  return (
+    /*#__PURE__*/
+    _react.default.createElement(_ModalPortal.default, null,
+    /*#__PURE__*/
+    _react.default.createElement(_ModalAnimation.default, {
+      animationType: animationType,
+      onDismiss: onDismissCallback,
+      onShow: onShowCallback,
+      visible: visible
+    },
+    /*#__PURE__*/
+    _react.default.createElement(_ModalFocusTrap.default, {
+      active: isActive
+    },
+    /*#__PURE__*/
+    _react.default.createElement(_ModalContent.default, {
+      active: isActive,
+      onRequestClose: onRequestClose,
+      ref: forwardedRef,
+      transparent: transparent
+    }, children))))
+  );
 });
 var _default = Modal;
 exports.default = _default;

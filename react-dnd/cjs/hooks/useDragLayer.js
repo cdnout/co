@@ -9,7 +9,7 @@ var _react = require("react");
 
 var _useDragDropManager = require("./useDragDropManager");
 
-var _useCollector3 = require("./internal/useCollector");
+var _useCollector3 = require("./useCollector");
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 

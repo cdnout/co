@@ -21,7 +21,9 @@ import usePlatformMethods from '../../modules/usePlatformMethods';
 import PickerItem from './PickerItem';
 import StyleSheet from '../StyleSheet';
 import { forwardRef, useRef } from 'react';
-var Picker = forwardRef(function (props, forwardedRef) {
+var Picker =
+/*#__PURE__*/
+forwardRef(function (props, forwardedRef) {
   var children = props.children,
       enabled = props.enabled,
       onValueChange = props.onValueChange,

@@ -1,37 +1,826 @@
-/*
- * Playcanvas Extras v1.28.6 revision e3d7b88c
- * Copyright 2011-2020 PlayCanvas Ltd. All rights reserved.
+/**
+ * @license
+ * PlayCanvas Engine v1.39.3 revision 9b454564b
+ * Copyright 2011-2021 PlayCanvas Ltd. All rights reserved.
  */
-;(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        define([], factory);
-    } else if (typeof module === 'object' && module.exports) {
-        module.exports = factory();
-    } else {
-        root.pc = factory();
-    }
-}(this, function () {
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.pcx = {}));
+}(this, (function (exports) { 'use strict';
 
-Object.assign(pc,function(){var m=function(d){this._frameIndex=0;this._frameTimings=[];this._timings=[];this._prevTimings=[];d.on("frameupdate",this.begin.bind(this,"update"));d.on("framerender",this.mark.bind(this,"render"));d.on("frameend",this.mark.bind(this,"other"))};Object.assign(m.prototype,{begin:function(d){this._frameIndex<this._frameTimings.length&&this._frameTimings.splice(this._frameIndex);var h=this._prevTimings;this._prevTimings=this._timings;this._timings=this._frameTimings;this._frameTimings=
-h;this._frameIndex=0;this.mark(d)},mark:function(d){var h=pc.now();if(0<this._frameIndex){var g=this._frameTimings[this._frameIndex-1];g[1]=h-g[1]}else 0<this._timings.length&&(g=this._timings[this._timings.length-1],g[1]=h-g[1]);this._frameIndex>=this._frameTimings.length?this._frameTimings.push([d,h]):(g=this._frameTimings[this._frameIndex],g[0]=d,g[1]=h);this._frameIndex++}});Object.defineProperty(m.prototype,"timings",{get:function(){return this._timings.slice(0,-1).map(function(d){return d[1]})}});
-return{CpuTimer:m}}());Object.assign(pc,function(){var m=function(d){this._gl=d.graphicsDevice.gl;this._ext=d.graphicsDevice.extDisjointTimerQuery;this._freeQueries=[];this._frameQueries=[];this._frames=[];this._timings=[];this._prevTimings=[];d.on("frameupdate",this.begin.bind(this,"update"));d.on("framerender",this.mark.bind(this,"render"));d.on("frameend",this.end.bind(this))};Object.assign(m.prototype,{begin:function(d){0<this._frameQueries.length&&this.end();this._checkDisjoint();if(0<this._frames.length&&this._resolveFrameTimings(this._frames[0],
-this._prevTimings)){var h=this._prevTimings;this._prevTimings=this._timings;this._timings=h;this._freeQueries=this._freeQueries.concat(this._frames.splice(0,1)[0])}this.mark(d)},mark:function(d){0<this._frameQueries.length&&this._gl.endQuery(this._ext.TIME_ELAPSED_EXT);var h=this._allocateQuery();h[0]=d;this._gl.beginQuery(this._ext.TIME_ELAPSED_EXT,h[1]);this._frameQueries.push(h)},end:function(){this._gl.endQuery(this._ext.TIME_ELAPSED_EXT);this._frames.push(this._frameQueries);this._frameQueries=
-[]},_checkDisjoint:function(){this._gl.getParameter(this._ext.GPU_DISJOINT_EXT)&&(this._freeQueries=[this._frames,[this._frameQueries],[this._freeQueries]].flat(2),this._frameQueries=[],this._frames=[])},_allocateQuery:function(){return 0<this._freeQueries.length?this._freeQueries.splice(-1,1)[0]:["",this._gl.createQuery()]},_resolveFrameTimings:function(d,h){if(!this._gl.getQueryParameter(d[d.length-1][1],this._gl.QUERY_RESULT_AVAILABLE))return!1;for(var g=0;g<d.length;++g)h[g]=[d[g][0],1E-6*this._gl.getQueryParameter(d[g][1],
-this._gl.QUERY_RESULT)];return!0}});Object.defineProperty(m.prototype,"timings",{get:function(){return this._timings.map(function(d){return d[1]})}});return{GpuTimer:m}}());Object.assign(pc,function(){var m=function(b,a){a=a||128;for(var c=new pc.VertexFormat(b,[{semantic:pc.SEMANTIC_POSITION,components:2,type:pc.TYPE_FLOAT32},{semantic:pc.SEMANTIC_TEXCOORD0,components:4,type:pc.TYPE_FLOAT32}]),f=new Uint32Array(6*a),e=0;e<a;++e)f[6*e]=4*e,f[6*e+1]=4*e+1,f[6*e+2]=4*e+2,f[6*e+3]=4*e,f[6*e+4]=4*e+2,f[6*e+5]=4*e+3;this.device=b;this.shader=pc.shaderChunks.createShaderFromCode(b,"attribute vec2 vertex_position;\nattribute vec4 vertex_texCoord0;\nuniform vec4 screenAndTextureSize;\nvarying vec4 uv0;\nvoid main(void) {\n    vec2 pos = vertex_position.xy / screenAndTextureSize.xy;\n    gl_Position = vec4(pos * 2.0 - 1.0, 0.5, 1.0);\n    uv0 = vec4(vertex_texCoord0.xy / screenAndTextureSize.zw, vertex_texCoord0.zw);\n}\n",
-"varying vec4 uv0;\nuniform vec4 clr;\nuniform sampler2D source;\nvoid main (void) {\n    vec4 tex = texture2D(source, uv0.xy);\n    if (tex.rgb != vec3(1, 1, 1)) {\n       if (uv0.w < tex.r)\n           tex = vec4(1.0, 0.3, 0.3, 1.0);\n       else if (uv0.w < tex.g)\n           tex = vec4(0.3, 1.0, 0.3, 1.0);\n       else\n           tex = vec4(0.0, 0.0, 0.0, 1.0);\n    }\n    gl_FragColor = tex * clr;\n}\n","mini-stats");this.buffer=new pc.VertexBuffer(b,c,4*a,pc.BUFFER_STREAM);this.data=new Float32Array(this.buffer.numBytes/
-4);this.indexBuffer=new pc.IndexBuffer(b,pc.INDEXFORMAT_UINT32,6*a,pc.BUFFER_STATIC,f);this.prims=[];this.prim=null;this.primIndex=-1;this.quads=0;this.clrId=b.scope.resolve("clr");this.clr=new Float32Array(4);this.screenTextureSizeId=b.scope.resolve("screenAndTextureSize");this.screenTextureSize=new Float32Array(4)};Object.assign(m.prototype,{quad:function(b,a,c,f,e,d,q,k,l){var p=this.quads++,n=this.prim;n&&n.texture===b?n.count+=6:(this.primIndex++,this.primIndex===this.prims.length?(n={type:pc.PRIMITIVE_TRIANGLES,
-indexed:!0,base:6*p,count:6,texture:b},this.prims.push(n)):(n=this.prims[this.primIndex],n.base=6*p,n.count=6,n.texture=b),this.prim=n);b=a+f;n=c+e;f=d+(void 0===k?f:k);e=q+(void 0===l?e:l);this.data.set([a,c,d,q,0,0,b,c,f,q,1,0,b,n,f,e,1,1,a,n,d,e,0,1],24*p)},render:function(b){var a=this.device,c=this.buffer;c.setData(this.data.buffer);a.updateBegin();a.setDepthTest(!1);a.setDepthWrite(!1);a.setCullMode(pc.CULLFACE_NONE);a.setBlending(!0);a.setBlendFunctionSeparate(pc.BLENDMODE_SRC_ALPHA,pc.BLENDMODE_ONE_MINUS_SRC_ALPHA,
-pc.BLENDMODE_ONE,pc.BLENDMODE_ONE);a.setBlendEquationSeparate(pc.BLENDEQUATION_ADD,pc.BLENDEQUATION_ADD);a.setVertexBuffer(c,0);a.setIndexBuffer(this.indexBuffer);a.setShader(this.shader);c=Math.min(a.maxPixelRatio,window.devicePixelRatio);this.clr.set(b,0);this.clrId.setValue(this.clr);this.screenTextureSize[0]=a.width/c;this.screenTextureSize[1]=a.height/c;for(b=0;b<=this.primIndex;++b)c=this.prims[b],this.screenTextureSize[2]=c.texture.width,this.screenTextureSize[3]=c.texture.height,this.screenTextureSizeId.setValue(this.screenTextureSize),
-a.constantTexSource.setValue(c.texture),a.draw(c);a.updateEnd();this.prim=null;this.primIndex=-1;this.quads=0}});var d=function(b,a){var c=document.createElement("canvas");c.width=b.width;c.height=b.height;var f=c.getContext("2d",{alpha:!0});f.font='10px "Lucida Console", Monaco, monospace';f.textAlign="left";f.textBaseline="alphabetic";f.fillStyle="rgb(255, 255, 255)";var e=5,d=5,q=[],k;for(k=0;k<a.length;++k){var l=f.measureText(a[k]),h=Math.ceil(-l.actualBoundingBoxLeft),n=Math.ceil(l.actualBoundingBoxRight),
-g=Math.ceil(l.actualBoundingBoxAscent);l=Math.ceil(l.actualBoundingBoxDescent);var m=h+n,r=g+l;e+m>=c.width&&(e=5,d+=16);f.fillText(a[k],e-h,d+g);q.push({l:h,r:n,a:g,d:l,x:e,y:d,w:m,h:r});e+=m+5}var t={};a.forEach(function(a,b){t[a]=b});this.words=a;this.wordMap=t;this.placements=q;this.texture=b;a=f.getImageData(0,0,c.width,c.height);c=b.lock();for(d=0;d<a.height;++d)for(e=0;e<a.width;++e)f=4*(e+d*b.width),c[f]=255,c[f+1]=255,c[f+2]=255,c[f+3]=a.data[4*(e+(a.height-1-d)*a.width)+3]};Object.assign(d.prototype,
-{render:function(b,a,c,d){return(a=this.placements[this.wordMap[a]])?(b.quad(this.texture,c+a.l-1,d-a.d+1,a.w+2,a.h+2,a.x-1,64-a.y-a.h-1),a.w):0}});var h=function(b,a,c,d,e){this.name=b;this.device=a.graphicsDevice;this.timer=c;this.enabled=!1;this.avgCount=this.avgTimer=this.avgTotal=0;this.timingText="";this.texture=d;this.yOffset=e;this.cursor=0;this.sample=new Uint8Array(4);this.sample.set([0,0,0,255]);a.on("frameupdate",this.update.bind(this));this.counter=0};Object.assign(h.prototype,{update:function(b){var a=
-this.timer.timings,c=a.reduce(function(a,b){return a+b},0);this.avgTotal+=c;this.avgTimer+=b;this.avgCount++;1E3<this.avgTimer&&(this.timingText=(this.avgTotal/this.avgCount).toFixed(1),this.avgCount=this.avgTotal=this.avgTimer=0);if(this.enabled){for(c=b=0;c<a.length;++c)b=Math.min(255,b+Math.floor(5.3125*a[c])),this.sample[c]=b;a=this.device.gl;this.device.bindTexture(this.texture);a.texSubImage2D(a.TEXTURE_2D,0,this.cursor,this.yOffset,1,1,a.RGBA,a.UNSIGNED_BYTE,this.sample);this.cursor++;this.cursor===
-this.texture.width&&(this.cursor=0)}},render:function(b,a,c,d,e){b.quad(this.texture,a+d,c,-d,e,this.cursor,.5+(this.enabled?this.yOffset:0),-d,0)}});var g=function(b){this.ms=0;var a=this;b.on("frameupdate",function(b){a.ms=b})};Object.defineProperty(g.prototype,"timings",{get:function(){return[this.ms]}});var r=function(b){for(var a=b.graphicsDevice,c=new pc.Texture(a,{name:"mini-stats",width:256,height:32,mipmaps:!1,minFilter:pc.FILTER_NEAREST,magFilter:pc.FILTER_NEAREST}),f=new d(c,"Frame CPU GPU ms 0 1 2 3 4 5 6 7 8 9 .".split(" ")),
-e=c.lock(),p=0;p<4*c.width;++p)e.set([0,0,0,255],4*p);c.unlock();e=[new h("Frame",b,new g(b),c,1),new h("CPU",b,new pc.CpuTimer(b),c,2)];a.extDisjointTimerQuery&&e.push(new h("GPU",b,new pc.GpuTimer(b),c,3));var q=[{width:100,height:16,graphs:!1},{width:128,height:32,graphs:!0},{width:256,height:64,graphs:!0}],k=0,l=this;p=document.createElement("div");p.style.cssText="position:fixed;bottom:0;left:0;background:transparent;";document.body.appendChild(p);p.addEventListener("mouseenter",function(a){l.opacity=
-1});p.addEventListener("mouseleave",function(a){l.opacity=.5});p.addEventListener("click",function(a){a.preventDefault();l.enabled&&(k=(k+1)%q.length,l.resize(q[k].width,q[k].height,q[k].graphs))});a.on("resizecanvas",function(){l.updateDiv()});b.on("postrender",function(){l.enabled&&l.render()});this.device=a;this.texture=c;this.wordAtlas=f;this.render2d=new m(a);this.graphs=e;this.div=p;this.height=this.width=0;this.gspacing=2;this.clr=[1,1,1,.5];this.enabled=!0;this.resize(q[k].width,q[k].height,
-q[k].graphs)};Object.defineProperties(r.prototype,{opacity:{get:function(){return this.clr[3]},set:function(b){this.clr[3]=b}},overallHeight:{get:function(){var b=this.graphs;return this.height*b.length+this.gspacing*(b.length-1)}}});Object.assign(r.prototype,{render:function(){var b=this.graphs,a=this.wordAtlas,c=this.render2d,d=this.width,e=this.height,h=this.gspacing,g;for(g=0;g<b.length;++g){var k=b[g];var l=g*(e+h);k.render(c,0,l,d,e);var m=1;l+=e-13;m+=a.render(c,k.name,m,l)+10;var n=k.timingText;
-for(k=0;k<n.length;++k)m+=a.render(c,n[k],m,l);a.render(c,"ms",m,l)}c.render(this.clr)},resize:function(b,a,c){for(var d=this.graphs,e=0;e<d.length;++e)d[e].enabled=c;this.width=b;this.height=a;this.updateDiv()},updateDiv:function(){var b=this.device.canvas.getBoundingClientRect();this.div.style.left=b.left+"px";this.div.style.bottom=window.innerHeight-b.bottom+"px";this.div.style.width=this.width+"px";this.div.style.height=this.overallHeight+"px"}});return{MiniStats:r}}());
+	function _defineProperties(target, props) {
+	  for (var i = 0; i < props.length; i++) {
+	    var descriptor = props[i];
+	    descriptor.enumerable = descriptor.enumerable || false;
+	    descriptor.configurable = true;
+	    if ("value" in descriptor) descriptor.writable = true;
+	    Object.defineProperty(target, descriptor.key, descriptor);
+	  }
+	}
 
-return pc;
-}));
+	function _createClass(Constructor, protoProps, staticProps) {
+	  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+	  if (staticProps) _defineProperties(Constructor, staticProps);
+	  return Constructor;
+	}
 
+	var CpuTimer = function () {
+		function CpuTimer(app) {
+			this._frameIndex = 0;
+			this._frameTimings = [];
+			this._timings = [];
+			this._prevTimings = [];
+			this.unitsName = "ms";
+			this.decimalPlaces = 1;
+			this.enabled = true;
+			app.on('frameupdate', this.begin.bind(this, 'update'));
+			app.on('framerender', this.mark.bind(this, 'render'));
+			app.on('frameend', this.mark.bind(this, 'other'));
+		}
+
+		var _proto = CpuTimer.prototype;
+
+		_proto.begin = function begin(name) {
+			if (!this.enabled) {
+				return;
+			}
+
+			if (this._frameIndex < this._frameTimings.length) {
+				this._frameTimings.splice(this._frameIndex);
+			}
+
+			var tmp = this._prevTimings;
+			this._prevTimings = this._timings;
+			this._timings = this._frameTimings;
+			this._frameTimings = tmp;
+			this._frameIndex = 0;
+			this.mark(name);
+		};
+
+		_proto.mark = function mark(name) {
+			if (!this.enabled) {
+				return;
+			}
+
+			var timestamp = pc.now();
+			var prev;
+
+			if (this._frameIndex > 0) {
+				prev = this._frameTimings[this._frameIndex - 1];
+				prev[1] = timestamp - prev[1];
+			} else if (this._timings.length > 0) {
+				prev = this._timings[this._timings.length - 1];
+				prev[1] = timestamp - prev[1];
+			}
+
+			if (this._frameIndex >= this._frameTimings.length) {
+				this._frameTimings.push([name, timestamp]);
+			} else {
+				var timing = this._frameTimings[this._frameIndex];
+				timing[0] = name;
+				timing[1] = timestamp;
+			}
+
+			this._frameIndex++;
+		};
+
+		_createClass(CpuTimer, [{
+			key: "timings",
+			get: function get() {
+				return this._timings.slice(0, -1).map(function (v) {
+					return v[1];
+				});
+			}
+		}]);
+
+		return CpuTimer;
+	}();
+
+	var GpuTimer = function () {
+		function GpuTimer(app) {
+			this._gl = app.graphicsDevice.gl;
+			this._ext = app.graphicsDevice.extDisjointTimerQuery;
+			this._freeQueries = [];
+			this._frameQueries = [];
+			this._frames = [];
+			this._timings = [];
+			this._prevTimings = [];
+			this.enabled = true;
+			this.unitsName = "ms";
+			this.decimalPlaces = 1;
+			app.on('frameupdate', this.begin.bind(this, 'update'));
+			app.on('framerender', this.mark.bind(this, 'render'));
+			app.on('frameend', this.end.bind(this));
+		}
+
+		var _proto = GpuTimer.prototype;
+
+		_proto.loseContext = function loseContext() {
+			this._freeQueries = [];
+			this._frameQueries = [];
+			this._frames = [];
+		};
+
+		_proto.begin = function begin(name) {
+			if (!this.enabled) {
+				return;
+			}
+
+			if (this._frameQueries.length > 0) {
+				this.end();
+			}
+
+			this._checkDisjoint();
+
+			if (this._frames.length > 0) {
+				if (this._resolveFrameTimings(this._frames[0], this._prevTimings)) {
+					var tmp = this._prevTimings;
+					this._prevTimings = this._timings;
+					this._timings = tmp;
+					this._freeQueries = this._freeQueries.concat(this._frames.splice(0, 1)[0]);
+				}
+			}
+
+			this.mark(name);
+		};
+
+		_proto.mark = function mark(name) {
+			if (!this.enabled) {
+				return;
+			}
+
+			if (this._frameQueries.length > 0) {
+				this._gl.endQuery(this._ext.TIME_ELAPSED_EXT);
+			}
+
+			var query = this._allocateQuery();
+
+			query[0] = name;
+
+			this._gl.beginQuery(this._ext.TIME_ELAPSED_EXT, query[1]);
+
+			this._frameQueries.push(query);
+		};
+
+		_proto.end = function end() {
+			if (!this.enabled) {
+				return;
+			}
+
+			this._gl.endQuery(this._ext.TIME_ELAPSED_EXT);
+
+			this._frames.push(this._frameQueries);
+
+			this._frameQueries = [];
+		};
+
+		_proto._checkDisjoint = function _checkDisjoint() {
+			var disjoint = this._gl.getParameter(this._ext.GPU_DISJOINT_EXT);
+
+			if (disjoint) {
+				this._freeQueries = [this._frames, [this._frameQueries], [this._freeQueries]].flat(2);
+				this._frameQueries = [];
+				this._frames = [];
+			}
+		};
+
+		_proto._allocateQuery = function _allocateQuery() {
+			return this._freeQueries.length > 0 ? this._freeQueries.splice(-1, 1)[0] : ["", this._gl.createQuery()];
+		};
+
+		_proto._resolveFrameTimings = function _resolveFrameTimings(frame, timings) {
+			if (!this._gl.getQueryParameter(frame[frame.length - 1][1], this._gl.QUERY_RESULT_AVAILABLE)) {
+				return false;
+			}
+
+			for (var i = 0; i < frame.length; ++i) {
+				timings[i] = [frame[i][0], this._gl.getQueryParameter(frame[i][1], this._gl.QUERY_RESULT) * 0.000001];
+			}
+
+			return true;
+		};
+
+		_createClass(GpuTimer, [{
+			key: "timings",
+			get: function get() {
+				return this._timings.map(function (v) {
+					return v[1];
+				});
+			}
+		}]);
+
+		return GpuTimer;
+	}();
+
+	var StatsTimer = function () {
+		function StatsTimer(app, statNames, decimalPlaces, unitsName, multiplier) {
+			this.app = app;
+			this.values = [];
+			this.statNames = statNames;
+			if (this.statNames.length > 3) this.statNames.length = 3;
+			this.unitsName = unitsName;
+			this.decimalPlaces = decimalPlaces;
+			this.multiplier = multiplier || 1;
+			var self = this;
+
+			function resolve(path, obj) {
+				return path.split('.').reduce(function (prev, curr) {
+					return prev ? prev[curr] : null;
+				}, obj || self);
+			}
+
+			app.on('frameupdate', function (ms) {
+				for (var i = 0; i < self.statNames.length; i++) {
+					self.values[i] = resolve(self.statNames[i], self.app.stats) * self.multiplier;
+				}
+			});
+		}
+
+		_createClass(StatsTimer, [{
+			key: "timings",
+			get: function get() {
+				return this.values;
+			}
+		}]);
+
+		return StatsTimer;
+	}();
+
+	var Graph = function () {
+		function Graph(name, app, watermark, textRefreshRate, timer) {
+			this.name = name;
+			this.device = app.graphicsDevice;
+			this.timer = timer;
+			this.watermark = watermark;
+			this.enabled = false;
+			this.textRefreshRate = textRefreshRate;
+			this.avgTotal = 0;
+			this.avgTimer = 0;
+			this.avgCount = 0;
+			this.timingText = "";
+			this.texture = null;
+			this.yOffset = 0;
+			this.cursor = 0;
+			this.sample = new Uint8ClampedArray(4);
+			this.sample.set([0, 0, 0, 255]);
+			app.on('frameupdate', this.update.bind(this));
+			this.counter = 0;
+		}
+
+		var _proto = Graph.prototype;
+
+		_proto.loseContext = function loseContext() {
+			if (this.timer && typeof this.timer.loseContext === 'function') {
+				this.timer.loseContext();
+			}
+		};
+
+		_proto.update = function update(ms) {
+			var timings = this.timer.timings;
+			var total = timings.reduce(function (a, v) {
+				return a + v;
+			}, 0);
+			this.avgTotal += total;
+			this.avgTimer += ms;
+			this.avgCount++;
+
+			if (this.avgTimer > this.textRefreshRate) {
+				this.timingText = (this.avgTotal / this.avgCount).toFixed(this.timer.decimalPlaces);
+				this.avgTimer = 0;
+				this.avgTotal = 0;
+				this.avgCount = 0;
+			}
+
+			if (this.enabled) {
+				var value = 0;
+				var range = 1.5 * this.watermark;
+
+				for (var i = 0; i < timings.length; ++i) {
+					value += Math.floor(timings[i] / range * 255);
+					this.sample[i] = value;
+				}
+
+				this.sample[3] = this.watermark / range * 255;
+				var gl = this.device.gl;
+				this.device.bindTexture(this.texture);
+				gl.texSubImage2D(gl.TEXTURE_2D, 0, this.cursor, this.yOffset, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, this.sample);
+				this.cursor++;
+
+				if (this.cursor === this.texture.width) {
+					this.cursor = 0;
+				}
+			}
+		};
+
+		_proto.render = function render(render2d, x, y, w, h) {
+			render2d.quad(this.texture, x + w, y, -w, h, this.cursor, 0.5 + this.yOffset, -w, 0, this.enabled);
+		};
+
+		return Graph;
+	}();
+
+	var WordAtlas = function () {
+		function WordAtlas(texture, words) {
+			var canvas = document.createElement('canvas');
+			canvas.width = texture.width;
+			canvas.height = texture.height;
+			var context = canvas.getContext('2d', {
+				alpha: true
+			});
+			context.font = '10px "Lucida Console", Monaco, monospace';
+			context.textAlign = "left";
+			context.textBaseline = "alphabetic";
+			context.fillStyle = "rgb(255, 255, 255)";
+			var padding = 5;
+			var x = padding;
+			var y = padding;
+			var placements = [];
+			var i;
+
+			for (i = 0; i < words.length; ++i) {
+				var measurement = context.measureText(words[i]);
+				var l = Math.ceil(-measurement.actualBoundingBoxLeft);
+				var r = Math.ceil(measurement.actualBoundingBoxRight);
+				var a = Math.ceil(measurement.actualBoundingBoxAscent);
+				var d = Math.ceil(measurement.actualBoundingBoxDescent);
+				var w = l + r;
+				var h = a + d;
+
+				if (x + w >= canvas.width) {
+					x = padding;
+					y += 16;
+				}
+
+				context.fillStyle = words[i].length === 1 ? "rgb(255, 255, 255)" : "rgb(150, 150, 150)";
+				context.fillText(words[i], x - l, y + a);
+				placements.push({
+					l: l,
+					r: r,
+					a: a,
+					d: d,
+					x: x,
+					y: y,
+					w: w,
+					h: h
+				});
+				x += w + padding;
+			}
+
+			var wordMap = {};
+			words.forEach(function (w, i) {
+				wordMap[w] = i;
+			});
+			this.words = words;
+			this.wordMap = wordMap;
+			this.placements = placements;
+			this.texture = texture;
+			var source = context.getImageData(0, 0, canvas.width, canvas.height);
+			var dest = texture.lock();
+			var red, alpha;
+
+			for (y = 0; y < source.height; ++y) {
+				for (x = 0; x < source.width; ++x) {
+					var offset = (x + y * texture.width) * 4;
+					dest[offset] = 255;
+					dest[offset + 1] = 255;
+					dest[offset + 2] = 255;
+					red = source.data[(x + (source.height - 1 - y) * source.width) * 4];
+					alpha = source.data[(x + (source.height - 1 - y) * source.width) * 4 + 3];
+					dest[offset + 3] = alpha * (red > 150 ? 1 : 0.7);
+				}
+			}
+		}
+
+		var _proto = WordAtlas.prototype;
+
+		_proto.render = function render(render2d, word, x, y) {
+			var p = this.placements[this.wordMap[word]];
+
+			if (p) {
+				var padding = 1;
+				render2d.quad(this.texture, x + p.l - padding, y - p.d + padding, p.w + padding * 2, p.h + padding * 2, p.x - padding, 64 - p.y - p.h - padding, undefined, undefined, true);
+				return p.w;
+			}
+
+			return 0;
+		};
+
+		return WordAtlas;
+	}();
+
+	var Render2d = function () {
+		function Render2d(device, colors, maxQuads) {
+			if (maxQuads === void 0) {
+				maxQuads = 512;
+			}
+
+			var vertexShader = 'attribute vec3 vertex_position;\n' + 'attribute vec4 vertex_texCoord0;\n' + 'uniform vec4 screenAndTextureSize;\n' + 'varying vec4 uv0;\n' + 'varying float enabled;\n' + 'void main(void) {\n' + '		vec2 pos = vertex_position.xy / screenAndTextureSize.xy;\n' + '		gl_Position = vec4(pos * 2.0 - 1.0, 0.5, 1.0);\n' + '		uv0 = vec4(vertex_texCoord0.xy / screenAndTextureSize.zw, vertex_texCoord0.zw);\n' + '		enabled = vertex_position.z;\n' + '}\n';
+			var fragmentShader = 'varying vec4 uv0;\n' + 'varying float enabled;\n' + 'uniform vec4 clr;\n' + 'uniform vec4 col0;\n' + 'uniform vec4 col1;\n' + 'uniform vec4 col2;\n' + 'uniform vec4 watermark;\n' + 'uniform float watermarkSize;\n' + 'uniform vec4 background;\n' + 'uniform sampler2D source;\n' + 'void main (void) {\n' + '		vec4 tex = texture2D(source, uv0.xy);\n' + '		if (!(tex.rgb == vec3(1.0, 1.0, 1.0))) {\n' + '			 if (enabled < 0.5)\n' + '					 tex = background;\n' + '			 else if (abs(uv0.w - tex.a) < watermarkSize)\n' + '					 tex = watermark;\n' + '			 else if (uv0.w < tex.r)\n' + '					 tex = col0;\n' + '			 else if (uv0.w < tex.g)\n' + '					 tex = col1;\n' + '			 else if (uv0.w < tex.b)\n' + '					 tex = col2;\n' + '			 else\n' + '					 tex = background;\n' + '		}\n' + '		gl_FragColor = tex * clr;\n' + '}\n';
+			var format = new pc.VertexFormat(device, [{
+				semantic: pc.SEMANTIC_POSITION,
+				components: 3,
+				type: pc.TYPE_FLOAT32
+			}, {
+				semantic: pc.SEMANTIC_TEXCOORD0,
+				components: 4,
+				type: pc.TYPE_FLOAT32
+			}]);
+			var indices = new Uint16Array(maxQuads * 6);
+
+			for (var i = 0; i < maxQuads; ++i) {
+				indices[i * 6 + 0] = i * 4;
+				indices[i * 6 + 1] = i * 4 + 1;
+				indices[i * 6 + 2] = i * 4 + 2;
+				indices[i * 6 + 3] = i * 4;
+				indices[i * 6 + 4] = i * 4 + 2;
+				indices[i * 6 + 5] = i * 4 + 3;
+			}
+
+			this.device = device;
+			this.shader = pc.shaderChunks.createShaderFromCode(device, vertexShader, fragmentShader, "mini-stats");
+			this.buffer = new pc.VertexBuffer(device, format, maxQuads * 4, pc.BUFFER_STREAM);
+			this.data = new Float32Array(this.buffer.numBytes / 4);
+			this.indexBuffer = new pc.IndexBuffer(device, pc.INDEXFORMAT_UINT16, maxQuads * 6, pc.BUFFER_STATIC, indices);
+			this.prims = [];
+			this.prim = null;
+			this.primIndex = -1;
+			this.quads = 0;
+
+			var setupColor = function (name, value) {
+				this[name] = new Float32Array([value.r, value.g, value.b, value.a]);
+				this[name + "Id"] = device.scope.resolve(name);
+			}.bind(this);
+
+			setupColor("col0", colors.graph0);
+			setupColor("col1", colors.graph1);
+			setupColor("col2", colors.graph2);
+			setupColor("watermark", colors.watermark);
+			setupColor("background", colors.background);
+			this.watermarkSizeId = device.scope.resolve('watermarkSize');
+			this.clrId = device.scope.resolve('clr');
+			this.clr = new Float32Array(4);
+			this.screenTextureSizeId = device.scope.resolve('screenAndTextureSize');
+			this.screenTextureSize = new Float32Array(4);
+		}
+
+		var _proto = Render2d.prototype;
+
+		_proto.quad = function quad(texture, x, y, w, h, u, v, uw, uh, enabled) {
+			var quad = this.quads++;
+			var prim = this.prim;
+
+			if (prim && prim.texture === texture) {
+				prim.count += 6;
+			} else {
+				this.primIndex++;
+
+				if (this.primIndex === this.prims.length) {
+					prim = {
+						type: pc.PRIMITIVE_TRIANGLES,
+						indexed: true,
+						base: quad * 6,
+						count: 6,
+						texture: texture
+					};
+					this.prims.push(prim);
+				} else {
+					prim = this.prims[this.primIndex];
+					prim.base = quad * 6;
+					prim.count = 6;
+					prim.texture = texture;
+				}
+
+				this.prim = prim;
+			}
+
+			var x1 = x + w;
+			var y1 = y + h;
+			var u1 = u + (uw === undefined ? w : uw);
+			var v1 = v + (uh === undefined ? h : uh);
+			var colorize = enabled ? 1 : 0;
+			this.data.set([x, y, colorize, u, v, 0, 0, x1, y, colorize, u1, v, 1, 0, x1, y1, colorize, u1, v1, 1, 1, x, y1, colorize, u, v1, 0, 1], 4 * 7 * quad);
+		};
+
+		_proto.render = function render(clr, height) {
+			var device = this.device;
+			var buffer = this.buffer;
+			buffer.setData(this.data.buffer);
+			device.updateBegin();
+			device.setDepthTest(false);
+			device.setDepthWrite(false);
+			device.setCullMode(pc.CULLFACE_NONE);
+			device.setBlending(true);
+			device.setBlendFunctionSeparate(pc.BLENDMODE_SRC_ALPHA, pc.BLENDMODE_ONE_MINUS_SRC_ALPHA, pc.BLENDMODE_ONE, pc.BLENDMODE_ONE);
+			device.setBlendEquationSeparate(pc.BLENDEQUATION_ADD, pc.BLENDEQUATION_ADD);
+			device.setVertexBuffer(buffer, 0);
+			device.setIndexBuffer(this.indexBuffer);
+			device.setShader(this.shader);
+			var pr = Math.min(device.maxPixelRatio, window.devicePixelRatio);
+			this.clr.set(clr, 0);
+			this.clrId.setValue(this.clr);
+			this.screenTextureSize[0] = device.width / pr;
+			this.screenTextureSize[1] = device.height / pr;
+			this.col0Id.setValue(this.col0);
+			this.col1Id.setValue(this.col1);
+			this.col2Id.setValue(this.col2);
+			this.watermarkId.setValue(this.watermark);
+			this.backgroundId.setValue(this.background);
+
+			for (var i = 0; i <= this.primIndex; ++i) {
+				var prim = this.prims[i];
+				this.screenTextureSize[2] = prim.texture.width;
+				this.screenTextureSize[3] = prim.texture.height;
+				this.screenTextureSizeId.setValue(this.screenTextureSize);
+				device.constantTexSource.setValue(prim.texture);
+				this.watermarkSizeId.setValue(0.5 / height);
+				device.draw(prim);
+			}
+
+			device.updateEnd();
+			this.prim = null;
+			this.primIndex = -1;
+			this.quads = 0;
+		};
+
+		return Render2d;
+	}();
+
+	var MiniStats = function () {
+		function MiniStats(app, options) {
+			var device = app.graphicsDevice;
+
+			this._contextLostHandler = function (event) {
+				event.preventDefault();
+
+				if (this.graphs) {
+					for (var i = 0; i < this.graphs.length; i++) {
+						this.graphs[i].loseContext();
+					}
+				}
+			}.bind(this);
+
+			device.canvas.addEventListener("webglcontextlost", this._contextLostHandler, false);
+			options = options || MiniStats.getDefaultOptions();
+			var graphs = this.initGraphs(app, device, options);
+			var words = ["", "ms", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
+			graphs.forEach(function (graph) {
+				words.push(graph.name);
+			});
+
+			if (options.stats) {
+				options.stats.forEach(function (stat) {
+					if (stat.unitsName) words.push(stat.unitsName);
+				});
+			}
+
+			words = words.filter(function (item, index) {
+				return words.indexOf(item) >= index;
+			});
+			var maxWidth = options.sizes.reduce(function (max, v) {
+				return v.width > max ? v.width : max;
+			}, 0);
+			var wordAtlasData = this.initWordAtlas(device, words, maxWidth, graphs.length);
+			var texture = wordAtlasData.texture;
+			graphs.forEach(function (graph, i) {
+				graph.texture = texture;
+				graph.yOffset = i;
+			});
+			this.sizes = options.sizes;
+			this._activeSizeIndex = options.startSizeIndex;
+			var self = this;
+			var div = document.createElement('div');
+			div.style.cssText = 'position:fixed;bottom:0;left:0;background:transparent;';
+			document.body.appendChild(div);
+			div.addEventListener('mouseenter', function (event) {
+				self.opacity = 1.0;
+			});
+			div.addEventListener('mouseleave', function (event) {
+				self.opacity = 0.5;
+			});
+			div.addEventListener('click', function (event) {
+				event.preventDefault();
+
+				if (self._enabled) {
+					self.activeSizeIndex = (self.activeSizeIndex + 1) % self.sizes.length;
+					self.resize(self.sizes[self.activeSizeIndex].width, self.sizes[self.activeSizeIndex].height, self.sizes[self.activeSizeIndex].graphs);
+				}
+			});
+			device.on("resizecanvas", function () {
+				self.updateDiv();
+			});
+			app.on('postrender', function () {
+				if (self._enabled) {
+					self.render();
+				}
+			});
+			this.device = device;
+			this.texture = texture;
+			this.wordAtlas = wordAtlasData.atlas;
+			this.render2d = new Render2d(device, options.colors);
+			this.graphs = graphs;
+			this.div = div;
+			this.width = 0;
+			this.height = 0;
+			this.gspacing = 2;
+			this.clr = [1, 1, 1, 0.5];
+			this._enabled = true;
+			this.activeSizeIndex = this._activeSizeIndex;
+		}
+
+		MiniStats.getDefaultOptions = function getDefaultOptions() {
+			return {
+				sizes: [{
+					width: 100,
+					height: 16,
+					spacing: 0,
+					graphs: false
+				}, {
+					width: 128,
+					height: 32,
+					spacing: 2,
+					graphs: true
+				}, {
+					width: 256,
+					height: 64,
+					spacing: 2,
+					graphs: true
+				}],
+				startSizeIndex: 0,
+				textRefreshRate: 500,
+				colors: {
+					graph0: new pc.Color(0.7, 0.2, 0.2, 1),
+					graph1: new pc.Color(0.2, 0.7, 0.2, 1),
+					graph2: new pc.Color(0.2, 0.2, 0.7, 1),
+					watermark: new pc.Color(0.4, 0.4, 0.2, 1),
+					background: new pc.Color(0, 0, 0, 1.0)
+				},
+				cpu: {
+					enabled: true,
+					watermark: 33
+				},
+				gpu: {
+					enabled: true,
+					watermark: 33
+				},
+				stats: [{
+					name: "Frame",
+					stats: ["frame.ms"],
+					decimalPlaces: 1,
+					unitsName: "ms",
+					watermark: 33
+				}, {
+					name: "DrawCalls",
+					stats: ["drawCalls.total"],
+					watermark: 1000
+				}]
+			};
+		};
+
+		var _proto = MiniStats.prototype;
+
+		_proto.initWordAtlas = function initWordAtlas(device, words, maxWidth, numGraphs) {
+			var texture = new pc.Texture(device, {
+				name: 'mini-stats',
+				width: pc.math.nextPowerOfTwo(maxWidth),
+				height: 64,
+				mipmaps: false,
+				minFilter: pc.FILTER_NEAREST,
+				magFilter: pc.FILTER_NEAREST
+			});
+			var wordAtlas = new WordAtlas(texture, words);
+			var dest = texture.lock();
+
+			for (var i = 0; i < texture.width * numGraphs; ++i) {
+				dest.set([0, 0, 0, 255], i * 4);
+			}
+
+			texture.unlock();
+			device.setTexture(texture, 0);
+			return {
+				atlas: wordAtlas,
+				texture: texture
+			};
+		};
+
+		_proto.initGraphs = function initGraphs(app, device, options) {
+			var graphs = [];
+
+			if (options.cpu.enabled) {
+				graphs.push(new Graph('CPU', app, options.cpu.watermark, options.textRefreshRate, new CpuTimer(app)));
+			}
+
+			if (options.gpu.enabled && device.extDisjointTimerQuery) {
+				graphs.push(new Graph('GPU', app, options.gpu.watermark, options.textRefreshRate, new GpuTimer(app)));
+			}
+
+			if (options.stats) {
+				options.stats.forEach(function (entry) {
+					graphs.push(new Graph(entry.name, app, entry.watermark, options.textRefreshRate, new StatsTimer(app, entry.stats, entry.decimalPlaces, entry.unitsName, entry.multiplier)));
+				});
+			}
+
+			return graphs;
+		};
+
+		_proto.render = function render() {
+			var graphs = this.graphs;
+			var wordAtlas = this.wordAtlas;
+			var render2d = this.render2d;
+			var width = this.width;
+			var height = this.height;
+			var gspacing = this.gspacing;
+			var i, j, x, y, graph;
+
+			for (i = 0; i < graphs.length; ++i) {
+				graph = graphs[i];
+				y = i * (height + gspacing);
+				graph.render(render2d, 0, y, width, height);
+				x = 1;
+				y += height - 13;
+				x += wordAtlas.render(render2d, graph.name, x, y) + 10;
+				var timingText = graph.timingText;
+
+				for (j = 0; j < timingText.length; ++j) {
+					x += wordAtlas.render(render2d, timingText[j], x, y);
+				}
+
+				if (graph.timer.unitsName) {
+					x += 3;
+					wordAtlas.render(render2d, graph.timer.unitsName, x, y);
+				}
+			}
+
+			render2d.render(this.clr, height);
+		};
+
+		_proto.resize = function resize(width, height, showGraphs) {
+			var graphs = this.graphs;
+
+			for (var i = 0; i < graphs.length; ++i) {
+				graphs[i].enabled = showGraphs;
+			}
+
+			this.width = width;
+			this.height = height;
+			this.updateDiv();
+		};
+
+		_proto.updateDiv = function updateDiv() {
+			var rect = this.device.canvas.getBoundingClientRect();
+			this.div.style.left = rect.left + "px";
+			this.div.style.bottom = window.innerHeight - rect.bottom + "px";
+			this.div.style.width = this.width + "px";
+			this.div.style.height = this.overallHeight + "px";
+		};
+
+		_createClass(MiniStats, [{
+			key: "activeSizeIndex",
+			get: function get() {
+				return this._activeSizeIndex;
+			},
+			set: function set(value) {
+				this._activeSizeIndex = value;
+				this.gspacing = this.sizes[value].spacing;
+				this.resize(this.sizes[value].width, this.sizes[value].height, this.sizes[value].graphs);
+			}
+		}, {
+			key: "opacity",
+			get: function get() {
+				return this.clr[3];
+			},
+			set: function set(value) {
+				this.clr[3] = value;
+			}
+		}, {
+			key: "overallHeight",
+			get: function get() {
+				var graphs = this.graphs;
+				var spacing = this.gspacing;
+				return this.height * graphs.length + spacing * (graphs.length - 1);
+			}
+		}, {
+			key: "enabled",
+			get: function get() {
+				return this._enabled;
+			},
+			set: function set(value) {
+				if (value !== this._enabled) {
+					this._enabled = value;
+
+					for (var i = 0; i < this.graphs.length; ++i) {
+						this.graphs[i].enabled = value;
+						this.graphs[i].timer.enabled = value;
+					}
+				}
+			}
+		}]);
+
+		return MiniStats;
+	}();
+
+	exports.MiniStats = MiniStats;
+
+	Object.defineProperty(exports, '__esModule', { value: true });
+
+})));

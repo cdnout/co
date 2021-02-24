@@ -1,3 +1,9 @@
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /**
  * Copyright (c) Nicolas Gallagher.
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -11,6 +17,7 @@ import * as React from 'react';
 import { forwardRef, useContext, useRef } from 'react';
 import createElement from '../createElement';
 import css from '../StyleSheet/css';
+import * as forwardedProps from '../../modules/forwardedProps';
 import pick from '../../modules/pick';
 import useElementLayout from '../../modules/useElementLayout';
 import useMergeRefs from '../../modules/useMergeRefs';
@@ -18,59 +25,24 @@ import usePlatformMethods from '../../modules/usePlatformMethods';
 import useResponderEvents from '../../modules/useResponderEvents';
 import StyleSheet from '../StyleSheet';
 import TextAncestorContext from '../Text/TextAncestorContext';
-var forwardPropsList = {
-  accessibilityLabel: true,
-  accessibilityLiveRegion: true,
-  accessibilityRole: true,
-  accessibilityState: true,
-  accessibilityValue: true,
-  accessible: true,
-  children: true,
-  classList: true,
-  disabled: true,
-  importantForAccessibility: true,
-  nativeID: true,
-  onBlur: true,
-  onClick: true,
-  onClickCapture: true,
-  onContextMenu: true,
-  onFocus: true,
-  onKeyDown: true,
-  onKeyUp: true,
-  onTouchCancel: true,
-  onTouchCancelCapture: true,
-  onTouchEnd: true,
-  onTouchEndCapture: true,
-  onTouchMove: true,
-  onTouchMoveCapture: true,
-  onTouchStart: true,
-  onTouchStartCapture: true,
-  pointerEvents: true,
-  ref: true,
-  style: true,
-  testID: true,
-  // unstable
-  dataSet: true,
-  onMouseDown: true,
-  onMouseEnter: true,
-  onMouseLeave: true,
-  onMouseMove: true,
-  onMouseOver: true,
-  onMouseOut: true,
-  onMouseUp: true,
+
+var forwardPropsList = _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, forwardedProps.defaultProps), forwardedProps.accessibilityProps), forwardedProps.clickProps), forwardedProps.focusProps), forwardedProps.keyboardProps), forwardedProps.mouseProps), forwardedProps.touchProps), forwardedProps.styleProps), {}, {
+  href: true,
+  lang: true,
   onScroll: true,
   onWheel: true,
-  href: true,
-  rel: true,
-  target: true
-};
+  pointerEvents: true
+});
 
 var pickProps = function pickProps(props) {
   return pick(props, forwardPropsList);
 };
 
-var View = forwardRef(function (props, forwardedRef) {
-  var onLayout = props.onLayout,
+var View =
+/*#__PURE__*/
+forwardRef(function (props, forwardedRef) {
+  var hrefAttrs = props.hrefAttrs,
+      onLayout = props.onLayout,
       onMoveShouldSetResponder = props.onMoveShouldSetResponder,
       onMoveShouldSetResponderCapture = props.onMoveShouldSetResponderCapture,
       onResponderEnd = props.onResponderEnd,
@@ -121,6 +93,25 @@ var View = forwardRef(function (props, forwardedRef) {
   var supportedProps = pickProps(props);
   supportedProps.classList = classList;
   supportedProps.style = style;
+
+  if (props.href != null && hrefAttrs != null) {
+    var download = hrefAttrs.download,
+        rel = hrefAttrs.rel,
+        target = hrefAttrs.target;
+
+    if (download != null) {
+      supportedProps.download = download;
+    }
+
+    if (rel != null) {
+      supportedProps.rel = rel;
+    }
+
+    if (typeof target === 'string' && target.charAt(0) !== '_') {
+      supportedProps.target = '_' + target;
+    }
+  }
+
   var platformMethodsRef = usePlatformMethods(supportedProps);
   var setRef = useMergeRefs(hostRef, platformMethodsRef, forwardedRef);
   supportedProps.ref = setRef;

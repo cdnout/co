@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.SerialDisposable = exports.CompositeDisposable = exports.Disposable = void 0;
 
-var _js_utils = require("../utils/js_utils");
+var _utils = require("./utils");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -18,76 +18,70 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
  * @param {Function} action Action to run during the first call to dispose.
  * The action is guaranteed to be run at most once.
  */
-var Disposable =
-/** @class */
-function () {
-  var Disposable = /*#__PURE__*/function () {
-    function Disposable(action) {
-      _classCallCheck(this, Disposable);
+var Disposable = /*#__PURE__*/function () {
+  function Disposable(action) {
+    _classCallCheck(this, Disposable);
 
-      this.isDisposed = false;
-      this.action = (0, _js_utils.isFunction)(action) ? action : _js_utils.noop;
-    }
-    /**
-     * Validates whether the given object is a disposable
-     * @param {Object} Object to test whether it has a dispose method
-     * @returns {Boolean} true if a disposable object, else false.
-     */
-
-
-    _createClass(Disposable, [{
-      key: "dispose",
-
-      /** Performs the task of cleaning up resources. */
-      value: function dispose() {
-        if (!this.isDisposed) {
-          this.action();
-          this.isDisposed = true;
-        }
-      }
-    }], [{
-      key: "isDisposable",
-      value: function isDisposable(d) {
-        return Boolean(d && (0, _js_utils.isFunction)(d.dispose));
-      }
-    }, {
-      key: "_fixup",
-      value: function _fixup(result) {
-        return Disposable.isDisposable(result) ? result : Disposable.empty;
-      }
-      /**
-       * Creates a disposable object that invokes the specified action when disposed.
-       * @param {Function} dispose Action to run during the first call to dispose.
-       * The action is guaranteed to be run at most once.
-       * @return {Disposable} The disposable object that runs the given action upon disposal.
-       */
-
-    }, {
-      key: "create",
-      value: function create(action) {
-        return new Disposable(action);
-      }
-    }]);
-
-    return Disposable;
-  }();
+    this.isDisposed = false;
+    this.action = (0, _utils.isFunction)(action) ? action : _utils.noop;
+  }
   /**
-   * Gets the disposable that does nothing when disposed.
+   * Validates whether the given object is a disposable
+   * @param {Object} Object to test whether it has a dispose method
+   * @returns {Boolean} true if a disposable object, else false.
    */
 
 
-  Disposable.empty = {
-    dispose: _js_utils.noop
-  };
+  _createClass(Disposable, [{
+    key: "dispose",
+    value:
+    /** Performs the task of cleaning up resources. */
+    function dispose() {
+      if (!this.isDisposed) {
+        this.action();
+        this.isDisposed = true;
+      }
+    }
+  }], [{
+    key: "isDisposable",
+    value: function isDisposable(d) {
+      return Boolean(d && (0, _utils.isFunction)(d.dispose));
+    }
+  }, {
+    key: "_fixup",
+    value: function _fixup(result) {
+      return Disposable.isDisposable(result) ? result : Disposable.empty;
+    }
+    /**
+     * Creates a disposable object that invokes the specified action when disposed.
+     * @param {Function} dispose Action to run during the first call to dispose.
+     * The action is guaranteed to be run at most once.
+     * @return {Disposable} The disposable object that runs the given action upon disposal.
+     */
+
+  }, {
+    key: "create",
+    value: function create(action) {
+      return new Disposable(action);
+    }
+  }]);
+
   return Disposable;
 }();
+/**
+ * Gets the disposable that does nothing when disposed.
+ */
+
 
 exports.Disposable = Disposable;
-
+Disposable.empty = {
+  dispose: _utils.noop
+};
 /**
  * Represents a group of disposable resources that are disposed together.
  * @constructor
  */
+
 var CompositeDisposable = /*#__PURE__*/function () {
   function CompositeDisposable() {
     _classCallCheck(this, CompositeDisposable);

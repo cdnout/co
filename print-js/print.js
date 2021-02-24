@@ -281,12 +281,14 @@ function isRawHTML(raw) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _functions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./functions */ "./src/js/functions.js");
 /* harmony import */ var _print__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./print */ "./src/js/print.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   print: function print(params, printFrame) {
     // Get the DOM printable element
-    var printElement = document.getElementById(params.printable); // Check if the element exists
+    var printElement = isHtmlElement(params.printable) ? params.printable : document.getElementById(params.printable); // Check if the element exists
 
     if (!printElement) {
       window.console.error('Invalid HTML element id: ' + params.printable);
@@ -312,7 +314,7 @@ function cloneElement(element, params) {
   var childNodesArray = Array.prototype.slice.call(element.childNodes);
 
   for (var i = 0; i < childNodesArray.length; i++) {
-    // Check if we are skiping the current element
+    // Check if we are skipping the current element
     if (params.ignoreElements.indexOf(childNodesArray[i].id) !== -1) {
       continue;
     } // Clone the child element
@@ -342,6 +344,11 @@ function cloneElement(element, params) {
   }
 
   return clone;
+}
+
+function isHtmlElement(printable) {
+  // Check if element is instance of HTMLElement or has nodeType === 1 (for elements in iframe)
+  return _typeof(printable) === 'object' && printable && (printable instanceof HTMLElement || printable.nodeType === 1);
 }
 
 /***/ }),
@@ -787,13 +794,13 @@ __webpack_require__.r(__webpack_exports__);
     req.responseType = 'arraybuffer';
     req.addEventListener('error', function () {
       Object(_functions__WEBPACK_IMPORTED_MODULE_1__["cleanUp"])(params);
-      params.onError(req.statusText); // Since we don't have a pdf document available, we will stop the print job
+      params.onError(req.statusText, req); // Since we don't have a pdf document available, we will stop the print job
     });
     req.addEventListener('load', function () {
       // Check for errors
       if ([200, 201].indexOf(req.status) === -1) {
         Object(_functions__WEBPACK_IMPORTED_MODULE_1__["cleanUp"])(params);
-        params.onError(req.statusText); // Since we don't have a pdf document available, we will stop the print job
+        params.onError(req.statusText, req); // Since we don't have a pdf document available, we will stop the print job
 
         return;
       } // Print requested document

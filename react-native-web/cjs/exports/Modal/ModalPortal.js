@@ -43,7 +43,9 @@ function ModalPortal(props) {
       };
     }
   }, []);
-  return elementRef.current && _ExecutionEnvironment.canUseDOM ? _reactDom.default.createPortal(children, elementRef.current) : null;
+  return elementRef.current && _ExecutionEnvironment.canUseDOM ?
+  /*#__PURE__*/
+  _reactDom.default.createPortal(children, elementRef.current) : null;
 }
 
 var _default = ModalPortal;

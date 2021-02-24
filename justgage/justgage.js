@@ -139,6 +139,10 @@
       // color of label showing label under value
       labelFontColor: kvLookup('labelFontColor', config, dataset, "#b3b3b3"),
 
+      // valueFontFamily : string
+      // font-family for label as well as min/max value
+      labelFontFamily: kvLookup('labelFontFamily', config, dataset, "Arial"),
+
       // shadowOpacity : int
       // 0 ~ 1
       shadowOpacity: kvLookup('shadowOpacity', config, dataset, 0.2),
@@ -605,14 +609,14 @@
     obj.gauge = obj.canvas.path().attr({
       "stroke": "none",
       "fill": obj.config.gaugeColor,
-      pki: [ obj.config.max ]
+      pki: [obj.config.max]
     });
 
     // level
     obj.level = obj.canvas.path().attr({
       "stroke": "none",
       "fill": getColor(obj.config.value, (obj.config.value - obj.config.min) / (obj.config.max - obj.config.min), obj.config.levelColors, obj.config.noGradient, obj.config.customSectors),
-      pki: [ obj.config.min ]
+      pki: [obj.config.min]
     });
     if (obj.config.donut) {
       obj.level.transform("r" + obj.config.donutStartAngle + ", " + (obj.params.widgetW / 2 + obj.params.dx) + ", " + (obj.params.widgetH / 2 + obj.params.dy));
@@ -625,7 +629,7 @@
         "stroke-width": !isUndefined(obj.config.pointerOptions.stroke_width) ? obj.config.pointerOptions.stroke_width : 0,
         "stroke-linecap": !isUndefined(obj.config.pointerOptions.stroke_linecap) ? obj.config.pointerOptions.stroke_linecap : "square",
         "fill": !isUndefined(obj.config.pointerOptions.color) ? obj.config.pointerOptions.color : "#000000",
-        ndl: [ obj.config.min ]
+        ndl: [obj.config.min]
       });
 
       if (obj.config.donut) {
@@ -649,7 +653,7 @@
     obj.txtLabel.attr({
       "font-size": obj.params.labelFontSize,
       "font-weight": "normal",
-      "font-family": "Arial",
+      "font-family": obj.config.labelFontFamily,
       "fill": obj.config.labelFontColor,
       "fill-opacity": "0"
     });
@@ -673,7 +677,7 @@
     obj.txtMin.attr({
       "font-size": obj.params.minFontSize,
       "font-weight": "normal",
-      "font-family": "Arial",
+      "font-family": obj.config.labelFontFamily,
       "fill": obj.config.labelFontColor,
       "fill-opacity": (obj.config.hideMinMax || obj.config.donut) ? "0" : "1"
     });
@@ -696,7 +700,7 @@
     obj.txtMax.attr({
       "font-size": obj.params.maxFontSize,
       "font-weight": "normal",
-      "font-family": "Arial",
+      "font-family": obj.config.labelFontFamily,
       "fill": obj.config.labelFontColor,
       "fill-opacity": (obj.config.hideMinMax || obj.config.donut) ? "0" : "1"
     });
@@ -761,7 +765,7 @@
         setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);
       };
 
-      
+
       this.bindEvent("raphael.anim.finish", onFinish)
       this.bindEvent("raphael.anim.frame", onFrame)
 
@@ -783,12 +787,12 @@
       rvl = (obj.config.max * 1) + (obj.config.min * 1) - (obj.config.value * 1);
     }
     obj.level.animate({
-      pki: [ rvl ]
+      pki: [rvl]
     }, obj.config.startAnimationTime, obj.config.startAnimationType, obj.config.onAnimationEnd);
 
     if (obj.config.pointer) {
       obj.needle.animate({
-        ndl: [ rvl ]
+        ndl: [rvl]
       }, obj.config.startAnimationTime, obj.config.startAnimationType);
     }
 
@@ -812,12 +816,12 @@
     eventName += '.' + this.level.id
 
     //check for existing bind events
-    if(this.events[eventName]) 
+    if (this.events[eventName])
       Raphael.eve.off(eventName, this.events[eventName])
-    
+
     Raphael.eve.on(eventName, func);
 
-    this.events[eventName] = func  
+    this.events[eventName] = func
   }
 
 
@@ -834,8 +838,8 @@
     var obj = this;
     var displayVal, color;
 
-    max = max || null;
-    min = min || null;
+    max = isNumber(max) ? max : null
+    min = isNumber(min) ? min : null
     label = label || null;
 
     // set label min
@@ -937,13 +941,13 @@
     }
 
     obj.level.animate({
-      pki: [ rvl ],
+      pki: [rvl],
       "fill": color
     }, obj.config.refreshAnimationTime, obj.config.refreshAnimationType, obj.config.onAnimationEnd);
 
     if (obj.config.pointer) {
       obj.needle.animate({
-        ndl: [ rvl ]
+        ndl: [rvl]
       }, obj.config.refreshAnimationTime, obj.config.refreshAnimationType);
     }
 
@@ -970,7 +974,7 @@
         updateProp(obj, option, val);
       }
 
-    // options as single option/val
+      // options as single option/val
     } else {
       updateProp(obj, options, val);
     }
@@ -1026,7 +1030,7 @@
   JustGage.prototype.destroy = function () {
     if (this.node && this.node.parentNode) this.node.innerHTML = ''
 
-    for(var event in this.events) {
+    for (var event in this.events) {
       Raphael.eve.off(event, this.events[event])
     }
 
@@ -1328,6 +1332,10 @@
 
     return out;
   };
+
+  function isNumber(n) {
+    return n !== null && n !== undefined && !isNaN(n)
+  }
 
   return JustGage
 }));

@@ -406,10 +406,9 @@ meter[property][mv-mode="edit"], progress[property][mv-mode="edit"] {
     transform-origin: top;
     -webkit-animation: inline-message-appear .5s backwards;
     animation: inline-message-appear .5s backwards; }
-  @supports ((position: -webkit-sticky) or (position: sticky)) {
+  @supports (position: sticky) {
     @media (min-width: 600px) and (min-height: 500px) {
       .mv-message.mv-inline {
-        position: -webkit-sticky;
         position: sticky;
         z-index: 2;
         top: 3em; } } }
@@ -445,6 +444,11 @@ meter[property][mv-mode="edit"], progress[property][mv-mode="edit"] {
 time[property][aria-label][mv-mode="edit"].mv-empty::before {
   content: "(No " attr(aria-label) ")"; }
 
+img[property][mv-mode="edit"]:not([alt])[src=""], img[property][mv-mode="edit"]:not([alt]):not([src]) {
+  min-width: 1.2em;
+  min-height: 1.2em;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20version%3D%221.1%22%20viewBox%3D%220%200%20100%20100%22%20fill%3D%22rgb%28200%2C0%2C0%29%22%3E			%3Ctext%20y%3D%221em%22%20font-size%3D%2290%22%3E🖼%3C%2Ftext%3E			%3C%2Fsvg%3E") center/contain no-repeat; }
+
 .mv-bar.mv-ui {
   all: initial;
   visibility: inherit;
@@ -460,9 +464,8 @@ time[property][aria-label][mv-mode="edit"].mv-empty::before {
   font-family: inherit;
   font-size: 1rem;
   line-height: 1.5;
-  position: -webkit-sticky;
   position: sticky; }
-  @supports ((position: -webkit-sticky) or (position: sticky)) {
+  @supports (position: sticky) {
     .mv-bar.mv-ui {
       z-index: 2;
       top: 5px; } }

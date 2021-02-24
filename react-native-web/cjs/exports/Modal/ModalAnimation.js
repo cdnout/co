@@ -47,7 +47,13 @@ function ModalAnimation(props) {
 
   var wasVisible = (0, _react.useRef)(false);
   var isAnimated = animationType && animationType !== 'none';
-  var animationEndCallback = (0, _react.useCallback)(function () {
+  var animationEndCallback = (0, _react.useCallback)(function (e) {
+    if (e && e.currentTarget !== e.target) {
+      // If the event was generated for something NOT this element we
+      // should ignore it as it's not relevant to us
+      return;
+    }
+
     if (visible) {
       if (onShow) {
         onShow();
@@ -154,7 +160,7 @@ var styles = _StyleSheet.default.create({
     }
   },
   hidden: {
-    display: 'none'
+    opacity: 0
   }
 });
 
