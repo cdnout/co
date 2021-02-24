@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * interact.js 1.10.2
+ * interact.js 1.10.3
  *
  * Copyright (c) 2012-present Taye Adeyemi <dev@taye.me>
  * Released under the MIT License.
@@ -184,11 +184,7 @@
 
   function beforeMove(_ref) {
     var interaction = _ref.interaction;
-
-    if (interaction.prepared.name !== 'drag') {
-      return;
-    }
-
+    if (interaction.prepared.name !== 'drag') return;
     var axis = interaction.prepared.axis;
 
     if (axis === 'x') {
@@ -207,11 +203,7 @@
   function move(_ref2) {
     var iEvent = _ref2.iEvent,
         interaction = _ref2.interaction;
-
-    if (interaction.prepared.name !== 'drag') {
-      return;
-    }
-
+    if (interaction.prepared.name !== 'drag') return;
     var axis = interaction.prepared.axis;
 
     if (axis === 'x' || axis === 'y') {
@@ -704,6 +696,7 @@
 
   function extend(dest, source) {
     for (var prop in source) {
+      ;
       dest[prop] = source[prop];
     }
 
@@ -1175,9 +1168,9 @@
   }
 
   function getPointerType(pointer) {
-    return _$is_74["default"].string(pointer.pointerType) ? pointer.pointerType : _$is_74["default"].number(pointer.pointerType) ? [undefined, undefined, 'touch', 'pen', 'mouse'][pointer.pointerType] // if the PointerEvent API isn't available, then the "pointer" must
+    return _$is_74["default"].string(pointer.pointerType) ? pointer.pointerType : _$is_74["default"].number(pointer.pointerType) ? [undefined, undefined, 'touch', 'pen', 'mouse'][pointer.pointerType] : // if the PointerEvent API isn't available, then the "pointer" must
     // be either a MouseEvent, TouchEvent, or Touch object
-    : /touch/.test(pointer.type) || pointer instanceof _$domObjects_69["default"].Touch ? 'touch' : 'mouse';
+    /touch/.test(pointer.type || '') || pointer instanceof _$domObjects_69["default"].Touch ? 'touch' : 'mouse';
   } // [ event.target, event.currentTarget ]
 
 
@@ -2121,11 +2114,7 @@
     var interaction = _ref.interaction,
         iEvent = _ref.iEvent,
         phase = _ref.phase;
-
-    if (interaction.prepared.name !== 'gesture') {
-      return;
-    }
-
+    if (interaction.prepared.name !== 'gesture') return;
     var pointers = interaction.pointers.map(function (p) {
       return p.pointer;
     });
@@ -2427,11 +2416,12 @@
       return false;
     }
 
-    return _$is_74["default"].element(value) // the value is an element to use as a resize handle
-    ? value === element // otherwise check if element matches value as selector
-    : _$domUtils_70.matchesUpTo(element, value, interactableElement);
+    return _$is_74["default"].element(value) ? // the value is an element to use as a resize handle
+    value === element : // otherwise check if element matches value as selector
+    _$domUtils_70.matchesUpTo(element, value, interactableElement);
   }
   /* eslint-disable multiline-ternary */
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 
 
   function initCursors(browser) {
@@ -2495,11 +2485,7 @@
   function __move_6(_ref2) {
     var iEvent = _ref2.iEvent,
         interaction = _ref2.interaction;
-
-    if (interaction.prepared.name !== 'resize' || !interaction.prepared.edges) {
-      return;
-    }
-
+    if (interaction.prepared.name !== 'resize' || !interaction.prepared.edges) return;
     var resizeEvent = iEvent;
     var resizeOptions = interaction.interactable.options.resize;
     var invert = resizeOptions.invert;
@@ -2553,11 +2539,7 @@
   function end(_ref3) {
     var iEvent = _ref3.iEvent,
         interaction = _ref3.interaction;
-
-    if (interaction.prepared.name !== 'resize' || !interaction.prepared.edges) {
-      return;
-    }
-
+    if (interaction.prepared.name !== 'resize' || !interaction.prepared.edges) return;
     var resizeEvent = iEvent;
     resizeEvent.edges = interaction.prepared.edges;
     resizeEvent.rect = interaction._rects.corrected;
@@ -2567,11 +2549,7 @@
   function updateEventAxes(_ref4) {
     var iEvent = _ref4.iEvent,
         interaction = _ref4.interaction;
-
-    if (interaction.prepared.name !== 'resize' || !interaction.resizeAxes) {
-      return;
-    }
-
+    if (interaction.prepared.name !== 'resize' || !interaction.resizeAxes) return;
     var options = interaction.interactable.options;
     var resizeEvent = iEvent;
 
@@ -2734,9 +2712,9 @@
     if (!_request) {
       _request = function request(callback) {
         var currTime = Date.now();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime)); // eslint-disable-next-line node/no-callback-literal
-
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
         var token = window.setTimeout(function () {
+          // eslint-disable-next-line node/no-callback-literal
           callback(currTime + timeToCall);
         }, timeToCall);
         lastTime = currTime + timeToCall;
@@ -3040,6 +3018,8 @@
     var warned = false;
     return function () {
       if (!warned) {
+        ;
+
         _$window_82.window.console.warn(message);
 
         warned = true;
@@ -3304,11 +3284,7 @@
         pointer = _ref.pointer,
         event = _ref.event,
         eventTarget = _ref.eventTarget;
-
-    if (interaction.interacting()) {
-      return;
-    }
-
+    if (interaction.interacting()) return;
     var actionInfo = getActionInfo(interaction, pointer, event, eventTarget, scope);
     prepare(interaction, actionInfo, scope);
   }
@@ -3318,11 +3294,7 @@
         pointer = _ref2.pointer,
         event = _ref2.event,
         eventTarget = _ref2.eventTarget;
-
-    if (interaction.pointerType !== 'mouse' || interaction.pointerIsDown || interaction.interacting()) {
-      return;
-    }
-
+    if (interaction.pointerType !== 'mouse' || interaction.pointerIsDown || interaction.interacting()) return;
     var actionInfo = getActionInfo(interaction, pointer, event, eventTarget, scope);
     prepare(interaction, actionInfo, scope);
   }
@@ -3585,31 +3557,25 @@
         eventTarget = _ref.eventTarget,
         dx = _ref.dx,
         dy = _ref.dy;
-
-    if (interaction.prepared.name !== 'drag') {
-      return;
-    } // check if a drag is in the correct axis
-
+    if (interaction.prepared.name !== 'drag') return; // check if a drag is in the correct axis
 
     var absX = Math.abs(dx);
     var absY = Math.abs(dy);
     var targetOptions = interaction.interactable.options.drag;
     var startAxis = targetOptions.startAxis;
     var currentAxis = absX > absY ? 'x' : absX < absY ? 'y' : 'xy';
-    interaction.prepared.axis = targetOptions.lockAxis === 'start' ? currentAxis[0] // always lock to one axis even if currentAxis === 'xy'
-    : targetOptions.lockAxis; // if the movement isn't in the startAxis of the interactable
+    interaction.prepared.axis = targetOptions.lockAxis === 'start' ? currentAxis[0] : // always lock to one axis even if currentAxis === 'xy'
+    targetOptions.lockAxis; // if the movement isn't in the startAxis of the interactable
 
     if (currentAxis !== 'xy' && startAxis !== 'xy' && startAxis !== currentAxis) {
       // cancel the prepared action
+      ;
       interaction.prepared.name = null; // then try to get a drag from another ineractable
 
       var element = eventTarget;
 
       var getDraggable = function getDraggable(interactable) {
-        if (interactable === interaction.interactable) {
-          return;
-        }
-
+        if (interactable === interaction.interactable) return;
         var options = interaction.interactable.options.drag;
 
         if (!options.manualStart && interactable.testIgnoreAllow(options, element, eventTarget)) {
@@ -3626,6 +3592,7 @@
         var interactable = scope.interactables.forEachMatch(element, getDraggable);
 
         if (interactable) {
+          ;
           interaction.prepared.name = 'drag';
           interaction.interactable = interactable;
           interaction.element = element;
@@ -3791,10 +3758,7 @@
 
   function checkAndPreventDefault(interactable, scope, event) {
     var setting = interactable.options.preventDefault;
-
-    if (setting === 'never') {
-      return;
-    }
+    if (setting === 'never') return;
 
     if (setting === 'always') {
       event.preventDefault();
@@ -4101,9 +4065,9 @@
         top: 0,
         bottom: 0
       };
-      this.startDelta = null;
-      this.result = null;
-      this.endResult = null;
+      this.startDelta = void 0;
+      this.result = void 0;
+      this.endResult = void 0;
       this.edges = void 0;
       this.interaction = void 0;
       this.interaction = interaction;
@@ -4123,11 +4087,11 @@
         x: 0,
         y: 0
       };
-      var arg = {
+      var arg = this.fillArg({
         phase: phase,
         pageCoords: pageCoords,
         preEnd: false
-      };
+      });
       this.result = createResult();
       this.startAll(arg);
       var result = this.result = this.setAll(arg);
@@ -4142,11 +4106,10 @@
       arg.rect = arg.rect || interaction.rect;
       arg.edges = this.edges;
       arg.startOffset = this.startOffset;
+      return arg;
     };
 
     _proto.startAll = function startAll(arg) {
-      this.fillArg(arg);
-
       for (var _i = 0; _i < this.states.length; _i++) {
         var _ref2;
 
@@ -4161,7 +4124,6 @@
     };
 
     _proto.setAll = function setAll(arg) {
-      this.fillArg(arg);
       var phase = arg.phase,
           preEnd = arg.preEnd,
           skipModifiers = arg.skipModifiers,
@@ -4176,11 +4138,14 @@
 
         _ref3 = states[_i2];
         var state = _ref3;
+
+        var _state$methods;
+
         var options = state.options;
         var lastModifierCoords = (0, _$extend_71["default"])({}, arg.coords);
         var returnValue = null;
 
-        if (state.methods.set && this.shouldDo(options, preEnd, phase)) {
+        if ((_state$methods = state.methods) != null && _state$methods.set && this.shouldDo(options, preEnd, phase)) {
           arg.state = state;
           returnValue = state.methods.set(arg);
 
@@ -4250,11 +4215,11 @@
       var phase = arg.phase,
           preEnd = arg.preEnd,
           skipModifiers = arg.skipModifiers;
-      var result = this.setAll({
+      var result = this.setAll(this.fillArg({
         preEnd: preEnd,
         phase: phase,
         pageCoords: arg.modifiedCoords || interaction.coords.cur.page
-      });
+      }));
       this.result = result; // don't fire an action move if a modifier would keep the event in the same
       // cordinates as before
 
@@ -4370,11 +4335,7 @@
           coords = _ref6$interaction.coords,
           rect = _ref6$interaction.rect,
           modification = _ref6$interaction.modification;
-
-      if (!modification.result) {
-        return;
-      }
-
+      if (!modification.result) return;
       var startDelta = modification.startDelta;
       var _modification$result = modification.result,
           curDelta = _modification$result.delta,
@@ -4510,6 +4471,7 @@
 
       for (var prop in defaults) {
         if (!(prop in options)) {
+          ;
           options[prop] = defaults[prop];
         }
       }
@@ -4541,7 +4503,8 @@
 
   function addEventModifiers(_ref) {
     var iEvent = _ref.iEvent,
-        result = _ref.interaction.modification.result;
+        interaction = _ref.interaction;
+    var result = interaction.modification.result;
 
     if (result) {
       iEvent.modifiers = result.eventProps;
@@ -5401,11 +5364,7 @@
 
     _proto.removePointer = function removePointer(pointer, event) {
       var pointerIndex = this.getPointerIndex(pointer);
-
-      if (pointerIndex === -1) {
-        return;
-      }
-
+      if (pointerIndex === -1) return;
       var pointerInfo = this.pointers[pointerIndex];
 
       this._scopeFire('interactions:remove-pointer', {
@@ -5506,6 +5465,7 @@
   /* removed: var _$rect_81 = require("../utils/rect.js"); */
 
   ;
+  ;
   _$Interaction_20._ProxyMethods.offsetBy = '';
 
   function addTotal(interaction) {
@@ -5526,11 +5486,7 @@
   function beforeEnd(_ref2) {
     var interaction = _ref2.interaction;
     var hadPending = applyPending(interaction);
-
-    if (!hadPending) {
-      return;
-    }
-
+    if (!hadPending) return;
     interaction.move({
       offset: true
     });
@@ -5679,19 +5635,19 @@
       this.isModified = false;
       this.smoothEnd = false;
       this.allowResume = false;
-      this.modification = null;
+      this.modification = void 0;
       this.modifierCount = 0;
-      this.modifierArg = null;
-      this.startCoords = null;
+      this.modifierArg = void 0;
+      this.startCoords = void 0;
       this.t0 = 0;
       this.v0 = 0;
       this.te = 0;
-      this.targetOffset = null;
-      this.modifiedOffset = null;
-      this.currentOffset = null;
+      this.targetOffset = void 0;
+      this.modifiedOffset = void 0;
+      this.currentOffset = void 0;
       this.lambda_v0 = 0;
       this.one_ve_v0 = 0;
-      this.timeout = null;
+      this.timeout = void 0;
       this.interaction = void 0;
       this.interaction = interaction;
     }
@@ -5718,16 +5674,11 @@
         y: 0
       };
       this.startCoords = interaction.coords.cur.page;
-      this.modifierArg = {
-        interaction: interaction,
-        interactable: interaction.interactable,
-        element: interaction.element,
-        rect: interaction.rect,
-        edges: interaction.edges,
+      this.modifierArg = modification.fillArg({
         pageCoords: this.startCoords,
         preEnd: true,
         phase: 'inertiastart'
-      };
+      });
       var thrown = this.t0 - interaction.coords.cur.timeStamp < 50 && pointerSpeed > options.minSpeed && pointerSpeed > options.endSpeed;
 
       if (thrown) {
@@ -5960,11 +5911,7 @@
     var interaction = arg.interaction,
         eventTarget = arg.eventTarget;
     var state = interaction.inertia;
-
-    if (!state.active) {
-      return;
-    }
-
+    if (!state.active) return;
     var element = eventTarget; // climb up the DOM tree from the event target
 
     while (_$is_74["default"].element(element)) {
@@ -6303,20 +6250,25 @@
 
 
         if (_$is_74["default"].array(optionValue)) {
+          ;
           actionOptions[optionName] = _$arr_66.from(optionValue);
         } // if the option value is an object
         else if (_$is_74["default"].plainObject(optionValue)) {
             // copy the object
+            ;
             actionOptions[optionName] = (0, _$extend_71["default"])(actionOptions[optionName] || {}, (0, _$clone_68["default"])(optionValue)); // set anabled field to true if it exists in the defaults
 
             if (_$is_74["default"].object(defaults.perAction[optionName]) && 'enabled' in defaults.perAction[optionName]) {
+              ;
               actionOptions[optionName].enabled = optionValue.enabled !== false;
             }
           } // if the option value is a boolean and the default is an object
           else if (_$is_74["default"].bool(optionValue) && _$is_74["default"].object(defaults.perAction[optionName])) {
+              ;
               actionOptions[optionName].enabled = optionValue;
             } // if it's anything else, do a plain assignment
             else {
+                ;
                 actionOptions[optionName] = optionValue;
               }
       }
@@ -6380,9 +6332,11 @@
 
     _proto._backCompatOption = function _backCompatOption(optionName, newValue) {
       if ((0, _$domUtils_70.trySelector)(newValue) || _$is_74["default"].object(newValue)) {
+        ;
         this.options[optionName] = newValue;
 
         for (var action in this._actions.map) {
+          ;
           this.options[action][optionName] = newValue;
         }
 
@@ -6569,6 +6523,7 @@
         options = {};
       }
 
+      ;
       this.options = (0, _$clone_68["default"])(defaults.base);
 
       for (var actionName_ in this._actions.methodDict) {
@@ -6581,6 +6536,7 @@
 
       for (var setting in options) {
         if (_$is_74["default"].func(this[setting])) {
+          ;
           this[setting](options[setting]);
         }
       }
@@ -6702,6 +6658,7 @@
           });
         }
 
+        ;
         target[this.scope.id].push(mappingInfo);
       }
 
@@ -6740,8 +6697,8 @@
         var interactable = _ref2;
         var ret = void 0;
 
-        if ((_$is_74["default"].string(interactable.target) // target is a selector and the element matches
-        ? _$is_74["default"].element(node) && _$domUtils_70.matchesSelector(node, interactable.target) : // target is the element
+        if ((_$is_74["default"].string(interactable.target) ? // target is a selector and the element matches
+        _$is_74["default"].element(node) && _$domUtils_70.matchesSelector(node, interactable.target) : // target is the element
         node === interactable.target) && // the element is in context
         interactable.inContext(node)) {
           ret = callback(interactable);
@@ -6933,11 +6890,7 @@
       var delegates = delegatedEvents[type];
       var matchFound = false;
       var index;
-
-      if (!delegates) {
-        return;
-      } // count from last index of delegated to 0
-
+      if (!delegates) return; // count from last index of delegated to 0
 
       for (index = delegates.length - 1; index >= 0; index--) {
         var cur = delegates[index]; // look for matching selector and context Node
@@ -7150,13 +7103,13 @@
     interact.closest = _$domUtils_70.closest;
     interact.globalEvents = {}; // eslint-disable-next-line no-undef
 
-    interact.version = "1.10.2";
+    interact.version = "1.10.3";
     interact.scope = scope;
     /**
-    * Use a plugin
-    *
-    * @alias module:interact.use
-    *
+     * Use a plugin
+     *
+     * @alias module:interact.use
+     *
      */
 
     interact.use = function (plugin, options) {
@@ -8472,11 +8425,7 @@
       }
 
       (0, _$extend_71["default"])(arg.edges, linkedEdges);
-
-      if (!modifiers || !modifiers.length) {
-        return;
-      }
-
+      if (!modifiers || !modifiers.length) return;
       var subModification = new _$Modification_35["default"](arg.interaction);
       subModification.copyFrom(arg.interaction.modification);
       subModification.prepareStates(modifiers);
@@ -8654,10 +8603,7 @@
     var options = state.options,
         offset = state.offset;
     var restriction = getRestrictionRect(options.restriction, interaction, coords);
-
-    if (!restriction) {
-      return;
-    }
+    if (!restriction) return;
 
     var rect = _$rect_81.xywhToTlbr(restriction);
 
@@ -9030,10 +8976,12 @@
         x: startOffset.left - rect.width * relativePoint.x + snapOffset.x,
         y: startOffset.top - rect.height * relativePoint.y + snapOffset.y
       };
-    }) : [(0, _$extend_71["default"])({
+    }) : [{
       index: 0,
-      relativePoint: null
-    }, snapOffset)];
+      relativePoint: null,
+      x: snapOffset.x,
+      y: snapOffset.y
+    }];
   }
 
   function __set_48(arg) {
@@ -9108,10 +9056,10 @@
         inRange = false;
       }
 
-      if (!closest.target || (inRange // is the closest target in range?
-      ? closest.inRange && range !== Infinity // the pointer is relatively deeper in this target
-      ? distance / range < closest.distance / closest.range // this target has Infinite range and the closest doesn't
-      : range === Infinity && closest.range !== Infinity || // OR this target is closer that the previous closest
+      if (!closest.target || (inRange ? // is the closest target in range?
+      closest.inRange && range !== Infinity ? // the pointer is relatively deeper in this target
+      distance / range < closest.distance / closest.range : // this target has Infinite range and the closest doesn't
+      range === Infinity && closest.range !== Infinity || // OR this target is closer that the previous closest
       distance < closest.distance : // The other is not in range and the pointer is closer to this target
       !closest.inRange && distance < closest.distance)) {
         closest.target = _target;
@@ -9693,6 +9641,7 @@
       var target = targets[i];
 
       for (var prop in target.props || {}) {
+        ;
         pointerEvent[prop] = target.props[prop];
       }
 
@@ -9768,7 +9717,9 @@
 
     if (type === 'hold') {
       signalArg.targets = signalArg.targets.filter(function (target) {
-        return target.eventable.options.holdDuration === interaction.pointers[pointerIndex].hold.duration;
+        var _interaction$pointers;
+
+        return target.eventable.options.holdDuration === ((_interaction$pointers = interaction.pointers[pointerIndex]) == null ? void 0 : _interaction$pointers.hold.duration);
       });
     }
 
@@ -9859,10 +9810,7 @@
       scope.fire('pointerEvents:collect-targets', signalArg);
     }
 
-    if (!signalArg.targets.length) {
-      return;
-    }
-
+    if (!signalArg.targets.length) return;
     var minDuration = Infinity;
 
     for (var _i3 = 0; _i3 < signalArg.targets.length; _i3++) {
@@ -9935,11 +9883,7 @@
 
   function onNew(_ref) {
     var pointerEvent = _ref.pointerEvent;
-
-    if (pointerEvent.type !== 'hold') {
-      return;
-    }
-
+    if (pointerEvent.type !== 'hold') return;
     pointerEvent.count = (pointerEvent.count || 0) + 1;
   }
 
@@ -9948,18 +9892,11 @@
         pointerEvent = _ref2.pointerEvent,
         eventTarget = _ref2.eventTarget,
         targets = _ref2.targets;
-
-    if (pointerEvent.type !== 'hold' || !targets.length) {
-      return;
-    } // get the repeat interval from the first eventable
-
+    if (pointerEvent.type !== 'hold' || !targets.length) return; // get the repeat interval from the first eventable
 
     var interval = targets[0].eventable.options.holdRepeatInterval; // don't repeat if the interval is 0 or less
 
-    if (interval <= 0) {
-      return;
-    } // set a timeout to fire the holdrepeat event
-
+    if (interval <= 0) return; // set a timeout to fire the holdrepeat event
 
     interaction.holdIntervalHandle = setTimeout(function () {
       scope.pointerEvents.fire({
@@ -9986,6 +9923,7 @@
     id: 'pointer-events/holdRepeat',
     install: __install_56,
     listeners: ['move', 'up', 'cancel', 'endall'].reduce(function (acc, enderTypes) {
+      ;
       acc["pointerEvents:" + enderTypes] = endHoldRepeat;
       return acc;
     }, {
@@ -10403,6 +10341,7 @@
     } catch (_unused) {}
   }
 
+  ;
   _$interact_33["default"]["default"] = _$interact_33["default"];
   _$interactjs_34 = _$interactjs_34.exports;
   var _$index_84 = {
@@ -10427,6 +10366,7 @@
     } catch (_unused) {}
   }
 
+  ;
   _$interactjs_34["default"]["default"] = _$interactjs_34["default"];
   _$index_84 = _$index_84.exports;
   return _$index_84;

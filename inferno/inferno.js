@@ -2331,6 +2331,9 @@
             if (QUEUE.indexOf(component) === -1) {
                 QUEUE.push(component);
             }
+            if (force) {
+                component.$F = true;
+            }
             if (!microTaskPending) {
                 microTaskPending = true;
                 nextTick(rerender);
@@ -2359,7 +2362,9 @@
         microTaskPending = false;
         while ((component = QUEUE.shift())) {
             if (!component.$UN) {
-                applyState(component, false);
+                var force = component.$F;
+                component.$F = false;
+                applyState(component, force);
                 if (component.$QU) {
                     callSetStateCallbacks(component);
                 }
@@ -2395,6 +2400,7 @@
         this.$N = false; // Uses new lifecycle API Flag
         this.$L = null; // Current lifecycle of this component
         this.$SVG = false; // Flag to keep track if component is inside SVG tree
+        this.$F = false; // Force update flag
         this.props = props || EMPTY_OBJ;
         this.context = context || EMPTY_OBJ; // context should not be mutable
     };
@@ -2435,7 +2441,7 @@
                 'See http://infernojs.org for more details.');
         }
     }
-    var version = "7.4.7";
+    var version = "7.4.8";
 
     exports.Component = Component;
     exports.EMPTY_OBJ = EMPTY_OBJ;

@@ -1,0 +1,1 @@
+[{"name":"jimp","version":"0.16.1","description":"An image processing library written entirely in JavaScript (i.e. zero external or native dependencies).","repository":"https:\/\/github.com\/oliver-moran\/jimp.git","keyfiles":"jimp.min.js","keywords":["image","image processing","image manipulation","png","jpg","jpeg","bmp","resize","scale","crop"],"npm":"jimp"}]

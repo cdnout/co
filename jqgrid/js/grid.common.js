@@ -63,7 +63,9 @@ $.extend($.jgrid,{
 			$(selector).attr("aria-hidden","true").jqmHide();
 		} else {
 			if(o.gb !== '') {
-				try {$(".jqgrid-overlay:first",o.gb).hide();} catch (e){}
+				try {
+					$(o.gb).find(".jqgrid-overlay").first().hide();
+				} catch (e){}
 			}
 			try { $(".jqgrid-overlay-modal").hide(); } catch (e) {}
 			$(selector).hide().attr("aria-hidden","true");
@@ -143,7 +145,7 @@ $.extend($.jgrid,{
 		if (p.width === 0 || !p.width) {p.width = 300;}
 		if(p.height === 0 || !p.height) {p.height =200;}
 		if(!p.zIndex) {
-			var parentZ = $(insertSelector).parents("*[role=dialog]").filter(':first').css("z-index");
+			var parentZ = $(insertSelector).parents("*[role=dialog]").first().css("z-index");
 			if(parentZ) {
 				p.zIndex = parseInt(parentZ,10)+2;
 			} else {
@@ -151,12 +153,14 @@ $.extend($.jgrid,{
 			}
 		}
 		var rtlt = 0;
-		if( rtlsup && coord.left && !appendsel) {
-			rtlt = $(p.gbox).width()- (!isNaN(p.width) ? parseInt(p.width,10) :0) - 8; // to do
+		if( rtlsup && coord.hasOwnProperty('left') && !appendsel) {
+			rtlt = $(p.gbox).outerWidth()- (!isNaN(p.width) ? parseInt(p.width,10) :0) + 12;// to do
 		// just in case
 			coord.left = parseInt(coord.left,10) + parseInt(rtlt,10);
 		}
-		if(coord.left) { coord.left += "px"; }
+		if(coord.hasOwnProperty('left')) { 
+			coord.left += "px"; 
+		}
 		$(mw).css($.extend({
 			width: isNaN(p.width) ? "auto": p.width+"px",
 			height:isNaN(p.height) ? "auto" : p.height + "px",
@@ -238,7 +242,7 @@ $.extend($.jgrid,{
 					}
 					$(".jqgrid-overlay-modal").css("z-index",zInd).show();
 				} else {
-					$(".jqgrid-overlay:first",o.gbox).css("z-index",zInd).show();
+					$(o.gbox).find(".jqgrid-overlay").first().css("z-index",zInd).show();
 					$(selector).data("gbox",o.gbox);
 				}
 			}
@@ -323,7 +327,7 @@ $.extend($.jgrid,{
 			function(){$(this).addClass(common.hover);},
 			function(){$(this).removeClass(common.hover);}
 		);
-		if($.isFunction(mopt.beforeOpen) ) { mopt.beforeOpen(); }
+		if($.jgrid.isFunction(mopt.beforeOpen) ) { mopt.beforeOpen(); }
 		$.jgrid.viewModal("#info_dialog",{
 			onHide: function(h) {
 				h.w.hide().remove();
@@ -332,12 +336,12 @@ $.extend($.jgrid,{
 			modal :mopt.modal,
 			jqm:jm
 		});
-		if($.isFunction(mopt.afterOpen) ) { mopt.afterOpen(); }
+		if($.jgrid.isFunction(mopt.afterOpen) ) { mopt.afterOpen(); }
 		try{ $("#info_dialog").focus();} catch (m){}
 	},
 	bindEv: function  (el, opt) {
 		var $t = this;
-		if($.isFunction(opt.dataInit)) {
+		if($.jgrid.isFunction(opt.dataInit)) {
 			opt.dataInit.call($t,el,opt);
 		}
 		if(opt.dataEvents) {
@@ -356,7 +360,7 @@ $.extend($.jgrid,{
 		function setAttributes(elm, atr, exl ) {
 			var exclude = ['dataInit','dataEvents','dataUrl', 'buildSelect','sopt', 'searchhidden', 'defaultValue', 'attr', 'custom_element', 'custom_value', 'oper'];
 			exclude = exclude.concat(['cacheUrlData','delimiter','separator']);
-			if(exl !== undefined && $.isArray(exl)) {
+			if(exl !== undefined && Array.isArray(exl)) {
 				$.merge(exclude, exl);
 			}
 			$.each(atr, function(key, value){
@@ -425,10 +429,10 @@ $.extend($.jgrid,{
 						rowid = $.jgrid.stripPref($t.p.idPrefix, rowid);
 					}
 					$.ajax($.extend({
-						url: $.isFunction(options.dataUrl) ? options.dataUrl.call($t, rowid, vl, String(options.name)) : options.dataUrl,
+						url: $.jgrid.isFunction(options.dataUrl) ? options.dataUrl.call($t, rowid, vl, String(options.name)) : options.dataUrl,
 						type : "GET",
 						dataType: "html",
-						data: $.isFunction(postData) ? postData.call($t, rowid, vl, String(options.name)) : postData,
+						data: $.jgrid.isFunction(postData) ? postData.call($t, rowid, vl, String(options.name)) : postData,
 						context: {elem:elem, options:options, vl:vl},
 						success: function(data){
 							var ovm = [], elem = this.elem, vl = this.vl,
@@ -436,9 +440,9 @@ $.extend($.jgrid,{
 							msl = options.multiple===true,
 							cU = options.cacheUrlData === true,
 							oV ='', txt, mss =[],
-							a = $.isFunction(options.buildSelect) ? options.buildSelect.call($t,data) : data;
+							a = $.jgrid.isFunction(options.buildSelect) ? options.buildSelect.call($t,data) : data;
 							if(typeof a === 'string') {
-								a = $( $.trim( a ) ).html();
+								a = $( $.jgrid.trim( a ) ).html();
 							}
 							if(a) {
 								$(elem).append(a);
@@ -446,9 +450,9 @@ $.extend($.jgrid,{
 								if(options.size === undefined) { options.size =  msl ? 3 : 1;}
 								if(msl) {
 									ovm = vl.split(",");
-									ovm = $.map(ovm,function(n){return $.trim(n);});
+									ovm = $.map(ovm,function(n){return $.jgrid.trim(n);});
 								} else {
-									ovm[0] = $.trim(vl);
+									ovm[0] = $.jgrid.trim(vl);
 								}
 								//$(elem).attr(options);
 								//setTimeout(function(){
@@ -462,7 +466,7 @@ $.extend($.jgrid,{
 									// fix IE8/IE7 problem with selecting of the first item on multiple=true
 									if (i === 0 && elem.multiple) { this.selected = false; }
 									$(this).attr("role","option");
-									if($.inArray($.trim(txt),ovm) > -1 || $.inArray($.trim(vl),ovm) > -1 ) {
+									if($.inArray($.jgrid.trim(txt),ovm) > -1 || $.inArray($.jgrid.trim(vl),ovm) > -1 ) {
 										this.selected= "selected";
 										mss.push(vl);
 									}
@@ -503,7 +507,7 @@ $.extend($.jgrid,{
 					}
 					if(msl) {
 						ovm = vl.split(",");
-						ovm = $.map(ovm,function(n){return $.trim(n);});
+						ovm = $.map(ovm,function(n){return $.jgrid.trim(n);});
 					}
 					if(typeof options.value === 'function') { options.value = options.value(); }
 					var so,sv, ov, oSv, key, value,
@@ -520,8 +524,8 @@ $.extend($.jgrid,{
 							ov.setAttribute("role","option");
 							ov.value = sv[0]; ov.innerHTML = sv[1];
 							elem.appendChild(ov);
-							if (!msl &&  ($.trim(sv[0]) === $.trim(vl) || $.trim(sv[1]) === $.trim(vl))) { ov.selected ="selected"; }
-							if (msl && ($.inArray($.trim(sv[1]), ovm)>-1 || $.inArray($.trim(sv[0]), ovm)>-1)) {ov.selected ="selected";}
+							if (!msl &&  ($.jgrid.trim(sv[0]) === $.jgrid.trim(vl) || $.jgrid.trim(sv[1]) === $.jgrid.trim(vl))) { ov.selected ="selected"; }
+							if (msl && ($.inArray($.jgrid.trim(sv[1]), ovm)>-1 || $.inArray($.jgrid.trim(sv[0]), ovm)>-1)) {ov.selected ="selected";}
 						}
 					} else if (Object.prototype.toString.call(options.value) === "[object Array]") {
 						oSv = options.value;
@@ -534,8 +538,8 @@ $.extend($.jgrid,{
 								ov.setAttribute("role","option");
 								ov.value = key; ov.innerHTML = value;
 								elem.appendChild(ov);
-								if (!msl &&  ( $.trim(key) === $.trim(vl) || $.trim(value) === $.trim(vl)) ) { ov.selected ="selected"; }
-								if (msl && ($.inArray($.trim(value),ovm)>-1 || $.inArray($.trim(key),ovm)>-1)) { ov.selected ="selected"; }
+								if (!msl &&  ( $.jgrid.trim(key) === $.jgrid.trim(vl) || $.jgrid.trim(value) === $.jgrid.trim(vl)) ) { ov.selected ="selected"; }
+								if (msl && ($.inArray($.jgrid.trim(value),ovm)>-1 || $.inArray($.jgrid.trim(key),ovm)>-1)) { ov.selected ="selected"; }
 							}
 						}
 					} else if (typeof options.value === 'object') {
@@ -546,8 +550,8 @@ $.extend($.jgrid,{
 								ov.setAttribute("role","option");
 								ov.value = key; ov.innerHTML = oSv[key];
 								elem.appendChild(ov);
-								if (!msl &&  ( $.trim(key) === $.trim(vl) || $.trim(oSv[key]) === $.trim(vl)) ) { ov.selected ="selected"; }
-								if (msl && ($.inArray($.trim(oSv[key]),ovm)>-1 || $.inArray($.trim(key),ovm)>-1)) { ov.selected ="selected"; }
+								if (!msl &&  ( $.jgrid.trim(key) === $.jgrid.trim(vl) || $.jgrid.trim(oSv[key]) === $.jgrid.trim(vl)) ) { ov.selected ="selected"; }
+								if (msl && ($.inArray($.jgrid.trim(oSv[key]),ovm)>-1 || $.inArray($.jgrid.trim(key),ovm)>-1)) { ov.selected ="selected"; }
 							}
 						}
 					}
@@ -565,7 +569,7 @@ $.extend($.jgrid,{
 			case "custom" :
 				elem = document.createElement("span");
 				try {
-					if($.isFunction(options.custom_element)) {
+					if($.jgrid.isFunction(options.custom_element)) {
 						var celm = options.custom_element.call($t,vl,options);
 						if(celm) {
 							celm = $(celm).addClass("customelement").attr({id:options.id,name:options.name});
@@ -791,9 +795,9 @@ $.extend($.jgrid,{
 			}
 			if(edtrul.custom === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
-					if($.isFunction(edtrul.custom_func)) {
+					if($.jgrid.isFunction(edtrul.custom_func)) {
 						var ret = edtrul.custom_func.call(g,val,nm,valref);
-						return $.isArray(ret) ? ret : [false,msg.customarray,""];
+						return Array.isArray(ret) ? ret : [false,msg.customarray,""];
 					}
 					return [false,msg.customfcheck,""];
 				}

@@ -5,6 +5,7 @@
 }(this, (function (exports) { 'use strict';
 
   /* If editing these values check babel-plugin-also */
+  exports.VNodeFlags = void 0;
   (function (VNodeFlags) {
       /* First set of bits define shape of vNode */
       VNodeFlags[VNodeFlags["HtmlElement"] = 1] = "HtmlElement";
@@ -35,6 +36,8 @@
       VNodeFlags[VNodeFlags["ClearInUse"] = -16385] = "ClearInUse";
       VNodeFlags[VNodeFlags["ComponentKnown"] = 12] = "ComponentKnown";
   })(exports.VNodeFlags || (exports.VNodeFlags = {}));
+  // Combinations are not possible, its bitwise only to reduce vNode size
+  exports.ChildFlags = void 0;
   (function (ChildFlags) {
       ChildFlags[ChildFlags["UnknownChildren"] = 0] = "UnknownChildren";
       /* Second set of bits define shape of children */

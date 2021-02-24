@@ -38,7 +38,7 @@
 			return typeof o === 'boolean';
 		},
 		isObject : function(o) {
-			return (o && (typeof o === 'object' || $.isFunction(o))) || false;
+			return (o && (typeof o === 'object' || $.jgrid.isFunction(o))) || false;
 		},
 		isString : function(o) {
 			return typeof o === 'string';
@@ -56,7 +56,7 @@
 			if (!this.isValue(o)){
 				return true;
 			}
-			o = $.trim(o).replace(/\&nbsp\;/ig,'').replace(/\&#160\;/ig,'');
+			o = $.jgrid.trim(o).replace(/\&nbsp\;/ig,'').replace(/\&#160\;/ig,'');
 			return o==="";	
 		}
 	});
@@ -235,7 +235,7 @@
 		if (oSelect) {
 			var	msl =  (opts.colModel.editoptions != null && opts.colModel.editoptions.multiple === true) === true ? true : false,
 			scell = [], sv;
-			if(msl) {scell = cellval.split(",");scell = $.map(scell,function(n){return $.trim(n);});}
+			if(msl) {scell = cellval.split(",");scell = $.map(scell,function(n){return $.jgrid.trim(n);});}
 			if ($.fmatter.isString(oSelect)) {
 				// mybe here we can use some caching with care ????
 				var so = oSelect.split(delim), j=0, i;
@@ -249,7 +249,7 @@
 							ret[j] = sv[1];
 							j++;
 						}
-					} else if($.trim(sv[0]) === $.trim(cellval)) {
+					} else if($.jgrid.trim(sv[0]) === $.jgrid.trim(cellval)) {
 						ret[0] = sv[1];
 						break;
 					}
@@ -276,17 +276,17 @@
 			$t = $grid[0],
 			p = $t.p,
 			cm = p.colModel[$.jgrid.getCellIndex(this)],
-			$actionsDiv = cm.frozen ? $("tr#"+rid+" td:eq("+$.jgrid.getCellIndex(this)+") > div",$grid) :$(this).parent(),
+			$actionsDiv = cm.frozen ? $("tr#"+rid+" td", $grid).eq( $.jgrid.getCellIndex(this) ).find("> div") :$(this).parent(),
 			op = {
 				extraparam: {}
 			},
 			saverow = function(rowid, res) {
-				if($.isFunction(op.afterSave)) { op.afterSave.call($t, rowid, res); }
+				if($.jgrid.isFunction(op.afterSave)) { op.afterSave.call($t, rowid, res); }
 				$actionsDiv.find("div.ui-inline-edit,div.ui-inline-del").show();
 				$actionsDiv.find("div.ui-inline-save,div.ui-inline-cancel").hide();
 			},
 			restorerow = function(rowid) {
-				if($.isFunction(op.afterRestore)) { op.afterRestore.call($t, rowid); }
+				if($.jgrid.isFunction(op.afterRestore)) { op.afterRestore.call($t, rowid); }
 				$actionsDiv.find("div.ui-inline-edit,div.ui-inline-del").show();
 				$actionsDiv.find("div.ui-inline-save,div.ui-inline-cancel").hide();
 			};
@@ -382,7 +382,7 @@
 		op =options.colModel.formatoptions || {}, sep,
 		re = /([\.\*\_\'\(\)\{\}\+\?\\])/g,
 		unformatFunc = options.colModel.unformat||($.fn.fmatter[formatType] && $.fn.fmatter[formatType].unformat);
-		if(unformatFunc !== undefined && $.isFunction(unformatFunc) ) {
+		if(unformatFunc !== undefined && $.jgrid.isFunction(unformatFunc) ) {
 			ret = unformatFunc.call(this, $(cellval).text(), options, cellval);
 		} else if(formatType !== undefined && $.fmatter.isString(formatType) ) {
 			var opts = $.jgrid.getRegional(this, 'formatter') || {}, stripTag;
@@ -441,7 +441,7 @@
 			var oSelect = op.value,
 			msl =  op.multiple === true ? true : false,
 			scell = [], sv;
-			if(msl) {scell = cell.split(",");scell = $.map(scell,function(n){return $.trim(n);});}
+			if(msl) {scell = cell.split(",");scell = $.map(scell,function(n){return $.jgrid.trim(n);});}
 			if ($.fmatter.isString(oSelect)) {
 				var so = oSelect.split(delim), j=0, i;
 				for(i=0; i<so.length;i++){
@@ -453,16 +453,16 @@
 						sv[1] = $.jgrid.htmlDecode(sv[1]);
 					}
 					if(msl) {
-						if($.inArray($.trim(sv[1]),scell)>-1) {
+						if($.inArray($.jgrid.trim(sv[1]),scell)>-1) {
 							ret[j] = sv[0];
 							j++;
 						}
-					} else if($.trim(sv[1]) === $.trim(cell)) {
+					} else if($.jgrid.trim(sv[1]) === $.jgrid.trim(cell)) {
 						ret[0] = sv[0];
 						break;
 					}
 				}
-			} else if($.fmatter.isObject(oSelect) || $.isArray(oSelect) ){
+			} else if( $.fmatter.isObject(oSelect) || Array.isArray(oSelect) ){
 				if(!msl) {scell[0] =  cell;}
 				ret = $.map(scell, function(n){
 					var rv;

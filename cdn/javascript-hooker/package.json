@@ -1,0 +1,1 @@
+[{"name":"javascript-hooker","version":"0.2.3","description":"Monkey-patch (hook) functions for debugging and stuff.","repository":"git:\/\/github.com\/cowboy\/javascript-hooker.git","keyfiles":"ba-hooker.min.js","keywords":["patch","hook","function","debug","aop"],"npm":"hooker"}]

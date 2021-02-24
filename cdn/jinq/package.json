@@ -1,0 +1,1 @@
+[{"name":"jinq","version":"1.6.1","description":"jinqJs provides you the ability to query, update and delete javaScript arrays using SQL like syntaxes and LINQ like expressions.","repository":"git+https:\/\/github.com\/fordth\/jinqJs.git","keyfiles":"jinqjs.min.js","keywords":["LINQ","query","SQL","array","lambda","jinqJs"],"npm":"jinq"}]

@@ -1,10 +1,10 @@
 /*!
  * jQuery.serialScroll
- * Copyright (c) 2007-2015 Ariel Flesler - aflesler<a>gmail<d>com | http://flesler.blogspot.com
+ * Copyright (c) 2007 Ariel Flesler - aflesler<a>gmail<d>com | https://github.com/flesler
  * Licensed under MIT.
  * @projectDescription Animated scrolling of series with jQuery
  * @author Ariel Flesler
- * @version 1.3.1
+ * @version 1.3.2
  * https://github.com/flesler/jquery.serialScroll
  */
 ;(function($) {
@@ -42,33 +42,40 @@
 		*/
 	};
 
+	// Brought from jQuery since it's now deprecated
+	function isNumeric(obj) {
+		var type = typeof obj;
+		return (type === 'number' || type === 'string') &&
+			!isNaN(obj - parseFloat(obj));
+	}
+
 	$.fn.serialScroll = function(options) {
 
 		return this.each(function() {
-			var 
+			var
 				settings = $.extend({}, $serialScroll.defaults, options),
 				// this one is just to get shorter code when compressed
-				event = settings.event, 
+				event = settings.event,
 				// ditto
-				step = settings.step, 
+				step = settings.step,
 				// ditto
-				lazy = settings.lazy, 
+				lazy = settings.lazy,
 				// if a target is specified, then everything's relative to 'this'.
-				context = settings.target ? this : document, 
+				context = settings.target ? this : document,
 				// the element to be scrolled (will carry all the events)
 				$pane = $(settings.target || this, context),
 				// will be reused, save it into a variable
-				pane = $pane[0], 
+				pane = $pane[0],
 				// will hold a lazy list of elements
-				items = settings.items, 
+				items = settings.items,
 				// index of the currently selected item
-				active = settings.start, 
+				active = settings.start,
 				// boolean, do automatic scrolling or not
-				auto = settings.interval, 
+				auto = settings.interval,
 				// save it now to make the code shorter
-				nav = settings.navigation, 
+				nav = settings.navigation,
 				// holds the interval id
-				timer; 
+				timer;
 
 			// Incompatible with $().animate()
 			delete settings.step;
@@ -88,37 +95,37 @@
 			}
 
 			// Button binding, optional
-			$(settings.prev||[], context).bind(event, -step, move);
-			$(settings.next||[], context).bind(event, step, move);
+			$(settings.prev||[], context).on(event, -step, move);
+			$(settings.next||[], context).on(event, step, move);
 
 			// Custom events bound to the container
 			if (!pane._bound_) {
 				$pane
 					 // You can trigger with just 'prev'
-					.bind('prev'+NAMESPACE, -step, move)
+					.on('prev'+NAMESPACE, -step, move)
 					// f.e: $(container).trigger('next');
-					.bind('next'+NAMESPACE, step, move)
+					.on('next'+NAMESPACE, step, move)
 					// f.e: $(container).trigger('goto', 4);
-					.bind('goto'+NAMESPACE, jump);
+					.on('goto'+NAMESPACE, jump);
 			}
 
 			if (auto) {
 				$pane
-					.bind('start'+NAMESPACE, function(e) {
+					.on('start'+NAMESPACE, function(e) {
 						if (!auto) {
 							clear();
 							auto = true;
 							next();
 						}
 					 })
-					.bind('stop'+NAMESPACE, function() {
+					.on('stop'+NAMESPACE, function() {
 						clear();
 						auto = false;
 					});
 			}
 
 			// Let serialScroll know that the index changed externally
-			$pane.bind('notify'+NAMESPACE, function(e, elem) {
+			$pane.on('notify'+NAMESPACE, function(e, elem) {
 				var i = index(elem);
 				if (i > -1) {
 					active = i;
@@ -130,13 +137,13 @@
 
 			// Can't use jump if using lazy items and a non-bubbling event
 			if (settings.jump) {
-				(lazy ? $pane : getItems()).bind(event, function(e) {
+				(lazy ? $pane : getItems()).on(event, function(e) {
 					jump(e, index(e.target));
 				});
 			}
 
 			if (nav) {
-				nav = $(nav, context).bind(event, function(e) {
+				nav = $(nav, context).on(event, function(e) {
 					e.data = Math.round(getItems().length / nav.length) * nav.index(this);
 					jump(e, this);
 				});
@@ -148,13 +155,13 @@
 			}
 
 			function jump(e, pos) {
-				if (!$.isNumeric(pos)) {
+				if (!isNumeric(pos)) {
 					pos = e.data;
 				}
 
-				var	n, 
+				var	n,
 					// Is a real event triggering ?
-					real = e.type, 
+					real = e.type,
 					// Handle a possible exclude
 					$items = settings.exclude ? getItems().slice(0,-settings.exclude) : getItems(),
 					limit = $items.length - 1,
@@ -166,7 +173,7 @@
 				if (auto) {
 					// clear any possible automatic scrolling.
 					clear();
-					timer = setTimeout(next, settings.interval); 
+					timer = setTimeout(next, settings.interval);
 				}
 
 				// exceeded the limits
@@ -229,7 +236,7 @@
 			
 			function index(elem) {
 				// Already a number
-				if ($.isNumeric(elem)) {
+				if (isNumeric(elem)) {
 					return elem;
 				}
 
