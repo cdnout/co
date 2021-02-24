@@ -10,7 +10,31 @@ import { TabsContainer } from './tabs-container';
  */
 export class Header extends EventEmitter {
     /** @internal */
-    constructor(_layoutManager, _parent, settings, _configClosable, _getActiveComponentItemEvent, closeEvent, _dockEvent, _popoutEvent, _maximiseToggleEvent, _clickEvent, _touchStartEvent, _componentRemoveEvent, _componentFocusEvent, _componentDragStartEvent) {
+    constructor(
+    /** @internal */
+    _layoutManager, 
+    /** @internal */
+    _parent, settings, 
+    /** @internal */
+    _configClosable, 
+    /** @internal */
+    _getActiveComponentItemEvent, closeEvent, 
+    /** @internal */
+    _dockEvent, 
+    /** @internal */
+    _popoutEvent, 
+    /** @internal */
+    _maximiseToggleEvent, 
+    /** @internal */
+    _clickEvent, 
+    /** @internal */
+    _touchStartEvent, 
+    /** @internal */
+    _componentRemoveEvent, 
+    /** @internal */
+    _componentFocusEvent, 
+    /** @internal */
+    _componentDragStartEvent) {
         super();
         this._layoutManager = _layoutManager;
         this._parent = _parent;
@@ -302,6 +326,7 @@ export class Header extends EventEmitter {
             }
         }
     }
+    /** @internal */
     processTabDropdownActiveChanged() {
         setElementDisplayVisibility(this._tabDropdownButton.element, this._tabsContainer.dropdownActive);
     }

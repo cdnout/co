@@ -12882,7 +12882,7 @@
             validateArgCount('OnDisconnect.cancel', 0, 1, arguments.length);
             validateCallback('OnDisconnect.cancel', 1, onComplete, true);
             var deferred = new Deferred();
-            this.repo_.onDisconnectCancel(this.path_, deferred.wrapCallback(onComplete));
+            repoOnDisconnectCancel(this.repo_, this.path_, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         OnDisconnect.prototype.remove = function (onComplete) {
@@ -12890,7 +12890,7 @@
             validateWritablePath('OnDisconnect.remove', this.path_);
             validateCallback('OnDisconnect.remove', 1, onComplete, true);
             var deferred = new Deferred();
-            this.repo_.onDisconnectSet(this.path_, null, deferred.wrapCallback(onComplete));
+            repoOnDisconnectSet(this.repo_, this.path_, null, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         OnDisconnect.prototype.set = function (value, onComplete) {
@@ -12899,7 +12899,7 @@
             validateFirebaseDataArg('OnDisconnect.set', 1, value, this.path_, false);
             validateCallback('OnDisconnect.set', 2, onComplete, true);
             var deferred = new Deferred();
-            this.repo_.onDisconnectSet(this.path_, value, deferred.wrapCallback(onComplete));
+            repoOnDisconnectSet(this.repo_, this.path_, value, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         OnDisconnect.prototype.setWithPriority = function (value, priority, onComplete) {
@@ -12909,7 +12909,7 @@
             validatePriority('OnDisconnect.setWithPriority', 2, priority, false);
             validateCallback('OnDisconnect.setWithPriority', 3, onComplete, true);
             var deferred = new Deferred();
-            this.repo_.onDisconnectSetWithPriority(this.path_, value, priority, deferred.wrapCallback(onComplete));
+            repoOnDisconnectSetWithPriority(this.repo_, this.path_, value, priority, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         OnDisconnect.prototype.update = function (objectToMerge, onComplete) {
@@ -12927,7 +12927,7 @@
             validateFirebaseMergeDataArg('OnDisconnect.update', 1, objectToMerge, this.path_, false);
             validateCallback('OnDisconnect.update', 2, onComplete, true);
             var deferred = new Deferred();
-            this.repo_.onDisconnectUpdate(this.path_, objectToMerge, deferred.wrapCallback(onComplete));
+            repoOnDisconnectUpdate(this.repo_, this.path_, objectToMerge, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         return OnDisconnect;
@@ -13578,11 +13578,11 @@
         };
         Query.prototype.onValueEvent = function (callback, cancelCallback, context) {
             var container = new ValueEventRegistration(callback, cancelCallback || null, context || null);
-            this.repo.addEventCallbackForQuery(this, container);
+            repoAddEventCallbackForQuery(this.repo, this, container);
         };
         Query.prototype.onChildEvent = function (callbacks, cancelCallback, context) {
             var container = new ChildEventRegistration(callbacks, cancelCallback, context);
-            this.repo.addEventCallbackForQuery(this, container);
+            repoAddEventCallbackForQuery(this.repo, this, container);
         };
         Query.prototype.off = function (eventType, callback, context) {
             validateArgCount('Query.off', 0, 3, arguments.length);
@@ -13602,13 +13602,13 @@
                 }
                 container = new ChildEventRegistration(callbacks, null, context || null);
             }
-            this.repo.removeEventCallbackForQuery(this, container);
+            repoRemoveEventCallbackForQuery(this.repo, this, container);
         };
         /**
          * Get the server-value for this query, or return a cached value if not connected.
          */
         Query.prototype.get = function () {
-            return this.repo.getValue(this);
+            return repoGetValue(this.repo, this);
         };
         /**
          * Attaches a listener, waits for the first event, and then removes the listener
@@ -13969,7 +13969,7 @@
         };
         /** @return {!Database} */
         Reference.prototype.databaseProp = function () {
-            return this.repo.database;
+            return repoGetDatabase(this.repo);
         };
         Reference.prototype.set = function (newVal, onComplete) {
             validateArgCount('Reference.set', 1, 2, arguments.length);
@@ -13977,7 +13977,7 @@
             validateFirebaseDataArg('Reference.set', 1, newVal, this.path, false);
             validateCallback('Reference.set', 2, onComplete, true);
             var deferred = new Deferred();
-            this.repo.setWithPriority(this.path, newVal, 
+            repoSetWithPriority(this.repo, this.path, newVal, 
             /*priority=*/ null, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
@@ -13998,7 +13998,7 @@
             validateFirebaseMergeDataArg('Reference.update', 1, objectToMerge, this.path, false);
             validateCallback('Reference.update', 2, onComplete, true);
             var deferred = new Deferred();
-            this.repo.update(this.path, objectToMerge, deferred.wrapCallback(onComplete));
+            repoUpdate(this.repo, this.path, objectToMerge, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         Reference.prototype.setWithPriority = function (newVal, newPriority, onComplete) {
@@ -14013,7 +14013,7 @@
                     ' is a read-only object.');
             }
             var deferred = new Deferred();
-            this.repo.setWithPriority(this.path, newVal, newPriority, deferred.wrapCallback(onComplete));
+            repoSetWithPriority(this.repo, this.path, newVal, newPriority, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         Reference.prototype.remove = function (onComplete) {
@@ -14053,7 +14053,7 @@
                     onComplete(error, committed, snapshot);
                 }
             };
-            this.repo.startTransaction(this.path, transactionUpdate, promiseComplete, applyLocally);
+            repoStartTransaction(this.repo, this.path, transactionUpdate, promiseComplete, applyLocally);
             return deferred.promise;
         };
         Reference.prototype.setPriority = function (priority, onComplete) {
@@ -14062,7 +14062,7 @@
             validatePriority('Reference.setPriority', 1, priority, false);
             validateCallback('Reference.setPriority', 2, onComplete, true);
             var deferred = new Deferred();
-            this.repo.setWithPriority(pathChild(this.path, '.priority'), priority, null, deferred.wrapCallback(onComplete));
+            repoSetWithPriority(this.repo, pathChild(this.path, '.priority'), priority, null, deferred.wrapCallback(onComplete));
             return deferred.promise;
         };
         Reference.prototype.push = function (value, onComplete) {
@@ -14070,7 +14070,7 @@
             validateWritablePath('Reference.push', this.path);
             validateFirebaseDataArg('Reference.push', 1, value, this.path, true);
             validateCallback('Reference.push', 2, onComplete, true);
-            var now = this.repo.serverTime();
+            var now = repoServerTime(this.repo);
             var name = nextPushId(now);
             // push() returns a ThennableReference whose promise is fulfilled with a regular Reference.
             // We use child() to create handles to two different references. The first is turned into a
@@ -14182,7 +14182,7 @@
         Object.defineProperty(Database.prototype, "repo_", {
             get: function () {
                 if (!this.instanceStarted_) {
-                    this.repoInternal_.start();
+                    repoStart(this.repoInternal_);
                     this.instanceStarted_ = true;
                 }
                 return this.repoInternal_;
@@ -14267,12 +14267,12 @@
         Database.prototype.goOffline = function () {
             validateArgCount('database.goOffline', 0, 0, arguments.length);
             this.checkDeleted_('goOffline');
-            this.repo_.interrupt();
+            repoInterrupt(this.repo_);
         };
         Database.prototype.goOnline = function () {
             validateArgCount('database.goOnline', 0, 0, arguments.length);
             this.checkDeleted_('goOnline');
-            this.repo_.resume();
+            repoResume(this.repo_);
         };
         Database.ServerValue = {
             TIMESTAMP: {
@@ -14534,24 +14534,6 @@
      * client / server hashes for some data, we won't retry indefinitely.
      */
     var MAX_TRANSACTION_RETRIES = 25;
-    var TransactionStatus;
-    (function (TransactionStatus) {
-        // We've run the transaction and updated transactionResultData_ with the result, but it isn't currently sent to the
-        // server. A transaction will go from RUN -> SENT -> RUN if it comes back from the server as rejected due to
-        // mismatched hash.
-        TransactionStatus[TransactionStatus["RUN"] = 0] = "RUN";
-        // We've run the transaction and sent it to the server and it's currently outstanding (hasn't come back as accepted
-        // or rejected yet).
-        TransactionStatus[TransactionStatus["SENT"] = 1] = "SENT";
-        // Temporary state used to mark completed transactions (whether successful or aborted).  The transaction will be
-        // removed when we get a chance to prune completed ones.
-        TransactionStatus[TransactionStatus["COMPLETED"] = 2] = "COMPLETED";
-        // Used when an already-sent transaction needs to be aborted (e.g. due to a conflicting set() call that was made).
-        // If it comes back as unsuccessful, we'll abort it.
-        TransactionStatus[TransactionStatus["SENT_NEEDS_ABORT"] = 3] = "SENT_NEEDS_ABORT";
-        // Temporary state used to mark transactions that need to be aborted.
-        TransactionStatus[TransactionStatus["NEEDS_ABORT"] = 4] = "NEEDS_ABORT";
-    })(TransactionStatus || (TransactionStatus = {}));
     /**
      * A connection to a single data repository.
      */
@@ -14575,914 +14557,860 @@
             // This key is intentionally not updated if RepoInfo is later changed or replaced
             this.key = this.repoInfo_.toURLString();
         }
-        Repo.prototype.start = function () {
-            var _this = this;
-            this.stats_ = StatsManager.getCollection(this.repoInfo_);
-            if (this.forceRestClient_ || beingCrawled()) {
-                this.server_ = new ReadonlyRestClient(this.repoInfo_, this.onDataUpdate_.bind(this), this.authTokenProvider_);
-                // Minor hack: Fire onConnect immediately, since there's no actual connection.
-                setTimeout(this.onConnectStatus_.bind(this, true), 0);
-            }
-            else {
-                var authOverride = this.app.options['databaseAuthVariableOverride'];
-                // Validate authOverride
-                if (typeof authOverride !== 'undefined' && authOverride !== null) {
-                    if (typeof authOverride !== 'object') {
-                        throw new Error('Only objects are supported for option databaseAuthVariableOverride');
-                    }
-                    try {
-                        stringify(authOverride);
-                    }
-                    catch (e) {
-                        throw new Error('Invalid authOverride provided: ' + e);
-                    }
-                }
-                this.persistentConnection_ = new PersistentConnection(this.repoInfo_, this.app.options.appId, this.onDataUpdate_.bind(this), this.onConnectStatus_.bind(this), this.onServerInfoUpdate_.bind(this), this.authTokenProvider_, authOverride);
-                this.server_ = this.persistentConnection_;
-            }
-            this.authTokenProvider_.addTokenChangeListener(function (token) {
-                _this.server_.refreshAuthToken(token);
-            });
-            // In the case of multiple Repos for the same repoInfo (i.e. there are multiple Firebase.Contexts being used),
-            // we only want to create one StatsReporter.  As such, we'll report stats over the first Repo created.
-            this.statsReporter_ = StatsManager.getOrCreateReporter(this.repoInfo_, function () { return new StatsReporter(_this.stats_, _this.server_); });
-            // Used for .info.
-            this.infoData_ = new SnapshotHolder();
-            this.infoSyncTree_ = new SyncTree({
-                startListening: function (query, tag, currentHashFn, onComplete) {
-                    var infoEvents = [];
-                    var node = _this.infoData_.getNode(query.path);
-                    // This is possibly a hack, but we have different semantics for .info endpoints. We don't raise null events
-                    // on initial data...
-                    if (!node.isEmpty()) {
-                        infoEvents = _this.infoSyncTree_.applyServerOverwrite(query.path, node);
-                        setTimeout(function () {
-                            onComplete('ok');
-                        }, 0);
-                    }
-                    return infoEvents;
-                },
-                stopListening: function () { }
-            });
-            this.updateInfo_('connected', false);
-            this.serverSyncTree_ = new SyncTree({
-                startListening: function (query, tag, currentHashFn, onComplete) {
-                    _this.server_.listen(query, currentHashFn, tag, function (status, data) {
-                        var events = onComplete(status, data);
-                        eventQueueRaiseEventsForChangedPath(_this.eventQueue_, query.path, events);
-                    });
-                    // No synchronous events for network-backed sync trees
-                    return [];
-                },
-                stopListening: function (query, tag) {
-                    _this.server_.unlisten(query, tag);
-                }
-            });
-        };
         /**
          * @return The URL corresponding to the root of this Firebase.
          */
         Repo.prototype.toString = function () {
             return ((this.repoInfo_.secure ? 'https://' : 'http://') + this.repoInfo_.host);
         };
-        /**
-         * @return The namespace represented by the repo.
-         */
-        Repo.prototype.name = function () {
-            return this.repoInfo_.namespace;
-        };
-        /**
-         * @return The time in milliseconds, taking the server offset into account if we have one.
-         */
-        Repo.prototype.serverTime = function () {
-            var offsetNode = this.infoData_.getNode(new Path('.info/serverTimeOffset'));
-            var offset = offsetNode.val() || 0;
-            return new Date().getTime() + offset;
-        };
-        /**
-         * Generate ServerValues using some variables from the repo object.
-         */
-        Repo.prototype.generateServerValues = function () {
-            return generateWithValues({
-                timestamp: this.serverTime()
-            });
-        };
-        /**
-         * Called by realtime when we get new messages from the server.
-         */
-        Repo.prototype.onDataUpdate_ = function (pathString, data, isMerge, tag) {
-            // For testing.
-            this.dataUpdateCount++;
-            var path = new Path(pathString);
-            data = this.interceptServerDataCallback_
-                ? this.interceptServerDataCallback_(pathString, data)
-                : data;
-            var events = [];
-            if (tag) {
-                if (isMerge) {
-                    var taggedChildren = map(data, function (raw) { return nodeFromJSON$1(raw); });
-                    events = this.serverSyncTree_.applyTaggedQueryMerge(path, taggedChildren, tag);
+        return Repo;
+    }());
+    function repoStart(repo) {
+        repo.stats_ = StatsManager.getCollection(repo.repoInfo_);
+        if (repo.forceRestClient_ || beingCrawled()) {
+            repo.server_ = new ReadonlyRestClient(repo.repoInfo_, function (pathString, data, isMerge, tag) {
+                repoOnDataUpdate(repo, pathString, data, isMerge, tag);
+            }, repo.authTokenProvider_);
+            // Minor hack: Fire onConnect immediately, since there's no actual connection.
+            setTimeout(function () { return repoOnConnectStatus(repo, /* connectStatus= */ true); }, 0);
+        }
+        else {
+            var authOverride = repo.app.options['databaseAuthVariableOverride'];
+            // Validate authOverride
+            if (typeof authOverride !== 'undefined' && authOverride !== null) {
+                if (typeof authOverride !== 'object') {
+                    throw new Error('Only objects are supported for option databaseAuthVariableOverride');
                 }
-                else {
-                    var taggedSnap = nodeFromJSON$1(data);
-                    events = this.serverSyncTree_.applyTaggedQueryOverwrite(path, taggedSnap, tag);
+                try {
+                    stringify(authOverride);
+                }
+                catch (e) {
+                    throw new Error('Invalid authOverride provided: ' + e);
                 }
             }
-            else if (isMerge) {
-                var changedChildren = map(data, function (raw) { return nodeFromJSON$1(raw); });
-                events = this.serverSyncTree_.applyServerMerge(path, changedChildren);
+            repo.persistentConnection_ = new PersistentConnection(repo.repoInfo_, repo.app.options.appId, function (pathString, data, isMerge, tag) {
+                repoOnDataUpdate(repo, pathString, data, isMerge, tag);
+            }, function (connectStatus) {
+                repoOnConnectStatus(repo, connectStatus);
+            }, function (updates) {
+                repoOnServerInfoUpdate(repo, updates);
+            }, repo.authTokenProvider_, authOverride);
+            repo.server_ = repo.persistentConnection_;
+        }
+        repo.authTokenProvider_.addTokenChangeListener(function (token) {
+            repo.server_.refreshAuthToken(token);
+        });
+        // In the case of multiple Repos for the same repoInfo (i.e. there are multiple Firebase.Contexts being used),
+        // we only want to create one StatsReporter.  As such, we'll report stats over the first Repo created.
+        repo.statsReporter_ = StatsManager.getOrCreateReporter(repo.repoInfo_, function () { return new StatsReporter(repo.stats_, repo.server_); });
+        // Used for .info.
+        repo.infoData_ = new SnapshotHolder();
+        repo.infoSyncTree_ = new SyncTree({
+            startListening: function (query, tag, currentHashFn, onComplete) {
+                var infoEvents = [];
+                var node = repo.infoData_.getNode(query.path);
+                // This is possibly a hack, but we have different semantics for .info endpoints. We don't raise null events
+                // on initial data...
+                if (!node.isEmpty()) {
+                    infoEvents = repo.infoSyncTree_.applyServerOverwrite(query.path, node);
+                    setTimeout(function () {
+                        onComplete('ok');
+                    }, 0);
+                }
+                return infoEvents;
+            },
+            stopListening: function () { }
+        });
+        repoUpdateInfo(repo, 'connected', false);
+        repo.serverSyncTree_ = new SyncTree({
+            startListening: function (query, tag, currentHashFn, onComplete) {
+                repo.server_.listen(query, currentHashFn, tag, function (status, data) {
+                    var events = onComplete(status, data);
+                    eventQueueRaiseEventsForChangedPath(repo.eventQueue_, query.path, events);
+                });
+                // No synchronous events for network-backed sync trees
+                return [];
+            },
+            stopListening: function (query, tag) {
+                repo.server_.unlisten(query, tag);
+            }
+        });
+    }
+    /**
+     * @return The time in milliseconds, taking the server offset into account if we have one.
+     */
+    function repoServerTime(repo) {
+        var offsetNode = repo.infoData_.getNode(new Path('.info/serverTimeOffset'));
+        var offset = offsetNode.val() || 0;
+        return new Date().getTime() + offset;
+    }
+    /**
+     * Generate ServerValues using some variables from the repo object.
+     */
+    function repoGenerateServerValues(repo) {
+        return generateWithValues({
+            timestamp: repoServerTime(repo)
+        });
+    }
+    /**
+     * Called by realtime when we get new messages from the server.
+     */
+    function repoOnDataUpdate(repo, pathString, data, isMerge, tag) {
+        // For testing.
+        repo.dataUpdateCount++;
+        var path = new Path(pathString);
+        data = repo.interceptServerDataCallback_
+            ? repo.interceptServerDataCallback_(pathString, data)
+            : data;
+        var events = [];
+        if (tag) {
+            if (isMerge) {
+                var taggedChildren = map(data, function (raw) { return nodeFromJSON$1(raw); });
+                events = repo.serverSyncTree_.applyTaggedQueryMerge(path, taggedChildren, tag);
             }
             else {
-                var snap = nodeFromJSON$1(data);
-                events = this.serverSyncTree_.applyServerOverwrite(path, snap);
+                var taggedSnap = nodeFromJSON$1(data);
+                events = repo.serverSyncTree_.applyTaggedQueryOverwrite(path, taggedSnap, tag);
             }
-            var affectedPath = path;
-            if (events.length > 0) {
-                // Since we have a listener outstanding for each transaction, receiving any events
-                // is a proxy for some change having occurred.
-                affectedPath = this.rerunTransactions_(path);
+        }
+        else if (isMerge) {
+            var changedChildren = map(data, function (raw) { return nodeFromJSON$1(raw); });
+            events = repo.serverSyncTree_.applyServerMerge(path, changedChildren);
+        }
+        else {
+            var snap = nodeFromJSON$1(data);
+            events = repo.serverSyncTree_.applyServerOverwrite(path, snap);
+        }
+        var affectedPath = path;
+        if (events.length > 0) {
+            // Since we have a listener outstanding for each transaction, receiving any events
+            // is a proxy for some change having occurred.
+            affectedPath = repoRerunTransactions(repo, path);
+        }
+        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, events);
+    }
+    function repoOnConnectStatus(repo, connectStatus) {
+        repoUpdateInfo(repo, 'connected', connectStatus);
+        if (connectStatus === false) {
+            repoRunOnDisconnectEvents(repo);
+        }
+    }
+    function repoOnServerInfoUpdate(repo, updates) {
+        each(updates, function (key, value) {
+            repoUpdateInfo(repo, key, value);
+        });
+    }
+    function repoUpdateInfo(repo, pathString, value) {
+        var path = new Path('/.info/' + pathString);
+        var newNode = nodeFromJSON$1(value);
+        repo.infoData_.updateSnapshot(path, newNode);
+        var events = repo.infoSyncTree_.applyServerOverwrite(path, newNode);
+        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
+    }
+    function repoGetNextWriteId(repo) {
+        return repo.nextWriteId_++;
+    }
+    /**
+     * The purpose of `getValue` is to return the latest known value
+     * satisfying `query`.
+     *
+     * This method will first check for in-memory cached values
+     * belonging to active listeners. If they are found, such values
+     * are considered to be the most up-to-date.
+     *
+     * If the client is not connected, this method will try to
+     * establish a connection and request the value for `query`. If
+     * the client is not able to retrieve the query result, it reports
+     * an error.
+     *
+     * @param query - The query to surface a value for.
+     */
+    function repoGetValue(repo, query) {
+        // Only active queries are cached. There is no persisted cache.
+        var cached = repo.serverSyncTree_.getServerValue(query);
+        if (cached != null) {
+            return Promise.resolve(new DataSnapshot(cached, query.getRef(), query.getQueryParams().getIndex()));
+        }
+        return repo.server_.get(query).then(function (payload) {
+            var node = nodeFromJSON$1(payload);
+            var events = repo.serverSyncTree_.applyServerOverwrite(query.path, node);
+            eventQueueRaiseEventsAtPath(repo.eventQueue_, query.path, events);
+            return Promise.resolve(new DataSnapshot(node, query.getRef(), query.getQueryParams().getIndex()));
+        }, function (err) {
+            repoLog(repo, 'get for query ' + stringify(query) + ' failed: ' + err);
+            return Promise.reject(new Error(err));
+        });
+    }
+    function repoSetWithPriority(repo, path, newVal, newPriority, onComplete) {
+        repoLog(repo, 'set', {
+            path: path.toString(),
+            value: newVal,
+            priority: newPriority
+        });
+        // TODO: Optimize this behavior to either (a) store flag to skip resolving where possible and / or
+        // (b) store unresolved paths on JSON parse
+        var serverValues = repoGenerateServerValues(repo);
+        var newNodeUnresolved = nodeFromJSON$1(newVal, newPriority);
+        var existing = repo.serverSyncTree_.calcCompleteEventCache(path);
+        var newNode = resolveDeferredValueSnapshot(newNodeUnresolved, existing, serverValues);
+        var writeId = repoGetNextWriteId(repo);
+        var events = repo.serverSyncTree_.applyUserOverwrite(path, newNode, writeId, true);
+        eventQueueQueueEvents(repo.eventQueue_, events);
+        repo.server_.put(path.toString(), newNodeUnresolved.val(/*export=*/ true), function (status, errorReason) {
+            var success = status === 'ok';
+            if (!success) {
+                warn('set at ' + path + ' failed: ' + status);
             }
-            eventQueueRaiseEventsForChangedPath(this.eventQueue_, affectedPath, events);
-        };
-        // TODO: This should be @private but it's used by test_access.js and internal.js
-        Repo.prototype.interceptServerData_ = function (callback) {
-            this.interceptServerDataCallback_ = callback;
-        };
-        Repo.prototype.onConnectStatus_ = function (connectStatus) {
-            this.updateInfo_('connected', connectStatus);
-            if (connectStatus === false) {
-                this.runOnDisconnectEvents_();
-            }
-        };
-        Repo.prototype.onServerInfoUpdate_ = function (updates) {
-            var _this = this;
-            each(updates, function (key, value) {
-                _this.updateInfo_(key, value);
-            });
-        };
-        Repo.prototype.updateInfo_ = function (pathString, value) {
-            var path = new Path('/.info/' + pathString);
-            var newNode = nodeFromJSON$1(value);
-            this.infoData_.updateSnapshot(path, newNode);
-            var events = this.infoSyncTree_.applyServerOverwrite(path, newNode);
-            eventQueueRaiseEventsForChangedPath(this.eventQueue_, path, events);
-        };
-        Repo.prototype.getNextWriteId_ = function () {
-            return this.nextWriteId_++;
-        };
-        /**
-         * The purpose of `getValue` is to return the latest known value
-         * satisfying `query`.
-         *
-         * This method will first check for in-memory cached values
-         * belonging to active listeners. If they are found, such values
-         * are considered to be the most up-to-date.
-         *
-         * If the client is not connected, this method will try to
-         * establish a connection and request the value for `query`. If
-         * the client is not able to retrieve the query result, it reports
-         * an error.
-         *
-         * @param query - The query to surface a value for.
-         */
-        Repo.prototype.getValue = function (query) {
-            var _this = this;
-            // Only active queries are cached. There is no persisted cache.
-            var cached = this.serverSyncTree_.getServerValue(query);
-            if (cached != null) {
-                return Promise.resolve(new DataSnapshot(cached, query.getRef(), query.getQueryParams().getIndex()));
-            }
-            return this.server_.get(query).then(function (payload) {
-                var node = nodeFromJSON$1(payload);
-                var events = _this.serverSyncTree_.applyServerOverwrite(query.path, node);
-                eventQueueRaiseEventsAtPath(_this.eventQueue_, query.path, events);
-                return Promise.resolve(new DataSnapshot(node, query.getRef(), query.getQueryParams().getIndex()));
-            }, function (err) {
-                _this.log_('get for query ' + stringify(query) + ' failed: ' + err);
-                return Promise.reject(new Error(err));
-            });
-        };
-        Repo.prototype.setWithPriority = function (path, newVal, newPriority, onComplete) {
-            var _this = this;
-            this.log_('set', {
-                path: path.toString(),
-                value: newVal,
-                priority: newPriority
-            });
-            // TODO: Optimize this behavior to either (a) store flag to skip resolving where possible and / or
-            // (b) store unresolved paths on JSON parse
-            var serverValues = this.generateServerValues();
-            var newNodeUnresolved = nodeFromJSON$1(newVal, newPriority);
-            var existing = this.serverSyncTree_.calcCompleteEventCache(path);
-            var newNode = resolveDeferredValueSnapshot(newNodeUnresolved, existing, serverValues);
-            var writeId = this.getNextWriteId_();
-            var events = this.serverSyncTree_.applyUserOverwrite(path, newNode, writeId, true);
-            eventQueueQueueEvents(this.eventQueue_, events);
-            this.server_.put(path.toString(), newNodeUnresolved.val(/*export=*/ true), function (status, errorReason) {
+            var clearEvents = repo.serverSyncTree_.ackUserWrite(writeId, !success);
+            eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, clearEvents);
+            repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+        });
+        var affectedPath = repoAbortTransactions(repo, path);
+        repoRerunTransactions(repo, affectedPath);
+        // We queued the events above, so just flush the queue here
+        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, []);
+    }
+    function repoUpdate(repo, path, childrenToMerge, onComplete) {
+        repoLog(repo, 'update', { path: path.toString(), value: childrenToMerge });
+        // Start with our existing data and merge each child into it.
+        var empty = true;
+        var serverValues = repoGenerateServerValues(repo);
+        var changedChildren = {};
+        each(childrenToMerge, function (changedKey, changedValue) {
+            empty = false;
+            changedChildren[changedKey] = resolveDeferredValueTree(pathChild(path, changedKey), nodeFromJSON$1(changedValue), repo.serverSyncTree_, serverValues);
+        });
+        if (!empty) {
+            var writeId_1 = repoGetNextWriteId(repo);
+            var events = repo.serverSyncTree_.applyUserMerge(path, changedChildren, writeId_1);
+            eventQueueQueueEvents(repo.eventQueue_, events);
+            repo.server_.merge(path.toString(), childrenToMerge, function (status, errorReason) {
                 var success = status === 'ok';
                 if (!success) {
-                    warn('set at ' + path + ' failed: ' + status);
+                    warn('update at ' + path + ' failed: ' + status);
                 }
-                var clearEvents = _this.serverSyncTree_.ackUserWrite(writeId, !success);
-                eventQueueRaiseEventsForChangedPath(_this.eventQueue_, path, clearEvents);
-                _this.callOnCompleteCallback(onComplete, status, errorReason);
+                var clearEvents = repo.serverSyncTree_.ackUserWrite(writeId_1, !success);
+                var affectedPath = clearEvents.length > 0 ? repoRerunTransactions(repo, path) : path;
+                eventQueueRaiseEventsForChangedPath(repo.eventQueue_, affectedPath, clearEvents);
+                repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
             });
-            var affectedPath = this.abortTransactions_(path);
-            this.rerunTransactions_(affectedPath);
+            each(childrenToMerge, function (changedPath) {
+                var affectedPath = repoAbortTransactions(repo, pathChild(path, changedPath));
+                repoRerunTransactions(repo, affectedPath);
+            });
             // We queued the events above, so just flush the queue here
-            eventQueueRaiseEventsForChangedPath(this.eventQueue_, affectedPath, []);
-        };
-        Repo.prototype.update = function (path, childrenToMerge, onComplete) {
-            var _this = this;
-            this.log_('update', { path: path.toString(), value: childrenToMerge });
-            // Start with our existing data and merge each child into it.
-            var empty = true;
-            var serverValues = this.generateServerValues();
-            var changedChildren = {};
-            each(childrenToMerge, function (changedKey, changedValue) {
-                empty = false;
-                changedChildren[changedKey] = resolveDeferredValueTree(pathChild(path, changedKey), nodeFromJSON$1(changedValue), _this.serverSyncTree_, serverValues);
-            });
-            if (!empty) {
-                var writeId_1 = this.getNextWriteId_();
-                var events = this.serverSyncTree_.applyUserMerge(path, changedChildren, writeId_1);
-                eventQueueQueueEvents(this.eventQueue_, events);
-                this.server_.merge(path.toString(), childrenToMerge, function (status, errorReason) {
-                    var success = status === 'ok';
-                    if (!success) {
-                        warn('update at ' + path + ' failed: ' + status);
-                    }
-                    var clearEvents = _this.serverSyncTree_.ackUserWrite(writeId_1, !success);
-                    var affectedPath = clearEvents.length > 0 ? _this.rerunTransactions_(path) : path;
-                    eventQueueRaiseEventsForChangedPath(_this.eventQueue_, affectedPath, clearEvents);
-                    _this.callOnCompleteCallback(onComplete, status, errorReason);
-                });
-                each(childrenToMerge, function (changedPath) {
-                    var affectedPath = _this.abortTransactions_(pathChild(path, changedPath));
-                    _this.rerunTransactions_(affectedPath);
-                });
-                // We queued the events above, so just flush the queue here
-                eventQueueRaiseEventsForChangedPath(this.eventQueue_, path, []);
-            }
-            else {
-                log("update() called with empty data.  Don't do anything.");
-                this.callOnCompleteCallback(onComplete, 'ok');
-            }
-        };
-        /**
-         * Applies all of the changes stored up in the onDisconnect_ tree.
-         */
-        Repo.prototype.runOnDisconnectEvents_ = function () {
-            var _this = this;
-            this.log_('onDisconnectEvents');
-            var serverValues = this.generateServerValues();
-            var resolvedOnDisconnectTree = new SparseSnapshotTree();
-            this.onDisconnect_.forEachTree(newEmptyPath(), function (path, node) {
-                var resolved = resolveDeferredValueTree(path, node, _this.serverSyncTree_, serverValues);
-                resolvedOnDisconnectTree.remember(path, resolved);
-            });
-            var events = [];
-            resolvedOnDisconnectTree.forEachTree(newEmptyPath(), function (path, snap) {
-                events = events.concat(_this.serverSyncTree_.applyServerOverwrite(path, snap));
-                var affectedPath = _this.abortTransactions_(path);
-                _this.rerunTransactions_(affectedPath);
-            });
-            this.onDisconnect_ = new SparseSnapshotTree();
-            eventQueueRaiseEventsForChangedPath(this.eventQueue_, newEmptyPath(), events);
-        };
-        Repo.prototype.onDisconnectCancel = function (path, onComplete) {
-            var _this = this;
-            this.server_.onDisconnectCancel(path.toString(), function (status, errorReason) {
-                if (status === 'ok') {
-                    _this.onDisconnect_.forget(path);
-                }
-                _this.callOnCompleteCallback(onComplete, status, errorReason);
-            });
-        };
-        Repo.prototype.onDisconnectSet = function (path, value, onComplete) {
-            var _this = this;
-            var newNode = nodeFromJSON$1(value);
-            this.server_.onDisconnectPut(path.toString(), newNode.val(/*export=*/ true), function (status, errorReason) {
-                if (status === 'ok') {
-                    _this.onDisconnect_.remember(path, newNode);
-                }
-                _this.callOnCompleteCallback(onComplete, status, errorReason);
-            });
-        };
-        Repo.prototype.onDisconnectSetWithPriority = function (path, value, priority, onComplete) {
-            var _this = this;
-            var newNode = nodeFromJSON$1(value, priority);
-            this.server_.onDisconnectPut(path.toString(), newNode.val(/*export=*/ true), function (status, errorReason) {
-                if (status === 'ok') {
-                    _this.onDisconnect_.remember(path, newNode);
-                }
-                _this.callOnCompleteCallback(onComplete, status, errorReason);
-            });
-        };
-        Repo.prototype.onDisconnectUpdate = function (path, childrenToMerge, onComplete) {
-            var _this = this;
-            if (isEmpty(childrenToMerge)) {
-                log("onDisconnect().update() called with empty data.  Don't do anything.");
-                this.callOnCompleteCallback(onComplete, 'ok');
-                return;
-            }
-            this.server_.onDisconnectMerge(path.toString(), childrenToMerge, function (status, errorReason) {
-                if (status === 'ok') {
-                    each(childrenToMerge, function (childName, childNode) {
-                        var newChildNode = nodeFromJSON$1(childNode);
-                        _this.onDisconnect_.remember(pathChild(path, childName), newChildNode);
-                    });
-                }
-                _this.callOnCompleteCallback(onComplete, status, errorReason);
-            });
-        };
-        Repo.prototype.addEventCallbackForQuery = function (query, eventRegistration) {
-            var events;
-            if (pathGetFront(query.path) === '.info') {
-                events = this.infoSyncTree_.addEventRegistration(query, eventRegistration);
-            }
-            else {
-                events = this.serverSyncTree_.addEventRegistration(query, eventRegistration);
-            }
-            eventQueueRaiseEventsAtPath(this.eventQueue_, query.path, events);
-        };
-        Repo.prototype.removeEventCallbackForQuery = function (query, eventRegistration) {
-            // These are guaranteed not to raise events, since we're not passing in a cancelError. However, we can future-proof
-            // a little bit by handling the return values anyways.
-            var events;
-            if (pathGetFront(query.path) === '.info') {
-                events = this.infoSyncTree_.removeEventRegistration(query, eventRegistration);
-            }
-            else {
-                events = this.serverSyncTree_.removeEventRegistration(query, eventRegistration);
-            }
-            eventQueueRaiseEventsAtPath(this.eventQueue_, query.path, events);
-        };
-        Repo.prototype.interrupt = function () {
-            if (this.persistentConnection_) {
-                this.persistentConnection_.interrupt(INTERRUPT_REASON);
-            }
-        };
-        Repo.prototype.resume = function () {
-            if (this.persistentConnection_) {
-                this.persistentConnection_.resume(INTERRUPT_REASON);
-            }
-        };
-        Repo.prototype.stats = function (showDelta) {
-            if (showDelta === void 0) { showDelta = false; }
-            if (typeof console === 'undefined') {
-                return;
-            }
-            var stats;
-            if (showDelta) {
-                if (!this.statsListener_) {
-                    this.statsListener_ = new StatsListener(this.stats_);
-                }
-                stats = this.statsListener_.get();
-            }
-            else {
-                stats = this.stats_.get();
-            }
-            var longestName = Object.keys(stats).reduce(function (previousValue, currentValue) {
-                return Math.max(currentValue.length, previousValue);
-            }, 0);
-            each(stats, function (stat, value) {
-                var paddedStat = stat;
-                // pad stat names to be the same length (plus 2 extra spaces).
-                for (var i = stat.length; i < longestName + 2; i++) {
-                    paddedStat += ' ';
-                }
-                console.log(paddedStat + value);
-            });
-        };
-        Repo.prototype.statsIncrementCounter = function (metric) {
-            this.stats_.incrementCounter(metric);
-            this.statsReporter_.includeStat(metric);
-        };
-        Repo.prototype.log_ = function () {
-            var varArgs = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                varArgs[_i] = arguments[_i];
-            }
-            var prefix = '';
-            if (this.persistentConnection_) {
-                prefix = this.persistentConnection_.id + ':';
-            }
-            log.apply(void 0, __spread([prefix], varArgs));
-        };
-        Repo.prototype.callOnCompleteCallback = function (callback, status, errorReason) {
-            if (callback) {
-                exceptionGuard(function () {
-                    if (status === 'ok') {
-                        callback(null);
-                    }
-                    else {
-                        var code = (status || 'error').toUpperCase();
-                        var message = code;
-                        if (errorReason) {
-                            message += ': ' + errorReason;
-                        }
-                        var error = new Error(message);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        error.code = code;
-                        callback(error);
-                    }
-                });
-            }
-        };
-        Object.defineProperty(Repo.prototype, "database", {
-            get: function () {
-                return this.__database || (this.__database = new Database(this));
-            },
-            enumerable: false,
-            configurable: true
+            eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, []);
+        }
+        else {
+            log("update() called with empty data.  Don't do anything.");
+            repoCallOnCompleteCallback(repo, onComplete, 'ok', undefined);
+        }
+    }
+    /**
+     * Applies all of the changes stored up in the onDisconnect_ tree.
+     */
+    function repoRunOnDisconnectEvents(repo) {
+        repoLog(repo, 'onDisconnectEvents');
+        var serverValues = repoGenerateServerValues(repo);
+        var resolvedOnDisconnectTree = new SparseSnapshotTree();
+        repo.onDisconnect_.forEachTree(newEmptyPath(), function (path, node) {
+            var resolved = resolveDeferredValueTree(path, node, repo.serverSyncTree_, serverValues);
+            resolvedOnDisconnectTree.remember(path, resolved);
         });
-        /**
-         * Creates a new transaction, adds it to the transactions we're tracking, and
-         * sends it to the server if possible.
-         *
-         * @param path Path at which to do transaction.
-         * @param transactionUpdate Update callback.
-         * @param onComplete Completion callback.
-         * @param applyLocally Whether or not to make intermediate results visible
-         */
-        Repo.prototype.startTransaction = function (path, transactionUpdate, onComplete, applyLocally) {
-            this.log_('transaction on ' + path);
-            // Add a watch to make sure we get server updates.
-            var valueCallback = function () { };
-            var watchRef = new Reference(this, path);
-            watchRef.on('value', valueCallback);
-            var unwatcher = function () {
-                watchRef.off('value', valueCallback);
-            };
-            // Initialize transaction.
-            var transaction = {
-                path: path,
-                update: transactionUpdate,
-                onComplete: onComplete,
-                // One of TransactionStatus enums.
-                status: null,
-                // Used when combining transactions at different locations to figure out
-                // which one goes first.
-                order: LUIDGenerator(),
-                // Whether to raise local events for this transaction.
-                applyLocally: applyLocally,
-                // Count of how many times we've retried the transaction.
-                retryCount: 0,
-                // Function to call to clean up our .on() listener.
-                unwatcher: unwatcher,
-                // Stores why a transaction was aborted.
-                abortReason: null,
-                currentWriteId: null,
-                currentInputSnapshot: null,
-                currentOutputSnapshotRaw: null,
-                currentOutputSnapshotResolved: null
-            };
-            // Run transaction initially.
-            var currentState = this.getLatestState_(path);
-            transaction.currentInputSnapshot = currentState;
-            var newVal = transaction.update(currentState.val());
-            if (newVal === undefined) {
-                // Abort transaction.
-                transaction.unwatcher();
-                transaction.currentOutputSnapshotRaw = null;
-                transaction.currentOutputSnapshotResolved = null;
-                if (transaction.onComplete) {
-                    // We just set the input snapshot, so this cast should be safe
-                    var snapshot = new DataSnapshot(transaction.currentInputSnapshot, new Reference(this, transaction.path), PRIORITY_INDEX);
-                    transaction.onComplete(null, false, snapshot);
+        var events = [];
+        resolvedOnDisconnectTree.forEachTree(newEmptyPath(), function (path, snap) {
+            events = events.concat(repo.serverSyncTree_.applyServerOverwrite(path, snap));
+            var affectedPath = repoAbortTransactions(repo, path);
+            repoRerunTransactions(repo, affectedPath);
+        });
+        repo.onDisconnect_ = new SparseSnapshotTree();
+        eventQueueRaiseEventsForChangedPath(repo.eventQueue_, newEmptyPath(), events);
+    }
+    function repoOnDisconnectCancel(repo, path, onComplete) {
+        repo.server_.onDisconnectCancel(path.toString(), function (status, errorReason) {
+            if (status === 'ok') {
+                repo.onDisconnect_.forget(path);
+            }
+            repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+        });
+    }
+    function repoOnDisconnectSet(repo, path, value, onComplete) {
+        var newNode = nodeFromJSON$1(value);
+        repo.server_.onDisconnectPut(path.toString(), newNode.val(/*export=*/ true), function (status, errorReason) {
+            if (status === 'ok') {
+                repo.onDisconnect_.remember(path, newNode);
+            }
+            repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+        });
+    }
+    function repoOnDisconnectSetWithPriority(repo, path, value, priority, onComplete) {
+        var newNode = nodeFromJSON$1(value, priority);
+        repo.server_.onDisconnectPut(path.toString(), newNode.val(/*export=*/ true), function (status, errorReason) {
+            if (status === 'ok') {
+                repo.onDisconnect_.remember(path, newNode);
+            }
+            repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+        });
+    }
+    function repoOnDisconnectUpdate(repo, path, childrenToMerge, onComplete) {
+        if (isEmpty(childrenToMerge)) {
+            log("onDisconnect().update() called with empty data.  Don't do anything.");
+            repoCallOnCompleteCallback(repo, onComplete, 'ok', undefined);
+            return;
+        }
+        repo.server_.onDisconnectMerge(path.toString(), childrenToMerge, function (status, errorReason) {
+            if (status === 'ok') {
+                each(childrenToMerge, function (childName, childNode) {
+                    var newChildNode = nodeFromJSON$1(childNode);
+                    repo.onDisconnect_.remember(pathChild(path, childName), newChildNode);
+                });
+            }
+            repoCallOnCompleteCallback(repo, onComplete, status, errorReason);
+        });
+    }
+    function repoAddEventCallbackForQuery(repo, query, eventRegistration) {
+        var events;
+        if (pathGetFront(query.path) === '.info') {
+            events = repo.infoSyncTree_.addEventRegistration(query, eventRegistration);
+        }
+        else {
+            events = repo.serverSyncTree_.addEventRegistration(query, eventRegistration);
+        }
+        eventQueueRaiseEventsAtPath(repo.eventQueue_, query.path, events);
+    }
+    function repoRemoveEventCallbackForQuery(repo, query, eventRegistration) {
+        // These are guaranteed not to raise events, since we're not passing in a cancelError. However, we can future-proof
+        // a little bit by handling the return values anyways.
+        var events;
+        if (pathGetFront(query.path) === '.info') {
+            events = repo.infoSyncTree_.removeEventRegistration(query, eventRegistration);
+        }
+        else {
+            events = repo.serverSyncTree_.removeEventRegistration(query, eventRegistration);
+        }
+        eventQueueRaiseEventsAtPath(repo.eventQueue_, query.path, events);
+    }
+    function repoInterrupt(repo) {
+        if (repo.persistentConnection_) {
+            repo.persistentConnection_.interrupt(INTERRUPT_REASON);
+        }
+    }
+    function repoResume(repo) {
+        if (repo.persistentConnection_) {
+            repo.persistentConnection_.resume(INTERRUPT_REASON);
+        }
+    }
+    function repoLog(repo) {
+        var varArgs = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            varArgs[_i - 1] = arguments[_i];
+        }
+        var prefix = '';
+        if (repo.persistentConnection_) {
+            prefix = repo.persistentConnection_.id + ':';
+        }
+        log.apply(void 0, __spread([prefix], varArgs));
+    }
+    function repoCallOnCompleteCallback(repo, callback, status, errorReason) {
+        if (callback) {
+            exceptionGuard(function () {
+                if (status === 'ok') {
+                    callback(null);
                 }
+                else {
+                    var code = (status || 'error').toUpperCase();
+                    var message = code;
+                    if (errorReason) {
+                        message += ': ' + errorReason;
+                    }
+                    var error = new Error(message);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    error.code = code;
+                    callback(error);
+                }
+            });
+        }
+    }
+    function repoGetDatabase(repo) {
+        return repo.__database || (repo.__database = new Database(repo));
+    }
+    /**
+     * Creates a new transaction, adds it to the transactions we're tracking, and
+     * sends it to the server if possible.
+     *
+     * @param path Path at which to do transaction.
+     * @param transactionUpdate Update callback.
+     * @param onComplete Completion callback.
+     * @param applyLocally Whether or not to make intermediate results visible
+     */
+    function repoStartTransaction(repo, path, transactionUpdate, onComplete, applyLocally) {
+        repoLog(repo, 'transaction on ' + path);
+        // Add a watch to make sure we get server updates.
+        var valueCallback = function () { };
+        var watchRef = new Reference(repo, path);
+        watchRef.on('value', valueCallback);
+        var unwatcher = function () {
+            watchRef.off('value', valueCallback);
+        };
+        // Initialize transaction.
+        var transaction = {
+            path: path,
+            update: transactionUpdate,
+            onComplete: onComplete,
+            // One of TransactionStatus enums.
+            status: null,
+            // Used when combining transactions at different locations to figure out
+            // which one goes first.
+            order: LUIDGenerator(),
+            // Whether to raise local events for this transaction.
+            applyLocally: applyLocally,
+            // Count of how many times we've retried the transaction.
+            retryCount: 0,
+            // Function to call to clean up our .on() listener.
+            unwatcher: unwatcher,
+            // Stores why a transaction was aborted.
+            abortReason: null,
+            currentWriteId: null,
+            currentInputSnapshot: null,
+            currentOutputSnapshotRaw: null,
+            currentOutputSnapshotResolved: null
+        };
+        // Run transaction initially.
+        var currentState = repoGetLatestState(repo, path, undefined);
+        transaction.currentInputSnapshot = currentState;
+        var newVal = transaction.update(currentState.val());
+        if (newVal === undefined) {
+            // Abort transaction.
+            transaction.unwatcher();
+            transaction.currentOutputSnapshotRaw = null;
+            transaction.currentOutputSnapshotResolved = null;
+            if (transaction.onComplete) {
+                // We just set the input snapshot, so this cast should be safe
+                var snapshot = new DataSnapshot(transaction.currentInputSnapshot, new Reference(repo, transaction.path), PRIORITY_INDEX);
+                transaction.onComplete(null, false, snapshot);
+            }
+        }
+        else {
+            validateFirebaseData('transaction failed: Data returned ', newVal, transaction.path);
+            // Mark as run and add to our queue.
+            transaction.status = 0 /* RUN */;
+            var queueNode = repo.transactionQueueTree_.subTree(path);
+            var nodeQueue = queueNode.getValue() || [];
+            nodeQueue.push(transaction);
+            queueNode.setValue(nodeQueue);
+            // Update visibleData and raise events
+            // Note: We intentionally raise events after updating all of our
+            // transaction state, since the user could start new transactions from the
+            // event callbacks.
+            var priorityForNode = void 0;
+            if (typeof newVal === 'object' &&
+                newVal !== null &&
+                contains(newVal, '.priority')) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                priorityForNode = safeGet(newVal, '.priority');
+                assert(isValidPriority(priorityForNode), 'Invalid priority returned by transaction. ' +
+                    'Priority must be a valid string, finite number, server value, or null.');
             }
             else {
-                validateFirebaseData('transaction failed: Data returned ', newVal, transaction.path);
-                // Mark as run and add to our queue.
-                transaction.status = TransactionStatus.RUN;
-                var queueNode = this.transactionQueueTree_.subTree(path);
-                var nodeQueue = queueNode.getValue() || [];
-                nodeQueue.push(transaction);
-                queueNode.setValue(nodeQueue);
-                // Update visibleData and raise events
-                // Note: We intentionally raise events after updating all of our
-                // transaction state, since the user could start new transactions from the
-                // event callbacks.
-                var priorityForNode = void 0;
-                if (typeof newVal === 'object' &&
-                    newVal !== null &&
-                    contains(newVal, '.priority')) {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    priorityForNode = safeGet(newVal, '.priority');
-                    assert(isValidPriority(priorityForNode), 'Invalid priority returned by transaction. ' +
-                        'Priority must be a valid string, finite number, server value, or null.');
-                }
-                else {
-                    var currentNode = this.serverSyncTree_.calcCompleteEventCache(path) ||
-                        ChildrenNode.EMPTY_NODE;
-                    priorityForNode = currentNode.getPriority().val();
-                }
-                var serverValues = this.generateServerValues();
-                var newNodeUnresolved = nodeFromJSON$1(newVal, priorityForNode);
-                var newNode = resolveDeferredValueSnapshot(newNodeUnresolved, currentState, serverValues);
-                transaction.currentOutputSnapshotRaw = newNodeUnresolved;
-                transaction.currentOutputSnapshotResolved = newNode;
-                transaction.currentWriteId = this.getNextWriteId_();
-                var events = this.serverSyncTree_.applyUserOverwrite(path, newNode, transaction.currentWriteId, transaction.applyLocally);
-                eventQueueRaiseEventsForChangedPath(this.eventQueue_, path, events);
-                this.sendReadyTransactions_();
+                var currentNode = repo.serverSyncTree_.calcCompleteEventCache(path) ||
+                    ChildrenNode.EMPTY_NODE;
+                priorityForNode = currentNode.getPriority().val();
             }
-        };
-        /**
-         * @param excludeSets A specific set to exclude
-         */
-        Repo.prototype.getLatestState_ = function (path, excludeSets) {
-            return (this.serverSyncTree_.calcCompleteEventCache(path, excludeSets) ||
-                ChildrenNode.EMPTY_NODE);
-        };
-        /**
-         * Sends any already-run transactions that aren't waiting for outstanding
-         * transactions to complete.
-         *
-         * Externally it's called with no arguments, but it calls itself recursively
-         * with a particular transactionQueueTree node to recurse through the tree.
-         *
-         * @param node transactionQueueTree node to start at.
-         */
-        Repo.prototype.sendReadyTransactions_ = function (node) {
-            var _this = this;
-            if (node === void 0) { node = this.transactionQueueTree_; }
-            // Before recursing, make sure any completed transactions are removed.
-            if (!node) {
-                this.pruneCompletedTransactionsBelowNode_(node);
+            var serverValues = repoGenerateServerValues(repo);
+            var newNodeUnresolved = nodeFromJSON$1(newVal, priorityForNode);
+            var newNode = resolveDeferredValueSnapshot(newNodeUnresolved, currentState, serverValues);
+            transaction.currentOutputSnapshotRaw = newNodeUnresolved;
+            transaction.currentOutputSnapshotResolved = newNode;
+            transaction.currentWriteId = repoGetNextWriteId(repo);
+            var events = repo.serverSyncTree_.applyUserOverwrite(path, newNode, transaction.currentWriteId, transaction.applyLocally);
+            eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
+            repoSendReadyTransactions(repo, repo.transactionQueueTree_);
+        }
+    }
+    /**
+     * @param excludeSets A specific set to exclude
+     */
+    function repoGetLatestState(repo, path, excludeSets) {
+        return (repo.serverSyncTree_.calcCompleteEventCache(path, excludeSets) ||
+            ChildrenNode.EMPTY_NODE);
+    }
+    /**
+     * Sends any already-run transactions that aren't waiting for outstanding
+     * transactions to complete.
+     *
+     * Externally it's called with no arguments, but it calls itself recursively
+     * with a particular transactionQueueTree node to recurse through the tree.
+     *
+     * @param node transactionQueueTree node to start at.
+     */
+    function repoSendReadyTransactions(repo, node) {
+        if (node === void 0) { node = repo.transactionQueueTree_; }
+        // Before recursing, make sure any completed transactions are removed.
+        if (!node) {
+            repoPruneCompletedTransactionsBelowNode(repo, node);
+        }
+        if (node.getValue() !== null) {
+            var queue = repoBuildTransactionQueue(repo, node);
+            assert(queue.length > 0, 'Sending zero length transaction queue');
+            var allRun = queue.every(function (transaction) { return transaction.status === 0 /* RUN */; });
+            // If they're all run (and not sent), we can send them.  Else, we must wait.
+            if (allRun) {
+                repoSendTransactionQueue(repo, node.path(), queue);
             }
-            if (node.getValue() !== null) {
-                var queue = this.buildTransactionQueue_(node);
-                assert(queue.length > 0, 'Sending zero length transaction queue');
-                var allRun = queue.every(function (transaction) {
-                    return transaction.status === TransactionStatus.RUN;
-                });
-                // If they're all run (and not sent), we can send them.  Else, we must wait.
-                if (allRun) {
-                    this.sendTransactionQueue_(node.path(), queue);
-                }
-            }
-            else if (node.hasChildren()) {
-                node.forEachChild(function (childNode) {
-                    _this.sendReadyTransactions_(childNode);
-                });
-            }
-        };
-        /**
-         * Given a list of run transactions, send them to the server and then handle
-         * the result (success or failure).
-         *
-         * @param path The location of the queue.
-         * @param queue Queue of transactions under the specified location.
-         */
-        Repo.prototype.sendTransactionQueue_ = function (path, queue) {
-            var _this = this;
-            // Mark transactions as sent and increment retry count!
-            var setsToIgnore = queue.map(function (txn) {
-                return txn.currentWriteId;
-            });
-            var latestState = this.getLatestState_(path, setsToIgnore);
-            var snapToSend = latestState;
-            var latestHash = latestState.hash();
-            for (var i = 0; i < queue.length; i++) {
-                var txn = queue[i];
-                assert(txn.status === TransactionStatus.RUN, 'tryToSendTransactionQueue_: items in queue should all be run.');
-                txn.status = TransactionStatus.SENT;
-                txn.retryCount++;
-                var relativePath = newRelativePath(path, txn.path);
-                // If we've gotten to this point, the output snapshot must be defined.
-                snapToSend = snapToSend.updateChild(relativePath /** @type {!Node} */, txn.currentOutputSnapshotRaw);
-            }
-            var dataToSend = snapToSend.val(true);
-            var pathToSend = path;
-            // Send the put.
-            this.server_.put(pathToSend.toString(), dataToSend, function (status) {
-                _this.log_('transaction put response', {
-                    path: pathToSend.toString(),
-                    status: status
-                });
-                var events = [];
-                if (status === 'ok') {
-                    // Queue up the callbacks and fire them after cleaning up all of our
-                    // transaction state, since the callback could trigger more
-                    // transactions or sets.
-                    var callbacks = [];
-                    for (var i = 0; i < queue.length; i++) {
-                        queue[i].status = TransactionStatus.COMPLETED;
-                        events = events.concat(_this.serverSyncTree_.ackUserWrite(queue[i].currentWriteId));
-                        if (queue[i].onComplete) {
-                            // We never unset the output snapshot, and given that this
-                            // transaction is complete, it should be set
-                            var node = queue[i].currentOutputSnapshotResolved;
-                            var ref = new Reference(_this, queue[i].path);
-                            var snapshot = new DataSnapshot(node, ref, PRIORITY_INDEX);
-                            callbacks.push(queue[i].onComplete.bind(null, null, true, snapshot));
-                        }
-                        queue[i].unwatcher();
-                    }
-                    // Now remove the completed transactions.
-                    _this.pruneCompletedTransactionsBelowNode_(_this.transactionQueueTree_.subTree(path));
-                    // There may be pending transactions that we can now send.
-                    _this.sendReadyTransactions_();
-                    eventQueueRaiseEventsForChangedPath(_this.eventQueue_, path, events);
-                    // Finally, trigger onComplete callbacks.
-                    for (var i = 0; i < callbacks.length; i++) {
-                        exceptionGuard(callbacks[i]);
-                    }
-                }
-                else {
-                    // transactions are no longer sent.  Update their status appropriately.
-                    if (status === 'datastale') {
-                        for (var i = 0; i < queue.length; i++) {
-                            if (queue[i].status === TransactionStatus.SENT_NEEDS_ABORT) {
-                                queue[i].status = TransactionStatus.NEEDS_ABORT;
-                            }
-                            else {
-                                queue[i].status = TransactionStatus.RUN;
-                            }
-                        }
-                    }
-                    else {
-                        warn('transaction at ' + pathToSend.toString() + ' failed: ' + status);
-                        for (var i = 0; i < queue.length; i++) {
-                            queue[i].status = TransactionStatus.NEEDS_ABORT;
-                            queue[i].abortReason = status;
-                        }
-                    }
-                    _this.rerunTransactions_(path);
-                }
-            }, latestHash);
-        };
-        /**
-         * Finds all transactions dependent on the data at changedPath and reruns them.
-         *
-         * Should be called any time cached data changes.
-         *
-         * Return the highest path that was affected by rerunning transactions. This
-         * is the path at which events need to be raised for.
-         *
-         * @param changedPath The path in mergedData that changed.
-         * @return The rootmost path that was affected by rerunning transactions.
-         */
-        Repo.prototype.rerunTransactions_ = function (changedPath) {
-            var rootMostTransactionNode = this.getAncestorTransactionNode_(changedPath);
-            var path = rootMostTransactionNode.path();
-            var queue = this.buildTransactionQueue_(rootMostTransactionNode);
-            this.rerunTransactionQueue_(queue, path);
-            return path;
-        };
-        /**
-         * Does all the work of rerunning transactions (as well as cleans up aborted
-         * transactions and whatnot).
-         *
-         * @param queue The queue of transactions to run.
-         * @param path The path the queue is for.
-         */
-        Repo.prototype.rerunTransactionQueue_ = function (queue, path) {
-            if (queue.length === 0) {
-                return; // Nothing to do!
-            }
-            // Queue up the callbacks and fire them after cleaning up all of our
-            // transaction state, since the callback could trigger more transactions or
-            // sets.
-            var callbacks = [];
-            var events = [];
-            // Ignore all of the sets we're going to re-run.
-            var txnsToRerun = queue.filter(function (q) {
-                return q.status === TransactionStatus.RUN;
-            });
-            var setsToIgnore = txnsToRerun.map(function (q) {
-                return q.currentWriteId;
-            });
-            for (var i = 0; i < queue.length; i++) {
-                var transaction = queue[i];
-                var relativePath = newRelativePath(path, transaction.path);
-                var abortTransaction = false, abortReason = void 0;
-                assert(relativePath !== null, 'rerunTransactionsUnderNode_: relativePath should not be null.');
-                if (transaction.status === TransactionStatus.NEEDS_ABORT) {
-                    abortTransaction = true;
-                    abortReason = transaction.abortReason;
-                    events = events.concat(this.serverSyncTree_.ackUserWrite(transaction.currentWriteId, true));
-                }
-                else if (transaction.status === TransactionStatus.RUN) {
-                    if (transaction.retryCount >= MAX_TRANSACTION_RETRIES) {
-                        abortTransaction = true;
-                        abortReason = 'maxretry';
-                        events = events.concat(this.serverSyncTree_.ackUserWrite(transaction.currentWriteId, true));
-                    }
-                    else {
-                        // This code reruns a transaction
-                        var currentNode = this.getLatestState_(transaction.path, setsToIgnore);
-                        transaction.currentInputSnapshot = currentNode;
-                        var newData = queue[i].update(currentNode.val());
-                        if (newData !== undefined) {
-                            validateFirebaseData('transaction failed: Data returned ', newData, transaction.path);
-                            var newDataNode = nodeFromJSON$1(newData);
-                            var hasExplicitPriority = typeof newData === 'object' &&
-                                newData != null &&
-                                contains(newData, '.priority');
-                            if (!hasExplicitPriority) {
-                                // Keep the old priority if there wasn't a priority explicitly specified.
-                                newDataNode = newDataNode.updatePriority(currentNode.getPriority());
-                            }
-                            var oldWriteId = transaction.currentWriteId;
-                            var serverValues = this.generateServerValues();
-                            var newNodeResolved = resolveDeferredValueSnapshot(newDataNode, currentNode, serverValues);
-                            transaction.currentOutputSnapshotRaw = newDataNode;
-                            transaction.currentOutputSnapshotResolved = newNodeResolved;
-                            transaction.currentWriteId = this.getNextWriteId_();
-                            // Mutates setsToIgnore in place
-                            setsToIgnore.splice(setsToIgnore.indexOf(oldWriteId), 1);
-                            events = events.concat(this.serverSyncTree_.applyUserOverwrite(transaction.path, newNodeResolved, transaction.currentWriteId, transaction.applyLocally));
-                            events = events.concat(this.serverSyncTree_.ackUserWrite(oldWriteId, true));
-                        }
-                        else {
-                            abortTransaction = true;
-                            abortReason = 'nodata';
-                            events = events.concat(this.serverSyncTree_.ackUserWrite(transaction.currentWriteId, true));
-                        }
-                    }
-                }
-                eventQueueRaiseEventsForChangedPath(this.eventQueue_, path, events);
-                events = [];
-                if (abortTransaction) {
-                    // Abort.
-                    queue[i].status = TransactionStatus.COMPLETED;
-                    // Removing a listener can trigger pruning which can muck with
-                    // mergedData/visibleData (as it prunes data). So defer the unwatcher
-                    // until we're done.
-                    (function (unwatcher) {
-                        setTimeout(unwatcher, Math.floor(0));
-                    })(queue[i].unwatcher);
-                    if (queue[i].onComplete) {
-                        if (abortReason === 'nodata') {
-                            var ref = new Reference(this, queue[i].path);
-                            // We set this field immediately, so it's safe to cast to an actual snapshot
-                            var lastInput /** @type {!Node} */ = queue[i].currentInputSnapshot;
-                            var snapshot = new DataSnapshot(lastInput, ref, PRIORITY_INDEX);
-                            callbacks.push(queue[i].onComplete.bind(null, null, false, snapshot));
-                        }
-                        else {
-                            callbacks.push(queue[i].onComplete.bind(null, new Error(abortReason), false, null));
-                        }
-                    }
-                }
-            }
-            // Clean up completed transactions.
-            this.pruneCompletedTransactionsBelowNode_(this.transactionQueueTree_);
-            // Now fire callbacks, now that we're in a good, known state.
-            for (var i = 0; i < callbacks.length; i++) {
-                exceptionGuard(callbacks[i]);
-            }
-            // Try to send the transaction result to the server.
-            this.sendReadyTransactions_();
-        };
-        /**
-         * Returns the rootmost ancestor node of the specified path that has a pending
-         * transaction on it, or just returns the node for the given path if there are
-         * no pending transactions on any ancestor.
-         *
-         * @param path The location to start at.
-         * @return The rootmost node with a transaction.
-         */
-        Repo.prototype.getAncestorTransactionNode_ = function (path) {
-            var front;
-            // Start at the root and walk deeper into the tree towards path until we
-            // find a node with pending transactions.
-            var transactionNode = this.transactionQueueTree_;
-            front = pathGetFront(path);
-            while (front !== null && transactionNode.getValue() === null) {
-                transactionNode = transactionNode.subTree(front);
-                path = pathPopFront(path);
-                front = pathGetFront(path);
-            }
-            return transactionNode;
-        };
-        /**
-         * Builds the queue of all transactions at or below the specified
-         * transactionNode.
-         *
-         * @param transactionNode
-         * @return The generated queue.
-         */
-        Repo.prototype.buildTransactionQueue_ = function (transactionNode) {
-            // Walk any child transaction queues and aggregate them into a single queue.
-            var transactionQueue = [];
-            this.aggregateTransactionQueuesForNode_(transactionNode, transactionQueue);
-            // Sort them by the order the transactions were created.
-            transactionQueue.sort(function (a, b) {
-                return a.order - b.order;
-            });
-            return transactionQueue;
-        };
-        Repo.prototype.aggregateTransactionQueuesForNode_ = function (node, queue) {
-            var _this = this;
-            var nodeQueue = node.getValue();
-            if (nodeQueue !== null) {
-                for (var i = 0; i < nodeQueue.length; i++) {
-                    queue.push(nodeQueue[i]);
-                }
-            }
-            node.forEachChild(function (child) {
-                _this.aggregateTransactionQueuesForNode_(child, queue);
-            });
-        };
-        /**
-         * Remove COMPLETED transactions at or below this node in the transactionQueueTree_.
-         */
-        Repo.prototype.pruneCompletedTransactionsBelowNode_ = function (node) {
-            var _this = this;
-            var queue = node.getValue();
-            if (queue) {
-                var to = 0;
-                for (var from = 0; from < queue.length; from++) {
-                    if (queue[from].status !== TransactionStatus.COMPLETED) {
-                        queue[to] = queue[from];
-                        to++;
-                    }
-                }
-                queue.length = to;
-                node.setValue(queue.length > 0 ? queue : null);
-            }
+        }
+        else if (node.hasChildren()) {
             node.forEachChild(function (childNode) {
-                _this.pruneCompletedTransactionsBelowNode_(childNode);
+                repoSendReadyTransactions(repo, childNode);
             });
-        };
-        /**
-         * Aborts all transactions on ancestors or descendants of the specified path.
-         * Called when doing a set() or update() since we consider them incompatible
-         * with transactions.
-         *
-         * @param path Path for which we want to abort related transactions.
-         */
-        Repo.prototype.abortTransactions_ = function (path) {
-            var _this = this;
-            var affectedPath = this.getAncestorTransactionNode_(path).path();
-            var transactionNode = this.transactionQueueTree_.subTree(path);
-            transactionNode.forEachAncestor(function (node) {
-                _this.abortTransactionsOnNode_(node);
+        }
+    }
+    /**
+     * Given a list of run transactions, send them to the server and then handle
+     * the result (success or failure).
+     *
+     * @param path The location of the queue.
+     * @param queue Queue of transactions under the specified location.
+     */
+    function repoSendTransactionQueue(repo, path, queue) {
+        // Mark transactions as sent and increment retry count!
+        var setsToIgnore = queue.map(function (txn) {
+            return txn.currentWriteId;
+        });
+        var latestState = repoGetLatestState(repo, path, setsToIgnore);
+        var snapToSend = latestState;
+        var latestHash = latestState.hash();
+        for (var i = 0; i < queue.length; i++) {
+            var txn = queue[i];
+            assert(txn.status === 0 /* RUN */, 'tryToSendTransactionQueue_: items in queue should all be run.');
+            txn.status = 1 /* SENT */;
+            txn.retryCount++;
+            var relativePath = newRelativePath(path, txn.path);
+            // If we've gotten to this point, the output snapshot must be defined.
+            snapToSend = snapToSend.updateChild(relativePath /** @type {!Node} */, txn.currentOutputSnapshotRaw);
+        }
+        var dataToSend = snapToSend.val(true);
+        var pathToSend = path;
+        // Send the put.
+        repo.server_.put(pathToSend.toString(), dataToSend, function (status) {
+            repoLog(repo, 'transaction put response', {
+                path: pathToSend.toString(),
+                status: status
             });
-            this.abortTransactionsOnNode_(transactionNode);
-            transactionNode.forEachDescendant(function (node) {
-                _this.abortTransactionsOnNode_(node);
-            });
-            return affectedPath;
-        };
-        /**
-         * Abort transactions stored in this transaction queue node.
-         *
-         * @param node Node to abort transactions for.
-         */
-        Repo.prototype.abortTransactionsOnNode_ = function (node) {
-            var queue = node.getValue();
-            if (queue !== null) {
+            var events = [];
+            if (status === 'ok') {
                 // Queue up the callbacks and fire them after cleaning up all of our
-                // transaction state, since the callback could trigger more transactions
-                // or sets.
+                // transaction state, since the callback could trigger more
+                // transactions or sets.
                 var callbacks = [];
-                // Go through queue.  Any already-sent transactions must be marked for
-                // abort, while the unsent ones can be immediately aborted and removed.
-                var events = [];
-                var lastSent = -1;
                 for (var i = 0; i < queue.length; i++) {
-                    if (queue[i].status === TransactionStatus.SENT_NEEDS_ABORT) ;
-                    else if (queue[i].status === TransactionStatus.SENT) {
-                        assert(lastSent === i - 1, 'All SENT items should be at beginning of queue.');
-                        lastSent = i;
-                        // Mark transaction for abort when it comes back.
-                        queue[i].status = TransactionStatus.SENT_NEEDS_ABORT;
-                        queue[i].abortReason = 'set';
+                    queue[i].status = 2 /* COMPLETED */;
+                    events = events.concat(repo.serverSyncTree_.ackUserWrite(queue[i].currentWriteId));
+                    if (queue[i].onComplete) {
+                        // We never unset the output snapshot, and given that this
+                        // transaction is complete, it should be set
+                        var node = queue[i].currentOutputSnapshotResolved;
+                        var ref = new Reference(repo, queue[i].path);
+                        var snapshot = new DataSnapshot(node, ref, PRIORITY_INDEX);
+                        callbacks.push(queue[i].onComplete.bind(null, null, true, snapshot));
                     }
-                    else {
-                        assert(queue[i].status === TransactionStatus.RUN, 'Unexpected transaction status in abort');
-                        // We can abort it immediately.
-                        queue[i].unwatcher();
-                        events = events.concat(this.serverSyncTree_.ackUserWrite(queue[i].currentWriteId, true));
-                        if (queue[i].onComplete) {
-                            var snapshot = null;
-                            callbacks.push(queue[i].onComplete.bind(null, new Error('set'), false, snapshot));
-                        }
-                    }
+                    queue[i].unwatcher();
                 }
-                if (lastSent === -1) {
-                    // We're not waiting for any sent transactions.  We can clear the queue.
-                    node.setValue(null);
-                }
-                else {
-                    // Remove the transactions we aborted.
-                    queue.length = lastSent + 1;
-                }
-                // Now fire the callbacks.
-                eventQueueRaiseEventsForChangedPath(this.eventQueue_, node.path(), events);
+                // Now remove the completed transactions.
+                repoPruneCompletedTransactionsBelowNode(repo, repo.transactionQueueTree_.subTree(path));
+                // There may be pending transactions that we can now send.
+                repoSendReadyTransactions(repo, repo.transactionQueueTree_);
+                eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
+                // Finally, trigger onComplete callbacks.
                 for (var i = 0; i < callbacks.length; i++) {
                     exceptionGuard(callbacks[i]);
                 }
             }
-        };
-        return Repo;
-    }());
+            else {
+                // transactions are no longer sent.  Update their status appropriately.
+                if (status === 'datastale') {
+                    for (var i = 0; i < queue.length; i++) {
+                        if (queue[i].status === 3 /* SENT_NEEDS_ABORT */) {
+                            queue[i].status = 4 /* NEEDS_ABORT */;
+                        }
+                        else {
+                            queue[i].status = 0 /* RUN */;
+                        }
+                    }
+                }
+                else {
+                    warn('transaction at ' + pathToSend.toString() + ' failed: ' + status);
+                    for (var i = 0; i < queue.length; i++) {
+                        queue[i].status = 4 /* NEEDS_ABORT */;
+                        queue[i].abortReason = status;
+                    }
+                }
+                repoRerunTransactions(repo, path);
+            }
+        }, latestHash);
+    }
+    /**
+     * Finds all transactions dependent on the data at changedPath and reruns them.
+     *
+     * Should be called any time cached data changes.
+     *
+     * Return the highest path that was affected by rerunning transactions. This
+     * is the path at which events need to be raised for.
+     *
+     * @param changedPath The path in mergedData that changed.
+     * @return The rootmost path that was affected by rerunning transactions.
+     */
+    function repoRerunTransactions(repo, changedPath) {
+        var rootMostTransactionNode = repoGetAncestorTransactionNode(repo, changedPath);
+        var path = rootMostTransactionNode.path();
+        var queue = repoBuildTransactionQueue(repo, rootMostTransactionNode);
+        repoRerunTransactionQueue(repo, queue, path);
+        return path;
+    }
+    /**
+     * Does all the work of rerunning transactions (as well as cleans up aborted
+     * transactions and whatnot).
+     *
+     * @param queue The queue of transactions to run.
+     * @param path The path the queue is for.
+     */
+    function repoRerunTransactionQueue(repo, queue, path) {
+        if (queue.length === 0) {
+            return; // Nothing to do!
+        }
+        // Queue up the callbacks and fire them after cleaning up all of our
+        // transaction state, since the callback could trigger more transactions or
+        // sets.
+        var callbacks = [];
+        var events = [];
+        // Ignore all of the sets we're going to re-run.
+        var txnsToRerun = queue.filter(function (q) {
+            return q.status === 0 /* RUN */;
+        });
+        var setsToIgnore = txnsToRerun.map(function (q) {
+            return q.currentWriteId;
+        });
+        for (var i = 0; i < queue.length; i++) {
+            var transaction = queue[i];
+            var relativePath = newRelativePath(path, transaction.path);
+            var abortTransaction = false, abortReason = void 0;
+            assert(relativePath !== null, 'rerunTransactionsUnderNode_: relativePath should not be null.');
+            if (transaction.status === 4 /* NEEDS_ABORT */) {
+                abortTransaction = true;
+                abortReason = transaction.abortReason;
+                events = events.concat(repo.serverSyncTree_.ackUserWrite(transaction.currentWriteId, true));
+            }
+            else if (transaction.status === 0 /* RUN */) {
+                if (transaction.retryCount >= MAX_TRANSACTION_RETRIES) {
+                    abortTransaction = true;
+                    abortReason = 'maxretry';
+                    events = events.concat(repo.serverSyncTree_.ackUserWrite(transaction.currentWriteId, true));
+                }
+                else {
+                    // This code reruns a transaction
+                    var currentNode = repoGetLatestState(repo, transaction.path, setsToIgnore);
+                    transaction.currentInputSnapshot = currentNode;
+                    var newData = queue[i].update(currentNode.val());
+                    if (newData !== undefined) {
+                        validateFirebaseData('transaction failed: Data returned ', newData, transaction.path);
+                        var newDataNode = nodeFromJSON$1(newData);
+                        var hasExplicitPriority = typeof newData === 'object' &&
+                            newData != null &&
+                            contains(newData, '.priority');
+                        if (!hasExplicitPriority) {
+                            // Keep the old priority if there wasn't a priority explicitly specified.
+                            newDataNode = newDataNode.updatePriority(currentNode.getPriority());
+                        }
+                        var oldWriteId = transaction.currentWriteId;
+                        var serverValues = repoGenerateServerValues(repo);
+                        var newNodeResolved = resolveDeferredValueSnapshot(newDataNode, currentNode, serverValues);
+                        transaction.currentOutputSnapshotRaw = newDataNode;
+                        transaction.currentOutputSnapshotResolved = newNodeResolved;
+                        transaction.currentWriteId = repoGetNextWriteId(repo);
+                        // Mutates setsToIgnore in place
+                        setsToIgnore.splice(setsToIgnore.indexOf(oldWriteId), 1);
+                        events = events.concat(repo.serverSyncTree_.applyUserOverwrite(transaction.path, newNodeResolved, transaction.currentWriteId, transaction.applyLocally));
+                        events = events.concat(repo.serverSyncTree_.ackUserWrite(oldWriteId, true));
+                    }
+                    else {
+                        abortTransaction = true;
+                        abortReason = 'nodata';
+                        events = events.concat(repo.serverSyncTree_.ackUserWrite(transaction.currentWriteId, true));
+                    }
+                }
+            }
+            eventQueueRaiseEventsForChangedPath(repo.eventQueue_, path, events);
+            events = [];
+            if (abortTransaction) {
+                // Abort.
+                queue[i].status = 2 /* COMPLETED */;
+                // Removing a listener can trigger pruning which can muck with
+                // mergedData/visibleData (as it prunes data). So defer the unwatcher
+                // until we're done.
+                (function (unwatcher) {
+                    setTimeout(unwatcher, Math.floor(0));
+                })(queue[i].unwatcher);
+                if (queue[i].onComplete) {
+                    if (abortReason === 'nodata') {
+                        var ref = new Reference(repo, queue[i].path);
+                        // We set this field immediately, so it's safe to cast to an actual snapshot
+                        var lastInput /** @type {!Node} */ = queue[i].currentInputSnapshot;
+                        var snapshot = new DataSnapshot(lastInput, ref, PRIORITY_INDEX);
+                        callbacks.push(queue[i].onComplete.bind(null, null, false, snapshot));
+                    }
+                    else {
+                        callbacks.push(queue[i].onComplete.bind(null, new Error(abortReason), false, null));
+                    }
+                }
+            }
+        }
+        // Clean up completed transactions.
+        repoPruneCompletedTransactionsBelowNode(repo, repo.transactionQueueTree_);
+        // Now fire callbacks, now that we're in a good, known state.
+        for (var i = 0; i < callbacks.length; i++) {
+            exceptionGuard(callbacks[i]);
+        }
+        // Try to send the transaction result to the server.
+        repoSendReadyTransactions(repo, repo.transactionQueueTree_);
+    }
+    /**
+     * Returns the rootmost ancestor node of the specified path that has a pending
+     * transaction on it, or just returns the node for the given path if there are
+     * no pending transactions on any ancestor.
+     *
+     * @param path The location to start at.
+     * @return The rootmost node with a transaction.
+     */
+    function repoGetAncestorTransactionNode(repo, path) {
+        var front;
+        // Start at the root and walk deeper into the tree towards path until we
+        // find a node with pending transactions.
+        var transactionNode = repo.transactionQueueTree_;
+        front = pathGetFront(path);
+        while (front !== null && transactionNode.getValue() === null) {
+            transactionNode = transactionNode.subTree(front);
+            path = pathPopFront(path);
+            front = pathGetFront(path);
+        }
+        return transactionNode;
+    }
+    /**
+     * Builds the queue of all transactions at or below the specified
+     * transactionNode.
+     *
+     * @param transactionNode
+     * @return The generated queue.
+     */
+    function repoBuildTransactionQueue(repo, transactionNode) {
+        // Walk any child transaction queues and aggregate them into a single queue.
+        var transactionQueue = [];
+        repoAggregateTransactionQueuesForNode(repo, transactionNode, transactionQueue);
+        // Sort them by the order the transactions were created.
+        transactionQueue.sort(function (a, b) {
+            return a.order - b.order;
+        });
+        return transactionQueue;
+    }
+    function repoAggregateTransactionQueuesForNode(repo, node, queue) {
+        var nodeQueue = node.getValue();
+        if (nodeQueue !== null) {
+            for (var i = 0; i < nodeQueue.length; i++) {
+                queue.push(nodeQueue[i]);
+            }
+        }
+        node.forEachChild(function (child) {
+            repoAggregateTransactionQueuesForNode(repo, child, queue);
+        });
+    }
+    /**
+     * Remove COMPLETED transactions at or below this node in the transactionQueueTree_.
+     */
+    function repoPruneCompletedTransactionsBelowNode(repo, node) {
+        var queue = node.getValue();
+        if (queue) {
+            var to = 0;
+            for (var from = 0; from < queue.length; from++) {
+                if (queue[from].status !== 2 /* COMPLETED */) {
+                    queue[to] = queue[from];
+                    to++;
+                }
+            }
+            queue.length = to;
+            node.setValue(queue.length > 0 ? queue : null);
+        }
+        node.forEachChild(function (childNode) {
+            repoPruneCompletedTransactionsBelowNode(repo, childNode);
+        });
+    }
+    /**
+     * Aborts all transactions on ancestors or descendants of the specified path.
+     * Called when doing a set() or update() since we consider them incompatible
+     * with transactions.
+     *
+     * @param path Path for which we want to abort related transactions.
+     */
+    function repoAbortTransactions(repo, path) {
+        var affectedPath = repoGetAncestorTransactionNode(repo, path).path();
+        var transactionNode = repo.transactionQueueTree_.subTree(path);
+        transactionNode.forEachAncestor(function (node) {
+            repoAbortTransactionsOnNode(repo, node);
+        });
+        repoAbortTransactionsOnNode(repo, transactionNode);
+        transactionNode.forEachDescendant(function (node) {
+            repoAbortTransactionsOnNode(repo, node);
+        });
+        return affectedPath;
+    }
+    /**
+     * Abort transactions stored in this transaction queue node.
+     *
+     * @param node Node to abort transactions for.
+     */
+    function repoAbortTransactionsOnNode(repo, node) {
+        var queue = node.getValue();
+        if (queue !== null) {
+            // Queue up the callbacks and fire them after cleaning up all of our
+            // transaction state, since the callback could trigger more transactions
+            // or sets.
+            var callbacks = [];
+            // Go through queue.  Any already-sent transactions must be marked for
+            // abort, while the unsent ones can be immediately aborted and removed.
+            var events = [];
+            var lastSent = -1;
+            for (var i = 0; i < queue.length; i++) {
+                if (queue[i].status === 3 /* SENT_NEEDS_ABORT */) ;
+                else if (queue[i].status === 1 /* SENT */) {
+                    assert(lastSent === i - 1, 'All SENT items should be at beginning of queue.');
+                    lastSent = i;
+                    // Mark transaction for abort when it comes back.
+                    queue[i].status = 3 /* SENT_NEEDS_ABORT */;
+                    queue[i].abortReason = 'set';
+                }
+                else {
+                    assert(queue[i].status === 0 /* RUN */, 'Unexpected transaction status in abort');
+                    // We can abort it immediately.
+                    queue[i].unwatcher();
+                    events = events.concat(repo.serverSyncTree_.ackUserWrite(queue[i].currentWriteId, true));
+                    if (queue[i].onComplete) {
+                        var snapshot = null;
+                        callbacks.push(queue[i].onComplete.bind(null, new Error('set'), false, snapshot));
+                    }
+                }
+            }
+            if (lastSent === -1) {
+                // We're not waiting for any sent transactions.  We can clear the queue.
+                node.setValue(null);
+            }
+            else {
+                // Remove the transactions we aborted.
+                queue.length = lastSent + 1;
+            }
+            // Now fire the callbacks.
+            eventQueueRaiseEventsForChangedPath(repo.eventQueue_, node.path(), events);
+            for (var i = 0; i < callbacks.length; i++) {
+                exceptionGuard(callbacks[i]);
+            }
+        }
+    }
 
     /**
      * @license
@@ -15647,7 +15575,7 @@
                     try {
                         for (var _e = (e_2 = void 0, __values(Object.keys(this.repos_[appName]))), _f = _e.next(); !_f.done; _f = _e.next()) {
                             var dbUrl = _f.value;
-                            this.repos_[appName][dbUrl].interrupt();
+                            repoInterrupt(this.repos_[appName][dbUrl]);
                         }
                     }
                     catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -15675,7 +15603,7 @@
                     try {
                         for (var _e = (e_4 = void 0, __values(Object.keys(this.repos_[appName]))), _f = _e.next(); !_f.done; _f = _e.next()) {
                             var dbUrl = _f.value;
-                            this.repos_[appName][dbUrl].resume();
+                            repoResume(this.repos_[appName][dbUrl]);
                         }
                     }
                     catch (e_4_1) { e_4 = { error: e_4_1 }; }
@@ -15743,7 +15671,7 @@
                     '(not including a child path).');
             }
             var repo = this.createRepo(repoInfo, app, authTokenProvider);
-            return repo.database;
+            return repoGetDatabase(repo);
         };
         /**
          * Remove the repo and make sure it is disconnected.
@@ -15755,7 +15683,7 @@
             if (!appRepos || safeGet(appRepos, repo.key) !== repo) {
                 fatal("Database " + repo.app.name + "(" + repo.repoInfo_ + ") has already been deleted.");
             }
-            repo.interrupt();
+            repoInterrupt(repo);
             delete appRepos[repo.key];
         };
         /**

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApiError = exports.PopoutBlockedError = exports.ConfigurationError = exports.ExternalError = void 0;
 /** @public */
 class ExternalError extends Error {
+    /** @internal */
     constructor(type, message) {
         super(message);
         this.type = type;
@@ -11,6 +12,7 @@ class ExternalError extends Error {
 exports.ExternalError = ExternalError;
 /** @public */
 class ConfigurationError extends ExternalError {
+    /** @internal */
     constructor(message, node) {
         super('Configuration', message);
         this.node = node;
@@ -19,6 +21,7 @@ class ConfigurationError extends ExternalError {
 exports.ConfigurationError = ConfigurationError;
 /** @public */
 class PopoutBlockedError extends ExternalError {
+    /** @internal */
     constructor(message) {
         super('PopoutBlocked', message);
     }
@@ -26,6 +29,7 @@ class PopoutBlockedError extends ExternalError {
 exports.PopoutBlockedError = PopoutBlockedError;
 /** @public */
 class ApiError extends ExternalError {
+    /** @internal */
     constructor(message) {
         super('API', message);
     }

@@ -12,7 +12,9 @@ import { ContentItem } from './content-item';
 /** @public */
 export class Stack extends ComponentParentableItem {
     /** @internal */
-    constructor(layoutManager, config, _stackParent) {
+    constructor(layoutManager, config, 
+    /** @internal */
+    _stackParent) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
         super(layoutManager, config, _stackParent, Stack.createElement(document));
         this._stackParent = _stackParent;
@@ -221,19 +223,21 @@ export class Stack extends ComponentParentableItem {
     setRowColumnClosable(value) {
         this._header.setRowColumnClosable(value);
     }
-    newComponent(componentType, componentState, index) {
+    newComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.newItem(itemConfig, index);
     }
-    addComponent(componentType, componentState, index) {
+    addComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.addItem(itemConfig, index);
     }
@@ -728,6 +732,7 @@ export class Stack extends ComponentParentableItem {
         dropTargetIndicator.highlightArea(area);
         return;
     }
+    /** @internal */
     resetHeaderDropZone() {
         this.layoutManager.tabDropPlaceholder.remove();
     }

@@ -131,6 +131,7 @@ class EventEmitter {
             subscriptions.splice(idx, 1);
         }
     }
+    /** @internal */
     emitAllEvent(eventName, args) {
         const allEventSubscriptionsCount = this._allEventSubscriptions.length;
         if (allEventSubscriptionsCount > 0) {
@@ -153,22 +154,32 @@ exports.EventEmitter = EventEmitter;
     EventEmitter.headerClickEventName = 'stackHeaderClick';
     EventEmitter.headerTouchStartEventName = 'stackHeaderTouchStart';
     class BubblingEvent {
-        constructor(_name, _target) {
+        /** @internal */
+        constructor(
+        /** @internal */
+        _name, 
+        /** @internal */
+        _target) {
             this._name = _name;
             this._target = _target;
-            this.isPropagationStopped = false;
+            /** @internal */
+            this._isPropagationStopped = false;
         }
         get name() { return this._name; }
         get target() { return this._target; }
         /** @deprecated Use {@link (EventEmitter:namespace).(BubblingEvent:class).target} instead */
         get origin() { return this._target; }
+        get isPropagationStopped() { return this._isPropagationStopped; }
         stopPropagation() {
-            this.isPropagationStopped = true;
+            this._isPropagationStopped = true;
         }
     }
     EventEmitter.BubblingEvent = BubblingEvent;
     class ClickBubblingEvent extends BubblingEvent {
-        constructor(name, target, _mouseEvent) {
+        /** @internal */
+        constructor(name, target, 
+        /** @internal */
+        _mouseEvent) {
             super(name, target);
             this._mouseEvent = _mouseEvent;
         }
@@ -176,7 +187,10 @@ exports.EventEmitter = EventEmitter;
     }
     EventEmitter.ClickBubblingEvent = ClickBubblingEvent;
     class TouchStartBubblingEvent extends BubblingEvent {
-        constructor(name, target, _touchEvent) {
+        /** @internal */
+        constructor(name, target, 
+        /** @internal */
+        _touchEvent) {
             super(name, target);
             this._touchEvent = _touchEvent;
         }

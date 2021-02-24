@@ -10,7 +10,9 @@ const content_item_1 = require("./content-item");
 /** @public */
 class ComponentItem extends content_item_1.ContentItem {
     /** @internal */
-    constructor(layoutManager, config, _parentItem) {
+    constructor(layoutManager, config, 
+    /** @internal */
+    _parentItem) {
         super(layoutManager, config, _parentItem, document.createElement('div'));
         this._parentItem = _parentItem;
         /** @internal */

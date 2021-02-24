@@ -1,5 +1,6 @@
 /** @public */
 export class ExternalError extends Error {
+    /** @internal */
     constructor(type, message) {
         super(message);
         this.type = type;
@@ -7,6 +8,7 @@ export class ExternalError extends Error {
 }
 /** @public */
 export class ConfigurationError extends ExternalError {
+    /** @internal */
     constructor(message, node) {
         super('Configuration', message);
         this.node = node;
@@ -14,12 +16,14 @@ export class ConfigurationError extends ExternalError {
 }
 /** @public */
 export class PopoutBlockedError extends ExternalError {
+    /** @internal */
     constructor(message) {
         super('PopoutBlocked', message);
     }
 }
 /** @public */
 export class ApiError extends ExternalError {
+    /** @internal */
     constructor(message) {
         super('API', message);
     }

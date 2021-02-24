@@ -15,7 +15,9 @@ const content_item_1 = require("./content-item");
 /** @public */
 class Stack extends component_parentable_item_1.ComponentParentableItem {
     /** @internal */
-    constructor(layoutManager, config, _stackParent) {
+    constructor(layoutManager, config, 
+    /** @internal */
+    _stackParent) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
         super(layoutManager, config, _stackParent, Stack.createElement(document));
         this._stackParent = _stackParent;
@@ -224,19 +226,21 @@ class Stack extends component_parentable_item_1.ComponentParentableItem {
     setRowColumnClosable(value) {
         this._header.setRowColumnClosable(value);
     }
-    newComponent(componentType, componentState, index) {
+    newComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.newItem(itemConfig, index);
     }
-    addComponent(componentType, componentState, index) {
+    addComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.addItem(itemConfig, index);
     }
@@ -731,6 +735,7 @@ class Stack extends component_parentable_item_1.ComponentParentableItem {
         dropTargetIndicator.highlightArea(area);
         return;
     }
+    /** @internal */
     resetHeaderDropZone() {
         this.layoutManager.tabDropPlaceholder.remove();
     }

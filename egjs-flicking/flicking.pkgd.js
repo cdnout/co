@@ -4,7 +4,7 @@ name: @egjs/flicking
 license: MIT
 author: NAVER Corp.
 repository: https://github.com/naver/egjs-flicking
-version: 3.7.2
+version: 3.8.0
 */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -4123,7 +4123,7 @@ version: 3.7.2
     @egjs/axes JavaScript library
     https://github.com/naver/egjs-axes
 
-    @version 2.7.0
+    @version 2.7.2
     */
 
     /*! *****************************************************************************
@@ -5202,7 +5202,7 @@ version: 3.7.2
             return acc;
           }, {});
         } else {
-          return __assign$1({}, this._pos, axes || {});
+          return __assign$1(__assign$1({}, this._pos), axes || {});
         }
       };
 
@@ -5436,7 +5436,7 @@ version: 3.7.2
 
     // export const DIRECTION_NONE = 1;
     var IOS_EDGE_THRESHOLD = 30;
-    var IS_IOS_SAFARI = "ontouchstart" in win$1 && agent(win$1.navigator.userAgent).browser.name.indexOf("safari") > -1;
+    var IS_IOS_SAFARI = "ontouchstart" in win$1 && agent().browser.name === "safari";
     var TRANSFORM = function () {
       if (typeof document === "undefined") {
         return "";
@@ -5850,7 +5850,7 @@ version: 3.7.2
        */
 
 
-      Axes.VERSION = "2.7.0";
+      Axes.VERSION = "2.7.2";
       /**
        * @name eg.Axes.TRANSFORM
        * @desc Returns the transform attribute with CSS vendor prefixes.
@@ -6243,7 +6243,7 @@ version: 3.7.2
 
           if (swipeLeftToRight) {
             // iOS swipe left => right
-            this.onPanend(__assign$1({}, prevInput, {
+            this.onPanend(__assign$1(__assign$1({}, prevInput), {
               velocityX: 0,
               velocityY: 0,
               offsetX: 0,
@@ -6261,7 +6261,7 @@ version: 3.7.2
             } else {
               // iOS swipe right => left
               this.rightEdgeTimer = window.setTimeout(function () {
-                _this.onPanend(__assign$1({}, prevInput, {
+                _this.onPanend(__assign$1(__assign$1({}, prevInput), {
                   velocityX: 0,
                   velocityY: 0,
                   offsetX: 0,
@@ -7894,10 +7894,11 @@ version: 3.7.2
           var clickedPanelPosition = clickedPanel.getPosition();
           var direction = clickedPanelPosition > cameraPosition ? DIRECTION.NEXT : clickedPanelPosition < cameraPosition ? DIRECTION.PREV : null; // Don't provide axes event, to use axes instance instead
 
-          triggerEvent(EVENTS.SELECT, null, true, {
+          triggerEvent(EVENTS.SELECT, releaseEvent, true, {
             direction: direction,
             index: clickedPanel.getIndex(),
-            panel: clickedPanel
+            panel: clickedPanel,
+            element: clickedElement
           });
         }
       };
@@ -9137,6 +9138,7 @@ version: 3.7.2
         panels.forEach(function (panel, idx) {
           var createdPanel = createdPanels[idx];
           createdPanel.setIndex(panel.index);
+          createdPanel.setPosition(panel.position);
           orderedPanels[panel.index] = createdPanel;
         });
         panelManager.replacePanels(orderedPanels, []);
@@ -10843,7 +10845,8 @@ version: 3.7.2
         }).map(function (panel) {
           return {
             html: panel.getElement().outerHTML,
-            index: panel.getIndex()
+            index: panel.getIndex(),
+            position: panel.getPosition()
           };
         });
         return {
@@ -11306,7 +11309,7 @@ version: 3.7.2
        */
 
 
-      Flicking.VERSION = "3.7.2";
+      Flicking.VERSION = "3.8.0";
       /**
        * Direction constant - "PREV" or "NEXT"
        * @ko 방향 상수 - "PREV" 또는 "NEXT"

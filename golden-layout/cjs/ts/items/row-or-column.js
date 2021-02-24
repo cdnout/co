@@ -11,7 +11,9 @@ const stack_1 = require("./stack");
 /** @public */
 class RowOrColumn extends content_item_1.ContentItem {
     /** @internal */
-    constructor(isColumn, layoutManager, config, _rowOrColumnParent) {
+    constructor(isColumn, layoutManager, config, 
+    /** @internal */
+    _rowOrColumnParent) {
         super(layoutManager, config, _rowOrColumnParent, RowOrColumn.createElement(document, isColumn));
         this._rowOrColumnParent = _rowOrColumnParent;
         /** @internal */
@@ -35,19 +37,21 @@ class RowOrColumn extends content_item_1.ContentItem {
                 throw new internal_error_1.AssertError('ROCCCT00925');
         }
     }
-    newComponent(componentType, componentState, index) {
+    newComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.newItem(itemConfig, index);
     }
-    addComponent(componentType, componentState, index) {
+    addComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.addItem(itemConfig, index);
     }

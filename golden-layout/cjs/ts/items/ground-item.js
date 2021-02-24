@@ -46,50 +46,6 @@ class GroundItem extends component_parentable_item_1.ComponentParentableItem {
             this.addChild(rootContentItem, 0);
         }
     }
-    newComponent(componentType, componentState, index) {
-        const itemConfig = {
-            type: 'component',
-            componentType,
-            componentState,
-        };
-        return this.newItem(itemConfig, index);
-    }
-    /**
-     * Adds a Component child to root ContentItem.
-     * Internal only.  To load a add with API, use {@link (LayoutManager:class).addComponent}
-     */
-    addComponent(componentType, componentState, index) {
-        const itemConfig = {
-            type: 'component',
-            componentType,
-            componentState,
-        };
-        return this.addItem(itemConfig, index);
-    }
-    newItem(itemConfig, index) {
-        index = this.addItem(itemConfig, index);
-        let createdItem;
-        if (index === -1) {
-            // created ContentItem as root as root did not exist
-            createdItem = this.contentItems[0];
-        }
-        else {
-            const rootItem = this.contentItems[0];
-            if (rootItem === undefined) {
-                throw new internal_error_1.UnexpectedUndefinedError('GINI8832');
-            }
-            else {
-                createdItem = rootItem.contentItems[index];
-            }
-        }
-        if (content_item_1.ContentItem.isStack(createdItem) && (config_1.ItemConfig.isComponent(itemConfig))) {
-            // createdItem is a Stack which was created to hold wanted component.  Return component
-            return createdItem.contentItems[0];
-        }
-        else {
-            return createdItem;
-        }
-    }
     /**
      * Adds a ContentItem child to root ContentItem.
      * Internal only.  To load a add with API, use {@link (LayoutManager:class).addItem}

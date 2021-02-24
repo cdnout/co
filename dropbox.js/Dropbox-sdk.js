@@ -1153,6 +1153,28 @@
     return this.request('files/move_batch/check', arg, 'user', 'api', 'rpc');
   };
   /**
+   * Creates a new Paper doc with the provided content.
+   * @function Dropbox#filesPaperCreate
+   * @arg {FilesPaperCreateArg} arg - The request parameters.
+   * @returns {Promise.<DropboxResponse<FilesPaperCreateResult>, Error.<FilesPaperCreateError>>}
+   */
+
+
+  routes.filesPaperCreate = function (arg) {
+    return this.request('files/paper/create', arg, 'user', 'api', 'upload');
+  };
+  /**
+   * Updates an existing Paper doc with the provided content.
+   * @function Dropbox#filesPaperUpdate
+   * @arg {FilesPaperUpdateArg} arg - The request parameters.
+   * @returns {Promise.<DropboxResponse<FilesPaperUpdateResult>, Error.<FilesPaperUpdateError>>}
+   */
+
+
+  routes.filesPaperUpdate = function (arg) {
+    return this.request('files/paper/update', arg, 'user', 'api', 'upload');
+  };
+  /**
    * Permanently delete the file or folder at a given path (see
    * https://www.dropbox.com/en/help/40). If the given file or folder is not yet
    * deleted, this route will first delete it. It is possible for this route to
@@ -3147,7 +3169,8 @@
     return this.request('team/properties/template/update', arg, 'team', 'api', 'rpc');
   };
   /**
-   * Retrieves reporting data about a team's user activity.
+   * Retrieves reporting data about a team's user activity. Deprecated: Will be
+   * removed on July 1st 2021.
    * @function Dropbox#teamReportsGetActivity
    * @deprecated
    * @arg {TeamDateRange} arg - The request parameters.
@@ -3159,7 +3182,8 @@
     return this.request('team/reports/get_activity', arg, 'team', 'api', 'rpc');
   };
   /**
-   * Retrieves reporting data about a team's linked devices.
+   * Retrieves reporting data about a team's linked devices. Deprecated: Will be
+   * removed on July 1st 2021.
    * @function Dropbox#teamReportsGetDevices
    * @deprecated
    * @arg {TeamDateRange} arg - The request parameters.
@@ -3171,7 +3195,8 @@
     return this.request('team/reports/get_devices', arg, 'team', 'api', 'rpc');
   };
   /**
-   * Retrieves reporting data about a team's membership.
+   * Retrieves reporting data about a team's membership. Deprecated: Will be
+   * removed on July 1st 2021.
    * @function Dropbox#teamReportsGetMembership
    * @deprecated
    * @arg {TeamDateRange} arg - The request parameters.
@@ -3183,7 +3208,8 @@
     return this.request('team/reports/get_membership', arg, 'team', 'api', 'rpc');
   };
   /**
-   * Retrieves reporting data about a team's storage usage.
+   * Retrieves reporting data about a team's storage usage. Deprecated: Will be
+   * removed on July 1st 2021.
    * @function Dropbox#teamReportsGetStorage
    * @deprecated
    * @arg {TeamDateRange} arg - The request parameters.

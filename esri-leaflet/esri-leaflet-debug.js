@@ -1,4 +1,4 @@
-/* esri-leaflet - v3.0.0 - Mon Jan 25 2021 16:19:56 GMT-0600 (Central Standard Time)
+/* esri-leaflet - v3.0.1 - Tue Feb 23 2021 09:23:20 GMT-0600 (Central Standard Time)
  * Copyright (c) 2021 Environmental Systems Research Institute, Inc.
  * Apache-2.0 */
 (function (global, factory) {
@@ -7,7 +7,7 @@
   (global = global || self, factory((global.L = global.L || {}, global.L.esri = {}), global.L));
 }(this, (function (exports, leaflet) { 'use strict';
 
-  var version = "3.0.0";
+  var version = "3.0.1";
 
   var cors = ((window.XMLHttpRequest && 'withCredentials' in new window.XMLHttpRequest()));
   var pointerEvents = document.documentElement.style.pointerEvents === '';
@@ -2257,6 +2257,8 @@
 
     onRemove: function (map) {
       removeEsriAttribution(map);
+
+      leaflet.TileLayer.prototype.onRemove.call(this, map);
     },
 
     metadata: function (callback, context) {

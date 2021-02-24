@@ -1,6 +1,6 @@
 <?php 
-//$npm_check = "";
-$keyfiles_add = array("");
+$npm_check = "flexslider";
+$keyfiles_add = array("jquery.flexslider.js");
 $version_limit = "-10";
 $type_s = "jquery";
 ?>

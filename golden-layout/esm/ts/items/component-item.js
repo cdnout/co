@@ -7,7 +7,9 @@ import { ContentItem } from './content-item';
 /** @public */
 export class ComponentItem extends ContentItem {
     /** @internal */
-    constructor(layoutManager, config, _parentItem) {
+    constructor(layoutManager, config, 
+    /** @internal */
+    _parentItem) {
         super(layoutManager, config, _parentItem, document.createElement('div'));
         this._parentItem = _parentItem;
         /** @internal */

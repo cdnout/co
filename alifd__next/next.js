@@ -1,5 +1,5 @@
 /*!
- * @alifd/next@1.22.8 (https://fusion.design)
+ * @alifd/next@1.22.9 (https://fusion.design)
  * Copyright 2018-present Alibaba Group,
  * Licensed under MIT (https://github.com/alibaba-fusion/next/blob/master/LICENSE)
  */
@@ -26962,7 +26962,7 @@ module.exports = exports['default'];
 
 var next = __webpack_require__(199);
 
-next.version = '1.22.8';
+next.version = '1.22.9';
 
 module.exports = next;
 
@@ -55278,7 +55278,8 @@ var Pagination = (_temp = _class = function (_Component) {
             size = _props10.size,
             pageSizeList = _props10.pageSizeList,
             locale = _props10.locale,
-            popupProps = _props10.popupProps;
+            popupProps = _props10.popupProps,
+            selectProps = _props10.selectProps;
         var currentPageSize = this.state.currentPageSize;
 
         return _react2.default.createElement(_select2.default, {
@@ -55286,7 +55287,8 @@ var Pagination = (_temp = _class = function (_Component) {
             popupClassName: prefix + 'pagination-size-selector-popup',
             popupProps: popupProps,
             'aria-label': locale.selectAriaLabel,
-            autoWidth: true,
+            autoWidth: false,
+            selectProps: selectProps,
             size: size,
             value: currentPageSize,
             onChange: this.onSelectSize.bind(this)
@@ -55337,7 +55339,8 @@ var Pagination = (_temp = _class = function (_Component) {
             link = _props11.link,
             onChange = _props11.onChange,
             popupProps = _props11.popupProps,
-            others = (0, _objectWithoutProperties3.default)(_props11, ['prefix', 'pure', 'rtl', 'device', 'type', 'size', 'shape', 'className', 'total', 'totalRender', 'pageSize', 'pageSizeSelector', 'pageSizeList', 'pageSizePosition', 'useFloatLayout', 'onPageSizeChange', 'hideOnlyOnePage', 'showJump', 'locale', 'current', 'defaultCurrent', 'pageShowCount', 'pageNumberRender', 'link', 'onChange', 'popupProps']);
+            selectProps = _props11.selectProps,
+            others = (0, _objectWithoutProperties3.default)(_props11, ['prefix', 'pure', 'rtl', 'device', 'type', 'size', 'shape', 'className', 'total', 'totalRender', 'pageSize', 'pageSizeSelector', 'pageSizeList', 'pageSizePosition', 'useFloatLayout', 'onPageSizeChange', 'hideOnlyOnePage', 'showJump', 'locale', 'current', 'defaultCurrent', 'pageShowCount', 'pageNumberRender', 'link', 'onChange', 'popupProps', 'selectProps']);
         /* eslint-enable */
 
         var _state2 = this.state,
@@ -55492,7 +55495,8 @@ var Pagination = (_temp = _class = function (_Component) {
     /**
      * 弹层组件属性，透传给Popup
      */
-    popupProps: _propTypes2.default.object
+    popupProps: _propTypes2.default.object,
+    selectProps: _propTypes2.default.object
 }), _class.defaultProps = {
     prefix: 'next-',
     pure: false,
@@ -65604,7 +65608,9 @@ Table.sticky = _sticky2.default;
 Table.GroupHeader = _listHeader2.default;
 Table.GroupFooter = _listFooter2.default;
 
-Table.StickyLock = StickyLockTable;
+Table.StickyLock = _configProvider2.default.config(StickyLockTable, {
+    componentName: 'Table'
+});
 
 exports.default = _configProvider2.default.config(Table, {
     componentName: 'Table',

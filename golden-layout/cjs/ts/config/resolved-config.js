@@ -172,7 +172,7 @@ var ResolvedComponentItemConfig;
         return result;
     }
     ResolvedComponentItemConfig.createCopy = createCopy;
-    function createDefault() {
+    function createDefault(componentType = '', componentState, title = '') {
         const result = {
             type: types_1.ItemType.component,
             content: [],
@@ -184,10 +184,10 @@ var ResolvedComponentItemConfig;
             maximised: ResolvedHeaderedItemConfig.defaultMaximised,
             isClosable: ResolvedItemConfig.defaults.isClosable,
             reorderEnabled: ResolvedComponentItemConfig.defaultReorderEnabled,
-            title: '',
+            title,
             header: undefined,
-            componentType: '',
-            componentState: {},
+            componentType,
+            componentState,
         };
         return result;
     }

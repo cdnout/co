@@ -13,7 +13,31 @@ const tabs_container_1 = require("./tabs-container");
  */
 class Header extends event_emitter_1.EventEmitter {
     /** @internal */
-    constructor(_layoutManager, _parent, settings, _configClosable, _getActiveComponentItemEvent, closeEvent, _dockEvent, _popoutEvent, _maximiseToggleEvent, _clickEvent, _touchStartEvent, _componentRemoveEvent, _componentFocusEvent, _componentDragStartEvent) {
+    constructor(
+    /** @internal */
+    _layoutManager, 
+    /** @internal */
+    _parent, settings, 
+    /** @internal */
+    _configClosable, 
+    /** @internal */
+    _getActiveComponentItemEvent, closeEvent, 
+    /** @internal */
+    _dockEvent, 
+    /** @internal */
+    _popoutEvent, 
+    /** @internal */
+    _maximiseToggleEvent, 
+    /** @internal */
+    _clickEvent, 
+    /** @internal */
+    _touchStartEvent, 
+    /** @internal */
+    _componentRemoveEvent, 
+    /** @internal */
+    _componentFocusEvent, 
+    /** @internal */
+    _componentDragStartEvent) {
         super();
         this._layoutManager = _layoutManager;
         this._parent = _parent;
@@ -305,6 +329,7 @@ class Header extends event_emitter_1.EventEmitter {
             }
         }
     }
+    /** @internal */
     processTabDropdownActiveChanged() {
         utils_1.setElementDisplayVisibility(this._tabDropdownButton.element, this._tabsContainer.dropdownActive);
     }

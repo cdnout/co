@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EventEmitter = exports.LayoutManager = exports.Stack = exports.RowOrColumn = exports.ContentItem = exports.ComponentItem = exports.GoldenLayout = exports.Tab = exports.Header = exports.BrowserPopout = exports.ComponentContainer = void 0;
+exports.EventEmitter = exports.LayoutManager = exports.Stack = exports.RowOrColumn = exports.ContentItem = exports.ComponentItem = exports.GoldenLayout = exports.Tab = exports.Header = exports.DragSource = exports.BrowserPopout = exports.ComponentContainer = void 0;
 const tslib_1 = require("tslib");
 tslib_1.__exportStar(require("./ts/config/config"), exports);
 tslib_1.__exportStar(require("./ts/config/resolved-config"), exports);
@@ -8,6 +8,8 @@ var component_container_1 = require("./ts/container/component-container");
 Object.defineProperty(exports, "ComponentContainer", { enumerable: true, get: function () { return component_container_1.ComponentContainer; } });
 var browser_popout_1 = require("./ts/controls/browser-popout");
 Object.defineProperty(exports, "BrowserPopout", { enumerable: true, get: function () { return browser_popout_1.BrowserPopout; } });
+var drag_source_1 = require("./ts/controls/drag-source");
+Object.defineProperty(exports, "DragSource", { enumerable: true, get: function () { return drag_source_1.DragSource; } });
 var header_1 = require("./ts/controls/header");
 Object.defineProperty(exports, "Header", { enumerable: true, get: function () { return header_1.Header; } });
 var tab_1 = require("./ts/controls/tab");

@@ -11,7 +11,11 @@ import { getUniqueId, setElementDisplayVisibility } from '../utils/utils';
  */
 export class ContentItem extends EventEmitter {
     /** @internal */
-    constructor(layoutManager, config, _parent, _element) {
+    constructor(layoutManager, config, 
+    /** @internal */
+    _parent, 
+    /** @internal */
+    _element) {
         super();
         this.layoutManager = layoutManager;
         this._parent = _parent;

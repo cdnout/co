@@ -5,7 +5,25 @@ import { deepExtend, setElementHeight, setElementWidth } from '../utils/utils';
 /** @public */
 export class ComponentContainer extends EventEmitter {
     /** @internal */
-    constructor(_config, _parent, _layoutManager, _element, _updateItemConfigEvent, _showEvent, _hideEvent, _focusEvent, _blurEvent) {
+    constructor(
+    /** @internal */
+    _config, 
+    /** @internal */
+    _parent, 
+    /** @internal */
+    _layoutManager, 
+    /** @internal */
+    _element, 
+    /** @internal */
+    _updateItemConfigEvent, 
+    /** @internal */
+    _showEvent, 
+    /** @internal */
+    _hideEvent, 
+    /** @internal */
+    _focusEvent, 
+    /** @internal */
+    _blurEvent) {
         super();
         this._config = _config;
         this._parent = _parent;
@@ -247,6 +265,7 @@ export class ComponentContainer extends EventEmitter {
             }
         }
     }
+    /** @internal */
     releaseComponent() {
         this.emit('beforeComponentRelease', this._component);
         this.layoutManager.releaseComponent(this, this._component);

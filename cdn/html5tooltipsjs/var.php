@@ -1,6 +1,6 @@
 <?php 
-//$npm_check = "";
-$keyfiles_add = array("");
+$npm_check = "html5tooltipsjs";
+$keyfiles_add = array("html5tooltips.min.css");
 $version_limit = "-10";
 $type_s = "jquery";
 ?>

@@ -1,7 +1,7 @@
 
 /** @public */
 export declare class ApiError extends ExternalError {
-    constructor(message: string);
+    /* Excluded from this release type: __constructor */
 }
 
 /* Excluded from this release type: AreaLinkedRect */
@@ -18,9 +18,9 @@ export declare class ApiError extends ExternalError {
  * @public
  */
 export declare class BrowserPopout extends EventEmitter {
-    private _config;
-    private _initialWindowSize;
-    private _layoutManager;
+    /* Excluded from this release type: _config */
+    /* Excluded from this release type: _initialWindowSize */
+    /* Excluded from this release type: _layoutManager */
     /* Excluded from this release type: _popoutWindow */
     /* Excluded from this release type: _isInitialised */
     /* Excluded from this release type: _checkReadyInterval */
@@ -45,15 +45,15 @@ export declare class BrowserPopout extends EventEmitter {
 
 /** @public */
 export declare class ComponentContainer extends EventEmitter {
-    private readonly _config;
-    private readonly _parent;
-    private readonly _layoutManager;
-    private readonly _element;
-    private readonly _updateItemConfigEvent;
-    private readonly _showEvent;
-    private readonly _hideEvent;
-    private readonly _focusEvent;
-    private readonly _blurEvent;
+    /* Excluded from this release type: _config */
+    /* Excluded from this release type: _parent */
+    /* Excluded from this release type: _layoutManager */
+    /* Excluded from this release type: _element */
+    /* Excluded from this release type: _updateItemConfigEvent */
+    /* Excluded from this release type: _showEvent */
+    /* Excluded from this release type: _hideEvent */
+    /* Excluded from this release type: _focusEvent */
+    /* Excluded from this release type: _blurEvent */
     /* Excluded from this release type: _componentType */
     /* Excluded from this release type: _component */
     /* Excluded from this release type: _width */
@@ -148,7 +148,7 @@ export declare class ComponentContainer extends EventEmitter {
     /* Excluded from this release type: setTab */
     /* Excluded from this release type: setDragSize */
     /* Excluded from this release type: setSizeToNodeSize */
-    private releaseComponent;
+    /* Excluded from this release type: releaseComponent */
 }
 
 /** @public */
@@ -163,7 +163,7 @@ export declare namespace ComponentContainer {
 
 /** @public */
 export declare class ComponentItem extends ContentItem {
-    private _parentItem;
+    /* Excluded from this release type: _parentItem */
     /* Excluded from this release type: _reorderEnabled */
     /* Excluded from this release type: _headerConfig */
     /* Excluded from this release type: _title */
@@ -256,7 +256,7 @@ export declare namespace ComponentItemConfig {
 }
 
 declare abstract class ComponentParentableItem extends ContentItem {
-    private _focused;
+    /* Excluded from this release type: _focused */
     get focused(): boolean;
     /* Excluded from this release type: setFocusedValue */
     abstract setActiveComponentItem(item: ComponentItem, focus: boolean, suppressFocusEvent: boolean): void;
@@ -268,7 +268,7 @@ export declare type Config = LayoutConfig;
 /** @public */
 export declare class ConfigurationError extends ExternalError {
     readonly node?: string | undefined;
-    constructor(message: string, node?: string | undefined);
+    /* Excluded from this release type: __constructor */
 }
 
 /**
@@ -280,8 +280,8 @@ export declare class ConfigurationError extends ExternalError {
  */
 export declare abstract class ContentItem extends EventEmitter {
     readonly layoutManager: LayoutManager;
-    private _parent;
-    private readonly _element;
+    /* Excluded from this release type: _parent */
+    /* Excluded from this release type: _element */
     /* Excluded from this release type: _type */
     /* Excluded from this release type: _id */
     /* Excluded from this release type: _popInParentIds */
@@ -369,23 +369,31 @@ export declare namespace ContentItem {
  * start to be dragged into the Layout
  * @public
  */
-declare class DragSource {
-    private readonly _element;
-    private readonly _extraAllowableChildTargets;
-    private _itemConfigOrFtn;
-    private _layoutManager;
+export declare class DragSource {
+    /* Excluded from this release type: _layoutManager */
+    /* Excluded from this release type: _element */
+    /* Excluded from this release type: _extraAllowableChildTargets */
+    /* Excluded from this release type: _componentTypeOrFtn */
+    /* Excluded from this release type: _componentState */
+    /* Excluded from this release type: _title */
     /* Excluded from this release type: _dragListener */
     /* Excluded from this release type: _dummyGroundContainer */
     /* Excluded from this release type: _dummyGroundContentItem */
     /* Excluded from this release type: __constructor */
-    /**
-     * Disposes of the drag listeners so the drag source is not usable any more.
-     */
-    destroy(): void;
+    /* Excluded from this release type: destroy */
     /* Excluded from this release type: createDragListener */
     /* Excluded from this release type: onDragStart */
     /* Excluded from this release type: onDragStop */
     /* Excluded from this release type: removeDragListener */
+}
+
+/** @public */
+export declare namespace DragSource {
+    export interface ComponentItemConfig {
+        type: JsonValue;
+        state?: JsonValue;
+        title?: string;
+    }
 }
 
 /* Excluded from this release type: DropTargetIndicator */
@@ -435,7 +443,7 @@ export declare class EventEmitter {
     /* Excluded from this release type: addUnknownEventListener */
     /* Excluded from this release type: removeUnknownEventListener */
     /* Excluded from this release type: removeSubscription */
-    private emitAllEvent;
+    /* Excluded from this release type: emitAllEvent */
 }
 
 /** @public */
@@ -494,25 +502,26 @@ export declare namespace EventEmitter {
     export type ClickBubblingEventParam = [ClickBubblingEvent];
     export type TouchStartBubblingEventParam = [TouchStartBubblingEvent];
     export class BubblingEvent {
-        private readonly _name;
-        private readonly _target;
-        isPropagationStopped: boolean;
+        /* Excluded from this release type: _name */
+        /* Excluded from this release type: _target */
+        /* Excluded from this release type: _isPropagationStopped */
         get name(): string;
         get target(): EventEmitter;
         /** @deprecated Use {@link (EventEmitter:namespace).(BubblingEvent:class).target} instead */
         get origin(): EventEmitter;
-        constructor(_name: string, _target: EventEmitter);
+        get isPropagationStopped(): boolean;
+        /* Excluded from this release type: __constructor */
         stopPropagation(): void;
     }
     export class ClickBubblingEvent extends BubblingEvent {
-        private readonly _mouseEvent;
+        /* Excluded from this release type: _mouseEvent */
         get mouseEvent(): MouseEvent;
-        constructor(name: string, target: EventEmitter, _mouseEvent: MouseEvent);
+        /* Excluded from this release type: __constructor */
     }
     export class TouchStartBubblingEvent extends BubblingEvent {
-        private readonly _touchEvent;
+        /* Excluded from this release type: _touchEvent */
         get touchEvent(): TouchEvent;
-        constructor(name: string, target: EventEmitter, _touchEvent: TouchEvent);
+        /* Excluded from this release type: __constructor */
     }
     export interface DragEvent {
         mouseEvent: MouseEvent | undefined;
@@ -527,7 +536,7 @@ export declare namespace EventEmitter {
 /** @public */
 export declare abstract class ExternalError extends Error {
     readonly type: string;
-    constructor(type: string, message: string);
+    /* Excluded from this release type: __constructor */
 }
 
 /** @public */
@@ -568,18 +577,18 @@ export declare namespace GoldenLayout {
  * @public
  */
 export declare class Header extends EventEmitter {
-    private _layoutManager;
-    private _parent;
-    private readonly _configClosable;
-    private _getActiveComponentItemEvent;
-    private _dockEvent;
-    private _popoutEvent;
-    private _maximiseToggleEvent;
-    private _clickEvent;
-    private _touchStartEvent;
-    private _componentRemoveEvent;
-    private _componentFocusEvent;
-    private _componentDragStartEvent;
+    /* Excluded from this release type: _layoutManager */
+    /* Excluded from this release type: _parent */
+    /* Excluded from this release type: _configClosable */
+    /* Excluded from this release type: _getActiveComponentItemEvent */
+    /* Excluded from this release type: _dockEvent */
+    /* Excluded from this release type: _popoutEvent */
+    /* Excluded from this release type: _maximiseToggleEvent */
+    /* Excluded from this release type: _clickEvent */
+    /* Excluded from this release type: _touchStartEvent */
+    /* Excluded from this release type: _componentRemoveEvent */
+    /* Excluded from this release type: _componentFocusEvent */
+    /* Excluded from this release type: _componentDragStartEvent */
     /* Excluded from this release type: _tabsContainer */
     /* Excluded from this release type: _element */
     /* Excluded from this release type: _controlsContainerElement */
@@ -642,7 +651,7 @@ export declare class Header extends EventEmitter {
     /* Excluded from this release type: handleTabInitiatedComponentRemoveEvent */
     /* Excluded from this release type: handleTabInitiatedComponentFocusEvent */
     /* Excluded from this release type: handleTabInitiatedDragStartEvent */
-    private processTabDropdownActiveChanged;
+    /* Excluded from this release type: processTabDropdownActiveChanged */
     /* Excluded from this release type: handleButtonDockEvent */
     /* Excluded from this release type: handleButtonPopoutEvent */
     /* Excluded from this release type: handleButtonMaximiseToggleEvent */
@@ -1154,7 +1163,7 @@ export declare abstract class LayoutManager extends EventEmitter {
      * @param state - Optional initial state to be assigned to component
      * @returns New ComponentItem created.
      */
-    newComponent(componentType: JsonValue, componentState?: JsonValue): ComponentItem;
+    newComponent(componentType: JsonValue, componentState?: JsonValue, title?: string): ComponentItem;
     /**
      * Adds a ComponentItem at the first valid selector location.
      * @param componentTypeName - Name of component type to be created.
@@ -1164,7 +1173,7 @@ export declare abstract class LayoutManager extends EventEmitter {
      * {@link (LayoutManager:namespace).defaultLocationSelectors} will be used
      * @returns New ComponentItem created or undefined if no valid location selector was in array.
      */
-    newComponentAtLocation(componentType: JsonValue, componentState?: JsonValue, locationSelectors?: LayoutManager.LocationSelector[]): ComponentItem | undefined;
+    newComponentAtLocation(componentType: JsonValue, componentState?: JsonValue, title?: string, locationSelectors?: LayoutManager.LocationSelector[]): ComponentItem | undefined;
     /**
      * Adds a new ComponentItem.  Will use default location selectors to ensure a location is found and
      * component is successfully added
@@ -1172,7 +1181,7 @@ export declare abstract class LayoutManager extends EventEmitter {
      * @param state - Optional initial state to be assigned to component
      * @returns Location of new ComponentItem created.
      */
-    addComponent(componentType: JsonValue, componentState?: JsonValue): LayoutManager.Location;
+    addComponent(componentType: JsonValue, componentState?: JsonValue, title?: string): LayoutManager.Location;
     /**
      * Adds a ComponentItem at the first valid selector location.
      * @param componentType - Type of component to be created.
@@ -1182,7 +1191,7 @@ export declare abstract class LayoutManager extends EventEmitter {
      * {@link (LayoutManager:namespace).defaultLocationSelectors} will be used.
      * @returns Location of new ComponentItem created or undefined if no valid location selector was in array.
      */
-    addComponentAtLocation(componentType: JsonValue, componentState?: JsonValue, locationSelectors?: readonly LayoutManager.LocationSelector[]): LayoutManager.Location | undefined;
+    addComponentAtLocation(componentType: JsonValue, componentState?: JsonValue, title?: string, locationSelectors?: readonly LayoutManager.LocationSelector[]): LayoutManager.Location | undefined;
     /**
      * Adds a new ContentItem.  Will use default location selectors to ensure a location is found and
      * component is successfully added
@@ -1250,18 +1259,19 @@ export declare abstract class LayoutManager extends EventEmitter {
     /* Excluded from this release type: createPopoutFromPopoutLayoutConfig */
     /**
      * Attaches DragListener to any given DOM element
-     * and turns it into a way of creating new ContentItems
+     * and turns it into a way of creating new ComponentItems
      * by 'dragging' the DOM element into the layout
      *
      * @param element -
-     * @param itemConfig - For the new item to be created, or a function which will provide it
+     * @param componentTypeOrFtn - Type of component to be created, or a function which will provide both component type and state
+     * @param componentState - Optional initial state of component.  This will be ignored if componentTypeOrFtn is a function
      *
      * @returns 1) an opaque object that identifies the DOM element
      *          and the attached itemConfig. This can be used in
      *          removeDragSource() later to get rid of the drag listeners.
      *          2) undefined if constrainDragToContainer is specified
      */
-    createDragSource(element: HTMLElement, itemConfig: ResolvedComponentItemConfig | (() => ResolvedComponentItemConfig), extraAllowableChildTargets?: HTMLElement[]): DragSource | undefined;
+    newDragSource(element: HTMLElement, componentTypeOrFtn: JsonValue | (() => DragSource.ComponentItemConfig), componentState?: JsonValue, title?: string): DragSource | undefined;
     /**
      * Removes a DragListener added by createDragSource() so the corresponding
      * DOM element is not a drag source any more.
@@ -1305,13 +1315,13 @@ export declare abstract class LayoutManager extends EventEmitter {
     /* Excluded from this release type: useResponsiveLayout */
     /* Excluded from this release type: addChildContentItemsToContainer */
     /* Excluded from this release type: getAllStacks */
-    private findFirstContentItemType;
-    private findFirstContentItemTypeRecursive;
-    private findFirstContentItemTypeByIdRecursive;
+    /* Excluded from this release type: findFirstContentItemType */
+    /* Excluded from this release type: findFirstContentItemTypeRecursive */
+    /* Excluded from this release type: findFirstContentItemTypeByIdRecursive */
     /* Excluded from this release type: findAllStacksRecursive */
-    private findFirstLocation;
-    private findLocation;
-    private tryCreateLocationFromParentItem;
+    /* Excluded from this release type: findFirstLocation */
+    /* Excluded from this release type: findLocation */
+    /* Excluded from this release type: tryCreateLocationFromParentItem */
 }
 
 /** @public */
@@ -1385,7 +1395,7 @@ export declare namespace LayoutManager {
 
 /** @public */
 export declare class PopoutBlockedError extends ExternalError {
-    constructor(message: string);
+    /* Excluded from this release type: __constructor */
 }
 
 /** @public */
@@ -1448,7 +1458,7 @@ export declare namespace ResolvedComponentItemConfig {
     const defaultReorderEnabled = true;
     /* Excluded from this release type: resolveComponentTypeName */
     export function createCopy(original: ResolvedComponentItemConfig): ResolvedComponentItemConfig;
-    export function createDefault(): ResolvedComponentItemConfig;
+    export function createDefault(componentType?: JsonValue, componentState?: JsonValue, title?: string): ResolvedComponentItemConfig;
     export function copyComponentType(componentType: JsonValue): JsonValue;
 }
 
@@ -1663,7 +1673,7 @@ export declare namespace RootItemConfig {
 
 /** @public */
 export declare class RowOrColumn extends ContentItem {
-    private _rowOrColumnParent;
+    /* Excluded from this release type: _rowOrColumnParent */
     /* Excluded from this release type: _childElementContainer */
     /* Excluded from this release type: _configType */
     /* Excluded from this release type: _isColumn */
@@ -1675,8 +1685,8 @@ export declare class RowOrColumn extends ContentItem {
     /* Excluded from this release type: _splitterMinPosition */
     /* Excluded from this release type: _splitterMaxPosition */
     /* Excluded from this release type: __constructor */
-    newComponent(componentType: JsonValue, componentState?: JsonValue, index?: number): ComponentItem;
-    addComponent(componentType: JsonValue, componentState?: JsonValue, index?: number): number;
+    newComponent(componentType: JsonValue, componentState?: JsonValue, title?: string, index?: number): ComponentItem;
+    addComponent(componentType: JsonValue, componentState?: JsonValue, title?: string, index?: number): number;
     newItem(itemConfig: RowOrColumnItemConfig | StackItemConfig | ComponentItemConfig, index?: number): ContentItem;
     addItem(itemConfig: RowOrColumnItemConfig | StackItemConfig | ComponentItemConfig, index?: number): number;
     /**
@@ -1769,7 +1779,7 @@ export declare namespace Side {
 
 /** @public */
 export declare class Stack extends ComponentParentableItem {
-    private _stackParent;
+    /* Excluded from this release type: _stackParent */
     /* Excluded from this release type: _headerConfig */
     /* Excluded from this release type: _header */
     /* Excluded from this release type: _childElementContainer */
@@ -1812,8 +1822,8 @@ export declare class Stack extends ComponentParentableItem {
     /* Excluded from this release type: setUndocked */
     /* Excluded from this release type: setDockable */
     /* Excluded from this release type: setRowColumnClosable */
-    newComponent(componentType: JsonValue, componentState?: JsonValue, index?: number): ComponentItem;
-    addComponent(componentType: JsonValue, componentState?: JsonValue, index?: number): number;
+    newComponent(componentType: JsonValue, componentState?: JsonValue, title?: string, index?: number): ComponentItem;
+    addComponent(componentType: JsonValue, componentState?: JsonValue, title?: string, index?: number): number;
     newItem(itemConfig: ComponentItemConfig, index?: number): ContentItem;
     addItem(itemConfig: ComponentItemConfig, index?: number): number;
     addChild(contentItem: ContentItem, index?: number, focus?: boolean): number;
@@ -1833,7 +1843,7 @@ export declare class Stack extends ComponentParentableItem {
     /* Excluded from this release type: setParent */
     /* Excluded from this release type: updateNodeSize */
     /* Excluded from this release type: highlightHeaderDropZone */
-    private resetHeaderDropZone;
+    /* Excluded from this release type: resetHeaderDropZone */
     /* Excluded from this release type: setupHeaderPosition */
     /* Excluded from this release type: highlightBodyDropZone */
     /* Excluded from this release type: handleResize */
@@ -1884,11 +1894,11 @@ export declare namespace StackItemConfig {
  * @public
  */
 export declare class Tab {
-    private readonly _layoutManager;
-    private _componentItem;
-    private _closeEvent;
-    private _focusEvent;
-    private _dragStartEvent;
+    /* Excluded from this release type: _layoutManager */
+    /* Excluded from this release type: _componentItem */
+    /* Excluded from this release type: _closeEvent */
+    /* Excluded from this release type: _focusEvent */
+    /* Excluded from this release type: _dragStartEvent */
     /* Excluded from this release type: _element */
     /* Excluded from this release type: _titleElement */
     /* Excluded from this release type: _closeElement */
@@ -1900,7 +1910,7 @@ export declare class Tab {
     /* Excluded from this release type: _closeTouchStartListener */
     /* Excluded from this release type: _dragStartListener */
     /* Excluded from this release type: _contentItemDestroyListener */
-    private readonly _tabTitleChangedListener;
+    /* Excluded from this release type: _tabTitleChangedListener */
     get isActive(): boolean;
     get componentItem(): ComponentItem;
     /** @deprecated use {@link (Tab:class).componentItem} */

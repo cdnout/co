@@ -1,5 +1,4 @@
-import { ItemConfig } from '../config/config';
-import { ResolvedItemConfig } from '../config/resolved-config';
+import { ComponentItemConfig } from '../config/config';
 import { UnexpectedNullError } from '../errors/internal-error';
 import { ComponentItem } from '../items/component-item';
 import { GroundItem } from '../items/ground-item';
@@ -12,11 +11,25 @@ import { DragProxy } from './drag-proxy';
  */
 export class DragSource {
     /** @internal */
-    constructor(_element, _extraAllowableChildTargets, _itemConfigOrFtn, _layoutManager) {
+    constructor(
+    /** @internal */
+    _layoutManager, 
+    /** @internal */
+    _element, 
+    /** @internal */
+    _extraAllowableChildTargets, 
+    /** @internal */
+    _componentTypeOrFtn, 
+    /** @internal */
+    _componentState, 
+    /** @internal */
+    _title) {
+        this._layoutManager = _layoutManager;
         this._element = _element;
         this._extraAllowableChildTargets = _extraAllowableChildTargets;
-        this._itemConfigOrFtn = _itemConfigOrFtn;
-        this._layoutManager = _layoutManager;
+        this._componentTypeOrFtn = _componentTypeOrFtn;
+        this._componentState = _componentState;
+        this._title = _title;
         this._dragListener = null;
         // Need to review dummyGroundContainer
         // Should this part of a fragment or template?
@@ -27,6 +40,7 @@ export class DragSource {
     }
     /**
      * Disposes of the drag listeners so the drag source is not usable any more.
+     * @internal
      */
     destroy() {
         this.removeDragListener();
@@ -49,21 +63,33 @@ export class DragSource {
      * @internal
      */
     onDragStart(x, y) {
-        let itemConfig;
-        if (typeof this._itemConfigOrFtn === "function") {
-            itemConfig = this._itemConfigOrFtn();
+        let componentType;
+        let componentState;
+        let title;
+        if (typeof this._componentTypeOrFtn === "function") {
+            const dragSourceItemConfig = this._componentTypeOrFtn();
+            componentType = dragSourceItemConfig.type;
+            componentState = dragSourceItemConfig.state;
+            title = dragSourceItemConfig.title;
         }
         else {
-            itemConfig = this._itemConfigOrFtn;
+            componentType = this._componentTypeOrFtn;
+            componentState = this._componentState;
+            title = this._title;
         }
-        const resolvedItemConfig = ItemConfig.resolve(itemConfig);
-        // const contentItem = this._layoutManager._$normalizeContentItem($.extend(true, {}, itemConfig));
-        const copiedConfig = ResolvedItemConfig.createCopy(resolvedItemConfig);
         // Create a dummy ContentItem only for drag purposes
         // All ContentItems (except for GroundItem) need a parent.  When dragging, the parent is not used.
         // Instead of allowing null parents (as Javascript version did), use a temporary dummy GroundItem parent and add ContentItem to that
         // If this does not work, need to create alternative GroundItem class
-        const componentItem = new ComponentItem(this._layoutManager, copiedConfig, this._dummyGroundContentItem);
+        const itemConfig = {
+            type: 'component',
+            componentType,
+            componentState,
+            title,
+        };
+        const resolvedItemConfig = ComponentItemConfig.resolve(itemConfig);
+        const componentItem = new ComponentItem(this._layoutManager, resolvedItemConfig, this._dummyGroundContentItem);
+        this._dummyGroundContentItem.contentItems.push(componentItem);
         if (this._dragListener === null) {
             throw new UnexpectedNullError('DSODSD66746');
         }

@@ -5,6 +5,7 @@ const content_item_1 = require("./content-item");
 class ComponentParentableItem extends content_item_1.ContentItem {
     constructor() {
         super(...arguments);
+        /** @internal */
         this._focused = false;
     }
     get focused() { return this._focused; }

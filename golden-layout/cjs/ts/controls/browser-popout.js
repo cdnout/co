@@ -23,7 +23,13 @@ class BrowserPopout extends event_emitter_1.EventEmitter {
      * @param _initialWindowSize - A map with width, height, top and left
      * @internal
      */
-    constructor(_config, _initialWindowSize, _layoutManager) {
+    constructor(
+    /** @internal */
+    _config, 
+    /** @internal */
+    _initialWindowSize, 
+    /** @internal */
+    _layoutManager) {
         super();
         this._config = _config;
         this._initialWindowSize = _initialWindowSize;

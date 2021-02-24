@@ -7,7 +7,17 @@ import { stripTags } from '../utils/utils';
  */
 export class Tab {
     /** @internal */
-    constructor(_layoutManager, _componentItem, _closeEvent, _focusEvent, _dragStartEvent) {
+    constructor(
+    /** @internal */
+    _layoutManager, 
+    /** @internal */
+    _componentItem, 
+    /** @internal */
+    _closeEvent, 
+    /** @internal */
+    _focusEvent, 
+    /** @internal */
+    _dragStartEvent) {
         var _a;
         this._layoutManager = _layoutManager;
         this._componentItem = _componentItem;
@@ -30,6 +40,7 @@ export class Tab {
         this._dragStartListener = (x, y) => this.onDragStart(x, y);
         /** @internal */
         this._contentItemDestroyListener = () => this.onContentItemDestroy();
+        /** @internal */
         this._tabTitleChangedListener = (title) => this.setTitle(title);
         this._element = document.createElement('div');
         this._element.classList.add("lm_tab" /* Tab */);

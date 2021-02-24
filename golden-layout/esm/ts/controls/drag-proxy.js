@@ -77,6 +77,24 @@ export class DragProxy extends EventEmitter {
             const { width: elementWidth, height: elementHeight } = getElementWidthAndHeight(this._element);
             this._width = elementWidth;
             this._height = elementHeight;
+            if (this._layoutManager.layoutConfig.settings.constrainDragToContainer) {
+                if (x <= this._minX) {
+                    x = Math.ceil(this._minX + 1);
+                }
+                else {
+                    if (x >= this._maxX) {
+                        x = Math.floor(this._maxX - 1);
+                    }
+                }
+                if (y <= this._minY) {
+                    y = Math.ceil(this._minY + 1);
+                }
+                else {
+                    if (y >= this._maxY) {
+                        y = Math.floor(this._maxY - 1);
+                    }
+                }
+            }
             this.setDropPosition(x, y);
         }
     }
@@ -92,14 +110,17 @@ export class DragProxy extends EventEmitter {
      * @internal
      */
     onDrag(offsetX, offsetY, event) {
-        var _a;
         const x = event.pageX;
         const y = event.pageY;
-        const isWithinContainer = x > this._minX && x < this._maxX && y > this._minY && y < this._maxY;
-        if (!isWithinContainer && ((_a = this._layoutManager.layoutConfig.settings) === null || _a === void 0 ? void 0 : _a.constrainDragToContainer) === true) {
-            return;
+        if (!this._layoutManager.layoutConfig.settings.constrainDragToContainer) {
+            this.setDropPosition(x, y);
         }
-        this.setDropPosition(x, y);
+        else {
+            const isWithinContainer = x > this._minX && x < this._maxX && y > this._minY && y < this._maxY;
+            if (isWithinContainer) {
+                this.setDropPosition(x, y);
+            }
+        }
     }
     /**
      * Sets the target position, highlighting the appropriate area

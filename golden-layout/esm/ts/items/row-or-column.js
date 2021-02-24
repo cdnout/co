@@ -8,7 +8,9 @@ import { Stack } from './stack';
 /** @public */
 export class RowOrColumn extends ContentItem {
     /** @internal */
-    constructor(isColumn, layoutManager, config, _rowOrColumnParent) {
+    constructor(isColumn, layoutManager, config, 
+    /** @internal */
+    _rowOrColumnParent) {
         super(layoutManager, config, _rowOrColumnParent, RowOrColumn.createElement(document, isColumn));
         this._rowOrColumnParent = _rowOrColumnParent;
         /** @internal */
@@ -32,19 +34,21 @@ export class RowOrColumn extends ContentItem {
                 throw new AssertError('ROCCCT00925');
         }
     }
-    newComponent(componentType, componentState, index) {
+    newComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.newItem(itemConfig, index);
     }
-    addComponent(componentType, componentState, index) {
+    addComponent(componentType, componentState, title, index) {
         const itemConfig = {
             type: 'component',
             componentType,
             componentState,
+            title,
         };
         return this.addItem(itemConfig, index);
     }

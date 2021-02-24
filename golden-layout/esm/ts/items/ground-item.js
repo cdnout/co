@@ -1,6 +1,6 @@
 import { ItemConfig } from '../config/config';
 import { ResolvedGroundItemConfig, ResolvedHeaderedItemConfig, ResolvedItemConfig, ResolvedRootItemConfig, ResolvedStackItemConfig } from '../config/resolved-config';
-import { AssertError, UnexpectedNullError, UnexpectedUndefinedError } from '../errors/internal-error';
+import { AssertError, UnexpectedNullError } from '../errors/internal-error';
 import { ItemType } from '../utils/types';
 import { getElementWidthAndHeight, setElementHeight, setElementWidth } from '../utils/utils';
 import { ComponentItem } from './component-item';
@@ -41,50 +41,6 @@ export class GroundItem extends ComponentParentableItem {
         if (rootItemConfig !== undefined) {
             const rootContentItem = this.layoutManager.createAndInitContentItem(rootItemConfig, this);
             this.addChild(rootContentItem, 0);
-        }
-    }
-    newComponent(componentType, componentState, index) {
-        const itemConfig = {
-            type: 'component',
-            componentType,
-            componentState,
-        };
-        return this.newItem(itemConfig, index);
-    }
-    /**
-     * Adds a Component child to root ContentItem.
-     * Internal only.  To load a add with API, use {@link (LayoutManager:class).addComponent}
-     */
-    addComponent(componentType, componentState, index) {
-        const itemConfig = {
-            type: 'component',
-            componentType,
-            componentState,
-        };
-        return this.addItem(itemConfig, index);
-    }
-    newItem(itemConfig, index) {
-        index = this.addItem(itemConfig, index);
-        let createdItem;
-        if (index === -1) {
-            // created ContentItem as root as root did not exist
-            createdItem = this.contentItems[0];
-        }
-        else {
-            const rootItem = this.contentItems[0];
-            if (rootItem === undefined) {
-                throw new UnexpectedUndefinedError('GINI8832');
-            }
-            else {
-                createdItem = rootItem.contentItems[index];
-            }
-        }
-        if (ContentItem.isStack(createdItem) && (ItemConfig.isComponent(itemConfig))) {
-            // createdItem is a Stack which was created to hold wanted component.  Return component
-            return createdItem.contentItems[0];
-        }
-        else {
-            return createdItem;
         }
     }
     /**
