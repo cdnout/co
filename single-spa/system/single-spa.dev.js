@@ -1,4 +1,4 @@
-/* single-spa@5.9.0 - SystemJS - dev */
+/* single-spa@5.9.1 - SystemJS - dev */
 System.register([], function (exports) {
   'use strict';
   return {

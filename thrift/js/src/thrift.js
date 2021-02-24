@@ -46,7 +46,7 @@ var Thrift = {
      * @const {string} Version
      * @memberof Thrift
      */
-    Version: '0.13.0',
+    Version: '0.14.0',
 
     /**
      * Thrift IDL type string to Id mapping.
@@ -284,7 +284,9 @@ Thrift.TProtocolExceptionType = {
 
 Thrift.TProtocolException = function TProtocolException(type, message) {
     Error.call(this);
-    Error.captureStackTrace(this, this.constructor);
+    if (Error.captureStackTrace !== undefined) {
+        Error.captureStackTrace(this, this.constructor);
+    }
     this.name = this.constructor.name;
     this.type = type;
     this.message = message;

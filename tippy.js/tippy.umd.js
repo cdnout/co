@@ -1,6 +1,6 @@
 /**!
-* tippy.js v6.2.7
-* (c) 2017-2020 atomiks
+* tippy.js v6.3.0
+* (c) 2017-2021 atomiks
 * MIT License
 */
 (function (global, factory) {
@@ -138,10 +138,13 @@
     });
   }
   function getOwnerDocument(elementOrElements) {
-    var _normalizeToArray = normalizeToArray(elementOrElements),
-        element = _normalizeToArray[0];
+    var _element$ownerDocumen;
 
-    return element ? element.ownerDocument || document : document;
+    var _normalizeToArray = normalizeToArray(elementOrElements),
+        element = _normalizeToArray[0]; // Elements created via a <template> have an ownerDocument with no reference to the body
+
+
+    return (element == null ? void 0 : (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body) ? element.ownerDocument : document;
   }
   function isCursorOutsideInteractiveBorder(popperTreeData, event) {
     var clientX = event.clientX,
@@ -1382,6 +1385,8 @@
       }
 
       onFirstUpdate = function onFirstUpdate() {
+        var _instance$popperInsta2;
+
         if (!instance.state.isVisible || ignoreOnFirstUpdate) {
           return;
         }
@@ -1402,7 +1407,10 @@
 
         handleAriaContentAttribute();
         handleAriaExpandedAttribute();
-        pushIfUnique(mountedInstances, instance);
+        pushIfUnique(mountedInstances, instance); // certain modifiers (e.g. `maxSize`) require a second update after the
+        // popper has been positioned for the first time
+
+        (_instance$popperInsta2 = instance.popperInstance) == null ? void 0 : _instance$popperInsta2.forceUpdate();
         instance.state.isMounted = true;
         invokeHook('onMount', [instance]);
 
@@ -1622,6 +1630,7 @@
     var currentTarget;
     var overrides = optionalProps.overrides;
     var interceptSetPropsCleanups = [];
+    var shownOnCreate = false;
 
     function setReferences() {
       references = individualInstances.map(function (instance) {
@@ -1655,6 +1664,26 @@
           instance.setProps = originalSetProps;
         };
       });
+    } // have to pass singleton, as it maybe undefined on first call
+
+
+    function prepareInstance(singleton, target) {
+      var index = references.indexOf(target); // bail-out
+
+      if (target === currentTarget) {
+        return;
+      }
+
+      currentTarget = target;
+      var overrideProps = (overrides || []).concat('content').reduce(function (acc, prop) {
+        acc[prop] = individualInstances[index].props[prop];
+        return acc;
+      }, {});
+      singleton.setProps(Object.assign({}, overrideProps, {
+        getReferenceClientRect: typeof overrideProps.getReferenceClientRect === 'function' ? overrideProps.getReferenceClientRect : function () {
+          return target.getBoundingClientRect();
+        }
+      }));
     }
 
     enableInstances(false);
@@ -1665,24 +1694,23 @@
           onDestroy: function onDestroy() {
             enableInstances(true);
           },
-          onTrigger: function onTrigger(instance, event) {
-            var target = event.currentTarget;
-            var index = references.indexOf(target); // bail-out
-
-            if (target === currentTarget) {
-              return;
+          onHidden: function onHidden() {
+            currentTarget = null;
+          },
+          onClickOutside: function onClickOutside(instance) {
+            if (instance.props.showOnCreate && !shownOnCreate) {
+              shownOnCreate = true;
+              currentTarget = null;
             }
-
-            currentTarget = target;
-            var overrideProps = (overrides || []).concat('content').reduce(function (acc, prop) {
-              acc[prop] = individualInstances[index].props[prop];
-              return acc;
-            }, {});
-            instance.setProps(Object.assign({}, overrideProps, {
-              getReferenceClientRect: typeof overrideProps.getReferenceClientRect === 'function' ? overrideProps.getReferenceClientRect : function () {
-                return target.getBoundingClientRect();
-              }
-            }));
+          },
+          onShow: function onShow(instance) {
+            if (instance.props.showOnCreate && !shownOnCreate) {
+              shownOnCreate = true;
+              prepareInstance(instance, references[0]);
+            }
+          },
+          onTrigger: function onTrigger(instance, event) {
+            prepareInstance(instance, event.currentTarget);
           }
         };
       }
@@ -1691,6 +1719,62 @@
       plugins: [plugin].concat(optionalProps.plugins || []),
       triggerTarget: references
     }));
+    var originalShow = singleton.show;
+
+    singleton.show = function (target) {
+      originalShow(); // first time, showOnCreate or programmatic call with no params
+      // default to showing first instance
+
+      if (!currentTarget && target == null) {
+        return prepareInstance(singleton, references[0]);
+      } // triggered from event (do nothing as prepareInstance already called by onTrigger)
+      // programmatic call with no params when already visible (do nothing again)
+
+
+      if (currentTarget && target == null) {
+        return;
+      } // target is index of instance
+
+
+      if (typeof target === 'number') {
+        return references[target] && prepareInstance(singleton, references[target]);
+      } // target is a child tippy instance
+
+
+      if (individualInstances.includes(target)) {
+        var ref = target.reference;
+        return prepareInstance(singleton, ref);
+      } // target is a ReferenceElement
+
+
+      if (references.includes(target)) {
+        return prepareInstance(singleton, target);
+      }
+    };
+
+    singleton.showNext = function () {
+      var first = references[0];
+
+      if (!currentTarget) {
+        return singleton.show(0);
+      }
+
+      var index = references.indexOf(currentTarget);
+      singleton.show(references[index + 1] || first);
+    };
+
+    singleton.showPrevious = function () {
+      var last = references[references.length - 1];
+
+      if (!currentTarget) {
+        return singleton.show(last);
+      }
+
+      var index = references.indexOf(currentTarget);
+      var target = references[index - 1] || last;
+      singleton.show(target);
+    };
+
     var originalSetProps = singleton.setProps;
 
     singleton.setProps = function (props) {
@@ -1799,7 +1883,7 @@
 
     function addEventListeners(instance) {
       var reference = instance.reference;
-      on(reference, 'touchstart', onTrigger);
+      on(reference, 'touchstart', onTrigger, TOUCH_OPTIONS);
       on(reference, 'mouseover', onTrigger);
       on(reference, 'focusin', onTrigger);
       on(reference, 'click', onTrigger);

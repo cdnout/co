@@ -1,3 +1,4 @@
+'use strict';
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -6,10 +7,10 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 /**
-* @license Angular v11.0.0-next.6+162.sha-170af07
-* (c) 2010-2020 Google LLC. https://angular.io/
-* License: MIT
-*/
+ * @license Angular v12.0.0-next.0
+ * (c) 2010-2020 Google LLC. https://angular.io/
+ * License: MIT
+ */
 (function (factory) {
     typeof define === 'function' && define.amd ? define(factory) :
         factory();
@@ -99,9 +100,13 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                 configurable: true
             });
             // tslint:disable-next-line:require-internal-with-underscore
-            Zone.__load_patch = function (name, fn) {
+            Zone.__load_patch = function (name, fn, ignoreDuplicate) {
+                if (ignoreDuplicate === void 0) { ignoreDuplicate = false; }
                 if (patches.hasOwnProperty(name)) {
-                    if (checkDuplicate) {
+                    // `checkDuplicate` option is defined from global variable
+                    // so it works for all modules.
+                    // `ignoreDuplicate` can work for the specified module
+                    if (!ignoreDuplicate && checkDuplicate) {
                         throw Error('Already loaded patch: ' + name);
                     }
                 }
@@ -938,7 +943,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
         }
         var delegateName = zoneSymbol(name);
         var delegate = null;
-        if (proto && !(delegate = proto[delegateName])) {
+        if (proto && (!(delegate = proto[delegateName]) || !proto.hasOwnProperty(delegateName))) {
             delegate = proto[delegateName] = proto[name];
             // check whether proto[name] is writable
             // some property is readonly in safari, such as HtmlCanvasElement.prototype.toBlob
@@ -2229,29 +2234,9 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
         var tasksByHandleId = {};
         function scheduleTask(task) {
             var data = task.data;
-            function timer() {
-                try {
-                    task.invoke.apply(this, arguments);
-                }
-                finally {
-                    // issue-934, task will be cancelled
-                    // even it is a periodic task such as
-                    // setInterval
-                    if (!(task.data && task.data.isPeriodic)) {
-                        if (typeof data.handleId === 'number') {
-                            // in non-nodejs env, we remove timerId
-                            // from local cache
-                            delete tasksByHandleId[data.handleId];
-                        }
-                        else if (data.handleId) {
-                            // Node returns complex objects as handleIds
-                            // we remove task reference from timer object
-                            data.handleId[taskSymbol] = null;
-                        }
-                    }
-                }
-            }
-            data.args[0] = timer;
+            data.args[0] = function () {
+                return task.invoke.apply(this, arguments);
+            };
             data.handleId = setNative.apply(window, data.args);
             return task;
         }
@@ -2261,13 +2246,40 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
         setNative =
             patchMethod(window, setName, function (delegate) { return function (self, args) {
                 if (typeof args[0] === 'function') {
-                    var options = {
+                    var options_1 = {
                         isPeriodic: nameSuffix === 'Interval',
                         delay: (nameSuffix === 'Timeout' || nameSuffix === 'Interval') ? args[1] || 0 :
                             undefined,
                         args: args
                     };
-                    var task = scheduleMacroTaskWithCurrentZone(setName, args[0], options, scheduleTask, clearTask);
+                    var callback_1 = args[0];
+                    args[0] = function timer() {
+                        try {
+                            return callback_1.apply(this, arguments);
+                        }
+                        finally {
+                            // issue-934, task will be cancelled
+                            // even it is a periodic task such as
+                            // setInterval
+                            // https://github.com/angular/angular/issues/40387
+                            // Cleanup tasksByHandleId should be handled before scheduleTask
+                            // Since some zoneSpec may intercept and doesn't trigger
+                            // scheduleFn(scheduleTask) provided here.
+                            if (!(options_1.isPeriodic)) {
+                                if (typeof options_1.handleId === 'number') {
+                                    // in non-nodejs env, we remove timerId
+                                    // from local cache
+                                    delete tasksByHandleId[options_1.handleId];
+                                }
+                                else if (options_1.handleId) {
+                                    // Node returns complex objects as handleIds
+                                    // we remove task reference from timer object
+                                    options_1.handleId[taskSymbol] = null;
+                                }
+                            }
+                        }
+                    };
+                    var task = scheduleMacroTaskWithCurrentZone(setName, args[0], options_1, scheduleTask, clearTask);
                     if (!task) {
                         return task;
                     }
@@ -3739,13 +3751,6 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
         // constructor params.
         Zone['AsyncTestZoneSpec'] = AsyncTestZoneSpec;
     })(typeof window !== 'undefined' && window || typeof self !== 'undefined' && self || global);
-    /**
-     * @license
-     * Copyright Google LLC All Rights Reserved.
-     *
-     * Use of this source code is governed by an MIT-style license that can be
-     * found in the LICENSE file at https://angular.io/license
-     */
     Zone.__load_patch('asynctest', function (global, Zone, api) {
         /**
          * Wraps a test function in an asynchronous test zone. The test will automatically
@@ -3794,7 +3799,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                     'Please make sure that your environment includes zone.js/dist/async-test.js');
             }
             var ProxyZoneSpec = Zone['ProxyZoneSpec'];
-            if (ProxyZoneSpec === undefined) {
+            if (!ProxyZoneSpec) {
                 throw new Error('ProxyZoneSpec is needed for the async() test helper but could not be found. ' +
                     'Please make sure that your environment includes zone.js/dist/proxy.js');
             }
@@ -4441,16 +4446,11 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
         // constructor params.
         Zone['FakeAsyncTestZoneSpec'] = FakeAsyncTestZoneSpec;
     })(typeof window === 'object' && window || typeof self === 'object' && self || global);
-    /**
-     * @license
-     * Copyright Google LLC All Rights Reserved.
-     *
-     * Use of this source code is governed by an MIT-style license that can be
-     * found in the LICENSE file at https://angular.io/license
-     */
     Zone.__load_patch('fakeasync', function (global, Zone, api) {
         var FakeAsyncTestZoneSpec = Zone && Zone['FakeAsyncTestZoneSpec'];
-        var ProxyZoneSpec = Zone && Zone['ProxyZoneSpec'];
+        function getProxyZoneSpec() {
+            return Zone && Zone['ProxyZoneSpec'];
+        }
         var _fakeAsyncTestZoneSpec = null;
         /**
          * Clears out the shared fake async zone for a test.
@@ -4464,7 +4464,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             }
             _fakeAsyncTestZoneSpec = null;
             // in node.js testing we may not have ProxyZoneSpec in which case there is nothing to reset.
-            ProxyZoneSpec && ProxyZoneSpec.assertPresent().resetDelegate();
+            getProxyZoneSpec() && getProxyZoneSpec().assertPresent().resetDelegate();
         }
         /**
          * Wraps a function to be executed in the fakeAsync zone:
@@ -4490,6 +4490,11 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
                 var args = [];
                 for (var _i = 0; _i < arguments.length; _i++) {
                     args[_i] = arguments[_i];
+                }
+                var ProxyZoneSpec = getProxyZoneSpec();
+                if (!ProxyZoneSpec) {
+                    throw new Error('ProxyZoneSpec is needed for the async() test helper but could not be found. ' +
+                        'Please make sure that your environment includes zone.js/dist/proxy.js');
                 }
                 var proxyZoneSpec = ProxyZoneSpec.assertPresent();
                 if (Zone.current.get('FakeAsyncTestZoneSpec')) {
@@ -4589,7 +4594,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
         }
         Zone[api.symbol('fakeAsyncTest')] =
             { resetFakeAsyncZone: resetFakeAsyncZone, flushMicrotasks: flushMicrotasks, discardPeriodicTasks: discardPeriodicTasks, tick: tick, flush: flush, fakeAsync: fakeAsync };
-    });
+    }, true);
     /**
      * @license
      * Copyright Google LLC All Rights Reserved.

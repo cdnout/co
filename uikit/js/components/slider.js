@@ -1,4 +1,4 @@
-/*! UIkit 3.6.13 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! UIkit 3.6.16 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -46,7 +46,9 @@
 
                 name: 'visibilitychange',
 
-                el: uikitUtil.inBrowser && document,
+                el: function() {
+                    return document;
+                },
 
                 filter: function() {
                     return this.autoplay;
@@ -180,10 +182,6 @@
                     this.prevIndex = this.index;
                 }
 
-                // Workaround for iOS's inert scrolling preventing pointerdown event
-                // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-                uikitUtil.on(this.list, 'touchmove', this.move, {passive: false});
-
                 uikitUtil.on(document, uikitUtil.pointerMove, this.move, {passive: false});
                 uikitUtil.on(document, (uikitUtil.pointerUp + " " + uikitUtil.pointerCancel), this.end, true);
 
@@ -200,6 +198,9 @@
                 if (distance === 0 || this.prevPos === this.pos || !this.dragging && Math.abs(distance) < this.threshold) {
                     return;
                 }
+
+                // prevent click event
+                uikitUtil.css(this.list, 'pointerEvents', 'none');
 
                 e.cancelable && e.preventDefault();
 
@@ -267,7 +268,6 @@
 
             end: function() {
 
-                uikitUtil.off(this.list, 'touchmove', this.move, {passive: false});
                 uikitUtil.off(document, uikitUtil.pointerMove, this.move, {passive: false});
                 uikitUtil.off(document, (uikitUtil.pointerUp + " " + uikitUtil.pointerCancel), this.end, true);
 
@@ -872,8 +872,6 @@
             },
 
             maxIndex: function() {
-                var this$1 = this;
-
 
                 if (!this.finite || this.center && !this.sets) {
                     return this.length - 1;
@@ -883,10 +881,18 @@
                     return uikitUtil.last(this.sets);
                 }
 
-                uikitUtil.css(this.slides, 'order', '');
-
+                var lft = 0;
                 var max = getMax(this.list);
-                var index = uikitUtil.findIndex(this.slides, function (el) { return getElLeft(el, this$1.list) >= max; });
+                var index = uikitUtil.findIndex(this.slides, function (el) {
+
+                    if (lft >= max) {
+                        return true;
+                    }
+
+                    lft += uikitUtil.dimensions(el).width;
+
+                });
+
                 return ~index ? index : this.length - 1;
             },
 
@@ -972,8 +978,10 @@
 
                 var actives = this._getTransitioner(this.index).getActives();
                 this.slides.forEach(function (slide) { return uikitUtil.toggleClass(slide, this$1.clsActive, uikitUtil.includes(actives, slide)); });
-                (!this.sets || uikitUtil.includes(this.sets, uikitUtil.toFloat(this.index))) && this.slides.forEach(function (slide) { return uikitUtil.toggleClass(slide, this$1.clsActivated, uikitUtil.includes(actives, slide)); });
 
+                if (this.clsActivated && (!this.sets || uikitUtil.includes(this.sets, uikitUtil.toFloat(this.index)))) {
+                    this.slides.forEach(function (slide) { return uikitUtil.toggleClass(slide, this$1.clsActivated || '', uikitUtil.includes(actives, slide)); });
+                }
             },
 
             events: ['resize']

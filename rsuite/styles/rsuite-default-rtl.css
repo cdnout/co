@@ -182,9 +182,11 @@ textarea {
   opacity: 0;
   -webkit-transition: opacity 0.15s linear;
   transition: opacity 0.15s linear;
+  pointer-events: none;
 }
 .fade.in {
   opacity: 1;
+  pointer-events: unset;
 }
 .collapse {
   display: none;
@@ -14731,10 +14733,10 @@ textarea.rs-input-group-inside.rs-input-group-xs > .rs-input-group-btn {
   border-color: #1675e0;
 }
 .rs-picker-tag-wrapper {
-  padding-left: 32px;
+  margin-left: 32px;
 }
 .rs-picker-cleanable .rs-picker-tag-wrapper {
-  padding-left: 44px;
+  margin-left: 44px;
 }
 .rs-picker-search {
   border: none;
@@ -19943,9 +19945,6 @@ textarea.rs-picker-menu .rs-picker-search-bar .rs-picker-search-bar-input {
   position: absolute;
   z-index: 4;
   background: #fff;
-}
-.rs-table-cell-group-fixed-right {
-  margin-right: 10px;
 }
 .rs-table-cell-group-shadow,
 .rs-table-cell-group-left-shadow {

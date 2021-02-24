@@ -58,7 +58,7 @@
     FormValidator.prototype = {
         // Validation error texts
         texts : {
-            invalid         : 'inupt is not as expected',
+            invalid         : 'input is not as expected',
             short           : 'input is too short',
             long            : 'input is too long',
             checked         : 'must be checked',
@@ -86,6 +86,7 @@
                 phone        : /^\+?([0-9]|[-|' '])+$/i,
                 numeric      : /^[0-9]+$/i,
                 alphanumeric : /^[a-zA-Z0-9]+$/i,
+                time         : /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/,
                 email        : {
                     illegalChars : /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
                     filter       : /^.+@.+\..{2,24}$/ // exmaple email "steve@s-i.photo"
@@ -105,28 +106,33 @@
                 if( field.getAttribute('placeholder') )
                     return data.value != field.getAttribute('placeholder') || this.texts.empty;
                 else
-                    return true;
+                    return true
             },
 
             hasValue : function( value ){
-                return value ? true : this.texts.empty;
+                return value ? true : this.texts.empty
             },
 
             // 'linked' is a special test case for inputs which their values should be equal to each other (ex. confirm email or retype password)
             linked : function(a, b, type){
                 if( b != a ){
                     // choose a specific message or a general one
-                    return this.texts[type + '_repeat'] || this.texts.no_match;
+                    return this.texts[type + '_repeat'] || this.texts.no_match
                 }
-                return true;
+                return true
             },
 
             email : function(field, data){
-                if ( !this.settings.regex.email.filter.test( data.value ) || data.value.match( this.settings.regex.email.illegalChars ) ){
-                    return this.texts.email;
-                }
+                var i, emails = data.value.trim().split(' ')
 
-                return true;
+                if( !field.multiple && emails.length > 1 )
+                return this.texts.email
+
+                for( var i = 0; i < emails.length; i++ )
+                    if ( !this.settings.regex.email.filter.test( emails[i] ) || emails[i].match( this.settings.regex.email.illegalChars ) )
+                        return this.texts.email
+
+                return true
             },
 
             // a "skip" will skip some of the tests (needed for keydown validation)
@@ -234,24 +240,23 @@
                     return this.texts.date;
                 }
                 catch(er){
-                    return this.texts.date;
+                    return this.texts.date
                 }
             },
 
             time : function( field, data ){
-                var pattern = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+                var pattern = this.settings.regex.time;
                 if( pattern.test(data.value) )
                     return true;
                 else
-                    return this.texts.time;
+                    return this.texts.time
             },
 
             url : function( field, data ){
-                // minimalistic URL validation
                 if( !this.settings.regex.url.test(data.value) )
                     return this.texts.url;
 
-                return true;
+                return true
             },
 
             hidden : function( field, data ){
@@ -263,7 +268,7 @@
                         return this.texts.invalid;
                 }
 
-                return true;
+                return true
             },
 
             select : function( field, data ){
@@ -273,7 +278,7 @@
             checkbox : function( field, data ){
                 if( field.checked ) return true;
 
-                return this.texts.checked;
+                return this.texts.checked
             }
         },
 
@@ -298,8 +303,9 @@
 
             function bindEventByType( type ){
                 formElm.addEventListener(type, function(e){
-                    that.checkField(e.target)
-                }, true);
+                    // a timeout is needed because on paste event the new value will not be available right away
+                    setTimeout(that.checkField.bind(that), 0, e.target)
+                }, true)
             }
         },
 
@@ -406,8 +412,8 @@
 
             this.data[id].value   = field.value.replace(/^\s+|\s+$/g, "");  // cache the value of the field and trim it
             this.data[id].valid   = true;                                  // initialize validity of field
-            this.data[id].type    = field.getAttribute('type');             // every field starts as 'valid=true' until proven otherwise
-            this.data[id].pattern = field.getAttribute('pattern');
+            this.data[id].type    = field.type;             // every field starts as 'valid=true' until proven otherwise
+            this.data[id].pattern = field.pattern;
 
             // Special treatment
             if( nodeName === "select" )

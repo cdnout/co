@@ -1,11 +1,7 @@
-/*Type definitions for Survey JavaScript library v1.8.26
+/*Type definitions for Survey JavaScript library v1.8.32
 Copyright (c) 2015-2020 Devsoft Baltic OÜ  - http://surveyjs.io/
 Definitions by: Devsoft Baltic OÜ <https://github.com/surveyjs/>
 */
-// Dependencies for this module:
-//   ../../../../knockout
-
-import * as ko from "knockout";
 
 import "./chunks/localization";
 
@@ -53,6 +49,7 @@ export declare var defaultStandardCss: {
     progressButtonsList: string;
     progressButtonsListElementPassed: string;
     progressButtonsListElementCurrent: string;
+    progressButtonsListElementNonClickable: string;
     progressButtonsPageTitle: string;
     progressButtonsPageDescription: string;
     page: {
@@ -139,6 +136,22 @@ export declare var defaultStandardCss: {
         other: string;
         column: string;
     };
+    ranking: {
+        root: string;
+        rootMobileMod: string;
+        rootDragMod: string;
+        item: string;
+        itemContent: string;
+        itemIndex: string;
+        itemText: string;
+        itemGhostNode: string;
+        itemIconContainer: string;
+        itemIcon: string;
+        itemIconHoverMod: string;
+        itemIconFocusMod: string;
+        itemGhostMod: string;
+        itemDragMod: string;
+    };
     comment: string;
     dropdown: {
         root: string;
@@ -193,6 +206,9 @@ export declare var defaultStandardCss: {
         detailIcon: string;
         detailIconExpanded: string;
         detailPanelCell: string;
+        emptyRowsSection: string;
+        emptyRowsText: string;
+        emptyRowsButton: string;
     };
     paneldynamic: {
         root: string;
@@ -323,6 +339,7 @@ export declare var defaultBootstrapCss: {
     progressButtonsList: string;
     progressButtonsListElementPassed: string;
     progressButtonsListElementCurrent: string;
+    progressButtonsListElementNonClickable: string;
     progressButtonsPageTitle: string;
     progressButtonsPageDescription: string;
     page: {
@@ -406,6 +423,22 @@ export declare var defaultBootstrapCss: {
         other: string;
         column: string;
     };
+    ranking: {
+        root: string;
+        rootMobileMod: string;
+        rootDragMod: string;
+        item: string;
+        itemContent: string;
+        itemIndex: string;
+        itemText: string;
+        itemGhostNode: string;
+        itemIconContainer: string;
+        itemIcon: string;
+        itemIconHoverMod: string;
+        itemIconFocusMod: string;
+        itemGhostMod: string;
+        itemDragMod: string;
+    };
     comment: string;
     dropdown: {
         root: string;
@@ -458,6 +491,9 @@ export declare var defaultBootstrapCss: {
         detailIcon: string;
         detailIconExpanded: string;
         detailPanelCell: string;
+        emptyRowsSection: string;
+        emptyRowsText: string;
+        emptyRowsButton: string;
     };
     paneldynamic: {
         root: string;
@@ -588,6 +624,7 @@ export declare var defaultBootstrapMaterialCss: {
     progressButtonsList: string;
     progressButtonsListElementPassed: string;
     progressButtonsListElementCurrent: string;
+    progressButtonsListElementNonClickable: string;
     progressButtonsPageTitle: string;
     progressButtonsPageDescription: string;
     page: {
@@ -671,6 +708,22 @@ export declare var defaultBootstrapMaterialCss: {
         other: string;
         column: string;
     };
+    ranking: {
+        root: string;
+        rootMobileMod: string;
+        rootDragMod: string;
+        item: string;
+        itemContent: string;
+        itemIndex: string;
+        itemText: string;
+        itemGhostNode: string;
+        itemIconContainer: string;
+        itemIcon: string;
+        itemIconHoverMod: string;
+        itemIconFocusMod: string;
+        itemGhostMod: string;
+        itemDragMod: string;
+    };
     comment: string;
     dropdown: {
         root: string;
@@ -729,6 +782,9 @@ export declare var defaultBootstrapMaterialCss: {
         detailIcon: string;
         detailIconExpanded: string;
         detailPanelCell: string;
+        emptyRowsSection: string;
+        emptyRowsText: string;
+        emptyRowsButton: string;
     };
     paneldynamic: {
         root: string;
@@ -891,6 +947,7 @@ export declare var modernCss: {
     progressButtonsList: string;
     progressButtonsListElementPassed: string;
     progressButtonsListElementCurrent: string;
+    progressButtonsListElementNonClickable: string;
     progressButtonsPageTitle: string;
     progressButtonsPageDescription: string;
     page: {
@@ -959,6 +1016,22 @@ export declare var modernCss: {
         materialDecorator: string;
         other: string;
         column: string;
+    };
+    ranking: {
+        root: string;
+        rootMobileMod: string;
+        rootDragMod: string;
+        item: string;
+        itemContent: string;
+        itemIndex: string;
+        itemText: string;
+        itemGhostNode: string;
+        itemIconContainer: string;
+        itemIcon: string;
+        itemIconHoverMod: string;
+        itemIconFocusMod: string;
+        itemGhostMod: string;
+        itemDragMod: string;
     };
     radiogroup: {
         root: string;
@@ -1077,6 +1150,9 @@ export declare var modernCss: {
         detailIcon: string;
         detailIconExpanded: string;
         detailPanelCell: string;
+        emptyRowsSection: string;
+        emptyRowsText: string;
+        emptyRowsButton: string;
     };
     rating: {
         root: string;
@@ -1137,7 +1213,8 @@ export declare var modernCss: {
 };
 
 export declare class Survey extends SurveyModel {
-    static cssType: string;
+    static get cssType(): string;
+    static set cssType(value: string);
     koCurrentPage: any;
     koIsFirstPage: any;
     koIsLastPage: any;
@@ -1180,6 +1257,7 @@ export declare var registerTemplateEngine: (ko: any, platform: string) => void;
 
 export declare class ImplementorBase {
     element: Base;
+    readonly implementedMark = "__surveyImplementedKo";
     constructor(element: Base);
     dispose(): void;
 }
@@ -1215,6 +1293,7 @@ export declare class Panel extends PanelModel {
 }
 export declare class Page extends PageModel {
     constructor(name?: string);
+    get renderTitleActions(): boolean;
     protected onBaseCreating(): void;
     protected createRow(): QuestionRowModel;
     protected createNewPanel(name: string): PanelModel;
@@ -1253,7 +1332,7 @@ export declare class QuestionImplementor extends ImplementorBase {
 export declare class QuestionSelectBaseImplementor extends QuestionImplementor {
     protected onCreated(): void;
     constructor(question: Question);
-    protected readonly isOtherSelected: boolean;
+    protected get isOtherSelected(): boolean;
 }
 export declare class QuestionCheckboxBaseImplementor extends QuestionSelectBaseImplementor {
     constructor(question: Question);
@@ -1264,7 +1343,6 @@ export declare class QuestionCheckboxImplementor extends QuestionCheckboxBaseImp
     protected getKoValue(): any;
 }
 export declare class QuestionCheckbox extends QuestionCheckboxModel {
-    name: string;
     koAllSelected: any;
     constructor(name: string);
     protected onBaseCreating(): void;
@@ -1278,19 +1356,16 @@ export declare class QuestionRanking extends QuestionRankingModel {
 }
 
 export declare class QuestionComment extends QuestionCommentModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionDropdown extends QuestionDropdownModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionFile extends QuestionFileModel {
-    name: string;
     koState: any;
     koHasValue: any;
     koData: any;
@@ -1301,13 +1376,11 @@ export declare class QuestionFile extends QuestionFileModel {
 }
 
 export declare class QuestionHtml extends QuestionHtmlModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionMatrix extends QuestionMatrixModel {
-    name: string;
     koVisibleRows: any;
     koVisibleColumns: any;
     constructor(name: string);
@@ -1325,8 +1398,6 @@ export declare class QuestionMatrixBaseImplementor extends QuestionImplementor {
     koRecalc: any;
     koAddRowClick: any;
     koRemoveRowClick: any;
-    koIsAddRowOnTop: any;
-    koIsAddRowOnBottom: any;
     koTable: any;
     constructor(question: Question);
     protected getQuestionTemplate(): string;
@@ -1338,7 +1409,6 @@ export declare class QuestionMatrixBaseImplementor extends QuestionImplementor {
     dispose(): void;
 }
 export declare class QuestionMatrixDropdown extends QuestionMatrixDropdownModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
     protected createNewDetailPanel(): PanelModel;
@@ -1347,15 +1417,12 @@ export declare class QuestionMatrixDropdown extends QuestionMatrixDropdownModel 
 
 export declare class QuestionMatrixDynamicImplementor extends QuestionMatrixBaseImplementor {
     constructor(question: Question);
-    protected isAddRowTop(): boolean;
-    protected isAddRowBottom(): boolean;
     protected canRemoveRows(): boolean;
     protected addRow(): void;
     protected removeRow(row: MatrixDynamicRowModel): void;
     getKoPopupIsVisible(row: MatrixDropdownRowModelBase): any;
 }
 export declare class QuestionMatrixDynamic extends QuestionMatrixDynamicModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
     protected createNewDetailPanel(): PanelModel;
@@ -1389,25 +1456,22 @@ export declare class QuestionPanelDynamicImplementor extends QuestionImplementor
     protected onCurrentIndexChanged(): void;
     protected addPanel(): void;
     protected removePanel(val: any): void;
-    protected readonly buttonAddCss: string;
-    protected readonly buttonPrevCss: any;
-    protected readonly buttonNextCss: any;
-    protected readonly progress: string;
+    protected get buttonAddCss(): string;
+    protected get buttonPrevCss(): any;
+    protected get buttonNextCss(): any;
+    protected get progress(): string;
 }
 export declare class QuestionPanelDynamic extends QuestionPanelDynamicModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
     protected createNewPanelObject(): PanelModel;
 }
 
 export declare class MultipleTextItem extends MultipleTextItemModel {
-    name: any;
     constructor(name?: any, title?: string);
     protected createEditor(name: string): QuestionTextModel;
 }
 export declare class QuestionMultipleText extends QuestionMultipleTextModel {
-    name: string;
     koRows: any;
     constructor(name: string);
     protected onBaseCreating(): void;
@@ -1416,25 +1480,21 @@ export declare class QuestionMultipleText extends QuestionMultipleTextModel {
 }
 
 export declare class QuestionRadiogroup extends QuestionRadiogroupModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionRating extends QuestionRatingModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionText extends QuestionTextModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionBoolean extends QuestionBooleanModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
     getItemCss(row: any, column: any): any;
@@ -1446,7 +1506,6 @@ export declare class QuestionBoolean extends QuestionBooleanModel {
 }
 
 export declare class QuestionEmpty extends QuestionEmptyModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
@@ -1456,13 +1515,11 @@ export declare class QuestionExpressionImplementor extends QuestionImplementor {
     constructor(question: Question);
 }
 export declare class QuestionExpression extends QuestionExpressionModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionImagePicker extends QuestionImagePickerModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
@@ -1474,10 +1531,11 @@ export declare class SurveyWindow extends SurveyWindowModel {
     constructor(jsonObj?: any, initialModel?: SurveyModel);
     protected createSurvey(jsonObj: any): SurveyModel;
     protected closeWindowOnComplete(): void;
-    protected template: string;
+    protected get template(): string;
+    protected set template(value: string);
     protected doShowingChanged(): void;
     protected getDefaultTemplate(): string;
-    readonly css: any;
+    get css(): any;
 }
 
 export declare var koTemplate: any;
@@ -1486,121 +1544,36 @@ export declare class SurveyTemplateText {
     addText(newText: string, id: string, name: string): void;
     replaceText(replaceText: string, id: string, questionType?: string): void;
     protected getId(id: string, questionType: string): string;
-    protected text: string;
+    protected get text(): string;
+    protected set text(value: string);
 }
 
 export declare class QuestionImage extends QuestionImageModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionSignaturePad extends QuestionSignaturePadModel {
-    name: string;
     constructor(name: string);
     protected onBaseCreating(): void;
 }
 
 export declare class QuestionCustom extends QuestionCustomModel {
-    name: string;
     constructor(name: string, questionJSON: ComponentQuestionJSON);
     protected onBaseCreating(): void;
 }
 export declare class QuestionComposite extends QuestionCompositeModel {
-    name: string;
     constructor(name: string, questionJSON: ComponentQuestionJSON);
     protected onBaseCreating(): void;
 }
 
-export interface IActionBarItem {
-        /**
-            * Unique string id
-            */
-        id: string;
-        /**
-            * Set this property to false to make the toolbar item invisible.
-            */
-        visible?: any;
-        /**
-            * Toolbar item title
-            */
-        title: any;
-        /**
-            * Toolbar item tooltip
-            */
-        tooltip?: any;
-        /**
-            * Set this property to false to disable the toolbar item.
-            */
-        enabled?: any;
-        /**
-            * Set this property to false to hide the toolbar item title.
-            */
-        showTitle?: any;
-        /**
-            * A callback that calls on toolbar item click.
-            */
-        action?: () => void;
-        /**
-            * Toolbar item css class
-            */
-        css?: any;
-        /**
-            * Toolbar inner element css class
-            */
-        innerCss?: any;
-        /**
-            * Toolbar item data object. Used as data for custom template or component rendering
-            */
-        data?: any;
-        /**
-            * Toolbar item template name
-            */
-        template?: string;
-        /**
-            * Toolbar item component name
-            */
-        component?: any;
-        /**
-            * Toolbar item icon name
-            */
-        iconName?: string;
-        /**
-            * Toolbar item child items. Can be used as contianer for options
-            */
-        items?: any;
-}
-/**
-    * The toolbar item description.
-    */
-export declare class AdaptiveElement {
-        items: ko.ObservableArray<any>;
-        invisibleItems: ko.ObservableArray<any>;
-        protected dotsItem: {
-                component: string;
-                items: ko.ObservableArray<any>;
-                css: string;
-                innerCss: string;
-                iconName: string;
-                isVisible: () => boolean;
-                showTitle: boolean;
-                verticalPosition: string;
-                horizontalPosition: string;
-                action: (item: any) => boolean;
-                closeOnAction: boolean;
-        };
-        showFirstN(visibleItemsCount: number): void;
-        invisibleItemSelected: (model: any) => void;
-}
 export declare class ActionBarViewModel extends AdaptiveElement {
-        itemsSubscription: ko.Computed;
-        constructor(_items: ko.MaybeObservableArray<IActionBarItem>);
-        readonly hasItems: boolean;
-        readonly canShrink: boolean;
-        readonly canGrow = true;
-        shrink(): void;
-        grow(): void;
-        dispose(): void;
+    itemsSubscription: any;
+    constructor(_items: Array<IActionBarItem>);
+    dispose(): void;
+}
+export declare class AdaptiveElementImplementor extends ImplementorBase {
+    constructor(model: AdaptiveElement);
 }
 
 export declare var CheckboxViewModel: any;
@@ -1617,36 +1590,11 @@ export declare class PanelViewModel {
     constructor(question: PanelModel, targetElement: HTMLElement);
 }
 
-export declare class PopupViewModel {
-    contentComponentName: string;
-    contentComponentData: any;
-    contentTemplateName: string;
-    isVisible: any;
-    verticalPosition: "top" | "bottom" | "middle";
-    horizontalPosition: "left" | "right" | "center";
-    showPointer: boolean;
-    isModal: boolean;
-    onCancel: () => void;
-    onApply: () => void;
-    onHide: () => void;
-    onShow: () => void;
-    cssClass: string;
-    top: any;
-    left: any;
-    popupDirection: any;
-    pointerTarget: any;
-    constructor(contentComponentName: string, contentComponentData: any, contentTemplateName: string, isVisible: any, verticalPosition: "top" | "bottom" | "middle", horizontalPosition: "left" | "right" | "center", showPointer: boolean, isModal: boolean, onCancel: () => void, onApply: () => void, onHide: () => void, onShow: () => void, cssClass: string, targetElement: HTMLElement);
-    readonly styleClass: string;
-    clickOutside(): void;
-    cancel(): void;
-    apply(): void;
-    readonly cancelButtonText: any;
-    readonly applyButtonText: any;
-    dispose(): void;
-}
+export declare function showModal(componentName: string, data: any, onApply: () => void, onCancel?: () => void): void;
 
 export declare class ProgressButtonsViewModel {
     constructor(model: SurveyModel, element: any);
+    isListElementClickable(index: any): boolean;
     getListElementCss(index: any): string;
     clickListElement(index: any): void;
     getScrollButtonCss(isLeftScroll: boolean): any;
@@ -1660,52 +1608,52 @@ export declare var TitleActionViewModel: any;
 
 export declare class StringEditorViewModel {
     constructor(params: any);
-    readonly koHasHtml: any;
-    editValue: any;
+    get koHasHtml(): any;
+    get editValue(): any;
+    set editValue(value: any);
     onInput(sender: StringEditorViewModel, event: any): void;
     onClick(sender: StringEditorViewModel, event: any): void;
 }
 
 export declare var StringViewerViewModel: any;
 
-export declare class ListViewModel {
-    items: ko.MaybeObservableArray<ListItem>;
-    onItemSelect: (item: ListItem) => void;
-    allowSelection: ko.MaybeObservable<boolean>;
-    isExpanded: ko.Observable<boolean>;
-    selectedItem: ko.Observable<ListItem>;
-    constructor(items: ko.MaybeObservableArray<ListItem>, onItemSelect: (item: ListItem) => void, allowSelection: ko.MaybeObservable<boolean>, selectedItem?: ko.Observable<ListItem>);
-    selectItem: (itemValue: ListItem) => void;
-    isItemDisabled: (itemValue: ListItem) => boolean;
-}
-export interface ListItem {
-    title: ko.MaybeObservable<string>;
-    iconName: ko.MaybeObservable<string>;
-    isEnabled?: boolean;
-}
+export declare var ListViewComponent: any;
 
 export declare var SvgIconViewModel: any;
 
 export declare class ResponsibilityManager {
     protected container: HTMLDivElement;
     getItemSizes: () => Array<number>;
-    constructor(container: HTMLDivElement, model: any, dotsItemSize?: number);
+    constructor(container: HTMLDivElement, model: AdaptiveElement, dotsItemSize?: number);
     getComputedStyle: any;
     protected getAvailableSpace(): number;
     protected getDimensions(element: HTMLElement): {
         scrollDimension: number;
         offsetDimension: number;
     };
-    readonly itemSizes: number[];
+    get itemSizes(): number[];
     process(): void;
 }
 export declare class VerticalResponsibilityManager extends ResponsibilityManager {
+    constructor(container: HTMLDivElement, model: AdaptiveElement, dotsItemSize?: number);
     protected getAvailableSpace(): number;
     protected getDimensions(): {
         scrollDimension: number;
         offsetDimension: number;
     };
 }
+
+declare function compareVersions(a: any, b: any): number;
+declare function confirmAction(message: string): boolean;
+declare function detectIEBrowser(): boolean;
+declare function detectIEOrEdge(): any;
+declare function loadFileFromBase64(b64Data: string, fileName: string): void;
+declare function isMobile(): boolean;
+declare function isElementVisible(element: HTMLElement, threshold?: number): boolean;
+declare function findScrollableParent(element: HTMLElement): HTMLElement;
+declare function createSvg(size: number, width: number, height: number, iconName: string, svgElem: any): void;
+export declare function unwrap<T>(value: T | (() => T)): T;
+export { compareVersions, confirmAction, detectIEOrEdge, detectIEBrowser, loadFileFromBase64, isMobile, isElementVisible, findScrollableParent, createSvg, };
 
 export declare class RendererFactory {
     static Instance: RendererFactory;
@@ -1847,6 +1795,15 @@ export declare var settings: {
                 text: string[];
                 checkbox: string[];
         };
+        /**
+            * Set the value as string "yyyy-mm-dd". text questions with inputType "date" will not allow to set to survey date that less than this value
+            */
+        minDate: string;
+        /**
+            * Set the value as string "yyyy-mm-dd". text questions with inputType "date" will not allow to set to survey date that greater than this value
+            */
+        maxDate: string;
+        showModal: (componentName: string, data: any, onApply: () => void, onCancel?: () => void) => void;
 };
 
 export interface HashTable<T> {
@@ -1884,14 +1841,16 @@ export declare class SurveyValidator extends Base {
         errorOwner: ISurveyErrorOwner;
         onAsyncCompleted: (result: ValidatorResult) => void;
         constructor();
-        text: string;
-        readonly isValidateAllValues: boolean;
-        readonly locText: LocalizableString;
+        getSurvey(): ISurvey;
+        get text(): string;
+        set text(value: string);
+        get isValidateAllValues(): boolean;
+        get locText(): LocalizableString;
         protected getErrorText(name: string): string;
         protected getDefaultErrorText(name: string): string;
         validate(value: any, name?: string, values?: any, properties?: any): ValidatorResult;
-        readonly isRunning: boolean;
-        readonly isAsync: boolean;
+        get isRunning(): boolean;
+        get isAsync(): boolean;
         getLocale(): string;
         getMarkdownHtml(text: string, name: string): string;
         getRenderer(name: string): string;
@@ -1921,11 +1880,13 @@ export declare class NumericValidator extends SurveyValidator {
         /**
             * The minValue property.
             */
-        minValue: number;
+        get minValue(): number;
+        set minValue(val: number);
         /**
             * The maxValue property.
             */
-        maxValue: number;
+        get maxValue(): number;
+        set maxValue(val: number);
 }
 /**
     * Validate text values.
@@ -1938,15 +1899,18 @@ export declare class TextValidator extends SurveyValidator {
         /**
             * The minLength property.
             */
-        minLength: number;
+        get minLength(): number;
+        set minLength(val: number);
         /**
             * The maxLength property.
             */
-        maxLength: number;
+        get maxLength(): number;
+        set maxLength(val: number);
         /**
             * The allowDigits property.
             */
-        allowDigits: boolean;
+        get allowDigits(): boolean;
+        set allowDigits(val: boolean);
 }
 export declare class AnswerCountValidator extends SurveyValidator {
         constructor(minCount?: number, maxCount?: number);
@@ -1956,11 +1920,13 @@ export declare class AnswerCountValidator extends SurveyValidator {
         /**
             * The minCount property.
             */
-        minCount: number;
+        get minCount(): number;
+        set minCount(val: number);
         /**
             * The maxCount property.
             */
-        maxCount: number;
+        get maxCount(): number;
+        set maxCount(val: number);
 }
 /**
     * Use it to validate the text by regular expressions.
@@ -1972,7 +1938,8 @@ export declare class RegexValidator extends SurveyValidator {
         /**
             * The regex property.
             */
-        regex: string;
+        get regex(): string;
+        set regex(val: string);
 }
 /**
     * Validate e-mail address in the text input
@@ -1989,17 +1956,18 @@ export declare class EmailValidator extends SurveyValidator {
 export declare class ExpressionValidator extends SurveyValidator {
         constructor(expression?: string);
         getType(): string;
-        readonly isValidateAllValues: boolean;
-        readonly isAsync: boolean;
-        readonly isRunning: boolean;
+        get isValidateAllValues(): boolean;
+        get isAsync(): boolean;
+        get isRunning(): boolean;
         validate(value: any, name?: string, values?: any, properties?: any): ValidatorResult;
-        protected generateError(res: boolean, value: any): ValidatorResult;
+        protected generateError(res: boolean, value: any, name: string): ValidatorResult;
         protected getDefaultErrorText(name: string): any;
         protected ensureConditionRunner(): boolean;
         /**
             * The expression property.
             */
-        expression: string;
+        get expression(): string;
+        set expression(val: string);
 }
 
 /**
@@ -2010,7 +1978,8 @@ export declare class ExpressionValidator extends SurveyValidator {
 export declare class ItemValue extends Base {
     protected typeName: string;
     [index: string]: any;
-    static Separator: string;
+    static get Separator(): string;
+    static set Separator(val: string);
     static createArray(locOwner: ILocalizableOwner): Array<ItemValue>;
     static setupArray(items: Array<ItemValue>, locOwner: ILocalizableOwner): void;
     static setData(items: Array<ItemValue>, values: Array<any>): void;
@@ -2024,23 +1993,30 @@ export declare class ItemValue extends Base {
     constructor(value: any, text?: string, typeName?: string);
     onCreating(): any;
     getType(): string;
+    getSurvey(): ISurvey;
     getLocale(): string;
-    readonly locText: LocalizableString;
+    get locText(): LocalizableString;
     setLocText(locText: LocalizableString): void;
-    locOwner: ILocalizableOwner;
-    value: any;
-    readonly hasText: boolean;
-    pureText: string;
-    text: string;
-    readonly calculatedText: string;
+    get locOwner(): ILocalizableOwner;
+    set locOwner(value: ILocalizableOwner);
+    get value(): any;
+    set value(newValue: any);
+    get hasText(): boolean;
+    get pureText(): string;
+    set pureText(val: string);
+    get text(): string;
+    set text(newText: string);
+    get calculatedText(): string;
     getData(): any;
     toJSON(): any;
     setData(value: any): void;
-    visibleIf: string;
-    enableIf: string;
-    readonly isVisible: boolean;
+    get visibleIf(): string;
+    set visibleIf(val: string);
+    get enableIf(): string;
+    set enableIf(val: string);
+    get isVisible(): boolean;
     setIsVisible(val: boolean): void;
-    readonly isEnabled: any;
+    get isEnabled(): any;
     setIsEnabled(val: boolean): void;
     addUsedLocales(locales: Array<string>): void;
     protected onPropertyValueChanged(name: string, oldValue: any, newValue: any): void;
@@ -2107,6 +2083,7 @@ export interface ISurvey extends ITextProcessor, ISurveyErrorOwner {
         getUpdatedQuestionNo(question: IQuestion, no: string): string;
         getUpdatedQuestionTitleActions(question: IQuestion, titleActions: Array<any>): Array<any>;
         getUpdatedPanelTitleActions(question: IPanel, titleActions: Array<any>): Array<any>;
+        getUpdatedPageTitleActions(question: IPage, titleActions: Array<any>): Array<any>;
         questionStartIndex: string;
         questionTitleLocation: string;
         questionDescriptionLocation: string;
@@ -2122,10 +2099,10 @@ export interface ISurvey extends ITextProcessor, ISurveyErrorOwner {
         updateQuestionCssClasses(question: IQuestion, cssClasses: any): any;
         updatePanelCssClasses(panel: IPanel, cssClasses: any): any;
         updatePageCssClasses(panel: IPanel, cssClasses: any): any;
-        afterRenderQuestion(question: IQuestion, htmlElement: any): any;
-        afterRenderQuestionInput(question: IQuestion, htmlElement: any): any;
-        afterRenderPanel(panel: IElement, htmlElement: any): any;
-        afterRenderPage(htmlElement: any): any;
+        afterRenderQuestion(question: IQuestion, htmlElement: HTMLElement): any;
+        afterRenderQuestionInput(question: IQuestion, htmlElement: HTMLElement): any;
+        afterRenderPanel(panel: IElement, htmlElement: HTMLElement): any;
+        afterRenderPage(htmlElement: HTMLElement): any;
         getQuestionByValueNameFromArray(valueName: string, name: string, index: number): IQuestion;
         matrixRowAdded(question: IQuestion, row: any): any;
         matrixBeforeRowAdded(options: {
@@ -2147,9 +2124,10 @@ export interface ISurvey extends ITextProcessor, ISurveyErrorOwner {
         scrollElementToTop(element: ISurveyElement, question: IQuestion, page: IPage, id: string): any;
         runExpression(expression: string): any;
         renderTitleActions(element: ISurveyElement): boolean;
+        elementContentVisibilityChanged(element: ISurveyElement): void;
 }
 export interface ISurveyImpl {
-        geSurveyData(): ISurveyData;
+        getSurveyData(): ISurveyData;
         getSurvey(): ISurvey;
         getTextProcessor(): ITextProcessor;
 }
@@ -2228,6 +2206,7 @@ export interface IPanel extends ISurveyElement, IParentElement {
         elementWidthChanged(el: IElement): any;
         indexOf(el: IElement): number;
         elements: Array<IElement>;
+        ensureRowsVisibility(): void;
 }
 export interface IPage extends IPanel, IConditionRunner {
         isStarted: boolean;
@@ -2265,7 +2244,8 @@ export declare class Bindings {
     */
 export declare class Base {
         static isSurveyElement(val: any): boolean;
-        static commentPrefix: string;
+        static get commentPrefix(): string;
+        static set commentPrefix(val: string);
         static createItemValue: (item: any, type?: string) => any;
         static itemValueLocStrChanged: (arr: Array<any>) => void;
         /**
@@ -2303,7 +2283,8 @@ export declare class Base {
             * Returns the type of the object as a string as it represents in the json. It should be in lowcase.
             */
         getType(): string;
-        readonly bindings: Bindings;
+        getSurvey(): ISurvey;
+        get bindings(): Bindings;
         checkBindings(valueName: string, value: any): void;
         protected updateBindings(propertyName: string, value: any): void;
         protected updateBindingValue(valueName: string, value: any): void;
@@ -2315,7 +2296,7 @@ export declare class Base {
         /**
             * Returns true if the object is loading from Json at the current moment.
             */
-        readonly isLoadingFromJson: boolean;
+        get isLoadingFromJson(): boolean;
         protected getIsLoadingFromJson(): boolean;
         startLoadingFromJson(): void;
         endLoadingFromJson(): void;
@@ -2356,6 +2337,7 @@ export declare class Base {
         itemValuePropertyChanged(item: ItemValue, name: string, oldValue: any, newValue: any): void;
         protected onPropertyValueChanged(name: string, oldValue: any, newValue: any): void;
         protected propertyValueChanged(name: string, oldValue: any, newValue: any, arrayChanges?: ArrayChanges, target?: Base): void;
+        protected get isInternal(): boolean;
         /**
             * Register a function that will be called on a property value changed.
             * @param name the property name
@@ -2391,6 +2373,7 @@ export declare class Base {
         protected AddLocStringToUsedLocales(locStr: LocalizableString, locales: Array<string>): void;
         protected createItemValues(name: string): Array<any>;
         protected createNewArrayCore(name: string): Array<any>;
+        protected ensureArray(name: string, onPush?: any, onRemove?: any): any[];
         protected createNewArray(name: string, onPush?: any, onRemove?: any): Array<any>;
         protected getItemValueType(): string;
         protected setArray(name: string, src: any[], dest: any[], isItemValues: boolean, onPush: any): void;
@@ -2409,7 +2392,7 @@ export declare class SurveyError {
         protected errorOwner: ISurveyErrorOwner;
         visible: boolean;
         constructor(text?: string, errorOwner?: ISurveyErrorOwner);
-        readonly locText: LocalizableString;
+        get locText(): LocalizableString;
         getText(): string;
         getErrorType(): string;
         protected getDefaultText(): string;
@@ -2432,21 +2415,22 @@ export declare class SurveyElement extends Base implements ISurveyElement {
         /**
             * Set this property to "collapsed" to render only Panel title and expanded button and to "expanded" to render the collapsed button in the Panel caption
             */
-        state: string;
+        get state(): string;
+        set state(val: string);
         /**
             * Returns true if the Element is in the collapsed state
             * @see state
             * @see collapse
             * @see isExpanded
             */
-        readonly isCollapsed: boolean;
+        get isCollapsed(): boolean;
         /**
             * Returns true if the Element is in the expanded state
             * @see state
             * @see expand
             * @see isCollapsed
             */
-        readonly isExpanded: boolean;
+        get isExpanded(): boolean;
         /**
             * Collapse the Element
             * @see state
@@ -2465,27 +2449,30 @@ export declare class SurveyElement extends Base implements ISurveyElement {
         getTitleActions(): Array<any>;
         getTitleComponentName(): string;
         setSurveyImpl(value: ISurveyImpl): void;
-        protected readonly surveyImpl: ISurveyImpl;
-        readonly data: ISurveyData;
+        protected get surveyImpl(): ISurveyImpl;
+        get data(): ISurveyData;
         /**
             * Returns the survey object.
             */
-        readonly survey: ISurvey;
+        get survey(): ISurvey;
+        getSurvey(): ISurvey;
         /**
             * Returns true if the question in design mode right now.
             */
-        readonly isDesignMode: boolean;
+        get isDesignMode(): boolean;
         isContentElement: boolean;
-        readonly areInvisibleElementsShowing: boolean;
-        readonly isVisible: boolean;
-        readonly isReadOnly: boolean;
+        protected get isInternal(): boolean;
+        get areInvisibleElementsShowing(): boolean;
+        get isVisible(): boolean;
+        get isReadOnly(): boolean;
         /**
             * Set it to true to make an element question/panel/page readonly.
             * Please note, this property is hidden for question without input, for example html question.
             * @see enableIf
             * @see isReadOnly
             */
-        readOnly: boolean;
+        get readOnly(): boolean;
+        set readOnly(val: boolean);
         protected onReadOnlyChanged(): void;
         updateElementCss(): void;
         protected getIsLoadingFromJson(): boolean;
@@ -2493,7 +2480,8 @@ export declare class SurveyElement extends Base implements ISurveyElement {
             * This is the identifier of a survey element - question or panel.
             * @see valueName
             */
-        name: string;
+        get name(): string;
+        set name(val: string);
         protected getValidName(name: string): string;
         protected onNameChanged(oldValue: string): void;
         protected updateBindingValue(valueName: string, value: any): void;
@@ -2501,29 +2489,31 @@ export declare class SurveyElement extends Base implements ISurveyElement {
             * The list of errors. It is created by callig hasErrors functions
             * @see hasErrors
             */
-        errors: Array<SurveyError>;
+        get errors(): Array<SurveyError>;
+        set errors(val: Array<SurveyError>);
         /**
             * Returns true if a question or a container (panel/page) or their chidren have an error.
             * The value can be out of date. hasErrors function should be called to get the correct value.
             */
-        readonly containsErrors: boolean;
+        get containsErrors(): boolean;
         updateContainsErrors(): void;
         protected getContainsErrors(): boolean;
         getElementsInDesign(includeHidden?: boolean): Array<IElement>;
-        selectedElementInDesign: SurveyElement;
+        get selectedElementInDesign(): SurveyElement;
+        set selectedElementInDesign(val: SurveyElement);
         updateCustomWidgets(): void;
         onSurveyLoad(): void;
         onFirstRendering(): void;
         endLoadingFromJson(): void;
         setVisibleIndex(index: number): number;
-        readonly isPage: boolean;
+        get isPage(): boolean;
         /**
             * Return false if it is not panel.
             */
-        readonly isPanel: boolean;
+        get isPanel(): boolean;
         delete(): void;
         protected removeSelfFromList(list: Array<any>): void;
-        protected readonly textProcessor: ITextProcessor;
+        protected get textProcessor(): ITextProcessor;
         protected getProcessedHtml(html: string): string;
         protected onSetData(): void;
         protected getPage(parent: IPanel): IPage;
@@ -2533,7 +2523,7 @@ export declare class SurveyElement extends Base implements ISurveyElement {
 export declare class Event<T extends Function, Options> {
         onCallbacksChanged: () => void;
         protected callbacks: Array<T>;
-        readonly isEmpty: boolean;
+        get isEmpty(): boolean;
         fire(sender: any, options: Options): void;
         clear(): void;
         add(func: T): void;
@@ -2552,26 +2542,30 @@ export declare class CalculatedValue extends Base {
         constructor(name?: string, expression?: string);
         setOwner(data: ISurveyData): void;
         getType(): string;
-        readonly owner: ISurveyData;
+        getSurvey(): ISurvey;
+        get owner(): ISurveyData;
         /**
             * The calculated value name. It should be non empty and unique.
             */
-        name: string;
+        get name(): string;
+        set name(val: string);
         /**
             * Set this property to true to include the non-empty calculated value into survey result, survey.data property.
             */
-        includeIntoResult: boolean;
+        get includeIntoResult(): boolean;
+        set includeIntoResult(val: boolean);
         /**
             * The Expression that used to calculate the value. You may use standard operators like +, -, * and /, squares (). Here is the example of accessing the question value {questionname}.
             * <br/>Example: "({quantity} * {price}) * (100 - {discount}) / 100"
             */
-        expression: string;
+        get expression(): string;
+        set expression(val: string);
         locCalculation(): void;
         unlocCalculation(): void;
         resetCalculation(): void;
         doCalculation(calculatedValues: Array<CalculatedValue>, values: HashTable<any>, properties: HashTable<any>): void;
         runExpression(values: HashTable<any>, properties: HashTable<any>): void;
-        readonly value: any;
+        get value(): any;
         protected setValue(val: any): void;
 }
 
@@ -2653,39 +2647,46 @@ export interface ILocalizableOwner {
         getProcessedText(text: string): string;
         getRenderer(name: string): string;
 }
+export interface ILocalizableString {
+        getLocaleText(loc: string): string;
+        setLocaleText(loc: string, newValue: string): any;
+        getLocales(): Array<string>;
+}
 /**
     * The class represents the string that supports multi-languages and markdown.
     * It uses in all objects where support for multi-languages and markdown is required.
     */
-export declare class LocalizableString {
+export declare class LocalizableString implements ILocalizableString {
         owner: ILocalizableOwner;
         useMarkdown: boolean;
         name?: string;
         static SerializeAsObject: boolean;
-        static defaultLocale: string;
+        static get defaultLocale(): string;
+        static set defaultLocale(val: string);
         static defaultRenderer: string;
         static editableRenderer: string;
         onGetTextCallback: (str: string) => string;
         onStrChanged: () => void;
         sharedData: LocalizableString;
         constructor(owner: ILocalizableOwner, useMarkdown?: boolean, name?: string);
-        readonly locale: string;
+        get locale(): string;
         strChanged(): void;
-        text: string;
-        readonly calculatedText: string;
-        readonly pureText: string;
-        readonly hasHtml: boolean;
-        readonly html: string;
-        readonly isEmpty: boolean;
-        readonly textOrHtml: string;
-        readonly renderedHtml: string;
+        get text(): string;
+        get calculatedText(): string;
+        get pureText(): string;
+        get hasHtml(): boolean;
+        get html(): string;
+        get isEmpty(): boolean;
+        get textOrHtml(): string;
+        get renderedHtml(): string;
+        set text(value: string);
         getLocaleText(loc: string): string;
         setLocaleText(loc: string, value: string): void;
         hasNonDefaultText(): boolean;
         getLocales(): Array<string>;
         getJson(): any;
         setJson(value: any): void;
-        readonly renderAs: string;
+        get renderAs(): string;
         equals(obj: any): boolean;
         onChanged(): void;
         protected onCreating(): void;
@@ -2693,15 +2694,20 @@ export declare class LocalizableString {
 /**
     * The class represents the list of strings that supports multi-languages.
     */
-export declare class LocalizableStrings {
+export declare class LocalizableStrings implements ILocalizableString {
         owner: ILocalizableOwner;
         constructor(owner: ILocalizableOwner);
-        readonly locale: string;
-        value: Array<string>;
-        text: string;
-        getValue(loc: string): any;
+        get locale(): string;
+        get value(): Array<string>;
+        set value(val: Array<string>);
+        get text(): string;
+        set text(val: string);
+        getLocaleText(loc: string): string;
+        setLocaleText(loc: string, newValue: string): any;
+        getValue(loc: string): Array<string>;
         setValue(loc: string, val: Array<string>): void;
-        readonly isEmpty: boolean;
+        get isEmpty(): boolean;
+        getLocales(): Array<string>;
         getJson(): any;
         setJson(value: any): void;
 }
@@ -2714,8 +2720,9 @@ export declare class ExpressionItem extends Base implements ILocalizableOwner {
         /**
             * The expression property. If this expression returns true, then survey will use html property to show on complete page.
             */
-        expression: string;
-        readonly locHtml: LocalizableString;
+        get expression(): string;
+        set expression(val: string);
+        get locHtml(): LocalizableString;
         getLocale(): string;
         getMarkdownHtml(text: string, name: string): string;
         getRenderer(name: string): string;
@@ -2734,8 +2741,9 @@ export declare class HtmlConditionItem extends ExpressionItem {
             * The html that shows on completed ('Thank you') page. The expression should return true
             * @see expression
             */
-        html: string;
-        readonly locHtml: LocalizableString;
+        get html(): string;
+        set html(value: string);
+        get locHtml(): LocalizableString;
 }
 /**
     * A class that contains expression and url propeties. It uses in survey.navigateToUrlOnCondition array.
@@ -2749,8 +2757,9 @@ export declare class UrlConditionItem extends ExpressionItem {
             * The url that survey navigates to on completing the survey. The expression should return true
             * @see expression
             */
-        url: string;
-        readonly locUrl: LocalizableString;
+        get url(): string;
+        set url(value: string);
+        get locUrl(): LocalizableString;
 }
 
 /**
@@ -2758,7 +2767,8 @@ export declare class UrlConditionItem extends ExpressionItem {
   * The run method call a restfull service and results can be get on getResultCallback.
   */
 export declare class ChoicesRestfull extends Base {
-    static EncodeParameters: boolean;
+    static get EncodeParameters(): boolean;
+    static set EncodeParameters(val: boolean);
     static clearCache(): void;
     static onBeforeSendRequest: (sender: ChoicesRestfull, options: {
         request: XMLHttpRequest;
@@ -2773,26 +2783,34 @@ export declare class ChoicesRestfull extends Base {
     error: SurveyError;
     owner: IQuestion;
     constructor();
+    getSurvey(): ISurvey;
     run(textProcessor?: ITextProcessor): void;
-    readonly isUsingCache: boolean;
-    readonly isRunning: boolean;
-    readonly isWaitingForParameters: boolean;
+    get isUsingCache(): boolean;
+    get isRunning(): boolean;
+    get isWaitingForParameters(): boolean;
     protected useChangedItemsResults(): boolean;
     protected parseResponse(response: any): any;
     protected sendRequest(): void;
     getType(): string;
-    readonly isEmpty: boolean;
+    get isEmpty(): boolean;
     getCustomPropertiesNames(): Array<string>;
     setData(json: any): void;
     getData(): any;
-    url: string;
-    path: string;
-    valueName: string;
-    titleName: string;
-    imageLinkName: string;
-    allowEmptyResponse: boolean;
-    attachOriginalItems: boolean;
-    readonly itemValueType: string;
+    get url(): string;
+    set url(val: string);
+    get path(): string;
+    set path(val: string);
+    get valueName(): string;
+    set valueName(val: string);
+    get titleName(): string;
+    set titleName(val: string);
+    get imageLinkName(): string;
+    set imageLinkName(val: string);
+    get allowEmptyResponse(): boolean;
+    set allowEmptyResponse(val: boolean);
+    get attachOriginalItems(): boolean;
+    set attachOriginalItems(val: boolean);
+    get itemValueType(): string;
     clear(): void;
     protected beforeSendRequest(): void;
     protected onLoad(result: any, loadingObjHash?: string): void;
@@ -2813,10 +2831,11 @@ export declare var registerFunction: (name: string, func: (params: any[]) => any
 
 export declare class ExpressionRunnerBase {
     constructor(expression: string);
-    expression: string;
+    get expression(): string;
+    set expression(value: string);
     getVariables(): Array<string>;
     hasFunction(): boolean;
-    readonly isAsync: boolean;
+    get isAsync(): boolean;
     canRun(): boolean;
     protected runCore(values: HashTable<any>, properties?: HashTable<any>): any;
     protected doOnComplete(res: any): void;
@@ -2844,12 +2863,12 @@ export declare abstract class Operand {
 export declare class BinaryOperand extends Operand {
     constructor(operatorName: string, left?: any, right?: any, isArithmeticOp?: boolean);
     getType(): string;
-    readonly isArithmetic: boolean;
-    readonly isConjunction: boolean;
-    readonly conjunction: string;
-    readonly operator: string;
-    readonly leftOperand: any;
-    readonly rightOperand: any;
+    get isArithmetic(): boolean;
+    get isConjunction(): boolean;
+    get conjunction(): string;
+    get operator(): string;
+    get leftOperand(): any;
+    get rightOperand(): any;
     evaluate(processValue?: ProcessValue): any;
     toString(func?: (op: Operand) => string): string;
     setVariables(variables: Array<string>): void;
@@ -2859,8 +2878,8 @@ export declare class BinaryOperand extends Operand {
 }
 export declare class UnaryOperand extends Operand {
     constructor(expressionValue: Operand, operatorName: string);
-    readonly operator: string;
-    readonly expression: Operand;
+    get operator(): string;
+    get expression(): Operand;
     getType(): string;
     toString(func?: (op: Operand) => string): string;
     evaluate(processValue?: ProcessValue): boolean;
@@ -2881,7 +2900,7 @@ export declare class Const extends Operand {
     constructor(value: any);
     getType(): string;
     toString(func?: (op: Operand) => string): string;
-    readonly correctValue: any;
+    get correctValue(): any;
     evaluate(): any;
     setVariables(variables: Array<string>): void;
     protected getCorrectValue(value: any): any;
@@ -2891,7 +2910,7 @@ export declare class Variable extends Const {
     constructor(variableName: string);
     getType(): string;
     toString(func?: (op: Operand) => string): string;
-    readonly variable: string;
+    get variable(): string;
     evaluate(processValue?: ProcessValue): any;
     setVariables(variables: Array<string>): void;
     protected getCorrectValue(value: any): any;
@@ -2904,7 +2923,7 @@ export declare class FunctionOperand extends Operand {
     evaluate(processValue?: ProcessValue): any;
     toString(func?: (op: Operand) => string): string;
     setVariables(variables: Array<string>): void;
-    readonly isReady: boolean;
+    get isReady(): boolean;
     hasFunction(): boolean;
     hasAsyncFunction(): boolean;
     addToAsyncList(list: Array<FunctionOperand>): void;
@@ -2931,7 +2950,7 @@ export declare class ConditionsParserError {
 export declare class ConditionsParser {
     createCondition(text: string): Operand;
     parseExpression(text: string): Operand;
-    readonly error: ConditionsParserError;
+    get error(): ConditionsParserError;
 }
 
 export declare class ProcessValue {
@@ -2952,8 +2971,15 @@ export interface IPropertyDecoratorOptions {
                 name: string;
                 onGetTextCallback?: (str: string) => string;
         } | boolean;
+        onSet?: (val: any, target: any) => void;
 }
 export declare function property(options?: IPropertyDecoratorOptions): (target: any, key: string) => void;
+export interface IArrayPropertyDecoratorOptions {
+        onPush?: any;
+        onRemove?: any;
+        onSet?: (val: any, target: any) => void;
+}
+export declare function propertyArray(options?: IArrayPropertyDecoratorOptions): (target: any, key: string) => void;
 export interface IObject {
         [key: string]: any;
 }
@@ -2963,7 +2989,7 @@ export interface IObject {
     * @see removeProperty
     * @see [Add Properties](https://surveyjs.io/Documentation/Survey-Creator#addproperties)
     * @see [Remove Properties](https://surveyjs.io/Documentation/Survey-Creator#removeproperties)
- */
+    */
 export declare class JsonObjectProperty implements IObject {
         name: string;
         static getItemValuesDefaultValue: (val: any) => any;
@@ -2994,35 +3020,43 @@ export declare class JsonObjectProperty implements IObject {
         visibleIf: (obj: any) => boolean;
         onPropertyEditorUpdate: (obj: any, propEditor: any) => any;
         constructor(classInfo: JsonMetadataClass, name: string, isRequired?: boolean);
-        readonly id: number;
-        readonly classInfo: JsonMetadataClass;
-        type: string;
+        get id(): number;
+        get classInfo(): JsonMetadataClass;
+        get type(): string;
+        set type(value: string);
         isArray: boolean;
-        isRequired: boolean;
-        isUnique: boolean;
-        readonly hasToUseGetValue: string | ((obj: any) => any);
-        defaultValue: any;
+        get isRequired(): boolean;
+        set isRequired(val: boolean);
+        get isUnique(): boolean;
+        set isUnique(val: boolean);
+        get hasToUseGetValue(): string | ((obj: any) => any);
+        get defaultValue(): any;
+        set defaultValue(newValue: any);
         isDefaultValue(value: any): boolean;
         getValue(obj: any): any;
         getPropertyValue(obj: any): any;
-        readonly hasToUseSetValue: string | ((obj: any, value: any, jsonConv: JsonObject) => any);
+        get hasToUseSetValue(): string | ((obj: any, value: any, jsonConv: JsonObject) => any);
         setValue(obj: any, value: any, jsonConv: JsonObject): void;
         getObjType(objType: string): string;
         getClassName(className: string): string;
         /**
             * Depricated, please use getChoices
             */
-        readonly choices: Array<any>;
-        readonly hasChoices: boolean;
+        get choices(): Array<any>;
+        get hasChoices(): boolean;
         getChoices(obj: any, choicesCallback?: any): Array<any>;
         setChoices(value: Array<any>, valueFunc?: (obj: any) => Array<any>): void;
         getBaseValue(): string;
         setBaseValue(val: any): void;
-        readOnly: boolean;
+        get readOnly(): boolean;
+        set readOnly(val: boolean);
         isVisible(layout: string, obj?: any): boolean;
-        visible: boolean;
-        isLocalizable: boolean;
-        dataList: Array<string>;
+        get visible(): boolean;
+        set visible(val: boolean);
+        get isLocalizable(): boolean;
+        set isLocalizable(val: boolean);
+        get dataList(): Array<string>;
+        set dataList(val: Array<string>);
         mergeWith(prop: JsonObjectProperty): void;
         addDependedProperty(name: string): void;
         getDependedProperties(): Array<string>;
@@ -3107,15 +3141,15 @@ export declare class JsonRequiredPropertyError extends JsonError {
         constructor(propertyName: string, className: string);
 }
 export declare class JsonObject {
-        static readonly metaData: JsonMetadata;
+        static get metaData(): JsonMetadata;
         errors: JsonError[];
         lightSerializing: boolean;
         toJsonObject(obj: any, storeDefaults?: boolean): any;
         toObject(jsonObj: any, obj: any): void;
         toObjectCore(jsonObj: any, obj: any): void;
-        protected toJsonObjectCore(obj: any, property: JsonObjectProperty, storeDefaults?: boolean): any;
+        toJsonObjectCore(obj: any, property: JsonObjectProperty, storeDefaults?: boolean): any;
         valueToJson(obj: any, result: any, property: JsonObjectProperty, storeDefaults?: boolean): void;
-        protected valueToObj(value: any, obj: any, property: JsonObjectProperty): void;
+        valueToObj(value: any, obj: any, property: JsonObjectProperty): void;
 }
 /**
     * An alias for the metadata object. It contains object properties' runtime information and allows you to modify it.
@@ -3130,6 +3164,7 @@ export interface IMatrixDropdownData {
         isValidateOnValueChanging: boolean;
         getRowIndex(row: MatrixDropdownRowModelBase): number;
         getRowValue(rowIndex: number): any;
+        checkIfValueInRowDuplicated(checkedRow: MatrixDropdownRowModelBase, cellQuestion: Question): boolean;
         hasDetailPanel(row: MatrixDropdownRowModelBase): boolean;
         getIsDetailPanelShowing(row: MatrixDropdownRowModelBase): boolean;
         setIsDetailPanelShowing(row: MatrixDropdownRowModelBase, val: boolean): void;
@@ -3188,51 +3223,79 @@ export declare var matrixDropdownColumnTypes: {
 export declare class MatrixDropdownColumn extends Base implements ILocalizableOwner {
         static getColumnTypes(): Array<string>;
         constructor(name: string, title?: string);
+        getSurvey(): ISurvey;
         endLoadingFromJson(): void;
         getDynamicPropertyName(): string;
         getDynamicType(): string;
-        colOwner: IMatrixColumnOwner;
+        get colOwner(): IMatrixColumnOwner;
+        set colOwner(value: IMatrixColumnOwner);
         locStrsChanged(): void;
         addUsedLocales(locales: Array<string>): void;
-        readonly index: number;
+        get index(): number;
         setIndex(val: number): void;
         getType(): string;
-        cellType: string;
-        readonly templateQuestion: Question;
-        readonly value: string;
-        readonly isVisible: boolean;
+        get cellType(): string;
+        set cellType(val: string);
+        get templateQuestion(): Question;
+        get value(): string;
+        get isVisible(): boolean;
         setIsVisible(newVal: boolean): void;
-        hasVisibleCell: boolean;
-        name: string;
-        title: string;
-        readonly locTitle: LocalizableString;
-        readonly fullTitle: string;
-        isRequired: boolean;
-        readonly requiredText: string;
-        requiredErrorText: string;
-        readonly locRequiredErrorText: LocalizableString;
-        readOnly: boolean;
-        hasOther: boolean;
-        visibleIf: string;
-        enableIf: string;
-        requiredIf: string;
-        showInMultipleColumns: boolean;
-        readonly isSupportMultipleColumns: boolean;
-        readonly isShowInMultipleColumns: boolean;
-        validators: Array<SurveyValidator>;
-        totalType: string;
-        totalExpression: string;
-        readonly hasTotal: boolean;
-        totalFormat: string;
-        readonly locTotalFormat: LocalizableString;
-        renderAs: string;
-        totalMaximumFractionDigits: number;
-        totalMinimumFractionDigits: number;
-        totalDisplayStyle: string;
-        totalCurrency: string;
-        minWidth: string;
-        width: string;
-        colCount: number;
+        get hasVisibleCell(): boolean;
+        set hasVisibleCell(newVal: boolean);
+        get name(): string;
+        set name(val: string);
+        get title(): string;
+        set title(val: string);
+        get locTitle(): LocalizableString;
+        get fullTitle(): string;
+        get isRequired(): boolean;
+        set isRequired(val: boolean);
+        get requiredText(): string;
+        get requiredErrorText(): string;
+        set requiredErrorText(val: string);
+        get locRequiredErrorText(): LocalizableString;
+        get readOnly(): boolean;
+        set readOnly(val: boolean);
+        get hasOther(): boolean;
+        set hasOther(val: boolean);
+        get visibleIf(): string;
+        set visibleIf(val: string);
+        get enableIf(): string;
+        set enableIf(val: string);
+        get requiredIf(): string;
+        set requiredIf(val: string);
+        get isUnique(): boolean;
+        set isUnique(val: boolean);
+        get showInMultipleColumns(): boolean;
+        set showInMultipleColumns(val: boolean);
+        get isSupportMultipleColumns(): boolean;
+        get isShowInMultipleColumns(): boolean;
+        get validators(): Array<SurveyValidator>;
+        set validators(val: Array<SurveyValidator>);
+        get totalType(): string;
+        set totalType(val: string);
+        get totalExpression(): string;
+        set totalExpression(val: string);
+        get hasTotal(): boolean;
+        get totalFormat(): string;
+        set totalFormat(val: string);
+        get locTotalFormat(): LocalizableString;
+        get renderAs(): string;
+        set renderAs(val: string);
+        get totalMaximumFractionDigits(): number;
+        set totalMaximumFractionDigits(val: number);
+        get totalMinimumFractionDigits(): number;
+        set totalMinimumFractionDigits(val: number);
+        get totalDisplayStyle(): string;
+        set totalDisplayStyle(val: string);
+        get totalCurrency(): string;
+        set totalCurrency(val: string);
+        get minWidth(): string;
+        set minWidth(val: string);
+        get width(): string;
+        set width(val: string);
+        get colCount(): number;
+        set colCount(val: number);
         getLocale(): string;
         getMarkdownHtml(text: string, name: string): string;
         getRenderer(name: string): string;
@@ -3253,8 +3316,9 @@ export declare class MatrixDropdownCell {
         constructor(column: MatrixDropdownColumn, row: MatrixDropdownRowModelBase, data: IMatrixDropdownData);
         locStrsChanged(): void;
         protected createQuestion(column: MatrixDropdownColumn, row: MatrixDropdownRowModelBase, data: IMatrixDropdownData): Question;
-        readonly question: Question;
-        value: any;
+        get question(): Question;
+        get value(): any;
+        set value(value: any);
         runCondition(values: HashTable<any>, properties: HashTable<any>): void;
 }
 export declare class MatrixDropdownTotalCell extends MatrixDropdownCell {
@@ -3277,20 +3341,21 @@ export declare class MatrixDropdownRowModelBase implements ISurveyData, ISurveyI
         cells: Array<MatrixDropdownCell>;
         showHideDetailPanelClick: any;
         constructor(data: IMatrixDropdownData, value: any);
-        readonly id: string;
-        readonly rowName: any;
-        value: any;
-        readonly locText: LocalizableString;
-        readonly hasPanel: boolean;
-        readonly detailPanel: PanelModel;
-        readonly detailPanelId: string;
-        readonly isDetailPanelShowing: boolean;
+        get id(): string;
+        get rowName(): any;
+        get value(): any;
+        get locText(): LocalizableString;
+        get hasPanel(): boolean;
+        get detailPanel(): PanelModel;
+        get detailPanelId(): string;
+        get isDetailPanelShowing(): boolean;
         showDetailPanel(): void;
         hideDetailPanel(destroyPanel?: boolean): void;
         getAllValues(): any;
         getFilteredValues(): any;
         getFilteredProperties(): any;
         runCondition(values: HashTable<any>, properties: HashTable<any>): void;
+        set value(value: any);
         onAnyValueChanged(name: string): void;
         getDataValueCore(valuesHash: any, key: string): any;
         getValue(name: string): any;
@@ -3299,11 +3364,12 @@ export declare class MatrixDropdownRowModelBase implements ISurveyData, ISurveyI
         setVariable(name: string, newValue: any): void;
         getComment(name: string): string;
         setComment(name: string, newValue: string, locNotification: any): void;
-        readonly isEmpty: boolean;
+        get isEmpty(): boolean;
         getQuestionByColumn(column: MatrixDropdownColumn): Question;
         getQuestionByColumnName(columnName: string): Question;
-        readonly questions: Array<Question>;
+        get questions(): Array<Question>;
         getQuestionByName(name: string): Question;
+        getQuestionsByName(name: string): Array<Question>;
         protected getSharedQuestionByName(columnName: string): Question;
         clearIncorrectValues(val: any): void;
         getLocale(): string;
@@ -3317,11 +3383,11 @@ export declare class MatrixDropdownRowModelBase implements ISurveyData, ISurveyI
         protected updateCellOnColumnChanged(cell: MatrixDropdownCell, name: string, newValue: any): void;
         protected buildCells(value: any): void;
         protected createCell(column: MatrixDropdownColumn): MatrixDropdownCell;
-        geSurveyData(): ISurveyData;
+        getSurveyData(): ISurveyData;
         getSurvey(): ISurvey;
         getTextProcessor(): ITextProcessor;
-        readonly rowIndex: number;
-        readonly editingObj: Base;
+        get rowIndex(): number;
+        get editingObj(): Base;
         dispose(): void;
 }
 export declare class MatrixDropdownTotalRowModel extends MatrixDropdownRowModelBase {
@@ -3348,17 +3414,18 @@ export declare class QuestionMatrixDropdownRenderedCell {
         isShowHideDetail: boolean;
         className: string;
         constructor();
-        readonly hasQuestion: boolean;
-        readonly hasTitle: boolean;
-        readonly hasPanel: boolean;
-        readonly id: number;
-        readonly showErrorOnTop: boolean;
-        readonly showErrorOnBottom: boolean;
-        item: ItemValue;
-        readonly isChoice: boolean;
-        readonly choiceValue: any;
-        readonly isCheckbox: boolean;
-        readonly isFirstChoice: boolean;
+        get hasQuestion(): boolean;
+        get hasTitle(): boolean;
+        get hasPanel(): boolean;
+        get id(): number;
+        get showErrorOnTop(): boolean;
+        get showErrorOnBottom(): boolean;
+        get item(): ItemValue;
+        set item(val: ItemValue);
+        get isChoice(): boolean;
+        get choiceValue(): any;
+        get isCheckbox(): boolean;
+        get isFirstChoice(): boolean;
 }
 export declare class QuestionMatrixDropdownRenderedRow {
         isDetailRow: boolean;
@@ -3366,20 +3433,24 @@ export declare class QuestionMatrixDropdownRenderedRow {
         cells: Array<QuestionMatrixDropdownRenderedCell>;
         className: string;
         constructor();
-        readonly id: number;
+        get id(): number;
 }
 export declare class QuestionMatrixDropdownRenderedTable extends Base {
         matrix: QuestionMatrixDropdownModelBase;
         constructor(matrix: QuestionMatrixDropdownModelBase);
-        readonly showHeader: boolean;
-        readonly showFooter: boolean;
-        readonly hasFooter: boolean;
-        readonly hasRemoveRows: boolean;
+        get showTable(): boolean;
+        get showHeader(): boolean;
+        get showAddRowOnTop(): boolean;
+        get showAddRowOnBottom(): boolean;
+        get showFooter(): boolean;
+        get hasFooter(): boolean;
+        get hasRemoveRows(): boolean;
         isRequireReset(): boolean;
-        readonly headerRow: QuestionMatrixDropdownRenderedRow;
-        readonly footerRow: QuestionMatrixDropdownRenderedRow;
-        readonly rows: Array<QuestionMatrixDropdownRenderedRow>;
+        get headerRow(): QuestionMatrixDropdownRenderedRow;
+        get footerRow(): QuestionMatrixDropdownRenderedRow;
+        get rows(): Array<QuestionMatrixDropdownRenderedRow>;
         protected build(): void;
+        updateShowTableAndAddRow(): void;
         onAddedRow(): void;
         onRemovedRow(row: MatrixDropdownRowModelBase): void;
         onDetailPanelChangeVisibility(row: MatrixDropdownRowModelBase, isShowing: boolean): void;
@@ -3391,13 +3462,12 @@ export declare class QuestionMatrixDropdownRenderedTable extends Base {
     * A base class for matrix dropdown and matrix dynamic questions.
     */
 export declare class QuestionMatrixDropdownModelBase extends QuestionMatrixBaseModel<MatrixDropdownRowModelBase, MatrixDropdownColumn> implements IMatrixDropdownData {
-        name: string;
-        static defaultCellType: string;
+        static get defaultCellType(): string;
+        static set defaultCellType(val: string);
         static addDefaultColumns(matrix: QuestionMatrixDropdownModelBase): void;
         protected isRowChanging: boolean;
         columnsChangedCallback: () => void;
         updateCellsCallback: () => void;
-        columnLayoutChangedCallback: () => void;
         onRenderedTableResetCallback: () => void;
         onRenderedTableCreatedCallback: (table: QuestionMatrixDropdownRenderedTable) => void;
         onCellCreatedCallback: (options: any) => void;
@@ -3407,41 +3477,45 @@ export declare class QuestionMatrixDropdownModelBase extends QuestionMatrixBaseM
         protected createColumnValues(): any[];
         constructor(name: string);
         getType(): string;
-        readonly hasSingleInput: boolean;
-        readonly isRowsDynamic: boolean;
+        get hasSingleInput(): boolean;
+        get isRowsDynamic(): boolean;
         /**
             * Set columnLayout to 'vertical' to place columns vertically and rows horizontally. It makes sense when we have many columns and few rows.
             * @see columns
             * @see rowCount
             */
-        columnLayout: string;
-        columnsLocation: string;
+        get columnLayout(): string;
+        set columnLayout(val: string);
+        get columnsLocation(): string;
+        set columnsLocation(val: string);
         /**
             * Returns true if columns are located horizontally
             * @see columnLayout
             */
-        readonly isColumnLayoutHorizontal: boolean;
+        get isColumnLayoutHorizontal(): boolean;
         /**
             * Set the value to "underRow" to show the detailPanel under the row.
             */
-        detailPanelMode: string;
+        get detailPanelMode(): string;
+        set detailPanelMode(val: string);
         /**
             * The detail template Panel. This panel is used as a template on creating detail panel for a row.
             * @see  detailElements
             * @see detailPanelMode
             */
-        readonly detailPanel: PanelModel;
+        get detailPanel(): PanelModel;
         getPanel(): IPanel;
         /**
             * The template Panel elements, questions and panels.
             * @see  detailPanel
             * @see detailPanelMode
             */
-        readonly detailElements: Array<IElement>;
+        get detailElements(): Array<IElement>;
         protected createNewDetailPanel(): PanelModel;
-        readonly hasRowText: boolean;
+        get hasRowText(): boolean;
         getFooterText(): LocalizableString;
-        readonly canRemoveRows: boolean;
+        get canAddRow(): boolean;
+        get canRemoveRows(): boolean;
         canRemoveRow(row: MatrixDropdownRowModelBase): boolean;
         protected onRowsChanged(): void;
         protected onStartRowAddingRemoving(): void;
@@ -3449,33 +3523,40 @@ export declare class QuestionMatrixDropdownModelBase extends QuestionMatrixBaseM
         protected onEndRowRemoving(row: MatrixDropdownRowModelBase): void;
         protected resetRenderedTable(): void;
         protected clearGeneratedRows(): void;
-        readonly renderedTable: QuestionMatrixDropdownRenderedTable;
+        get renderedTable(): QuestionMatrixDropdownRenderedTable;
         protected createRenderedTable(): QuestionMatrixDropdownRenderedTable;
         protected onMatrixRowCreated(row: MatrixDropdownRowModelBase): void;
         /**
             * Use this property to change the default cell type.
             */
-        cellType: string;
+        get cellType(): string;
+        set cellType(val: string);
         /**
             * The default column count for radiogroup and checkbox  cell types.
             */
-        columnColCount: number;
+        get columnColCount(): number;
+        set columnColCount(value: number);
         /**
             * Use this property to set the minimum column width.
             */
-        columnMinWidth: string;
+        get columnMinWidth(): string;
+        set columnMinWidth(val: string);
         /**
             * Set this property to true to show the horizontal scroll.
             */
-        horizontalScroll: boolean;
+        get horizontalScroll(): boolean;
+        set horizontalScroll(val: boolean);
         getRequiredText(): string;
         onColumnPropertyChanged(column: MatrixDropdownColumn, name: string, newValue: any): void;
         onShowInMultipleColumnsChanged(column: MatrixDropdownColumn): void;
         onColumnCellTypeChanged(column: MatrixDropdownColumn): void;
         getRowTitleWidth(): string;
-        readonly hasFooter: boolean;
+        get hasFooter(): boolean;
+        getAddRowLocation(): string;
+        getShowColumnsIfEmpty(): boolean;
+        protected setShowColumnsIfEmpty(): void;
         protected updateHasFooter(): void;
-        readonly hasTotal: boolean;
+        get hasTotal(): boolean;
         getCellType(): string;
         getConditionJson(operator?: string, path?: string): any;
         clearIncorrectValues(): void;
@@ -3499,24 +3580,34 @@ export declare class QuestionMatrixDropdownModelBase extends QuestionMatrixBaseM
         /**
             * The default choices for dropdown, checkbox and radiogroup cell types.
             */
-        choices: Array<any>;
+        get choices(): Array<any>;
+        set choices(val: Array<any>);
         /**
             * The default options caption for dropdown cell type.
             */
-        optionsCaption: string;
-        readonly locOptionsCaption: LocalizableString;
-        readonly storeOthersAsComment: boolean;
+        get optionsCaption(): string;
+        set optionsCaption(val: string);
+        get locOptionsCaption(): LocalizableString;
+        /**
+            * The duplication value error text. Set it to show the text different from the default.
+            * @see MatrixDropdownColumn.isUnique
+            */
+        get keyDuplicationError(): string;
+        set keyDuplicationError(val: string);
+        get locKeyDuplicationError(): LocalizableString;
+        get storeOthersAsComment(): boolean;
         addColumn(name: string, title?: string): MatrixDropdownColumn;
         protected getVisibleRows(): Array<MatrixDropdownRowModelBase>;
-        readonly totalValue: any;
+        get totalValue(): any;
         protected getVisibleTotalRow(): MatrixDropdownRowModelBase;
-        readonly visibleTotalRow: MatrixDropdownRowModelBase;
+        get visibleTotalRow(): MatrixDropdownRowModelBase;
         onSurveyLoad(): void;
         /**
             * Returns the row value. If the row value is empty, the object is empty: {}.
             * @param rowIndex row index from 0 to visible row count - 1.
             */
         getRowValue(rowIndex: number): any;
+        checkIfValueInRowDuplicated(checkedRow: MatrixDropdownRowModelBase, cellQuestion: Question): boolean;
         /**
             * Set the row value.
             * @param rowIndex row index from 0 to visible row count - 1.
@@ -3544,6 +3635,7 @@ export declare class QuestionMatrixDropdownModelBase extends QuestionMatrixBaseM
         hasErrors(fireCallback?: boolean, rec?: any): boolean;
         protected getIsRunningValidators(): boolean;
         getAllErrors(): Array<SurveyError>;
+        protected getUniqueColumns(): Array<MatrixDropdownColumn>;
         protected getFirstInputElementId(): string;
         protected getFirstErrorInputElementId(): string;
         protected getFirstCellQuestion(onError: boolean): Question;
@@ -3555,7 +3647,7 @@ export declare class QuestionMatrixDropdownModelBase extends QuestionMatrixBaseM
         protected isObject(value: any): boolean;
         protected onCellValueChanged(row: MatrixDropdownRowModelBase, columnName: string, rowValue: any): void;
         validateCell(row: MatrixDropdownRowModelBase, columnName: string, rowValue: any): SurveyError;
-        readonly isValidateOnValueChanging: boolean;
+        get isValidateOnValueChanging(): boolean;
         onRowChanging(row: MatrixDropdownRowModelBase, columnName: string, rowValue: any): any;
         onRowChanged(row: MatrixDropdownRowModelBase, columnName: string, newRowValue: any, isDeletingValue: boolean): void;
         getRowIndex(row: MatrixDropdownRowModelBase): number;
@@ -3569,33 +3661,33 @@ export declare class QuestionMatrixDropdownModelBase extends QuestionMatrixBaseM
         getSharedQuestionByName(columnName: string, row: MatrixDropdownRowModelBase): Question;
         onTotalValueChanged(): any;
         getQuestionFromArray(name: string, index: number): IQuestion;
-        getSurvey(): ISurvey;
 }
 
 export declare class MatrixDropdownRowModel extends MatrixDropdownRowModelBase {
         name: string;
         constructor(name: string, item: ItemValue, data: IMatrixDropdownData, value: any);
-        readonly rowName: string;
-        readonly text: string;
-        readonly locText: LocalizableString;
+        get rowName(): string;
+        get text(): string;
+        get locText(): LocalizableString;
 }
 /**
     * A Model for a matrix dropdown question. You may use a dropdown, checkbox, radiogroup, text and comment questions as a cell editors.
     */
 export declare class QuestionMatrixDropdownModel extends QuestionMatrixDropdownModelBase implements IMatrixDropdownData {
-        name: string;
         constructor(name: string);
         getType(): string;
         /**
             * Set this property to show it on the first column for the total row.
             */
-        totalText: string;
-        readonly locTotalText: LocalizableString;
+        get totalText(): string;
+        set totalText(val: string);
+        get locTotalText(): LocalizableString;
         getFooterText(): LocalizableString;
         /**
             * The column width for the first column, row title column.
             */
-        rowTitleWidth: string;
+        get rowTitleWidth(): string;
+        set rowTitleWidth(val: string);
         getRowTitleWidth(): string;
         protected getDisplayValueCore(keysAsText: boolean, value: any): any;
         addConditionObjectsByContext(objects: Array<IConditionObject>, context: any): void;
@@ -3608,41 +3700,44 @@ export declare class QuestionMatrixDropdownModel extends QuestionMatrixDropdownM
 export declare class MatrixDynamicRowModel extends MatrixDropdownRowModelBase {
         index: number;
         constructor(index: number, data: IMatrixDropdownData, value: any);
-        readonly rowName: string;
+        get rowName(): string;
 }
 /**
     * A Model for a matrix dymanic question. You may use a dropdown, checkbox, radiogroup, text and comment questions as a cell editors.
     * An end-user may dynamically add/remove rows, unlike in matrix dropdown question.
     */
 export declare class QuestionMatrixDynamicModel extends QuestionMatrixDropdownModelBase implements IMatrixDropdownData {
-        name: string;
         onGetValueForNewRowCallBack: (sender: QuestionMatrixDynamicModel) => any;
         constructor(name: string);
         getType(): string;
-        readonly isRowsDynamic: boolean;
+        get isRowsDynamic(): boolean;
         /**
             * Set it to true, to show a confirmation dialog on removing a row
             * @see ConfirmDeleteText
             */
-        confirmDelete: boolean;
+        get confirmDelete(): boolean;
+        set confirmDelete(val: boolean);
         /**
             * Set it to a column name and the library shows duplication error, if there are same values in different rows in the column.
             * @see keyDuplicationError
             */
-        keyName: string;
+        get keyName(): string;
+        set keyName(val: string);
         /**
             * If it is not empty, then this value is set to every new row, including rows created initially, unless the defaultValue is not empty
             * @see defaultValue
             * @see defaultValueFromLastRow
             */
-        defaultRowValue: any;
+        get defaultRowValue(): any;
+        set defaultRowValue(val: any);
         /**
             * Set it to true to copy the value into new added row from the last row. If defaultRowValue is set and this property equals to true,
             * then the value for new added row is merging.
             * @see defaultValue
             * @see defaultRowValue
             */
-        defaultValueFromLastRow: boolean;
+        get defaultValueFromLastRow(): boolean;
+        set defaultValueFromLastRow(val: boolean);
         protected isDefaultValueEmpty(): boolean;
         protected valueFromData(val: any): any;
         protected setDefaultValue(): void;
@@ -3652,33 +3747,38 @@ export declare class QuestionMatrixDynamicModel extends QuestionMatrixDropdownMo
             * @see minRowCount
             * @see maxRowCount
             */
-        rowCount: number;
+        get rowCount(): number;
+        set rowCount(val: number);
         /**
             * The minimum row count. A user could not delete a row if the rowCount equals to minRowCount
             * @see rowCount
             * @see maxRowCount
             * @see allowAddRows
             */
-        minRowCount: number;
+        get minRowCount(): number;
+        set minRowCount(val: number);
         /**
             * The maximum row count. A user could not add a row if the rowCount equals to maxRowCount
             * @see rowCount
             * @see minRowCount
             * @see allowAddRows
             */
-        maxRowCount: number;
+        get maxRowCount(): number;
+        set maxRowCount(val: number);
         /**
             * Set this property to false to disable ability to add new rows. "Add new Row" button becomes invsible in UI
             * @see canAddRow
             * @see allowRemoveRows
             */
-        allowAddRows: boolean;
+        get allowAddRows(): boolean;
+        set allowAddRows(val: boolean);
         /**
             * Set this property to false to disable ability to remove rows. "Remove" row buttons become invsible in UI
             * @see canRemoveRows
             * @see allowAddRows
             */
-        allowRemoveRows: boolean;
+        get allowRemoveRows(): boolean;
+        set allowRemoveRows(val: boolean);
         /**
             * Returns true, if a new row can be added.
             * @see allowAddRows
@@ -3686,14 +3786,14 @@ export declare class QuestionMatrixDynamicModel extends QuestionMatrixDropdownMo
             * @see canRemoveRows
             * @see rowCount
             */
-        readonly canAddRow: boolean;
+        get canAddRow(): boolean;
         /**
             * Returns true, if row can be removed.
             * @see minRowCount
             * @see canAddRow
             * @see rowCount
             */
-        readonly canRemoveRows: boolean;
+        get canRemoveRows(): boolean;
         canRemoveRow(row: MatrixDropdownRowModelBase): boolean;
         /**
             * Creates and add a new row.
@@ -3717,38 +3817,47 @@ export declare class QuestionMatrixDynamicModel extends QuestionMatrixDropdownMo
         /**
             * Use this property to change the default text showing in the confirmation delete dialog on removing a row.
             */
-        confirmDeleteText: string;
-        readonly locConfirmDeleteText: LocalizableString;
-        /**
-            * The duplication value error text. Set it to show the text different from the default.
-            * @see keyName
-            */
-        keyDuplicationError: string;
-        readonly locKeyDuplicationError: LocalizableString;
+        get confirmDeleteText(): string;
+        set confirmDeleteText(val: string);
+        get locConfirmDeleteText(): LocalizableString;
         /**
             * Use this property to change the default value of add row button text.
             */
-        addRowText: string;
-        readonly locAddRowText: LocalizableString;
+        get addRowText(): string;
+        set addRowText(val: string);
+        get locAddRowText(): LocalizableString;
         /**
             * By default the 'Add Row' button is shown on bottom if columnLayout is horizontal and on top if columnLayout is vertical. <br/>
             * You may set it to "top", "bottom" or "topBottom" (to show on top and bottom).
             * @see columnLayout
             */
-        addRowLocation: string;
-        readonly isAddRowOnTop: boolean;
-        readonly isAddRowOnBottom: boolean;
+        get addRowLocation(): string;
+        set addRowLocation(val: string);
+        getAddRowLocation(): string;
+        /**
+            * Set this property to true to hide matrix columns when there is no any row.
+            */
+        get hideColumnsIfEmpty(): boolean;
+        set hideColumnsIfEmpty(val: boolean);
+        getShowColumnsIfEmpty(): boolean;
         /**
             * Use this property to change the default value of remove row button text.
             */
-        removeRowText: string;
-        readonly locRemoveRowText: LocalizableString;
+        get removeRowText(): string;
+        set removeRowText(val: string);
+        get locRemoveRowText(): LocalizableString;
+        /**
+            * Use this property to change the default value of remove row button text.
+            */
+        get emptyRowsText(): string;
+        set emptyRowsText(val: string);
+        get locEmptyRowsText(): LocalizableString;
         protected getDisplayValueCore(keysAsText: boolean, value: any): any;
         addConditionObjectsByContext(objects: Array<IConditionObject>, context: any): void;
         supportGoNextPageAutomatic(): boolean;
-        readonly hasRowText: boolean;
+        get hasRowText(): boolean;
         protected onCheckForErrors(errors: Array<SurveyError>, isOnValueChanged: boolean): void;
-        hasErrors(fireCallback?: boolean, rec?: any): boolean;
+        protected getUniqueColumns(): Array<MatrixDropdownColumn>;
         protected generateRows(): Array<MatrixDynamicRowModel>;
         protected createMatrixRow(value: any): MatrixDynamicRowModel;
         protected onBeforeValueChanged(val: any): void;
@@ -3765,11 +3874,12 @@ export declare class MatrixRowModel extends Base {
         fullName: string;
         cellClick: any;
         constructor(item: ItemValue, fullName: string, data: IMatrixData, value: any);
-        readonly name: string;
-        readonly text: string;
-        readonly locText: LocalizableString;
-        value: any;
-        readonly rowClasses: string;
+        get name(): string;
+        get text(): string;
+        get locText(): LocalizableString;
+        get value(): any;
+        set value(newValue: any);
+        get rowClasses(): string;
 }
 export interface IMatrixCellsOwner extends ILocalizableOwner {
         getRows(): Array<any>;
@@ -3778,7 +3888,7 @@ export interface IMatrixCellsOwner extends ILocalizableOwner {
 export declare class MartrixCells {
         cellsOwner: IMatrixCellsOwner;
         constructor(cellsOwner: IMatrixCellsOwner);
-        readonly isEmpty: boolean;
+        get isEmpty(): boolean;
         setCellText(row: any, column: any, val: string): void;
         setDefaultCellText(column: any, val: string): void;
         getCellLocText(row: any, column: any): LocalizableString;
@@ -3787,8 +3897,8 @@ export declare class MartrixCells {
         getCellText(row: any, column: any): string;
         getDefaultCellText(column: any): string;
         getCellDisplayText(row: any, column: any): string;
-        readonly rows: Array<any>;
-        readonly columns: Array<any>;
+        get rows(): Array<any>;
+        get columns(): Array<any>;
         getJson(): any;
         setJson(value: any): void;
         protected createString(): LocalizableString;
@@ -3797,26 +3907,28 @@ export declare class MartrixCells {
     * A Model for a simple matrix question.
     */
 export declare class QuestionMatrixModel extends QuestionMatrixBaseModel<MatrixRowModel, ItemValue> implements IMatrixData, IMatrixCellsOwner {
-        name: string;
         constructor(name: string);
         getType(): string;
-        readonly hasSingleInput: boolean;
+        get hasSingleInput(): boolean;
         /**
             * Set this property to true, if you want a user to answer all rows.
             */
-        isAllRowRequired: boolean;
+        get isAllRowRequired(): boolean;
+        set isAllRowRequired(val: boolean);
         /**
             * Returns true, if there is at least one row.
             */
-        readonly hasRows: boolean;
+        get hasRows(): boolean;
         /**
             * Use this property to render items in a specific order: "random" or "initial". Default is "initial".
             */
-        rowsOrder: string;
+        get rowsOrder(): string;
+        set rowsOrder(val: string);
         /**
             * Set this property to true to hide the question if there is no visible rows in the matrix.
             */
-        hideIfRowsEmpty: boolean;
+        get hideIfRowsEmpty(): boolean;
+        set hideIfRowsEmpty(val: boolean);
         getRows(): Array<any>;
         getColumns(): Array<any>;
         getItemClass(row: any, column: any): string;
@@ -3830,9 +3942,10 @@ export declare class QuestionMatrixModel extends QuestionMatrixBaseModel<MatrixR
             * Returns the list of visible rows as model objects.
             * @see rowsVisibleIf
             */
-        readonly visibleRows: Array<MatrixRowModel>;
-        cells: MartrixCells;
-        readonly hasCellText: boolean;
+        get visibleRows(): Array<MatrixRowModel>;
+        get cells(): MartrixCells;
+        set cells(value: MartrixCells);
+        get hasCellText(): boolean;
         setCellText(row: any, column: any, val: string): void;
         getCellText(row: any, column: any): string;
         setDefaultCellText(column: any, val: string): void;
@@ -3873,13 +3986,14 @@ export declare class MultipleTextItemModel extends Base implements IValidatorOwn
         valueChangedCallback: (newValue: any) => void;
         constructor(name?: any, title?: string);
         getType(): string;
-        readonly id: string;
+        get id(): string;
         /**
             * The item name.
             */
-        name: string;
-        readonly question: Question;
-        readonly editor: QuestionTextModel;
+        get name(): string;
+        set name(val: string);
+        get question(): Question;
+        get editor(): QuestionTextModel;
         protected createEditor(name: string): QuestionTextModel;
         addUsedLocales(locales: Array<string>): void;
         locStrsChanged(): void;
@@ -3887,50 +4001,58 @@ export declare class MultipleTextItemModel extends Base implements IValidatorOwn
         /**
             * Set this property to true, to make the item a required. If a user doesn't fill the item then a validation error will be generated.
             */
-        isRequired: boolean;
+        get isRequired(): boolean;
+        set isRequired(val: boolean);
         /**
             * Use this property to change the default input type.
             */
-        inputType: string;
+        get inputType(): string;
+        set inputType(val: string);
         /**
             * Item title. If it is empty, the item name is rendered as title. This property supports markdown.
             * @see name
             */
-        title: string;
-        readonly locTitle: LocalizableString;
+        get title(): string;
+        set title(val: string);
+        get locTitle(): LocalizableString;
         /**
             * Returns the text or html for rendering the title.
             */
-        readonly fullTitle: string;
+        get fullTitle(): string;
         /**
             * The maximum text length. If it is -1, defaul value, then the survey maxTextLength property will be used.
             * If it is 0, then the value is unlimited
             * @see SurveyModel.maxTextLength
             */
-        maxLength: number;
+        get maxLength(): number;
+        set maxLength(val: number);
         getMaxLength(): any;
         /**
             * The input place holder.
             */
-        placeHolder: string;
-        readonly locPlaceHolder: LocalizableString;
+        get placeHolder(): string;
+        set placeHolder(val: string);
+        get locPlaceHolder(): LocalizableString;
         /**
             * The custom text that will be shown on required error. Use this property, if you do not want to show the default text.
             */
-        requiredErrorText: string;
-        readonly locRequiredErrorText: LocalizableString;
+        get requiredErrorText(): string;
+        set requiredErrorText(val: string);
+        get locRequiredErrorText(): LocalizableString;
         /**
             * The list of question validators.
             */
-        validators: Array<SurveyValidator>;
+        get validators(): Array<SurveyValidator>;
+        set validators(val: Array<SurveyValidator>);
         getValidators(): Array<SurveyValidator>;
         /**
             * The item value.
             */
-        value: any;
+        get value(): any;
+        set value(value: any);
         isEmpty(): boolean;
         onValueChanged(newValue: any): void;
-        geSurveyData(): ISurveyData;
+        getSurveyData(): ISurveyData;
         getSurvey(): ISurvey;
         getTextProcessor(): ITextProcessor;
         getValue(name: string): any;
@@ -3943,7 +4065,8 @@ export declare class MultipleTextItemModel extends Base implements IValidatorOwn
         getFilteredValues(): any;
         getFilteredProperties(): any;
         getValidatorTitle(): string;
-        validatedValue: any;
+        get validatedValue(): any;
+        set validatedValue(val: any);
         getDataFilteredValues(): any;
         getDataFilteredProperties(): any;
 }
@@ -3951,20 +4074,20 @@ export declare class MultipleTextItemModel extends Base implements IValidatorOwn
     * A Model for a multiple text question.
     */
 export declare class QuestionMultipleTextModel extends Question implements IMultipleTextData, IPanel {
-        name: string;
         colCountChangedCallback: () => void;
         constructor(name: string);
         getType(): string;
         setSurveyImpl(value: ISurveyImpl): void;
-        readonly isAllowTitleLeft: boolean;
-        readonly hasSingleInput: boolean;
+        get isAllowTitleLeft(): boolean;
+        get hasSingleInput(): boolean;
         onSurveyLoad(): void;
         setQuestionValue(newValue: any, updateIsAnswered?: boolean): void;
         onSurveyValueChanged(newValue: any): void;
         /**
             * The list of input items.
             */
-        items: Array<MultipleTextItemModel>;
+        get items(): Array<MultipleTextItemModel>;
+        set items(val: Array<MultipleTextItemModel>);
         /**
             * Add a new text item.
             * @param name a item name
@@ -3979,11 +4102,13 @@ export declare class QuestionMultipleTextModel extends Question implements IMult
         /**
             * The number of columns. Items are rendred in one line if the value is 0.
             */
-        colCount: number;
+        get colCount(): number;
+        set colCount(val: number);
         /**
             * The default text input size.
             */
-        itemSize: number;
+        get itemSize(): number;
+        set itemSize(val: number);
         /**
             * Returns the list of rendered rows.
             */
@@ -4001,7 +4126,6 @@ export declare class QuestionMultipleTextModel extends Question implements IMult
         getMultipleTextValue(name: string): any;
         setMultipleTextValue(name: string, value: any): void;
         getItemDefaultValue(name: string): any;
-        getSurvey(): ISurvey;
         getTextProcessor(): ITextProcessor;
         getAllValues(): any;
         getIsRequiredText(): string;
@@ -4011,8 +4135,9 @@ export declare class QuestionMultipleTextModel extends Question implements IMult
         getQuestionStartIndex(): string;
         getChildrenLayoutType(): string;
         elementWidthChanged(el: IElement): void;
-        readonly elements: Array<IElement>;
+        get elements(): Array<IElement>;
         indexOf(el: IElement): number;
+        ensureRowsVisibility(): void;
 }
 
 export declare class DragDropInfo {
@@ -4026,24 +4151,28 @@ export declare class DragDropInfo {
 }
 export declare class QuestionRowModel extends Base {
         panel: PanelModelBase;
-        startLazyRendering(rowContainerDiv: HTMLElement): void;
+        protected _scrollableParent: any;
+        protected _updateVisibility: any;
+        startLazyRendering(rowContainerDiv: HTMLElement, findScrollableContainer?: typeof findScrollableParent): void;
+        ensureVisibility(): void;
         stopLazyRendering(): void;
         constructor(panel: PanelModelBase);
-        readonly id: string;
-        readonly elements: Array<IElement>;
-        visible: boolean;
-        isNeedRender: boolean;
-        readonly visibleElements: Array<IElement>;
+        get id(): string;
+        get elements(): Array<IElement>;
+        get visible(): boolean;
+        set visible(val: boolean);
+        get isNeedRender(): boolean;
+        set isNeedRender(val: boolean);
+        get visibleElements(): Array<IElement>;
         updateVisible(): void;
         addElement(q: IElement): void;
-        readonly index: number;
+        get index(): number;
         setElementMaxMinWidth(el: IElement): void;
 }
 /**
     * A base class for a Panel and Page objects.
     */
 export declare class PanelModelBase extends SurveyElement implements IPanel, IConditionRunner, ILocalizableOwner, ISurveyErrorOwner {
-        name: string;
         addElementCallback: (element: IElement) => void;
         removeElementCallback: (element: IElement) => void;
         onGetQuestionTitleLocation: () => string;
@@ -4055,32 +4184,35 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
             * PanelModel or PageModel title property.
             * @description
             */
-        title: string;
-        readonly locTitle: LocalizableString;
-        readonly _showTitle: boolean;
+        get title(): string;
+        set title(val: string);
+        get locTitle(): LocalizableString;
+        get _showTitle(): boolean;
         getTitleActions(): Array<any>;
-        readonly _showDescription: boolean;
+        get _showDescription(): boolean;
         /**
             * PanelModel or PageModel description property. It renders under title by using smaller font. Unlike the title, description can be empty.
             * @see title
             */
-        description: string;
-        readonly locDescription: LocalizableString;
+        get description(): string;
+        set description(val: string);
+        get locDescription(): LocalizableString;
         locStrsChanged(): void;
         /**
             * Returns the char/string for a required panel.
             * @see SurveyModel.requiredText
             */
-        readonly requiredText: string;
-        protected readonly titlePattern: string;
-        readonly isRequireTextOnStart: boolean;
-        readonly isRequireTextBeforeTitle: boolean;
-        readonly isRequireTextAfterTitle: boolean;
+        get requiredText(): string;
+        protected get titlePattern(): string;
+        get isRequireTextOnStart(): boolean;
+        get isRequireTextBeforeTitle(): boolean;
+        get isRequireTextAfterTitle(): boolean;
         /**
             * The custom text that will be shown on required error. Use this property, if you do not want to show the default text.
             */
-        requiredErrorText: string;
-        readonly locRequiredErrorText: LocalizableString;
+        get requiredErrorText(): string;
+        set requiredErrorText(val: string);
+        get locRequiredErrorText(): LocalizableString;
         getLocale(): string;
         getMarkdownHtml(text: string, name: string): string;
         getRenderer(name: string): string;
@@ -4088,23 +4220,26 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
         /**
             * A parent element. It is always null for the Page object and always not null for the Panel object. Panel object may contain Questions and other Panels.
             */
-        parent: PanelModelBase;
-        readonly depth: number;
+        get parent(): PanelModelBase;
+        set parent(val: PanelModelBase);
+        get depth(): number;
         /**
             * An expression that returns true or false. If it returns true the Panel becomes visible and if it returns false the Panel becomes invisible. The library runs the expression on survey start and on changing a question value. If the property is empty then visible property is used.
             * @see visible
             */
-        visibleIf: string;
-        readonly cssClasses: any;
-        protected readonly css: any;
+        get visibleIf(): string;
+        set visibleIf(val: string);
+        get cssClasses(): any;
+        protected get css(): any;
         /**
             * A unique element identificator. It is generated automatically.
             */
-        id: string;
+        get id(): string;
+        set id(val: string);
         /**
             * Returns true if the current object is Panel. Returns false if the current object is Page (a root Panel).
             */
-        readonly isPanel: boolean;
+        get isPanel(): boolean;
         getPanel(): IPanel;
         getLayoutType(): string;
         isLayoutTypeSupported(layoutType: string): boolean;
@@ -4113,7 +4248,7 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
             * @see Question
             * @see elements
             */
-        readonly questions: Array<Question>;
+        get questions(): Array<Question>;
         protected getValidName(name: string): string;
         /**
             * Returns the question by its name
@@ -4148,7 +4283,7 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
         /**
             * Returns the list of the elements in the object, Panel/Page. Elements can be questions or panels. The function doesn't return elements in the nested Panels.
             */
-        readonly elements: Array<IElement>;
+        get elements(): Array<IElement>;
         getElementsInDesign(includeHidden?: boolean): Array<IElement>;
         /**
             * Returns true if the current element belongs to the Panel/Page. It looks in nested Panels as well.
@@ -4159,13 +4294,15 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
         /**
             * Set this property to true, to require the answer at least in one question in the panel.
             */
-        isRequired: boolean;
+        get isRequired(): boolean;
+        set isRequired(val: boolean);
         /**
             * An expression that returns true or false. If it returns true the Panel/Page becomes required.
             * The library runs the expression on survey start and on changing a question value. If the property is empty then isRequired property is used.
             * @see isRequired
             */
-        requiredIf: string;
+        get requiredIf(): string;
+        set requiredIf(val: string);
         /**
             * Returns true, if there is an error on this Page or inside the current Panel
             * @param fireCallback set it to true, to show errors in UI
@@ -4199,24 +4336,26 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
         /**
             * Returns true if the current object is Page and it is the current page.
             */
-        readonly isActive: boolean;
+        get isActive(): boolean;
         updateCustomWidgets(): void;
         /**
             * Set this property different from "default" to set the specific question title location for this panel/page.
             * @see SurveyModel.questionTitleLocation
             */
-        questionTitleLocation: string;
+        get questionTitleLocation(): string;
+        set questionTitleLocation(value: string);
         getQuestionTitleLocation(): string;
         protected getStartIndex(): string;
         getQuestionStartIndex(): string;
         getChildrenLayoutType(): string;
         getProgressInfo(): IProgressInfo;
-        protected readonly root: PanelModelBase;
+        protected get root(): PanelModelBase;
         protected childVisibilityChanged(): void;
         protected createRow(): QuestionRowModel;
         onSurveyLoad(): void;
         onFirstRendering(): void;
-        readonly rows: Array<QuestionRowModel>;
+        get rows(): Array<QuestionRowModel>;
+        ensureRowsVisibility(): void;
         protected onRowsChanged(): void;
         protected onAddElement(element: IElement, index: number): void;
         protected onRemoveElement(element: IElement): void;
@@ -4225,18 +4364,19 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
         /**
             * Returns rendered title text or html.
             */
-        readonly processedTitle: string;
+        get processedTitle(): string;
         protected getRenderedTitle(str: string): string;
         /**
             * Use it to get/set the object visibility.
             * @see visibleIf
             */
-        visible: boolean;
+        get visible(): boolean;
+        set visible(value: boolean);
         protected onVisibleChanged(): void;
         /**
             * Returns true if object is visible or survey is in design mode right now.
             */
-        readonly isVisible: boolean;
+        get isVisible(): boolean;
         getIsPageVisible(exceptionQuestion: IQuestion): boolean;
         setVisibleIndex(index: number): number;
         protected beforeSetVisibleIndex(index: number): number;
@@ -4247,7 +4387,7 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
             * @see SurveyModel.model
             * @see readOnly
             */
-        readonly isReadOnly: boolean;
+        get isReadOnly(): boolean;
         protected onReadOnlyChanged(): void;
         updateElementCss(): void;
         /**
@@ -4256,7 +4396,8 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
             * @see readOnly
             * @see isReadOnly
             */
-        enableIf: string;
+        get enableIf(): string;
+        set enableIf(val: string);
         /**
             * Add an element into Panel or Page. Returns true if the element added successfully. Otherwise returns false.
             * @param element
@@ -4320,18 +4461,18 @@ export declare class PanelModelBase extends SurveyElement implements IPanel, ICo
     * It may contain questions and other panels.
     */
 export declare class PanelModel extends PanelModelBase implements IElement, ITitleOwner {
-        name: string;
         minWidth?: string;
         maxWidth?: string;
         constructor(name?: string);
         getType(): string;
-        readonly contentId: string;
+        get contentId(): string;
         onSurveyLoad(): void;
-        readonly isPanel: boolean;
+        get isPanel(): boolean;
         /**
             * Get/set the page where the panel is located.
             */
-        page: IPage;
+        get page(): IPage;
+        set page(val: IPage);
         delete(): void;
         /**
             * Move panel to a new container Page/Panel. Add as a last element if insertBefore parameter is not used or inserted into the given index,
@@ -4345,12 +4486,13 @@ export declare class PanelModel extends PanelModelBase implements IElement, ITit
             * You have to set showNumber to true to show index/numbering for the Panel
             * @see showNumber
             */
-        readonly visibleIndex: number;
+        get visibleIndex(): number;
         /**
             * Set showNumber to true to start showing the number for this panel.
             * @see visibleIndex
             */
-        showNumber: boolean;
+        get showNumber(): boolean;
+        set showNumber(val: boolean);
         /**
             * Gets or sets a value that specifies how the elements numbers inside panel are displayed.
             *
@@ -4361,21 +4503,23 @@ export declare class PanelModel extends PanelModelBase implements IElement, ITit
             * - `off` - turn off the numbering for questions titles
             * @see showNumber
             */
-        showQuestionNumbers: string;
+        get showQuestionNumbers(): string;
+        set showQuestionNumbers(value: string);
         /**
             * Gets or sets the first question index for elements inside the panel. The first question index is '1.' by default and it is taken from survey.questionStartIndex property.
             * You may start it from '100' or from 'A', by setting '100' or 'A' to this property.
             * You can set the start index to "(1)" or "# A)" or "a)" to render question number as (1), # A) and a) accordingly.
             * @see survey.questionStartIndex
             */
-        questionStartIndex: string;
+        get questionStartIndex(): string;
+        set questionStartIndex(val: string);
         getQuestionStartIndex(): string;
         /**
             * The property returns the question number. If question is invisible then it returns empty string.
             * If visibleIndex is 1, then no is 2, or 'B' if survey.questionStartIndex is 'A'.
             * @see SurveyModel.questionStartIndex
             */
-        readonly no: string;
+        get no(): string;
         protected setNo(visibleIndex: number): void;
         protected beforeSetVisibleIndex(index: number): number;
         protected getPanelStartIndex(index: number): number;
@@ -4385,29 +4529,38 @@ export declare class PanelModel extends PanelModelBase implements IElement, ITit
         /**
             * The Panel width.
             */
-        width: string;
+        get width(): string;
+        set width(val: string);
         /**
             * The left indent. Set this property to increase the panel left indent.
             */
-        indent: number;
+        get indent(): number;
+        set indent(val: number);
         /**
             * The inner indent. Set this property to increase the panel content margin.
             */
-        innerIndent: number;
-        renderWidth: string;
+        get innerIndent(): number;
+        set innerIndent(val: number);
+        get renderWidth(): string;
+        set renderWidth(val: string);
         /**
             * The Panel renders on the new line if the property is true. If the property is false, the panel tries to render on the same line/row with a previous question/panel.
             */
-        startWithNewLine: boolean;
+        get startWithNewLine(): boolean;
+        set startWithNewLine(value: boolean);
         /**
             * The right indent of the Panel.
             */
-        rightIndent: number;
-        paddingLeft: string;
-        innerPaddingLeft: string;
-        paddingRight: string;
+        get rightIndent(): number;
+        set rightIndent(val: number);
+        get paddingLeft(): string;
+        set paddingLeft(val: string);
+        get innerPaddingLeft(): string;
+        set innerPaddingLeft(val: string);
+        get paddingRight(): string;
+        set paddingRight(val: string);
         clearOnDeletingContainer(): void;
-        readonly hasEditButton: boolean;
+        get hasEditButton(): boolean;
         cancelPreview(): void;
         protected onVisibleChanged(): void;
 }
@@ -4425,9 +4578,11 @@ export declare class FlowPanelModel extends PanelModel {
     getType(): string;
     getChildrenLayoutType(): string;
     onSurveyLoad(): any;
-    content: string;
-    readonly locContent: LocalizableString;
-    html: string;
+    get content(): string;
+    set content(val: string);
+    get locContent(): LocalizableString;
+    get html(): string;
+    set html(val: string);
     protected onContentChanged(): any;
     produceHtml(): string;
     getQuestionFromText(str: string): Question;
@@ -4443,16 +4598,18 @@ export declare class FlowPanelModel extends PanelModel {
     * The page object. It has elements collection, that contains questions and panels.
     */
 export declare class PageModel extends PanelModelBase implements IPage {
-        name: string;
         constructor(name?: string);
         getType(): string;
         toString(): string;
-        readonly isPage: boolean;
-        navigationTitle: string;
-        readonly locNavigationTitle: LocalizableString;
-        navigationDescription: string;
-        readonly locNavigationDescription: LocalizableString;
-        passed: boolean;
+        get isPage(): boolean;
+        get navigationTitle(): string;
+        set navigationTitle(val: string);
+        get locNavigationTitle(): LocalizableString;
+        get navigationDescription(): string;
+        set navigationDescription(val: string);
+        get locNavigationDescription(): LocalizableString;
+        get passed(): boolean;
+        set passed(val: boolean);
         delete(): void;
         onFirstRendering(): void;
         /**
@@ -4460,24 +4617,27 @@ export declare class PageModel extends PanelModelBase implements IPage {
             * @see SurveyModel.visiblePages
             * @see SurveyModel.pages
             */
-        visibleIndex: number;
+        get visibleIndex(): number;
+        set visibleIndex(val: number);
         /**
             * Returns true, if the page is started page in the survey. It can be shown on the start only and the end-user could not comeback to it after it passed it.
             */
-        readonly isStarted: boolean;
-        readonly cssClasses: any;
+        get isStarted(): boolean;
+        get cssClasses(): any;
         getIsPageVisible(exceptionQuestion: IQuestion): boolean;
-        num: number;
+        get num(): number;
+        set num(val: number);
         /**
             * Set this property to "hide" to make "Prev", "Next" and "Complete" buttons are invisible for this page. Set this property to "show" to make these buttons visible, even if survey showNavigationButtons property is false.
             * @see SurveyMode.showNavigationButtons
             */
-        navigationButtonsVisibility: string;
+        get navigationButtonsVisibility(): string;
+        set navigationButtonsVisibility(val: string);
         /**
             * The property returns true, if the page has been shown to the end-user.
             */
-        readonly wasShown: boolean;
-        readonly hasShown: boolean;
+        get wasShown(): boolean;
+        get hasShown(): boolean;
         setWasShown(val: boolean): void;
         /**
             * The property returns true, if the elements are randomized on the page
@@ -4485,13 +4645,14 @@ export declare class PageModel extends PanelModelBase implements IPage {
             * @see questionsOrder
             * @see SurveyModel.questionsOrder
             */
-        readonly areQuestionsRandomized: boolean;
+        get areQuestionsRandomized(): boolean;
         /**
             * Use this property to randomize questions. Set it to 'random' to randomize questions, 'initial' to keep them in the same order or 'default' to use the Survey questionsOrder property
             * @see SurveyModel.questionsOrder
             * @see areQuestionsRandomized
             */
-        questionsOrder: string;
+        get questionsOrder(): string;
+        set questionsOrder(val: string);
         /**
             * Call it to scroll to the page top.
             */
@@ -4509,12 +4670,15 @@ export declare class PageModel extends PanelModelBase implements IPage {
             * @see startTimer
             * @see SurveyModel.maxTimeToFinishPage
             */
-        maxTimeToFinish: number;
+        get maxTimeToFinish(): number;
+        set maxTimeToFinish(val: number);
         protected onNumChanged(value: number): void;
         protected onVisibleChanged(): void;
         dragDropStart(src: IElement, target: IElement, nestedPanelDepth?: number): void;
         dragDropMoveTo(destination: ISurveyElement, isBottom?: boolean, isEdge?: boolean): boolean;
+        getTitleActions(): Array<any>;
         dragDropFinish(isCancel?: boolean): IElement;
+        ensureRowsVisibility(): void;
 }
 
 export interface IConditionObject {
@@ -4526,7 +4690,6 @@ export interface IConditionObject {
     * A base class for all questions.
     */
 export declare class Question extends SurveyElement implements IQuestion, IConditionRunner, ILocalizableOwner, IValidatorOwner, ITitleOwner {
-        name: string;
         [index: string]: any;
         customWidgetData: {
                 isNeedRender: boolean;
@@ -4540,6 +4703,7 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         afterRenderQuestionCallback: (question: Question, element: any) => any;
         valueFromDataCallback: (val: any) => any;
         valueToDataCallback: (val: any) => any;
+        onGetSurvey: () => ISurvey;
         protected isReadyValue: boolean;
         /**
             * The event is fired when isReady property of question is changed.
@@ -4550,6 +4714,7 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         onReadyChanged: Event<(sender: Question, options: any) => any, any>;
         isReadOnlyRenderDiv(): boolean;
         constructor(name: string);
+        getSurvey(): ISurvey;
         getValueName(): string;
         /**
             * Use this property if you want to store the question result in the name different from the question name.
@@ -4559,10 +4724,11 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * Please note, this property is hidden for questions without input, for example html question.
             * @see name
             */
-        valueName: string;
+        get valueName(): string;
+        set valueName(val: string);
         protected onValueNameChanged(oldValue: string): void;
         protected onNameChanged(oldValue: string): void;
-        readonly isReady: boolean;
+        get isReady(): boolean;
         /**
             * Get is question ready to use
             */
@@ -4570,49 +4736,54 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         /**
             * Get/set the page where the question is located.
             */
-        page: IPage;
+        get page(): IPage;
+        set page(val: IPage);
         getPanel(): IPanel;
         delete(): void;
-        readonly isFlowLayout: boolean;
+        get isFlowLayout(): boolean;
         getLayoutType(): string;
         isLayoutTypeSupported(layoutType: string): boolean;
         /**
             * Use it to get/set the question visibility.
             * @see visibleIf
             */
-        visible: boolean;
+        get visible(): boolean;
+        set visible(val: boolean);
         protected onVisibleChanged(): void;
         /**
             * Use it to choose how other question values will be rendered in title if referenced in {}.
             * Please note, this property is hidden for question without input, for example html question.
             */
-        useDisplayValuesInTitle: boolean;
+        get useDisplayValuesInTitle(): boolean;
+        set useDisplayValuesInTitle(val: boolean);
         /**
             * An expression that returns true or false. If it returns true the Question becomes visible and if it returns false the Question becomes invisible. The library runs the expression on survey start and on changing a question value. If the property is empty then visible property is used.
             * @see visible
             */
-        visibleIf: string;
+        get visibleIf(): string;
+        set visibleIf(val: string);
         /**
             * Returns true if the question is visible or survey is in design mode right now.
             */
-        readonly isVisible: boolean;
+        get isVisible(): boolean;
         /**
             * Returns the visible index of the question in the survey. It can be from 0 to all visible questions count - 1
             * The visibleIndex is -1 if the title is 'hidden' or hideNumber is true
             * @see titleLocation
             * @see hideNumber
             */
-        readonly visibleIndex: number;
+        get visibleIndex(): number;
         /**
             * Set hideNumber to true to stop showing the number for this question. The question will not be counter
             * @see visibleIndex
             * @see titleLocation
             */
-        hideNumber: boolean;
+        get hideNumber(): boolean;
+        set hideNumber(val: boolean);
         /**
             * Returns true if the question may have a title located on the left
             */
-        readonly isAllowTitleLeft: boolean;
+        get isAllowTitleLeft(): boolean;
         /**
             * Returns the type of the object as a string as it represents in the json.
             */
@@ -4631,25 +4802,27 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         /**
             * A parent element. It can be panel or page.
             */
-        parent: IPanel;
+        get parent(): IPanel;
+        set parent(val: IPanel);
         /**
             * A parent question. It can be a dynamic panel or dynamic/dropdown matrices. If the value is a matrix, it means that question is a cell question.
             * This property is null for a stand alone question.
             */
-        readonly parentQuestion: Question;
+        get parentQuestion(): Question;
         setParentQuestion(val: Question): void;
         protected onParentChanged(): void;
         /**
             * Returns false if the question doesn't have a title property, for example: QuestionHtmlModel, or titleLocation property equals to "hidden"
             * @see titleLocation
             */
-        readonly hasTitle: boolean;
+        get hasTitle(): boolean;
         /**
             * Set this property different from "default" to set the specific question title location for this panel/page.
             * Please note, this property is hidden for questions without input, for example html question.
             * @see SurveyModel.questionTitleLocation
             */
-        titleLocation: string;
+        get titleLocation(): string;
+        set titleLocation(value: string);
         /**
             * Return the title location based on question titleLocation property and QuestionTitleLocation of it's parents
             * @see titleLocation
@@ -4658,28 +4831,29 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             */
         getTitleLocation(): string;
         protected getTitleLocationCore(): string;
-        readonly hasTitleOnLeft: boolean;
-        readonly hasTitleOnTop: boolean;
-        readonly hasTitleOnBottom: boolean;
-        readonly hasTitleOnLeftTop: boolean;
-        readonly errorLocation: string;
+        get hasTitleOnLeft(): boolean;
+        get hasTitleOnTop(): boolean;
+        get hasTitleOnBottom(): boolean;
+        get hasTitleOnLeftTop(): boolean;
+        get errorLocation(): string;
         /**
             * Returns false if the question doesn't have an input element, for example: QuestionHtmlModel
             * @see hasSingleInput
             */
-        readonly hasInput: boolean;
+        get hasInput(): boolean;
         /**
             * Returns false if the question doesn't have an input element or have multiple inputs: matrices or panel dynamic
             * @see hasInput
             */
-        readonly hasSingleInput: boolean;
-        readonly inputId: string;
+        get hasSingleInput(): boolean;
+        get inputId(): string;
         /**
             * Question title. Use survey questionTitleTemplate property to change the title question is rendered. If it is empty, then question name property is used.
             * @see SurveyModel.questionTitleTemplate
             */
-        title: string;
-        readonly locTitle: LocalizableString;
+        get title(): string;
+        set title(val: string);
+        get locTitle(): LocalizableString;
         /**
             * Question description. It renders under question title by using smaller font. Unlike the title, description can be empty.
             * Please note, this property is hidden for questions without input, for example html question.
@@ -4692,21 +4866,24 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * @see description
             * @see Survey.questionDescriptionLocation
             */
-        descriptionLocation: string;
-        readonly hasDescriptionUnderTitle: boolean;
-        readonly hasDescriptionUnderInput: boolean;
-        readonly clickTitleFunction: any;
+        get descriptionLocation(): string;
+        set descriptionLocation(val: string);
+        get hasDescriptionUnderTitle(): boolean;
+        get hasDescriptionUnderInput(): boolean;
+        get clickTitleFunction(): any;
         /**
             * The custom text that will be shown on required error. Use this property, if you do not want to show the default text.
             * Please note, this property is hidden for question without input, for example html question.
             */
-        requiredErrorText: string;
-        readonly locRequiredErrorText: LocalizableString;
+        get requiredErrorText(): string;
+        set requiredErrorText(val: string);
+        get locRequiredErrorText(): LocalizableString;
         /**
             * Use it to get or set the comment value.
             */
-        commentText: string;
-        readonly locCommentText: LocalizableString;
+        get commentText(): string;
+        set commentText(val: string);
+        get locCommentText(): LocalizableString;
         /**
             * Returns a copy of question errors survey. For some questions like matrix and panel dynamic it includes the errors of nested questions.
             */
@@ -4715,47 +4892,48 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         /**
             * The link to the custom widget.
             */
-        readonly customWidget: QuestionCustomWidget;
+        get customWidget(): QuestionCustomWidget;
         updateCustomWidget(): void;
-        readonly isCompositeQuestion: boolean;
-        afterRenderQuestionElement(el: any): void;
-        afterRender(el: any): void;
-        beforeDestroyQuestionElement(el: any): void;
+        get isCompositeQuestion(): boolean;
+        afterRenderQuestionElement(el: HTMLElement): void;
+        afterRender(el: HTMLElement): void;
+        beforeDestroyQuestionElement(el: HTMLElement): void;
         /**
             * Returns the rendred question title.
             */
-        readonly processedTitle: string;
+        get processedTitle(): string;
         /**
             * Returns the title after processing the question template.
             * @see SurveyModel.questionTitleTemplate
             */
-        readonly fullTitle: string;
-        protected readonly titlePattern: string;
-        readonly isRequireTextOnStart: boolean;
-        readonly isRequireTextBeforeTitle: boolean;
-        readonly isRequireTextAfterTitle: boolean;
+        get fullTitle(): string;
+        protected get titlePattern(): string;
+        get isRequireTextOnStart(): boolean;
+        get isRequireTextBeforeTitle(): boolean;
+        get isRequireTextAfterTitle(): boolean;
         /**
             * The Question renders on the new line if the property is true. If the property is false, the question tries to render on the same line/row with a previous question/panel.
             */
-        startWithNewLine: boolean;
+        get startWithNewLine(): boolean;
+        set startWithNewLine(val: boolean);
         /**
             * Returns all css classes that used for rendering the question. You may use survey.updateQuestionCssClasses event to override css classes for a question.
             * @see SurveyModel.updateQuestionCssClasses
             */
-        readonly cssClasses: any;
-        readonly cssRoot: string;
+        get cssClasses(): any;
+        get cssRoot(): string;
         protected setCssRoot(val: string): void;
         protected getCssRoot(cssClasses: any): string;
-        readonly cssHeader: string;
+        get cssHeader(): string;
         protected setCssHeader(val: string): void;
         protected getCssHeader(cssClasses: any): string;
-        readonly cssContent: string;
+        get cssContent(): string;
         protected setCssContent(val: string): void;
         protected getCssContent(cssClasses: any): string;
-        readonly cssTitle: string;
+        get cssTitle(): string;
         protected setCssTitle(val: string): void;
         protected getCssTitle(cssClasses: any): string;
-        readonly cssError: string;
+        get cssError(): string;
         protected setCssError(val: string): void;
         protected getCssError(cssClasses: any): string;
         updateElementCss(): void;
@@ -4765,29 +4943,37 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         /**
             * Use it to set the specific width to the question like css style (%, px, em etc).
             */
-        width: string;
+        get width(): string;
+        set width(val: string);
         /**
             * Use it to set the specific minWidth constraint to the question like css style (%, px, em etc).
             */
-        minWidth: string;
+        get minWidth(): string;
+        set minWidth(val: string);
         /**
             * Use it to set the specific maxWidth constraint to the question like css style (%, px, em etc).
             */
-        maxWidth: string;
+        get maxWidth(): string;
+        set maxWidth(val: string);
         /**
             * The rendered width of the question.
             */
-        renderWidth: string;
+        get renderWidth(): string;
+        set renderWidth(val: string);
         /**
             * Set it different from 0 to increase the left padding.
             */
-        indent: number;
+        get indent(): number;
+        set indent(val: number);
         /**
             * Set it different from 0 to increase the right padding.
             */
-        rightIndent: number;
-        paddingLeft: string;
-        paddingRight: string;
+        get rightIndent(): number;
+        set rightIndent(val: number);
+        get paddingLeft(): string;
+        set paddingLeft(val: string);
+        get paddingRight(): string;
+        set paddingRight(val: string);
         /**
             * Move the focus to the input of this question.
             * @param onError set this parameter to true, to focus the input with the first error, other wise the first input will be focused.
@@ -4805,7 +4991,8 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * Set this property to true, to make the question a required. If a user doesn't answer the question then a validation error will be generated.
             * Please note, this property is hidden for question without input, for example html question.
             */
-        isRequired: boolean;
+        get isRequired(): boolean;
+        set isRequired(val: boolean);
         /**
             * An expression that returns true or false. If it returns true the Question becomes required and an end-user has to answer it.
             * If it returns false the Question then an end-user may not answer it the Question maybe empty.
@@ -4813,33 +5000,38 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * Please note, this property is hidden for question without input, for example html question.
             * @see isRequired
             */
-        requiredIf: string;
+        get requiredIf(): string;
+        set requiredIf(val: string);
         /**
             * Set it to true, to add a comment for the question.
             */
-        hasComment: boolean;
+        get hasComment(): boolean;
+        set hasComment(val: boolean);
         /**
             * The unique identificator. It is generated automatically.
             */
-        id: string;
-        readonly ariaTitleId: string;
-        readonly ariaRole: string;
-        hasOther: boolean;
+        get id(): string;
+        set id(val: string);
+        get ariaTitleId(): string;
+        get ariaRole(): string;
+        get hasOther(): boolean;
+        set hasOther(val: boolean);
         protected hasOtherChanged(): void;
-        readonly requireUpdateCommentValue: boolean;
+        get requireUpdateCommentValue(): boolean;
         /**
             * Returns true if readOnly property is true or survey is in display mode or parent panel/page is readOnly.
             * @see SurveyModel.model
             * @see readOnly
             */
-        readonly isReadOnly: boolean;
+        get isReadOnly(): boolean;
         /**
             * An expression that returns true or false. If it returns false the Question becomes read only and an end-user will not able to answer on the qustion. The library runs the expression on survey start and on changing a question value. If the property is empty then readOnly property is used.
             * Please note, this property is hidden for question without input, for example html question.
             * @see readOnly
             * @see isReadOnly
             */
-        enableIf: string;
+        get enableIf(): string;
+        set enableIf(val: string);
         /**
             * Run visibleIf and enableIf expressions. If visibleIf or/and enabledIf are not empty, then the results of performing the expression (true or false) set to the visible/readOnly properties.
             * @param values Typically survey results
@@ -4854,7 +5046,7 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * If visibleIndex is 1, then no is 2, or 'B' if survey.questionStartIndex is 'A'.
             * @see SurveyModel.questionStartIndex
             */
-        readonly no: string;
+        get no(): string;
         protected getStartIndex(): string;
         onSurveyLoad(): void;
         protected onSetData(): void;
@@ -4866,7 +5058,9 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * @see SurveyMode.setValue
             * @see SurveyMode.getValue
             */
-        value: any;
+        get value(): any;
+        set value(newValue: any);
+        get valueForSurvey(): any;
         /**
             * Clear the question value. It clears the question comment as well.
             */
@@ -4876,7 +5070,7 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         protected isEditingSurveyElement(value: any): boolean;
         protected getUnbindValue(value: any): any;
         clearValueIfInvisible(): void;
-        readonly displayValue: any;
+        get displayValue(): any;
         protected updateDisplayValue(): any;
         /**
             * Return the question value as a display text. For example, for dropdown, it would return the item text instead of item value.
@@ -4889,8 +5083,10 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * Set the default value to the question. It will be assign to the question on loading the survey from JSON or adding a question to the survey or on setting this property of the value is empty.
             * Please note, this property is hidden for question without input, for example html question.
             */
-        defaultValue: any;
-        defaultValueExpression: any;
+        get defaultValue(): any;
+        set defaultValue(val: any);
+        get defaultValueExpression(): any;
+        set defaultValueExpression(val: any);
         /**
             * Returns question answer data as a plain object: with question title, name, value and displayValue.
             * For complex questions (like matrix, etc.) isNode flag is set to true and data contains array of nested objects (rows)
@@ -4909,14 +5105,15 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
             * @see SurveyModel.correctAnswers
             * @see SurveyModel.inCorrectAnswers
             */
-        correctAnswer: any;
+        get correctAnswer(): any;
+        set correctAnswer(val: any);
         protected convertDefaultValue(val: any): any;
         /**
             * Returns questions count: 1 for the non-matrix questions and all inner visible questions that has input(s) widgets for question of matrix types.
             * @see getQuizQuestions
             */
-        readonly quizQuestionCount: number;
-        readonly correctAnswerCount: number;
+        get quizQuestionCount(): number;
+        get correctAnswerCount(): number;
         protected getQuizQuestionCount(): number;
         protected getCorrectAnswerCount(): number;
         isAnswerCorrect(): boolean;
@@ -4926,25 +5123,28 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         protected isDefaultValueEmpty(): boolean;
         protected setDefaultValue(): void;
         protected isValueExpression(val: any): boolean;
-        protected setValueAndRunExpression(expression: string, defaultValue: any, setFunc: (val: any) => void): void;
+        protected setValueAndRunExpression(expression: string, defaultValue: any, setFunc: (val: any) => void, values?: HashTable<any>, properties?: HashTable<any>): void;
         /**
             * The question comment value.
             */
-        comment: string;
+        get comment(): string;
+        set comment(newValue: string);
         protected getQuestionComment(): string;
         protected setQuestionComment(newValue: string): void;
         /**
             * Returns true if the question value is empty
             */
         isEmpty(): boolean;
-        isAnswered: boolean;
+        get isAnswered(): boolean;
+        set isAnswered(val: boolean);
         protected updateIsAnswered(): void;
         protected getIsAnswered(): boolean;
         /**
             * The list of question validators.
             * Please note, this property is hidden for question without input, for example html question.
             */
-        validators: Array<SurveyValidator>;
+        get validators(): Array<SurveyValidator>;
+        set validators(val: Array<SurveyValidator>);
         getValidators(): Array<SurveyValidator>;
         getSupportedValidators(): Array<string>;
         addConditionObjectsByContext(objects: Array<IConditionObject>, context: any): void;
@@ -4957,12 +5157,12 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         /**
             * Returns the validation errors count.
             */
-        readonly currentErrorCount: number;
+        get currentErrorCount(): number;
         /**
             * Returns the char/string for a required question.
             * @see SurveyModel.requiredText
             */
-        readonly requiredText: string;
+        get requiredText(): string;
         /**
             * Add error into the question error list.
             * @param error
@@ -4977,18 +5177,19 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         protected onCheckForErrors(errors: Array<SurveyError>, isOnValueChanged: boolean): void;
         protected hasRequiredError(): boolean;
         onCompletedAsyncValidators: (hasErrors: boolean) => void;
-        readonly isRunningValidators: boolean;
+        get isRunningValidators(): boolean;
         protected getIsRunningValidators(): boolean;
         protected runValidators(): Array<SurveyError>;
         protected raiseOnCompletedAsyncValidators(): void;
         protected allowNotifyValueChanged: boolean;
         protected setNewValue(newValue: any): void;
         protected isTextValue(): boolean;
-        readonly isSurveyInputTextUpdate: boolean;
-        readonly isInputTextUpdate: boolean;
+        get isSurveyInputTextUpdate(): boolean;
+        get isInputTextUpdate(): boolean;
         protected setNewValueInData(newValue: any): void;
         protected getValueCore(): any;
         protected setValueCore(newValue: any): void;
+        protected canSetValueToSurvey(): boolean;
         protected valueFromData(val: any): any;
         protected valueToData(val: any): any;
         protected onValueChanged(): void;
@@ -5030,7 +5231,8 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
         renderAs: string;
         getErrorCustomText(text: string, error: SurveyError): string;
         getValidatorTitle(): string;
-        validatedValue: any;
+        get validatedValue(): any;
+        set validatedValue(val: any);
         getAllValues(): any;
         dispose(): void;
 }
@@ -5039,13 +5241,12 @@ export declare class Question extends SurveyElement implements IQuestion, ICondi
   * A Model for non value question. This question doesn't add any new functionality. It hides some properties, including the value.
   */
 export declare class QuestionNonValue extends Question {
-    name: string;
     constructor(name: string);
     getType(): string;
-    readonly hasInput: boolean;
-    readonly hasTitle: boolean;
+    get hasInput(): boolean;
+    get hasTitle(): boolean;
     getTitleLocation(): string;
-    readonly hasComment: boolean;
+    get hasComment(): boolean;
     hasErrors(fireCallback?: boolean, rec?: any): boolean;
     getAllErrors(): Array<SurveyError>;
     supportGoNextPageAutomatic(): boolean;
@@ -5057,7 +5258,6 @@ export declare class QuestionNonValue extends Question {
   * A Model for an question that renders empty "div" tag. It used as a base class for some custom widgets
   */
 export declare class QuestionEmptyModel extends Question {
-    name: string;
     constructor(name: string);
     getType(): string;
 }
@@ -5076,22 +5276,24 @@ export declare class QuestionSelectBase extends Question {
             * Returns the other item. By using this property, you may change programmatically it's value and text.
             * @see hasOther
             */
-        readonly otherItem: ItemValue;
+        get otherItem(): ItemValue;
         /**
             * Returns true if a user select the 'other' item.
             */
-        readonly isOtherSelected: boolean;
+        get isOtherSelected(): boolean;
         /**
             * An expression that returns true or false. It runs against each choices item and if for this item it returns true, then the item is visible otherwise the item becomes invisible. Please use {item} to get the current item value in the expression.
             * @see visibleIf
             * @see choicesEnableIf
             */
-        choicesVisibleIf: string;
+        get choicesVisibleIf(): string;
+        set choicesVisibleIf(val: string);
         /**
             * An expression that returns true or false. It runs against each choices item and if for this item it returns true, then the item is enabled otherwise the item becomes disabled. Please use {item} to get the current item value in the expression.
             * @see choicesVisibleIf
             */
-        choicesEnableIf: string;
+        get choicesEnableIf(): string;
+        set choicesEnableIf(val: string);
         runCondition(values: HashTable<any>, properties: HashTable<any>): void;
         protected isTextValue(): boolean;
         protected setDefaultValue(): void;
@@ -5103,11 +5305,12 @@ export declare class QuestionSelectBase extends Question {
         protected onAfterRunItemsEnableCondition(): void;
         protected onEnableItemCallBack(item: ItemValue): boolean;
         protected getHasOther(val: any): boolean;
-        readonly validatedValue: any;
+        get validatedValue(): any;
         protected createRestfull(): ChoicesRestfull;
         protected getQuestionComment(): string;
         protected setQuestionComment(newValue: string): void;
-        renderedValue: any;
+        get renderedValue(): any;
+        set renderedValue(val: any);
         protected setQuestionValue(newValue: any, updateIsAnswered?: boolean): void;
         protected setNewValue(newValue: any): void;
         protected valueFromData(val: any): any;
@@ -5125,13 +5328,14 @@ export declare class QuestionSelectBase extends Question {
             * Use this property to fill the choices from a restful service.
             * @see choices
             */
-        readonly choicesByUrl: ChoicesRestfull;
+        get choicesByUrl(): ChoicesRestfull;
         /**
             * The list of items. Every item has value and text. If text is empty, the value is rendered. The item text supports markdown.
             * @see choicesByUrl
             * @see choicesFromQuestion
             */
-        choices: Array<any>;
+        get choices(): Array<any>;
+        set choices(newValue: Array<any>);
         /**
             * Set this property to get choices from the specified question instead of defining them in the current question. This avoids duplication of choices declaration in your survey definition.
             * By setting this property, the "choices", "choicesVisibleIf", "choicesEnableIf" and "choicesOrder" properties become invisible, because these question characteristics depend on actions in another (specified) question.
@@ -5139,59 +5343,68 @@ export declare class QuestionSelectBase extends Question {
             * @see choices
             * @see choicesFromQuestionMode
             */
-        choicesFromQuestion: string;
+        get choicesFromQuestion(): string;
+        set choicesFromQuestion(val: string);
         /**
             * This property becomes visible when the `choicesFromQuestion` property is selected. The default value is "all" (all visible choices from another question are displayed as they are).
             * You can set this property to "selected" or "unselected" to display only selected or unselected choices from the specified question.
             * @see choicesFromQuestion
             */
-        choicesFromQuestionMode: string;
+        get choicesFromQuestionMode(): string;
+        set choicesFromQuestionMode(val: string);
         /**
             * Set this property to true to hide the question if there is no visible choices.
             */
-        hideIfChoicesEmpty: boolean;
-        keepIncorrectValues: boolean;
+        get hideIfChoicesEmpty(): boolean;
+        set hideIfChoicesEmpty(val: boolean);
+        get keepIncorrectValues(): boolean;
+        set keepIncorrectValues(val: boolean);
         /**
             * Please use survey.storeOthersAsComment to change the behavior on the survey level. This property is depricated and invisible in Survey Creator.
             * By default the entered text in the others input in the checkbox/radiogroup/dropdown are stored as "question name " + "-Comment". The value itself is "question name": "others". Set this property to false, to store the entered text directly in the "question name" key.
             * Possible values are: "default", true, false
             * @see SurveyModel.storeOthersAsComment
             */
-        storeOthersAsComment: any;
+        get storeOthersAsComment(): any;
+        set storeOthersAsComment(val: any);
         protected hasOtherChanged(): void;
         /**
             * Use this property to render items in a specific order: "asc", "desc", "random". Default value is "none".
             */
-        choicesOrder: string;
+        get choicesOrder(): string;
+        set choicesOrder(val: string);
         /**
             * Use this property to set the different text for other item.
             */
-        otherText: string;
-        readonly locOtherText: LocalizableString;
+        get otherText(): string;
+        set otherText(val: string);
+        get locOtherText(): LocalizableString;
         /**
             *  Use this property to set the place holder text for other or comment field  .
             */
-        otherPlaceHolder: string;
-        readonly locOtherPlaceHolder: LocalizableString;
+        get otherPlaceHolder(): string;
+        set otherPlaceHolder(val: string);
+        get locOtherPlaceHolder(): LocalizableString;
         /**
             * The text that shows when the other item is choosed by the other input is empty.
             */
-        otherErrorText: string;
-        readonly locOtherErrorText: LocalizableString;
+        get otherErrorText(): string;
+        set otherErrorText(val: string);
+        get locOtherErrorText(): LocalizableString;
         /**
             * The list of items as they will be rendered. If needed items are sorted and the other item is added.
             * @see hasOther
             * @see choicesOrder
             * @see enabledChoices
             */
-        readonly visibleChoices: Array<ItemValue>;
+        get visibleChoices(): Array<ItemValue>;
         /**
             * The list of enabled items as they will be rendered. The disabled items are not included
             * @see hasOther
             * @see choicesOrder
             * @see visibleChoices
             */
-        readonly enabledChoices: Array<ItemValue>;
+        get enabledChoices(): Array<ItemValue>;
         protected updateVisibleChoices(): void;
         protected canUseFilteredChoices(): boolean;
         protected addToVisibleChoices(items: Array<ItemValue>): void;
@@ -5207,7 +5420,8 @@ export declare class QuestionSelectBase extends Question {
             */
         protected getDisplayValueCore(keysAsText: boolean, value: any): any;
         protected getChoicesDisplayValue(items: ItemValue[], val: any): any;
-        protected readonly activeChoices: Array<ItemValue>;
+        protected get activeChoices(): Array<ItemValue>;
+        protected getChoicesFromQuestion(question: QuestionSelectBase): Array<ItemValue>;
         protected getChoices(): Array<ItemValue>;
         supportComment(): boolean;
         supportOther(): boolean;
@@ -5222,6 +5436,7 @@ export declare class QuestionSelectBase extends Question {
         protected onBeforeSendRequest(): void;
         protected onLoadChoicesFromUrl(array: Array<ItemValue>): void;
         protected updateChoicesDependedQuestions(): void;
+        onSurveyValueChanged(newValue: any): void;
         protected onVisibleChoicesChanged(): void;
         clearIncorrectValues(): void;
         clearValueIfInvisible(): void;
@@ -5237,21 +5452,21 @@ export declare class QuestionSelectBase extends Question {
         getColumnClass(): any;
         getLabelClass(item: ItemValue): any;
         getControlLabelClass(item: ItemValue): any;
-        readonly columns: ItemValue[][];
-        readonly hasColumns: boolean;
+        get columns(): ItemValue[][];
+        get hasColumns(): boolean;
         choicesLoaded(): void;
 }
 /**
     * A base class for checkbox and radiogroup questions. It introduced a colCount property.
     */
 export declare class QuestionCheckboxBase extends QuestionSelectBase {
-        name: string;
         colCountChangedCallback: () => void;
         constructor(name: string);
         /**
             * The number of columns for radiogroup and checkbox questions. Items are rendred in one line if the value is 0.
             */
-        colCount: number;
+        get colCount(): number;
+        set colCount(value: number);
         getItemIndex(item: any): number;
         protected onParentChanged(): void;
 }
@@ -5260,9 +5475,8 @@ export declare class QuestionCheckboxBase extends QuestionSelectBase {
     * A Model for a checkbox question
     */
 export declare class QuestionCheckboxModel extends QuestionCheckboxBase {
-        name: string;
         constructor(name: string);
-        readonly ariaRole: string;
+        get ariaRole(): string;
         getType(): string;
         protected onCreating(): void;
         protected getFirstInputElementId(): string;
@@ -5270,31 +5484,35 @@ export declare class QuestionCheckboxModel extends QuestionCheckboxBase {
             * Returns the select all item. By using this property, you may change programmatically it's value and text.
             * @see hasSelectAll
             */
-        readonly selectAllItem: ItemValue;
+        get selectAllItem(): ItemValue;
         /**
             * Returns the none item. By using this property, you may change programmatically it's value and text.
             * @see hasNone
             */
-        readonly noneItem: ItemValue;
+        get noneItem(): ItemValue;
         /**
             * Use this property to set the different text for none item.
             */
-        noneText: string;
-        readonly locNoneText: LocalizableString;
+        get noneText(): string;
+        set noneText(val: string);
+        get locNoneText(): LocalizableString;
         /**
             * Use this property to set the different text for Select All item.
             */
-        selectAllText: string;
-        readonly locSelectAllText: LocalizableString;
+        get selectAllText(): string;
+        set selectAllText(val: string);
+        get locSelectAllText(): LocalizableString;
         /**
             * Set this property to true, to show the "Select All" item on the top. If end-user checks this item, then all items are checked.
             */
-        hasSelectAll: boolean;
+        get hasSelectAll(): boolean;
+        set hasSelectAll(val: boolean);
         /**
             * Returns true if all items are selected
             * @see toggleSelectAll
             */
-        isAllSelected: boolean;
+        get isAllSelected(): boolean;
+        set isAllSelected(val: boolean);
         /**
             * It will select all items, except other and none. If all items have been already selected then it will clear the value
             * @see isAllSelected
@@ -5308,7 +5526,8 @@ export declare class QuestionCheckboxModel extends QuestionCheckboxBase {
         /**
             * Set this property to true, to show the "None" item on the bottom. If end-user checks this item, all other items would be unchecked.
             */
-        hasNone: boolean;
+        get hasNone(): boolean;
+        set hasNone(val: boolean);
         /**
             * Returns true if item is checked
             * @param item checkbox item value
@@ -5317,7 +5536,8 @@ export declare class QuestionCheckboxModel extends QuestionCheckboxBase {
         /**
             * Set this property different to 0 to limit the number of selected choices in the checkbox.
             */
-        maxSelectedChoices: number;
+        get maxSelectedChoices(): number;
+        set maxSelectedChoices(val: number);
         protected onEnableItemCallBack(item: ItemValue): boolean;
         protected onAfterRunItemsEnableCondition(): void;
         getItemClass(item: any): any;
@@ -5344,13 +5564,22 @@ export declare class QuestionCheckboxModel extends QuestionCheckboxBase {
   * A Model for a ranking question
   */
 export declare class QuestionRankingModel extends QuestionCheckboxModel {
+    constructor(name: string);
+    getType(): string;
+    get isIndeterminate(): boolean;
+    get rootClass(): any;
+    getNumberByIndex(index: number): string;
+    get rankingChoices(): ItemValue[];
+    afterRenderQuestionElement(el: HTMLElement): void;
+    beforeDestroyQuestionElement(el: HTMLElement): void;
+    handleKeydown: (event: any) => void;
+    protected onVisibleChoicesChanged(): void;
 }
 
 /**
     * A Model for a comment question
     */
 export declare class QuestionCommentModel extends Question {
-        name: string;
         constructor(name: string);
         protected isTextValue(): boolean;
         /**
@@ -5358,21 +5587,25 @@ export declare class QuestionCommentModel extends Question {
             * If it is 0, then the value is unlimited
             * @see SurveyModel.maxTextLength
             */
-        maxLength: number;
+        get maxLength(): number;
+        set maxLength(val: number);
         getMaxLength(): any;
         /**
             * Use this property to set the input place holder.
             */
-        placeHolder: string;
-        readonly locPlaceHolder: LocalizableString;
+        get placeHolder(): string;
+        set placeHolder(val: string);
+        get locPlaceHolder(): LocalizableString;
         /**
             * The html rows attribute.
             */
-        rows: number;
+        get rows(): number;
+        set rows(val: number);
         /**
             * The html cols attribute.
             */
-        cols: number;
+        get cols(): number;
+        set cols(val: number);
         getType(): string;
         isEmpty(): boolean;
         /**
@@ -5386,27 +5619,29 @@ export declare class QuestionCommentModel extends Question {
             * Note, that setting to "onTyping" may lead to a performance degradation, in case you have many expressions in the survey.
             * @see survey.textUpdateMode
             */
-        textUpdateMode: string;
-        readonly isSurveyInputTextUpdate: boolean;
+        get textUpdateMode(): string;
+        set textUpdateMode(val: string);
+        get isSurveyInputTextUpdate(): boolean;
 }
 
 /**
     * A Model for a dropdown question
     */
 export declare class QuestionDropdownModel extends QuestionSelectBase {
-        name: string;
         constructor(name: string);
         /**
             * This flag controls whether to show options caption item ('Choose...').
             */
-        showOptionsCaption: boolean;
+        get showOptionsCaption(): boolean;
+        set showOptionsCaption(val: boolean);
         /**
             * Use this property to set the options caption different from the default value. The default value is taken from localization strings.
             */
-        optionsCaption: string;
-        readonly locOptionsCaption: LocalizableString;
+        get optionsCaption(): string;
+        set optionsCaption(val: string);
+        get locOptionsCaption(): LocalizableString;
         getType(): string;
-        readonly selectedItem: ItemValue;
+        get selectedItem(): ItemValue;
         supportGoNextPageAutomatic(): boolean;
         protected getChoices(): Array<ItemValue>;
         /**
@@ -5414,27 +5649,30 @@ export declare class QuestionDropdownModel extends QuestionSelectBase {
             * @see choicesMax
             * @see choicesStep
             */
-        choicesMin: number;
+        get choicesMin(): number;
+        set choicesMin(val: number);
         /**
             * Use this and choicesMax property to automatically add choices. For example choicesMin = 1 and choicesMax = 10 will generate ten additional choices from 1 to 10.
             * @see choicesMin
             * @see choicesStep
             */
-        choicesMax: number;
+        get choicesMax(): number;
+        set choicesMax(val: number);
         /**
             * The default value is 1. It tells the value of the iterator between choicesMin and choicesMax properties.
             * If choicesMin = 10, choicesMax = 30 and choicesStep = 10 then you will have only three additional choices: [10, 20, 30].
             * @see choicesMin
             * @see choicesMax
             */
-        choicesStep: number;
+        get choicesStep(): number;
+        set choicesStep(val: number);
 }
 
 export declare class QuestionFactory {
     static Instance: QuestionFactory;
-    static readonly DefaultChoices: string[];
-    static readonly DefaultColums: string[];
-    static readonly DefaultRows: string[];
+    static get DefaultChoices(): string[];
+    static get DefaultColums(): string[];
+    static get DefaultRows(): string[];
     registerQuestion(questionType: string, questionCreator: (name: string) => Question): void;
     unregisterElement(elementType: string): void;
     clear(): void;
@@ -5454,7 +5692,6 @@ export declare class ElementFactory {
     * A Model for a file question
     */
 export declare class QuestionFileModel extends Question {
-        name: string;
         /**
             * The event is fired after question state has been changed.
             * <br/> sender the question object that fires the event
@@ -5469,45 +5706,55 @@ export declare class QuestionFileModel extends Question {
         /**
             * Set it to true, to show the preview for the image files.
             */
-        showPreview: boolean;
+        get showPreview(): boolean;
+        set showPreview(val: boolean);
         /**
             * Set it to true, to allow select multiple files.
             */
-        allowMultiple: boolean;
+        get allowMultiple(): boolean;
+        set allowMultiple(val: boolean);
         /**
             * The image height.
             */
-        imageHeight: string;
+        get imageHeight(): string;
+        set imageHeight(val: string);
         /**
             * The image width.
             */
-        imageWidth: string;
+        get imageWidth(): string;
+        set imageWidth(val: string);
         /**
             * Accepted file types. Passed to the 'accept' attribute of the file input tag. See https://www.w3schools.com/tags/att_input_accept.asp for more details.
             */
-        acceptedTypes: string;
+        get acceptedTypes(): string;
+        set acceptedTypes(val: string);
         /**
             * Set it to false if you do not want to serialize file content as text in the survey.data.
             * In this case, you have to write the code onUploadFiles event to store the file content.
             * @see SurveyModel.onUploadFiles
             */
-        storeDataAsText: boolean;
+        get storeDataAsText(): boolean;
+        set storeDataAsText(val: boolean);
         /**
             * Set it to true if you want to wait until files will be uploaded to your server.
             */
-        waitForUpload: boolean;
+        get waitForUpload(): boolean;
+        set waitForUpload(val: boolean);
         /**
             * Set it to false if you want to disable images preview.
             */
-        allowImagesPreview: boolean;
+        get allowImagesPreview(): boolean;
+        set allowImagesPreview(val: boolean);
         /**
             * Use this property to setup the maximum allowed file size.
             */
-        maxSize: number;
+        get maxSize(): number;
+        set maxSize(val: number);
         /**
             * Use this property to setup confirmation to remove file.
             */
-        needConfirmRemoveFile: boolean;
+        get needConfirmRemoveFile(): boolean;
+        set needConfirmRemoveFile(val: boolean);
         /**
             * The remove file confirmation message.
             */
@@ -5515,27 +5762,27 @@ export declare class QuestionFileModel extends Question {
         /**
             * The remove all files confirmation message.
             */
-        readonly confirmRemoveAllMessage: string;
+        get confirmRemoveAllMessage(): string;
         /**
             * The no file chosen caption for modern theme.
             */
-        readonly noFileChosenCaption: string;
+        get noFileChosenCaption(): string;
         /**
             * The choose files button caption for modern theme.
             */
-        readonly chooseButtonCaption: string;
+        get chooseButtonCaption(): string;
         /**
             * The clean files button caption.
             */
-        readonly cleanButtonCaption: string;
+        get cleanButtonCaption(): string;
         /**
             * The remove file button caption.
             */
-        readonly removeFileCaption: string;
+        get removeFileCaption(): string;
         /**
             * The input title value.
             */
-        readonly inputTitle: string;
+        get inputTitle(): string;
         /**
             * Clear value programmatically.
             */
@@ -5568,33 +5815,33 @@ export declare class QuestionFileModel extends Question {
     * A Model for html question. Unlike other questions it doesn't have value and title.
     */
 export declare class QuestionHtmlModel extends QuestionNonValue {
-        name: string;
         constructor(name: string);
         getType(): string;
-        readonly isCompositeQuestion: boolean;
+        get isCompositeQuestion(): boolean;
         /**
             * Set html to display it
             */
-        html: string;
-        readonly locHtml: LocalizableString;
-        readonly processedHtml: string;
+        get html(): string;
+        set html(val: string);
+        get locHtml(): LocalizableString;
+        get processedHtml(): string;
 }
 
 /**
     * A Model for a radiogroup question.
     */
 export declare class QuestionRadiogroupModel extends QuestionCheckboxBase {
-        name: string;
         constructor(name: string);
         getType(): string;
         protected getFirstInputElementId(): string;
-        readonly selectedItem: ItemValue;
+        get selectedItem(): ItemValue;
         /**
             * Show "clear button" flag.
             */
-        showClearButton: boolean;
-        readonly canShowClearButton: boolean;
-        readonly clearButtonCaption: any;
+        get showClearButton(): boolean;
+        set showClearButton(val: boolean);
+        get canShowClearButton(): boolean;
+        get clearButtonCaption(): any;
         supportGoNextPageAutomatic(): boolean;
         getItemClass(item: any): any;
 }
@@ -5603,7 +5850,6 @@ export declare class QuestionRadiogroupModel extends QuestionCheckboxBase {
     * A Model for a rating question.
     */
 export declare class QuestionRatingModel extends Question {
-        name: string;
         rateValuesChangedCallback: () => void;
         constructor(name: string);
         onSurveyLoad(): void;
@@ -5613,30 +5859,34 @@ export declare class QuestionRatingModel extends Question {
             * @see rateMax
             * @see rateStep
             */
-        rateValues: Array<any>;
+        get rateValues(): Array<any>;
+        set rateValues(val: Array<any>);
         /**
             * This property is used to generate rate values if rateValues array is empty. It is the first value in the rating. The default value is 1.
             * @see rateValues
             * @see rateMax
             * @see rateStep
             */
-        rateMin: number;
+        get rateMin(): number;
+        set rateMin(val: number);
         /**
             * This property is used to generate rate values if rateValues array is empty. It is the last value in the rating. The default value is 5.
             * @see rateValues
             * @see rateMin
             * @see rateStep
             */
-        rateMax: number;
+        get rateMax(): number;
+        set rateMax(val: number);
         /**
             * This property is used to generate rate values if rateValues array is empty. It is the step value. The number of rate values are (rateMax - rateMin) / rateStep. The default value is 1.
             * @see rateValues
             * @see rateMin
             * @see rateMax
             */
-        rateStep: number;
+        get rateStep(): number;
+        set rateStep(val: number);
         protected getDisplayValueCore(keysAsText: boolean, value: any): any;
-        readonly visibleRateValues: ItemValue[];
+        get visibleRateValues(): ItemValue[];
         getType(): string;
         protected getFirstInputElementId(): string;
         supportGoNextPageAutomatic(): boolean;
@@ -5645,13 +5895,15 @@ export declare class QuestionRatingModel extends Question {
         /**
             * The description of minimum (first) item.
             */
-        minRateDescription: string;
-        readonly locMinRateDescription: LocalizableString;
+        get minRateDescription(): string;
+        set minRateDescription(val: string);
+        get locMinRateDescription(): LocalizableString;
         /**
             * The description of maximum (last) item.
             */
-        maxRateDescription: string;
-        readonly locMaxRateDescription: LocalizableString;
+        get maxRateDescription(): string;
+        set maxRateDescription(val: string);
+        get locMaxRateDescription(): LocalizableString;
         protected valueToData(val: any): any;
 }
 
@@ -5659,20 +5911,21 @@ export declare class QuestionRatingModel extends Question {
     * A Model for expression question. It is a read-only question. It calculates value based on epxression property.
     */
 export declare class QuestionExpressionModel extends Question {
-        name: string;
         constructor(name: string);
         getType(): string;
-        readonly hasInput: boolean;
+        get hasInput(): boolean;
         /**
             * Use this property to display the value in your own format. Make sure you have "{0}" substring in your string, to display the actual value.
             */
-        format: string;
-        readonly locFormat: LocalizableString;
+        get format(): string;
+        set format(val: string);
+        get locFormat(): LocalizableString;
         /**
             * The Expression that used to calculate the question value. You may use standard operators like +, -, * and /, squares (). Here is the example of accessing the question value {questionname}.
             * <br/>Example: "({quantity} * {price}) * (100 - {discount}) / 100"
             */
-        expression: string;
+        get expression(): string;
+        set expression(val: string);
         locCalculation(): void;
         unlocCalculation(): void;
         runCondition(values: HashTable<any>, properties: HashTable<any>): void;
@@ -5681,26 +5934,31 @@ export declare class QuestionExpressionModel extends Question {
         /**
             * The maximum number of fraction digits to use if displayStyle is not "none". Possible values are from 0 to 20. The default value is -1 and it means that this property is not used.
             */
-        maximumFractionDigits: number;
+        get maximumFractionDigits(): number;
+        set maximumFractionDigits(val: number);
         /**
             * The minimum number of fraction digits to use if displayStyle is not "none". Possible values are from 0 to 20. The default value is -1 and it means that this property is not used.
             */
-        minimumFractionDigits: number;
+        get minimumFractionDigits(): number;
+        set minimumFractionDigits(val: number);
         protected getDisplayValueCore(keysAsText: boolean, value: any): any;
         /**
             * You may set this property to "decimal", "currency", "percent" or "date". If you set it to "currency", you may use the currency property to display the value in currency different from USD.
             * @see currency
             */
-        displayStyle: string;
+        get displayStyle(): string;
+        set displayStyle(val: string);
         /**
             * Use it to display the value in the currency differen from USD. The displayStype should be set to "currency".
             * @see displayStyle
             */
-        currency: string;
+        get currency(): string;
+        set currency(val: string);
         /**
             * 	Determines whether to display grouping separators. The default value is true.
             */
-        useGrouping: boolean;
+        get useGrouping(): boolean;
+        set useGrouping(val: boolean);
         protected getValueAsStr(val: any): string;
 }
 export declare function getCurrecyCodes(): Array<string>;
@@ -5709,7 +5967,6 @@ export declare function getCurrecyCodes(): Array<string>;
     * A Model for an input text question.
     */
 export declare class QuestionTextModel extends Question {
-        name: string;
         constructor(name: string);
         protected isTextValue(): boolean;
         getType(): string;
@@ -5717,7 +5974,9 @@ export declare class QuestionTextModel extends Question {
         /**
             * Use this property to change the default input type.
             */
-        inputType: string;
+        get inputType(): string;
+        set inputType(val: string);
+        runCondition(values: HashTable<any>, properties: HashTable<any>): void;
         /**
             * Gets or sets a value that specifies how the question updates it's value.
             *
@@ -5729,8 +5988,9 @@ export declare class QuestionTextModel extends Question {
             * Note, that setting to "onTyping" may lead to a performance degradation, in case you have many expressions in the survey.
             * @see survey.textUpdateMode
             */
-        textUpdateMode: string;
-        readonly isSurveyInputTextUpdate: boolean;
+        get textUpdateMode(): string;
+        set textUpdateMode(val: string);
+        get isSurveyInputTextUpdate(): boolean;
         getValidators(): Array<SurveyValidator>;
         isLayoutTypeSupported(layoutType: string): boolean;
         /**
@@ -5738,44 +5998,85 @@ export declare class QuestionTextModel extends Question {
             * If it is 0, then the value is unlimited
             * @see SurveyModel.maxTextLength
             */
-        maxLength: number;
+        get maxLength(): number;
+        set maxLength(val: number);
         getMaxLength(): any;
         /**
             * The text input size
             */
-        size: number;
-        autoComplete: string;
+        get size(): number;
+        set size(val: number);
+        get autoComplete(): string;
+        set autoComplete(val: string);
         /**
             * The minimum value
             */
-        min: string;
+        get min(): string;
+        set min(val: string);
         /**
             * The maximum value
             */
-        max: string;
-        minValueExpression: string;
-        maxValueExpression: string;
-        readonly renderedMin: any;
-        readonly renderedMax: any;
+        get max(): string;
+        set max(val: string);
+        /**
+            * The minimum value that you can setup as expression, for example today(-1) = yesterday;
+            */
+        get minValueExpression(): string;
+        set minValueExpression(val: string);
+        /**
+            * The maximum value that you can setup as expression, for example today(1) = tomorrow;
+            */
+        get maxValueExpression(): string;
+        set maxValueExpression(val: string);
+        get renderedMin(): any;
+        get renderedMax(): any;
+        /**
+            * The text that shows when value is less than min property.
+            * @see min
+            * @see maxErrorText
+            */
+        get minErrorText(): string;
+        set minErrorText(val: string);
+        get locMinErrorText(): LocalizableString;
+        /**
+            * The text that shows when value is greater than man property.
+            * @see max
+            * @see minErrorText
+            */
+        get maxErrorText(): string;
+        set maxErrorText(val: string);
+        get locMaxErrorText(): LocalizableString;
+        /**
+            * Readonly property that returns true if the current inputType allows to set min and max properties
+            * @see inputType
+            * @see min
+            * @see max
+            */
+        get isMinMaxType(): boolean;
+        protected onCheckForErrors(errors: Array<SurveyError>, isOnValueChanged: boolean): void;
+        protected canSetValueToSurvey(): boolean;
         /**
             * The step value
             */
-        step: string;
-        readonly renderedStep: string;
+        get step(): string;
+        set step(val: string);
+        get renderedStep(): string;
         isEmpty(): boolean;
         supportGoNextPageAutomatic(): boolean;
         supportGoNextPageError(): boolean;
         /**
             * The input place holder.
             */
-        placeHolder: string;
-        readonly locPlaceHolder: LocalizableString;
+        get placeHolder(): string;
+        set placeHolder(val: string);
+        get locPlaceHolder(): LocalizableString;
         /**
             * The list of recommended options available to choose.
             */
-        dataList: Array<string>;
-        readonly locDataList: LocalizableStrings;
-        readonly dataListId: string;
+        get dataList(): Array<string>;
+        set dataList(val: Array<string>);
+        get locDataList(): LocalizableStrings;
+        get dataListId(): string;
         protected canRunValidators(isOnValueChanged: boolean): boolean;
         protected setNewValue(newValue: any): void;
         protected correctValueType(newValue: any): any;
@@ -5785,44 +6086,47 @@ export declare class QuestionTextModel extends Question {
     * A Model for a boolean question.
     */
 export declare class QuestionBooleanModel extends Question {
-        name: string;
         constructor(name: string);
         getType(): string;
         isLayoutTypeSupported(layoutType: string): boolean;
         /**
             * Returns true if the question check will be rendered in indeterminate mode. value is empty.
             */
-        readonly isIndeterminate: boolean;
-        readonly hasTitle: boolean;
+        get isIndeterminate(): boolean;
+        get hasTitle(): boolean;
         /**
             * Get/set question value in 3 modes: indeterminate (value is empty), true (check is set) and false (check is unset).
             * @see valueTrue
             * @see valueFalse
             */
-        checkedValue: any;
+        get checkedValue(): any;
+        set checkedValue(val: any);
         /**
             * Set the default state of the check: "indeterminate" - default (value is empty/null), "true" - value equals valueTrue or true, "false" - value equals valueFalse or false.
             */
-        defaultValue: any;
+        get defaultValue(): any;
+        set defaultValue(val: any);
         getDefaultValue(): any;
-        readonly locTitle: LocalizableString;
+        get locTitle(): LocalizableString;
         /**
             * The checkbox label. If it is empty and showTitle is false then title is rendered
             * @see showTitle
             * @see title
             */
         label: string;
-        readonly locDisplayLabel: LocalizableString;
+        get locDisplayLabel(): LocalizableString;
         /**
             * Set this property, if you want to have a different label for state when check is set.
             */
-        labelTrue: any;
-        readonly locLabelTrue: LocalizableString;
+        get labelTrue(): any;
+        set labelTrue(val: any);
+        get locLabelTrue(): LocalizableString;
         /**
             * Set this property, if you want to have a different label for state when check is unset.
             */
-        labelFalse: any;
-        readonly locLabelFalse: LocalizableString;
+        get labelFalse(): any;
+        set labelFalse(val: any);
+        get locLabelFalse(): LocalizableString;
         /**
             * Set this property to true to show the question title. It is hidden by default.
             */
@@ -5845,8 +6149,9 @@ export declare class ImageItemValue extends ItemValue implements ILocalizableOwn
         /**
             * The image or video link property.
             */
-        imageLink: string;
-        readonly locImageLink: LocalizableString;
+        get imageLink(): string;
+        set imageLink(val: string);
+        get locImageLink(): LocalizableString;
         getLocale(): string;
         getMarkdownHtml(text: string, name: string): string;
         getRenderer(name: string): string;
@@ -5856,18 +6161,18 @@ export declare class ImageItemValue extends ItemValue implements ILocalizableOwn
     * A Model for a select image question.
     */
 export declare class QuestionImagePickerModel extends QuestionCheckboxBase {
-        name: string;
         constructor(name: string);
         getType(): string;
         supportGoNextPageAutomatic(): boolean;
-        readonly hasSingleInput: boolean;
+        get hasSingleInput(): boolean;
         protected getItemValueType(): string;
-        readonly isCompositeQuestion: boolean;
+        get isCompositeQuestion(): boolean;
         supportOther(): boolean;
         /**
             * Multi select option. If set to true, then allows to select multiple images.
             */
-        multiSelect: boolean;
+        get multiSelect(): boolean;
+        set multiSelect(newValue: boolean);
         /**
             * Returns true if item is checked
             * @param item image picker item value
@@ -5877,7 +6182,8 @@ export declare class QuestionImagePickerModel extends QuestionCheckboxBase {
         /**
             * Show label under the image.
             */
-        showLabel: boolean;
+        get showLabel(): boolean;
+        set showLabel(newValue: boolean);
         endLoadingFromJson(): void;
         protected getValueCore(): any;
         protected renderedValueFromDataCore(val: any): any;
@@ -5885,19 +6191,23 @@ export declare class QuestionImagePickerModel extends QuestionCheckboxBase {
         /**
             * The image height.
             */
-        imageHeight: string;
+        get imageHeight(): string;
+        set imageHeight(val: string);
         /**
             * The image width.
             */
-        imageWidth: string;
+        get imageWidth(): string;
+        set imageWidth(val: string);
         /**
             * The image fit mode.
             */
-        imageFit: string;
+        get imageFit(): string;
+        set imageFit(val: string);
         /**
             * The content mode.
             */
-        contentMode: string;
+        get contentMode(): string;
+        set contentMode(val: string);
         getItemClass(item: any): string;
         protected convertDefaultValue(val: any): any;
 }
@@ -5906,76 +6216,85 @@ export declare class QuestionImagePickerModel extends QuestionCheckboxBase {
     * A Model for image question. This question hasn't any functionality and can be used to improve the appearance of the survey.
     */
 export declare class QuestionImageModel extends QuestionNonValue {
-        name: string;
         constructor(name: string);
         getType(): string;
-        readonly isCompositeQuestion: boolean;
+        get isCompositeQuestion(): boolean;
         /**
             * The image URL.
             */
-        imageLink: string;
-        readonly locImageLink: LocalizableString;
+        get imageLink(): string;
+        set imageLink(val: string);
+        get locImageLink(): LocalizableString;
         /**
             * The image alt text.
             */
-        text: string;
-        readonly locText: LocalizableString;
+        get text(): string;
+        set text(val: string);
+        get locText(): LocalizableString;
         /**
             * The image height.
             */
-        imageHeight: string;
+        get imageHeight(): string;
+        set imageHeight(val: string);
         /**
             * The image width.
             */
-        imageWidth: string;
+        get imageWidth(): string;
+        set imageWidth(val: string);
         /**
             * The image fit mode.
             */
-        imageFit: string;
+        get imageFit(): string;
+        set imageFit(val: string);
         /**
             * The content mode.
             */
-        contentMode: string;
+        get contentMode(): string;
+        set contentMode(val: string);
 }
 
 /**
     * A Model for signature pad question.
     */
 export declare class QuestionSignaturePadModel extends Question {
-        name: string;
         protected getCssRoot(cssClasses: any): string;
         protected updateValue(): void;
         constructor(name: string);
         getType(): string;
-        afterRenderQuestionElement(el: any): void;
-        beforeDestroyQuestionElement(el: any): void;
+        afterRenderQuestionElement(el: HTMLElement): void;
+        beforeDestroyQuestionElement(el: HTMLElement): void;
         initSignaturePad(el: HTMLElement): void;
         destroySignaturePad(el: HTMLElement): void;
         /**
             * Use it to set the specific dataFormat for the signature pad image data.
             * formats: "" (default) - png, "image/jpeg" - jpeg, "image/svg+xml" - svg
             */
-        dataFormat: string;
+        get dataFormat(): string;
+        set dataFormat(val: string);
         /**
             * Use it to set the specific width for the signature pad.
             */
-        width: string;
+        get width(): string;
+        set width(val: string);
         /**
             * Use it to set the specific height for the signature pad.
             */
-        height: string;
+        get height(): string;
+        set height(val: string);
         /**
             * Use it to clear content of the signature pad.
             */
-        allowClear: boolean;
+        get allowClear(): boolean;
+        set allowClear(val: boolean);
         /**
             * Use it to set pen color for the signature pad.
             */
-        penColor: string;
+        get penColor(): string;
+        set penColor(val: string);
         /**
             * The clear signature button caption.
             */
-        readonly clearButtonCaption: string;
+        get clearButtonCaption(): string;
 }
 
 export interface IQuestionPanelDynamicData {
@@ -5991,7 +6310,7 @@ export declare class QuestionPanelDynamicItem implements ISurveyData, ISurveyImp
         static ParentItemVariableName: string;
         static IndexVariableName: string;
         constructor(data: IQuestionPanelDynamicData, panel: PanelModel);
-        readonly panel: PanelModel;
+        get panel(): PanelModel;
         setSurveyImpl(): void;
         getValue(name: string): any;
         setValue(name: string, newValue: any): void;
@@ -6002,14 +6321,14 @@ export declare class QuestionPanelDynamicItem implements ISurveyData, ISurveyImp
         getAllValues(): any;
         getFilteredValues(): any;
         getFilteredProperties(): any;
-        geSurveyData(): ISurveyData;
+        getSurveyData(): ISurveyData;
         getSurvey(): ISurvey;
         getTextProcessor(): ITextProcessor;
 }
 export declare class QuestionPanelDynamicTemplateSurveyImpl implements ISurveyImpl {
         data: IQuestionPanelDynamicData;
         constructor(data: IQuestionPanelDynamicData);
-        geSurveyData(): ISurveyData;
+        getSurveyData(): ISurveyData;
         getSurvey(): ISurvey;
         getTextProcessor(): ITextProcessor;
 }
@@ -6018,17 +6337,16 @@ export declare class QuestionPanelDynamicTemplateSurveyImpl implements ISurveyIm
     * An end-user may dynamically add/remove panels, unless you forbidden this.
     */
 export declare class QuestionPanelDynamicModel extends Question implements IQuestionPanelDynamicData {
-        name: string;
         renderModeChangedCallback: () => void;
         panelCountChangedCallback: () => void;
         currentIndexChangedCallback: () => void;
         constructor(name: string);
-        readonly hasSingleInput: boolean;
+        get hasSingleInput(): boolean;
         setSurveyImpl(value: ISurveyImpl): void;
         getType(): string;
-        readonly isCompositeQuestion: boolean;
+        get isCompositeQuestion(): boolean;
         clearOnDeletingContainer(): void;
-        readonly isAllowTitleLeft: boolean;
+        get isAllowTitleLeft(): boolean;
         removeElement(element: IElement): boolean;
         /**
             * The template Panel. This panel is used as a template on creatign dynamic panels
@@ -6036,7 +6354,7 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see templateTitle
             * @see panelCount
             */
-        readonly template: PanelModel;
+        get template(): PanelModel;
         getPanel(): IPanel;
         /**
             * The template Panel elements, questions and panels.
@@ -6044,15 +6362,16 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see template
             * @see panelCount
             */
-        readonly templateElements: Array<IElement>;
+        get templateElements(): Array<IElement>;
         /**
             * The template Panel title property.
             * @see  templateElements
             * @see template
             * @see panelCount
             */
-        templateTitle: string;
-        readonly locTemplateTitle: LocalizableString;
+        get templateTitle(): string;
+        set templateTitle(newValue: string);
+        get locTemplateTitle(): LocalizableString;
         /**
             * The template Panel description property.
             * @see  templateElements
@@ -6060,15 +6379,16 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see panelCount
             * @see templateTitle
             */
-        templateDescription: string;
-        readonly locTemplateDescription: LocalizableString;
-        protected readonly items: Array<ISurveyData>;
+        get templateDescription(): string;
+        set templateDescription(newValue: string);
+        get locTemplateDescription(): LocalizableString;
+        protected get items(): Array<ISurveyData>;
         /**
             * The array of dynamic panels created based on panel template
             * @see template
             * @see panelCount
             */
-        readonly panels: Array<PanelModel>;
+        get panels(): Array<PanelModel>;
         /**
             * The index of current active dynamical panel when the renderMode is not "list". If there is no dymamic panel (panelCount = 0) or renderMode equals "list" it returns -1, otherwise it returns a value from 0 to panelCount - 1.
             * @see currentPanel
@@ -6076,7 +6396,8 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see panelCount
             * @see renderMode
             */
-        currentIndex: number;
+        get currentIndex(): number;
+        set currentIndex(val: number);
         /**
             * The current active dynamical panel when the renderMode is not "list". If there is no dymamic panel (panelCount = 0) or renderMode equals "list" it returns null.
             * @see currenIndex
@@ -6084,79 +6405,87 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see panelCount
             * @see renderMode
             */
-        readonly currentPanel: PanelModel;
+        get currentPanel(): PanelModel;
         /**
             * Set it to true, to show a confirmation dialog on removing a panel
             * @see ConfirmDeleteText
             */
-        confirmDelete: boolean;
+        get confirmDelete(): boolean;
+        set confirmDelete(val: boolean);
         /**
             * Set it to a question name used in the template panel and the library shows duplication error, if there are same values in different panels of this question.
             * @see keyDuplicationError
             */
-        keyName: string;
+        get keyName(): string;
+        set keyName(val: string);
         /**
             * Use this property to change the default text showing in the confirmation delete dialog on removing a panel.
             */
-        confirmDeleteText: string;
-        readonly locConfirmDeleteText: LocalizableString;
+        get confirmDeleteText(): string;
+        set confirmDeleteText(val: string);
+        get locConfirmDeleteText(): LocalizableString;
         /**
             * The duplication value error text. Set it to show the text different from the default.
             * @see keyName
             */
-        keyDuplicationError: string;
-        readonly locKeyDuplicationError: LocalizableString;
+        get keyDuplicationError(): string;
+        set keyDuplicationError(val: string);
+        get locKeyDuplicationError(): LocalizableString;
         /**
             * Use this property to change the default previous button text. Previous button shows the previous panel, change the currentPanel, when the renderMode doesn't equal to "list".
             * @see currentPanel
             * @see currentIndex
             * @see renderMode
             */
-        panelPrevText: string;
-        readonly locPanelPrevText: LocalizableString;
+        get panelPrevText(): string;
+        set panelPrevText(val: string);
+        get locPanelPrevText(): LocalizableString;
         /**
             * Use this property to change the default next button text. Next button shows the next panel, change the currentPanel, when the renderMode doesn't equal to "list".
             * @see currentPanel
             * @see currentIndex
             * @see renderMode
             */
-        panelNextText: string;
-        readonly locPanelNextText: LocalizableString;
+        get panelNextText(): string;
+        set panelNextText(val: string);
+        get locPanelNextText(): LocalizableString;
         /**
             * Use this property to change the default value of add panel button text.
             */
-        panelAddText: string;
-        readonly locPanelAddText: LocalizableString;
+        get panelAddText(): string;
+        set panelAddText(value: string);
+        get locPanelAddText(): LocalizableString;
         /**
             * Use this property to change the default value of remove panel button text.
             */
-        panelRemoveText: string;
-        readonly locPanelRemoveText: LocalizableString;
+        get panelRemoveText(): string;
+        set panelRemoveText(val: string);
+        get locPanelRemoveText(): LocalizableString;
         /**
             * Returns true when the renderMode equals to "progressTop" or "progressTopBottom"
             */
-        readonly isProgressTopShowing: boolean;
+        get isProgressTopShowing(): boolean;
         /**
             * Returns true when the renderMode equals to "progressBottom" or "progressTopBottom"
             */
-        readonly isProgressBottomShowing: boolean;
+        get isProgressBottomShowing(): boolean;
         /**
             * Returns true when currentIndex is more than 0.
             * @see currenIndex
             * @see currenPanel
             */
-        readonly isPrevButtonShowing: boolean;
+        get isPrevButtonShowing(): boolean;
         /**
             * Returns true when currentIndex is more than or equal 0 and less than panelCount - 1.
             * @see currenIndex
             * @see currenPanel
             * @see panelCount
             */
-        readonly isNextButtonShowing: boolean;
+        get isNextButtonShowing(): boolean;
         /**
             * Returns true when showRangeInProgress equals to true, renderMode doesn't equal to "list" and panelCount is >= 2.
             */
-        readonly isRangeShowing: boolean;
+        get isRangeShowing(): boolean;
         getElementsInDesign(includeHidden?: boolean): Array<IElement>;
         protected getValueCore(): any;
         protected setValueCore(newValue: any): void;
@@ -6169,7 +6498,8 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see removePanel
             * @see removePanelUI
             */
-        panelCount: number;
+        get panelCount(): number;
+        set panelCount(val: number);
         /**
             * Use this property to allow the end-user to collapse/expand the panels. It works only if the renderMode property equals to "list" and templateTitle property is not empty. The following values are available:
             * <br/> default - the default value. User can't collapse/expand panels
@@ -6179,55 +6509,64 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see renderMode
             * @see templateTitle
             */
-        panelsState: string;
+        get panelsState(): string;
+        set panelsState(val: string);
         /**
             * The minimum panel count. A user could not delete a panel if the panelCount equals to minPanelCount
             * @see panelCount
             * @see maxPanelCount
             */
-        minPanelCount: number;
+        get minPanelCount(): number;
+        set minPanelCount(val: number);
         /**
             * The maximum panel count. A user could not add a panel if the panelCount equals to maxPanelCount
             * @see panelCount
             * @see minPanelCount
             */
-        maxPanelCount: number;
+        get maxPanelCount(): number;
+        set maxPanelCount(val: number);
         /**
             * Set this property to false to hide the 'Add New' button
             * @see allowRemovePanel
             */
-        allowAddPanel: boolean;
+        get allowAddPanel(): boolean;
+        set allowAddPanel(val: boolean);
         /**
             * Set this property to false to hide the 'Remove' button
             * @see allowAddPanel
             */
-        allowRemovePanel: boolean;
+        get allowRemovePanel(): boolean;
+        set allowRemovePanel(val: boolean);
         /**
             * Set this property different from "default" to set the specific question title location for the template questions.
             * @see SurveyModel.questionTitleLocation
             * @see PanelModelBase.questionTitleLocation
             */
-        templateTitleLocation: string;
+        get templateTitleLocation(): string;
+        set templateTitleLocation(value: string);
         /**
             * Use this property to show/hide the numbers in titles in questions inside a dynamic panel.
             * By default the value is "off". You may set it to "onPanel" and the first question inside a dynamic panel will start with 1 or "onSurvey" to include nested questions in dymamic panels into global survey question numbering.
             */
-        showQuestionNumbers: string;
+        get showQuestionNumbers(): string;
+        set showQuestionNumbers(val: string);
         /**
             * Shows the range from 1 to panelCount when renderMode doesn't equal to "list". Set to false to hide this element.
             * @see panelCount
             * @see renderMode
             */
-        showRangeInProgress: boolean;
+        get showRangeInProgress(): boolean;
+        set showRangeInProgress(val: boolean);
         /**
             * By default the property equals to "list" and all dynamic panels are rendered one by one on the page. You may change it to: "progressTop", "progressBottom" or "progressTopBottom" to render only one dynamic panel at once. The progress and navigation elements can be rendred on top, bottom or both.
             */
-        renderMode: string;
+        get renderMode(): string;
+        set renderMode(val: string);
         /**
             * Returns true when renderMode equals to "list".
             * @see renderMode
             */
-        readonly isRenderModeList: boolean;
+        get isRenderModeList(): boolean;
         setVisibleIndex(value: number): number;
         /**
             * Returns true when an end user may add a new panel. The question is not read only and panelCount less than maxPanelCount
@@ -6235,28 +6574,30 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
             * @see panelCount
             * @see maxPanelCount
             */
-        readonly canAddPanel: boolean;
+        get canAddPanel(): boolean;
         /**
             * Returns true when an end user may remove a panel. The question is not read only and panelCount is more than minPanelCount
             * @see isReadOnly
             * @see panelCount
             * @see minPanelCount
             */
-        readonly canRemovePanel: boolean;
+        get canRemovePanel(): boolean;
         protected rebuildPanels(): void;
         /**
             * If it is not empty, then this value is set to every new panel, including panels created initially, unless the defaultValue is not empty
             * @see defaultValue
             * @see defaultValueFromLastRow
             */
-        defaultPanelValue: any;
+        get defaultPanelValue(): any;
+        set defaultPanelValue(val: any);
         /**
             * Set it to true to copy the value into new added panel from the last panel. If defaultPanelValue is set and this property equals to true,
             * then the value for new added panel is merging.
             * @see defaultValue
             * @see defaultPanelValue
             */
-        defaultValueFromLastPanel: boolean;
+        get defaultValueFromLastPanel(): boolean;
+        set defaultValueFromLastPanel(val: boolean);
         protected isDefaultValueEmpty(): boolean;
         protected setDefaultValue(): void;
         isEmpty(): boolean;
@@ -6332,7 +6673,6 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
         getItemIndex(item: ISurveyData): number;
         getPanelItemData(item: ISurveyData): any;
         setPanelItemData(item: ISurveyData, name: string, val: any): void;
-        getSurvey(): ISurvey;
         getRootData(): ISurveyData;
         getPlainData(options?: {
                 includeEmpty?: boolean;
@@ -6341,7 +6681,7 @@ export declare class QuestionPanelDynamicModel extends Question implements IQues
                 }>;
         }): any;
         updateElementCss(): void;
-        readonly progressText: string;
+        get progressText(): string;
 }
 
 export declare var surveyTimerFunctions: {
@@ -6349,7 +6689,7 @@ export declare var surveyTimerFunctions: {
     clearTimeout: (timerId: number) => void;
 };
 export declare class SurveyTimer {
-    static readonly instance: SurveyTimer;
+    static get instance(): SurveyTimer;
     onTimer: Event<() => any, any>;
     start(func?: () => any): void;
     stop(func?: () => any): void;
@@ -6358,8 +6698,9 @@ export declare class SurveyTimer {
 
 export declare class SurveyProgressButtonsModel {
     constructor(survey: SurveyModel);
+    isListElementClickable(index: number): boolean;
     getListElementCss(index: number): string;
-    clickListElement(visibleIndex: number): void;
+    clickListElement(index: number): void;
 }
 
 /**
@@ -6368,14 +6709,15 @@ export declare class SurveyProgressButtonsModel {
 export declare class SurveyModel extends Base implements ISurvey, ISurveyData, ISurveyImpl, ISurveyTriggerOwner, ISurveyErrorOwner, ILocalizableOwner {
         [index: string]: any;
         static platform: string;
-        readonly platformName: string;
+        get platformName(): string;
         /**
             * You can display an additional field (comment field) for the most of questions; users can enter additional comments to their response.
             * The comment field input is saved as `'question name' + 'commentPrefix'`.
             * @see data
             * @see Question.hasComment
             */
-        commentPrefix: string;
+        get commentPrefix(): string;
+        set commentPrefix(val: string);
         /**
             * The event is fired before the survey is completed and the `onComplete` event is fired. You can prevent the survey from completing by setting `options.allowComplete` to `false`
             * <br/> `sender` - the survey object that fires the event.
@@ -6688,10 +7030,14 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * The event is fired on uploading the file in QuestionFile when `storeDataAsText` is set to `false`. Use this event to change the uploaded file name or to prevent a particular file from being uploaded.
             * <br/> `sender` - the survey object that fires the event.
             * <br/> `options.question` - the file question instance.
-            * <br/> `options.name` - the file question name.
+            * <br/> `options.name` - the question name.
             * <br/> `options.files` - the Javascript File objects array to upload.
+            * <br/> `options.callback` - a callback function to get the file upload status and the updloaded file content.
             * @see uploadFiles
             * @see QuestionFileModel.storeDataAsText
+            * @see onDownloadFile
+            * @see onClearFiles
+            * @see [View Examples](https://www.google.com/search?q=site%3Ahttps%3A%2F%2Fsurveyjs.io%2FExamples%2F+%22onUploadFiles%22)
             */
         onUploadFiles: Event<(sender: SurveyModel, options: any) => any, any>;
         /**
@@ -6700,8 +7046,11 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * <br/> `options.name` - the question name.
             * <br/> `options.content` - the file content.
             * <br/> `options.fileValue` - single file question value.
-            * <br/> `options.callback` - a call back function to get the status on downloading the file and the downloaded file content.
+            * <br/> `options.callback` - a callback function to get the file downloading status and the downloaded file content.
             * @see downloadFile
+            * @see onClearFiles
+            * @see onUploadFiles
+            * @see [View Examples](https://www.google.com/search?q=site%3Ahttps%3A%2F%2Fsurveyjs.io%2FExamples%2F+%22onDownloadFile%22)
             */
         onDownloadFile: Event<(sender: SurveyModel, options: any) => any, any>;
         /**
@@ -6711,8 +7060,11 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * <br/> `options.name` - the question name.
             * <br/> `options.value` - the question value.
             * <br/> `options.fileName` - a removed file's name, set it to `null` to clear all files.
-            * <br/> `options.callback` - a call back function to get the status on clearing the files operation.
+            * <br/> `options.callback` - a callback function to get the operation status.
             * @see clearFiles
+            * @see onDownloadFile
+            * @see onUploadFiles
+            * @see [View Examples](https://www.google.com/search?q=site%3Ahttps%3A%2F%2Fsurveyjs.io%2FExamples%2F+%22onClearFiles%22)
             */
         onClearFiles: Event<(sender: SurveyModel, options: any) => any, any>;
         /**
@@ -6998,6 +7350,14 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
         onLocaleChangedEvent: Event<(sender: SurveyModel, value: string) => any, any>;
         onGetQuestionTitleActions: Event<(sender: SurveyModel, options: any) => any, any>;
         onGetPanelTitleActions: Event<(sender: SurveyModel, options: any) => any, any>;
+        onGetPageTitleActions: Event<(sender: SurveyModel, options: any) => any, any>;
+        /**
+            * The event is fired after the survey element content was collapsed or expanded.
+            * <br/> `sender` - the survey object that fires the event.
+            * <br/> `options.element` - Specifies which survey element content was collapsed or expanded.
+            * @see onElementContentVisibilityChanged
+            */
+        onElementContentVisibilityChanged: Event<(sender: SurveyModel, options: any) => any, any>;
         /**
             * The list of errors on loading survey JSON. If the list is empty after loading a JSON, then the JSON is correct and has no errors.
             * @see JsonError
@@ -7011,70 +7371,81 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see PageModel
             * @see visiblePages
             */
-        readonly pages: Array<PageModel>;
+        get pages(): Array<PageModel>;
         getCss(): any;
-        css: any;
-        readonly cssNavigationComplete: string;
-        readonly cssNavigationPreview: string;
-        readonly cssNavigationEdit: string;
-        readonly cssNavigationPrev: string;
-        readonly cssNavigationStart: string;
-        readonly cssNavigationNext: string;
-        readonly completedCss: string;
+        get css(): any;
+        set css(value: any);
+        get cssNavigationComplete(): string;
+        get cssNavigationPreview(): string;
+        get cssNavigationEdit(): string;
+        get cssNavigationPrev(): string;
+        get cssNavigationStart(): string;
+        get cssNavigationNext(): string;
+        get completedCss(): string;
         /**
             * Gets or sets a list of triggers in the survey.
             * @see SurveyTrigger
             */
-        triggers: Array<SurveyTrigger>;
+        get triggers(): Array<SurveyTrigger>;
+        set triggers(val: Array<SurveyTrigger>);
         /**
             * Gets or sets a list of calculated values in the survey.
             * @see CalculatedValue
             */
-        calculatedValues: Array<CalculatedValue>;
+        get calculatedValues(): Array<CalculatedValue>;
+        set calculatedValues(val: Array<CalculatedValue>);
         /**
             * Gets or sets an identifier of a survey model loaded from the [api.surveyjs.io](https://api.surveyjs.io) service. When specified, the survey JSON is automatically loaded from [api.surveyjs.io](https://api.surveyjs.io) service.
             * @see loadSurveyFromService
             * @see onLoadedSurveyFromService
             */
-        surveyId: string;
+        get surveyId(): string;
+        set surveyId(val: string);
         /**
             * Gets or sets an identifier of a survey model saved to the [api.surveyjs.io](https://api.surveyjs.io) service. When specified, the survey data is automatically saved to the [api.surveyjs.io](https://api.surveyjs.io) service.
             * @see onComplete
             * @see surveyShowDataSaving
             */
-        surveyPostId: string;
+        get surveyPostId(): string;
+        set surveyPostId(val: string);
         /**
             * Gets or sets user's identifier (e.g., e-mail or unique customer id) in your web application.
             * If you load survey or post survey results from/to [api.surveyjs.io](https://api.surveyjs.io) service, then the library do not allow users to run the same survey the second time.
             * On the second run, the user will see the survey complete page.
             */
-        clientId: string;
+        get clientId(): string;
+        set clientId(val: string);
         /**
             * Gets or sets a cookie name used to save information about completing the survey.
             * If the property is not empty, before starting the survey, the Survey library checks if the cookie with this name exists.
             * If it is `true`, the survey goes to complete mode and a user sees the survey complete page. On completing the survey the cookie with this name is created.
             */
-        cookieName: string;
+        get cookieName(): string;
+        set cookieName(val: string);
         /**
             * Gets or sets whether to save survey results on completing every page. If the property value is set to `true`, the `onPartialSend` event is fired.
             * @see onPartialSend
             * @see clientId
             */
-        sendResultOnPageNext: boolean;
+        get sendResultOnPageNext(): boolean;
+        set sendResultOnPageNext(val: boolean);
         /**
             * Gets or sets whether to show the progress on saving/sending data into the [api.surveyjs.io](https://api.surveyjs.io) service.
             * @see surveyPostId
             */
-        surveyShowDataSaving: boolean;
+        get surveyShowDataSaving(): boolean;
+        set surveyShowDataSaving(val: boolean);
         /**
             * Gets or sets whether the first input is focused on showing a next or a previous page.
             */
-        focusFirstQuestionAutomatic: boolean;
+        get focusFirstQuestionAutomatic(): boolean;
+        set focusFirstQuestionAutomatic(val: boolean);
         /**
             * Gets or sets whether the first input is focused if the current page has errors.
             * Set this property to `false` (the default value is `true`) if you do not want to bring the focus to the first question that has error on the page.
             */
-        focusOnFirstError: boolean;
+        get focusOnFirstError(): boolean;
+        set focusOnFirstError(val: boolean);
         /**
             * Gets or sets the navigation buttons position.
             * Possible values: 'bottom' (default), 'top', 'both' and 'none'. Set it to 'none' to hide 'Prev', 'Next' and 'Complete' buttons.
@@ -7082,46 +7453,54 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see goNextPageAutomatic
             * @see showPrevButton
             */
-        showNavigationButtons: string | any;
+        get showNavigationButtons(): string | any;
+        set showNavigationButtons(val: string | any);
         /**
             * Gets or sets whether the Survey displays "Prev" button in its pages. Set it to `false` to prevent end-users from going back to their answers.
             * @see showNavigationButtons
             */
-        showPrevButton: boolean;
+        get showPrevButton(): boolean;
+        set showPrevButton(val: boolean);
         /**
             * Gets or sets whether the Survey displays survey title in its pages. Set it to `false` to hide a survey title.
             * @see title
             */
-        showTitle: boolean;
+        get showTitle(): boolean;
+        set showTitle(val: boolean);
         /**
             * Gets or sets whether the Survey displays page titles. Set it to `false` to hide page titles.
             * @see PageModel.title
             */
-        showPageTitles: boolean;
+        get showPageTitles(): boolean;
+        set showPageTitles(val: boolean);
         /**
             * On finishing the survey the complete page is shown. Set the property to `false`, to hide the complete page.
             * @see data
             * @see onComplete
             * @see navigateToUrl
             */
-        showCompletedPage: boolean;
+        get showCompletedPage(): boolean;
+        set showCompletedPage(val: boolean);
         /**
             * Set this property to a url you want to navigate after a user completing the survey.
             * By default it uses after calling onComplete event. In case calling options.showDataSaving callback in onComplete event, navigateToUrl will be used on calling options.showDataSavingSuccess callback.
             */
-        navigateToUrl: string;
+        get navigateToUrl(): string;
+        set navigateToUrl(val: string);
         /**
             * Gets or sets a list of URL condition items. If the expression of this item returns `true`, then survey will navigate to the item URL.
             * @see UrlConditionItem
             * @see navigateToUrl
             */
-        navigateToUrlOnCondition: Array<UrlConditionItem>;
+        get navigateToUrlOnCondition(): Array<UrlConditionItem>;
+        set navigateToUrlOnCondition(val: Array<UrlConditionItem>);
         getNavigateToUrl(): string;
         /**
             * Gets or sets the required question mark. The required question mark is a char or string that is rendered in the required questions' titles.
             * @see Question.title
             */
-        requiredText: string;
+        get requiredText(): string;
+        set requiredText(val: string);
         /**
             * Gets or sets whether to hide all required errors.
             */
@@ -7133,7 +7512,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see Question.title
             * @see requiredText
             */
-        questionStartIndex: string;
+        get questionStartIndex(): string;
+        set questionStartIndex(val: string);
         /**
             * Gets or sets whether the "Others" option text is stored as question comment.
             *
@@ -7141,14 +7521,16 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Set this property to `false`, to store the entered text directly in the `"question name"` key.
             * @see commentPrefix
             */
-        storeOthersAsComment: boolean;
+        get storeOthersAsComment(): boolean;
+        set storeOthersAsComment(val: boolean);
         /**
             * Specifies the default maximum length for questions like text and comment, including matrix cell questions.
             *
             * The default value is `0`, that means that the text and comment have the same max length as the standard HTML input - 524288 characters: https://www.w3schools.com/tags/att_input_maxlength.asp.
             * @see maxOthersLength
             */
-        maxTextLength: number;
+        get maxTextLength(): number;
+        set maxTextLength(val: number);
         /**
             * Gets or sets the default maximum length for question comments and others
             *
@@ -7157,7 +7539,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see Question.hasOther
             * @see maxTextLength
             */
-        maxOthersLength: number;
+        get maxOthersLength(): number;
+        set maxOthersLength(val: number);
         /**
             * Gets or ses whether a user can navigate the next page automatically after answering all the questions on a page without pressing the "Next" button.
             * The available options:
@@ -7167,12 +7550,14 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `false` - do not navigate the next page and do not submit survey data automatically.
             * @see showNavigationButtons
             */
-        goNextPageAutomatic: boolean | "autogonext";
+        get goNextPageAutomatic(): boolean | "autogonext";
+        set goNextPageAutomatic(val: boolean | "autogonext");
         /**
             * Gets or sets whether a survey is automatically completed when `goNextPageAutomatic = true`. Set it to `false` if you do not want to submit survey automatically on completing the last survey page.
             * @see goNextPageAutomatic
             */
-        allowCompleteSurveyAutomatic: boolean;
+        get allowCompleteSurveyAutomatic(): boolean;
+        set allowCompleteSurveyAutomatic(val: boolean);
         /**
             * Gets or sets a value that specifies how the survey validates the question answers.
             *
@@ -7183,7 +7568,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `onValueChanging` - check errors before setting value into survey. If there is an error, then survey data is not changed, but question value will be keeped.
             * - `onComplete` - to validate all visible questions on complete button click. If there are errors on previous pages, then the page with the first error becomes the current.
             */
-        checkErrorsMode: string;
+        get checkErrorsMode(): string;
+        set checkErrorsMode(val: string);
         /**
             * Gets or sets a value that specifies how the survey updates its questions' text values.
             *
@@ -7194,7 +7580,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             *
             * Note, that setting to "onTyping" may lead to a performance degradation, in case you have many expressions in the survey.
             */
-        textUpdateMode: string;
+        get textUpdateMode(): string;
+        set textUpdateMode(val: string);
         /**
             * Gets or sets a value that specifies how the invisible data is included in survey data.
             *
@@ -7207,7 +7594,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see Question.visible
             * @see onComplete
             */
-        clearInvisibleValues: any;
+        get clearInvisibleValues(): any;
+        set clearInvisibleValues(val: any);
         /**
             * Call this function to remove all question values from the survey, that end-user will not be able to enter.
             * For example the value that doesn't exists in a radiogroup/dropdown/checkbox choices or matrix rows/columns.
@@ -7223,7 +7611,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Gets or sets the survey locale. The default value it is empty, this means the 'en' locale is used.
             * You can set it to 'de' - German, 'fr' - French and so on. The library has built-in localization for several languages. The library has a multi-language support as well.
             */
-        locale: string;
+        get locale(): string;
+        set locale(value: string);
         /**
             * Returns an array of locales that are used in the survey's translation.
             */
@@ -7240,64 +7629,73 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
         /**
             * Returns the text that is displayed when there are no any visible pages and questiona.
             */
-        readonly emptySurveyText: string;
+        get emptySurveyText(): string;
         /**
             * Gets or sets a survey title.
             * @see description
             */
-        title: string;
-        readonly locTitle: LocalizableString;
+        get title(): string;
+        set title(value: string);
+        get locTitle(): LocalizableString;
         /**
             * Gets or sets a survey description. The survey description is displayed under a survey title.
             * @see title
             */
-        description: string;
-        readonly locDescription: LocalizableString;
+        get description(): string;
+        set description(value: string);
+        get locDescription(): LocalizableString;
         /**
             * Gets or sets a survey logo.
             * @see title
             */
-        logo: string;
-        readonly locLogo: LocalizableString;
+        get logo(): string;
+        set logo(value: string);
+        get locLogo(): LocalizableString;
         /**
             * Gets or sets a survey logo width.
             * @see logo
             */
-        logoWidth: number;
+        get logoWidth(): number;
+        set logoWidth(value: number);
         /**
             * Gets or sets a survey logo height.
             * @see logo
             */
-        logoHeight: number;
+        get logoHeight(): number;
+        set logoHeight(value: number);
         /**
             * Gets or sets a survey logo position.
             * @see logo
             */
-        logoPosition: string;
-        readonly hasLogo: boolean;
-        readonly isLogoBefore: boolean;
-        readonly isLogoAfter: boolean;
-        readonly logoClassNames: string;
+        get logoPosition(): string;
+        set logoPosition(value: string);
+        get hasLogo(): boolean;
+        get isLogoBefore(): boolean;
+        get isLogoAfter(): boolean;
+        get logoClassNames(): string;
         /**
             * The logo fit mode.
             * @see logo
             */
-        logoFit: string;
-        readonly titleMaxWidth: string;
+        get logoFit(): string;
+        set logoFit(val: string);
+        get titleMaxWidth(): string;
         /**
             * Gets or sets the HTML content displayed on the complete page. Use this property to change the default complete page text.
             * @see showCompletedPage
             * @see completedHtmlOnCondition
             * @see locale
             */
-        completedHtml: string;
-        readonly locCompletedHtml: LocalizableString;
+        get completedHtml(): string;
+        set completedHtml(value: string);
+        get locCompletedHtml(): LocalizableString;
         /**
             * The list of HTML condition items. If the expression of this item returns `true`, then a survey will use this item HTML instead of `completedHtml`.
             * @see HtmlConditionItem
             * @see completeHtml
             */
-        completedHtmlOnCondition: Array<HtmlConditionItem>;
+        get completedHtmlOnCondition(): Array<HtmlConditionItem>;
+        set completedHtmlOnCondition(val: Array<HtmlConditionItem>);
         /**
             * Calculates a given expression and returns a result value.
             * @param expression
@@ -7312,47 +7710,53 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Run all triggers that performs on value changed and not on moving to the next page.
             */
         runTriggers(): void;
-        readonly renderedCompletedHtml: string;
+        get renderedCompletedHtml(): string;
         /**
             * The HTML content displayed to an end user that has already completed the survey.
             * @see clientId
             * @see locale
             */
-        completedBeforeHtml: string;
-        readonly locCompletedBeforeHtml: LocalizableString;
+        get completedBeforeHtml(): string;
+        set completedBeforeHtml(value: string);
+        get locCompletedBeforeHtml(): LocalizableString;
         /**
             * The HTML that shows on loading survey Json from the [api.surveyjs.io](https://api.surveyjs.io) service.
             * @see surveyId
             * @see locale
             */
-        loadingHtml: string;
-        readonly locLoadingHtml: LocalizableString;
+        get loadingHtml(): string;
+        set loadingHtml(value: string);
+        get locLoadingHtml(): LocalizableString;
         /**
             * Gets or sets the 'Start' button caption.
             * The 'Start' button is shown on the started page. Set the `firstPageIsStarted` property to `true`, to display the started page.
             * @see firstPageIsStarted
             * @see locale
             */
-        startSurveyText: string;
-        readonly locStartSurveyText: LocalizableString;
+        get startSurveyText(): string;
+        set startSurveyText(newValue: string);
+        get locStartSurveyText(): LocalizableString;
         /**
             * Gets or sets the 'Prev' button caption.
             * @see locale
             */
-        pagePrevText: string;
-        readonly locPagePrevText: LocalizableString;
+        get pagePrevText(): string;
+        set pagePrevText(newValue: string);
+        get locPagePrevText(): LocalizableString;
         /**
             * Gets or sets the 'Next' button caption.
             * @see locale
             */
-        pageNextText: string;
-        readonly locPageNextText: LocalizableString;
+        get pageNextText(): string;
+        set pageNextText(newValue: string);
+        get locPageNextText(): LocalizableString;
         /**
             *  Gets or sets the 'Complete' button caption.
             * @see locale
             */
-        completeText: string;
-        readonly locCompleteText: LocalizableString;
+        get completeText(): string;
+        set completeText(newValue: string);
+        get locCompleteText(): LocalizableString;
         /**
             *  Gets or sets the 'Preview' button caption.
             * @see locale
@@ -7360,8 +7764,9 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see editText
             * @see showPreview
             */
-        previewText: string;
-        readonly locPreviewText: LocalizableString;
+        get previewText(): string;
+        set previewText(newValue: string);
+        get locPreviewText(): LocalizableString;
         /**
             *  Gets or sets the 'Edit' button caption.
             * @see locale
@@ -7369,8 +7774,9 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see previewText
             * @see cancelPreview
             */
-        editText: string;
-        readonly locEditText: LocalizableString;
+        get editText(): string;
+        set editText(newValue: string);
+        get locEditText(): LocalizableString;
         /**
             * Set the pattern for question title. Default is "numTitleRequire", 1. What is your name? *,
             * You can set it to numRequireTitle: 1. * What is your name?
@@ -7378,21 +7784,24 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * You can set it to numTitle (remove require symbol completely): 1. What is your name?
             * @see QuestionModel.title
             */
-        questionTitlePattern: string;
+        get questionTitlePattern(): string;
+        set questionTitlePattern(val: string);
         getQuestionTitlePatternOptions(): Array<any>;
         /**
             * Gets or sets a question title template. Obsolete, please use questionTitlePattern
             * @see QuestionModel.title
             * @see questionTitlePattern
             */
-        questionTitleTemplate: string;
-        readonly locQuestionTitleTemplate: LocalizableString;
+        get questionTitleTemplate(): string;
+        set questionTitleTemplate(value: string);
+        get locQuestionTitleTemplate(): LocalizableString;
         getUpdatedQuestionTitle(question: IQuestion, title: string): string;
         getUpdatedQuestionNo(question: IQuestion, no: string): string;
         /**
             * Gets or sets whether the survey displays page numbers on pages titles.
             */
-        showPageNumbers: boolean;
+        get showPageNumbers(): boolean;
+        set showPageNumbers(value: boolean);
         /**
             * Gets or sets a value that specifies how the question numbers are displayed.
             *
@@ -7402,7 +7811,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `onpage` - display question numbers, start numbering on every page
             * - `off` - turn off the numbering for questions titles
             */
-        showQuestionNumbers: string;
+        get showQuestionNumbers(): string;
+        set showQuestionNumbers(value: string);
         /**
             * Gets or sets the survey progress bar position.
             *
@@ -7413,7 +7823,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `bottom` - show progress bar in the bottom
             * - `both` - show progress bar in both sides: top and bottom.
             */
-        showProgressBar: string;
+        get showProgressBar(): string;
+        set showProgressBar(newValue: string);
         /**
             * Gets or sets the type of info in the progress bar.
             *
@@ -7425,13 +7836,14 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `correctQuestions`,
             * - `buttons`
             */
-        progressBarType: string;
-        readonly isShowProgressBarOnTop: boolean;
-        readonly isShowProgressBarOnBottom: boolean;
+        get progressBarType(): string;
+        set progressBarType(newValue: string);
+        get isShowProgressBarOnTop(): boolean;
+        get isShowProgressBarOnBottom(): boolean;
         /**
             * Returns the text/HTML that is rendered as a survey title.
             */
-        readonly processedTitle: string;
+        get processedTitle(): string;
         /**
             * Gets or sets the question title location.
             *
@@ -7443,7 +7855,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             *
             * > Some questions, for example matrixes, do not support 'left' value. The title for them will be displayed to the top.
             */
-        questionTitleLocation: string;
+        get questionTitleLocation(): string;
+        set questionTitleLocation(value: string);
         protected updateElementCss(): void;
         /**
             * Gets or sets the error message position.
@@ -7453,7 +7866,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `top` - to show question error(s) over the question,
             * - `bottom` - to show question error(s) under the question.
             */
-        questionErrorLocation: string;
+        get questionErrorLocation(): string;
+        set questionErrorLocation(value: string);
         /**
             * Gets or sets the question description position.
             *
@@ -7462,7 +7876,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `underTitle` - show question description under the question title,
             * - `underInput` - show question description under the question input instead of question title.
             */
-        questionDescriptionLocation: string;
+        get questionDescriptionLocation(): string;
+        set questionDescriptionLocation(value: string);
         /**
             * Gets or sets the survey edit mode.
             *
@@ -7471,7 +7886,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `edit` (default) - make a survey editable,
             * - `display` - make a survey read-only.
             */
-        mode: string;
+        get mode(): string;
+        set mode(value: string);
         /**
             * Gets or sets an object that stores the survey results/data. You can set it directly as `{ 'question name': questionValue, ... }`
             *
@@ -7481,7 +7897,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see mergeData
             * @see currentPageNo
             */
-        data: any;
+        get data(): any;
+        set data(data: any);
         /**
             * Merge the values into survey.data. It works as survey.data, except it doesn't clean the existing data, but overrides them.
             * @param data data to merge. It should be an object {keyValue: Value, ...}
@@ -7490,8 +7907,9 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             */
         mergeData(data: any): void;
         setDataCore(data: any): void;
-        editingObj: Base;
-        readonly isEditingSurveyElement: boolean;
+        get editingObj(): Base;
+        set editingObj(val: Base);
+        get isEditingSurveyElement(): boolean;
         getAllValues(): any;
         /**
             * Returns survey result data as an array of plain objects: with question `title`, `name`, `value`, and `displayValue`.
@@ -7516,47 +7934,49 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Returns all comments from the data.
             * @see data
             */
-        readonly comments: any;
+        get comments(): any;
         /**
             * Returns a list of visible pages. If all pages are visible, then this property returns the same list as the `pages` property.
             * @see pages
             * @see PageModel.visible
             * @see PageModel.visibleIf
             */
-        readonly visiblePages: Array<PageModel>;
+        get visiblePages(): Array<PageModel>;
         /**
             * Returns `true` if the survey contains no pages. The survey is empty.
             */
-        readonly isEmpty: boolean;
+        get isEmpty(): boolean;
         /**
             * Deprecated. Use the `pageCount` property instead.
             */
-        readonly PageCount: number;
+        get PageCount(): number;
         /**
             * Returns the survey page count.
             * @see visiblePageCount
             * @see pages
             */
-        readonly pageCount: number;
+        get pageCount(): number;
         /**
             * Returns a number of visible pages within the survey.
             * @see pageCount
             * @see visiblePages
             */
-        readonly visiblePageCount: number;
+        get visiblePageCount(): number;
         /**
             * Returns the started page. This property works if the `firstPageIsStarted` property is set to `true`.
             * @see firstPageIsStarted
             */
-        readonly startedPage: PageModel;
+        get startedPage(): PageModel;
         /**
             * Gets or sets the current survey page. If a survey is rendered, then this property returns a page that a user can see/edit.
             */
-        currentPage: any;
+        get currentPage(): any;
+        set currentPage(value: any);
         /**
             * The zero-based index of the current page in the visible pages array.
             */
-        currentPageNo: number;
+        get currentPageNo(): number;
+        set currentPageNo(value: number);
         /**
             * Gets or sets the question display order. Use this property to randomize questions. You can randomize questions on a specific page.
             *
@@ -7566,7 +7986,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `initial` - keep questions in the same order, as in a survey model.
             * @see SurveyPage.questionsOrder
             */
-        questionsOrder: string;
+        get questionsOrder(): string;
+        set questionsOrder(val: string);
         /**
             * Sets the input focus to the first question with the input field.
             */
@@ -7584,9 +8005,9 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             *
             * Details: [Preview State](https://surveyjs.io/Documentation/Library#states)
             */
-        readonly state: string;
-        readonly completedState: string;
-        readonly completedStateText: string;
+        get state(): string;
+        get completedState(): string;
+        get completedStateText(): string;
         protected setCompletedState(value: string, text: string): void;
         /**
             * Clears the survey data and state. If the survey has a `completed` state, it will get a `running` state.
@@ -7613,31 +8034,31 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * It depends from progressBarType property
             * @see progressBarType
             */
-        readonly progressValue: number;
+        get progressValue(): number;
         /**
             * Returns the navigation buttons (i.e., 'Prev', 'Next', or 'Complete') position.
             */
-        readonly isNavigationButtonsShowing: string;
+        get isNavigationButtonsShowing(): string;
         /**
             * Returns `true` if the survey is in edit mode.
             * @see mode
             */
-        readonly isEditMode: boolean;
-        readonly isCompleteButtonVisible: boolean;
-        readonly isPreviewButtonVisible: boolean;
-        readonly isCancelPreviewButtonVisible: boolean;
+        get isEditMode(): boolean;
+        get isCompleteButtonVisible(): boolean;
+        get isPreviewButtonVisible(): boolean;
+        get isCancelPreviewButtonVisible(): boolean;
         /**
             * Returns `true` if the survey is in display mode or in preview mode.
             * @see mode
             * @see showPreviewBeforeComplete
             */
-        readonly isDisplayMode: boolean;
-        readonly isUpdateValueTextOnTyping: boolean;
+        get isDisplayMode(): boolean;
+        get isUpdateValueTextOnTyping(): boolean;
         /**
             * Returns `true` if the survey is in design mode. It is used by SurveyJS Editor.
             * @see setDesignMode
             */
-        readonly isDesignMode: boolean;
+        get isDesignMode(): boolean;
         /**
             * Sets the survey into design mode.
             * @param value use true to set the survey into the design mode.
@@ -7646,9 +8067,10 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
         /**
             * Gets or sets whether to show all elements in the survey, regardless their visibility. The default value is `false`.
             */
-        showInvisibleElements: boolean;
-        readonly areInvisibleElementsShowing: boolean;
-        readonly areEmptyElementsHidden: boolean;
+        get showInvisibleElements(): boolean;
+        set showInvisibleElements(val: boolean);
+        get areInvisibleElementsShowing(): boolean;
+        get areEmptyElementsHidden(): boolean;
         /**
             * Returns `true`, if a user has already completed the survey in this browser and there is a cookie about it. Survey goes to `completed` state if the function returns `true`.
             * @see cookieName
@@ -7656,7 +8078,7 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see deleteCookie
             * @see state
             */
-        readonly hasCookie: boolean;
+        get hasCookie(): boolean;
         /**
             * Set the cookie with `cookieName` in user's browser. It is done automatically on survey complete if the `cookieName` property value is not empty.
             * @see cookieName
@@ -7694,7 +8116,7 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Returns `true`, if the current page contains errors, for example, the required question is empty or a question validation is failed.
             * @see nextPage
             */
-        readonly isCurrentPageHasErrors: boolean;
+        get isCurrentPageHasErrors(): boolean;
         /**
             * Returns `true`, if any of the survey pages contains errors.
             * @param fireCallback set it to `true`, to show errors in UI.
@@ -7749,7 +8171,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Obsolete. Use the `questionsOnPageMode` property instead.
             * @see questionsOnPageMode
             */
-        isSinglePage: boolean;
+        get isSinglePage(): boolean;
+        set isSinglePage(val: boolean);
         /**
             * Gets or sets a value that specifies how the survey combines questions, panels, and pages.
             *
@@ -7758,12 +8181,14 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * - `singlePage` - combine all survey pages in a single page. Pages will be converted to panels.
             * - `questionPerPage` - show one question per page. Survey will create a separate page for every question.
             */
-        questionsOnPageMode: string;
+        get questionsOnPageMode(): string;
+        set questionsOnPageMode(val: string);
         /**
             * Gets or sets whether the first survey page is a start page. Set this property to `true`, to make the first page a starting page.
             * An end user cannot navigate to the start page and the start page does not affect a survey progress.
             */
-        firstPageIsStarted: boolean;
+        get firstPageIsStarted(): boolean;
+        set firstPageIsStarted(val: boolean);
         isPageStarted(page: IPage): boolean;
         /**
             * Set this property to "showAllQuestions" or "showAnsweredQuestions" to allow respondents to preview answers before submitting the survey results.
@@ -7776,8 +8201,9 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see previewText
             * @see editText
             */
-        showPreviewBeforeComplete: string;
-        readonly isShowPreviewBeforeComplete: boolean;
+        get showPreviewBeforeComplete(): string;
+        set showPreviewBeforeComplete(val: string);
+        get isShowPreviewBeforeComplete(): boolean;
         protected onFirstPageIsStartedChanged(): void;
         runningPages: any;
         origionalPages: any;
@@ -7785,12 +8211,12 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
         /**
             * Gets whether the current page is the first one.
             */
-        readonly isFirstPage: boolean;
-        readonly isShowPrevButton: boolean;
+        get isFirstPage(): boolean;
+        get isShowPrevButton(): boolean;
         /**
             * Gets whether the current page is the last one.
             */
-        readonly isLastPage: boolean;
+        get isLastPage(): boolean;
         /**
             * Completes the survey.
             *
@@ -7823,7 +8249,7 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Gets whether the question values on the current page are validating on the server at the current moment.
             * @see onServerValidateQuestions
             */
-        readonly isValidatingOnServer: boolean;
+        get isValidatingOnServer(): boolean;
         protected onIsValidatingOnServerChanged(): void;
         protected doServerValidation(doComplete: boolean, isPreview?: boolean): boolean;
         protected doNextPage(): void;
@@ -7832,33 +8258,33 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Returns the HTML content for the complete page.
             * @see completedHtml
             */
-        readonly processedCompletedHtml: string;
+        get processedCompletedHtml(): string;
         /**
             * Returns the HTML content, that is shown to a user that had completed the survey before.
             * @see completedHtml
             * @see cookieName
             */
-        readonly processedCompletedBeforeHtml: string;
+        get processedCompletedBeforeHtml(): string;
         /**
             * Returns the HTML content, that is shows when a survey loads the survey JSON.
             */
-        readonly processedLoadingHtml: string;
+        get processedLoadingHtml(): string;
         getProgressInfo(): IProgressInfo;
         /**
             * Returns the text for the current progress.
             */
-        readonly progressText: string;
+        get progressText(): string;
         updateProgressText(onValueChanged?: boolean): void;
         getProgressText(): string;
         protected afterRenderSurvey(htmlElement: any): void;
         updateQuestionCssClasses(question: IQuestion, cssClasses: any): void;
         updatePanelCssClasses(panel: IPanel, cssClasses: any): void;
         updatePageCssClasses(page: IPage, cssClasses: any): void;
-        afterRenderPage(htmlElement: any): void;
-        afterRenderHeader(htmlElement: any): void;
-        afterRenderQuestion(question: IQuestion, htmlElement: any): void;
-        afterRenderQuestionInput(question: IQuestion, htmlElement: any): void;
-        afterRenderPanel(panel: IElement, htmlElement: any): void;
+        afterRenderPage(htmlElement: HTMLElement): void;
+        afterRenderHeader(htmlElement: HTMLElement): void;
+        afterRenderQuestion(question: IQuestion, htmlElement: HTMLElement): void;
+        afterRenderQuestionInput(question: IQuestion, htmlElement: HTMLElement): void;
+        afterRenderPanel(panel: IElement, htmlElement: HTMLElement): void;
         matrixBeforeRowAdded(options: any): void;
         matrixRowAdded(question: IQuestion, row: any): void;
         getQuestionByValueNameFromArray(valueName: string, name: string, index: number): IQuestion;
@@ -7868,15 +8294,17 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
         matrixAfterCellRender(question: IQuestion, options: any): void;
         matrixCellValueChanged(question: IQuestion, options: any): void;
         matrixCellValueChanging(question: IQuestion, options: any): void;
-        readonly isValidateOnValueChanging: boolean;
+        get isValidateOnValueChanging(): boolean;
         matrixCellValidate(question: IQuestion, options: any): SurveyError;
         dynamicPanelAdded(question: IQuestion): void;
         dynamicPanelRemoved(question: IQuestion, panelIndex: number, panel: IPanel): void;
         dynamicPanelItemValueChanged(question: IQuestion, options: any): void;
         dragAndDropAllow(options: any): boolean;
         renderTitleActions(element: ISurveyElement): boolean;
-        getUpdatedQuestionTitleActions(question: IQuestion, titleActions: Array<any>): any[];
-        getUpdatedPanelTitleActions(panel: IPanel, titleActions: Array<any>): any[];
+        elementContentVisibilityChanged(element: ISurveyElement): void;
+        getUpdatedQuestionTitleActions(question: IQuestion, titleActions: Array<IActionBarItem>): IActionBarItem[];
+        getUpdatedPanelTitleActions(panel: IPanel, titleActions: Array<IActionBarItem>): IActionBarItem[];
+        getUpdatedPageTitleActions(page: IPage, titleActions: Array<IActionBarItem>): IActionBarItem[];
         scrollElementToTop(element: ISurveyElement, question: IQuestion, page: IPage, id: string): any;
         /**
             * Uploads a file to server.
@@ -8106,9 +8534,10 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * Gets or sets whether to clear value on disable items in checkbox, dropdown and radiogroup questions.
             * By default, values are not cleared on disabled the corresponded items. This property is not persisted in survey JSON and you have to set it in code.
             */
-        clearValueOnDisableItems: boolean;
-        readonly isClearValueOnHidden: boolean;
-        readonly isClearValueOnHiddenContainer: boolean;
+        get clearValueOnDisableItems(): boolean;
+        set clearValueOnDisableItems(val: boolean);
+        get isClearValueOnHidden(): boolean;
+        get isClearValueOnHiddenContainer(): boolean;
         questionVisibilityChanged(question: IQuestion, newValue: boolean): void;
         pageVisibilityChanged(page: IPage, newValue: boolean): void;
         panelVisibilityChanged(panel: IPanel, newValue: boolean): void;
@@ -8152,9 +8581,10 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see startTimer
             * @see stopTimer
             */
-        showTimerPanel: string;
-        readonly isTimerPanelShowingOnTop: boolean;
-        readonly isTimerPanelShowingOnBottom: boolean;
+        get showTimerPanel(): string;
+        set showTimerPanel(val: string);
+        get isTimerPanelShowingOnTop(): boolean;
+        get isTimerPanelShowingOnBottom(): boolean;
         /**
             * Gets or set a value that specifies whether the timer displays information for the page or for the entire survey.
             *
@@ -8167,8 +8597,9 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see showTimerPanel
             * @see onTimerPanelInfoText
             */
-        showTimerPanelMode: string;
-        readonly timerInfoText: string;
+        get showTimerPanelMode(): string;
+        set showTimerPanelMode(val: string);
+        get timerInfoText(): string;
         /**
             * Starts a timer that will calculate how much time end-user spends on the survey or on pages.
             * @see stopTimer
@@ -8193,7 +8624,8 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see startTimer
             * @see maxTimeToFinishPage
             */
-        maxTimeToFinish: number;
+        get maxTimeToFinish(): number;
+        set maxTimeToFinish(val: number);
         /**
             * Gets or sets the maximum time in seconds that end user has to complete a page in the survey. If the value is 0 or less, an end user has no time limit.
             *
@@ -8202,9 +8634,10 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
             * @see maxTimeToFinish
             * @see PageModel.maxTimeToFinish
             */
-        maxTimeToFinishPage: number;
+        get maxTimeToFinishPage(): number;
+        set maxTimeToFinishPage(val: number);
         protected doTimer(): void;
-        geSurveyData(): ISurveyData;
+        getSurveyData(): ISurveyData;
         getSurvey(): ISurvey;
         getTextProcessor(): ITextProcessor;
         getObjects(pages: string[], questions: string[]): any[];
@@ -8224,14 +8657,18 @@ export declare class SurveyModel extends Base implements ISurvey, ISurveyData, I
     */
 export declare class Trigger extends Base {
         static operatorsValue: HashTable<Function>;
-        static readonly operators: HashTable<Function>;
+        static get operators(): HashTable<Function>;
         constructor();
         getType(): string;
         toString(): string;
-        operator: string;
-        value: any;
-        name: string;
-        expression: string;
+        get operator(): string;
+        set operator(value: string);
+        get value(): any;
+        set value(val: any);
+        get name(): string;
+        set name(val: string);
+        get expression(): string;
+        set expression(val: string);
         checkExpression(keys: any, values: HashTable<any>, properties?: HashTable<any>): void;
         check(value: any): void;
         protected onSuccess(values: HashTable<any>, properties: HashTable<any>): void;
@@ -8252,9 +8689,10 @@ export interface ISurveyTriggerOwner {
 export declare class SurveyTrigger extends Trigger {
         protected ownerValue: ISurveyTriggerOwner;
         constructor();
-        readonly owner: ISurveyTriggerOwner;
+        get owner(): ISurveyTriggerOwner;
         setOwner(owner: ISurveyTriggerOwner): void;
-        readonly isOnNextPage: boolean;
+        getSurvey(): ISurvey;
+        get isOnNextPage(): boolean;
 }
 /**
     * If expression returns true, it makes questions/pages visible.
@@ -8276,7 +8714,7 @@ export declare class SurveyTriggerVisible extends SurveyTrigger {
 export declare class SurveyTriggerComplete extends SurveyTrigger {
         constructor();
         getType(): string;
-        readonly isOnNextPage: boolean;
+        get isOnNextPage(): boolean;
         protected onSuccess(values: HashTable<any>, properties: HashTable<any>): void;
 }
 /**
@@ -8285,9 +8723,12 @@ export declare class SurveyTriggerComplete extends SurveyTrigger {
 export declare class SurveyTriggerSetValue extends SurveyTrigger {
         constructor();
         getType(): string;
-        setToName: string;
-        setValue: any;
-        isVariable: boolean;
+        get setToName(): string;
+        set setToName(val: string);
+        get setValue(): any;
+        set setValue(val: any);
+        get isVariable(): boolean;
+        set isVariable(val: boolean);
         protected onSuccess(values: HashTable<any>, properties: HashTable<any>): void;
 }
 /**
@@ -8296,8 +8737,9 @@ export declare class SurveyTriggerSetValue extends SurveyTrigger {
 export declare class SurveyTriggerSkip extends SurveyTrigger {
         constructor();
         getType(): string;
-        gotoName: string;
-        readonly isOnNextPage: boolean;
+        get gotoName(): string;
+        set gotoName(val: string);
+        get isOnNextPage(): boolean;
         protected onSuccess(values: HashTable<any>, properties: HashTable<any>): void;
 }
 /**
@@ -8306,8 +8748,10 @@ export declare class SurveyTriggerSkip extends SurveyTrigger {
 export declare class SurveyTriggerRunExpression extends SurveyTrigger {
         constructor();
         getType(): string;
-        setToName: string;
-        runExpression: string;
+        get setToName(): string;
+        set setToName(val: string);
+        get runExpression(): string;
+        set runExpression(val: string);
         protected onSuccess(values: HashTable<any>, properties: HashTable<any>): void;
 }
 /**
@@ -8315,8 +8759,10 @@ export declare class SurveyTriggerRunExpression extends SurveyTrigger {
     */
 export declare class SurveyTriggerCopyValue extends SurveyTrigger {
         constructor();
-        setToName: string;
-        fromName: string;
+        get setToName(): string;
+        set setToName(val: string);
+        get fromName(): string;
+        set fromName(val: string);
         getType(): string;
         protected onSuccess(values: HashTable<any>, properties: HashTable<any>): void;
 }
@@ -8338,7 +8784,7 @@ export declare class SurveyWindowModel extends Base {
             * A survey object.
             * @see SurveyModel
             */
-        readonly survey: SurveyModel;
+        get survey(): SurveyModel;
         /**
             * Set this value to negative value, for example -1, to avoid closing the window on completing the survey. Leave it equals to 0 (default value) to close the window immediately, or set it to 3, 5, 10, ... to close the window in 3, 5, 10 seconds.
             */
@@ -8348,7 +8794,8 @@ export declare class SurveyWindowModel extends Base {
             * @see show
             * @see hide
             */
-        isShowing: boolean;
+        get isShowing(): boolean;
+        set isShowing(val: boolean);
         /**
             * Show the window
             * @see hide
@@ -8366,12 +8813,14 @@ export declare class SurveyWindowModel extends Base {
             * @see expand
             * @see collapse
             */
-        isExpanded: boolean;
+        get isExpanded(): boolean;
+        set isExpanded(val: boolean);
         /**
             * The window and survey title.
             */
-        title: string;
-        readonly locTitle: LocalizableString;
+        get title(): string;
+        set title(value: string);
+        get locTitle(): LocalizableString;
         /**
             * Expand the window to show the survey.
             */
@@ -8403,14 +8852,14 @@ export declare class TextPreProcessor {
     constructor();
     process(text: string, returnDisplayValue?: boolean, doEncoding?: boolean): string;
     processValue(name: string, returnDisplayValue: boolean): TextPreProcessorValue;
-    readonly hasAllValuesOnLastRun: boolean;
+    get hasAllValuesOnLastRun(): boolean;
 }
 export declare class QuestionTextProcessor implements ITextProcessor {
     protected variableName: string;
     constructor(variableName: string);
     processValue(name: string, returnDisplayValue: boolean): TextPreProcessorValue;
-    protected readonly survey: ISurvey;
-    protected readonly panel: PanelModel;
+    protected get survey(): ISurvey;
+    protected get panel(): PanelModel;
     protected getValues(): any;
     protected getQuestionByName(name: string): Question;
     protected onCustomProcessText(textValue: TextPreProcessorValue): boolean;
@@ -8422,7 +8871,8 @@ export declare class QuestionTextProcessor implements ITextProcessor {
   * The class contains methods to work with api.surveyjs.io service.
   */
 export declare class dxSurveyService {
-    static serviceUrl: string;
+    static get serviceUrl(): string;
+    static set serviceUrl(val: string);
     constructor();
     loadSurvey(surveyId: string, onLoad: (success: boolean, result: string, response: any) => void): void;
     getSurveyJsonAndIsCompleted(surveyId: string, clientId: string, onLoad: (success: boolean, surveyJson: any, result: string, response: any) => void): void;
@@ -8455,6 +8905,8 @@ export declare var englishStrings: {
     requiredErrorInPanel: string;
     requiredInAllRowsError: string;
     numericError: string;
+    minError: string;
+    maxError: string;
     textMinLength: string;
     textMaxLength: string;
     textMinMaxLength: string;
@@ -8479,6 +8931,7 @@ export declare var englishStrings: {
     addColumn: string;
     addRow: string;
     removeRow: string;
+    emptyRowsText: string;
     addPanel: string;
     removePanel: string;
     choices_Item: string;
@@ -8524,7 +8977,7 @@ export declare var surveyLocalization: {
     getLocaleStrings(loc: string): any;
     getCurrentStrings(): any;
     getString: (strName: string) => any;
-    getLocales: (removeDefaultLoc?: boolean) => string[];
+    getLocales: (removeDefaultLoc?: boolean) => Array<string>;
 };
 export declare var surveyStrings: {
     pagePrevText: string;
@@ -8549,6 +9002,8 @@ export declare var surveyStrings: {
     requiredErrorInPanel: string;
     requiredInAllRowsError: string;
     numericError: string;
+    minError: string;
+    maxError: string;
     textMinLength: string;
     textMaxLength: string;
     textMinMaxLength: string;
@@ -8573,6 +9028,7 @@ export declare var surveyStrings: {
     addColumn: string;
     addRow: string;
     removeRow: string;
+    emptyRowsText: string;
     addPanel: string;
     removePanel: string;
     choices_Item: string;
@@ -8615,14 +9071,14 @@ export declare class QuestionCustomWidget {
         isFit(question: IQuestion): boolean;
         init(): void;
         activatedByChanged(activatedBy: string): void;
-        readonly isDefaultRender: boolean;
-        readonly pdfQuestionType: string;
-        readonly pdfRender: any;
+        get isDefaultRender(): boolean;
+        get pdfQuestionType(): string;
+        get pdfRender(): any;
 }
 export declare class CustomWidgetCollection {
         static Instance: CustomWidgetCollection;
         onCustomWidgetAdded: Event<(customWidget: QuestionCustomWidget) => any, any>;
-        readonly widgets: Array<QuestionCustomWidget>;
+        get widgets(): Array<QuestionCustomWidget>;
         add(widgetJson: any, activatedBy?: string): void;
         addCustomWidget(widgetJson: any, activatedBy?: string): void;
         /**
@@ -8654,7 +9110,7 @@ export declare class ComponentQuestionJSON {
     onPropertyChanged(question: Question, propertyName: string, newValue: any): void;
     onValueChanged(question: Question, name: string, newValue: any): void;
     onItemValuePropertyChanged(question: Question, item: ItemValue, propertyName: string, name: string, newValue: any): void;
-    readonly isComposite: boolean;
+    get isComposite(): boolean;
 }
 export declare class ComponentCollection {
     static Instance: ComponentCollection;
@@ -8662,7 +9118,7 @@ export declare class ComponentCollection {
     onCreateCustom: (name: string, questionJSON: ComponentQuestionJSON) => QuestionCustomModel;
     onAddingJson: (name: string, isComposite: boolean) => void;
     add(json: any): void;
-    readonly items: Array<ComponentQuestionJSON>;
+    get items(): Array<ComponentQuestionJSON>;
     getCustomQuestionByName(name: string): ComponentQuestionJSON;
     clear(): void;
     createQuestion(name: string, questionJSON: ComponentQuestionJSON): Question;
@@ -8670,7 +9126,6 @@ export declare class ComponentCollection {
     protected createCustomModel(name: string, questionJSON: ComponentQuestionJSON): QuestionCustomModel;
 }
 export declare abstract class QuestionCustomModelBase extends Question implements ISurveyImpl, ISurveyData, IPanel {
-    name: string;
     customQuestion: ComponentQuestionJSON;
     constructor(name: string, customQuestion: ComponentQuestionJSON);
     getType(): string;
@@ -8682,12 +9137,11 @@ export declare abstract class QuestionCustomModelBase extends Question implement
     protected initElement(el: SurveyElement): void;
     setSurveyImpl(value: ISurveyImpl): void;
     onSurveyLoad(): void;
-    afterRenderQuestionElement(el: any): void;
+    afterRenderQuestionElement(el: HTMLElement): void;
     afterRender(el: any): void;
     protected setQuestionValue(newValue: any, updateIsAnswered?: boolean): void;
     protected setNewValue(newValue: any): void;
-    geSurveyData(): ISurveyData;
-    getSurvey(): ISurvey;
+    getSurveyData(): ISurveyData;
     getTextProcessor(): ITextProcessor;
     getValue(name: string): any;
     setValue(name: string, newValue: any, locNotification: any, allowNotifyValueChanged?: boolean): any;
@@ -8706,8 +9160,9 @@ export declare abstract class QuestionCustomModelBase extends Question implement
     getQuestionStartIndex(): string;
     getChildrenLayoutType(): string;
     elementWidthChanged(el: IElement): void;
-    readonly elements: Array<IElement>;
+    get elements(): Array<IElement>;
     indexOf(el: IElement): number;
+    ensureRowsVisibility(): void;
 }
 export declare class QuestionCustomModel extends QuestionCustomModelBase {
     getTemplate(): string;
@@ -8716,7 +9171,7 @@ export declare class QuestionCustomModel extends QuestionCustomModelBase {
     onAnyValueChanged(name: string): void;
     hasErrors(fireCallback?: boolean, rec?: any): boolean;
     focus(onError?: boolean): void;
-    readonly contentQuestion: Question;
+    get contentQuestion(): Question;
     protected createQuestion(): Question;
     onSurveyLoad(): void;
     runCondition(values: HashTable<any>, properties: HashTable<any>): void;
@@ -8728,7 +9183,6 @@ export declare class QuestionCustomModel extends QuestionCustomModelBase {
     protected updateElementCssCore(cssClasses: any): void;
 }
 export declare class QuestionCompositeModel extends QuestionCustomModelBase {
-    name: string;
     customQuestion: ComponentQuestionJSON;
     static ItemVariableName: string;
     constructor(name: string, customQuestion: ComponentQuestionJSON);
@@ -8736,7 +9190,7 @@ export declare class QuestionCompositeModel extends QuestionCustomModelBase {
     getTemplate(): string;
     protected getCssType(): string;
     protected getElement(): SurveyElement;
-    readonly contentPanel: PanelModel;
+    get contentPanel(): PanelModel;
     hasErrors(fireCallback?: boolean, rec?: any): boolean;
     updateElementCss(): void;
     getTextProcessor(): ITextProcessor;
@@ -8789,29 +9243,202 @@ export declare class StylesManager {
     initializeStyles(sheet: CSSStyleSheet): void;
 }
 
+export interface IActionBarItem {
+        /**
+            * Unique string id
+            */
+        id: string;
+        /**
+            * Set this property to false to make the toolbar item invisible.
+            */
+        visible?: boolean;
+        /**
+            * Toolbar item title
+            */
+        title?: string;
+        /**
+            * Toolbar item tooltip
+            */
+        tooltip?: string;
+        /**
+            * Set this property to false to disable the toolbar item.
+            */
+        enabled?: boolean;
+        /**
+            * Set this property to false to hide the toolbar item title.
+            */
+        showTitle?: boolean;
+        /**
+            * A callback that calls on toolbar item click.
+            */
+        action?: (context?: any) => void;
+        /**
+            * Toolbar item css class
+            */
+        css?: (() => string) | string;
+        /**
+            * Toolbar inner element css class
+            */
+        innerCss?: string;
+        /**
+            * Toolbar item data object. Used as data for custom template or component rendering
+            */
+        data?: any;
+        popupModel?: any;
+        needSeparator?: boolean;
+        /**
+            * Set this property to true to activate the toolbar item (page)
+            */
+        active?: (() => boolean) | boolean;
+        /**
+            * Toolbar item template name
+            */
+        template?: string;
+        /**
+            * Toolbar item component name
+            */
+        component?: string;
+        /**
+            * Toolbar item icon name
+            */
+        iconName?: (() => string) | string;
+        /**
+            * Toolbar item child items. Can be used as contianer for options
+            */
+        items?: any;
+}
+export declare class ActionBarItem extends Base implements IActionBarItem {
+        constructor(item: IActionBarItem);
+        id: string;
+        visible?: boolean;
+        title?: string;
+        tooltip?: string;
+        enabled?: boolean;
+        showTitle?: boolean;
+        action?: (context?: any) => void;
+        css?: (() => string) | string;
+        innerCss?: string;
+        data?: any;
+        popupModel?: any;
+        needSeparator?: boolean;
+        active?: boolean | (() => boolean);
+        template?: string;
+        component?: string;
+        iconName?: (() => string) | string;
+        items?: any;
+}
+export declare class AdaptiveActionBarItemWrapper extends Base implements IActionBarItem {
+        constructor(owner: AdaptiveElement, item: IActionBarItem);
+        get wrappedItem(): IActionBarItem;
+        get id(): string;
+        get visible(): boolean;
+        get title(): string;
+        get tooltip(): string;
+        get enabled(): boolean;
+        get disabled(): boolean;
+        get showTitle(): boolean;
+        action(context?: any): void;
+        get css(): (() => string) | string;
+        get innerCss(): string;
+        get data(): any;
+        get popupModel(): any;
+        get active(): boolean;
+        get template(): string;
+        get component(): string;
+        get iconName(): string;
+        get items(): any;
+        isVisible: boolean;
+        needSeparator: boolean;
+}
+export declare class AdaptiveElement extends Base {
+        showTitles: boolean;
+        items: Array<AdaptiveActionBarItemWrapper>;
+        invisibleItems: Array<AdaptiveActionBarItemWrapper>;
+        protected dotsItem: AdaptiveActionBarItemWrapper;
+        dotsItemPopupModel: PopupModel;
+        constructor();
+        get hasItems(): boolean;
+        invisibleItemSelected(item: AdaptiveActionBarItemWrapper): void;
+        protected invisibleItemsListModel: ListModel;
+        showFirstN(visibleItemsCount: number): void;
+        get canShrink(): boolean;
+        readonly canGrow = true;
+        shrink(): void;
+        grow(): void;
+}
+
+export declare class ListModel extends Base {
+    onItemSelect: (item: IActionBarItem) => void;
+    allowSelection: boolean;
+    isExpanded: boolean;
+    selectedItem: IActionBarItem;
+    constructor(items: Array<IActionBarItem>, onItemSelect: (item: IActionBarItem) => void, allowSelection: boolean, selectedItem?: IActionBarItem);
+    get items(): Array<IActionBarItem>;
+    set items(value: Array<IActionBarItem>);
+    selectItem: (itemValue: IActionBarItem) => void;
+    isItemDisabled: (itemValue: IActionBarItem) => boolean;
+    isItemSelected: (itemValue: IActionBarItem) => boolean;
+    getItemClass: (itemValue: IActionBarItem) => string;
+}
+
+export declare class PopupModel extends Base {
+    contentComponentName: string;
+    contentComponentData: any;
+    verticalPosition: "top" | "bottom" | "middle";
+    horizontalPosition: "left" | "right" | "center";
+    showPointer: boolean;
+    isModal: boolean;
+    onCancel: () => void;
+    onApply: () => void;
+    onHide: () => void;
+    onShow: () => void;
+    cssClass: string;
+    constructor(contentComponentName: string, contentComponentData: any, verticalPosition?: "top" | "bottom" | "middle", horizontalPosition?: "left" | "right" | "center", showPointer?: boolean, isModal?: boolean, onCancel?: () => void, onApply?: () => void, onHide?: () => void, onShow?: () => void, cssClass?: string);
+    get isVisible(): boolean;
+    set isVisible(value: boolean);
+    toggleVisibility(): void;
+    onVisibilityChanged: () => void;
+}
+export declare class PopupViewModel extends Base {
+    model: PopupModel;
+    targetElement?: HTMLElement;
+    top: string | number;
+    left: string | number;
+    popupDirection: string;
+    pointerTarget: {
+        top: string | number;
+        left: string | number;
+    };
+    container: HTMLElement;
+    constructor(model: PopupModel, targetElement?: HTMLElement);
+    get isVisible(): boolean;
+    get contentComponentName(): string;
+    get contentComponentData(): any;
+    get showPointer(): boolean;
+    get isModal(): boolean;
+    get styleClass(): string;
+    clickOutside(): void;
+    cancel(): void;
+    apply(): void;
+    get cancelButtonText(): any;
+    get applyButtonText(): any;
+    dispose(): void;
+    initializePopupContainer(): void;
+    destroyPopupContainer(): void;
+}
+
+export declare const IsMobile: boolean;
+
 export declare var ActionBarItemViewModel: any;
 
 export declare var ActionBarSeparatorViewModel: any;
 
 export declare var ActionBarItemDropdownViewModel: any;
 
-export declare class ActionBarItemModalViewModel {
-    koIsVisible: any;
-    constructor(_item: IActionBarItem);
-    readonly iconName: string;
-    readonly contentComponentName: any;
-    readonly contentComponentData: any;
-    readonly contentTemplateName: any;
-    readonly onShow: any;
-    readonly onApply: any;
-    readonly onCancel: any;
-}
-
 /**
     * A Model for a matrix base question.
     */
 export declare class QuestionMatrixBaseModel<TRow, TColumn> extends Question {
-        name: string;
         protected filteredColumns: Array<TColumn>;
         protected filteredRows: Array<ItemValue>;
         protected generatedVisibleRows: Array<TRow>;
@@ -8820,37 +9447,42 @@ export declare class QuestionMatrixBaseModel<TRow, TColumn> extends Question {
         protected createColumnValues(): any;
         constructor(name: string);
         getType(): string;
-        readonly isCompositeQuestion: boolean;
+        get isCompositeQuestion(): boolean;
         /**
             * Set this property to false, to hide table header. The default value is true.
             */
-        showHeader: boolean;
+        get showHeader(): boolean;
+        set showHeader(val: boolean);
         /**
             * The list of columns. A column has a value and an optional text
             */
-        columns: Array<any>;
-        readonly visibleColumns: Array<any>;
+        get columns(): Array<any>;
+        set columns(newValue: Array<any>);
+        get visibleColumns(): Array<any>;
         /**
             * The list of rows. A row has a value and an optional text
             */
-        rows: Array<any>;
+        get rows(): Array<any>;
+        set rows(newValue: Array<any>);
         protected processRowsOnSet(newRows: Array<any>): any[];
         protected getVisibleRows(): Array<TRow>;
         /**
             * Returns the list of visible rows as model objects.
             * @see rowsVisibleIf
             */
-        readonly visibleRows: Array<TRow>;
+        get visibleRows(): Array<TRow>;
         /**
             * An expression that returns true or false. It runs against each row item and if for this item it returns true, then the item is visible otherwise the item becomes invisible. Please use {item} to get the current item value in the expression.
             * @see visibleIf
             */
-        rowsVisibleIf: string;
+        get rowsVisibleIf(): string;
+        set rowsVisibleIf(val: string);
         /**
             * An expression that returns true or false. It runs against each column item and if for this item it returns true, then the item is visible otherwise the item becomes invisible. Please use {item} to get the current item value in the expression.
             * @see rowsVisibleIf
             */
-        columnsVisibleIf: string;
+        get columnsVisibleIf(): string;
+        set columnsVisibleIf(val: string);
         runCondition(values: HashTable<any>, properties: HashTable<any>): void;
         protected filterItems(): boolean;
         protected onColumnsChanged(): void;

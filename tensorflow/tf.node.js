@@ -27,7 +27,7 @@ var tfjsBackendWebgl = require('@tensorflow/tfjs-backend-webgl');
 
 /** @license See the LICENSE file. */
 // This code is auto-generated, do not modify this file!
-var version = '2.8.5';
+var version = '2.8.6';
 
 /**
  * @license

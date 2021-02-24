@@ -1,4 +1,4 @@
-/*! UIkit 3.6.13 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! UIkit 3.6.16 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -1008,19 +1008,23 @@
     };
 
     function ajax(url, options) {
+
+        var env = assign({
+            data: null,
+            method: 'GET',
+            headers: {},
+            xhr: new XMLHttpRequest(),
+            beforeSend: noop,
+            responseType: ''
+        }, options);
+
+        return Promise.resolve()
+            .then(function () { return env.beforeSend(env); })
+            .then(function () { return send(url, env); });
+    }
+
+    function send(url, env) {
         return new Promise(function (resolve, reject) {
-
-            var env = assign({
-                data: null,
-                method: 'GET',
-                headers: {},
-                xhr: new XMLHttpRequest(),
-                beforeSend: noop,
-                responseType: ''
-            }, options);
-
-            env.beforeSend(env);
-
             var xhr = env.xhr;
 
             for (var prop in env) {
@@ -2306,7 +2310,7 @@
             return 0;
         }
 
-        var ref = scrollParents(element, /auto|scroll/);
+        var ref = scrollParents(element, /auto|scroll/, true);
         var scrollElement = ref[0];
         var clientHeight = scrollElement.clientHeight;
         var scrollHeight = scrollElement.scrollHeight;
@@ -3149,7 +3153,6 @@
 
         function normalizeData(ref, ref$1) {
             var data = ref.data;
-            var el = ref.el;
             var args = ref$1.args;
             var props = ref$1.props; if ( props === void 0 ) props = {};
 
@@ -3434,7 +3437,7 @@
     UIkit.data = '__uikit__';
     UIkit.prefix = 'uk-';
     UIkit.options = {};
-    UIkit.version = '3.6.13';
+    UIkit.version = '3.6.16';
 
     globalAPI(UIkit);
     hooksAPI(UIkit);
@@ -3690,21 +3693,25 @@
                                 : this$1.hasTransition
                                     ? toggleHeight(this$1)
                                     : toggleAnimation(this$1)
-                        )(el, show) || Promise.resolve();
+                        )(el, show);
 
-                        addClass(el, show ? this$1.clsEnter : this$1.clsLeave);
+                        var cls = show ? this$1.clsEnter : this$1.clsLeave;
+
+                        addClass(el, cls);
 
                         trigger(el, show ? 'show' : 'hide', [this$1]);
 
-                        promise
-                            .catch(noop)
-                            .then(function () { return removeClass(el, show ? this$1.clsEnter : this$1.clsLeave); });
-
-                        return promise.then(function () {
-                            removeClass(el, show ? this$1.clsEnter : this$1.clsLeave);
+                        var done = function () {
+                            removeClass(el, cls);
                             trigger(el, show ? 'shown' : 'hidden', [this$1]);
                             this$1.$update(el);
-                        });
+                        };
+
+                        return promise ? promise.then(done, function () {
+                            removeClass(el, cls);
+                            return Promise.reject();
+                        }) : done();
+
                     })).then(resolve, noop); }
                 );
             },
@@ -4221,7 +4228,7 @@
         data: {
             mode: ['click', 'hover'],
             toggle: '- *',
-            boundary: inBrowser && window,
+            boundary: true,
             boundaryAlign: false,
             delayShow: 0,
             delayHide: 800,
@@ -4235,7 +4242,7 @@
             boundary: function(ref, $el) {
                 var boundary = ref.boundary;
 
-                return query(boundary, $el);
+                return boundary === true ? window : query(boundary, $el);
             },
 
             clsDrop: function(ref) {
@@ -4582,7 +4589,7 @@
                 if (this.align === 'justify') {
                     var prop = this.getAxis() === 'y' ? 'width' : 'height';
                     css(this.$el, prop, alignTo[prop]);
-                } else if (this.$el.offsetWidth > Math.max(boundary.right - alignTo.left, alignTo.right - boundary.left)) {
+                } else if (this.boundary && this.$el.offsetWidth > Math.max(boundary.right - alignTo.left, alignTo.right - boundary.left)) {
                     addClass(this.$el, ((this.clsDrop) + "-stack"));
                 }
 
@@ -6283,7 +6290,9 @@
                     var this$1 = this;
 
 
-                    active$1.splice(active$1.indexOf(this), 1);
+                    if (includes(active$1, this)) {
+                        active$1.splice(active$1.indexOf(this), 1);
+                    }
 
                     if (!active$1.length) {
                         css(document.body, 'overflowY', '');
@@ -6310,11 +6319,6 @@
             show: function() {
                 var this$1 = this;
 
-
-                if (this.isToggled()) {
-                    return Promise.resolve();
-                }
-
                 if (this.container && parent(this.$el) !== this.container) {
                     append(this.container, this.$el);
                     return new Promise(function (resolve) { return requestAnimationFrame(function () { return this$1.show().then(resolve); }
@@ -6326,11 +6330,6 @@
             },
 
             hide: function() {
-
-                if (!this.isToggled()) {
-                    return Promise.resolve();
-                }
-
                 return this.toggleElement(this.$el, false, animate$1(this));
             }
 
@@ -7543,7 +7542,9 @@
 
                 name: 'load hashchange popstate',
 
-                el: inBrowser && window,
+                el: function() {
+                    return window;
+                },
 
                 handler: function() {
                     var this$1 = this;
@@ -7855,7 +7856,7 @@
 
                 watch: function(toggles) {
                     var active = this.index();
-                    this.show(~active && active || toggles[this.active] || toggles[0]);
+                    this.show(~active ? active : toggles[this.active] || toggles[0]);
                 },
 
                 immediate: true
@@ -8293,7 +8294,9 @@
 
                 name: 'visibilitychange',
 
-                el: inBrowser && document,
+                el: function() {
+                    return document;
+                },
 
                 handler: function() {
                     if (document.hidden) {
@@ -8674,7 +8677,7 @@
                 get: function(ref, $el) {
                     var attrItem = ref.attrItem;
 
-                    return $$(("[" + (this.attrItem) + "],[data-" + (this.attrItem) + "]"), $el);
+                    return $$(("[" + attrItem + "],[data-" + attrItem + "]"), $el);
                 },
 
                 watch: function() {
@@ -9086,7 +9089,9 @@
 
                 name: 'visibilitychange',
 
-                el: inBrowser && document,
+                el: function() {
+                    return document;
+                },
 
                 filter: function() {
                     return this.autoplay;
@@ -9220,10 +9225,6 @@
                     this.prevIndex = this.index;
                 }
 
-                // Workaround for iOS's inert scrolling preventing pointerdown event
-                // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-                on(this.list, 'touchmove', this.move, {passive: false});
-
                 on(document, pointerMove, this.move, {passive: false});
                 on(document, (pointerUp + " " + pointerCancel), this.end, true);
 
@@ -9240,6 +9241,9 @@
                 if (distance === 0 || this.prevPos === this.pos || !this.dragging && Math.abs(distance) < this.threshold) {
                     return;
                 }
+
+                // prevent click event
+                css(this.list, 'pointerEvents', 'none');
 
                 e.cancelable && e.preventDefault();
 
@@ -9307,7 +9311,6 @@
 
             end: function() {
 
-                off(this.list, 'touchmove', this.move, {passive: false});
                 off(document, pointerMove, this.move, {passive: false});
                 off(document, (pointerUp + " " + pointerCancel), this.end, true);
 
@@ -9802,7 +9805,7 @@
             caption: function(ref, $el) {
                 var selCaption = ref.selCaption;
 
-                return $('.uk-lightbox-caption', $el);
+                return $(selCaption, $el);
             }
 
         },
@@ -9882,7 +9885,9 @@
 
                 name: 'keyup',
 
-                el: inBrowser && document,
+                el: function() {
+                    return document;
+                },
 
                 handler: function(e) {
 
@@ -9982,7 +9987,7 @@
                     };
 
                     // Image
-                    if (type === 'image' || src.match(/\.(jpe?g|png|gif|svg|webp)($|\?)/i)) {
+                    if (type === 'image' || src.match(/\.(avif|jpe?g|a?png|gif|svg|webp)($|\?)/i)) {
 
                         getImage(src, attrs.srcset, attrs.size).then(
                             function (ref) {
@@ -10228,6 +10233,8 @@
 
     var notification = {
 
+        mixins: [Container],
+
         functional: true,
 
         args: ['message', 'status'],
@@ -10263,8 +10270,8 @@
 
         created: function() {
 
-            var container = $(("." + (this.clsContainer) + "-" + (this.pos)), this.$container)
-                || append(this.$container, ("<div class=\"" + (this.clsContainer) + " " + (this.clsContainer) + "-" + (this.pos) + "\" style=\"display: block\"></div>"));
+            var container = $(("." + (this.clsContainer) + "-" + (this.pos)), this.container)
+                || append(this.container, ("<div class=\"" + (this.clsContainer) + " " + (this.clsContainer) + "-" + (this.pos) + "\" style=\"display: block\"></div>"));
 
             this.$mount(append(container,
                 ("<div class=\"" + (this.clsMsg) + (this.status ? (" " + (this.clsMsg) + "-" + (this.status)) : '') + "\"> <a href class=\"" + (this.clsClose) + "\" data-uk-close></a> <div>" + (this.message) + "</div> </div>")
@@ -10993,8 +11000,6 @@
             },
 
             maxIndex: function() {
-                var this$1 = this;
-
 
                 if (!this.finite || this.center && !this.sets) {
                     return this.length - 1;
@@ -11004,10 +11009,18 @@
                     return last(this.sets);
                 }
 
-                css(this.slides, 'order', '');
-
+                var lft = 0;
                 var max = getMax(this.list);
-                var index = findIndex(this.slides, function (el) { return getElLeft(el, this$1.list) >= max; });
+                var index = findIndex(this.slides, function (el) {
+
+                    if (lft >= max) {
+                        return true;
+                    }
+
+                    lft += dimensions(el).width;
+
+                });
+
                 return ~index ? index : this.length - 1;
             },
 
@@ -11093,8 +11106,10 @@
 
                 var actives = this._getTransitioner(this.index).getActives();
                 this.slides.forEach(function (slide) { return toggleClass(slide, this$1.clsActive, includes(actives, slide)); });
-                (!this.sets || includes(this.sets, toFloat(this.index))) && this.slides.forEach(function (slide) { return toggleClass(slide, this$1.clsActivated, includes(actives, slide)); });
 
+                if (this.clsActivated && (!this.sets || includes(this.sets, toFloat(this.index)))) {
+                    this.slides.forEach(function (slide) { return toggleClass(slide, this$1.clsActivated || '', includes(actives, slide)); });
+                }
             },
 
             events: ['resize']
@@ -12235,7 +12250,7 @@
                             ['loadStart', 'load', 'loadEnd', 'abort'].forEach(function (type) { return on(xhr, type.toLowerCase(), this$1[type]); }
                             );
 
-                            this$1.beforeSend(env);
+                            return this$1.beforeSend(env);
 
                         }
                     }).then(

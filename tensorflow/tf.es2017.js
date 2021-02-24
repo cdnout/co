@@ -8309,7 +8309,7 @@
 
     /** @license See the LICENSE file. */
     // This code is auto-generated, do not modify this file!
-    const version = '2.8.5';
+    const version = '2.8.6';
 
     /**
      * @license
@@ -36853,7 +36853,7 @@
 
     /** @license See the LICENSE file. */
     // This code is auto-generated, do not modify this file!
-    const version$1 = '2.8.5';
+    const version$1 = '2.8.6';
 
     /**
      * @license
@@ -58067,7 +58067,7 @@
 
     /** @license See the LICENSE file. */
     // This code is auto-generated, do not modify this file!
-    const version$2 = '2.8.5';
+    const version$2 = '2.8.6';
 
     /**
      * @license
@@ -61794,7 +61794,7 @@
 
     /** @license See the LICENSE file. */
     // This code is auto-generated, do not modify this file!
-    const version$3 = '2.8.5';
+    const version$3 = '2.8.6';
 
     /**
      * @license
@@ -63675,7 +63675,7 @@
 
     /** @license See the LICENSE file. */
     // This code is auto-generated, do not modify this file!
-    const version$4 = '2.8.5';
+    const version$4 = '2.8.6';
 
     /**
      * @license
@@ -75461,7 +75461,7 @@ vec2 packedUVfrom3D(int texNumR, int texNumC,
 
     /** @license See the LICENSE file. */
     // This code is auto-generated, do not modify this file!
-    const version$5 = '2.8.5';
+    const version$5 = '2.8.6';
 
     /**
      * @license
@@ -81046,7 +81046,7 @@ return (log(1.0 + x) - log(1.0 - x)) / 2.0;`;
             throw new Error(`WebGL cumsum shader expects an inner-most axis=${x.shape.length - 1} ` +
                 `but got axis=${axis}`);
         }
-        const size = x.shape[permutedAxis];
+        const size = permutedX.shape[permutedAxis];
         let result = identity$2({ inputs: { x: permutedX }, backend });
         // Use cumsum parallel algorithm, ref:
         // https://developer.nvidia.com/gpugems/gpugems3/part-vi-gpu-computing/chapter-39-parallel-prefix-sum-scan-cuda
@@ -88144,7 +88144,7 @@ return a / b;`;
 
     /** @license See the LICENSE file. */
     // This code is auto-generated, do not modify this file!
-    const version$6 = '2.8.5';
+    const version$6 = '2.8.6';
 
     /**
      * @license

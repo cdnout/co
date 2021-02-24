@@ -163,7 +163,20 @@ helpers.getImageUrl = function (filename, width) {
 };
 
 helpers.getEntityIdFromGuid = function (guid) {
-  return guid.split('$')[0].toUpperCase();
+  var parts = guid.split(/[$-]/);
+  if (parts.length === 6) {
+    // Examples:
+    // - q520$BCA8D9DE-B467-473B-943C-6FD0C5B3D02C
+    // - P6216-a7fd6230-496e-6b47-ca4a-dcec5dbd7f95
+    return parts[0].toUpperCase();
+  } else if (parts.length === 7) {
+    // Examples:
+    // - L525-S1$66D20252-8CEC-4DB1-8B00-D713CFF42E48
+    // - L525-F2-52c9b382-02f5-4413-9923-26ade74f5a0d
+    return parts.slice(0, 2).join('-').toUpperCase();
+  } else {
+    throw new Error('invalid guid: ' + guid);
+  }
 };
 
 module.exports = helpers;
@@ -228,7 +241,7 @@ var coordinate = function coordinate(datavalue, options) {
 };
 
 var time = function time(datavalue, options) {
-  var timeValue;
+  var timeValue = void 0;
   if (typeof options.timeConverter === 'function') {
     timeValue = options.timeConverter(datavalue.value);
   } else {
@@ -520,7 +533,12 @@ var simplifyClaim = function simplifyClaim(claim) {
       rank = claim.rank;
 
 
-  var value, datatype, datavalue, snaktype, isQualifierSnak, isReferenceSnak;
+  var value = void 0,
+      datatype = void 0,
+      datavalue = void 0,
+      snaktype = void 0,
+      isQualifierSnak = void 0,
+      isReferenceSnak = void 0;
   if (mainsnak) {
     datatype = mainsnak.datatype;
     datavalue = mainsnak.datavalue;
@@ -1251,7 +1269,7 @@ var fullDateData = function fullDateData(sign, rest) {
 };
 
 var expandedYearDate = function expandedYearDate(sign, rest, year) {
-  var date;
+  var date = void 0;
   // Using ISO8601 expanded notation for negative years or positive
   // years with more than 4 digits: adding up to 2 leading zeros
   // when needed. Can't find the documentation again, but testing
@@ -1583,7 +1601,8 @@ var types = ['item', 'property', 'lexeme', 'form', 'sense'];
 module.exports = function (buildUrl) {
   return function (search, language, limit, format, uselang) {
     // Using the variable 'offset' instead of 'continue' as the later is a reserved word
-    var type, offset;
+    var type = void 0,
+        offset = void 0;
 
     // polymorphism: arguments can be passed as an object keys
     if (isPlainObject(search)) {
@@ -1739,7 +1758,9 @@ var WBK = function WBK(config) {
     throw new Error('one of instance or sparqlEndpoint should be set at initialization.\n' + tip);
   }
 
-  var wikibaseApiFunctions, instanceRoot, instanceApiEndpoint;
+  var wikibaseApiFunctions = void 0,
+      instanceRoot = void 0,
+      instanceApiEndpoint = void 0;
   if (instance) {
     validateEndpoint('instance', instance);
 
@@ -1768,7 +1789,7 @@ var WBK = function WBK(config) {
     };
   }
 
-  var wikibaseQueryServiceFunctions;
+  var wikibaseQueryServiceFunctions = void 0;
   if (sparqlEndpoint) {
     validateEndpoint('sparqlEndpoint', sparqlEndpoint);
     wikibaseQueryServiceFunctions = {

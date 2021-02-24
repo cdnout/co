@@ -19313,10 +19313,10 @@ html.overflow-y-hidden {
   text-align: right;
 }
 .v-application--is-ltr .v-text-field--outlined.v-text-field--reverse legend {
-  text-align: right;
+  margin-left: auto;
 }
 .v-application--is-rtl .v-text-field--outlined.v-text-field--reverse legend {
-  text-align: left;
+  margin-right: auto;
 }
 .v-application--is-ltr .v-text-field--outlined.v-text-field--rounded legend {
   margin-left: 12px;
@@ -23562,6 +23562,9 @@ html.overflow-y-hidden {
   pointer-events: auto;
   cursor: pointer;
   outline: 0;
+}
+.v-data-table-header th.sortable .v-data-table-header__icon {
+  line-height: 0.9;
 }
 .v-data-table-header th.active .v-data-table-header__icon, .v-data-table-header th:hover .v-data-table-header__icon {
   transform: none;

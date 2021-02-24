@@ -1,8 +1,9 @@
+'use strict';
 /**
-* @license Angular v11.0.0-next.6+162.sha-170af07
-* (c) 2010-2020 Google LLC. https://angular.io/
-* License: MIT
-*/
+ * @license Angular v12.0.0-next.0
+ * (c) 2010-2020 Google LLC. https://angular.io/
+ * License: MIT
+ */
 (function (factory) {
     typeof define === 'function' && define.amd ? define(factory) :
         factory();
@@ -92,9 +93,13 @@
                 configurable: true
             });
             // tslint:disable-next-line:require-internal-with-underscore
-            Zone.__load_patch = function (name, fn) {
+            Zone.__load_patch = function (name, fn, ignoreDuplicate) {
+                if (ignoreDuplicate === void 0) { ignoreDuplicate = false; }
                 if (patches.hasOwnProperty(name)) {
-                    if (checkDuplicate) {
+                    // `checkDuplicate` option is defined from global variable
+                    // so it works for all modules.
+                    // `ignoreDuplicate` can work for the specified module
+                    if (!ignoreDuplicate && checkDuplicate) {
                         throw Error('Already loaded patch: ' + name);
                     }
                 }
@@ -999,7 +1004,7 @@
         }
         var delegateName = zoneSymbol(name);
         var delegate = null;
-        if (proto && !(delegate = proto[delegateName])) {
+        if (proto && (!(delegate = proto[delegateName]) || !proto.hasOwnProperty(delegateName))) {
             delegate = proto[delegateName] = proto[name];
             // check whether proto[name] is writable
             // some property is readonly in safari, such as HtmlCanvasElement.prototype.toBlob
@@ -3054,29 +3059,9 @@
         var tasksByHandleId = {};
         function scheduleTask(task) {
             var data = task.data;
-            function timer() {
-                try {
-                    task.invoke.apply(this, arguments);
-                }
-                finally {
-                    // issue-934, task will be cancelled
-                    // even it is a periodic task such as
-                    // setInterval
-                    if (!(task.data && task.data.isPeriodic)) {
-                        if (typeof data.handleId === 'number') {
-                            // in non-nodejs env, we remove timerId
-                            // from local cache
-                            delete tasksByHandleId[data.handleId];
-                        }
-                        else if (data.handleId) {
-                            // Node returns complex objects as handleIds
-                            // we remove task reference from timer object
-                            data.handleId[taskSymbol] = null;
-                        }
-                    }
-                }
-            }
-            data.args[0] = timer;
+            data.args[0] = function () {
+                return task.invoke.apply(this, arguments);
+            };
             data.handleId = setNative.apply(window, data.args);
             return task;
         }
@@ -3086,13 +3071,40 @@
         setNative =
             patchMethod(window, setName, function (delegate) { return function (self, args) {
                 if (typeof args[0] === 'function') {
-                    var options = {
+                    var options_1 = {
                         isPeriodic: nameSuffix === 'Interval',
                         delay: (nameSuffix === 'Timeout' || nameSuffix === 'Interval') ? args[1] || 0 :
                             undefined,
                         args: args
                     };
-                    var task = scheduleMacroTaskWithCurrentZone(setName, args[0], options, scheduleTask, clearTask);
+                    var callback_1 = args[0];
+                    args[0] = function timer() {
+                        try {
+                            return callback_1.apply(this, arguments);
+                        }
+                        finally {
+                            // issue-934, task will be cancelled
+                            // even it is a periodic task such as
+                            // setInterval
+                            // https://github.com/angular/angular/issues/40387
+                            // Cleanup tasksByHandleId should be handled before scheduleTask
+                            // Since some zoneSpec may intercept and doesn't trigger
+                            // scheduleFn(scheduleTask) provided here.
+                            if (!(options_1.isPeriodic)) {
+                                if (typeof options_1.handleId === 'number') {
+                                    // in non-nodejs env, we remove timerId
+                                    // from local cache
+                                    delete tasksByHandleId[options_1.handleId];
+                                }
+                                else if (options_1.handleId) {
+                                    // Node returns complex objects as handleIds
+                                    // we remove task reference from timer object
+                                    options_1.handleId[taskSymbol] = null;
+                                }
+                            }
+                        }
+                    };
+                    var task = scheduleMacroTaskWithCurrentZone(setName, args[0], options_1, scheduleTask, clearTask);
                     if (!task) {
                         return task;
                     }
@@ -3221,6 +3233,13 @@
         if (legacyPatch) {
             legacyPatch();
         }
+    });
+    Zone.__load_patch('queueMicrotask', function (global, Zone, api) {
+        api.patchMethod(global, 'queueMicrotask', function (delegate) {
+            return function (self, args) {
+                Zone.current.scheduleMicroTask('queueMicrotask', args[0]);
+            };
+        });
     });
     Zone.__load_patch('timers', function (global) {
         var set = 'set';

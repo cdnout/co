@@ -23978,7 +23978,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$1 = '2.8.5';
+	var version$1 = '2.8.6';
 
 	/**
 	 * @license
@@ -59307,7 +59307,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$2 = '2.8.5';
+	var version$2 = '2.8.6';
 
 	/**
 	 * Helper function to check the dtype and shape compatibility of a feed value.
@@ -87333,7 +87333,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$3 = '2.8.5';
+	var version$3 = '2.8.6';
 
 	/**
 	 * @license
@@ -93631,7 +93631,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$4 = '2.8.5';
+	var version$4 = '2.8.6';
 
 	/**
 	 * @license
@@ -95872,7 +95872,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$5 = '2.8.5';
+	var version$5 = '2.8.6';
 
 	/**
 	 * @license
@@ -109632,7 +109632,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$6 = '2.8.5';
+	var version$6 = '2.8.6';
 
 	/**
 	 * @license
@@ -114752,7 +114752,7 @@
 	    throw new Error("WebGL cumsum shader expects an inner-most axis=" + (x.shape.length - 1) + " " + ("but got axis=" + axis));
 	  }
 
-	  var size = x.shape[permutedAxis];
+	  var size = permutedX.shape[permutedAxis];
 	  var result = identity$2({
 	    inputs: {
 	      x: permutedX
@@ -121190,7 +121190,7 @@
 
 	/** @license See the LICENSE file. */
 	// This code is auto-generated, do not modify this file!
-	var version$7 = '2.8.5';
+	var version$7 = '2.8.6';
 
 	/**
 	 * @license

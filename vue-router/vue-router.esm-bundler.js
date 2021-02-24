@@ -1,5 +1,5 @@
 /*!
-  * vue-router v4.0.3
+  * vue-router v4.0.4
   * (c) 2021 Eduardo San Martin Morote
   * @license MIT
   */
@@ -910,7 +910,12 @@ function tokensToParser(segments, extraOptions) {
                 let subPattern = repeatable ? `((?:${re})(?:/(?:${re}))*)` : `(${re})`;
                 // prepend the slash if we are starting a new segment
                 if (!tokenIndex)
-                    subPattern = optional ? `(?:/${subPattern})` : '/' + subPattern;
+                    subPattern =
+                        // avoid an optional / if there are more segments e.g. /:p?-static
+                        // or /:p?-:p2
+                        optional && segment.length < 2
+                            ? `(?:/${subPattern})`
+                            : '/' + subPattern;
                 if (optional)
                     subPattern += '?';
                 pattern += subPattern;
@@ -974,12 +979,16 @@ function tokensToParser(segments, extraOptions) {
                     const text = Array.isArray(param) ? param.join('/') : param;
                     if (!text) {
                         if (optional) {
-                            // remove the last slash as we could be at the end
-                            if (path.endsWith('/'))
-                                path = path.slice(0, -1);
-                            // do not append a slash on the next iteration
-                            else
-                                avoidDuplicatedSlash = true;
+                            // if we have more than one optional param like /:a?-static we
+                            // don't need to care about the optional param
+                            if (segment.length < 2) {
+                                // remove the last slash as we could be at the end
+                                if (path.endsWith('/'))
+                                    path = path.slice(0, -1);
+                                // do not append a slash on the next iteration
+                                else
+                                    avoidDuplicatedSlash = true;
+                            }
                         }
                         else
                             throw new Error(`Missing required param "${value}"`);
@@ -1536,13 +1545,19 @@ function isSameParam(a, b) {
         a.optional === b.optional &&
         a.repeatable === b.repeatable);
 }
+/**
+ * Check if a path and its alias have the same required params
+ *
+ * @param a - original record
+ * @param b - alias record
+ */
 function checkSameParams(a, b) {
     for (let key of a.keys) {
-        if (!b.keys.find(isSameParam.bind(null, key)))
+        if (!key.optional && !b.keys.find(isSameParam.bind(null, key)))
             return warn(`Alias "${b.record.path}" and the original record: "${a.record.path}" should have the exact same param named "${key.name}"`);
     }
     for (let key of b.keys) {
-        if (!a.keys.find(isSameParam.bind(null, key)))
+        if (!key.optional && !a.keys.find(isSameParam.bind(null, key)))
             return warn(`Alias "${b.record.path}" and the original record: "${a.record.path}" should have the exact same param named "${key.name}"`);
     }
 }
@@ -1983,7 +1998,7 @@ function extractComponentsGuards(matched, guardType, to, from) {
                 }
                 else {
                     // display the error if any
-                    componentPromise = componentPromise.catch((process.env.NODE_ENV !== 'production') ? err => err && warn(err) : console.error);
+                    componentPromise = componentPromise.catch(console.error);
                 }
                 guards.push(() => componentPromise.then(resolved => {
                     if (!resolved)
@@ -1993,8 +2008,9 @@ function extractComponentsGuards(matched, guardType, to, from) {
                         : resolved;
                     // replace the function with the resolved component
                     record.components[name] = resolvedComponent;
-                    // @ts-ignore: the options types are not propagated to Component
-                    const guard = resolvedComponent[guardType];
+                    // __vccOpts is added by vue-class-component and contain the regular options
+                    let options = resolvedComponent.__vccOpts || resolvedComponent;
+                    const guard = options[guardType];
                     return guard && guardToPromiseFn(guard, to, from, record, name)();
                 }));
             }
@@ -2341,8 +2357,8 @@ function addDevtools(app, router, matcher) {
     // increment to support multiple router instances
     const id = routerId++;
     setupDevtoolsPlugin({
-        id: 'Router' + id ? ' ' + id : '',
-        label: 'Router devtools',
+        id: 'Router' + (id ? ' ' + id : ''),
+        label: 'Vue Router',
         app,
     }, api => {
         api.on.inspectComponent((payload, ctx) => {

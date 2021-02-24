@@ -9,7 +9,7 @@
   },
   "v-app-bar/app": {
     "type": "boolean",
-    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
+    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
   },
   "v-app-bar/bottom": {
     "type": "boolean",
@@ -377,7 +377,7 @@
   },
   "v-autocomplete/filter": {
     "type": "function",
-    "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L36)"
+    "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L40)"
   },
   "v-autocomplete/flat": {
     "type": "boolean",
@@ -793,7 +793,7 @@
   },
   "v-bottom-navigation/app": {
     "type": "boolean",
-    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
+    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
   },
   "v-bottom-navigation/background-color": {
     "type": "string",
@@ -2597,7 +2597,7 @@
   },
   "v-combobox/filter": {
     "type": "function",
-    "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L36)"
+    "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L40)"
   },
   "v-combobox/flat": {
     "type": "boolean",
@@ -2861,7 +2861,7 @@
   },
   "v-data-iterator/locale": {
     "type": "string",
-    "description": "Sets the locale of component. Used for translating internal text strings."
+    "description": "Sets the locale used for sorting. This is passed into [`Intl.Collator()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator) in the default `customSort` function"
   },
   "v-data-iterator/mobile-breakpoint": {
     "type": "number|string",
@@ -3101,7 +3101,7 @@
   },
   "v-data-table/locale": {
     "type": "string",
-    "description": "Sets the locale of component. Used for translating internal text strings."
+    "description": "Sets the locale used for sorting. This is passed into [`Intl.Collator()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator) in the default `customSort` function"
   },
   "v-data-table/mobile-breakpoint": {
     "type": "number|string",
@@ -3897,7 +3897,7 @@
   },
   "v-footer/app": {
     "type": "boolean",
-    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
+    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
   },
   "v-footer/color": {
     "type": "string",
@@ -5109,7 +5109,7 @@
   },
   "v-navigation-drawer/app": {
     "type": "boolean",
-    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
+    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
   },
   "v-navigation-drawer/bottom": {
     "type": "boolean",
@@ -5317,7 +5317,7 @@
   },
   "v-overflow-btn/filter": {
     "type": "function",
-    "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L36)"
+    "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L40)"
   },
   "v-overflow-btn/flat": {
     "type": "boolean",
@@ -7221,7 +7221,7 @@
   },
   "v-system-bar/app": {
     "type": "boolean",
-    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
+    "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop"
   },
   "v-system-bar/color": {
     "type": "string",

@@ -2,7 +2,7 @@
   "$schema": "http://json.schemastore.org/web-types",
   "framework": "vue",
   "name": "vuetify",
-  "version": "2.4.3",
+  "version": "2.4.5",
   "contributions": {
     "html": {
       "types-syntax": "typescript",
@@ -63,7 +63,7 @@
             },
             {
               "name": "app",
-              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
+              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
               "doc-url": "https://www.vuetifyjs.com/api/v-app-bar#props",
               "default": "false",
               "value": {
@@ -1242,7 +1242,7 @@
             },
             {
               "name": "filter",
-              "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L36)",
+              "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L40)",
               "doc-url": "https://www.vuetifyjs.com/api/v-autocomplete#props",
               "default": "(item, queryText, itemText) => {}",
               "value": {
@@ -2829,7 +2829,7 @@
             },
             {
               "name": "app",
-              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
+              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
               "doc-url": "https://www.vuetifyjs.com/api/v-bottom-navigation#props",
               "default": "false",
               "value": {
@@ -5059,7 +5059,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar#props",
-              "default": "2021-01-21",
+              "default": "2021-02-23",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -6688,7 +6688,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar-daily#props",
-              "default": "2021-01-21",
+              "default": "2021-02-23",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -6906,7 +6906,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar-weekly#props",
-              "default": "2021-01-21",
+              "default": "2021-02-23",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -7124,7 +7124,7 @@
               "name": "start",
               "description": "The starting date on the calendar (inclusive) in the format of `YYYY-MM-DD`. This may be ignored depending on the `type` of the calendar.",
               "doc-url": "https://www.vuetifyjs.com/api/v-calendar-monthly#props",
-              "default": "2021-01-21",
+              "default": "2021-02-23",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -10064,7 +10064,7 @@
             },
             {
               "name": "filter",
-              "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L36)",
+              "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L40)",
               "doc-url": "https://www.vuetifyjs.com/api/v-combobox#props",
               "default": "(item, queryText, itemText) => {}",
               "value": {
@@ -11117,7 +11117,7 @@
             },
             {
               "name": "locale",
-              "description": "Sets the locale of component. Used for translating internal text strings.",
+              "description": "Sets the locale used for sorting. This is passed into [`Intl.Collator()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator) in the default `customSort` function",
               "doc-url": "https://www.vuetifyjs.com/api/v-data-iterator#props",
               "default": "'en-US'",
               "value": {
@@ -12212,7 +12212,7 @@
             },
             {
               "name": "locale",
-              "description": "Sets the locale of component. Used for translating internal text strings.",
+              "description": "Sets the locale used for sorting. This is passed into [`Intl.Collator()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Collator/Collator) in the default `customSort` function",
               "doc-url": "https://www.vuetifyjs.com/api/v-data-table#props",
               "default": "'en-US'",
               "value": {
@@ -15893,7 +15893,7 @@
             },
             {
               "name": "app",
-              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
+              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
               "doc-url": "https://www.vuetifyjs.com/api/v-footer#props",
               "default": "false",
               "value": {
@@ -20173,7 +20173,7 @@
             },
             {
               "name": "app",
-              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
+              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
               "doc-url": "https://www.vuetifyjs.com/api/v-navigation-drawer#props",
               "default": "false",
               "value": {
@@ -20834,7 +20834,7 @@
             },
             {
               "name": "filter",
-              "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L36)",
+              "description": "The filtering algorithm used when searching. [example](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VAutocomplete/VAutocomplete.ts#L40)",
               "doc-url": "https://www.vuetifyjs.com/api/v-overflow-btn#props",
               "default": "(item, queryText, itemText) => {}",
               "value": {
@@ -28162,7 +28162,7 @@
             },
             {
               "name": "app",
-              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
+              "description": "Designates the component as part of the application layout. Used for dynamically adjusting content sizing. Components using this prop should reside **outside** of `v-main` component to function properly. You can find more information about layouts on the [application page](/components/application). **Note:** this prop automatically applies **position: fixed** to the layout element. You can overwrite this functionality by using the `absolute` prop",
               "doc-url": "https://www.vuetifyjs.com/api/v-system-bar#props",
               "default": "false",
               "value": {

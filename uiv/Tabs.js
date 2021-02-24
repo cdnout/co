@@ -732,7 +732,7 @@ var PortalTarget = Vue.extend({
 var _id$1 = 0;
 var portalProps = ['disabled', 'name', 'order', 'slim', 'slotProps', 'tag', 'to'];
 var targetProps = ['multiple', 'transition'];
-var MountingPortal = Vue.extend({
+Vue.extend({
   name: 'MountingPortal',
   inheritAttrs: false,
   props: {
@@ -1244,24 +1244,20 @@ var __vue_render__ = function() {
                   },
                   [
                     tab.$slots.title
-                      ? _c(
-                          "a",
-                          {
-                            attrs: { role: "tab", href: "#" },
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault();
-                                _vm.select(_vm.tabs.indexOf(tab));
-                              }
-                            }
+                      ? _c("portal-target", {
+                          attrs: {
+                            name: tab._uid.toString(),
+                            tag: "a",
+                            role: "tab",
+                            href: "#"
                           },
-                          [
-                            _c("portal-target", {
-                              attrs: { name: tab._uid.toString() }
-                            })
-                          ],
-                          1
-                        )
+                          nativeOn: {
+                            click: function($event) {
+                              $event.preventDefault();
+                              _vm.select(_vm.tabs.indexOf(tab));
+                            }
+                          }
+                        })
                       : _c("a", {
                           attrs: { role: "tab", href: "#" },
                           domProps: { textContent: _vm._s(tab.title) },
@@ -1272,7 +1268,8 @@ var __vue_render__ = function() {
                             }
                           }
                         })
-                  ]
+                  ],
+                  1
                 )
           ]
         }),

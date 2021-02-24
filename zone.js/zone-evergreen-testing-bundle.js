@@ -1,8 +1,9 @@
+'use strict';
 /**
-* @license Angular v11.0.0-next.6+162.sha-170af07
-* (c) 2010-2020 Google LLC. https://angular.io/
-* License: MIT
-*/
+ * @license Angular v12.0.0-next.0
+ * (c) 2010-2020 Google LLC. https://angular.io/
+ * License: MIT
+ */
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -75,9 +76,12 @@ const Zone$1 = (function (global) {
             return _currentTask;
         }
         // tslint:disable-next-line:require-internal-with-underscore
-        static __load_patch(name, fn) {
+        static __load_patch(name, fn, ignoreDuplicate = false) {
             if (patches.hasOwnProperty(name)) {
-                if (checkDuplicate) {
+                // `checkDuplicate` option is defined from global variable
+                // so it works for all modules.
+                // `ignoreDuplicate` can work for the specified module
+                if (!ignoreDuplicate && checkDuplicate) {
                     throw Error('Already loaded patch: ' + name);
                 }
             }
@@ -960,7 +964,7 @@ function patchMethod(target, name, patchFn) {
     }
     const delegateName = zoneSymbol(name);
     let delegate = null;
-    if (proto && !(delegate = proto[delegateName])) {
+    if (proto && (!(delegate = proto[delegateName]) || !proto.hasOwnProperty(delegateName))) {
         delegate = proto[delegateName] = proto[name];
         // check whether proto[name] is writable
         // some property is readonly in safari, such as HtmlCanvasElement.prototype.toBlob
@@ -2533,29 +2537,9 @@ function patchTimer(window, setName, cancelName, nameSuffix) {
     const tasksByHandleId = {};
     function scheduleTask(task) {
         const data = task.data;
-        function timer() {
-            try {
-                task.invoke.apply(this, arguments);
-            }
-            finally {
-                // issue-934, task will be cancelled
-                // even it is a periodic task such as
-                // setInterval
-                if (!(task.data && task.data.isPeriodic)) {
-                    if (typeof data.handleId === 'number') {
-                        // in non-nodejs env, we remove timerId
-                        // from local cache
-                        delete tasksByHandleId[data.handleId];
-                    }
-                    else if (data.handleId) {
-                        // Node returns complex objects as handleIds
-                        // we remove task reference from timer object
-                        data.handleId[taskSymbol] = null;
-                    }
-                }
-            }
-        }
-        data.args[0] = timer;
+        data.args[0] = function () {
+            return task.invoke.apply(this, arguments);
+        };
         data.handleId = setNative.apply(window, data.args);
         return task;
     }
@@ -2570,6 +2554,33 @@ function patchTimer(window, setName, cancelName, nameSuffix) {
                     delay: (nameSuffix === 'Timeout' || nameSuffix === 'Interval') ? args[1] || 0 :
                         undefined,
                     args: args
+                };
+                const callback = args[0];
+                args[0] = function timer() {
+                    try {
+                        return callback.apply(this, arguments);
+                    }
+                    finally {
+                        // issue-934, task will be cancelled
+                        // even it is a periodic task such as
+                        // setInterval
+                        // https://github.com/angular/angular/issues/40387
+                        // Cleanup tasksByHandleId should be handled before scheduleTask
+                        // Since some zoneSpec may intercept and doesn't trigger
+                        // scheduleFn(scheduleTask) provided here.
+                        if (!(options.isPeriodic)) {
+                            if (typeof options.handleId === 'number') {
+                                // in non-nodejs env, we remove timerId
+                                // from local cache
+                                delete tasksByHandleId[options.handleId];
+                            }
+                            else if (options.handleId) {
+                                // Node returns complex objects as handleIds
+                                // we remove task reference from timer object
+                                options.handleId[taskSymbol] = null;
+                            }
+                        }
+                    }
                 };
                 const task = scheduleMacroTaskWithCurrentZone(setName, args[0], options, scheduleTask, clearTask);
                 if (!task) {
@@ -2703,6 +2714,13 @@ Zone.__load_patch('legacy', (global) => {
     if (legacyPatch) {
         legacyPatch();
     }
+});
+Zone.__load_patch('queueMicrotask', (global, Zone, api) => {
+    api.patchMethod(global, 'queueMicrotask', delegate => {
+        return function (self, args) {
+            Zone.current.scheduleMicroTask('queueMicrotask', args[0]);
+        };
+    });
 });
 Zone.__load_patch('timers', (global) => {
     const set = 'set';
@@ -4161,14 +4179,6 @@ Zone.__load_patch('mocha', (global, Zone) => {
     // constructor params.
     Zone['AsyncTestZoneSpec'] = AsyncTestZoneSpec;
 })(typeof window !== 'undefined' && window || typeof self !== 'undefined' && self || global);
-
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
 Zone.__load_patch('asynctest', (global, Zone, api) => {
     /**
      * Wraps a test function in an asynchronous test zone. The test will automatically
@@ -4216,7 +4226,7 @@ Zone.__load_patch('asynctest', (global, Zone, api) => {
                 'Please make sure that your environment includes zone.js/dist/async-test.js');
         }
         const ProxyZoneSpec = Zone['ProxyZoneSpec'];
-        if (ProxyZoneSpec === undefined) {
+        if (!ProxyZoneSpec) {
             throw new Error('ProxyZoneSpec is needed for the async() test helper but could not be found. ' +
                 'Please make sure that your environment includes zone.js/dist/proxy.js');
         }
@@ -4843,17 +4853,11 @@ Zone.__load_patch('asynctest', (global, Zone, api) => {
     // constructor params.
     Zone['FakeAsyncTestZoneSpec'] = FakeAsyncTestZoneSpec;
 })(typeof window === 'object' && window || typeof self === 'object' && self || global);
-
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
 Zone.__load_patch('fakeasync', (global, Zone, api) => {
     const FakeAsyncTestZoneSpec = Zone && Zone['FakeAsyncTestZoneSpec'];
-    const ProxyZoneSpec = Zone && Zone['ProxyZoneSpec'];
+    function getProxyZoneSpec() {
+        return Zone && Zone['ProxyZoneSpec'];
+    }
     let _fakeAsyncTestZoneSpec = null;
     /**
      * Clears out the shared fake async zone for a test.
@@ -4867,7 +4871,7 @@ Zone.__load_patch('fakeasync', (global, Zone, api) => {
         }
         _fakeAsyncTestZoneSpec = null;
         // in node.js testing we may not have ProxyZoneSpec in which case there is nothing to reset.
-        ProxyZoneSpec && ProxyZoneSpec.assertPresent().resetDelegate();
+        getProxyZoneSpec() && getProxyZoneSpec().assertPresent().resetDelegate();
     }
     /**
      * Wraps a function to be executed in the fakeAsync zone:
@@ -4890,6 +4894,11 @@ Zone.__load_patch('fakeasync', (global, Zone, api) => {
     function fakeAsync(fn) {
         // Not using an arrow function to preserve context passed from call site
         const fakeAsyncFn = function (...args) {
+            const ProxyZoneSpec = getProxyZoneSpec();
+            if (!ProxyZoneSpec) {
+                throw new Error('ProxyZoneSpec is needed for the async() test helper but could not be found. ' +
+                    'Please make sure that your environment includes zone.js/dist/proxy.js');
+            }
             const proxyZoneSpec = ProxyZoneSpec.assertPresent();
             if (Zone.current.get('FakeAsyncTestZoneSpec')) {
                 throw new Error('fakeAsync() calls can not be nested');
@@ -4986,7 +4995,7 @@ Zone.__load_patch('fakeasync', (global, Zone, api) => {
     }
     Zone[api.symbol('fakeAsyncTest')] =
         { resetFakeAsyncZone, flushMicrotasks, discardPeriodicTasks, tick, flush, fakeAsync };
-});
+}, true);
 
 /**
  * @license

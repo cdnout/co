@@ -1,4 +1,4 @@
-/* single-spa@5.9.0 - ESM - dev */
+/* single-spa@5.9.1 - ESM - dev */
 var singleSpa = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get start () { return start; },

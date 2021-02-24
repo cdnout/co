@@ -1,5 +1,5 @@
 /*!
- * wavesurfer.js regions plugin 4.4.0 (2021-01-14)
+ * wavesurfer.js regions plugin 4.5.0 (2021-02-14)
  * https://wavesurfer-js.org
  * @license BSD-3-Clause
  */
@@ -328,6 +328,7 @@ var RegionsPlugin = /*#__PURE__*/function () {
         region = null;
       };
 
+      this.wrapper.addEventListener('mouseleave', eventUp);
       this.wrapper.addEventListener('mouseup', eventUp);
       this.wrapper.addEventListener('touchend', eventUp);
       document.body.addEventListener('mouseup', eventUp);
@@ -339,6 +340,8 @@ var RegionsPlugin = /*#__PURE__*/function () {
         _this4.wrapper.removeEventListener('touchend', eventUp);
 
         _this4.wrapper.removeEventListener('mouseup', eventUp);
+
+        _this4.wrapper.removeEventListener('mouseleave', eventUp);
       });
 
       var eventMove = function eventMove(e) {

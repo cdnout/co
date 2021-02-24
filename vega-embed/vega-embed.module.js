@@ -268,6 +268,13 @@ function guessMode(spec, providedMode) {
 function isLoader(o) {
     return !!(o && 'load' in o);
 }
+function createLoader(opts) {
+    return isLoader(opts) ? opts : vega.loader(opts);
+}
+function embedOptionsFromUsermeta(parsedSpec) {
+    var _a;
+    return (_a = (parsedSpec.usermeta && parsedSpec.usermeta['embedOptions'])) !== null && _a !== void 0 ? _a : {};
+}
 /**
  * Embed a Vega visualization component in a web page. This function returns a promise.
  *
@@ -279,10 +286,21 @@ function isLoader(o) {
 function embed(el, spec, opts = {}) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
-        const loader = isLoader(opts.loader) ? opts.loader : vega.loader(opts.loader);
-        // load spec, config, and patch that are references by URLs
-        const parsedSpec = isString(spec) ? JSON.parse(yield loader.load(spec)) : spec;
-        const usermetaOpts = yield loadOpts((_a = (parsedSpec.usermeta && parsedSpec.usermeta['embedOptions'])) !== null && _a !== void 0 ? _a : {}, loader);
+        let parsedSpec;
+        let loader;
+        if (isString(spec)) {
+            loader = createLoader(opts.loader);
+            parsedSpec = JSON.parse(yield loader.load(spec));
+        }
+        else {
+            parsedSpec = spec;
+        }
+        const usermetaLoader = embedOptionsFromUsermeta(parsedSpec).loader;
+        // either create the loader for the first time or create a new loader if the spec has new loader options
+        if (!loader || usermetaLoader) {
+            loader = createLoader((_a = opts.loader) !== null && _a !== void 0 ? _a : usermetaLoader);
+        }
+        const usermetaOpts = yield loadOpts(embedOptionsFromUsermeta(parsedSpec), loader);
         const parsedOpts = yield loadOpts(opts, loader);
         const mergedOpts = Object.assign(Object.assign({}, mergeDeep(parsedOpts, usermetaOpts)), { config: mergeConfig((_b = parsedOpts.config) !== null && _b !== void 0 ? _b : {}, (_c = usermetaOpts.config) !== null && _c !== void 0 ? _c : {}) });
         return yield _embed(el, parsedSpec, mergedOpts, loader);

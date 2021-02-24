@@ -3296,13 +3296,15 @@ var __spread = undefined && undefined.__spread || function () {
     genDays: function genDays() {
       var _this = this;
 
-      var d = this.days[0];
-      var days = this.days.slice();
-      days = new Array(this.parsedCategories.length);
-      days.fill(d);
-      return days.map(function (v, i) {
-        return _this.genDay(v, 0, i);
+      var days = [];
+      this.days.forEach(function (d) {
+        var day = new Array(_this.parsedCategories.length);
+        day.fill(d);
+        days.push.apply(days, __spread(day.map(function (v, i) {
+          return _this.genDay(v, 0, i);
+        })));
       });
+      return days;
     },
     genDay: function genDay(day, index, categoryIndex) {
       var _this = this;
@@ -9131,7 +9133,12 @@ var __assign = undefined && undefined.__assign || function () {
       if (this.editingIndex > -1) {
         this.updateEditing();
       } else {
-        _VAutocomplete_VAutocomplete__WEBPACK_IMPORTED_MODULE_2__["default"].options.methods.selectItem.call(this, item);
+        _VAutocomplete_VAutocomplete__WEBPACK_IMPORTED_MODULE_2__["default"].options.methods.selectItem.call(this, item); // if selected item contains search value,
+        // remove the search string
+
+        if (this.internalSearch && this.multiple && this.getText(item).toLocaleLowerCase().includes(this.internalSearch.toLocaleLowerCase())) {
+          this.internalSearch = null;
+        }
       }
     },
     setSelectedItems: function setSelectedItems() {
@@ -9817,7 +9824,7 @@ var __spread = undefined && undefined.__spread || function () {
       // Make sure we don't try to display non-existant page if items suddenly change
       // TODO: Could possibly move this to pageStart/pageStop?
       if (this.serverItemsLength === -1 && items.length <= this.pageStart) {
-        this.internalOptions.page = Math.max(1, this.internalOptions.page - 1);
+        this.internalOptions.page = Math.max(1, Math.ceil(items.length / this.internalOptions.itemsPerPage));
       }
 
       return items.slice(this.pageStart, this.pageStop);
@@ -12521,33 +12528,6 @@ var __assign = undefined && undefined.__assign || function () {
   };
 
   return __assign.apply(this, arguments);
-};
-
-var __read = undefined && undefined.__read || function (o, n) {
-  var m = typeof Symbol === "function" && o[Symbol.iterator];
-  if (!m) return o;
-  var i = m.call(o),
-      r,
-      ar = [],
-      e;
-
-  try {
-    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
-      ar.push(r.value);
-    }
-  } catch (error) {
-    e = {
-      error: error
-    };
-  } finally {
-    try {
-      if (r && !r.done && (m = i["return"])) m.call(i);
-    } finally {
-      if (e) throw e.error;
-    }
-  }
-
-  return ar;
 }; // Components
 
 
@@ -12565,23 +12545,6 @@ var __read = undefined && undefined.__read || function (o, n) {
 
 
 
- // Adds leading zero to month/day if necessary, returns 'YYYY' if type = 'year',
-// 'YYYY-MM' if 'month' and 'YYYY-MM-DD' if 'date'
-
-function sanitizeDateString(dateString, type) {
-  var _a = __read(dateString.split('-'), 3),
-      year = _a[0],
-      _b = _a[1],
-      month = _b === void 0 ? 1 : _b,
-      _c = _a[2],
-      date = _c === void 0 ? 1 : _c;
-
-  return (year + "-" + Object(_util__WEBPACK_IMPORTED_MODULE_12__["pad"])(month) + "-" + Object(_util__WEBPACK_IMPORTED_MODULE_12__["pad"])(date)).substr(0, {
-    date: 10,
-    month: 7,
-    year: 4
-  }[type]);
-}
 
 /* harmony default export */ __webpack_exports__["default"] = (Object(_util_mixins__WEBPACK_IMPORTED_MODULE_8__["default"])(_mixins_localable__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_picker__WEBPACK_IMPORTED_MODULE_6__["default"]).extend({
   name: 'v-date-picker',
@@ -12690,7 +12653,7 @@ function sanitizeDateString(dateString, type) {
 
         var multipleValue = Object(_util_helpers__WEBPACK_IMPORTED_MODULE_9__["wrapInArray"])(_this.value);
         var date = multipleValue[multipleValue.length - 1] || (typeof _this.showCurrent === 'string' ? _this.showCurrent : now.getFullYear() + "-" + (now.getMonth() + 1));
-        return sanitizeDateString(date, _this.type === 'date' ? 'month' : 'year');
+        return Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(date, _this.type === 'date' ? 'month' : 'year');
       }()
     };
   },
@@ -12717,7 +12680,7 @@ function sanitizeDateString(dateString, type) {
     },
     current: function current() {
       if (this.showCurrent === true) {
-        return sanitizeDateString(this.now.getFullYear() + "-" + (this.now.getMonth() + 1) + "-" + this.now.getDate(), this.type);
+        return Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.now.getFullYear() + "-" + (this.now.getMonth() + 1) + "-" + this.now.getDate(), this.type);
       }
 
       return this.showCurrent || null;
@@ -12732,16 +12695,16 @@ function sanitizeDateString(dateString, type) {
       return Number((this.pickerDate || this.tableDate).split('-')[0]);
     },
     minMonth: function minMonth() {
-      return this.min ? sanitizeDateString(this.min, 'month') : null;
+      return this.min ? Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.min, 'month') : null;
     },
     maxMonth: function maxMonth() {
-      return this.max ? sanitizeDateString(this.max, 'month') : null;
+      return this.max ? Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.max, 'month') : null;
     },
     minYear: function minYear() {
-      return this.min ? sanitizeDateString(this.min, 'year') : null;
+      return this.min ? Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.min, 'year') : null;
     },
     maxYear: function maxYear() {
-      return this.max ? sanitizeDateString(this.max, 'year') : null;
+      return this.max ? Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.max, 'year') : null;
     },
     formatters: function formatters() {
       return {
@@ -12809,16 +12772,16 @@ function sanitizeDateString(dateString, type) {
       // Make a ISO 8601 strings from val and prev for comparision, otherwise it will incorrectly
       // compare for example '2000-9' and '2000-10'
       var sanitizeType = this.type === 'month' ? 'year' : 'month';
-      this.isReversing = sanitizeDateString(val, sanitizeType) < sanitizeDateString(prev, sanitizeType);
+      this.isReversing = Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(val, sanitizeType) < Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(prev, sanitizeType);
       this.$emit('update:picker-date', val);
     },
     pickerDate: function pickerDate(val) {
       if (val) {
         this.tableDate = val;
       } else if (this.lastValue && this.type === 'date') {
-        this.tableDate = sanitizeDateString(this.lastValue, 'month');
+        this.tableDate = Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.lastValue, 'month');
       } else if (this.lastValue && this.type === 'month') {
-        this.tableDate = sanitizeDateString(this.lastValue, 'year');
+        this.tableDate = Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.lastValue, 'year');
       }
     },
     value: function value(newValue, oldValue) {
@@ -12826,7 +12789,7 @@ function sanitizeDateString(dateString, type) {
       this.setInputDate();
 
       if (!this.isMultiple && this.value && !this.pickerDate || this.isMultiple && this.multipleValue.length && (!oldValue || !oldValue.length) && !this.pickerDate) {
-        this.tableDate = sanitizeDateString(this.inputDate, this.type === 'month' ? 'year' : 'month');
+        this.tableDate = Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.inputDate, this.type === 'month' ? 'year' : 'month');
       }
     },
     type: function type(_type) {
@@ -12834,7 +12797,7 @@ function sanitizeDateString(dateString, type) {
 
       if (this.value && this.value.length) {
         var output = this.multipleValue.map(function (val) {
-          return sanitizeDateString(val, _type);
+          return Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(val, _type);
         }).filter(this.isDateAllowed);
         this.$emit('input', this.isMultiple ? output : output[0]);
       }
@@ -13016,7 +12979,7 @@ function sanitizeDateString(dateString, type) {
         props: {
           allowedDates: this.type === 'month' ? this.allowedDates : null,
           color: this.color,
-          current: this.current ? sanitizeDateString(this.current, 'month') : null,
+          current: this.current ? Object(_util__WEBPACK_IMPORTED_MODULE_12__["sanitizeDateString"])(this.current, 'month') : null,
           dark: this.dark,
           disabled: this.disabled,
           events: this.type === 'month' ? this.events : null,
@@ -14055,6 +14018,12 @@ var __spread = undefined && undefined.__spread || function () {
         return _this.$createElement('div', _this.setBackgroundColor(color));
       })) : null;
     },
+    isValidScroll: function isValidScroll(e, calculateTableDate) {
+      var tableDate = calculateTableDate(e.deltaY); // tableDate is 'YYYY-MM' for DateTable and 'YYYY' for MonthTable
+
+      var sanitizeType = tableDate.split('-').length === 1 ? 'year' : 'month';
+      return e.deltaY === 0 || e.deltaY < 0 && (this.min ? tableDate >= Object(_util__WEBPACK_IMPORTED_MODULE_5__["sanitizeDateString"])(this.min, sanitizeType) : true) || e.deltaY > 0 && (this.max ? tableDate <= Object(_util__WEBPACK_IMPORTED_MODULE_5__["sanitizeDateString"])(this.max, sanitizeType) : true);
+    },
     wheel: function wheel(e, calculateTableDate) {
       this.$emit('update:table-date', calculateTableDate(e.deltaY));
     },
@@ -14091,7 +14060,9 @@ var __spread = undefined && undefined.__spread || function () {
           wheel: function wheel(e) {
             e.preventDefault();
 
-            _this.wheelThrottle(e, calculateTableDate);
+            if (_this.isValidScroll(e, calculateTableDate)) {
+              _this.wheelThrottle(e, calculateTableDate);
+            }
           }
         } : undefined,
         directives: [touchDirective]
@@ -14227,7 +14198,7 @@ function createItemTypeListeners(instance, itemTypeSuffix) {
 /*!**************************************************!*\
   !*** ./src/components/VDatePicker/util/index.ts ***!
   \**************************************************/
-/*! exports provided: createItemTypeListeners, createItemTypeNativeListeners, createNativeLocaleFormatter, monthChange, pad */
+/*! exports provided: createItemTypeListeners, createItemTypeNativeListeners, createNativeLocaleFormatter, monthChange, sanitizeDateString, pad */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14243,8 +14214,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _monthChange__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./monthChange */ "./src/components/VDatePicker/util/monthChange.ts");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "monthChange", function() { return _monthChange__WEBPACK_IMPORTED_MODULE_2__["default"]; });
 
-/* harmony import */ var _pad__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pad */ "./src/components/VDatePicker/util/pad.ts");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pad", function() { return _pad__WEBPACK_IMPORTED_MODULE_3__["default"]; });
+/* harmony import */ var _sanitizeDateString__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./sanitizeDateString */ "./src/components/VDatePicker/util/sanitizeDateString.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "sanitizeDateString", function() { return _sanitizeDateString__WEBPACK_IMPORTED_MODULE_3__["default"]; });
+
+/* harmony import */ var _pad__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pad */ "./src/components/VDatePicker/util/pad.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pad", function() { return _pad__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+
 
 
 
@@ -14362,6 +14337,63 @@ var padStart = function padStart(string, targetLength, padString) {
   }
 
   return padStart(n, length, '0');
+});
+
+/***/ }),
+
+/***/ "./src/components/VDatePicker/util/sanitizeDateString.ts":
+/*!***************************************************************!*\
+  !*** ./src/components/VDatePicker/util/sanitizeDateString.ts ***!
+  \***************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _pad__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pad */ "./src/components/VDatePicker/util/pad.ts");
+var __read = undefined && undefined.__read || function (o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m) return o;
+  var i = m.call(o),
+      r,
+      ar = [],
+      e;
+
+  try {
+    while ((n === void 0 || n-- > 0) && !(r = i.next()).done) {
+      ar.push(r.value);
+    }
+  } catch (error) {
+    e = {
+      error: error
+    };
+  } finally {
+    try {
+      if (r && !r.done && (m = i["return"])) m.call(i);
+    } finally {
+      if (e) throw e.error;
+    }
+  }
+
+  return ar;
+}; // Adds leading zero to month/day if necessary, returns 'YYYY' if type = 'year',
+// 'YYYY-MM' if 'month' and 'YYYY-MM-DD' if 'date'
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (function (dateString, type) {
+  var _a = __read(dateString.split('-'), 3),
+      year = _a[0],
+      _b = _a[1],
+      month = _b === void 0 ? 1 : _b,
+      _c = _a[2],
+      date = _c === void 0 ? 1 : _c;
+
+  return (year + "-" + Object(_pad__WEBPACK_IMPORTED_MODULE_0__["default"])(month) + "-" + Object(_pad__WEBPACK_IMPORTED_MODULE_0__["default"])(date)).substr(0, {
+    date: 10,
+    month: 7,
+    year: 4
+  }[type]);
 });
 
 /***/ }),
@@ -15495,7 +15527,7 @@ var __spread = undefined && undefined.__spread || function () {
     text: function text() {
       var _this = this;
 
-      if (!this.isDirty) return [this.placeholder];
+      if (!this.isDirty && (this.isFocused || !this.hasLabel)) return [this.placeholder];
       return this.internalArrayValue.map(function (file) {
         var _a = file.name,
             name = _a === void 0 ? '' : _a,
@@ -18264,17 +18296,12 @@ var __assign = undefined && undefined.__assign || function () {
   },
   methods: {
     genContent: function genContent() {
-      var slot = Object(_util_helpers__WEBPACK_IMPORTED_MODULE_4__["getSlot"])(this);
-      /* istanbul ignore if */
-
-      if (!this.transition) return slot;
-      var children = [];
-      if (this.isActive) children.push(slot);
-      return this.$createElement('transition', {
+      var children = this.isActive && Object(_util_helpers__WEBPACK_IMPORTED_MODULE_4__["getSlot"])(this);
+      return this.transition ? this.$createElement('transition', {
         props: {
           name: this.transition
         }
-      }, children);
+      }, children) : children;
     },
     onObserve: function onObserve(entries, observer, isIntersecting) {
       if (this.isActive) return;
@@ -18849,7 +18876,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_9__["default"])(_m
       if (this.$attrs.hasOwnProperty('role')) {// do nothing, role already provided
       } else if (this.isInNav) {// do nothing, role is inherit
       } else if (this.isInGroup) {
-        attrs.role = 'listitem';
+        attrs.role = 'option';
         attrs['aria-selected'] = String(this.isActive);
       } else if (this.isInMenu) {
         attrs.role = this.isClickable ? 'menuitem' : undefined;
@@ -20870,6 +20897,7 @@ var __spread = undefined && undefined.__spread || function () {
           'v-pagination__navigation--disabled': disabled
         },
         attrs: {
+          disabled: disabled,
           type: 'button',
           'aria-label': label
         },
@@ -22608,7 +22636,6 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.$createElement(_VIcon__WEBPACK_IMPORTED_MODULE_1__["default"], this.setTextColor(this.getColor(props), {
         attrs: {
-          tabindex: -1,
           'aria-label': this.$vuetify.lang.t(this.iconLabel, i + 1, Number(this.length))
         },
         directives: this.directives,
@@ -22941,7 +22968,13 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_14__["default"])(_
       return "list-" + this._uid;
     },
     computedCounterValue: function computedCounterValue() {
-      return this.multiple ? this.selectedItems.length : (this.getText(this.selectedItems[0]) || '').toString().length;
+      var value = this.multiple ? this.selectedItems : (this.getText(this.selectedItems[0]) || '').toString();
+
+      if (typeof this.counterValue === 'function') {
+        return this.counterValue(value);
+      }
+
+      return value.length;
     },
     directives: function directives() {
       var _this = this;
@@ -23507,6 +23540,8 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_14__["default"])(_
       }
     },
     onUpDown: function onUpDown(e) {
+      var _this = this;
+
       var menu = this.$refs.menu;
       if (!menu) return;
       e.preventDefault(); // Multiple selects do not cycle their value
@@ -23520,6 +23555,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_14__["default"])(_
       menu.isBooted = true;
       window.requestAnimationFrame(function () {
         menu.getTiles();
+        if (!menu.hasClickableTiles) return _this.activateMenu();
 
         switch (keyCode) {
           case _util_helpers__WEBPACK_IMPORTED_MODULE_12__["keyCodes"].up:
@@ -23539,7 +23575,7 @@ var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_14__["default"])(_
             break;
         }
 
-        menu.activeTile && menu.activeTile.click();
+        _this.selectItem(_this.allItems[_this.getMenuIndex()]);
       });
     },
     selectItem: function selectItem(item) {
@@ -27971,9 +28007,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_validatable__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../mixins/validatable */ "./src/mixins/validatable/index.ts");
 /* harmony import */ var _directives_resize__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../directives/resize */ "./src/directives/resize/index.ts");
 /* harmony import */ var _directives_ripple__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../directives/ripple */ "./src/directives/ripple/index.ts");
-/* harmony import */ var _util_helpers__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../util/helpers */ "./src/util/helpers.ts");
-/* harmony import */ var _util_console__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../util/console */ "./src/util/console.ts");
-/* harmony import */ var _util_mixins__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../util/mixins */ "./src/util/mixins.ts");
+/* harmony import */ var _util_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../util/dom */ "./src/util/dom.ts");
+/* harmony import */ var _util_helpers__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../util/helpers */ "./src/util/helpers.ts");
+/* harmony import */ var _util_console__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../util/console */ "./src/util/console.ts");
+/* harmony import */ var _util_mixins__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../util/mixins */ "./src/util/mixins.ts");
 var __assign = undefined && undefined.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -28041,10 +28078,11 @@ var __spread = undefined && undefined.__spread || function () {
  // Utilities
 
 
+
  // Types
 
 
-var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_11__["default"])(_VInput__WEBPACK_IMPORTED_MODULE_1__["default"], Object(_mixins_intersectable__WEBPACK_IMPORTED_MODULE_4__["default"])({
+var baseMixins = Object(_util_mixins__WEBPACK_IMPORTED_MODULE_12__["default"])(_VInput__WEBPACK_IMPORTED_MODULE_1__["default"], Object(_mixins_intersectable__WEBPACK_IMPORTED_MODULE_4__["default"])({
   onVisible: ['onResize', 'tryAutofocus']
 }), _mixins_loadable__WEBPACK_IMPORTED_MODULE_5__["default"]);
 var dirtyTypes = ['color', 'file', 'time', 'date', 'datetime-local', 'week', 'month'];
@@ -28198,19 +28236,19 @@ var dirtyTypes = ['color', 'file', 'time', 'date', 'datetime-local', 'week', 'mo
   created: function created() {
     /* istanbul ignore next */
     if (this.$attrs.hasOwnProperty('box')) {
-      Object(_util_console__WEBPACK_IMPORTED_MODULE_10__["breaking"])('box', 'filled', this);
+      Object(_util_console__WEBPACK_IMPORTED_MODULE_11__["breaking"])('box', 'filled', this);
     }
     /* istanbul ignore next */
 
 
     if (this.$attrs.hasOwnProperty('browser-autocomplete')) {
-      Object(_util_console__WEBPACK_IMPORTED_MODULE_10__["breaking"])('browser-autocomplete', 'autocomplete', this);
+      Object(_util_console__WEBPACK_IMPORTED_MODULE_11__["breaking"])('browser-autocomplete', 'autocomplete', this);
     }
     /* istanbul ignore if */
 
 
     if (this.shaped && !(this.filled || this.outlined || this.isSolo)) {
-      Object(_util_console__WEBPACK_IMPORTED_MODULE_10__["consoleWarn"])('shaped should be used with either filled or outlined', this);
+      Object(_util_console__WEBPACK_IMPORTED_MODULE_11__["consoleWarn"])('shaped should be used with either filled or outlined', this);
     }
   },
   mounted: function mounted() {
@@ -28360,7 +28398,7 @@ var dirtyTypes = ['color', 'file', 'time', 'date', 'datetime-local', 'week', 'mo
       });
       return this.$createElement('legend', {
         style: {
-          width: !this.isSingle ? Object(_util_helpers__WEBPACK_IMPORTED_MODULE_9__["convertToUnit"])(width) : undefined
+          width: !this.isSingle ? Object(_util_helpers__WEBPACK_IMPORTED_MODULE_10__["convertToUnit"])(width) : undefined
         }
       }, [span]);
     },
@@ -28430,8 +28468,10 @@ var dirtyTypes = ['color', 'file', 'time', 'date', 'datetime-local', 'week', 'mo
     },
     onFocus: function onFocus(e) {
       if (!this.$refs.input) return;
+      var root = Object(_util_dom__WEBPACK_IMPORTED_MODULE_9__["attachedRoot"])(this.$el);
+      if (!root) return;
 
-      if (document.activeElement !== this.$refs.input) {
+      if (root.activeElement !== this.$refs.input) {
         return this.$refs.input.focus();
       }
 
@@ -28446,7 +28486,7 @@ var dirtyTypes = ['color', 'file', 'time', 'date', 'datetime-local', 'week', 'mo
       this.badInput = target.validity && target.validity.badInput;
     },
     onKeyDown: function onKeyDown(e) {
-      if (e.keyCode === _util_helpers__WEBPACK_IMPORTED_MODULE_9__["keyCodes"].enter) this.$emit('change', this.internalValue);
+      if (e.keyCode === _util_helpers__WEBPACK_IMPORTED_MODULE_10__["keyCodes"].enter) this.$emit('change', this.internalValue);
       this.$emit('keydown', e);
     },
     onMouseDown: function onMouseDown(e) {
@@ -28475,7 +28515,9 @@ var dirtyTypes = ['color', 'file', 'time', 'date', 'datetime-local', 'week', 'mo
       this.prependWidth = this.$refs['prepend-inner'].offsetWidth;
     },
     tryAutofocus: function tryAutofocus() {
-      if (!this.autofocus || typeof document === 'undefined' || !this.$refs.input || document.activeElement === this.$refs.input) return false;
+      if (!this.autofocus || typeof document === 'undefined' || !this.$refs.input) return false;
+      var root = Object(_util_dom__WEBPACK_IMPORTED_MODULE_9__["attachedRoot"])(this.$el);
+      if (!root || root.activeElement === this.$refs.input) return false;
       this.$refs.input.focus();
       return true;
     },
@@ -33806,7 +33848,7 @@ function () {
 
   Vuetify.install = _install__WEBPACK_IMPORTED_MODULE_0__["install"];
   Vuetify.installed = false;
-  Vuetify.version = "2.4.3";
+  Vuetify.version = "2.4.5";
   Vuetify.config = {
     silent: false
   };
@@ -36626,7 +36668,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   rating: {
     ariaLabel: {
-      icon: 'Rating {0} of {1}'
+      icon: 'Hodnotenie {0} z {1}'
     }
   }
 });
@@ -43741,6 +43783,44 @@ function dedupeModelListeners(data) {
       delete data.on.input;
     }
   }
+}
+
+/***/ }),
+
+/***/ "./src/util/dom.ts":
+/*!*************************!*\
+  !*** ./src/util/dom.ts ***!
+  \*************************/
+/*! exports provided: attachedRoot */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "attachedRoot", function() { return attachedRoot; });
+/**
+ * Returns:
+ *  - 'null' if the node is not attached to the DOM
+ *  - the root node (HTMLDocument | ShadowRoot) otherwise
+ */
+function attachedRoot(node) {
+  /* istanbul ignore next */
+  if (typeof node.getRootNode !== 'function') {
+    // Shadow DOM not supported (IE11), lets find the root of this node
+    while (node.parentNode) {
+      node = node.parentNode;
+    } // The root parent is the document if the node is attached to the DOM
+
+
+    if (node !== document) return null;
+    return document;
+  }
+
+  var root = node.getRootNode(); // The composed root node is the document if the node is attached to the DOM
+
+  if (root !== document && root.getRootNode({
+    composed: true
+  }) !== document) return null;
+  return root;
 }
 
 /***/ }),

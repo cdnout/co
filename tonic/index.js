@@ -104,11 +104,11 @@ class Tonic extends window.HTMLElement {
     }
 
     if (!htmlName) htmlName = Tonic._splitName(c.name).toLowerCase()
-    if (window.customElements.get(htmlName)) {
+    if (!Tonic.ssr && window.customElements.get(htmlName)) {
       throw new Error(`Cannot Tonic.add(${c.name}, '${htmlName}') twice`)
     }
 
-    if (!c.prototype.isTonicComponent) {
+    if (!c.prototype || !c.prototype.isTonicComponent) {
       const tmp = { [c.name]: class extends Tonic {} }[c.name]
       tmp.prototype.render = c
       c = tmp
@@ -120,7 +120,7 @@ class Tonic extends window.HTMLElement {
     Tonic._tags = Object.keys(Tonic._reg).join()
     window.customElements.define(htmlName, c)
 
-    if (c.stylesheet) {
+    if (typeof c.stylesheet === 'function') {
       Tonic.registerStyles(c.stylesheet)
     }
 
@@ -203,7 +203,7 @@ class Tonic extends window.HTMLElement {
   scheduleReRender (oldProps) {
     if (this.pendingReRender) return this.pendingReRender
 
-    this.pendingReRender = new Promise(resolve => window.setTimeout(() => {
+    this.pendingReRender = new Promise(resolve => setTimeout(() => {
       if (!this.isInDocument(this.shadowRoot || this)) return
       const p = this._set(this.shadowRoot || this, this.render)
       this.pendingReRender = null

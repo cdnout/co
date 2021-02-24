@@ -2147,6 +2147,6 @@ Object.defineProperty(VueI18n, 'availabilities', {
 });
 
 VueI18n.install = install;
-VueI18n.version = '8.22.4';
+VueI18n.version = '8.23.0';
 
 export default VueI18n;

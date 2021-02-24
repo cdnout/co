@@ -1,0 +1,1 @@
+.carousel{width:100%;position:relative}.carousel .carousel-item{display:none}.carousel .carousel-active{display:block}.carousel-fade .carousel-item:not(.carousel-active){pointer-events:none}.carousel .carousel-nav:nth-child(2){display:none}

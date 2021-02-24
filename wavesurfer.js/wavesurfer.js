@@ -1,5 +1,5 @@
 /*!
- * wavesurfer.js 4.4.0 (2021-01-14)
+ * wavesurfer.js 4.5.0 (2021-02-14)
  * https://wavesurfer-js.org
  * @license BSD-3-Clause
  */
@@ -1462,8 +1462,13 @@ var MultiCanvas = /*#__PURE__*/function (_Drawer) {
           return val < 0;
         });
         var height = _this7.params.height * _this7.params.pixelRatio;
-        var offsetY = height * drawIndex || 0;
         var halfH = height / 2;
+        var offsetY = height * drawIndex || 0; // Override offsetY if overlay is true
+
+        if (_this7.params.splitChannelsOptions && _this7.params.splitChannelsOptions.overlay) {
+          offsetY = 0;
+        }
+
         return fn({
           absmax: absmax,
           hasMinVals: hasMinVals,
@@ -4897,6 +4902,12 @@ var WaveSurfer = /*#__PURE__*/function (_util$Observer) {
 
           preload = null;
         }
+      } // loadBuffer(url, peaks, duration) requires that url is a string
+      // but users can pass in a HTMLMediaElement to WaveSurfer
+
+
+      if (this.params.backend === 'WebAudio' && url instanceof HTMLMediaElement) {
+        url = url.src;
       }
 
       switch (this.params.backend) {
@@ -5233,7 +5244,9 @@ var WaveSurfer = /*#__PURE__*/function (_util$Observer) {
       }
 
       if (this.backend) {
-        this.backend.destroy();
+        this.backend.destroy(); // clears memory usage
+
+        this.backend = null;
       }
 
       if (this.drawer) {
@@ -5250,7 +5263,7 @@ var WaveSurfer = /*#__PURE__*/function (_util$Observer) {
 }(util.Observer);
 
 exports.default = WaveSurfer;
-WaveSurfer.VERSION = "4.4.0";
+WaveSurfer.VERSION = "4.5.0";
 WaveSurfer.util = util;
 module.exports = exports.default;
 

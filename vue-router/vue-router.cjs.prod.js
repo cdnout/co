@@ -1,5 +1,5 @@
 /*!
-  * vue-router v4.0.3
+  * vue-router v4.0.4
   * (c) 2021 Eduardo San Martin Morote
   * @license MIT
   */
@@ -13,8 +13,8 @@ const hasSymbol = typeof Symbol === 'function' && typeof Symbol.toStringTag === 
 const PolySymbol = (name) => 
 // vr = vue router
 hasSymbol
-    ? Symbol( name)
-    : ( '_vr_') + name;
+    ? Symbol(name)
+    : ('_vr_') + name;
 // rvlm = Router View Location Matched
 /**
  * RouteRecord being rendered by the closest ancestor Router View. Used for
@@ -23,35 +23,35 @@ hasSymbol
  *
  * @internal
  */
-const matchedRouteKey = /*#__PURE__*/ PolySymbol( 'rvlm');
+const matchedRouteKey = /*#__PURE__*/ PolySymbol('rvlm');
 /**
  * Allows overriding the router view depth to control which component in
  * `matched` is rendered. rvd stands for Router View Depth
  *
  * @internal
  */
-const viewDepthKey = /*#__PURE__*/ PolySymbol( 'rvd');
+const viewDepthKey = /*#__PURE__*/ PolySymbol('rvd');
 /**
  * Allows overriding the router instance returned by `useRouter` in tests. r
  * stands for router
  *
  * @internal
  */
-const routerKey = /*#__PURE__*/ PolySymbol( 'r');
+const routerKey = /*#__PURE__*/ PolySymbol('r');
 /**
  * Allows overriding the current route returned by `useRoute` in tests. rl
  * stands for route location
  *
  * @internal
  */
-const routeLocationKey = /*#__PURE__*/ PolySymbol( 'rl');
+const routeLocationKey = /*#__PURE__*/ PolySymbol('rl');
 /**
  * Allows overriding the current route used by router-view. Internally this is
  * used when the `route` prop is passed.
  *
  * @internal
  */
-const routerViewLocationKey = /*#__PURE__*/ PolySymbol( 'rvl');
+const routerViewLocationKey = /*#__PURE__*/ PolySymbol('rvl');
 
 const isBrowser = typeof window !== 'undefined';
 
@@ -710,7 +710,12 @@ const START_LOCATION_NORMALIZED = {
     redirectedFrom: undefined,
 };
 
-const NavigationFailureSymbol = /*#__PURE__*/ PolySymbol( 'nf');
+const NavigationFailureSymbol = /*#__PURE__*/ PolySymbol('nf');
+/**
+ * Enumeration with all possible types for navigation failures. Can be passed to
+ * {@link isNavigationFailure} to check for specific failures.
+ */
+exports.NavigationFailureType = void 0;
 (function (NavigationFailureType) {
     /**
      * An aborted navigation is a navigation that failed because a navigation
@@ -842,7 +847,12 @@ function tokensToParser(segments, extraOptions) {
                 let subPattern = repeatable ? `((?:${re})(?:/(?:${re}))*)` : `(${re})`;
                 // prepend the slash if we are starting a new segment
                 if (!tokenIndex)
-                    subPattern = optional ? `(?:/${subPattern})` : '/' + subPattern;
+                    subPattern =
+                        // avoid an optional / if there are more segments e.g. /:p?-static
+                        // or /:p?-:p2
+                        optional && segment.length < 2
+                            ? `(?:/${subPattern})`
+                            : '/' + subPattern;
                 if (optional)
                     subPattern += '?';
                 pattern += subPattern;
@@ -906,12 +916,16 @@ function tokensToParser(segments, extraOptions) {
                     const text = Array.isArray(param) ? param.join('/') : param;
                     if (!text) {
                         if (optional) {
-                            // remove the last slash as we could be at the end
-                            if (path.endsWith('/'))
-                                path = path.slice(0, -1);
-                            // do not append a slash on the next iteration
-                            else
-                                avoidDuplicatedSlash = true;
+                            // if we have more than one optional param like /:a?-static we
+                            // don't need to care about the optional param
+                            if (segment.length < 2) {
+                                // remove the last slash as we could be at the end
+                                if (path.endsWith('/'))
+                                    path = path.slice(0, -1);
+                                // do not append a slash on the next iteration
+                                else
+                                    avoidDuplicatedSlash = true;
+                            }
                         }
                         else
                             throw new Error(`Missing required param "${value}"`);
@@ -1002,7 +1016,7 @@ function tokenizePath(path) {
     if (path === '/')
         return [[ROOT_TOKEN]];
     if (!path.startsWith('/')) {
-        throw new Error( `Invalid path "${path}"`);
+        throw new Error(`Invalid path "${path}"`);
     }
     // if (tokenCache.has(path)) return tokenCache.get(path)!
     function crash(message) {
@@ -1764,7 +1778,7 @@ function guardToPromiseFn(guard, to, from, record, name) {
             }
         };
         // wrapping with Promise.resolve allows it to work with both async and sync guards
-        const guardReturn = guard.call(record && record.instances[name], to, from,  next);
+        const guardReturn = guard.call(record && record.instances[name], to, from, next);
         let guardCall = Promise.resolve(guardReturn);
         if (guard.length < 3)
             guardCall = guardCall.then(next);
@@ -1790,7 +1804,7 @@ function extractComponentsGuards(matched, guardType, to, from) {
                 let componentPromise = rawComponent();
                 {
                     // display the error if any
-                    componentPromise = componentPromise.catch( console.error);
+                    componentPromise = componentPromise.catch(console.error);
                 }
                 guards.push(() => componentPromise.then(resolved => {
                     if (!resolved)
@@ -1800,8 +1814,9 @@ function extractComponentsGuards(matched, guardType, to, from) {
                         : resolved;
                     // replace the function with the resolved component
                     record.components[name] = resolvedComponent;
-                    // @ts-ignore: the options types are not propagated to Component
-                    const guard = resolvedComponent[guardType];
+                    // __vccOpts is added by vue-class-component and contain the regular options
+                    let options = resolvedComponent.__vccOpts || resolvedComponent;
+                    const guard = options[guardType];
                     return guard && guardToPromiseFn(guard, to, from, record, name)();
                 }));
             }

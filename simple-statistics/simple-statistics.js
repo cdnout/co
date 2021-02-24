@@ -2176,7 +2176,7 @@ function coefficientOfVariation(x) {
  *
  * in this case, we're trying to determine whether the
  * population mean is equal to the value that we know, which is `x`
- * here. usually the results here are used to look up a
+ * here. Usually the results here are used to look up a
  * [p-value](http://en.wikipedia.org/wiki/P-value), which, for
  * a certain level of significance, will let you determine that the
  * null hypothesis can or cannot be rejected.

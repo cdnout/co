@@ -13708,6 +13708,846 @@ if (true) {
 
 /***/ }),
 
+/***/ "./node_modules/lodash.debounce/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash.debounce/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/** Used as references for various `Number` constants. */
+var NAN = 0 / 0;
+
+/** `Object#toString` result references. */
+var symbolTag = '[object Symbol]';
+
+/** Used to match leading and trailing whitespace. */
+var reTrim = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max,
+    nativeMin = Math.min;
+
+/**
+ * Gets the timestamp of the number of milliseconds that have elapsed since
+ * the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Date
+ * @returns {number} Returns the timestamp.
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => Logs the number of milliseconds it took for the deferred invocation.
+ */
+var now = function() {
+  return root.Date.now();
+};
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed `func` invocations and a `flush` method to immediately invoke them.
+ * Provide `options` to indicate whether `func` should be invoked on the
+ * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+ * with the last arguments provided to the debounced function. Subsequent
+ * calls to the debounced function return the result of the last `func`
+ * invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the debounced function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.debounce` and `_.throttle`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to debounce.
+ * @param {number} [wait=0] The number of milliseconds to delay.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=false]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {number} [options.maxWait]
+ *  The maximum time `func` is allowed to be delayed before it's invoked.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new debounced function.
+ * @example
+ *
+ * // Avoid costly calculations while the window size is in flux.
+ * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+ *
+ * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+ * jQuery(element).on('click', _.debounce(sendMail, 300, {
+ *   'leading': true,
+ *   'trailing': false
+ * }));
+ *
+ * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+ * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+ * var source = new EventSource('/stream');
+ * jQuery(source).on('message', debounced);
+ *
+ * // Cancel the trailing debounced invocation.
+ * jQuery(window).on('popstate', debounced.cancel);
+ */
+function debounce(func, wait, options) {
+  var lastArgs,
+      lastThis,
+      maxWait,
+      result,
+      timerId,
+      lastCallTime,
+      lastInvokeTime = 0,
+      leading = false,
+      maxing = false,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  wait = toNumber(wait) || 0;
+  if (isObject(options)) {
+    leading = !!options.leading;
+    maxing = 'maxWait' in options;
+    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+
+  function invokeFunc(time) {
+    var args = lastArgs,
+        thisArg = lastThis;
+
+    lastArgs = lastThis = undefined;
+    lastInvokeTime = time;
+    result = func.apply(thisArg, args);
+    return result;
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time;
+    // Start the timer for the trailing edge.
+    timerId = setTimeout(timerExpired, wait);
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result;
+  }
+
+  function remainingWait(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime,
+        result = wait - timeSinceLastCall;
+
+    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
+  }
+
+  function shouldInvoke(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime;
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+  }
+
+  function timerExpired() {
+    var time = now();
+    if (shouldInvoke(time)) {
+      return trailingEdge(time);
+    }
+    // Restart the timer.
+    timerId = setTimeout(timerExpired, remainingWait(time));
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined;
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time);
+    }
+    lastArgs = lastThis = undefined;
+    return result;
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+    lastInvokeTime = 0;
+    lastArgs = lastCallTime = lastThis = timerId = undefined;
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(now());
+  }
+
+  function debounced() {
+    var time = now(),
+        isInvoking = shouldInvoke(time);
+
+    lastArgs = arguments;
+    lastThis = this;
+    lastCallTime = time;
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime);
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        timerId = setTimeout(timerExpired, wait);
+        return invokeFunc(lastCallTime);
+      }
+    }
+    if (timerId === undefined) {
+      timerId = setTimeout(timerExpired, wait);
+    }
+    return result;
+  }
+  debounced.cancel = cancel;
+  debounced.flush = flush;
+  return debounced;
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim, '');
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+module.exports = debounce;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/lodash.throttle/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/lodash.throttle/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT = 'Expected a function';
+
+/** Used as references for various `Number` constants. */
+var NAN = 0 / 0;
+
+/** `Object#toString` result references. */
+var symbolTag = '[object Symbol]';
+
+/** Used to match leading and trailing whitespace. */
+var reTrim = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt = parseInt;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = freeGlobal || freeSelf || Function('return this')();
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString = objectProto.toString;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax = Math.max,
+    nativeMin = Math.min;
+
+/**
+ * Gets the timestamp of the number of milliseconds that have elapsed since
+ * the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Date
+ * @returns {number} Returns the timestamp.
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => Logs the number of milliseconds it took for the deferred invocation.
+ */
+var now = function() {
+  return root.Date.now();
+};
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed `func` invocations and a `flush` method to immediately invoke them.
+ * Provide `options` to indicate whether `func` should be invoked on the
+ * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+ * with the last arguments provided to the debounced function. Subsequent
+ * calls to the debounced function return the result of the last `func`
+ * invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the debounced function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.debounce` and `_.throttle`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to debounce.
+ * @param {number} [wait=0] The number of milliseconds to delay.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=false]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {number} [options.maxWait]
+ *  The maximum time `func` is allowed to be delayed before it's invoked.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new debounced function.
+ * @example
+ *
+ * // Avoid costly calculations while the window size is in flux.
+ * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+ *
+ * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+ * jQuery(element).on('click', _.debounce(sendMail, 300, {
+ *   'leading': true,
+ *   'trailing': false
+ * }));
+ *
+ * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+ * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+ * var source = new EventSource('/stream');
+ * jQuery(source).on('message', debounced);
+ *
+ * // Cancel the trailing debounced invocation.
+ * jQuery(window).on('popstate', debounced.cancel);
+ */
+function debounce(func, wait, options) {
+  var lastArgs,
+      lastThis,
+      maxWait,
+      result,
+      timerId,
+      lastCallTime,
+      lastInvokeTime = 0,
+      leading = false,
+      maxing = false,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  wait = toNumber(wait) || 0;
+  if (isObject(options)) {
+    leading = !!options.leading;
+    maxing = 'maxWait' in options;
+    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+
+  function invokeFunc(time) {
+    var args = lastArgs,
+        thisArg = lastThis;
+
+    lastArgs = lastThis = undefined;
+    lastInvokeTime = time;
+    result = func.apply(thisArg, args);
+    return result;
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time;
+    // Start the timer for the trailing edge.
+    timerId = setTimeout(timerExpired, wait);
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result;
+  }
+
+  function remainingWait(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime,
+        result = wait - timeSinceLastCall;
+
+    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
+  }
+
+  function shouldInvoke(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime;
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+  }
+
+  function timerExpired() {
+    var time = now();
+    if (shouldInvoke(time)) {
+      return trailingEdge(time);
+    }
+    // Restart the timer.
+    timerId = setTimeout(timerExpired, remainingWait(time));
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined;
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time);
+    }
+    lastArgs = lastThis = undefined;
+    return result;
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+    lastInvokeTime = 0;
+    lastArgs = lastCallTime = lastThis = timerId = undefined;
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(now());
+  }
+
+  function debounced() {
+    var time = now(),
+        isInvoking = shouldInvoke(time);
+
+    lastArgs = arguments;
+    lastThis = this;
+    lastCallTime = time;
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime);
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        timerId = setTimeout(timerExpired, wait);
+        return invokeFunc(lastCallTime);
+      }
+    }
+    if (timerId === undefined) {
+      timerId = setTimeout(timerExpired, wait);
+    }
+    return result;
+  }
+  debounced.cancel = cancel;
+  debounced.flush = flush;
+  return debounced;
+}
+
+/**
+ * Creates a throttled function that only invokes `func` at most once per
+ * every `wait` milliseconds. The throttled function comes with a `cancel`
+ * method to cancel delayed `func` invocations and a `flush` method to
+ * immediately invoke them. Provide `options` to indicate whether `func`
+ * should be invoked on the leading and/or trailing edge of the `wait`
+ * timeout. The `func` is invoked with the last arguments provided to the
+ * throttled function. Subsequent calls to the throttled function return the
+ * result of the last `func` invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the throttled function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.throttle` and `_.debounce`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to throttle.
+ * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=true]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new throttled function.
+ * @example
+ *
+ * // Avoid excessively updating the position while scrolling.
+ * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
+ *
+ * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
+ * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
+ * jQuery(element).on('click', throttled);
+ *
+ * // Cancel the trailing throttled invocation.
+ * jQuery(window).on('popstate', throttled.cancel);
+ */
+function throttle(func, wait, options) {
+  var leading = true,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT);
+  }
+  if (isObject(options)) {
+    leading = 'leading' in options ? !!options.leading : leading;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+  return debounce(func, wait, {
+    'leading': leading,
+    'maxWait': wait,
+    'trailing': trailing
+  });
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol(value)) {
+    return NAN;
+  }
+  if (isObject(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim, '');
+  var isBinary = reIsBinary.test(value);
+  return (isBinary || reIsOctal.test(value))
+    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex.test(value) ? NAN : +value);
+}
+
+module.exports = throttle;
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "./node_modules/lodash/_DataView.js":
 /*!******************************************!*\
   !*** ./node_modules/lodash/_DataView.js ***!
@@ -17847,208 +18687,6 @@ function constant(value) {
 }
 
 module.exports = constant;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/debounce.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/debounce.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
-    now = __webpack_require__(/*! ./now */ "./node_modules/lodash/now.js"),
-    toNumber = __webpack_require__(/*! ./toNumber */ "./node_modules/lodash/toNumber.js");
-
-/** Error message constants. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeMax = Math.max,
-    nativeMin = Math.min;
-
-/**
- * Creates a debounced function that delays invoking `func` until after `wait`
- * milliseconds have elapsed since the last time the debounced function was
- * invoked. The debounced function comes with a `cancel` method to cancel
- * delayed `func` invocations and a `flush` method to immediately invoke them.
- * Provide `options` to indicate whether `func` should be invoked on the
- * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
- * with the last arguments provided to the debounced function. Subsequent
- * calls to the debounced function return the result of the last `func`
- * invocation.
- *
- * **Note:** If `leading` and `trailing` options are `true`, `func` is
- * invoked on the trailing edge of the timeout only if the debounced function
- * is invoked more than once during the `wait` timeout.
- *
- * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
- * until to the next tick, similar to `setTimeout` with a timeout of `0`.
- *
- * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
- * for details over the differences between `_.debounce` and `_.throttle`.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Function
- * @param {Function} func The function to debounce.
- * @param {number} [wait=0] The number of milliseconds to delay.
- * @param {Object} [options={}] The options object.
- * @param {boolean} [options.leading=false]
- *  Specify invoking on the leading edge of the timeout.
- * @param {number} [options.maxWait]
- *  The maximum time `func` is allowed to be delayed before it's invoked.
- * @param {boolean} [options.trailing=true]
- *  Specify invoking on the trailing edge of the timeout.
- * @returns {Function} Returns the new debounced function.
- * @example
- *
- * // Avoid costly calculations while the window size is in flux.
- * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
- *
- * // Invoke `sendMail` when clicked, debouncing subsequent calls.
- * jQuery(element).on('click', _.debounce(sendMail, 300, {
- *   'leading': true,
- *   'trailing': false
- * }));
- *
- * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
- * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
- * var source = new EventSource('/stream');
- * jQuery(source).on('message', debounced);
- *
- * // Cancel the trailing debounced invocation.
- * jQuery(window).on('popstate', debounced.cancel);
- */
-function debounce(func, wait, options) {
-  var lastArgs,
-      lastThis,
-      maxWait,
-      result,
-      timerId,
-      lastCallTime,
-      lastInvokeTime = 0,
-      leading = false,
-      maxing = false,
-      trailing = true;
-
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  wait = toNumber(wait) || 0;
-  if (isObject(options)) {
-    leading = !!options.leading;
-    maxing = 'maxWait' in options;
-    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
-    trailing = 'trailing' in options ? !!options.trailing : trailing;
-  }
-
-  function invokeFunc(time) {
-    var args = lastArgs,
-        thisArg = lastThis;
-
-    lastArgs = lastThis = undefined;
-    lastInvokeTime = time;
-    result = func.apply(thisArg, args);
-    return result;
-  }
-
-  function leadingEdge(time) {
-    // Reset any `maxWait` timer.
-    lastInvokeTime = time;
-    // Start the timer for the trailing edge.
-    timerId = setTimeout(timerExpired, wait);
-    // Invoke the leading edge.
-    return leading ? invokeFunc(time) : result;
-  }
-
-  function remainingWait(time) {
-    var timeSinceLastCall = time - lastCallTime,
-        timeSinceLastInvoke = time - lastInvokeTime,
-        timeWaiting = wait - timeSinceLastCall;
-
-    return maxing
-      ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke)
-      : timeWaiting;
-  }
-
-  function shouldInvoke(time) {
-    var timeSinceLastCall = time - lastCallTime,
-        timeSinceLastInvoke = time - lastInvokeTime;
-
-    // Either this is the first call, activity has stopped and we're at the
-    // trailing edge, the system time has gone backwards and we're treating
-    // it as the trailing edge, or we've hit the `maxWait` limit.
-    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
-  }
-
-  function timerExpired() {
-    var time = now();
-    if (shouldInvoke(time)) {
-      return trailingEdge(time);
-    }
-    // Restart the timer.
-    timerId = setTimeout(timerExpired, remainingWait(time));
-  }
-
-  function trailingEdge(time) {
-    timerId = undefined;
-
-    // Only invoke if we have `lastArgs` which means `func` has been
-    // debounced at least once.
-    if (trailing && lastArgs) {
-      return invokeFunc(time);
-    }
-    lastArgs = lastThis = undefined;
-    return result;
-  }
-
-  function cancel() {
-    if (timerId !== undefined) {
-      clearTimeout(timerId);
-    }
-    lastInvokeTime = 0;
-    lastArgs = lastCallTime = lastThis = timerId = undefined;
-  }
-
-  function flush() {
-    return timerId === undefined ? result : trailingEdge(now());
-  }
-
-  function debounced() {
-    var time = now(),
-        isInvoking = shouldInvoke(time);
-
-    lastArgs = arguments;
-    lastThis = this;
-    lastCallTime = time;
-
-    if (isInvoking) {
-      if (timerId === undefined) {
-        return leadingEdge(lastCallTime);
-      }
-      if (maxing) {
-        // Handle invocations in a tight loop.
-        clearTimeout(timerId);
-        timerId = setTimeout(timerExpired, wait);
-        return invokeFunc(lastCallTime);
-      }
-    }
-    if (timerId === undefined) {
-      timerId = setTimeout(timerExpired, wait);
-    }
-    return result;
-  }
-  debounced.cancel = cancel;
-  debounced.flush = flush;
-  return debounced;
-}
-
-module.exports = debounce;
 
 
 /***/ }),
@@ -36194,40 +36832,6 @@ module.exports = memoize;
 
 /***/ }),
 
-/***/ "./node_modules/lodash/now.js":
-/*!************************************!*\
-  !*** ./node_modules/lodash/now.js ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var root = __webpack_require__(/*! ./_root */ "./node_modules/lodash/_root.js");
-
-/**
- * Gets the timestamp of the number of milliseconds that have elapsed since
- * the Unix epoch (1 January 1970 00:00:00 UTC).
- *
- * @static
- * @memberOf _
- * @since 2.4.0
- * @category Date
- * @returns {number} Returns the timestamp.
- * @example
- *
- * _.defer(function(stamp) {
- *   console.log(_.now() - stamp);
- * }, _.now());
- * // => Logs the number of milliseconds it took for the deferred invocation.
- */
-var now = function() {
-  return root.Date.now();
-};
-
-module.exports = now;
-
-
-/***/ }),
-
 /***/ "./node_modules/lodash/property.js":
 /*!*****************************************!*\
   !*** ./node_modules/lodash/property.js ***!
@@ -36330,163 +36934,6 @@ function stubFalse() {
 }
 
 module.exports = stubFalse;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/throttle.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/throttle.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var debounce = __webpack_require__(/*! ./debounce */ "./node_modules/lodash/debounce.js"),
-    isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js");
-
-/** Error message constants. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/**
- * Creates a throttled function that only invokes `func` at most once per
- * every `wait` milliseconds. The throttled function comes with a `cancel`
- * method to cancel delayed `func` invocations and a `flush` method to
- * immediately invoke them. Provide `options` to indicate whether `func`
- * should be invoked on the leading and/or trailing edge of the `wait`
- * timeout. The `func` is invoked with the last arguments provided to the
- * throttled function. Subsequent calls to the throttled function return the
- * result of the last `func` invocation.
- *
- * **Note:** If `leading` and `trailing` options are `true`, `func` is
- * invoked on the trailing edge of the timeout only if the throttled function
- * is invoked more than once during the `wait` timeout.
- *
- * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
- * until to the next tick, similar to `setTimeout` with a timeout of `0`.
- *
- * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
- * for details over the differences between `_.throttle` and `_.debounce`.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Function
- * @param {Function} func The function to throttle.
- * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
- * @param {Object} [options={}] The options object.
- * @param {boolean} [options.leading=true]
- *  Specify invoking on the leading edge of the timeout.
- * @param {boolean} [options.trailing=true]
- *  Specify invoking on the trailing edge of the timeout.
- * @returns {Function} Returns the new throttled function.
- * @example
- *
- * // Avoid excessively updating the position while scrolling.
- * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
- *
- * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
- * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
- * jQuery(element).on('click', throttled);
- *
- * // Cancel the trailing throttled invocation.
- * jQuery(window).on('popstate', throttled.cancel);
- */
-function throttle(func, wait, options) {
-  var leading = true,
-      trailing = true;
-
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  if (isObject(options)) {
-    leading = 'leading' in options ? !!options.leading : leading;
-    trailing = 'trailing' in options ? !!options.trailing : trailing;
-  }
-  return debounce(func, wait, {
-    'leading': leading,
-    'maxWait': wait,
-    'trailing': trailing
-  });
-}
-
-module.exports = throttle;
-
-
-/***/ }),
-
-/***/ "./node_modules/lodash/toNumber.js":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/toNumber.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isObject = __webpack_require__(/*! ./isObject */ "./node_modules/lodash/isObject.js"),
-    isSymbol = __webpack_require__(/*! ./isSymbol */ "./node_modules/lodash/isSymbol.js");
-
-/** Used as references for various `Number` constants. */
-var NAN = 0 / 0;
-
-/** Used to match leading and trailing whitespace. */
-var reTrim = /^\s+|\s+$/g;
-
-/** Used to detect bad signed hexadecimal string values. */
-var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-/** Used to detect binary string values. */
-var reIsBinary = /^0b[01]+$/i;
-
-/** Used to detect octal string values. */
-var reIsOctal = /^0o[0-7]+$/i;
-
-/** Built-in method references without a dependency on `root`. */
-var freeParseInt = parseInt;
-
-/**
- * Converts `value` to a number.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to process.
- * @returns {number} Returns the number.
- * @example
- *
- * _.toNumber(3.2);
- * // => 3.2
- *
- * _.toNumber(Number.MIN_VALUE);
- * // => 5e-324
- *
- * _.toNumber(Infinity);
- * // => Infinity
- *
- * _.toNumber('3.2');
- * // => 3.2
- */
-function toNumber(value) {
-  if (typeof value == 'number') {
-    return value;
-  }
-  if (isSymbol(value)) {
-    return NAN;
-  }
-  if (isObject(value)) {
-    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-    value = isObject(other) ? (other + '') : other;
-  }
-  if (typeof value != 'string') {
-    return value === 0 ? value : +value;
-  }
-  value = value.replace(reTrim, '');
-  var isBinary = reIsBinary.test(value);
-  return (isBinary || reIsOctal.test(value))
-    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-    : (reIsBadHex.test(value) ? NAN : +value);
-}
-
-module.exports = toNumber;
 
 
 /***/ }),
@@ -37226,53 +37673,6 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ "./node_modules/raf-schd/dist/raf-schd.esm.js":
-/*!****************************************************!*\
-  !*** ./node_modules/raf-schd/dist/raf-schd.esm.js ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var rafSchd = function rafSchd(fn) {
-  var lastArgs = [];
-  var frameId = null;
-
-  var wrapperFn = function wrapperFn() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    lastArgs = args;
-
-    if (frameId) {
-      return;
-    }
-
-    frameId = requestAnimationFrame(function () {
-      frameId = null;
-      fn.apply(void 0, lastArgs);
-    });
-  };
-
-  wrapperFn.cancel = function () {
-    if (!frameId) {
-      return;
-    }
-
-    cancelAnimationFrame(frameId);
-    frameId = null;
-  };
-
-  return wrapperFn;
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (rafSchd);
-
-
-/***/ }),
-
 /***/ "./node_modules/raf/index.js":
 /*!***********************************!*\
   !*** ./node_modules/raf/index.js ***!
@@ -37357,6 +37757,271 @@ module.exports.polyfill = function(object) {
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/react-is/cjs/react-is.development.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-is/cjs/react-is.development.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/** @license React v16.10.2
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+// (unstable) APIs that have been removed. Can we remove the symbols?
+
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+
+function isValidElementType(type) {
+  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE);
+}
+
+/**
+ * Forked from fbjs/warning:
+ * https://github.com/facebook/fbjs/blob/e66ba20ad5be433eb54423f2b097d829324d9de6/packages/fbjs/src/__forks__/warning.js
+ *
+ * Only change is we use console.warn instead of console.error,
+ * and do nothing when 'console' is not supported.
+ * This really simplifies the code.
+ * ---
+ * Similar to invariant but only logs a warning if the condition is not met.
+ * This can be used to log issues in development environments in critical
+ * paths. Removing the logging code for production environments will keep the
+ * same logic and follow the same code paths.
+ */
+var lowPriorityWarningWithoutStack = function () {};
+
+{
+  var printWarning = function (format) {
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    var argIndex = 0;
+    var message = 'Warning: ' + format.replace(/%s/g, function () {
+      return args[argIndex++];
+    });
+
+    if (typeof console !== 'undefined') {
+      console.warn(message);
+    }
+
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+
+  lowPriorityWarningWithoutStack = function (condition, format) {
+    if (format === undefined) {
+      throw new Error('`lowPriorityWarningWithoutStack(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+
+    if (!condition) {
+      for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
+      }
+
+      printWarning.apply(void 0, [format].concat(args));
+    }
+  };
+}
+
+var lowPriorityWarningWithoutStack$1 = lowPriorityWarningWithoutStack;
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
+          case REACT_CONCURRENT_MODE_TYPE:
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+            return type;
+
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+
+              default:
+                return $$typeof;
+            }
+
+        }
+
+      case REACT_LAZY_TYPE:
+      case REACT_MEMO_TYPE:
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+} // AsyncMode is deprecated along with isAsyncMode
+
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
+var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true;
+      lowPriorityWarningWithoutStack$1(false, 'The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+    }
+  }
+
+  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+}
+function isConcurrentMode(object) {
+  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+
+exports.typeOf = typeOf;
+exports.AsyncMode = AsyncMode;
+exports.ConcurrentMode = ConcurrentMode;
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.isValidElementType = isValidElementType;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-is/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/react-is/index.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/react-is/cjs/react-is.development.js");
+}
+
 
 /***/ }),
 
@@ -37532,497 +38197,325 @@ function polyfill(Component) {
 
 /***/ }),
 
-/***/ "./node_modules/react-resize-detector/lib/esm/components/ResizeDetector.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/react-resize-detector/lib/esm/components/ResizeDetector.js ***!
-  \*********************************************************************************/
-/*! exports provided: default */
+/***/ "./node_modules/react-resize-detector/build/index.esm.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/react-resize-detector/build/index.esm.js ***!
+  \***************************************************************/
+/*! exports provided: default, useResizeDetector, withResizeDetector */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useResizeDetector", function() { return useResizeDetector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withResizeDetector", function() { return withResizeDetector; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var resize_observer_polyfill__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! resize-observer-polyfill */ "./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js");
-/* harmony import */ var raf_schd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! raf-schd */ "./node_modules/raf-schd/dist/raf-schd.esm.js");
-/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils */ "./node_modules/react-resize-detector/lib/esm/lib/utils.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-
-
-
-var ResizeDetector = /*#__PURE__*/function (_PureComponent) {
-  _inherits(ResizeDetector, _PureComponent);
-
-  var _super = _createSuper(ResizeDetector);
-
-  function ResizeDetector(props) {
-    var _this;
-
-    _classCallCheck(this, ResizeDetector);
-
-    _this = _super.call(this, props);
-
-    _defineProperty(_assertThisInitialized(_this), "cancelHandler", function () {
-      if (_this.resizeHandler && _this.resizeHandler.cancel) {
-        // cancel debounced handler
-        _this.resizeHandler.cancel();
-
-        _this.resizeHandler = null;
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "rafClean", function () {
-      if (_this.raf && _this.raf.cancel) {
-        _this.raf.cancel();
-
-        _this.raf = null;
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "attachObserver", function () {
-      var targetRef = _this.props.targetRef;
-
-      if (targetRef && targetRef.current) {
-        _this.targetRef.current = targetRef.current;
-      }
-
-      var element = _this.getElement();
-
-      if (!element) {
-        // can't find element to observe
-        return;
-      }
-
-      if (_this.observableElement && _this.observableElement === element) {
-        // element is already observed
-        return;
-      }
-
-      _this.observableElement = element;
-
-      _this.resizeObserver.observe(element);
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "getElement", function () {
-      var _this$props = _this.props,
-          querySelector = _this$props.querySelector,
-          targetDomEl = _this$props.targetDomEl;
-      if (Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["isSSR"])()) return undefined; // in case we pass a querySelector
-
-      if (querySelector) return document.querySelector(querySelector); // in case we pass a DOM element
-
-      if (targetDomEl && Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["isDOMElement"])(targetDomEl)) return targetDomEl; // in case we pass a React ref using React.createRef()
-
-      if (_this.targetRef && Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["isDOMElement"])(_this.targetRef.current)) return _this.targetRef.current; // the worse case when we don't receive any information from the parent and the library doesn't add any wrappers
-      // we have to use a deprecated `findDOMNode` method in order to find a DOM element to attach to
-      // eslint-disable-next-line react/no-find-dom-node
-
-      var currentElement = Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"])(_assertThisInitialized(_this));
-      if (!currentElement) return undefined;
-
-      var renderType = _this.getRenderType();
-
-      switch (renderType) {
-        case 'renderProp':
-          return currentElement;
-
-        case 'childFunction':
-          return currentElement;
-
-        case 'child':
-          return currentElement;
-
-        case 'childArray':
-          return currentElement;
-
-        default:
-          return currentElement.parentElement;
-      }
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "createUpdater", function () {
-      _this.rafClean();
-
-      _this.raf = Object(raf_schd__WEBPACK_IMPORTED_MODULE_3__["default"])(function (_ref) {
-        var width = _ref.width,
-            height = _ref.height;
-        var onResize = _this.props.onResize;
-
-        if (Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["isFunction"])(onResize)) {
-          onResize(width, height);
-        }
-
-        _this.setState({
-          width: width,
-          height: height
-        });
-      });
-      return _this.raf;
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "createResizeHandler", function (entries) {
-      var _this$state = _this.state,
-          widthCurrent = _this$state.width,
-          heightCurrent = _this$state.height;
-      var _this$props2 = _this.props,
-          handleWidth = _this$props2.handleWidth,
-          handleHeight = _this$props2.handleHeight;
-      if (!handleWidth && !handleHeight) return;
-
-      var updater = _this.createUpdater();
-
-      entries.forEach(function (entry) {
-        var _ref2 = entry && entry.contentRect || {},
-            width = _ref2.width,
-            height = _ref2.height;
-
-        var isWidthChanged = handleWidth && widthCurrent !== width;
-        var isHeightChanged = handleHeight && heightCurrent !== height;
-        var isSizeChanged = isWidthChanged || isHeightChanged;
-        var shouldSetSize = !_this.skipOnMount && isSizeChanged && !Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["isSSR"])();
-
-        if (shouldSetSize) {
-          updater({
-            width: width,
-            height: height
-          });
-        }
-
-        _this.skipOnMount = false;
-      });
-    });
-
-    _defineProperty(_assertThisInitialized(_this), "getRenderType", function () {
-      var _this$props3 = _this.props,
-          render = _this$props3.render,
-          children = _this$props3.children;
-
-      if (Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["isFunction"])(render)) {
-        // DEPRECATED. Use `Child Function Pattern` instead
-        return 'renderProp';
-      }
-
-      if (Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["isFunction"])(children)) {
-        return 'childFunction';
-      }
-
-      if ( /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["isValidElement"])(children)) {
-        return 'child';
-      }
-
-      if (Array.isArray(children)) {
-        // DEPRECATED. Wrap children with a single parent
-        return 'childArray';
-      } // DEPRECATED. Use `Child Function Pattern` instead
-
-
-      return 'parent';
-    });
-
-    var skipOnMount = props.skipOnMount,
-        refreshMode = props.refreshMode,
-        refreshRate = props.refreshRate,
-        refreshOptions = props.refreshOptions;
-    _this.state = {
-      width: undefined,
-      height: undefined
-    };
-    _this.skipOnMount = skipOnMount;
-    _this.raf = null;
-    _this.unmounted = false;
-    _this.targetRef = /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["createRef"])();
-    _this.observableElement = null;
-    var handle = Object(_lib_utils__WEBPACK_IMPORTED_MODULE_4__["getHandle"])(refreshMode);
-    _this.resizeHandler = handle ? handle(_this.createResizeHandler, refreshRate, refreshOptions) : _this.createResizeHandler;
-    _this.resizeObserver = new resize_observer_polyfill__WEBPACK_IMPORTED_MODULE_2__["default"](_this.resizeHandler);
-    return _this;
-  }
-
-  _createClass(ResizeDetector, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.attachObserver();
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      this.attachObserver();
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      this.resizeObserver.disconnect();
-      this.rafClean();
-      this.cancelHandler();
-      this.unmounted = true;
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$props4 = this.props,
-          render = _this$props4.render,
-          children = _this$props4.children,
-          WrapperTag = _this$props4.nodeType;
-      var _this$state2 = this.state,
-          width = _this$state2.width,
-          height = _this$state2.height;
-      var childProps = {
-        width: width,
-        height: height,
-        targetRef: this.targetRef
-      };
-      var renderType = this.getRenderType();
-
-      switch (renderType) {
-        case 'renderProp':
-          return render(childProps);
-
-        case 'childFunction':
-          return children(childProps);
-
-        case 'child':
-          // @TODO bug prone logic
-          if (typeof children.type === 'string') {
-            // child is a native DOM elements such as div, span etc
-            var targetRef = childProps.targetRef,
-                nativeProps = _objectWithoutProperties(childProps, ["targetRef"]);
-
-            return /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["cloneElement"])(children, nativeProps);
-          } // class or functional component otherwise
-
-
-          return /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["cloneElement"])(children, childProps);
-
-        case 'childArray':
-          return children.map(function (el) {
-            return !!el && /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["cloneElement"])(el, childProps);
-          });
-
-        default:
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WrapperTag, null);
-      }
-    }
-  }]);
-
-  return ResizeDetector;
-}(react__WEBPACK_IMPORTED_MODULE_0__["PureComponent"]);
-
-ResizeDetector.defaultProps = {
-  handleWidth: true,
-  handleHeight: true,
-  skipOnMount: false,
-  refreshRate: 1000,
-  refreshMode: undefined,
-  refreshOptions: undefined,
-  querySelector: null,
-  targetDomEl: null,
-  targetRef: null,
-  onResize: null,
-  render: undefined,
-  children: null,
-  nodeType: 'div'
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash.debounce */ "./node_modules/lodash.debounce/index.js");
+/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash.throttle */ "./node_modules/lodash.throttle/index.js");
+/* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash_throttle__WEBPACK_IMPORTED_MODULE_3__);
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
 };
-/* harmony default export */ __webpack_exports__["default"] = (ResizeDetector);
 
-/***/ }),
-
-/***/ "./node_modules/react-resize-detector/lib/esm/hoc/withResizeDetector.js":
-/*!******************************************************************************!*\
-  !*** ./node_modules/react-resize-detector/lib/esm/hoc/withResizeDetector.js ***!
-  \******************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_ResizeDetector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/ResizeDetector */ "./node_modules/react-resize-detector/lib/esm/components/ResizeDetector.js");
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-
-function withResizeDetector(Component) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-    handleWidth: true,
-    handleHeight: true
-  };
-
-  var ResizeDetectorHOC = /*#__PURE__*/function (_React$Component) {
-    _inherits(ResizeDetectorHOC, _React$Component);
-
-    var _super = _createSuper(ResizeDetectorHOC);
-
-    function ResizeDetectorHOC() {
-      var _this;
-
-      _classCallCheck(this, ResizeDetectorHOC);
-
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      _this = _super.call.apply(_super, [this].concat(args));
-
-      _defineProperty(_assertThisInitialized(_this), "ref", /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["createRef"])());
-
-      return _this;
-    }
-
-    _createClass(ResizeDetectorHOC, [{
-      key: "render",
-      value: function render() {
-        var _this$props = this.props,
-            forwardedRef = _this$props.forwardedRef,
-            rest = _objectWithoutProperties(_this$props, ["forwardedRef"]);
-
-        var targetRef = forwardedRef || this.ref;
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_ResizeDetector__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, options, {
-          targetRef: targetRef
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Component, _extends({
-          targetRef: targetRef
-        }, rest)));
-      }
-    }]);
-
-    return ResizeDetectorHOC;
-  }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-  function forwardRefWrapper(props, ref) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ResizeDetectorHOC, _extends({}, props, {
-      forwardedRef: ref
-    }));
-  }
-
-  var name = Component.displayName || Component.name;
-  forwardRefWrapper.displayName = "withResizeDetector(".concat(name, ")");
-  ResizeDetectorHOC.defaultProps = {
-    forwardedRef: undefined
-  };
-  return /*#__PURE__*/Object(react__WEBPACK_IMPORTED_MODULE_0__["forwardRef"])(forwardRefWrapper);
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (withResizeDetector);
-
-/***/ }),
-
-/***/ "./node_modules/react-resize-detector/lib/esm/index.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/react-resize-detector/lib/esm/index.js ***!
-  \*************************************************************/
-/*! exports provided: withResizeDetector, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_ResizeDetector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/ResizeDetector */ "./node_modules/react-resize-detector/lib/esm/components/ResizeDetector.js");
-/* harmony import */ var _hoc_withResizeDetector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hoc/withResizeDetector */ "./node_modules/react-resize-detector/lib/esm/hoc/withResizeDetector.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "withResizeDetector", function() { return _hoc_withResizeDetector__WEBPACK_IMPORTED_MODULE_1__["default"]; });
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = (_components_ResizeDetector__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-/***/ }),
-
-/***/ "./node_modules/react-resize-detector/lib/esm/lib/utils.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/react-resize-detector/lib/esm/lib/utils.js ***!
-  \*****************************************************************/
-/*! exports provided: listHandle, getHandle, isFunction, isSSR, isDOMElement */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listHandle", function() { return listHandle; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getHandle", function() { return getHandle; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFunction", function() { return isFunction; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSSR", function() { return isSSR; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDOMElement", function() { return isDOMElement; });
-/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash/debounce */ "./node_modules/lodash/debounce.js");
-/* harmony import */ var lodash_debounce__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_debounce__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash/throttle */ "./node_modules/lodash/throttle.js");
-/* harmony import */ var lodash_throttle__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_throttle__WEBPACK_IMPORTED_MODULE_1__);
-
-
-var listHandle = {
-  debounce: lodash_debounce__WEBPACK_IMPORTED_MODULE_0___default.a,
-  throttle: lodash_throttle__WEBPACK_IMPORTED_MODULE_1___default.a
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
-var getHandle = function getHandle(type) {
-  return listHandle[type];
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}var patchResizeHandler = function (resizeCallback, refreshMode, refreshRate, refreshOptions) {
+    switch (refreshMode) {
+        case 'debounce':
+            return lodash_debounce__WEBPACK_IMPORTED_MODULE_2___default()(resizeCallback, refreshRate, refreshOptions);
+        case 'throttle':
+            return lodash_throttle__WEBPACK_IMPORTED_MODULE_3___default()(resizeCallback, refreshRate, refreshOptions);
+        default:
+            return resizeCallback;
+    }
 };
-var isFunction = function isFunction(fn) {
-  return typeof fn === 'function';
-};
-var isSSR = function isSSR() {
-  return typeof window === 'undefined';
-};
-var isDOMElement = function isDOMElement(element) {
-  return element instanceof Element || element instanceof HTMLDocument;
-};
+var isFunction = function (fn) { return typeof fn === 'function'; };
+var isSSR = function () { return typeof window === 'undefined'; };
+var isDOMElement = function (element) { return element instanceof Element || element instanceof HTMLDocument; };
+var createNotifier = function (onResize, setSize, handleWidth, handleHeight) { return function (_a) {
+    var width = _a.width, height = _a.height;
+    setSize(function (prev) {
+        if (prev.width === width && prev.height === height) {
+            // skip if dimensions haven't changed
+            return prev;
+        }
+        if ((prev.width === width && !handleHeight) || (prev.height === height && !handleWidth)) {
+            // process `handleHeight/handleWidth` props
+            return prev;
+        }
+        if (onResize && isFunction(onResize)) {
+            onResize(width, height);
+        }
+        return { width: width, height: height };
+    });
+}; };var ResizeDetector = /** @class */ (function (_super) {
+    __extends(ResizeDetector, _super);
+    function ResizeDetector(props) {
+        var _this = _super.call(this, props) || this;
+        _this.cancelHandler = function () {
+            if (_this.resizeHandler && _this.resizeHandler.cancel) {
+                // cancel debounced handler
+                _this.resizeHandler.cancel();
+                _this.resizeHandler = null;
+            }
+        };
+        _this.attachObserver = function () {
+            var _a = _this.props, targetRef = _a.targetRef, observerOptions = _a.observerOptions;
+            if (isSSR()) {
+                return;
+            }
+            if (targetRef && targetRef.current) {
+                _this.targetRef.current = targetRef.current;
+            }
+            var element = _this.getElement();
+            if (!element) {
+                // can't find element to observe
+                return;
+            }
+            if (_this.observableElement && _this.observableElement === element) {
+                // element is already observed
+                return;
+            }
+            _this.observableElement = element;
+            _this.resizeObserver.observe(element, observerOptions);
+        };
+        _this.getElement = function () {
+            var _a = _this.props, querySelector = _a.querySelector, targetDomEl = _a.targetDomEl;
+            if (isSSR())
+                return null;
+            // in case we pass a querySelector
+            if (querySelector)
+                return document.querySelector(querySelector);
+            // in case we pass a DOM element
+            if (targetDomEl && isDOMElement(targetDomEl))
+                return targetDomEl;
+            // in case we pass a React ref using React.createRef()
+            if (_this.targetRef && isDOMElement(_this.targetRef.current))
+                return _this.targetRef.current;
+            // the worse case when we don't receive any information from the parent and the library doesn't add any wrappers
+            // we have to use a deprecated `findDOMNode` method in order to find a DOM element to attach to
+            var currentElement = Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["findDOMNode"])(_this);
+            if (!currentElement)
+                return null;
+            var renderType = _this.getRenderType();
+            switch (renderType) {
+                case 'renderProp':
+                    return currentElement;
+                case 'childFunction':
+                    return currentElement;
+                case 'child':
+                    return currentElement;
+                case 'childArray':
+                    return currentElement;
+                default:
+                    return currentElement.parentElement;
+            }
+        };
+        _this.createResizeHandler = function (entries) {
+            var _a = _this.props, _b = _a.handleWidth, handleWidth = _b === void 0 ? true : _b, _c = _a.handleHeight, handleHeight = _c === void 0 ? true : _c, onResize = _a.onResize;
+            if (!handleWidth && !handleHeight)
+                return;
+            var notifyResize = createNotifier(onResize, _this.setState.bind(_this), handleWidth, handleHeight);
+            entries.forEach(function (entry) {
+                var _a = (entry && entry.contentRect) || {}, width = _a.width, height = _a.height;
+                var shouldSetSize = !_this.skipOnMount && !isSSR();
+                if (shouldSetSize) {
+                    notifyResize({ width: width, height: height });
+                }
+                _this.skipOnMount = false;
+            });
+        };
+        _this.getRenderType = function () {
+            var _a = _this.props, render = _a.render, children = _a.children;
+            if (isFunction(render)) {
+                // DEPRECATED. Use `Child Function Pattern` instead
+                return 'renderProp';
+            }
+            if (isFunction(children)) {
+                return 'childFunction';
+            }
+            if (Object(react__WEBPACK_IMPORTED_MODULE_0__["isValidElement"])(children)) {
+                return 'child';
+            }
+            if (Array.isArray(children)) {
+                // DEPRECATED. Wrap children with a single parent
+                return 'childArray';
+            }
+            // DEPRECATED. Use `Child Function Pattern` instead
+            return 'parent';
+        };
+        var skipOnMount = props.skipOnMount, refreshMode = props.refreshMode, _a = props.refreshRate, refreshRate = _a === void 0 ? 1000 : _a, refreshOptions = props.refreshOptions;
+        _this.state = {
+            width: undefined,
+            height: undefined
+        };
+        _this.skipOnMount = skipOnMount;
+        _this.targetRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["createRef"])();
+        _this.observableElement = null;
+        if (isSSR()) {
+            return _this;
+        }
+        _this.resizeHandler = patchResizeHandler(_this.createResizeHandler, refreshMode, refreshRate, refreshOptions);
+        _this.resizeObserver = new window.ResizeObserver(_this.resizeHandler);
+        return _this;
+    }
+    ResizeDetector.prototype.componentDidMount = function () {
+        this.attachObserver();
+    };
+    ResizeDetector.prototype.componentDidUpdate = function () {
+        this.attachObserver();
+    };
+    ResizeDetector.prototype.componentWillUnmount = function () {
+        if (isSSR()) {
+            return;
+        }
+        this.resizeObserver.disconnect();
+        this.cancelHandler();
+    };
+    ResizeDetector.prototype.render = function () {
+        var _a = this.props, render = _a.render, children = _a.children, _b = _a.nodeType, WrapperTag = _b === void 0 ? 'div' : _b;
+        var _c = this.state, width = _c.width, height = _c.height;
+        var childProps = { width: width, height: height, targetRef: this.targetRef };
+        var renderType = this.getRenderType();
+        var typedChildren;
+        switch (renderType) {
+            case 'renderProp':
+                return render && render(childProps);
+            case 'childFunction':
+                typedChildren = children;
+                return typedChildren(childProps);
+            case 'child':
+                // @TODO bug prone logic
+                typedChildren = children;
+                if (typedChildren.type && typeof typedChildren.type === 'string') {
+                    // child is a native DOM elements such as div, span etc
+                    var nativeProps = __rest(childProps, ["targetRef"]);
+                    return Object(react__WEBPACK_IMPORTED_MODULE_0__["cloneElement"])(typedChildren, nativeProps);
+                }
+                // class or functional component otherwise
+                return Object(react__WEBPACK_IMPORTED_MODULE_0__["cloneElement"])(typedChildren, childProps);
+            case 'childArray':
+                typedChildren = children;
+                return typedChildren.map(function (el) { return !!el && Object(react__WEBPACK_IMPORTED_MODULE_0__["cloneElement"])(el, childProps); });
+            default:
+                return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(WrapperTag, null);
+        }
+    };
+    return ResizeDetector;
+}(react__WEBPACK_IMPORTED_MODULE_0__["PureComponent"]));function withResizeDetector(ComponentInner, options) {
+    var ResizeDetectorHOC = /** @class */ (function (_super) {
+        __extends(ResizeDetectorHOC, _super);
+        function ResizeDetectorHOC() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["createRef"])();
+            return _this;
+        }
+        ResizeDetectorHOC.prototype.render = function () {
+            var _a = this.props, forwardedRef = _a.forwardedRef, rest = __rest(_a, ["forwardedRef"]);
+            var targetRef = forwardedRef || this.ref;
+            return (react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ResizeDetector, __assign({}, options, { targetRef: targetRef }),
+                react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ComponentInner, __assign({ targetRef: targetRef }, rest))));
+        };
+        return ResizeDetectorHOC;
+    }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+    function forwardRefWrapper(props, ref) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ResizeDetectorHOC, __assign({}, props, { forwardedRef: ref }));
+    }
+    var name = ComponentInner.displayName || ComponentInner.name;
+    forwardRefWrapper.displayName = "withResizeDetector(" + name + ")";
+    return Object(react__WEBPACK_IMPORTED_MODULE_0__["forwardRef"])(forwardRefWrapper);
+}var useEnhancedEffect = isSSR() ? react__WEBPACK_IMPORTED_MODULE_0__["useEffect"] : react__WEBPACK_IMPORTED_MODULE_0__["useLayoutEffect"];
+function useResizeDetector(props) {
+    if (props === void 0) { props = {}; }
+    var _a = props.skipOnMount, skipOnMount = _a === void 0 ? false : _a, refreshMode = props.refreshMode, _b = props.refreshRate, refreshRate = _b === void 0 ? 1000 : _b, refreshOptions = props.refreshOptions, _c = props.handleWidth, handleWidth = _c === void 0 ? true : _c, _d = props.handleHeight, handleHeight = _d === void 0 ? true : _d, targetRef = props.targetRef, observerOptions = props.observerOptions, onResize = props.onResize;
+    var skipResize = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(skipOnMount);
+    var localRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+    var ref = targetRef !== null && targetRef !== void 0 ? targetRef : localRef;
+    var resizeHandler = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
+    var _e = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({
+        width: undefined,
+        height: undefined
+    }), size = _e[0], setSize = _e[1];
+    useEnhancedEffect(function () {
+        if (isSSR()) {
+            return;
+        }
+        var notifyResize = createNotifier(onResize, setSize, handleWidth, handleHeight);
+        var resizeCallback = function (entries) {
+            if (!handleWidth && !handleHeight)
+                return;
+            entries.forEach(function (entry) {
+                var _a = (entry && entry.contentRect) || {}, width = _a.width, height = _a.height;
+                var shouldSetSize = !skipResize.current && !isSSR();
+                if (shouldSetSize) {
+                    notifyResize({ width: width, height: height });
+                }
+                skipResize.current = false;
+            });
+        };
+        resizeHandler.current = patchResizeHandler(resizeCallback, refreshMode, refreshRate, refreshOptions);
+        var resizeObserver = new window.ResizeObserver(resizeHandler.current);
+        if (ref.current) {
+            resizeObserver.observe(ref.current, observerOptions);
+        }
+        return function () {
+            resizeObserver.disconnect();
+            var patchedResizeHandler = resizeHandler.current;
+            if (patchedResizeHandler && patchedResizeHandler.cancel) {
+                patchedResizeHandler.cancel();
+            }
+        };
+    }, [refreshMode, refreshRate, refreshOptions, handleWidth, handleHeight, onResize, observerOptions, ref.current]);
+    return __assign({ ref: ref }, size);
+}/* harmony default export */ __webpack_exports__["default"] = (ResizeDetector);//# sourceMappingURL=index.esm.js.map
+
 
 /***/ }),
 
@@ -45995,945 +46488,276 @@ if (true) {
 
 /***/ }),
 
-/***/ "./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js":
-/*!*************************************************************************!*\
-  !*** ./node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js ***!
-  \*************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/setimmediate/setImmediate.js":
+/*!***************************************************!*\
+  !*** ./node_modules/setimmediate/setImmediate.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/**
- * A collection of shims that provide minimal functionality of the ES6 collections.
- *
- * These implementations are not meant to be used outside of the ResizeObserver
- * modules as they cover only a limited range of use cases.
- */
-/* eslint-disable require-jsdoc, valid-jsdoc */
-var MapShim = (function () {
-    if (typeof Map !== 'undefined') {
-        return Map;
-    }
-    /**
-     * Returns index in provided array that matches the specified key.
-     *
-     * @param {Array<Array>} arr
-     * @param {*} key
-     * @returns {number}
-     */
-    function getIndex(arr, key) {
-        var result = -1;
-        arr.some(function (entry, index) {
-            if (entry[0] === key) {
-                result = index;
-                return true;
-            }
-            return false;
-        });
-        return result;
-    }
-    return /** @class */ (function () {
-        function class_1() {
-            this.__entries__ = [];
-        }
-        Object.defineProperty(class_1.prototype, "size", {
-            /**
-             * @returns {boolean}
-             */
-            get: function () {
-                return this.__entries__.length;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        /**
-         * @param {*} key
-         * @returns {*}
-         */
-        class_1.prototype.get = function (key) {
-            var index = getIndex(this.__entries__, key);
-            var entry = this.__entries__[index];
-            return entry && entry[1];
-        };
-        /**
-         * @param {*} key
-         * @param {*} value
-         * @returns {void}
-         */
-        class_1.prototype.set = function (key, value) {
-            var index = getIndex(this.__entries__, key);
-            if (~index) {
-                this.__entries__[index][1] = value;
-            }
-            else {
-                this.__entries__.push([key, value]);
-            }
-        };
-        /**
-         * @param {*} key
-         * @returns {void}
-         */
-        class_1.prototype.delete = function (key) {
-            var entries = this.__entries__;
-            var index = getIndex(entries, key);
-            if (~index) {
-                entries.splice(index, 1);
-            }
-        };
-        /**
-         * @param {*} key
-         * @returns {void}
-         */
-        class_1.prototype.has = function (key) {
-            return !!~getIndex(this.__entries__, key);
-        };
-        /**
-         * @returns {void}
-         */
-        class_1.prototype.clear = function () {
-            this.__entries__.splice(0);
-        };
-        /**
-         * @param {Function} callback
-         * @param {*} [ctx=null]
-         * @returns {void}
-         */
-        class_1.prototype.forEach = function (callback, ctx) {
-            if (ctx === void 0) { ctx = null; }
-            for (var _i = 0, _a = this.__entries__; _i < _a.length; _i++) {
-                var entry = _a[_i];
-                callback.call(ctx, entry[1], entry[0]);
-            }
-        };
-        return class_1;
-    }());
-})();
+/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+    "use strict";
 
-/**
- * Detects whether window and document objects are available in current environment.
- */
-var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && window.document === document;
+    if (global.setImmediate) {
+        return;
+    }
 
-// Returns global object of a current environment.
-var global$1 = (function () {
-    if (typeof global !== 'undefined' && global.Math === Math) {
-        return global;
-    }
-    if (typeof self !== 'undefined' && self.Math === Math) {
-        return self;
-    }
-    if (typeof window !== 'undefined' && window.Math === Math) {
-        return window;
-    }
-    // eslint-disable-next-line no-new-func
-    return Function('return this')();
-})();
+    var nextHandle = 1; // Spec says greater than zero
+    var tasksByHandle = {};
+    var currentlyRunningATask = false;
+    var doc = global.document;
+    var registerImmediate;
 
-/**
- * A shim for the requestAnimationFrame which falls back to the setTimeout if
- * first one is not supported.
- *
- * @returns {number} Requests' identifier.
- */
-var requestAnimationFrame$1 = (function () {
-    if (typeof requestAnimationFrame === 'function') {
-        // It's required to use a bounded function because IE sometimes throws
-        // an "Invalid calling object" error if rAF is invoked without the global
-        // object on the left hand side.
-        return requestAnimationFrame.bind(global$1);
+    function setImmediate(callback) {
+      // Callback can either be a function or a string
+      if (typeof callback !== "function") {
+        callback = new Function("" + callback);
+      }
+      // Copy function arguments
+      var args = new Array(arguments.length - 1);
+      for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i + 1];
+      }
+      // Store and register the task
+      var task = { callback: callback, args: args };
+      tasksByHandle[nextHandle] = task;
+      registerImmediate(nextHandle);
+      return nextHandle++;
     }
-    return function (callback) { return setTimeout(function () { return callback(Date.now()); }, 1000 / 60); };
-})();
 
-// Defines minimum timeout before adding a trailing call.
-var trailingTimeout = 2;
-/**
- * Creates a wrapper function which ensures that provided callback will be
- * invoked only once during the specified delay period.
- *
- * @param {Function} callback - Function to be invoked after the delay period.
- * @param {number} delay - Delay after which to invoke callback.
- * @returns {Function}
- */
-function throttle (callback, delay) {
-    var leadingCall = false, trailingCall = false, lastCallTime = 0;
-    /**
-     * Invokes the original callback function and schedules new invocation if
-     * the "proxy" was called during current request.
-     *
-     * @returns {void}
-     */
-    function resolvePending() {
-        if (leadingCall) {
-            leadingCall = false;
+    function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+    }
+
+    function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+        case 0:
             callback();
-        }
-        if (trailingCall) {
-            proxy();
+            break;
+        case 1:
+            callback(args[0]);
+            break;
+        case 2:
+            callback(args[0], args[1]);
+            break;
+        case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+        default:
+            callback.apply(undefined, args);
+            break;
         }
     }
-    /**
-     * Callback invoked after the specified delay. It will further postpone
-     * invocation of the original function delegating it to the
-     * requestAnimationFrame.
-     *
-     * @returns {void}
-     */
-    function timeoutCallback() {
-        requestAnimationFrame$1(resolvePending);
-    }
-    /**
-     * Schedules invocation of the original function.
-     *
-     * @returns {void}
-     */
-    function proxy() {
-        var timeStamp = Date.now();
-        if (leadingCall) {
-            // Reject immediately following calls.
-            if (timeStamp - lastCallTime < trailingTimeout) {
-                return;
+
+    function runIfPresent(handle) {
+        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // "too much recursion" error.
+            setTimeout(runIfPresent, 0, handle);
+        } else {
+            var task = tasksByHandle[handle];
+            if (task) {
+                currentlyRunningATask = true;
+                try {
+                    run(task);
+                } finally {
+                    clearImmediate(handle);
+                    currentlyRunningATask = false;
+                }
             }
-            // Schedule new call to be in invoked when the pending one is resolved.
-            // This is important for "transitions" which never actually start
-            // immediately so there is a chance that we might miss one if change
-            // happens amids the pending invocation.
-            trailingCall = true;
         }
-        else {
-            leadingCall = true;
-            trailingCall = false;
-            setTimeout(timeoutCallback, delay);
-        }
-        lastCallTime = timeStamp;
     }
-    return proxy;
-}
 
-// Minimum delay before invoking the update of observers.
-var REFRESH_DELAY = 20;
-// A list of substrings of CSS properties used to find transition events that
-// might affect dimensions of observed elements.
-var transitionKeys = ['top', 'right', 'bottom', 'left', 'width', 'height', 'size', 'weight'];
-// Check if MutationObserver is available.
-var mutationObserverSupported = typeof MutationObserver !== 'undefined';
-/**
- * Singleton controller class which handles updates of ResizeObserver instances.
- */
-var ResizeObserverController = /** @class */ (function () {
-    /**
-     * Creates a new instance of ResizeObserverController.
-     *
-     * @private
-     */
-    function ResizeObserverController() {
-        /**
-         * Indicates whether DOM listeners have been added.
-         *
-         * @private {boolean}
-         */
-        this.connected_ = false;
-        /**
-         * Tells that controller has subscribed for Mutation Events.
-         *
-         * @private {boolean}
-         */
-        this.mutationEventsAdded_ = false;
-        /**
-         * Keeps reference to the instance of MutationObserver.
-         *
-         * @private {MutationObserver}
-         */
-        this.mutationsObserver_ = null;
-        /**
-         * A list of connected observers.
-         *
-         * @private {Array<ResizeObserverSPI>}
-         */
-        this.observers_ = [];
-        this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
-        this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
+    function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+            process.nextTick(function () { runIfPresent(handle); });
+        };
     }
-    /**
-     * Adds observer to observers list.
-     *
-     * @param {ResizeObserverSPI} observer - Observer to be added.
-     * @returns {void}
-     */
-    ResizeObserverController.prototype.addObserver = function (observer) {
-        if (!~this.observers_.indexOf(observer)) {
-            this.observers_.push(observer);
-        }
-        // Add listeners if they haven't been added yet.
-        if (!this.connected_) {
-            this.connect_();
-        }
-    };
-    /**
-     * Removes observer from observers list.
-     *
-     * @param {ResizeObserverSPI} observer - Observer to be removed.
-     * @returns {void}
-     */
-    ResizeObserverController.prototype.removeObserver = function (observer) {
-        var observers = this.observers_;
-        var index = observers.indexOf(observer);
-        // Remove observer if it's present in registry.
-        if (~index) {
-            observers.splice(index, 1);
-        }
-        // Remove listeners if controller has no connected observers.
-        if (!observers.length && this.connected_) {
-            this.disconnect_();
-        }
-    };
-    /**
-     * Invokes the update of observers. It will continue running updates insofar
-     * it detects changes.
-     *
-     * @returns {void}
-     */
-    ResizeObserverController.prototype.refresh = function () {
-        var changesDetected = this.updateObservers_();
-        // Continue running updates if changes have been detected as there might
-        // be future ones caused by CSS transitions.
-        if (changesDetected) {
-            this.refresh();
-        }
-    };
-    /**
-     * Updates every observer from observers list and notifies them of queued
-     * entries.
-     *
-     * @private
-     * @returns {boolean} Returns "true" if any observer has detected changes in
-     *      dimensions of it's elements.
-     */
-    ResizeObserverController.prototype.updateObservers_ = function () {
-        // Collect observers that have active observations.
-        var activeObservers = this.observers_.filter(function (observer) {
-            return observer.gatherActive(), observer.hasActive();
-        });
-        // Deliver notifications in a separate cycle in order to avoid any
-        // collisions between observers, e.g. when multiple instances of
-        // ResizeObserver are tracking the same element and the callback of one
-        // of them changes content dimensions of the observed target. Sometimes
-        // this may result in notifications being blocked for the rest of observers.
-        activeObservers.forEach(function (observer) { return observer.broadcastActive(); });
-        return activeObservers.length > 0;
-    };
-    /**
-     * Initializes DOM listeners.
-     *
-     * @private
-     * @returns {void}
-     */
-    ResizeObserverController.prototype.connect_ = function () {
-        // Do nothing if running in a non-browser environment or if listeners
-        // have been already added.
-        if (!isBrowser || this.connected_) {
-            return;
-        }
-        // Subscription to the "Transitionend" event is used as a workaround for
-        // delayed transitions. This way it's possible to capture at least the
-        // final state of an element.
-        document.addEventListener('transitionend', this.onTransitionEnd_);
-        window.addEventListener('resize', this.refresh);
-        if (mutationObserverSupported) {
-            this.mutationsObserver_ = new MutationObserver(this.refresh);
-            this.mutationsObserver_.observe(document, {
-                attributes: true,
-                childList: true,
-                characterData: true,
-                subtree: true
-            });
-        }
-        else {
-            document.addEventListener('DOMSubtreeModified', this.refresh);
-            this.mutationEventsAdded_ = true;
-        }
-        this.connected_ = true;
-    };
-    /**
-     * Removes DOM listeners.
-     *
-     * @private
-     * @returns {void}
-     */
-    ResizeObserverController.prototype.disconnect_ = function () {
-        // Do nothing if running in a non-browser environment or if listeners
-        // have been already removed.
-        if (!isBrowser || !this.connected_) {
-            return;
-        }
-        document.removeEventListener('transitionend', this.onTransitionEnd_);
-        window.removeEventListener('resize', this.refresh);
-        if (this.mutationsObserver_) {
-            this.mutationsObserver_.disconnect();
-        }
-        if (this.mutationEventsAdded_) {
-            document.removeEventListener('DOMSubtreeModified', this.refresh);
-        }
-        this.mutationsObserver_ = null;
-        this.mutationEventsAdded_ = false;
-        this.connected_ = false;
-    };
-    /**
-     * "Transitionend" event handler.
-     *
-     * @private
-     * @param {TransitionEvent} event
-     * @returns {void}
-     */
-    ResizeObserverController.prototype.onTransitionEnd_ = function (_a) {
-        var _b = _a.propertyName, propertyName = _b === void 0 ? '' : _b;
-        // Detect whether transition may affect dimensions of an element.
-        var isReflowProperty = transitionKeys.some(function (key) {
-            return !!~propertyName.indexOf(key);
-        });
-        if (isReflowProperty) {
-            this.refresh();
-        }
-    };
-    /**
-     * Returns instance of the ResizeObserverController.
-     *
-     * @returns {ResizeObserverController}
-     */
-    ResizeObserverController.getInstance = function () {
-        if (!this.instance_) {
-            this.instance_ = new ResizeObserverController();
-        }
-        return this.instance_;
-    };
-    /**
-     * Holds reference to the controller's instance.
-     *
-     * @private {ResizeObserverController}
-     */
-    ResizeObserverController.instance_ = null;
-    return ResizeObserverController;
-}());
 
-/**
- * Defines non-writable/enumerable properties of the provided target object.
- *
- * @param {Object} target - Object for which to define properties.
- * @param {Object} props - Properties to be defined.
- * @returns {Object} Target object.
- */
-var defineConfigurable = (function (target, props) {
-    for (var _i = 0, _a = Object.keys(props); _i < _a.length; _i++) {
-        var key = _a[_i];
-        Object.defineProperty(target, key, {
-            value: props[key],
-            enumerable: false,
-            writable: false,
-            configurable: true
-        });
+    function canUsePostMessage() {
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `global.postMessage` means something completely different and can't be used for this purpose.
+        if (global.postMessage && !global.importScripts) {
+            var postMessageIsAsynchronous = true;
+            var oldOnMessage = global.onmessage;
+            global.onmessage = function() {
+                postMessageIsAsynchronous = false;
+            };
+            global.postMessage("", "*");
+            global.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous;
+        }
     }
-    return target;
-});
 
-/**
- * Returns the global object associated with provided element.
- *
- * @param {Object} target
- * @returns {Object}
- */
-var getWindowOf = (function (target) {
-    // Assume that the element is an instance of Node, which means that it
-    // has the "ownerDocument" property from which we can retrieve a
-    // corresponding global object.
-    var ownerGlobal = target && target.ownerDocument && target.ownerDocument.defaultView;
-    // Return the local global object if it's not possible extract one from
-    // provided element.
-    return ownerGlobal || global$1;
-});
+    function installPostMessageImplementation() {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
 
-// Placeholder of an empty content rectangle.
-var emptyRect = createRectInit(0, 0, 0, 0);
-/**
- * Converts provided string to a number.
- *
- * @param {number|string} value
- * @returns {number}
- */
-function toFloat(value) {
-    return parseFloat(value) || 0;
-}
-/**
- * Extracts borders size from provided styles.
- *
- * @param {CSSStyleDeclaration} styles
- * @param {...string} positions - Borders positions (top, right, ...)
- * @returns {number}
- */
-function getBordersSize(styles) {
-    var positions = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        positions[_i - 1] = arguments[_i];
-    }
-    return positions.reduce(function (size, position) {
-        var value = styles['border-' + position + '-width'];
-        return size + toFloat(value);
-    }, 0);
-}
-/**
- * Extracts paddings sizes from provided styles.
- *
- * @param {CSSStyleDeclaration} styles
- * @returns {Object} Paddings box.
- */
-function getPaddings(styles) {
-    var positions = ['top', 'right', 'bottom', 'left'];
-    var paddings = {};
-    for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
-        var position = positions_1[_i];
-        var value = styles['padding-' + position];
-        paddings[position] = toFloat(value);
-    }
-    return paddings;
-}
-/**
- * Calculates content rectangle of provided SVG element.
- *
- * @param {SVGGraphicsElement} target - Element content rectangle of which needs
- *      to be calculated.
- * @returns {DOMRectInit}
- */
-function getSVGContentRect(target) {
-    var bbox = target.getBBox();
-    return createRectInit(0, 0, bbox.width, bbox.height);
-}
-/**
- * Calculates content rectangle of provided HTMLElement.
- *
- * @param {HTMLElement} target - Element for which to calculate the content rectangle.
- * @returns {DOMRectInit}
- */
-function getHTMLElementContentRect(target) {
-    // Client width & height properties can't be
-    // used exclusively as they provide rounded values.
-    var clientWidth = target.clientWidth, clientHeight = target.clientHeight;
-    // By this condition we can catch all non-replaced inline, hidden and
-    // detached elements. Though elements with width & height properties less
-    // than 0.5 will be discarded as well.
-    //
-    // Without it we would need to implement separate methods for each of
-    // those cases and it's not possible to perform a precise and performance
-    // effective test for hidden elements. E.g. even jQuery's ':visible' filter
-    // gives wrong results for elements with width & height less than 0.5.
-    if (!clientWidth && !clientHeight) {
-        return emptyRect;
-    }
-    var styles = getWindowOf(target).getComputedStyle(target);
-    var paddings = getPaddings(styles);
-    var horizPad = paddings.left + paddings.right;
-    var vertPad = paddings.top + paddings.bottom;
-    // Computed styles of width & height are being used because they are the
-    // only dimensions available to JS that contain non-rounded values. It could
-    // be possible to utilize the getBoundingClientRect if only it's data wasn't
-    // affected by CSS transformations let alone paddings, borders and scroll bars.
-    var width = toFloat(styles.width), height = toFloat(styles.height);
-    // Width & height include paddings and borders when the 'border-box' box
-    // model is applied (except for IE).
-    if (styles.boxSizing === 'border-box') {
-        // Following conditions are required to handle Internet Explorer which
-        // doesn't include paddings and borders to computed CSS dimensions.
-        //
-        // We can say that if CSS dimensions + paddings are equal to the "client"
-        // properties then it's either IE, and thus we don't need to subtract
-        // anything, or an element merely doesn't have paddings/borders styles.
-        if (Math.round(width + horizPad) !== clientWidth) {
-            width -= getBordersSize(styles, 'left', 'right') + horizPad;
-        }
-        if (Math.round(height + vertPad) !== clientHeight) {
-            height -= getBordersSize(styles, 'top', 'bottom') + vertPad;
-        }
-    }
-    // Following steps can't be applied to the document's root element as its
-    // client[Width/Height] properties represent viewport area of the window.
-    // Besides, it's as well not necessary as the <html> itself neither has
-    // rendered scroll bars nor it can be clipped.
-    if (!isDocumentElement(target)) {
-        // In some browsers (only in Firefox, actually) CSS width & height
-        // include scroll bars size which can be removed at this step as scroll
-        // bars are the only difference between rounded dimensions + paddings
-        // and "client" properties, though that is not always true in Chrome.
-        var vertScrollbar = Math.round(width + horizPad) - clientWidth;
-        var horizScrollbar = Math.round(height + vertPad) - clientHeight;
-        // Chrome has a rather weird rounding of "client" properties.
-        // E.g. for an element with content width of 314.2px it sometimes gives
-        // the client width of 315px and for the width of 314.7px it may give
-        // 314px. And it doesn't happen all the time. So just ignore this delta
-        // as a non-relevant.
-        if (Math.abs(vertScrollbar) !== 1) {
-            width -= vertScrollbar;
-        }
-        if (Math.abs(horizScrollbar) !== 1) {
-            height -= horizScrollbar;
-        }
-    }
-    return createRectInit(paddings.left, paddings.top, width, height);
-}
-/**
- * Checks whether provided element is an instance of the SVGGraphicsElement.
- *
- * @param {Element} target - Element to be checked.
- * @returns {boolean}
- */
-var isSVGGraphicsElement = (function () {
-    // Some browsers, namely IE and Edge, don't have the SVGGraphicsElement
-    // interface.
-    if (typeof SVGGraphicsElement !== 'undefined') {
-        return function (target) { return target instanceof getWindowOf(target).SVGGraphicsElement; };
-    }
-    // If it's so, then check that element is at least an instance of the
-    // SVGElement and that it has the "getBBox" method.
-    // eslint-disable-next-line no-extra-parens
-    return function (target) { return (target instanceof getWindowOf(target).SVGElement &&
-        typeof target.getBBox === 'function'); };
-})();
-/**
- * Checks whether provided element is a document element (<html>).
- *
- * @param {Element} target - Element to be checked.
- * @returns {boolean}
- */
-function isDocumentElement(target) {
-    return target === getWindowOf(target).document.documentElement;
-}
-/**
- * Calculates an appropriate content rectangle for provided html or svg element.
- *
- * @param {Element} target - Element content rectangle of which needs to be calculated.
- * @returns {DOMRectInit}
- */
-function getContentRect(target) {
-    if (!isBrowser) {
-        return emptyRect;
-    }
-    if (isSVGGraphicsElement(target)) {
-        return getSVGContentRect(target);
-    }
-    return getHTMLElementContentRect(target);
-}
-/**
- * Creates rectangle with an interface of the DOMRectReadOnly.
- * Spec: https://drafts.fxtf.org/geometry/#domrectreadonly
- *
- * @param {DOMRectInit} rectInit - Object with rectangle's x/y coordinates and dimensions.
- * @returns {DOMRectReadOnly}
- */
-function createReadOnlyRect(_a) {
-    var x = _a.x, y = _a.y, width = _a.width, height = _a.height;
-    // If DOMRectReadOnly is available use it as a prototype for the rectangle.
-    var Constr = typeof DOMRectReadOnly !== 'undefined' ? DOMRectReadOnly : Object;
-    var rect = Object.create(Constr.prototype);
-    // Rectangle's properties are not writable and non-enumerable.
-    defineConfigurable(rect, {
-        x: x, y: y, width: width, height: height,
-        top: y,
-        right: x + width,
-        bottom: height + y,
-        left: x
-    });
-    return rect;
-}
-/**
- * Creates DOMRectInit object based on the provided dimensions and the x/y coordinates.
- * Spec: https://drafts.fxtf.org/geometry/#dictdef-domrectinit
- *
- * @param {number} x - X coordinate.
- * @param {number} y - Y coordinate.
- * @param {number} width - Rectangle's width.
- * @param {number} height - Rectangle's height.
- * @returns {DOMRectInit}
- */
-function createRectInit(x, y, width, height) {
-    return { x: x, y: y, width: width, height: height };
-}
-
-/**
- * Class that is responsible for computations of the content rectangle of
- * provided DOM element and for keeping track of it's changes.
- */
-var ResizeObservation = /** @class */ (function () {
-    /**
-     * Creates an instance of ResizeObservation.
-     *
-     * @param {Element} target - Element to be observed.
-     */
-    function ResizeObservation(target) {
-        /**
-         * Broadcasted width of content rectangle.
-         *
-         * @type {number}
-         */
-        this.broadcastWidth = 0;
-        /**
-         * Broadcasted height of content rectangle.
-         *
-         * @type {number}
-         */
-        this.broadcastHeight = 0;
-        /**
-         * Reference to the last observed content rectangle.
-         *
-         * @private {DOMRectInit}
-         */
-        this.contentRect_ = createRectInit(0, 0, 0, 0);
-        this.target = target;
-    }
-    /**
-     * Updates content rectangle and tells whether it's width or height properties
-     * have changed since the last broadcast.
-     *
-     * @returns {boolean}
-     */
-    ResizeObservation.prototype.isActive = function () {
-        var rect = getContentRect(this.target);
-        this.contentRect_ = rect;
-        return (rect.width !== this.broadcastWidth ||
-            rect.height !== this.broadcastHeight);
-    };
-    /**
-     * Updates 'broadcastWidth' and 'broadcastHeight' properties with a data
-     * from the corresponding properties of the last observed content rectangle.
-     *
-     * @returns {DOMRectInit} Last observed content rectangle.
-     */
-    ResizeObservation.prototype.broadcastRect = function () {
-        var rect = this.contentRect_;
-        this.broadcastWidth = rect.width;
-        this.broadcastHeight = rect.height;
-        return rect;
-    };
-    return ResizeObservation;
-}());
-
-var ResizeObserverEntry = /** @class */ (function () {
-    /**
-     * Creates an instance of ResizeObserverEntry.
-     *
-     * @param {Element} target - Element that is being observed.
-     * @param {DOMRectInit} rectInit - Data of the element's content rectangle.
-     */
-    function ResizeObserverEntry(target, rectInit) {
-        var contentRect = createReadOnlyRect(rectInit);
-        // According to the specification following properties are not writable
-        // and are also not enumerable in the native implementation.
-        //
-        // Property accessors are not being used as they'd require to define a
-        // private WeakMap storage which may cause memory leaks in browsers that
-        // don't support this type of collections.
-        defineConfigurable(this, { target: target, contentRect: contentRect });
-    }
-    return ResizeObserverEntry;
-}());
-
-var ResizeObserverSPI = /** @class */ (function () {
-    /**
-     * Creates a new instance of ResizeObserver.
-     *
-     * @param {ResizeObserverCallback} callback - Callback function that is invoked
-     *      when one of the observed elements changes it's content dimensions.
-     * @param {ResizeObserverController} controller - Controller instance which
-     *      is responsible for the updates of observer.
-     * @param {ResizeObserver} callbackCtx - Reference to the public
-     *      ResizeObserver instance which will be passed to callback function.
-     */
-    function ResizeObserverSPI(callback, controller, callbackCtx) {
-        /**
-         * Collection of resize observations that have detected changes in dimensions
-         * of elements.
-         *
-         * @private {Array<ResizeObservation>}
-         */
-        this.activeObservations_ = [];
-        /**
-         * Registry of the ResizeObservation instances.
-         *
-         * @private {Map<Element, ResizeObservation>}
-         */
-        this.observations_ = new MapShim();
-        if (typeof callback !== 'function') {
-            throw new TypeError('The callback provided as parameter 1 is not a function.');
-        }
-        this.callback_ = callback;
-        this.controller_ = controller;
-        this.callbackCtx_ = callbackCtx;
-    }
-    /**
-     * Starts observing provided element.
-     *
-     * @param {Element} target - Element to be observed.
-     * @returns {void}
-     */
-    ResizeObserverSPI.prototype.observe = function (target) {
-        if (!arguments.length) {
-            throw new TypeError('1 argument required, but only 0 present.');
-        }
-        // Do nothing if current environment doesn't have the Element interface.
-        if (typeof Element === 'undefined' || !(Element instanceof Object)) {
-            return;
-        }
-        if (!(target instanceof getWindowOf(target).Element)) {
-            throw new TypeError('parameter 1 is not of type "Element".');
-        }
-        var observations = this.observations_;
-        // Do nothing if element is already being observed.
-        if (observations.has(target)) {
-            return;
-        }
-        observations.set(target, new ResizeObservation(target));
-        this.controller_.addObserver(this);
-        // Force the update of observations.
-        this.controller_.refresh();
-    };
-    /**
-     * Stops observing provided element.
-     *
-     * @param {Element} target - Element to stop observing.
-     * @returns {void}
-     */
-    ResizeObserverSPI.prototype.unobserve = function (target) {
-        if (!arguments.length) {
-            throw new TypeError('1 argument required, but only 0 present.');
-        }
-        // Do nothing if current environment doesn't have the Element interface.
-        if (typeof Element === 'undefined' || !(Element instanceof Object)) {
-            return;
-        }
-        if (!(target instanceof getWindowOf(target).Element)) {
-            throw new TypeError('parameter 1 is not of type "Element".');
-        }
-        var observations = this.observations_;
-        // Do nothing if element is not being observed.
-        if (!observations.has(target)) {
-            return;
-        }
-        observations.delete(target);
-        if (!observations.size) {
-            this.controller_.removeObserver(this);
-        }
-    };
-    /**
-     * Stops observing all elements.
-     *
-     * @returns {void}
-     */
-    ResizeObserverSPI.prototype.disconnect = function () {
-        this.clearActive();
-        this.observations_.clear();
-        this.controller_.removeObserver(this);
-    };
-    /**
-     * Collects observation instances the associated element of which has changed
-     * it's content rectangle.
-     *
-     * @returns {void}
-     */
-    ResizeObserverSPI.prototype.gatherActive = function () {
-        var _this = this;
-        this.clearActive();
-        this.observations_.forEach(function (observation) {
-            if (observation.isActive()) {
-                _this.activeObservations_.push(observation);
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+            if (event.source === global &&
+                typeof event.data === "string" &&
+                event.data.indexOf(messagePrefix) === 0) {
+                runIfPresent(+event.data.slice(messagePrefix.length));
             }
-        });
-    };
-    /**
-     * Invokes initial callback function with a list of ResizeObserverEntry
-     * instances collected from active resize observations.
-     *
-     * @returns {void}
-     */
-    ResizeObserverSPI.prototype.broadcastActive = function () {
-        // Do nothing if observer doesn't have active observations.
-        if (!this.hasActive()) {
-            return;
-        }
-        var ctx = this.callbackCtx_;
-        // Create ResizeObserverEntry instance for every active observation.
-        var entries = this.activeObservations_.map(function (observation) {
-            return new ResizeObserverEntry(observation.target, observation.broadcastRect());
-        });
-        this.callback_.call(ctx, entries, ctx);
-        this.clearActive();
-    };
-    /**
-     * Clears the collection of active observations.
-     *
-     * @returns {void}
-     */
-    ResizeObserverSPI.prototype.clearActive = function () {
-        this.activeObservations_.splice(0);
-    };
-    /**
-     * Tells whether observer has active observations.
-     *
-     * @returns {boolean}
-     */
-    ResizeObserverSPI.prototype.hasActive = function () {
-        return this.activeObservations_.length > 0;
-    };
-    return ResizeObserverSPI;
-}());
+        };
 
-// Registry of internal observers. If WeakMap is not available use current shim
-// for the Map collection as it has all required methods and because WeakMap
-// can't be fully polyfilled anyway.
-var observers = typeof WeakMap !== 'undefined' ? new WeakMap() : new MapShim();
-/**
- * ResizeObserver API. Encapsulates the ResizeObserver SPI implementation
- * exposing only those methods and properties that are defined in the spec.
- */
-var ResizeObserver = /** @class */ (function () {
-    /**
-     * Creates a new instance of ResizeObserver.
-     *
-     * @param {ResizeObserverCallback} callback - Callback that is invoked when
-     *      dimensions of the observed elements change.
-     */
-    function ResizeObserver(callback) {
-        if (!(this instanceof ResizeObserver)) {
-            throw new TypeError('Cannot call a class as a function.');
+        if (global.addEventListener) {
+            global.addEventListener("message", onGlobalMessage, false);
+        } else {
+            global.attachEvent("onmessage", onGlobalMessage);
         }
-        if (!arguments.length) {
-            throw new TypeError('1 argument required, but only 0 present.');
-        }
-        var controller = ResizeObserverController.getInstance();
-        var observer = new ResizeObserverSPI(callback, controller, this);
-        observers.set(this, observer);
+
+        registerImmediate = function(handle) {
+            global.postMessage(messagePrefix + handle, "*");
+        };
     }
-    return ResizeObserver;
-}());
-// Expose public methods of ResizeObserver.
-[
-    'observe',
-    'unobserve',
-    'disconnect'
-].forEach(function (method) {
-    ResizeObserver.prototype[method] = function () {
-        var _a;
-        return (_a = observers.get(this))[method].apply(_a, arguments);
-    };
-});
 
-var index = (function () {
-    // Export existing implementation if available.
-    if (typeof global$1.ResizeObserver !== 'undefined') {
-        return global$1.ResizeObserver;
+    function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+            var handle = event.data;
+            runIfPresent(handle);
+        };
+
+        registerImmediate = function(handle) {
+            channel.port2.postMessage(handle);
+        };
     }
-    return ResizeObserver;
-})();
 
-/* harmony default export */ __webpack_exports__["default"] = (index);
+    function installReadyStateChangeImplementation() {
+        var html = doc.documentElement;
+        registerImmediate = function(handle) {
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement("script");
+            script.onreadystatechange = function () {
+                runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+        };
+    }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+    function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+            setTimeout(runIfPresent, 0, handle);
+        };
+    }
+
+    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+    // Don't get fooled by e.g. browserify environments.
+    if ({}.toString.call(global.process) === "[object process]") {
+        // For Node.js before 0.9
+        installNextTickImplementation();
+
+    } else if (canUsePostMessage()) {
+        // For non-IE10 modern browsers
+        installPostMessageImplementation();
+
+    } else if (global.MessageChannel) {
+        // For web workers, where supported
+        installMessageChannelImplementation();
+
+    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        // For IE 6–8
+        installReadyStateChangeImplementation();
+
+    } else {
+        // For older browsers
+        installSetTimeoutImplementation();
+    }
+
+    attachTo.setImmediate = setImmediate;
+    attachTo.clearImmediate = clearImmediate;
+}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js"), __webpack_require__(/*! ./../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/timers-browserify/main.js":
+/*!************************************************!*\
+  !*** ./node_modules/timers-browserify/main.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {var scope = (typeof global !== "undefined" && global) ||
+            (typeof self !== "undefined" && self) ||
+            window;
+var apply = Function.prototype.apply;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, scope, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, scope, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(scope, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(/*! setimmediate */ "./node_modules/setimmediate/setImmediate.js");
+// On some exotic environments, it's not clear which object `setimmediate` was
+// able to install onto.  Search each possibility in the same order as the
+// `setimmediate` library.
+exports.setImmediate = (typeof self !== "undefined" && self.setImmediate) ||
+                       (typeof global !== "undefined" && global.setImmediate) ||
+                       (this && this.setImmediate);
+exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
+                         (typeof global !== "undefined" && global.clearImmediate) ||
+                         (this && this.clearImmediate);
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -47605,7 +47429,7 @@ var Area = function (_super) {
         if (layout === 'horizontal') {
           return {
             x: entry.x,
-            y: !lodash_1["default"].isNil(lodash_1["default"].get(entry, 'value[0]')) ? yAxis.scale(lodash_1["default"].get(entry, 'value[0]')) : null
+            y: !lodash_1["default"].isNil(lodash_1["default"].get(entry, 'value[0]')) && !lodash_1["default"].isNil(lodash_1["default"].get(entry, 'y')) ? yAxis.scale(lodash_1["default"].get(entry, 'value[0]')) : null
           };
         }
 
@@ -48165,7 +47989,7 @@ var Bar = function (_super) {
         }
       }
 
-      return __assign(__assign(__assign({}, entry), {
+      return __assign(__assign(__assign(__assign({}, entry), {
         x: x,
         y: y,
         width: width,
@@ -48173,7 +47997,13 @@ var Bar = function (_super) {
         value: stackedData ? value : value[1],
         payload: entry,
         background: background
-      }), cells && cells[index] && cells[index].props);
+      }), cells && cells[index] && cells[index].props), {
+        tooltipPayload: [ChartUtils_1.getTooltipItem(item, entry)],
+        tooltipPosition: {
+          x: x + width / 2,
+          y: y + height / 2
+        }
+      });
     });
     return __assign({
       data: rects,
@@ -51872,6 +51702,8 @@ var CartesianUtils_1 = __webpack_require__(/*! ../util/CartesianUtils */ "./src/
 exports.BarChart = generateCategoricalChart_1.generateCategoricalChart({
   chartName: 'BarChart',
   GraphicalChild: Bar_1.Bar,
+  defaultTooltipEventType: 'axis',
+  validateTooltipEventTypes: ['axis', 'item'],
   axisComponents: [{
     axisType: 'xAxis',
     AxisComp: XAxis_1.XAxis
@@ -51957,7 +51789,8 @@ var Funnel_1 = __webpack_require__(/*! ../numberAxis/Funnel */ "./src/numberAxis
 exports.FunnelChart = generateCategoricalChart_1.generateCategoricalChart({
   chartName: 'FunnelChart',
   GraphicalChild: Funnel_1.Funnel,
-  eventType: 'item',
+  validateTooltipEventTypes: ['item'],
+  defaultTooltipEventType: 'item',
   axisComponents: [],
   defaultProps: {
     layout: 'centric'
@@ -52034,7 +51867,8 @@ var Pie_1 = __webpack_require__(/*! ../polar/Pie */ "./src/polar/Pie.tsx");
 exports.PieChart = generateCategoricalChart_1.generateCategoricalChart({
   chartName: 'PieChart',
   GraphicalChild: Pie_1.Pie,
-  eventType: 'item',
+  validateTooltipEventTypes: ['item'],
+  defaultTooltipEventType: 'item',
   legendContent: 'children',
   axisComponents: [{
     axisType: 'angleAxis',
@@ -52135,6 +51969,8 @@ exports.RadialBarChart = generateCategoricalChart_1.generateCategoricalChart({
   chartName: 'RadialBarChart',
   GraphicalChild: RadialBar_1.RadialBar,
   legendContent: 'children',
+  defaultTooltipEventType: 'axis',
+  validateTooltipEventTypes: ['axis', 'item'],
   axisComponents: [{
     axisType: 'angleAxis',
     AxisComp: PolarAngleAxis_1.PolarAngleAxis
@@ -52977,7 +52813,8 @@ var CartesianUtils_1 = __webpack_require__(/*! ../util/CartesianUtils */ "./src/
 exports.ScatterChart = generateCategoricalChart_1.generateCategoricalChart({
   chartName: 'ScatterChart',
   GraphicalChild: Scatter_1.Scatter,
-  eventType: 'single',
+  defaultTooltipEventType: 'item',
+  validateTooltipEventTypes: ['item'],
   axisComponents: [{
     axisType: 'xAxis',
     AxisComp: XAxis_1.XAxis
@@ -53135,7 +52972,11 @@ var DataUtils_1 = __webpack_require__(/*! ../util/DataUtils */ "./src/util/DataU
 
 var types_1 = __webpack_require__(/*! ../util/types */ "./src/util/types.ts");
 
+var NODE_VALUE_KEY = 'value';
+
 var computeNode = function computeNode(_a) {
+  var _b;
+
   var depth = _a.depth,
       node = _a.node,
       index = _a.index,
@@ -53150,22 +52991,19 @@ var computeNode = function computeNode(_a) {
       valueKey: valueKey
     });
   }) : null;
-  var value;
+  var nodeValue;
 
   if (children && children.length) {
-    value = computedChildren.reduce(function (result, child) {
-      return result + child.value;
+    nodeValue = computedChildren.reduce(function (result, child) {
+      return result + child[NODE_VALUE_KEY];
     }, 0);
   } else {
-    value = lodash_1["default"].isNaN(node[valueKey]) || node[valueKey] <= 0 ? 0 : node[valueKey];
+    nodeValue = lodash_1["default"].isNaN(node[valueKey]) || node[valueKey] <= 0 ? 0 : node[valueKey];
   }
 
-  return __assign(__assign({}, node), {
-    children: computedChildren,
-    value: value,
-    depth: depth,
-    index: index
-  });
+  return __assign(__assign({}, node), (_b = {
+    children: computedChildren
+  }, _b[NODE_VALUE_KEY] = nodeValue, _b.depth = depth, _b.index = index, _b));
 };
 
 var filterRect = function filterRect(node) {
@@ -53180,7 +53018,7 @@ var filterRect = function filterRect(node) {
 var getAreaOfChildren = function getAreaOfChildren(children, areaValueRatio) {
   var ratio = areaValueRatio < 0 ? 0 : areaValueRatio;
   return children.map(function (child) {
-    var area = child.value * ratio;
+    var area = child[NODE_VALUE_KEY] * ratio;
     return __assign(__assign({}, child), {
       area: lodash_1["default"].isNaN(area) || area <= 0 ? 0 : area
     });
@@ -53281,7 +53119,7 @@ var squarify = function squarify(node, aspectRatio) {
     var child = void 0,
         score = void 0;
     var size = Math.min(rect.width, rect.height);
-    var scaleChildren = getAreaOfChildren(children, rect.width * rect.height / node.value);
+    var scaleChildren = getAreaOfChildren(children, rect.width * rect.height / node[NODE_VALUE_KEY]);
     var tempChildren = scaleChildren.slice();
     row.area = 0;
 
@@ -53704,7 +53542,7 @@ var Treemap = function (_super) {
     var payload = isTooltipActive && activeNode ? [{
       payload: activeNode,
       name: ChartUtils_1.getValueByDataKey(activeNode, nameKey, ''),
-      value: ChartUtils_1.getValueByDataKey(activeNode, dataKey)
+      value: ChartUtils_1.getValueByDataKey(activeNode, NODE_VALUE_KEY)
     }] : [];
     return react_1["default"].cloneElement(tooltipItem, {
       viewBox: viewBox,
@@ -53813,7 +53651,7 @@ exports.Treemap = Treemap;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {
 
 var __extends = this && this.__extends || function () {
   var _extendStatics = function extendStatics(d, b) {
@@ -53933,7 +53771,7 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 
 var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
 
-var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+var lodash_1 = __importStar(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
 
 var Surface_1 = __webpack_require__(/*! ../container/Surface */ "./src/container/Surface.tsx");
 
@@ -53984,6 +53822,8 @@ var originCoordinate = {
   y: 0
 };
 var isFinit = Number.isFinite ? Number.isFinite : isFinite;
+var defer = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : typeof setImmediate === 'function' ? setImmediate : setTimeout;
+var deferClear = typeof cancelAnimationFrame === 'function' ? cancelAnimationFrame : typeof clearImmediate === 'function' ? clearImmediate : clearTimeout;
 
 var calculateTooltipPos = function calculateTooltipPos(rangeObj, layout) {
   if (layout === 'horizontal') {
@@ -54086,13 +53926,7 @@ var getTooltipContent = function getTooltipContent(state, chartData, activeIndex
       return result;
     }
 
-    var _a = child.props,
-        dataKey = _a.dataKey,
-        name = _a.name,
-        unit = _a.unit,
-        formatter = _a.formatter,
-        data = _a.data,
-        tooltipType = _a.tooltipType;
+    var data = child.props.data;
     var payload;
 
     if (tooltipAxis.dataKey && !tooltipAxis.allowDuplicatedCategory) {
@@ -54106,16 +53940,7 @@ var getTooltipContent = function getTooltipContent(state, chartData, activeIndex
       return result;
     }
 
-    return __spreadArrays(result, [__assign(__assign({}, types_1.filterProps(child)), {
-      dataKey: dataKey,
-      unit: unit,
-      formatter: formatter,
-      name: name || dataKey,
-      color: ChartUtils_1.getMainColorOfGraphicItem(child),
-      value: ChartUtils_1.getValueByDataKey(payload, dataKey),
-      type: tooltipType,
-      payload: payload
-    })]);
+    return __spreadArrays(result, [ChartUtils_1.getTooltipItem(child, payload)]);
   }, []);
 };
 
@@ -54493,8 +54318,10 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
 
   var chartName = _a.chartName,
       GraphicalChild = _a.GraphicalChild,
-      _c = _a.eventType,
-      eventType = _c === void 0 ? 'axis' : _c,
+      _c = _a.defaultTooltipEventType,
+      defaultTooltipEventType = _c === void 0 ? 'axis' : _c,
+      _d = _a.validateTooltipEventTypes,
+      validateTooltipEventTypes = _d === void 0 ? ['axis'] : _d,
       axisComponents = _a.axisComponents,
       legendContent = _a.legendContent,
       formatAxisMap = _a.formatAxisMap,
@@ -54665,6 +54492,14 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
     function CategoricalChartWrapper(props) {
       var _this = _super.call(this, props) || this;
 
+      _this.clearDeferId = function () {
+        if (!lodash_1.isNil(_this.deferId) && deferClear) {
+          deferClear(_this.deferId);
+        }
+
+        _this.deferId = null;
+      };
+
       _this.handleLegendBBoxUpdate = function (box) {
         if (box && _this.legendInstance) {
           var _a = _this.state,
@@ -54686,59 +54521,12 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
       };
 
       _this.handleReceiveSyncEvent = function (cId, chartId, data) {
-        var _a = _this.props,
-            syncId = _a.syncId,
-            layout = _a.layout;
-        var updateId = _this.state.updateId;
+        var syncId = _this.props.syncId;
 
         if (syncId === cId && chartId !== _this.uniqueChartId) {
-          var dataStartIndex = data.dataStartIndex,
-              dataEndIndex = data.dataEndIndex;
+          _this.clearDeferId();
 
-          if (!lodash_1["default"].isNil(data.dataStartIndex) || !lodash_1["default"].isNil(data.dataEndIndex)) {
-            _this.setState(__assign({
-              dataStartIndex: dataStartIndex,
-              dataEndIndex: dataEndIndex
-            }, updateStateOfAxisMapsOffsetAndStackGroups({
-              props: _this.props,
-              dataStartIndex: dataStartIndex,
-              dataEndIndex: dataEndIndex,
-              updateId: updateId
-            }, _this.state)));
-          } else if (!lodash_1["default"].isNil(data.activeTooltipIndex)) {
-            var chartX = data.chartX,
-                chartY = data.chartY,
-                activeTooltipIndex = data.activeTooltipIndex;
-            var _b = _this.state,
-                offset = _b.offset,
-                tooltipTicks = _b.tooltipTicks;
-
-            if (!offset) {
-              return;
-            }
-
-            var viewBox = __assign(__assign({}, offset), {
-              x: offset.left,
-              y: offset.top
-            });
-
-            var validateChartX = Math.min(chartX, viewBox.x + viewBox.width);
-            var validateChartY = Math.min(chartY, viewBox.y + viewBox.height);
-            var activeLabel = tooltipTicks[activeTooltipIndex] && tooltipTicks[activeTooltipIndex].value;
-            var activePayload = getTooltipContent(_this.state, _this.props.data, activeTooltipIndex);
-            var activeCoordinate = tooltipTicks[activeTooltipIndex] ? {
-              x: layout === 'horizontal' ? tooltipTicks[activeTooltipIndex].coordinate : validateChartX,
-              y: layout === 'horizontal' ? validateChartY : tooltipTicks[activeTooltipIndex].coordinate
-            } : originCoordinate;
-
-            _this.setState(__assign(__assign({}, data), {
-              activeLabel: activeLabel,
-              activeCoordinate: activeCoordinate,
-              activePayload: activePayload
-            }));
-          } else {
-            _this.setState(data);
-          }
+          _this.deferId = defer && defer(_this.applySyncEvent.bind(_this, data));
         }
       };
 
@@ -54808,7 +54596,7 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
         }
       };
 
-      _this.handleItemMouseEnter = function (el) {
+      _this.handleItemMouseEnter = function (el, index, e) {
         _this.setState(function () {
           return {
             isTooltipActive: true,
@@ -54975,7 +54763,9 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
             offset = _a.offset,
             activeTooltipIndex = _a.activeTooltipIndex;
 
-        if (!element || !element.props.cursor || !isTooltipActive || !activeCoordinate) {
+        var tooltipEventType = _this.getTooltipEventType();
+
+        if (!element || !element.props.cursor || !isTooltipActive || !activeCoordinate || tooltipEventType !== 'axis') {
           return null;
         }
 
@@ -55082,21 +54872,25 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
       };
 
       _this.renderPolarGrid = function (element) {
-        var radialLines = element.props.radialLines;
-        var _a = _this.state,
-            radiusAxisMap = _a.radiusAxisMap,
-            angleAxisMap = _a.angleAxisMap;
+        var _a = element.props,
+            radialLines = _a.radialLines,
+            polarAngles = _a.polarAngles,
+            polarRadius = _a.polarRadius;
+        var _b = _this.state,
+            radiusAxisMap = _b.radiusAxisMap,
+            angleAxisMap = _b.angleAxisMap;
         var radiusAxis = DataUtils_1.getAnyElementOfObject(radiusAxisMap);
         var angleAxis = DataUtils_1.getAnyElementOfObject(angleAxisMap);
         var cx = angleAxis.cx,
             cy = angleAxis.cy,
             innerRadius = angleAxis.innerRadius,
             outerRadius = angleAxis.outerRadius;
+        var props = element.props || {};
         return react_1.cloneElement(element, {
-          polarAngles: ChartUtils_1.getTicksOfAxis(angleAxis, true).map(function (entry) {
+          polarAngles: lodash_1.isArray(polarAngles) ? polarAngles : ChartUtils_1.getTicksOfAxis(angleAxis, true).map(function (entry) {
             return entry.coordinate;
           }),
-          polarRadius: ChartUtils_1.getTicksOfAxis(radiusAxis, true).map(function (entry) {
+          polarRadius: lodash_1.isArray(polarRadius) ? polarRadius : ChartUtils_1.getTicksOfAxis(radiusAxis, true).map(function (entry) {
             return entry.coordinate;
           }),
           cx: cx,
@@ -55264,6 +55058,8 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
           return null;
         }
 
+        var tooltipEventType = _this.getTooltipEventType();
+
         var _a = _this.state,
             isTooltipActive = _a.isTooltipActive,
             tooltipAxis = _a.tooltipAxis,
@@ -55279,13 +55075,19 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
             activeDot = _c.activeDot,
             hide = _c.hide;
         var hasActive = !hide && isTooltipActive && tooltipItem && activeDot && activeTooltipIndex >= 0;
-        var isTooltipTriggerByClick = tooltipItem && tooltipItem.props.trigger === 'click';
-        var itemEvents = isTooltipTriggerByClick ? {
-          onClick: ChartUtils_1.combineEventHandlers(_this.handleItemMouseEnter, null, item.props.onCLick)
-        } : {
-          onMouseLeave: ChartUtils_1.combineEventHandlers(_this.handleItemMouseLeave, null, item.props.onMouseLeave),
-          onMouseEnter: ChartUtils_1.combineEventHandlers(_this.handleItemMouseEnter, null, item.props.onMouseEnter)
-        };
+        var itemEvents = {};
+
+        if (tooltipEventType !== 'axis' && tooltipItem && tooltipItem.props.trigger === 'click') {
+          itemEvents = {
+            onClick: ChartUtils_1.combineEventHandlers(_this.handleItemMouseEnter, null, element.props.onCLick)
+          };
+        } else if (tooltipEventType !== 'axis') {
+          itemEvents = {
+            onMouseLeave: ChartUtils_1.combineEventHandlers(_this.handleItemMouseLeave, null, element.props.onMouseLeave),
+            onMouseEnter: ChartUtils_1.combineEventHandlers(_this.handleItemMouseEnter, null, element.props.onMouseEnter)
+          };
+        }
+
         var graphicalItem = react_1.cloneElement(element, __assign(__assign({}, item.props), itemEvents));
 
         function findWithPayload(entry) {
@@ -55355,6 +55157,8 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
     };
 
     CategoricalChartWrapper.prototype.componentWillUnmount = function () {
+      this.clearDeferId();
+
       if (!lodash_1["default"].isNil(this.props.syncId)) {
         this.removeListener();
       }
@@ -55366,6 +55170,17 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
       if (typeof this.triggeredAfterMouseMove.cancel === 'function') {
         this.triggeredAfterMouseMove.cancel();
       }
+    };
+
+    CategoricalChartWrapper.prototype.getTooltipEventType = function () {
+      var tooltipItem = ReactUtils_1.findChildByType(this.props.children, Tooltip_1.Tooltip.displayName);
+
+      if (tooltipItem && lodash_1.isBoolean(tooltipItem.props.shared)) {
+        var eventType = tooltipItem.props.shared ? 'axis' : 'item';
+        return validateTooltipEventTypes.indexOf(eventType) >= 0 ? eventType : defaultTooltipEventType;
+      }
+
+      return defaultTooltipEventType;
     };
 
     CategoricalChartWrapper.prototype.getMouseInfo = function (event) {
@@ -55384,8 +55199,9 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
       var _a = this.state,
           xAxisMap = _a.xAxisMap,
           yAxisMap = _a.yAxisMap;
+      var tooltipEventType = this.getTooltipEventType();
 
-      if (eventType !== 'axis' && xAxisMap && yAxisMap) {
+      if (tooltipEventType !== 'axis' && xAxisMap && yAxisMap) {
         var xScale = DataUtils_1.getAnyElementOfObject(xAxisMap).scale;
         var yScale = DataUtils_1.getAnyElementOfObject(yAxisMap).scale;
         var xValue = xScale && xScale.invert ? xScale.invert(e.chartX) : null;
@@ -55509,10 +55325,11 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
 
     CategoricalChartWrapper.prototype.parseEventsOfWrapper = function () {
       var children = this.props.children;
+      var tooltipEventType = this.getTooltipEventType();
       var tooltipItem = ReactUtils_1.findChildByType(children, Tooltip_1.Tooltip.displayName);
       var tooltipEvents = {};
 
-      if (tooltipItem && eventType === 'axis') {
+      if (tooltipItem && tooltipEventType === 'axis') {
         if (tooltipItem.props.trigger === 'click') {
           tooltipEvents = {
             onClick: this.handleClick
@@ -55554,6 +55371,73 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
 
       if (!lodash_1["default"].isNil(syncId)) {
         Events_1.eventCenter.emit(Events_1.SYNC_EVENT, syncId, this.uniqueChartId, data);
+      }
+    };
+
+    CategoricalChartWrapper.prototype.applySyncEvent = function (data) {
+      var _a = this.props,
+          layout = _a.layout,
+          syncMethod = _a.syncMethod;
+      var updateId = this.state.updateId;
+      var dataStartIndex = data.dataStartIndex,
+          dataEndIndex = data.dataEndIndex;
+
+      if (!lodash_1["default"].isNil(data.dataStartIndex) || !lodash_1["default"].isNil(data.dataEndIndex)) {
+        this.setState(__assign({
+          dataStartIndex: dataStartIndex,
+          dataEndIndex: dataEndIndex
+        }, updateStateOfAxisMapsOffsetAndStackGroups({
+          props: this.props,
+          dataStartIndex: dataStartIndex,
+          dataEndIndex: dataEndIndex,
+          updateId: updateId
+        }, this.state)));
+      } else if (!lodash_1["default"].isNil(data.activeTooltipIndex)) {
+        var chartX = data.chartX,
+            chartY = data.chartY;
+        var activeTooltipIndex = data.activeTooltipIndex;
+        var _b = this.state,
+            offset = _b.offset,
+            tooltipTicks = _b.tooltipTicks;
+
+        if (!offset) {
+          return;
+        }
+
+        if (typeof syncMethod === 'function') {
+          activeTooltipIndex = syncMethod(activeTooltipIndex, data);
+        } else if (syncMethod === 'value') {
+          activeTooltipIndex = -1;
+
+          for (var i = 0; i < tooltipTicks.length; i++) {
+            if (tooltipTicks[i].value === data.activeLabel) {
+              activeTooltipIndex = i;
+              break;
+            }
+          }
+        }
+
+        var viewBox = __assign(__assign({}, offset), {
+          x: offset.left,
+          y: offset.top
+        });
+
+        var validateChartX = Math.min(chartX, viewBox.x + viewBox.width);
+        var validateChartY = Math.min(chartY, viewBox.y + viewBox.height);
+        var activeLabel = tooltipTicks[activeTooltipIndex] && tooltipTicks[activeTooltipIndex].value;
+        var activePayload = getTooltipContent(this.state, this.props.data, activeTooltipIndex);
+        var activeCoordinate = tooltipTicks[activeTooltipIndex] ? {
+          x: layout === 'horizontal' ? tooltipTicks[activeTooltipIndex].coordinate : validateChartX,
+          y: layout === 'horizontal' ? validateChartY : tooltipTicks[activeTooltipIndex].coordinate
+        } : originCoordinate;
+        this.setState(__assign(__assign({}, data), {
+          activeLabel: activeLabel,
+          activeCoordinate: activeCoordinate,
+          activePayload: activePayload,
+          activeTooltipIndex: activeTooltipIndex
+        }));
+      } else {
+        this.setState(data);
       }
     };
 
@@ -55603,6 +55487,79 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
         height: height,
         width: width
       })));
+    };
+
+    CategoricalChartWrapper.prototype.getXScales = function () {
+      var xAxisMap = this.state.xAxisMap;
+      return xAxisMap ? Object.entries(xAxisMap).reduce(function (res, _a) {
+        var _b;
+
+        var axisId = _a[0],
+            axisProps = _a[1];
+        return __assign(__assign({}, res), (_b = {}, _b[axisId] = axisProps.scale, _b));
+      }, {}) : null;
+    };
+
+    CategoricalChartWrapper.prototype.getYScales = function () {
+      var yAxisMap = this.state.yAxisMap;
+      return yAxisMap ? Object.entries(yAxisMap).reduce(function (res, _a) {
+        var _b;
+
+        var axisId = _a[0],
+            axisProps = _a[1];
+        return __assign(__assign({}, res), (_b = {}, _b[axisId] = axisProps.scale, _b));
+      }, {}) : null;
+    };
+
+    CategoricalChartWrapper.prototype.getXScaleByAxisId = function (axisId) {
+      var _a, _b;
+
+      return (_b = (_a = this.state.xAxisMap) === null || _a === void 0 ? void 0 : _a[axisId]) === null || _b === void 0 ? void 0 : _b.scale;
+    };
+
+    CategoricalChartWrapper.prototype.getYScaleByAxisId = function (axisId) {
+      var _a, _b;
+
+      return (_b = (_a = this.state.yAxisMap) === null || _a === void 0 ? void 0 : _a[axisId]) === null || _b === void 0 ? void 0 : _b.scale;
+    };
+
+    CategoricalChartWrapper.prototype.getItemByXY = function (chartXY) {
+      var formatedGraphicalItems = this.state.formatedGraphicalItems;
+
+      if (formatedGraphicalItems && formatedGraphicalItems.length) {
+        for (var i = 0, len = formatedGraphicalItems.length; i < len; i++) {
+          var graphicalItem = formatedGraphicalItems[i];
+          var props = graphicalItem.props,
+              item = graphicalItem.item;
+          var itemDisplayName = ReactUtils_1.getDisplayName(item.type);
+
+          if (itemDisplayName === 'Bar') {
+            var activeBarItem = (props.data || []).find(function (entry) {
+              return Rectangle_1.isInRectangle(chartXY, entry);
+            });
+
+            if (activeBarItem) {
+              return {
+                graphicalItem: graphicalItem,
+                payload: activeBarItem
+              };
+            }
+          } else if (itemDisplayName === 'RadialBar') {
+            var activeBarItem = (props.data || []).find(function (entry) {
+              return PolarUtils_1.inRangeOfSector(chartXY, entry);
+            });
+
+            if (activeBarItem) {
+              return {
+                graphicalItem: graphicalItem,
+                payload: activeBarItem
+              };
+            }
+          }
+        }
+      }
+
+      return null;
     };
 
     CategoricalChartWrapper.prototype.render = function () {
@@ -55727,7 +55684,8 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
       bottom: 5,
       left: 5
     },
-    reverseStackOrder: false
+    reverseStackOrder: false,
+    syncMethod: 'index'
   }, defaultProps), _b.getDerivedStateFromProps = function (nextProps, prevState) {
     var data = nextProps.data,
         children = nextProps.children,
@@ -55817,6 +55775,7 @@ var generateCategoricalChart = function generateCategoricalChart(_a) {
 };
 
 exports.generateCategoricalChart = generateCategoricalChart;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").setImmediate, __webpack_require__(/*! ./../../node_modules/timers-browserify/main.js */ "./node_modules/timers-browserify/main.js").clearImmediate))
 
 /***/ }),
 
@@ -57633,6 +57592,22 @@ var __extends = this && this.__extends || function () {
   };
 }();
 
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
   if (k2 === undefined) k2 = k;
   Object.defineProperty(o, k2, {
@@ -57678,13 +57653,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ResponsiveContainer = void 0;
 
-var react_1 = __importStar(__webpack_require__(/*! react */ "react"));
-
 var classnames_1 = __importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
 
-var react_resize_detector_1 = __importDefault(__webpack_require__(/*! react-resize-detector */ "./node_modules/react-resize-detector/lib/esm/index.js"));
-
 var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
+
+var react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+
+var react_resize_detector_1 = __importDefault(__webpack_require__(/*! react-resize-detector */ "./node_modules/react-resize-detector/build/index.esm.js"));
 
 var DataUtils_1 = __webpack_require__(/*! ../util/DataUtils */ "./src/util/DataUtils.ts");
 
@@ -57724,6 +57699,7 @@ var ResponsiveContainer = function (_super) {
       containerHeight: -1
     };
     _this.handleResize = props.debounce > 0 ? lodash_1["default"].debounce(_this.updateDimensionsImmediate, props.debounce) : _this.updateDimensionsImmediate;
+    _this.containerRef = react_1["default"].createRef();
     return _this;
   }
 
@@ -57741,13 +57717,13 @@ var ResponsiveContainer = function (_super) {
   };
 
   ResponsiveContainer.prototype.getContainerSize = function () {
-    if (!this.container) {
+    if (!this.containerRef.current) {
       return null;
     }
 
     return {
-      containerWidth: this.container.clientWidth,
-      containerHeight: this.container.clientHeight
+      containerWidth: this.containerRef.current.clientWidth,
+      containerHeight: this.containerRef.current.clientHeight
     };
   };
 
@@ -57793,8 +57769,6 @@ var ResponsiveContainer = function (_super) {
   };
 
   ResponsiveContainer.prototype.render = function () {
-    var _this = this;
-
     var _a = this.props,
         minWidth = _a.minWidth,
         minHeight = _a.minHeight,
@@ -57810,18 +57784,18 @@ var ResponsiveContainer = function (_super) {
       minHeight: minHeight,
       maxHeight: maxHeight
     };
-    return react_1["default"].createElement("div", {
-      id: "" + id,
-      className: classnames_1["default"]('recharts-responsive-container', className),
-      style: style,
-      ref: function ref(node) {
-        _this.container = node;
-      }
-    }, this.renderChart(), react_1["default"].createElement(react_resize_detector_1["default"], {
+    return react_1["default"].createElement(react_resize_detector_1["default"], {
       handleWidth: true,
       handleHeight: true,
-      onResize: this.handleResize
-    }));
+      onResize: this.handleResize,
+      targetRef: this.containerRef
+    }, react_1["default"].createElement("div", __assign({}, id != null ? {
+      id: "" + id
+    } : {}, {
+      className: classnames_1["default"]('recharts-responsive-container', className),
+      style: style,
+      ref: this.containerRef
+    }), this.renderChart()));
   };
 
   ResponsiveContainer.defaultProps = {
@@ -57992,25 +57966,91 @@ var calculateWordWidths = function calculateWordWidths(props) {
   }
 };
 
-var calculateWordsByLines = function calculateWordsByLines(wordsWithComputedWidth, spaceWidth, lineWidth, scaleToFit) {
-  return (wordsWithComputedWidth || []).reduce(function (result, _a) {
-    var word = _a.word,
-        width = _a.width;
-    var currentLine = result[result.length - 1];
+var calculateWordsByLines = function calculateWordsByLines(props, initialWordsWithComputedWith, spaceWidth, lineWidth, scaleToFit) {
+  var shouldLimitLines = DataUtils_1.isNumber(props.maxLines);
+  var text = props.children;
 
-    if (currentLine && (lineWidth == null || scaleToFit || currentLine.width + width + spaceWidth < lineWidth)) {
-      currentLine.words.push(word);
-      currentLine.width += width + spaceWidth;
-    } else {
-      var newLine = {
-        words: [word],
-        width: width
-      };
-      result.push(newLine);
+  var calculate = function calculate(words) {
+    if (words === void 0) {
+      words = [];
     }
 
-    return result;
-  }, []);
+    return words.reduce(function (result, _a) {
+      var word = _a.word,
+          width = _a.width;
+      var currentLine = result[result.length - 1];
+
+      if (currentLine && (lineWidth == null || scaleToFit || currentLine.width + width + spaceWidth < lineWidth)) {
+        currentLine.words.push(word);
+        currentLine.width += width + spaceWidth;
+      } else {
+        var newLine = {
+          words: [word],
+          width: width
+        };
+        result.push(newLine);
+      }
+
+      return result;
+    }, []);
+  };
+
+  var originalResult = calculate(initialWordsWithComputedWith);
+
+  var findLongestLine = function findLongestLine(words) {
+    return words.reduce(function (a, b) {
+      return a.width > b.width ? a : b;
+    });
+  };
+
+  if (!shouldLimitLines) {
+    return originalResult;
+  }
+
+  var suffix = '…';
+
+  var checkOverflow = function checkOverflow(index) {
+    var tempText = text.slice(0, index);
+    var words = calculateWordWidths(__assign(__assign({}, props), {
+      children: tempText + suffix
+    })).wordsWithComputedWidth;
+    var result = calculate(words);
+    var doesOverflow = result.length > props.maxLines || findLongestLine(result).width > lineWidth;
+    return [doesOverflow, result];
+  };
+
+  var start = 0;
+  var end = text.length - 1;
+  var iterations = 0;
+  var trimmedResult;
+
+  while (start <= end && iterations <= text.length - 1) {
+    var middle = Math.floor((start + end) / 2);
+    var prev = middle - 1;
+
+    var _a = checkOverflow(prev),
+        doesPrevOverflow = _a[0],
+        result = _a[1];
+
+    var doesMiddleOverflow = checkOverflow(middle)[0];
+
+    if (!doesPrevOverflow && !doesMiddleOverflow) {
+      start = middle + 1;
+    }
+
+    if (doesPrevOverflow && doesMiddleOverflow) {
+      end = middle - 1;
+    }
+
+    if (!doesPrevOverflow && doesMiddleOverflow) {
+      trimmedResult = result;
+      break;
+    }
+
+    iterations++;
+  }
+
+  return trimmedResult || originalResult;
 };
 
 var getWordsWithoutCalculate = function getWordsWithoutCalculate(children) {
@@ -58037,7 +58077,7 @@ var getWordsByLines = function getWordsByLines(props, needCalculate) {
         return getWordsWithoutCalculate(props.children);
       }
 
-      return calculateWordsByLines(wordsWithComputedWidth, spaceWidth, props.width, props.scaleToFit);
+      return calculateWordsByLines(props, wordsWithComputedWidth, spaceWidth, props.width, props.scaleToFit);
     }
   }
 
@@ -61640,6 +61680,8 @@ var ChartUtils_1 = __webpack_require__(/*! ../util/ChartUtils */ "./src/util/Cha
 
 var types_1 = __webpack_require__(/*! ../util/types */ "./src/util/types.ts");
 
+var PolarUtils_1 = __webpack_require__(/*! ../util/PolarUtils */ "./src/util/PolarUtils.ts");
+
 var RadialBar = function (_super) {
   __extends(RadialBar, _super);
 
@@ -61968,7 +62010,7 @@ var RadialBar = function (_super) {
         }
       }
 
-      return __assign(__assign(__assign(__assign({}, entry), backgroundSector), {
+      return __assign(__assign(__assign(__assign(__assign({}, entry), backgroundSector), {
         payload: entry,
         value: stackedData ? value : value[1],
         cx: cx,
@@ -61977,7 +62019,10 @@ var RadialBar = function (_super) {
         outerRadius: outerRadius,
         startAngle: startAngle,
         endAngle: endAngle
-      }), cells && cells[index] && cells[index].props);
+      }), cells && cells[index] && cells[index].props), {
+        tooltipPayload: [ChartUtils_1.getTooltipItem(item, entry)],
+        tooltipPosition: PolarUtils_1.polarToCartesian(cx, cy, (innerRadius + outerRadius) / 2, (startAngle + endAngle) / 2)
+      });
     });
     return {
       data: sectors,
@@ -62846,7 +62891,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Rectangle = void 0;
+exports.Rectangle = exports.isInRectangle = void 0;
 
 var react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 
@@ -62904,6 +62949,31 @@ var getRectanglePath = function getRectanglePath(x, y, width, height, radius) {
 
   return path;
 };
+
+var isInRectangle = function isInRectangle(point, rect) {
+  if (!point || !rect) {
+    return false;
+  }
+
+  var px = point.x,
+      py = point.y;
+  var x = rect.x,
+      y = rect.y,
+      width = rect.width,
+      height = rect.height;
+
+  if (Math.abs(width) > 0 && Math.abs(height) > 0) {
+    var minX = Math.min(x, x + width);
+    var maxX = Math.max(x, x + width);
+    var minY = Math.min(y, y + height);
+    var maxY = Math.max(y, y + height);
+    return px >= minX && px <= maxX && py >= minY && py <= maxY;
+  }
+
+  return false;
+};
+
+exports.isInRectangle = isInRectangle;
 
 var Rectangle = function (_super) {
   __extends(Rectangle, _super);
@@ -63840,10 +63910,13 @@ var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules
 
 var ChartUtils_1 = __webpack_require__(/*! ./ChartUtils */ "./src/util/ChartUtils.ts");
 
+var ReactUtils_1 = __webpack_require__(/*! ./ReactUtils */ "./src/util/ReactUtils.ts");
+
 var formatAxisMap = function formatAxisMap(props, axisMap, offset, axisType, chartName) {
   var width = props.width,
       height = props.height,
-      layout = props.layout;
+      layout = props.layout,
+      children = props.children;
   var ids = Object.keys(axisMap);
   var steps = {
     left: offset.left,
@@ -63855,6 +63928,7 @@ var formatAxisMap = function formatAxisMap(props, axisMap, offset, axisType, cha
     bottom: height - offset.bottom,
     bottomMirror: height - offset.bottom
   };
+  var hasBar = !!ReactUtils_1.findChildByType(children, 'Bar');
   return ids.reduce(function (result, id) {
     var _a;
 
@@ -63880,7 +63954,7 @@ var formatAxisMap = function formatAxisMap(props, axisMap, offset, axisType, cha
       range = [range[1], range[0]];
     }
 
-    var _c = ChartUtils_1.parseScale(axis, chartName),
+    var _c = ChartUtils_1.parseScale(axis, chartName, hasBar),
         scale = _c.scale,
         realScaleType = _c.realScaleType;
 
@@ -64167,7 +64241,7 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.parseDomainOfCategoryAxis = exports.getBandSizeOfAxis = exports.parseSpecifiedDomain = exports.MAX_VALUE_REG = exports.MIN_VALUE_REG = exports.getDomainOfStackGroups = exports.getStackedDataOfItem = exports.getBaseValueOfBar = exports.getCateCoordinateOfBar = exports.getCateCoordinateOfLine = exports.getTicksOfScale = exports.calculateDomainOfTicks = exports.getStackGroupsByAxisId = exports.getStackedData = exports.offsetPositive = exports.offsetSign = exports.truncateByDomain = exports.findPositionOfBar = exports.checkDomainOfScale = exports.parseScale = exports.combineEventHandlers = exports.getTicksOfAxis = exports.getCoordinatesOfGrid = exports.isCategoricalAxis = exports.getDomainOfItemsWithSameAxis = exports.parseErrorBarsOfAxis = exports.getDomainOfErrorBars = exports.appendOffsetOfLegend = exports.getBarPosition = exports.getBarSizeList = exports.getLegendProps = exports.getMainColorOfGraphicItem = exports.calculateActiveTickIndex = exports.getDomainOfDataByKey = exports.getValueByDataKey = void 0;
+exports.getTooltipItem = exports.parseDomainOfCategoryAxis = exports.getBandSizeOfAxis = exports.parseSpecifiedDomain = exports.MAX_VALUE_REG = exports.MIN_VALUE_REG = exports.getDomainOfStackGroups = exports.getStackedDataOfItem = exports.getBaseValueOfBar = exports.getCateCoordinateOfBar = exports.getCateCoordinateOfLine = exports.getTicksOfScale = exports.calculateDomainOfTicks = exports.getStackGroupsByAxisId = exports.getStackedData = exports.offsetPositive = exports.offsetSign = exports.truncateByDomain = exports.findPositionOfBar = exports.checkDomainOfScale = exports.parseScale = exports.combineEventHandlers = exports.getTicksOfAxis = exports.getCoordinatesOfGrid = exports.isCategoricalAxis = exports.getDomainOfItemsWithSameAxis = exports.parseErrorBarsOfAxis = exports.getDomainOfErrorBars = exports.appendOffsetOfLegend = exports.getBarPosition = exports.getBarSizeList = exports.getLegendProps = exports.getMainColorOfGraphicItem = exports.calculateActiveTickIndex = exports.getDomainOfDataByKey = exports.getValueByDataKey = void 0;
 
 var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
 
@@ -64182,6 +64256,8 @@ var DataUtils_1 = __webpack_require__(/*! ./DataUtils */ "./src/util/DataUtils.t
 var Legend_1 = __webpack_require__(/*! ../component/Legend */ "./src/component/Legend.tsx");
 
 var ReactUtils_1 = __webpack_require__(/*! ./ReactUtils */ "./src/util/ReactUtils.ts");
+
+var types_1 = __webpack_require__(/*! ./types */ "./src/util/types.ts");
 
 function getValueByDataKey(obj, dataKey, defaultValue) {
   if (lodash_1["default"].isNil(obj) || lodash_1["default"].isNil(dataKey)) {
@@ -64224,8 +64300,14 @@ function getDomainOfDataByKey(data, key, type, filterNil) {
 exports.getDomainOfDataByKey = getDomainOfDataByKey;
 
 var calculateActiveTickIndex = function calculateActiveTickIndex(coordinate, ticks, unsortedTicks, axis) {
+  var _a;
+
+  if (ticks === void 0) {
+    ticks = [];
+  }
+
   var index = -1;
-  var len = ticks.length;
+  var len = (_a = ticks === null || ticks === void 0 ? void 0 : ticks.length) !== null && _a !== void 0 ? _a : 0;
 
   if (len > 1) {
     if (axis && axis.axisType === 'angleAxis' && Math.abs(Math.abs(axis.range[1] - axis.range[0]) - 360) <= 1e-6) {
@@ -64737,7 +64819,7 @@ var combineEventHandlers = function combineEventHandlers(defaultHandler, parentH
 
 exports.combineEventHandlers = combineEventHandlers;
 
-var parseScale = function parseScale(axis, chartType) {
+var parseScale = function parseScale(axis, chartType, hasBar) {
   var scale = axis.scale,
       type = axis.type,
       layout = axis.layout,
@@ -64758,7 +64840,7 @@ var parseScale = function parseScale(axis, chartType) {
       };
     }
 
-    if (type === 'category' && chartType && (chartType.indexOf('LineChart') >= 0 || chartType.indexOf('AreaChart') >= 0 || chartType.indexOf('ComposedChart') >= 0)) {
+    if (type === 'category' && chartType && (chartType.indexOf('LineChart') >= 0 || chartType.indexOf('AreaChart') >= 0 || chartType.indexOf('ComposedChart') >= 0 && !hasBar)) {
       return {
         scale: d3Scales.scalePoint(),
         realScaleType: 'point'
@@ -65249,6 +65331,27 @@ var parseDomainOfCategoryAxis = function parseDomainOfCategoryAxis(specifiedDoma
 };
 
 exports.parseDomainOfCategoryAxis = parseDomainOfCategoryAxis;
+
+var getTooltipItem = function getTooltipItem(graphicalItem, payload) {
+  var _a = graphicalItem.props,
+      dataKey = _a.dataKey,
+      name = _a.name,
+      unit = _a.unit,
+      formatter = _a.formatter,
+      tooltipType = _a.tooltipType;
+  return __assign(__assign({}, types_1.filterProps(graphicalItem)), {
+    dataKey: dataKey,
+    unit: unit,
+    formatter: formatter,
+    name: name || dataKey,
+    color: exports.getMainColorOfGraphicItem(graphicalItem),
+    value: getValueByDataKey(payload, dataKey),
+    type: tooltipType,
+    payload: payload
+  });
+};
+
+exports.getTooltipItem = getTooltipItem;
 
 /***/ }),
 
@@ -66278,6 +66381,8 @@ var react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 
 var lodash_1 = __importDefault(__webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"));
 
+var react_is_1 = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+
 var DataUtils_1 = __webpack_require__(/*! ./DataUtils */ "./src/util/DataUtils.ts");
 
 var ShallowEqual_1 = __webpack_require__(/*! ./ShallowEqual */ "./src/util/ShallowEqual.ts");
@@ -66327,6 +66432,10 @@ var findAllByType = function findAllByType(children, type) {
   }
 
   react_1["default"].Children.forEach(children, function (child) {
+    if (react_is_1.isFragment(child)) {
+      result = result.concat(exports.findAllByType(child.props.children, type));
+    }
+
     var childType = lodash_1["default"].get(child, 'type.displayName') || lodash_1["default"].get(child, 'type.name');
 
     if (types.indexOf(childType) !== -1) {
@@ -66493,7 +66602,9 @@ var renderByOrder = function renderByOrder(children, renderMap) {
       }
     }
   });
-  return lodash_1["default"].flatten(elements);
+  return lodash_1["default"].flatten(elements).filter(function (element) {
+    return !lodash_1["default"].isNil(element);
+  });
 };
 
 exports.renderByOrder = renderByOrder;

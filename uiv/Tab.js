@@ -466,7 +466,7 @@ var PortalTarget = Vue.extend({
 var _id$1 = 0;
 var portalProps = ['disabled', 'name', 'order', 'slim', 'slotProps', 'tag', 'to'];
 var targetProps = ['multiple', 'transition'];
-var MountingPortal = Vue.extend({
+Vue.extend({
   name: 'MountingPortal',
   inheritAttrs: false,
   props: {

@@ -1,5 +1,5 @@
 /**
-  * vee-validate v4.1.11
+  * vee-validate v4.1.20
   * (c) 2021 Abdelrahman Awad
   * @license MIT
   */
@@ -13,6 +13,9 @@
       return typeof fn === 'function';
   }
   const isObject = (obj) => obj !== null && !!obj && typeof obj === 'object' && !Array.isArray(obj);
+  function isIndex(value) {
+      return Number(value) >= 0;
+  }
 
   const RULES = {};
   /**
@@ -51,8 +54,8 @@
   /**
    * Checks if an input is of type file
    */
-  function isFileInput(tag, type) {
-      return isHTMLTag(tag) && type === 'file';
+  function isFileInputNode(tag, attrs) {
+      return isHTMLTag(tag) && attrs.type === 'file';
   }
   function isYupValidator(value) {
       return !!value && isCallable(value.validate);
@@ -60,8 +63,8 @@
   function hasCheckedAttr(type) {
       return type === 'checkbox' || type === 'radio';
   }
-  function isIndex(value) {
-      return Number(value) >= 0;
+  function isContainerValue(value) {
+      return isObject(value) || Array.isArray(value);
   }
   /**
    * True if the value is an empty object or array
@@ -77,6 +80,30 @@
    */
   function isNotNestedPath(path) {
       return /^\[.+\]$/i.test(path);
+  }
+  /**
+   * Checks if an element is a native HTML5 multi-select input element
+   */
+  function isNativeMultiSelect(el) {
+      return el.tagName === 'SELECT' && el.multiple;
+  }
+  /**
+   * Checks if a tag name with attrs object will render a native multi-select element
+   */
+  function isNativeMultiSelectNode(tag, attrs) {
+      // The falsy value array is the values that Vue won't add the `multiple` prop if it has one of these values
+      const hasTruthyBindingValue = ![false, null, undefined, 0].includes(attrs.multiple) && !Number.isNaN(attrs.multiple);
+      return tag === 'select' && 'multiple' in attrs && hasTruthyBindingValue;
+  }
+  /**
+   * Checks if a node should have a `:value` binding or not
+   *
+   * These nodes should not have a value binding
+   * For files, because they are not reactive
+   * For multi-selects because the value binding will reset the value
+   */
+  function shouldHaveValueBinding(tag, attrs) {
+      return isNativeMultiSelectNode(tag, attrs) || isFileInputNode(tag, attrs);
   }
 
   function cleanupNonNestedPath(path) {
@@ -95,15 +122,16 @@
       if (isNotNestedPath(path)) {
           return object[cleanupNonNestedPath(path)];
       }
-      return path
+      const resolvedValue = path
           .split(/\.|\[(\d+)\]/)
           .filter(Boolean)
           .reduce((acc, propKey) => {
-          if (acc && propKey in acc) {
+          if (isContainerValue(acc) && propKey in acc) {
               return acc[propKey];
           }
           return undefined;
       }, object);
+      return resolvedValue;
   }
   /**
    * Sets a nested property value in a path, creates the path properties if it doesn't exist
@@ -134,7 +162,9 @@
           object.splice(Number(key), 1);
           return;
       }
-      delete object[key];
+      if (isObject(object)) {
+          delete object[key];
+      }
   }
   /**
    * Removes a nested property from object
@@ -206,6 +236,31 @@
       return currentValue === checkedValue ? uncheckedValue : checkedValue;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const normalizeChildren = (context, slotProps) => {
+      if (!context.slots.default) {
+          return context.slots.default;
+      }
+      return context.slots.default(slotProps);
+  };
+  /**
+   * Vue adds a `_value` prop at the moment on the input elements to store the REAL value on them, real values are different than the `value` attribute
+   * as they do not get casted to strings unlike `el.value` which preserves user-code behavior
+   */
+  function getBoundValue(el) {
+      if (hasValueBinding(el)) {
+          return el._value;
+      }
+      return undefined;
+  }
+  /**
+   * Vue adds a `_value` prop at the moment on the input elements to store the REAL value on them, real values are different than the `value` attribute
+   * as they do not get casted to strings unlike `el.value` which preserves user-code behavior
+   */
+  function hasValueBinding(el) {
+      return '_value' in el;
+  }
+
   const isEvent = (evt) => {
       if (!evt) {
           return false;
@@ -213,7 +268,7 @@
       if (typeof Event !== 'undefined' && isCallable(Event) && evt instanceof Event) {
           return true;
       }
-      // this is for IE
+      // this is for IE and Cypress #3161
       /* istanbul ignore next */
       if (evt && evt.srcElement) {
           return true;
@@ -227,11 +282,16 @@
       const input = value.target;
       // Vue sets the current bound value on `_value` prop
       // for checkboxes it it should fetch the value binding type as is (boolean instead of string)
-      if (hasCheckedAttr(input.type) && '_value' in input) {
-          return input._value;
+      if (hasCheckedAttr(input.type) && hasValueBinding(input)) {
+          return getBoundValue(input);
       }
       if (input.type === 'file' && input.files) {
           return Array.from(input.files);
+      }
+      if (isNativeMultiSelect(input)) {
+          return Array.from(input.options)
+              .filter(opt => opt.selected && !opt.disabled)
+              .map(getBoundValue);
       }
       return input.value;
   }
@@ -240,7 +300,6 @@
    * Normalizes the given rules expression.
    */
   function normalizeRules(rules) {
-      // if falsy value return an empty object.
       const acc = {};
       Object.defineProperty(acc, '_$$isNormalized', {
           value: true,
@@ -250,10 +309,6 @@
       });
       if (!rules) {
           return acc;
-      }
-      // If its a single validate function or a yup fn, leave as is.
-      if (isCallable(rules) || isYupValidator(rules)) {
-          return rules;
       }
       // Object is already normalized, skip.
       if (isObject(rules) && rules._$$isNormalized) {
@@ -329,7 +384,7 @@
   };
   function createLocator(value) {
       const locator = (crossTable) => {
-          const val = crossTable[value];
+          const val = getFromPath(crossTable, value) || crossTable[value];
           return val;
       };
       locator.__locatorRef = value;
@@ -339,17 +394,10 @@
       if (Array.isArray(params)) {
           return params.filter(isLocator);
       }
-      return Object.keys(params)
+      return keysOf(params)
           .filter(key => isLocator(params[key]))
           .map(key => params[key]);
   }
-
-  const normalizeChildren = (context, slotProps) => {
-      if (!context.slots.default) {
-          return context.slots.default;
-      }
-      return context.slots.default(slotProps);
-  };
 
   const DEFAULT_CONFIG = {
       generateMessage: ({ field }) => `${field} is not valid.`,
@@ -373,7 +421,7 @@
       const shouldBail = options === null || options === void 0 ? void 0 : options.bails;
       const field = {
           name: (options === null || options === void 0 ? void 0 : options.name) || '{field}',
-          rules: normalizeRules(rules),
+          rules,
           bails: shouldBail !== null && shouldBail !== void 0 ? shouldBail : true,
           formData: (options === null || options === void 0 ? void 0 : options.values) || {},
       };
@@ -389,34 +437,31 @@
    */
   async function _validate(field, value) {
       if (isYupValidator(field.rules)) {
-          return validateFieldWithYup(field, value);
+          return validateFieldWithYup(value, field.rules, { bails: field.bails });
       }
       // if a generic function, use it as the pipeline.
       if (isCallable(field.rules)) {
-          const result = await field.rules(value, {
+          const ctx = {
               field: field.name,
               form: field.formData,
-          });
+              value: value,
+          };
+          const result = await field.rules(value, ctx);
           const isValid = typeof result !== 'string' && result;
-          const message = typeof result === 'string'
-              ? result
-              : _generateFieldError({
-                  field: field.name,
-                  value,
-                  form: field.formData,
-              });
+          const message = typeof result === 'string' ? result : _generateFieldError(ctx);
           return {
               errors: !isValid ? [message] : [],
           };
       }
+      const normalizedContext = Object.assign(Object.assign({}, field), { rules: normalizeRules(field.rules) });
       const errors = [];
-      const rules = Object.keys(field.rules);
-      const length = rules.length;
+      const rulesKeys = Object.keys(normalizedContext.rules);
+      const length = rulesKeys.length;
       for (let i = 0; i < length; i++) {
-          const rule = rules[i];
-          const result = await _test(field, value, {
+          const rule = rulesKeys[i];
+          const result = await _test(normalizedContext, value, {
               name: rule,
-              params: field.rules[rule],
+              params: normalizedContext.rules[rule],
           });
           if (result.error) {
               errors.push(result.error);
@@ -434,10 +479,11 @@
   /**
    * Handles yup validation
    */
-  async function validateFieldWithYup(field, value) {
-      const errors = await field.rules
+  async function validateFieldWithYup(value, validator, opts) {
+      var _a;
+      const errors = await validator
           .validate(value, {
-          abortEarly: field.bails,
+          abortEarly: (_a = opts.bails) !== null && _a !== void 0 ? _a : true,
       })
           .then(() => [])
           .catch((err) => {
@@ -517,7 +563,7 @@
       const fid = ID_COUNTER >= Number.MAX_SAFE_INTEGER ? 0 : ++ID_COUNTER;
       const { initialValue, validateOnMount, bails, type, valueProp, label, validateOnValueUpdate, uncheckedValue, } = normalizeOptions(vue.unref(name), opts);
       const form = injectWithSelf(FormContextSymbol);
-      const { meta, errors, handleBlur, handleInput, resetValidationState, setValidationState, value, checked, } = useValidationState({
+      const { meta, errors, errorMessage, handleBlur, handleInput, resetValidationState, setValidationState, value, checked, } = useValidationState({
           name,
           // make sure to unref initial value because of possible refs passed in
           initValue: vue.unref(initialValue),
@@ -525,9 +571,16 @@
           type,
           valueProp,
       });
-      const nonYupSchemaRules = extractRuleFromSchema(form === null || form === void 0 ? void 0 : form.schema, vue.unref(name));
       const normalizedRules = vue.computed(() => {
-          return normalizeRules(nonYupSchemaRules || vue.unref(rules));
+          let rulesValue = vue.unref(rules);
+          const schema = form === null || form === void 0 ? void 0 : form.schema;
+          if (schema && !isYupValidator(schema)) {
+              rulesValue = extractRuleFromSchema(schema, vue.unref(name)) || rulesValue;
+          }
+          if (isYupValidator(rulesValue) || isCallable(rulesValue)) {
+              return rulesValue;
+          }
+          return normalizeRules(rulesValue);
       });
       const validate$1 = async () => {
           var _a;
@@ -566,9 +619,6 @@
       if (validateOnMount) {
           vue.onMounted(validate$1);
       }
-      const errorMessage = vue.computed(() => {
-          return errors.value[0];
-      });
       function setTouched(isTouched) {
           meta.touched = isTouched;
       }
@@ -590,6 +640,7 @@
           watchValue();
       }
       const field = {
+          idx: -1,
           fid,
           name,
           value,
@@ -600,7 +651,6 @@
           valueProp,
           uncheckedValue,
           checked,
-          idx: -1,
           resetField,
           handleReset: () => resetField(),
           validate: validate$1,
@@ -630,27 +680,35 @@
       const dependencies = vue.computed(() => {
           const rulesVal = normalizedRules.value;
           // is falsy, a function schema or a yup schema
-          if (!rulesVal || isCallable(rulesVal) || isCallable(rulesVal.validate)) {
-              return [];
+          if (!rulesVal || isCallable(rulesVal) || isYupValidator(rulesVal)) {
+              return {};
           }
           return Object.keys(rulesVal).reduce((acc, rule) => {
-              const deps = extractLocators(normalizedRules.value[rule]).map((dep) => dep.__locatorRef);
-              acc.push(...deps);
+              const deps = extractLocators(rulesVal[rule])
+                  .map((dep) => dep.__locatorRef)
+                  .reduce((depAcc, depName) => {
+                  const depValue = getFromPath(form.values, depName) || form.values[depName];
+                  if (depValue !== undefined) {
+                      depAcc[depName] = depValue;
+                  }
+                  return depAcc;
+              }, {});
+              Object.assign(acc, deps);
               return acc;
-          }, []);
+          }, {});
       });
       // Adds a watcher that runs the validation whenever field dependencies change
-      vue.watchEffect(() => {
-          // Skip if no dependencies
-          if (!dependencies.value.length) {
+      vue.watch(dependencies, (deps, oldDeps) => {
+          // Skip if no dependencies or if the field wasn't manipulated
+          if (!Object.keys(deps).length || !meta.dirty) {
               return;
           }
-          // For each dependent field, validate it if it was validated before
-          dependencies.value.forEach(dep => {
-              if (dep in form.values && meta.dirty) {
-                  return validate$1();
-              }
+          const shouldValidate = Object.keys(deps).some(depName => {
+              return deps[depName] !== oldDeps[depName];
           });
+          if (shouldValidate) {
+              validate$1();
+          }
       });
       return field;
   }
@@ -676,14 +734,11 @@
    */
   function useValidationState({ name, initValue, form, type, valueProp, }) {
       var _a;
-      const errors = vue.ref([]);
+      const { errors, errorMessage, setErrors } = useErrorsSource(name, form);
       const formInitialValues = injectWithSelf(FormInitialValuesSymbol, undefined);
-      const initialValue = (_a = getFromPath(vue.unref(formInitialValues), vue.unref(name))) !== null && _a !== void 0 ? _a : initValue;
+      const initialValue = ((_a = getFromPath(vue.unref(formInitialValues), vue.unref(name))) !== null && _a !== void 0 ? _a : initValue);
       const { resetMeta, meta } = useMeta(initialValue);
       const value = useFieldValue(initialValue, name, form);
-      if (hasCheckedAttr(type) && initialValue) {
-          value.value = initialValue;
-      }
       const checked = hasCheckedAttr(type)
           ? vue.computed(() => {
               if (Array.isArray(value.value)) {
@@ -715,7 +770,7 @@
       };
       // Updates the validation state with the validation result
       function setValidationState(result) {
-          errors.value = result.errors;
+          setErrors(result.errors);
           meta.valid = !result.errors.length;
           return result;
       }
@@ -723,19 +778,22 @@
       function resetValidationState(state) {
           var _a;
           const fieldPath = vue.unref(name);
-          const newValue = state && 'value' in state ? state.value : (_a = getFromPath(vue.unref(formInitialValues), fieldPath)) !== null && _a !== void 0 ? _a : initValue;
+          const newValue = state && 'value' in state
+              ? state.value
+              : ((_a = getFromPath(vue.unref(formInitialValues), fieldPath)) !== null && _a !== void 0 ? _a : initValue);
           if (form) {
               form.setFieldValue(fieldPath, newValue, { force: true });
           }
           else {
               value.value = newValue;
           }
-          errors.value = (state === null || state === void 0 ? void 0 : state.errors) || [];
+          setErrors((state === null || state === void 0 ? void 0 : state.errors) || []);
           resetMeta(state);
       }
       return {
           meta,
           errors,
+          errorMessage,
           setValidationState,
           resetValidationState,
           handleBlur,
@@ -804,6 +862,26 @@
       });
       return value;
   }
+  function useErrorsSource(path, form) {
+      if (!form) {
+          const errors = vue.ref([]);
+          return {
+              errors: vue.computed(() => errors.value),
+              errorMessage: vue.computed(() => errors.value[0]),
+              setErrors: (messages) => {
+                  errors.value = messages;
+              },
+          };
+      }
+      const errors = vue.computed(() => form.errorBag.value[vue.unref(path)] || []);
+      return {
+          errors,
+          errorMessage: vue.computed(() => errors.value[0]),
+          setErrors: (messages) => {
+              form.setFieldErrorBag(vue.unref(path), messages);
+          },
+      };
+  }
 
   const Field = vue.defineComponent({
       name: 'Field',
@@ -819,7 +897,7 @@
           },
           rules: {
               type: [Object, String, Function],
-              default: null,
+              default: undefined,
           },
           validateOnMount: {
               type: Boolean,
@@ -857,6 +935,7 @@
               type: null,
           },
       },
+      emits: ['update:modelValue'],
       setup(props, ctx) {
           const rules = vue.toRef(props, 'rules');
           const name = vue.toRef(props, 'name');
@@ -912,7 +991,8 @@
               else {
                   attrs.value = value.value;
               }
-              if (isFileInput(resolveTag(props, ctx), ctx.attrs.type)) {
+              const tag = resolveTag(props, ctx);
+              if (shouldHaveValueBinding(tag, ctx.attrs)) {
                   delete attrs.value;
               }
               return attrs;
@@ -920,6 +1000,7 @@
           const slotProps = vue.computed(() => {
               return {
                   field: fieldProps.value,
+                  value: value.value,
                   meta,
                   errors: errors.value,
                   errorMessage: errorMessage.value,
@@ -978,20 +1059,22 @@
       // a field map object useful for faster access of fields
       const fieldsById = vue.computed(() => {
           return fields.value.reduce((acc, field) => {
+              const fieldPath = vue.unref(field.name);
               // if the field was not added before
-              if (!acc[field.name]) {
-                  acc[field.name] = field;
+              if (!acc[fieldPath]) {
+                  acc[fieldPath] = field;
                   field.idx = -1;
                   return acc;
               }
               // if the same name is detected
-              if (!Array.isArray(acc[field.name])) {
-                  const firstField = acc[field.name];
-                  firstField.idx = 0;
-                  acc[field.name] = [firstField];
+              const existingField = acc[fieldPath];
+              if (!Array.isArray(existingField)) {
+                  existingField.idx = 0;
+                  acc[fieldPath] = [existingField];
               }
-              field.idx = acc[field.name].length;
-              acc[field.name].push(field);
+              const fieldGroup = acc[fieldPath];
+              field.idx = fieldGroup.length;
+              fieldGroup.push(field);
               return acc;
           }, {});
       });
@@ -1002,51 +1085,33 @@
       // a lookup to keep track of values by their field ids
       // this is important because later we need it if fields swap names
       const valuesByFid = {};
-      // an aggregation of field errors in a map object
+      // the source of errors for the form fields
+      const { errorBag, setErrorBag, setFieldErrorBag } = useErrorBag(opts === null || opts === void 0 ? void 0 : opts.initialErrors);
+      // Gets the first error of each field
       const errors = vue.computed(() => {
-          return fields.value.reduce((acc, field) => {
-              // Check if its a grouped field (checkbox/radio)
-              let message;
-              if (Array.isArray(fieldsById.value[field.name])) {
-                  const group = fieldsById.value[field.name];
-                  message = vue.unref((group.find((f) => vue.unref(f.checked)) || field).errorMessage);
-              }
-              else {
-                  message = vue.unref(field.errorMessage);
-              }
-              if (message) {
-                  acc[field.name] = message;
+          return keysOf(errorBag.value).reduce((acc, key) => {
+              const bag = errorBag.value[key];
+              if (bag && bag.length) {
+                  acc[key] = bag[0];
               }
               return acc;
           }, {});
       });
       // initial form values
-      const { initialValues, setInitialValues } = useFormInitialValues(fieldsById, formValues, opts === null || opts === void 0 ? void 0 : opts.initialValues);
+      const { readonlyInitialValues, initialValues, setInitialValues } = useFormInitialValues(fieldsById, formValues, opts === null || opts === void 0 ? void 0 : opts.initialValues);
       // form meta aggregations
-      const meta = useFormMeta(fields, initialValues);
+      const meta = useFormMeta(fields, readonlyInitialValues);
       /**
        * Manually sets an error message on a specific field
        */
       function setFieldError(field, message) {
-          const fieldInstance = fieldsById.value[field];
-          if (!fieldInstance) {
-              return;
-          }
-          if (Array.isArray(fieldInstance)) {
-              fieldInstance.forEach(instance => {
-                  instance.setValidationState({ errors: message ? [message] : [] });
-              });
-              return;
-          }
-          fieldInstance.setValidationState({ errors: message ? [message] : [] });
+          setFieldErrorBag(field, message);
       }
       /**
        * Sets errors for the fields specified in the object
        */
       function setErrors(fields) {
-          keysOf(fields).forEach(field => {
-              setFieldError(field, fields[field]);
-          });
+          setErrorBag(fields);
       }
       /**
        * Sets a single field value
@@ -1065,10 +1130,17 @@
           }
           let newValue = value;
           // Single Checkbox: toggles the field value unless the field is being reset then force it
-          if ((fieldInstance === null || fieldInstance === void 0 ? void 0 : fieldInstance.type) === 'checkbox' && !force) {
+          if (!Array.isArray(fieldInstance) && (fieldInstance === null || fieldInstance === void 0 ? void 0 : fieldInstance.type) === 'checkbox' && !force) {
               newValue = resolveNextCheckboxValue(getFromPath(formValues, field), value, vue.unref(fieldInstance.uncheckedValue));
           }
           setInPath(formValues, field, newValue);
+          // multiple radio fields
+          if (fieldInstance && Array.isArray(fieldInstance)) {
+              fieldInstance.forEach(fieldItem => {
+                  valuesByFid[fieldItem.fid] = newValue;
+              });
+              return;
+          }
           if (fieldInstance) {
               valuesByFid[fieldInstance.fid] = newValue;
           }
@@ -1134,7 +1206,7 @@
               setInitialValues(state.values);
           }
           // Reset all fields state
-          fields.value.forEach((f) => f.resetField());
+          fields.value.forEach(f => f.resetField());
           // set explicit state afterwards
           if (state === null || state === void 0 ? void 0 : state.dirty) {
               setDirty(state.dirty);
@@ -1176,7 +1248,14 @@
           // in this case, this is a single field not a group (checkbox or radio)
           // so remove the field value key immediately
           if (field.idx === -1) {
+              // avoid un-setting the value if the field was switched with another that shares the same name
+              // #3166
+              const isSharingName = fields.value.find(f => vue.unref(f.name) === fieldName);
+              if (isSharingName) {
+                  return;
+              }
               unsetPath(formValues, fieldName);
+              unsetPath(initialValues.value, fieldName);
               return;
           }
           // otherwise find the actual value in the current array of values and remove it
@@ -1193,6 +1272,7 @@
               return;
           }
           unsetPath(formValues, fieldName);
+          unsetPath(initialValues.value, fieldName);
       }
       async function validate() {
           function resultReducer(acc, result) {
@@ -1210,10 +1290,10 @@
                       .reduce(resultReducer, { errors: {}, valid: true });
               });
           }
-          const results = await Promise.all(fields.value.map((f) => {
+          const results = await Promise.all(fields.value.map(f => {
               return f.validate().then((result) => {
                   return {
-                      key: f.name,
+                      key: vue.unref(f.name),
                       errors: result.errors,
                   };
               });
@@ -1225,6 +1305,9 @@
           if (!fieldInstance) {
               vue.warn(`field with name ${field} was not found`);
               return Promise.resolve({ errors: [], valid: true });
+          }
+          if (Array.isArray(fieldInstance)) {
+              return fieldInstance.map(f => f.validate())[0];
           }
           return fieldInstance.validate();
       }
@@ -1267,6 +1350,8 @@
           unregister: unregisterField,
           fields: fieldsById,
           values: formValues,
+          setFieldErrorBag,
+          errorBag,
           schema: opts === null || opts === void 0 ? void 0 : opts.validationSchema,
           submitCount,
           validateSchema: isYupValidator(opts === null || opts === void 0 ? void 0 : opts.validationSchema)
@@ -1291,7 +1376,7 @@
       };
       const immutableFormValues = vue.computed(() => {
           return fields.value.reduce((formData, field) => {
-              setInPath(formData, field.name, vue.unref(field.value));
+              setInPath(formData, vue.unref(field.name), vue.unref(field.value));
               return formData;
           }, {});
       });
@@ -1387,13 +1472,12 @@
               valid: !messages.length,
           };
           result[fieldId] = fieldResult;
-          const isGroup = Array.isArray(field);
-          const isDirty = isGroup ? field.some((f) => f.meta.dirty) : field.meta.dirty;
+          const isDirty = Array.isArray(field) ? field.some(f => f.meta.dirty) : field.meta.dirty;
           if (!shouldMutate && !isDirty) {
               return result;
           }
-          if (isGroup) {
-              field.forEach((f) => f.setValidationState(fieldResult));
+          if (Array.isArray(field)) {
+              field[0].setValidationState(fieldResult);
               return result;
           }
           field.setValidationState(fieldResult);
@@ -1438,8 +1522,34 @@
       }
       vue.provide(FormInitialValuesSymbol, computedInitials);
       return {
-          initialValues: computedInitials,
+          readonlyInitialValues: computedInitials,
+          initialValues,
           setInitialValues,
+      };
+  }
+  function useErrorBag(initialErrors) {
+      const errorBag = vue.ref({});
+      /**
+       * Manually sets an error message on a specific field
+       */
+      function setFieldErrorBag(field, message) {
+          errorBag.value[field] = Array.isArray(message) ? message : message ? [message] : [];
+      }
+      /**
+       * Sets errors for the fields specified in the object
+       */
+      function setErrorBag(fields) {
+          keysOf(fields).forEach(field => {
+              setFieldErrorBag(field, fields[field]);
+          });
+      }
+      if (initialErrors) {
+          setErrorBag(initialErrors);
+      }
+      return {
+          errorBag,
+          setErrorBag,
+          setFieldErrorBag,
       };
   }
 
@@ -1479,10 +1589,6 @@
               type: Function,
               default: undefined,
           },
-      },
-      emits: {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          submit: (values, actions) => true,
       },
       setup(props, ctx) {
           const initialValues = vue.toRef(props, 'initialValues');

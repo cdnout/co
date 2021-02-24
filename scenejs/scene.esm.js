@@ -4,7 +4,7 @@ name: scenejs
 license: MIT
 author: Daybrush
 repository: https://github.com/daybrush/scenejs.git
-version: 1.4.3
+version: 1.5.0
 */
 import { between, isString, splitText, isArray, splitComma, splitSpace, RGBA, splitBracket, COLOR_MODELS, stringToRGBA, OBJECT, ARRAY, PROPERTY, STRING, NUMBER, isObject, IS_WINDOW, $, ANIMATION, removeEvent, addEvent, requestAnimationFrame, cancelAnimationFrame, splitUnit, camelize, getKeys, sortOrders, isUndefined, FILTER, TRANSFORM, FUNCTION, dot as dot$1, isFunction, toArray, fromCSS, findIndex, find, KEYFRAMES, addClass, removeClass, hasClass, decamelize } from '@daybrush/utils';
 import EventEmitter from '@scena/event-emitter';
@@ -786,7 +786,7 @@ function getValueByNames(names, properties, length) {
 
   return value;
 }
-function isInProperties(roles, args, isCheckTrue) {
+function isInProperties(roles, args, isLast) {
   var length = args.length;
   var role = roles;
 
@@ -801,15 +801,21 @@ function isInProperties(roles, args, isCheckTrue) {
 
     role = role[args[i]];
 
-    if (!role || !isCheckTrue && role === true) {
+    if (!role || !isLast && role === true) {
       return false;
     }
   }
 
   return true;
 }
-function isRole(args, isCheckTrue) {
-  return isInProperties(ROLES, args, isCheckTrue);
+/**
+ * @memberof Scene
+ * @param - Property names
+ * @param - Whether the property is the last property that cannot be an object (non-partitionable)
+ */
+
+function isRole(args, isLast) {
+  return isInProperties(ROLES, args, isLast);
 }
 function isFixed(args) {
   return isInProperties(FIXED, args, true);
@@ -985,7 +991,7 @@ var setters = ["id", ITERATION_COUNT, DELAY, FILL_MODE, DIRECTION, PLAY_SPEED, D
 var getters = __spreadArrays(setters, [EASING, EASING_NAME]);
 /**
 * play video, animation, the others
-* @extends EventTrigger
+* @extends EventEmitter
 * @see {@link https://www.w3schools.com/css/css3_animations.asp|CSS3 Animation}
 */
 
@@ -3452,6 +3458,7 @@ function (_super) {
 
 /**
  * manage sceneItems and play Scene.
+ * @extends Animator
  * @sort 1
  */
 
@@ -3958,11 +3965,11 @@ function (_super) {
   * version info
   * @type {string}
   * @example
-  * Scene.VERSION // 1.4.3
+  * Scene.VERSION // 1.5.0
   */
 
 
-  Scene.VERSION = "1.4.3";
+  Scene.VERSION = "1.5.0";
   return Scene;
 }(Animator);
 
@@ -3974,5 +3981,5 @@ function animateItem(properties, options) {
 }
 
 export default Scene;
-export { Animator, EASE, EASE_IN, EASE_IN_OUT, EASE_OUT, EVENTS, FIXED, Frame, LINEAR, NAME_SEPARATOR, OPTIONS, ROLES, STEP_END, STEP_START, SceneItem, animate, animateItem, bezier, setAlias, setRole, steps };
+export { Animator, EASE, EASE_IN, EASE_IN_OUT, EASE_OUT, EVENTS, FIXED, Frame, LINEAR, NAME_SEPARATOR, OPTIONS, ROLES, STEP_END, STEP_START, SceneItem, animate, animateItem, bezier, isRole, setAlias, setRole, steps };
 //# sourceMappingURL=scene.esm.js.map

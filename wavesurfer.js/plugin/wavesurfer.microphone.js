@@ -1,5 +1,5 @@
 /*!
- * wavesurfer.js microphone plugin 4.4.0 (2021-01-14)
+ * wavesurfer.js microphone plugin 4.5.0 (2021-02-14)
  * https://wavesurfer-js.org
  * @license BSD-3-Clause
  */
@@ -267,21 +267,10 @@ var MicrophonePlugin = /*#__PURE__*/function () {
 
       this.disconnect(); // stop stream from device
 
-      if (this.stream) {
-        // MediaStream.stop is deprecated since:
-        // - Firefox 44 (https://www.fxsitecompat.com/en-US/docs/2015/mediastream-stop-has-been-deprecated/)
-        // - Chrome 45 (https://developers.google.com/web/updates/2015/07/mediastream-deprecations)
-        if (this.browser.browser === 'chrome' && this.browser.version >= 45 || this.browser.browser === 'firefox' && this.browser.version >= 44 || this.browser.browser === 'edge' || this.browser.browser === 'safari') {
-          if (this.stream.getTracks) {
-            // note that this should not be a call
-            this.stream.getTracks().forEach(function (stream) {
-              return stream.stop();
-            });
-            return;
-          }
-        }
-
-        this.stream.stop();
+      if (this.stream && this.stream.getTracks) {
+        this.stream.getTracks().forEach(function (stream) {
+          return stream.stop();
+        });
       }
     }
     /**

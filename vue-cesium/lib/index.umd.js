@@ -4,7 +4,7 @@
  *
  * @package VueCesium
  * @author zouyaoji <370681295@qq.com>
- * @version 2.1.9
+ * @version 2.2.0
  * @license MIT
  * @homepage https://zouyaoji.top/vue-cesium
  * @copyright (c) 2018-2021, zouyaoji <370681295@qq.com>
@@ -4304,6 +4304,14 @@
 	    spaceDistance: '空间距离',
 	    verticalHeight: '垂直高度'
 	  },
+	  draw: {
+	    drawingTip1: '单击左键绘制起点。',
+	    drawingTip2: '单击左键绘制下一个点，单击右键结束绘制。',
+	    drawingTip3: '单击结束编辑。',
+	    editingMove: '移动节点',
+	    editingInsert: '插入节点',
+	    editingDelete: '删除节点'
+	  },
 	  navigation: {
 	    compass: {
 	      description: '拖拽罗盘外环: 旋转视图。\n拖拽罗盘陀螺仪: 翻转视图。\n双击罗盘: 重置视图。\n提示: 您也可以通过按住Ctrl键的同时拖拽地图来改变地图倾角。',
@@ -4375,7 +4383,7 @@
 	  }
 
 	  var $vc = {
-	    VERSION: '2.1.9'
+	    VERSION: '2.2.0'
 	  };
 	  Vue.prototype.$vc = Vue.prototype.$vc || $vc;
 
@@ -4540,14 +4548,40 @@
 	      return vals;
 	    }
 
-	    if (isObject(vals[0])) {
+	    if (isArray(vals[0])) {
 	      var coordinates = [];
-	      vals.forEach(function (item) {
-	        coordinates.push(item.lng);
-	        coordinates.push(item.lat);
-	        coordinates.push(item.height || 0);
-	      });
-	      return Cartesian3.fromDegreesArrayHeights(coordinates);
+
+	      for (var i = 0; i < vals.length; i++) {
+	        coordinates.push(vals[i][0]);
+	        coordinates.push(vals[i][1]);
+	        coordinates.push(vals[i][2] || 0);
+	      }
+
+	      return Cartesian3.fromRadiansArrayHeights(coordinates);
+	    } else if (isObject(vals[0])) {
+	      var _coordinates = [];
+
+	      if (vals[0].lng) {
+	        vals.forEach(function (item) {
+	          _coordinates.push(item.lng);
+
+	          _coordinates.push(item.lat);
+
+	          _coordinates.push(item.height || 0);
+	        });
+	        return Cartesian3.fromDegreesArrayHeights(_coordinates);
+	      } else {
+	        if (vals[0].x) {
+	          vals.forEach(function (item) {
+	            _coordinates.push(item.x);
+
+	            _coordinates.push(item.y);
+
+	            _coordinates.push(item.z || 0);
+	          });
+	          return Cartesian3.fromRadiansArrayHeights(_coordinates);
+	        }
+	      }
 	    }
 
 	    return Cartesian3.fromDegreesArrayHeights(vals);
@@ -5520,8 +5554,7 @@
 	var classificationType = {
 	  props: {
 	    classificationType: {
-	      type: [Number, Object, Function],
-	      default: 2
+	      type: [Number, Object, Function]
 	    }
 	  }
 	};
@@ -6774,6 +6807,68 @@
 	      }
 	    }
 	  }
+	};
+	/**
+	 * @const {Object, String, Array} lightColor2 mixin
+	 * 用于 Cesium3DTileset 和 Model
+	 */
+
+	var lightColor2 = {
+	  props: {
+	    lightColor: {
+	      type: [Object, Array],
+	      watcherOptions: {
+	        cesiumObjectBuilder: makeCartesian3
+	      }
+	    }
+	  }
+	};
+	/**
+	 * @const {Number} luminanceAtZenith mixin
+	 */
+
+	var luminanceAtZenith = {
+	  props: {
+	    luminanceAtZenith: {
+	      type: Number,
+	      default: 0.2
+	    }
+	  }
+	};
+	/**
+	 * @const {Array, Object} sphericalHarmonicCoefficients mixin
+	 */
+
+	var sphericalHarmonicCoefficients = {
+	  props: {
+	    sphericalHarmonicCoefficients: {
+	      type: [Array, Object],
+	      watcherOptions: {
+	        cesiumObjectBuilder: makeCartesian3Array
+	      }
+	    }
+	  }
+	};
+	/**
+	 * @const {String} specularEnvironmentMaps mixin
+	 */
+
+	var specularEnvironmentMaps = {
+	  props: {
+	    specularEnvironmentMaps: String
+	  }
+	};
+	/**
+	 * @const {Boolean} backFaceCulling mixin
+	 */
+
+	var backFaceCulling = {
+	  props: {
+	    backFaceCulling: {
+	      type: Boolean,
+	      default: true
+	    }
+	  }
 	}; // datasouce
 
 	/**
@@ -6852,6 +6947,10 @@
 
 	var allProps = /*#__PURE__*/Object.freeze({
 		__proto__: null,
+		backFaceCulling: backFaceCulling,
+		specularEnvironmentMaps: specularEnvironmentMaps,
+		sphericalHarmonicCoefficients: sphericalHarmonicCoefficients,
+		luminanceAtZenith: luminanceAtZenith,
 		maximumScreenSpaceError: maximumScreenSpaceError,
 		runAnimations: runAnimations,
 		articulations: articulations,
@@ -6876,6 +6975,7 @@
 		startColor: startColor,
 		shape: shape,
 		lightColor: lightColor,
+		lightColor2: lightColor2,
 		imageBasedLightingFactor: imageBasedLightingFactor,
 		polygonHierarchy: polygonHierarchy,
 		orientation: orientation$1,
@@ -17525,7 +17625,7 @@
 	     *  重写 createCesiumObject 方法，支持用数组加载大量 billboard。
 	     */
 	    createCesiumObject: function createCesiumObject() {
-	      var $props, transformProps, billboards, options, billboardCollection, i, billboardOptions, billboardOptionsTransform, billboard;
+	      var $props, transformProps, billboards, options, billboardCollection, i, billboardOptions, billboardOptionsTransform, billboard, prop;
 	      return regenerator.async(function createCesiumObject$(_context) {
 	        while (1) {
 	          switch (_context.prev = _context.next) {
@@ -17539,6 +17639,13 @@
 	                billboardOptions.id = Cesium.defined(billboardOptions.id) ? billboardOptions.id : Cesium.createGuid();
 	                billboardOptionsTransform = transformProps(billboardOptions);
 	                billboard = billboardCollection.add(billboardOptionsTransform);
+
+	                for (prop in billboardOptionsTransform) {
+	                  if (!billboard[prop]) {
+	                    billboard[prop] = billboardOptionsTransform[prop];
+	                  }
+	                }
+
 	                billboard.vcIndex = i;
 	              }
 
@@ -17693,7 +17800,7 @@
 	     *  重写 createCesiumObject 方法，支持用数组加载大量 label。
 	     */
 	    createCesiumObject: function createCesiumObject() {
-	      var $props, transformProps, labels, options, labelColletion, i, labelOptions, labelOptionsTransform, laebl;
+	      var $props, transformProps, labels, options, labelColletion, i, labelOptions, labelOptionsTransform, label, prop;
 	      return regenerator.async(function createCesiumObject$(_context) {
 	        while (1) {
 	          switch (_context.prev = _context.next) {
@@ -17706,8 +17813,15 @@
 	                labelOptions = labels[i];
 	                labelOptions.id = Cesium.defined(labelOptions.id) ? labelOptions.id : Cesium.createGuid();
 	                labelOptionsTransform = transformProps(labelOptions);
-	                laebl = labelColletion.add(labelOptionsTransform);
-	                laebl.vcIndex = i;
+	                label = labelColletion.add(labelOptionsTransform);
+
+	                for (prop in labelOptionsTransform) {
+	                  if (!label[prop]) {
+	                    label[prop] = labelOptionsTransform[prop];
+	                  }
+	                }
+
+	                label.vcIndex = i;
 	              }
 
 	              return _context.abrupt("return", labelColletion);
@@ -17861,7 +17975,7 @@
 	     *  重写 createCesiumObject 方法，支持用数组加载大量 point。
 	     */
 	    createCesiumObject: function createCesiumObject() {
-	      var $props, transformProps, points, options, pointColletion, i, pointOptions, pointOptionsTransform, point;
+	      var $props, transformProps, points, options, pointColletion, i, pointOptions, pointOptionsTransform, point, prop;
 	      return regenerator.async(function createCesiumObject$(_context) {
 	        while (1) {
 	          switch (_context.prev = _context.next) {
@@ -17875,6 +17989,13 @@
 	                pointOptions.id = Cesium.defined(pointOptions.id) ? pointOptions.id : Cesium.createGuid();
 	                pointOptionsTransform = transformProps(pointOptions);
 	                point = pointColletion.add(pointOptionsTransform);
+
+	                for (prop in pointOptionsTransform) {
+	                  if (!point[prop]) {
+	                    point[prop] = pointOptionsTransform[prop];
+	                  }
+	                }
+
 	                point.vcIndex = i;
 	              }
 
@@ -18029,7 +18150,7 @@
 	     *  重写 createCesiumObject 方法，支持用数组加载大量 polyline
 	     */
 	    createCesiumObject: function createCesiumObject() {
-	      var $props, transformProps, polylines, options, polylineCollection, i, polylineOptions, polylineOptionsTransform, polyline;
+	      var $props, transformProps, polylines, options, polylineCollection, i, polylineOptions, polylineOptionsTransform, polyline, prop;
 	      return regenerator.async(function createCesiumObject$(_context) {
 	        while (1) {
 	          switch (_context.prev = _context.next) {
@@ -18043,6 +18164,13 @@
 	                polylineOptions.id = Cesium.defined(polylineOptions.id) ? polylineOptions.id : Cesium.createGuid();
 	                polylineOptionsTransform = transformProps(polylineOptions);
 	                polyline = polylineCollection.add(polylineOptionsTransform);
+
+	                for (prop in polylineOptionsTransform) {
+	                  if (!polyline[prop]) {
+	                    polyline[prop] = polylineOptionsTransform[prop];
+	                  }
+	                }
+
 	                polyline.vcIndex = i;
 	              }
 
@@ -18566,10 +18694,9 @@
 	          case 0:
 	            $props = this.$props, transformProps = this.transformProps, primitives = this.primitives;
 	            options = transformProps($props);
-	            console.log(options);
 	            return _context.abrupt("return", primitives && primitives.add(options));
 
-	          case 4:
+	          case 3:
 	          case "end":
 	            return _context.stop();
 	        }
@@ -18892,7 +19019,7 @@
 
 	var script$V = {
 	  name: 'vc-primitive-model',
-	  mixins: [modelMatrix, id$1, aaMixin, debugShowBoundingVolume, scene, debugWireframe, mixinModel, mixinPrimitive],
+	  mixins: [modelMatrix, id$1, aaMixin, debugShowBoundingVolume, scene, debugWireframe, lightColor2, imageBasedLightingFactor, luminanceAtZenith, sphericalHarmonicCoefficients, specularEnvironmentMaps, backFaceCulling, mixinModel, mixinPrimitive],
 	  props: {
 	    url: String,
 	    basePath: String,
@@ -18982,14 +19109,8 @@
 
 	var script$W = {
 	  name: 'vc-primitive-tileset',
-	  mixins: [show, modelMatrix, shadows, clippingPlanes, debugShowBoundingVolume, debugWireframe, imageBasedLightingFactor, url, mixinPrimitive],
+	  mixins: [show, modelMatrix, shadows, clippingPlanes, debugShowBoundingVolume, debugWireframe, imageBasedLightingFactor, url, classificationType, ellipsoid, lightColor2, luminanceAtZenith, sphericalHarmonicCoefficients, specularEnvironmentMaps, backFaceCulling, mixinPrimitive],
 	  props: {
-	    lightColor: {
-	      type: [Object, Array],
-	      watcherOptions: {
-	        cesiumObjectBuilder: makeCartesian3
-	      }
-	    },
 	    maximumScreenSpaceError: {
 	      type: Number,
 	      default: 16
@@ -19001,6 +19122,26 @@
 	    cullWithChildrenBounds: {
 	      type: Boolean,
 	      default: true
+	    },
+	    cullRequestsWhileMoving: {
+	      type: Boolean,
+	      default: true
+	    },
+	    cullRequestsWhileMovingMultiplier: {
+	      type: Number,
+	      default: 60.0
+	    },
+	    preloadWhenHidden: {
+	      type: Boolean,
+	      default: false
+	    },
+	    preloadFlightDestinations: {
+	      type: Boolean,
+	      default: true
+	    },
+	    preferLeaves: {
+	      type: Boolean,
+	      default: false
 	    },
 	    dynamicScreenSpaceError: {
 	      type: Boolean,
@@ -19017,6 +19158,27 @@
 	    dynamicScreenSpaceErrorHeightFalloff: {
 	      type: Number,
 	      default: 0.25
+	    },
+	    progressiveResolutionHeightFraction: {
+	      type: Number,
+	      default: 0.3
+	    },
+	    foveatedScreenSpaceError: {
+	      type: Boolean,
+	      default: true
+	    },
+	    foveatedConeSize: {
+	      type: Number,
+	      default: 0.1
+	    },
+	    foveatedMinimumScreenSpaceErrorRelaxation: {
+	      type: Number,
+	      default: 0.0
+	    },
+	    foveatedInterpolationCallback: Function,
+	    foveatedTimeDelay: {
+	      type: Number,
+	      default: 0.2
 	    },
 	    skipLevelOfDetail: {
 	      type: Boolean,
@@ -19042,9 +19204,8 @@
 	      type: Boolean,
 	      default: false
 	    },
-	    classificationType: Number,
-	    ellipsoid: Object,
 	    pointCloudShading: Object,
+	    debugHeatmapTilePropertyName: String,
 	    debugFreezeFrame: {
 	      type: Boolean,
 	      default: false
@@ -25331,6 +25492,342 @@
 		install: plugin$1w
 	});
 
+	//
+	//
+	//
+	//
+	var icons = {};
+	var notLoadedIcons = [];
+	var defaultWidth = '';
+	var defaultHeight = '';
+	var classPrefix = 'vc-svg';
+	var isStroke = false;
+	var isOriginalDefault = false;
+	var script$1x = {
+	  name: 'svgicon',
+	  data: function data() {
+	    return {
+	      loaded: false
+	    };
+	  },
+	  props: {
+	    icon: String,
+	    name: String,
+	    width: {
+	      type: String,
+	      default: ''
+	    },
+	    height: {
+	      type: String,
+	      default: ''
+	    },
+	    scale: String,
+	    dir: String,
+	    fill: {
+	      type: Boolean,
+	      default: function _default() {
+	        return !isStroke;
+	      }
+	    },
+	    color: String,
+	    original: {
+	      type: Boolean,
+	      default: function _default() {
+	        return isOriginalDefault;
+	      }
+	    },
+	    title: String
+	  },
+	  computed: {
+	    clazz: function clazz() {
+	      var clazz = "".concat(classPrefix, "-icon");
+
+	      if (this.fill) {
+	        clazz += " ".concat(classPrefix, "-fill");
+	      }
+
+	      if (this.dir) {
+	        clazz += " ".concat(classPrefix, "-").concat(this.dir);
+	      }
+
+	      return clazz;
+	    },
+	    iconName: function iconName() {
+	      return this.name || this.icon;
+	    },
+	    iconData: function iconData() {
+	      var iconData = icons[this.iconName];
+
+	      if (iconData || this.loaded) {
+	        return iconData;
+	      }
+
+	      return null;
+	    },
+	    colors: function colors() {
+	      if (this.color) {
+	        return this.color.split(' ');
+	      }
+
+	      return [];
+	    },
+	    path: function path() {
+	      var pathData = '';
+
+	      if (this.iconData) {
+	        pathData = this.iconData.data;
+	        pathData = this.setTitle(pathData); // use original color
+
+	        if (this.original) {
+	          pathData = this.addOriginalColor(pathData);
+	        }
+
+	        if (this.colors.length > 0) {
+	          pathData = this.addColor(pathData);
+	        }
+	      } else {
+	        // if no iconData, push to notLoadedIcons
+	        notLoadedIcons.push({
+	          name: this.iconName,
+	          component: this
+	        });
+	      }
+
+	      return this.getValidPathData(pathData);
+	    },
+	    box: function box() {
+	      var width = this.width || 16;
+	      var height = this.width || 16;
+
+	      if (this.iconData) {
+	        if (this.iconData.viewBox) {
+	          return this.iconData.viewBox;
+	        }
+
+	        return "0 0 ".concat(this.iconData.width, " ").concat(this.iconData.height);
+	      }
+
+	      return "0 0 ".concat(_parseFloat$2(width), " ").concat(_parseFloat$2(height));
+	    },
+	    style: function style() {
+	      var digitReg = /^\d+$/;
+	      var scale = Number(this.scale);
+	      var width;
+	      var height; // apply scale
+
+	      if (!isNaN(scale) && this.iconData) {
+	        width = Number(this.iconData.width) * scale + 'px';
+	        height = Number(this.iconData.height) * scale + 'px';
+	      } else {
+	        width = digitReg.test(this.width) ? this.width + 'px' : this.width || defaultWidth;
+	        height = digitReg.test(this.height) ? this.height + 'px' : this.height || defaultHeight;
+	      }
+
+	      var style = {};
+
+	      if (width) {
+	        style.width = width;
+	      }
+
+	      if (height) {
+	        style.height = height;
+	      }
+
+	      return style;
+	    }
+	  },
+	  created: function created() {
+	    if (icons[this.iconName]) {
+	      this.loaded = true;
+	    }
+	  },
+	  methods: {
+	    addColor: function addColor(data) {
+	      var _this = this;
+
+	      var reg = /<(path|rect|circle|polygon|line|polyline|ellipse)\s/gi;
+	      var i = 0;
+	      return data.replace(reg, function (match) {
+	        var color = _this.colors[i++] || _this.colors[_this.colors.length - 1];
+	        var fill = _this.fill; // if color is '_', ignore it
+
+	        if (color && color === '_') {
+	          return match;
+	        } // if color start with 'r-', reverse the fill value
+
+
+	        if (color && color.indexOf('r-') === 0) {
+	          fill = !fill;
+	          color = color.split('r-')[1];
+	        }
+
+	        var style = fill ? 'fill' : 'stroke';
+	        var reverseStyle = fill ? 'stroke' : 'fill';
+	        return match + "".concat(style, "=\"").concat(color, "\" ").concat(reverseStyle, "=\"none\" ");
+	      });
+	    },
+	    addOriginalColor: function addOriginalColor(data) {
+	      var styleReg = /_fill="|_stroke="/gi;
+	      return data.replace(styleReg, function (styleName) {
+	        return styleName && styleName.slice(1);
+	      });
+	    },
+	    getValidPathData: function getValidPathData(pathData) {
+	      // If use original and colors, clear double fill or stroke
+	      if (this.original && this.colors.length > 0) {
+	        // eslint-disable-next-line no-useless-escape
+	        var reg = /<(path|rect|circle|polygon|line|polyline|ellipse)(\sfill|\sstroke)([="\w\s\.\-\+#\$\&>]+)(fill|stroke)/gi;
+	        pathData = pathData.replace(reg, function (match, p1, p2, p3, p4) {
+	          return "<".concat(p1).concat(p2).concat(p3, "_").concat(p4);
+	        });
+	      }
+
+	      return pathData;
+	    },
+	    setTitle: function setTitle(pathData) {
+	      if (this.title) {
+	        var title = this.title // eslint-disable-next-line no-useless-escape
+	        .replace(/\</gi, '&lt;').replace(/>/gi, '&gt;').replace(/&/g, '&amp;');
+	        return "<title>".concat(title, "</title>") + pathData;
+	      }
+
+	      return pathData;
+	    },
+	    onClick: function onClick(e) {
+	      this.$emit('click', e);
+	    }
+	  },
+	  install: function install(Vue) {
+	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	    var tagName = options.tagName || 'svgicon';
+
+	    if (options.classPrefix) {
+	      classPrefix = options.classPrefix;
+	    }
+
+	    isStroke = !!options.isStroke;
+	    isOriginalDefault = !!options.isOriginalDefault; // default size
+
+	    options.defaultWidth && (defaultWidth = options.defaultWidth);
+	    options.defaultHeight && (defaultHeight = options.defaultHeight);
+	    Vue.component(tagName, this);
+	  },
+	  // register icons
+	  register: function register(data) {
+	    var _loop = function _loop(name) {
+	      if (!icons[name]) {
+	        icons[name] = data[name];
+	      } // check new register icon is not loaded, and set loaded to true
+
+
+	      notLoadedIcons = notLoadedIcons.filter(function (v, ix) {
+	        if (v.name === name) {
+	          v.component.$set(v.component, 'loaded', true);
+	        }
+
+	        return v.name !== name;
+	      });
+	    };
+
+	    for (var name in data) {
+	      _loop(name);
+	    }
+	  },
+	  icons: icons
+	};
+
+	/* script */
+	var __vue_script__$1x = script$1x;
+	/* template */
+
+	var __vue_render__$4 = function __vue_render__() {
+	  var _vm = this;
+
+	  var _h = _vm.$createElement;
+
+	  var _c = _vm._self._c || _h;
+
+	  return _c('svg', {
+	    class: _vm.clazz,
+	    style: _vm.style,
+	    attrs: {
+	      "viewBox": _vm.box,
+	      "version": "1.1"
+	    },
+	    domProps: {
+	      "innerHTML": _vm._s(_vm.path)
+	    },
+	    on: {
+	      "click": _vm.onClick
+	    }
+	  });
+	};
+
+	var __vue_staticRenderFns__$4 = [];
+	/* style */
+
+	var __vue_inject_styles__$1x = undefined;
+	/* scoped */
+
+	var __vue_scope_id__$1x = "data-v-b5224d78";
+	/* functional template */
+
+	var __vue_is_functional_template__$1x = false;
+	/* component normalizer */
+
+	function __vue_normalize__$1x(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+	  component.__file = "VcIconSvg.vue";
+
+	  if (!component.render) {
+	    component.render = template.render;
+	    component.staticRenderFns = template.staticRenderFns;
+	    component._compiled = true;
+	    if (functional) component.functional = true;
+	  }
+
+	  component._scopeId = scope;
+
+	  return component;
+	}
+	/* style inject */
+
+	/* style inject SSR */
+
+
+	var VcIconSvg = __vue_normalize__$1x({
+	  render: __vue_render__$4,
+	  staticRenderFns: __vue_staticRenderFns__$4
+	}, __vue_inject_styles__$1x, __vue_script__$1x, __vue_scope_id__$1x, __vue_is_functional_template__$1x);
+
+	VcIconSvg.register({
+	  'icon-move': {
+	    width: 48,
+	    height: 48,
+	    viewBox: '0 0 1024 1024',
+	    data: "\n    <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->\n    <!-- <title>icon-move</title> -->\n    <path d=\"M918.557 489.053L794.902 365.398c-12.526-12.526-32.868-12.526-45.394 0-12.526 12.526-12.526 32.868 0 45.394l68.842 68.842H542.983V206.37l68.541 68.541c12.526 12.526 32.868 12.526 45.394 0 12.526-12.526 12.526-32.868 0-45.394L533.663 106.263l-0.301-0.301c-0.301-0.301-0.601-0.601-0.902-0.802-0.1-0.1-0.2-0.2-0.401-0.301-0.301-0.2-0.601-0.501-0.802-0.701-0.1-0.1-0.2-0.2-0.301-0.2a3.584 3.584 0 0 0-1.002-0.701c-0.1 0-0.1-0.1-0.2-0.1-0.401-0.301-0.701-0.501-1.102-0.802-4.209-2.806-9.219-4.71-14.53-5.211h-0.2c-0.501 0-0.902-0.1-1.403-0.1h-3.207c-0.501 0-0.902 0.1-1.403 0.1h-0.2c-5.311 0.501-10.321 2.405-14.53 5.211-0.401 0.301-0.701 0.501-1.102 0.802-0.1 0-0.1 0.1-0.2 0.1-0.301 0.2-0.601 0.501-1.002 0.701-0.1 0.1-0.2 0.2-0.301 0.2-0.301 0.2-0.601 0.501-0.802 0.701-0.1 0.1-0.2 0.2-0.401 0.301-0.301 0.301-0.601 0.501-0.902 0.802l-0.301 0.301-123.353 123.555c-12.526 12.526-12.526 32.868 0 45.394a32.034 32.034 0 0 0 22.647 9.419c8.217 0 16.434-3.106 22.647-9.419l68.742-68.742v273.063H205.386l68.842-68.842c12.526-12.526 12.526-32.868 0-45.394-12.526-12.526-32.868-12.526-45.394 0L105.48 488.752c-6.012 6.012-9.419 14.129-9.419 22.647s3.407 16.634 9.419 22.647l122.753 122.753c6.213 6.213 14.43 9.419 22.647 9.419s16.434-3.106 22.647-9.419c12.526-12.526 12.526-32.868 0-45.394l-67.639-67.74h273.063V817.43l-69.844-69.844c-12.526-12.526-32.868-12.526-45.394 0-12.526 12.526-12.526 32.868 0 45.394L488.27 917.536c6.012 6.012 14.129 9.419 22.647 9.419 8.518 0 16.634-3.407 22.647-9.419l123.755-123.755c12.526-12.526 12.526-32.868 0-45.394-12.526-12.526-32.868-12.526-45.394 0l-68.942 68.942V543.665h275.568l-68.842 68.842c-12.526 12.526-12.526 32.868 0 45.394a32.034 32.034 0 0 0 22.647 9.419c8.217 0 16.434-3.106 22.647-9.419l123.455-123.455c12.625-12.526 12.625-32.868 0.099-45.393z\" fill=\"#1296db\" p-id=\"11002\"></path>"
+	  }
+	});
+
+	VcIconSvg.register({
+	  'icon-add': {
+	    width: 48,
+	    height: 48,
+	    viewBox: '0 0 1024 1024',
+	    data: "\n    <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->\n    <!-- <title>icon-add</title> -->\n    <path d=\"M903.37727 439.522292 584.476173 439.522292 584.476173 120.622218c0-32.020274-25.961278-57.981553-57.981553-57.981553l-28.990265 0c-32.020274 0-57.982576 25.962302-57.982576 57.981553l0 318.900074L120.621706 439.522292c-32.020274 0-57.981553 25.962302-57.981553 57.981553l0 28.991288c0 32.020274 25.962302 57.981553 57.981553 57.981553l318.900074 0L439.52178 903.377782c0 32.019251 25.962302 57.981553 57.982576 57.981553l28.990265 0c32.020274 0 57.981553-25.962302 57.981553-57.981553L584.476173 584.476685l318.901097 0c32.020274 0 57.981553-25.961278 57.981553-57.981553l0-28.991288C961.358823 465.484593 935.397544 439.522292 903.37727 439.522292z\" p-id=\"6657\" fill=\"#1296db\"></path>"
+	  }
+	});
+
+	VcIconSvg.register({
+	  'icon-delete': {
+	    width: 48,
+	    height: 48,
+	    viewBox: '0 0 1024 1024',
+	    data: "\n    <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->\n    <!-- <title>icon-delete</title> -->\n    <path d=\"M512 620.544l253.3376 253.3376a76.6976 76.6976 0 1 0 108.544-108.544L620.6464 512l253.2352-253.3376a76.6976 76.6976 0 1 0-108.544-108.544L512 403.3536 258.6624 150.1184a76.6976 76.6976 0 1 0-108.544 108.544L403.3536 512 150.1184 765.3376a76.6976 76.6976 0 1 0 108.544 108.544L512 620.6464z\" p-id=\"7671\" fill=\"#1296db\"></path>"
+	  }
+	});
+
 	var props$1 = {
 	  mode: {
 	    type: Number,
@@ -25347,9 +25844,24 @@
 	  pointPixelSize: {
 	    type: Number,
 	    default: 8
+	  },
+	  editable: {
+	    type: Boolean,
+	    default: false
+	  },
+	  showDrawTip: {
+	    type: Boolean,
+	    default: true
 	  }
 	};
 	var watch$2 = {
+	  editable: function editable(val) {
+	    if (!val) {
+	      this.showToolbar = false;
+	    } else {
+	      this.drawing = false;
+	    }
+	  },
 	  drawing: function drawing(val) {
 	    var nextTick, polylines, startNew, drawType, $parent, getParent, polyline, drawCmpNames, measureCmpNames, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, $node, listener;
 
@@ -25362,46 +25874,47 @@
 	            polyline = polylines[polylines.length - 1];
 
 	            if (!(!val && polyline && !polyline.positions.length)) {
-	              _context.next = 7;
+	              _context.next = 8;
 	              break;
 	            }
 
 	            this.polylines.pop();
-	            _context.next = 42;
+	            this.showTooltip = false;
+	            _context.next = 47;
 	            break;
 
-	          case 7:
+	          case 8:
 	            if (!val) {
-	              _context.next = 42;
+	              _context.next = 46;
 	              break;
 	            }
 
 	            drawCmpNames = [];
 	            _context.t0 = drawType;
-	            _context.next = _context.t0 === 'pointDrawing' ? 12 : _context.t0 === 'polylineDrawing' ? 15 : _context.t0 === 'polygonDrawing' ? 18 : 21;
+	            _context.next = _context.t0 === 'pointDrawing' ? 13 : _context.t0 === 'polylineDrawing' ? 16 : _context.t0 === 'polygonDrawing' ? 19 : 22;
 	            break;
 
-	          case 12:
+	          case 13:
 	            drawCmpNames.push('vc-handler-draw-polyline');
 	            drawCmpNames.push('vc-handler-draw-polygon');
-	            return _context.abrupt("break", 21);
+	            return _context.abrupt("break", 22);
 
-	          case 15:
+	          case 16:
 	            drawCmpNames.push('vc-handler-draw-point');
 	            drawCmpNames.push('vc-handler-draw-polygon');
-	            return _context.abrupt("break", 21);
+	            return _context.abrupt("break", 22);
 
-	          case 18:
+	          case 19:
 	            drawCmpNames.push('vc-handler-draw-polyline');
 	            drawCmpNames.push('vc-handler-draw-point');
-	            return _context.abrupt("break", 21);
+	            return _context.abrupt("break", 22);
 
-	          case 21:
+	          case 22:
 	            measureCmpNames = ['vc-measure-height', 'vc-measure-distance', 'vc-measure-area'];
 	            _iteratorNormalCompletion = true;
 	            _didIteratorError = false;
 	            _iteratorError = undefined;
-	            _context.prev = 25;
+	            _context.prev = 26;
 
 	            for (_iterator = getIterator$1(getParent($parent).$slots.default || []); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	              $node = _step.value;
@@ -25417,54 +25930,64 @@
 	              }
 	            }
 
-	            _context.next = 33;
+	            _context.next = 34;
 	            break;
 
-	          case 29:
-	            _context.prev = 29;
-	            _context.t1 = _context["catch"](25);
+	          case 30:
+	            _context.prev = 30;
+	            _context.t1 = _context["catch"](26);
 	            _didIteratorError = true;
 	            _iteratorError = _context.t1;
 
-	          case 33:
-	            _context.prev = 33;
+	          case 34:
 	            _context.prev = 34;
+	            _context.prev = 35;
 
 	            if (!_iteratorNormalCompletion && _iterator.return != null) {
 	              _iterator.return();
 	            }
 
-	          case 36:
-	            _context.prev = 36;
+	          case 37:
+	            _context.prev = 37;
 
 	            if (!_didIteratorError) {
-	              _context.next = 39;
+	              _context.next = 40;
 	              break;
 	            }
 
 	            throw _iteratorError;
 
-	          case 39:
-	            return _context.finish(36);
-
 	          case 40:
-	            return _context.finish(33);
+	            return _context.finish(37);
 
 	          case 41:
-	            startNew();
+	            return _context.finish(34);
 
 	          case 42:
+	            startNew();
+	            this.showTooltip = true;
+	            _context.next = 47;
+	            break;
+
+	          case 46:
+	            this.showTooltip = false;
+
+	          case 47:
+	            if (!this.showTooltip) {
+	              this.tooltipPosition = [0, 0, 0];
+	            }
+
 	            _context.t2 = nextTick;
 
 	            if (!_context.t2) {
-	              _context.next = 46;
+	              _context.next = 52;
 	              break;
 	            }
 
-	            _context.next = 46;
+	            _context.next = 52;
 	            return regenerator.awrap(this.$nextTick());
 
-	          case 46:
+	          case 52:
 	            this.viewer.canvas.setAttribute('style', val ? 'cursor: crosshair' : 'cursor: auto');
 	            listener = this.$listeners.activeEvt;
 	            listener && this.$emit('activeEvt', {
@@ -25472,15 +25995,34 @@
 	              isActive: val
 	            });
 
-	          case 49:
+	          case 55:
 	          case "end":
 	            return _context.stop();
 	        }
 	      }
-	    }, null, this, [[25, 29, 33, 41], [34,, 36, 40]]);
+	    }, null, this, [[26, 30, 34, 42], [35,, 37, 41]]);
 	  }
 	};
-	var computed = {};
+	var computed = {
+	  points: function points() {
+	    var _this = this;
+
+	    var points = [];
+	    this.polylines.forEach(function (polyline, index) {
+	      polyline.positions.forEach(function (position, subIndex) {
+	        var point = {
+	          color: _this.pointColor,
+	          pixelSize: _this.pointPixelSize,
+	          position: position,
+	          polylineIndex: index,
+	          positionIndex: subIndex
+	        };
+	        points.push(point);
+	      });
+	    });
+	    return points;
+	  }
+	};
 	var methods$b = {
 	  createCesiumObject: function createCesiumObject() {
 	    var viewer, handler;
@@ -25536,6 +26078,11 @@
 	      return;
 	    }
 
+	    if (this.editingPoint) {
+	      this.RIGHT_CLICK(movement);
+	      return;
+	    }
+
 	    var Cesium = this.Cesium,
 	        viewer = this.viewer,
 	        polylines = this.polylines,
@@ -25552,7 +26099,7 @@
 	    onDrawingEvt(polyline, nIndex);
 	  },
 	  MOUSE_MOVE: function MOUSE_MOVE(movement) {
-	    var Cesium, viewer, polylines, onDrawingEvt, drawType, nIndex, polyline, cartesian, listener;
+	    var Cesium, viewer, polylines, onDrawingEvt, drawType, cartesian, nIndex, polyline, listener;
 	    return regenerator.async(function MOUSE_MOVE$(_context5) {
 	      while (1) {
 	        switch (_context5.prev = _context5.next) {
@@ -25566,46 +26113,57 @@
 
 	          case 2:
 	            Cesium = this.Cesium, viewer = this.viewer, polylines = this.polylines, onDrawingEvt = this.onDrawingEvt, drawType = this.drawType;
-
-	            if (polylines.length) {
-	              _context5.next = 5;
-	              break;
-	            }
-
-	            return _context5.abrupt("return");
-
-	          case 5:
-	            nIndex = polylines.length - 1;
-	            polyline = polylines[nIndex];
-
-	            if (polyline.positions.length) {
-	              _context5.next = 9;
-	              break;
-	            }
-
-	            return _context5.abrupt("return");
-
-	          case 9:
 	            cartesian = viewer.scene.pickPosition(movement.endPosition);
 
 	            if (Cesium.defined(cartesian)) {
-	              _context5.next = 12;
+	              _context5.next = 6;
 	              break;
 	            }
 
 	            return _context5.abrupt("return");
 
-	          case 12:
-	            if (polyline.positions.length >= 2) {
-	              polyline.positions.pop();
+	          case 6:
+	            this.tooltipPosition = cartesian;
+	            this.tooltip = this.$vc.lang.draw.drawingTip1;
+
+	            if (polylines.length) {
+	              _context5.next = 10;
+	              break;
 	            }
 
-	            polyline.positions.push(cartesian);
+	            return _context5.abrupt("return");
+
+	          case 10:
+	            nIndex = this.editingPoint ? this.editingPoint.polylineIndex : polylines.length - 1;
+	            polyline = polylines[nIndex];
+
+	            if (polyline.positions.length) {
+	              _context5.next = 14;
+	              break;
+	            }
+
+	            return _context5.abrupt("return");
+
+	          case 14:
+	            if (polyline.positions.length >= 2) {
+	              this.tooltip = this.editingPoint ? this.$vc.lang.draw.drawingTip3 : this.$vc.lang.draw.drawingTip2;
+	            }
+
+	            if (this.editingPoint) {
+	              polyline.positions.splice(this.editingPoint.positionIndex, 1, cartesian);
+	            } else {
+	              if (polyline.positions.length >= 2) {
+	                polyline.positions.pop();
+	              }
+
+	              polyline.positions.push(cartesian);
+	            }
+
 	            listener = this.$listeners.movingEvt;
 	            listener && this.$emit('movingEvt', movement.endPosition, drawType);
 	            onDrawingEvt(polyline, nIndex);
 
-	          case 17:
+	          case 19:
 	          case "end":
 	            return _context5.stop();
 	        }
@@ -25636,7 +26194,8 @@
 	            return _context6.abrupt("return");
 
 	          case 5:
-	            nIndex = polylines.length - 1;
+	            nIndex = this.editingPoint ? this.editingPoint.polylineIndex : polylines.length - 1; // const nIndex = polylines.length - 1
+
 	            polyline = polylines[nIndex];
 
 	            if (!(polyline.positions.length === 0)) {
@@ -25657,23 +26216,28 @@
 	            return _context6.abrupt("return");
 
 	          case 12:
-	            if (polyline.positions.length > 1) {
-	              polyline.positions.pop();
-	            }
+	            if (!this.editingPoint) {
+	              if (polyline.positions.length > 1) {
+	                polyline.positions.pop();
+	              }
 
-	            if (mode === 0) {
-	              startNew();
+	              if (mode === 0) {
+	                startNew();
+	              } else {
+	                this.drawing = false;
+	              }
 	            } else {
+	              this.editingPoint = undefined;
 	              this.drawing = false;
 	            }
 
-	            _context6.next = 16;
+	            _context6.next = 15;
 	            return regenerator.awrap(this.$nextTick());
 
-	          case 16:
+	          case 15:
 	            onDrawingEvt(polyline, nIndex, true);
 
-	          case 17:
+	          case 16:
 	          case "end":
 	            return _context6.stop();
 	        }
@@ -25717,10 +26281,77 @@
 	      type: this.drawType,
 	      finished: flag
 	    });
+	  },
+	  pointMouseOver: function pointMouseOver(e) {
+	    if (!this.editable) {
+	      return;
+	    }
+
+	    if (this.editingPoint) {
+	      return;
+	    }
+
+	    e.pickedFeature.primitive.pixelSize = this.pointPixelSize * 2.0;
+	    this.toolbarPosition = e.pickedFeature.primitive.position;
+	    this.showToolbar = true;
+	    this.mouseoverPoint = e.pickedFeature.primitive;
+	  },
+	  pointMouseOut: function pointMouseOut(e) {
+	    if (!this.editable) {
+	      return;
+	    }
+
+	    e.pickedFeature.primitive.pixelSize = this.pointPixelSize * 1.0;
+	    this.toolbarPosition = [0, 0, 0];
+	    this.showToolbar = false;
+	    this.mouseoverPoint = undefined;
+	  },
+	  onEditClick: function onEditClick(e) {
+	    this.editType = e;
+	    this.toolbarPosition = [0, 0, 0];
+	    this.showToolbar = false;
+
+	    if (!this.editable) {
+	      return;
+	    }
+
+	    this.drawing = false;
+
+	    if (e === 'delete') {
+	      var nIndex = this.mouseoverPoint.polylineIndex;
+	      var polyline = this.polylines[nIndex];
+	      polyline.positions.splice(this.mouseoverPoint.positionIndex, 1);
+	    } else if (e === 'insert') {
+	      var _nIndex = this.mouseoverPoint.polylineIndex;
+	      var _polyline = this.polylines[_nIndex];
+
+	      _polyline.positions.splice(this.mouseoverPoint.positionIndex, 0, this.mouseoverPoint.position);
+
+	      this.editingPoint = this.mouseoverPoint;
+	      this.drawing = true;
+	    } else {
+	      this.editingPoint = this.mouseoverPoint;
+	      this.drawing = true;
+	    }
 	  }
 	};
 	var mixinDraw = {
 	  mixins: [cmp],
+	  data: function data() {
+	    return {
+	      drawing: false,
+	      polylines: [],
+	      toolbarPosition: [0, 0, 0],
+	      showToolbar: false,
+	      tooltipPosition: [0, 0, 0],
+	      showTooltip: false,
+	      tooltip: '',
+	      nowaiting: true
+	    };
+	  },
+	  components: {
+	    VcIconSvg: VcIconSvg
+	  },
 	  props: props$1,
 	  watch: watch$2,
 	  computed: computed,
@@ -25738,24 +26369,21 @@
 	};
 
 	//
-	var script$1x = {
+	var script$1y = {
 	  name: 'vc-handler-draw-point',
 	  mixins: [mixinDraw],
 	  data: function data() {
 	    return {
-	      drawType: 'pointDrawing',
-	      drawing: false,
-	      polylines: [],
-	      nowaiting: true
+	      drawType: 'pointDrawing'
 	    };
 	  }
 	};
 
 	/* script */
-	var __vue_script__$1x = script$1x;
+	var __vue_script__$1y = script$1y;
 	/* template */
 
-	var __vue_render__$4 = function __vue_render__() {
+	var __vue_render__$5 = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -25763,40 +26391,88 @@
 	  var _c = _vm._self._c || _h;
 
 	  return _c('i', {
-	    class: _vm.$options.name,
-	    staticStyle: {
-	      "display": "none !important"
-	    }
+	    class: _vm.$options.name
 	  }, [_c('vc-collection-primitive-point', {
-	    ref: "pointCollection"
-	  }, [_vm._l(_vm.polylines, function (polyline, index) {
-	    return [_vm._l(polyline.positions, function (position, subIndex) {
-	      return [_c('vc-primitive-point', {
-	        key: 'point' + index + 'position' + subIndex,
-	        attrs: {
-	          "color": _vm.pointColor,
-	          "pixelSize": _vm.pointPixelSize,
-	          "position": position,
-	          "show": _vm.show
-	        }
-	      })];
-	    })];
-	  })], 2)], 1);
+	    ref: "pointCollection",
+	    attrs: {
+	      "points": _vm.points
+	    },
+	    on: {
+	      "mouseover": _vm.pointMouseOver,
+	      "mouseout": _vm.pointMouseOut
+	    }
+	  }), _vm._v(" "), _vm.showToolbar ? _c('vc-overlay-html', {
+	    attrs: {
+	      "position": _vm.toolbarPosition
+	    }
+	  }, [_c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingMove,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('move');
+	      }
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-move"
+	    }
+	  })], 1), _vm._v(" "), _c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingInsert,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('insert');
+	      }
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-add"
+	    }
+	  })], 1), _vm._v(" "), _c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingDelete,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('delete');
+	      }
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-delete"
+	    }
+	  })], 1)]) : _vm._e(), _vm._v(" "), _vm.showTooltip && _vm.showDrawTip ? _c('vc-overlay-html', {
+	    attrs: {
+	      "position": _vm.tooltipPosition,
+	      "pixelOffset": [32, 32]
+	    }
+	  }, [_c('div', {
+	    staticClass: "vc-html-bubble"
+	  }, [_vm._v(_vm._s(_vm.tooltip))])]) : _vm._e()], 1);
 	};
 
-	var __vue_staticRenderFns__$4 = [];
+	var __vue_staticRenderFns__$5 = [];
 	/* style */
 
-	var __vue_inject_styles__$1x = undefined;
+	var __vue_inject_styles__$1y = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1x = undefined;
+	var __vue_scope_id__$1y = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1x = false;
+	var __vue_is_functional_template__$1y = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1x(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcDrawHandlerPoint.vue";
@@ -25817,10 +26493,181 @@
 	/* style inject SSR */
 
 
-	var VcDrawHandlerPoint = __vue_normalize__$1x({
-	  render: __vue_render__$4,
-	  staticRenderFns: __vue_staticRenderFns__$4
-	}, __vue_inject_styles__$1x, __vue_script__$1x, __vue_scope_id__$1x, __vue_is_functional_template__$1x);
+	var VcDrawHandlerPoint = __vue_normalize__$1y({
+	  render: __vue_render__$5,
+	  staticRenderFns: __vue_staticRenderFns__$5
+	}, __vue_inject_styles__$1y, __vue_script__$1y, __vue_scope_id__$1y, __vue_is_functional_template__$1y);
+
+	var script$1z = {
+	  name: 'vc-overlay-html',
+	  mixins: [cmp, pixelOffset, position],
+	  props: {
+	    hiddenOnBack: {
+	      type: Boolean,
+	      default: true
+	    }
+	  },
+	  data: function data() {
+	    return {
+	      nowaiting: true
+	    };
+	  },
+	  methods: {
+	    createCesiumObject: function createCesiumObject() {
+	      var viewer, onPreRender;
+	      return regenerator.async(function createCesiumObject$(_context) {
+	        while (1) {
+	          switch (_context.prev = _context.next) {
+	            case 0:
+	              viewer = this.viewer, onPreRender = this.onPreRender;
+	              viewer.scene.preRender.addEventListener(onPreRender);
+	              return _context.abrupt("return", this.$el);
+
+	            case 3:
+	            case "end":
+	              return _context.stop();
+	          }
+	        }
+	      }, null, this);
+	    },
+	    mount: function mount() {
+	      return regenerator.async(function mount$(_context2) {
+	        while (1) {
+	          switch (_context2.prev = _context2.next) {
+	            case 0:
+	              return _context2.abrupt("return", true);
+
+	            case 1:
+	            case "end":
+	              return _context2.stop();
+	          }
+	        }
+	      });
+	    },
+	    unmount: function unmount() {
+	      var viewer, onPreRender;
+	      return regenerator.async(function unmount$(_context3) {
+	        while (1) {
+	          switch (_context3.prev = _context3.next) {
+	            case 0:
+	              viewer = this.viewer, onPreRender = this.onPreRender;
+	              viewer.scene.preRender.removeEventListener(onPreRender);
+	              this.$el.style.display = 'none';
+	              return _context3.abrupt("return", true);
+
+	            case 4:
+	            case "end":
+	              return _context3.stop();
+	          }
+	        }
+	      }, null, this);
+	    },
+	    onPreRender: function onPreRender() {
+	      var viewer = this.viewer,
+	          position = this.position,
+	          pixelOffset = this.pixelOffset,
+	          hiddenOnBack = this.hiddenOnBack;
+	      var cartesian2 = makeCartesian2(pixelOffset);
+	      var cartesian3 = makeCartesian3(position);
+	      var scratch = {};
+	      var canvasPosition = viewer.scene.cartesianToCanvasCoordinates(cartesian3, scratch);
+
+	      if (Cesium.defined(canvasPosition)) {
+	        this.$el.style.left = canvasPosition.x + cartesian2.x + 'px';
+	        this.$el.style.top = canvasPosition.y + cartesian2.y + 'px';
+
+	        if (hiddenOnBack) {
+	          var cameraPosition = viewer.camera.position;
+	          var cartographicPosition = viewer.scene.globe.ellipsoid.cartesianToCartographic(cameraPosition);
+
+	          if (Cesium.defined(cartographicPosition)) {
+	            var cameraHeight = cartographicPosition.height;
+	            cameraHeight += 1 * viewer.scene.globe.ellipsoid.maximumRadius;
+
+	            if (Cesium.Cartesian3.distance(cameraPosition, cartesian3) > cameraHeight) {
+	              this.$el.style.display = 'none';
+	            } else {
+	              this.$el.style.display = 'block';
+	            }
+	          }
+	        }
+	      }
+	    },
+	    onClick: function onClick(e) {
+	      var listener = this.$listeners.click;
+	      listener && this.$emit('click', e);
+	    }
+	  },
+	  created: function created() {
+	    var _this = this;
+
+	    defineProperties$1(this, {
+	      element: {
+	        enumerable: true,
+	        get: function get() {
+	          return _this.cesiumObject;
+	        }
+	      }
+	    });
+	  }
+	};
+
+	/* script */
+	var __vue_script__$1z = script$1z;
+	/* template */
+
+	var __vue_render__$6 = function __vue_render__() {
+	  var _vm = this;
+
+	  var _h = _vm.$createElement;
+
+	  var _c = _vm._self._c || _h;
+
+	  return _c('div', {
+	    staticClass: "vc-html-container",
+	    on: {
+	      "click": _vm.onClick
+	    }
+	  }, [_vm._t("default")], 2);
+	};
+
+	var __vue_staticRenderFns__$6 = [];
+	/* style */
+
+	var __vue_inject_styles__$1z = undefined;
+	/* scoped */
+
+	var __vue_scope_id__$1z = undefined;
+	/* functional template */
+
+	var __vue_is_functional_template__$1z = false;
+	/* component normalizer */
+
+	function __vue_normalize__$1z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
+
+	  component.__file = "VcHTMLOverlay.vue";
+
+	  if (!component.render) {
+	    component.render = template.render;
+	    component.staticRenderFns = template.staticRenderFns;
+	    component._compiled = true;
+	    if (functional) component.functional = true;
+	  }
+
+	  component._scopeId = scope;
+
+	  return component;
+	}
+	/* style inject */
+
+	/* style inject SSR */
+
+
+	var VcHTMLOverlay = __vue_normalize__$1z({
+	  render: __vue_render__$6,
+	  staticRenderFns: __vue_staticRenderFns__$6
+	}, __vue_inject_styles__$1z, __vue_script__$1z, __vue_scope_id__$1z, __vue_is_functional_template__$1z);
 
 	function plugin$1x(Vue) {
 
@@ -25829,28 +26676,43 @@
 	  }
 
 	  plugin$1x.installed = true;
+	  Vue.component(VcHTMLOverlay.name, VcHTMLOverlay);
+	}
+
+	var VcHTMLOverlay$1 = /*#__PURE__*/Object.freeze({
+		__proto__: null,
+		'default': plugin$1x,
+		VcHTMLOverlay: VcHTMLOverlay,
+		install: plugin$1x
+	});
+
+	function plugin$1y(Vue) {
+
+	  if (plugin$1y.installed) {
+	    return;
+	  }
+
+	  plugin$1y.installed = true;
 	  Vue.use(PointPrimitiveCollection$1);
 	  Vue.use(PointPrimitive$1);
+	  Vue.use(VcHTMLOverlay$1);
 	  Vue.component(VcDrawHandlerPoint.name, VcDrawHandlerPoint);
 	}
 
 	var VcDrawHandlerPoint$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1x,
+		'default': plugin$1y,
 		VcDrawHandlerPoint: VcDrawHandlerPoint,
-		install: plugin$1x
+		install: plugin$1y
 	});
 
 	//
-	var script$1y = {
+	var script$1A = {
 	  name: 'vc-handler-draw-polyline',
 	  mixins: [mixinDraw],
 	  data: function data() {
 	    return {
-	      drawType: 'polylineDrawing',
-	      drawing: false,
-	      polylines: [],
-	      nowaiting: true
+	      drawType: 'polylineDrawing'
 	    };
 	  },
 	  props: {
@@ -25880,6 +26742,23 @@
 	      default: false
 	    }
 	  },
+	  computed: {
+	    primitivePolylines: function primitivePolylines() {
+	      var _this = this;
+
+	      var polylines = [];
+	      this.polylines.forEach(function (item, index) {
+	        var polyline = {
+	          material: _this.polylineMaterial,
+	          positions: item.positions,
+	          width: _this.polylineWidth,
+	          polylineIndex: index
+	        };
+	        polylines.push(polyline);
+	      });
+	      return polylines;
+	    }
+	  },
 	  methods: {
 	    makeAppearance: function makeAppearance(val) {
 	      return new Cesium.PolylineMaterialAppearance({
@@ -25890,10 +26769,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1y = script$1y;
+	var __vue_script__$1A = script$1A;
 	/* template */
 
-	var __vue_render__$5 = function __vue_render__() {
+	var __vue_render__$7 = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -25901,10 +26780,7 @@
 	  var _c = _vm._self._c || _h;
 
 	  return _c('i', {
-	    class: _vm.$options.name,
-	    staticStyle: {
-	      "display": "none !important"
-	    }
+	    class: _vm.$options.name
 	  }, [_c('vc-collection-primitive', {
 	    attrs: {
 	      "show": _vm.show
@@ -25925,45 +26801,91 @@
 	      }
 	    })], 1)], 1) : _vm._e()];
 	  })], 2) : _c('vc-collection-primitive-polyline', {
-	    ref: "polylineCollection"
-	  }, _vm._l(_vm.polylines, function (polyline, index) {
-	    return _c('vc-primitive-polyline', {
-	      key: index,
-	      attrs: {
-	        "material": _vm.polylineMaterial,
-	        "positions": polyline.positions,
-	        "width": _vm.polylineWidth
+	    ref: "polylineCollection",
+	    attrs: {
+	      "polylines": _vm.primitivePolylines
+	    }
+	  }), _vm._v(" "), _c('vc-collection-primitive-point', {
+	    ref: "pointCollection",
+	    attrs: {
+	      "points": _vm.points
+	    },
+	    on: {
+	      "mouseover": _vm.pointMouseOver,
+	      "mouseout": _vm.pointMouseOut
+	    }
+	  })], 1), _vm._v(" "), _vm.showToolbar ? _c('vc-overlay-html', {
+	    attrs: {
+	      "position": _vm.toolbarPosition
+	    }
+	  }, [_c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingMove,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('move');
 	      }
-	    });
-	  }), 1), _vm._v(" "), _c('vc-collection-primitive-point', {
-	    ref: "pointCollection"
-	  }, [_vm._l(_vm.polylines, function (polyline, index) {
-	    return [_vm._l(polyline.positions, function (position, subIndex) {
-	      return [_c('vc-primitive-point', {
-	        key: 'point' + index + 'position' + subIndex,
-	        attrs: {
-	          "color": _vm.pointColor,
-	          "pixelSize": _vm.pointPixelSize,
-	          "position": position
-	        }
-	      })];
-	    })];
-	  })], 2)], 1)], 1);
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-move"
+	    }
+	  })], 1), _vm._v(" "), _c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingInsert,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('insert');
+	      }
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-add"
+	    }
+	  })], 1), _vm._v(" "), _c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingDelete,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('delete');
+	      }
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-delete"
+	    }
+	  })], 1)]) : _vm._e(), _vm._v(" "), _vm.showTooltip && _vm.showDrawTip ? _c('vc-overlay-html', {
+	    attrs: {
+	      "position": _vm.tooltipPosition,
+	      "pixelOffset": [32, 32]
+	    }
+	  }, [_c('div', {
+	    staticClass: "vc-html-bubble"
+	  }, [_vm._v(_vm._s(_vm.tooltip))])]) : _vm._e()], 1);
 	};
 
-	var __vue_staticRenderFns__$5 = [];
+	var __vue_staticRenderFns__$7 = [];
 	/* style */
 
-	var __vue_inject_styles__$1y = undefined;
+	var __vue_inject_styles__$1A = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1y = undefined;
+	var __vue_scope_id__$1A = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1y = false;
+	var __vue_is_functional_template__$1A = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1A(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcDrawHandlerPolyline.vue";
@@ -25984,18 +26906,18 @@
 	/* style inject SSR */
 
 
-	var VcDrawHandlerPolyline = __vue_normalize__$1y({
-	  render: __vue_render__$5,
-	  staticRenderFns: __vue_staticRenderFns__$5
-	}, __vue_inject_styles__$1y, __vue_script__$1y, __vue_scope_id__$1y, __vue_is_functional_template__$1y);
+	var VcDrawHandlerPolyline = __vue_normalize__$1A({
+	  render: __vue_render__$7,
+	  staticRenderFns: __vue_staticRenderFns__$7
+	}, __vue_inject_styles__$1A, __vue_script__$1A, __vue_scope_id__$1A, __vue_is_functional_template__$1A);
 
-	function plugin$1y(Vue) {
+	function plugin$1z(Vue) {
 
-	  if (plugin$1y.installed) {
+	  if (plugin$1z.installed) {
 	    return;
 	  }
 
-	  plugin$1y.installed = true;
+	  plugin$1z.installed = true;
 	  Vue.use(PrimitiveCollection$1);
 	  Vue.use(GeometryInstance$1);
 	  Vue.use(GroundPolylinePrimitive$1);
@@ -26004,26 +26926,24 @@
 	  Vue.use(Polyline$1);
 	  Vue.use(PointPrimitiveCollection$1);
 	  Vue.use(PointPrimitive$1);
+	  Vue.use(VcHTMLOverlay$1);
 	  Vue.component(VcDrawHandlerPolyline.name, VcDrawHandlerPolyline);
 	}
 
 	var VcDrawHandlerPolyline$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1y,
+		'default': plugin$1z,
 		VcDrawHandlerPolyline: VcDrawHandlerPolyline,
-		install: plugin$1y
+		install: plugin$1z
 	});
 
 	//
-	var script$1z = {
+	var script$1B = {
 	  name: 'vc-handler-draw-polygon',
 	  mixins: [mixinDraw],
 	  data: function data() {
 	    return {
-	      drawType: 'polygonDrawing',
-	      drawing: false,
-	      polylines: [],
-	      nowaiting: true
+	      drawType: 'polygonDrawing'
 	    };
 	  },
 	  props: {
@@ -26070,6 +26990,24 @@
 	      default: false
 	    }
 	  },
+	  computed: {
+	    primitivePolylines: function primitivePolylines() {
+	      var _this = this;
+
+	      var polylines = [];
+	      this.polylines.forEach(function (item, index) {
+	        var polyline = {
+	          material: _this.polylineMaterial,
+	          positions: item.positions,
+	          width: _this.polylineWidth,
+	          loop: true,
+	          polylineIndex: index
+	        };
+	        polylines.push(polyline);
+	      });
+	      return polylines;
+	    }
+	  },
 	  methods: {
 	    makeEllipsoidSurfaceAppearance: function makeEllipsoidSurfaceAppearance(val) {
 	      return new Cesium.EllipsoidSurfaceAppearance({
@@ -26091,10 +27029,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1z = script$1z;
+	var __vue_script__$1B = script$1B;
 	/* template */
 
-	var __vue_render__$6 = function __vue_render__() {
+	var __vue_render__$8 = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -26102,10 +27040,7 @@
 	  var _c = _vm._self._c || _h;
 
 	  return _c('i', {
-	    class: _vm.$options.name,
-	    staticStyle: {
-	      "display": "none !important"
-	    }
+	    class: _vm.$options.name
 	  }, [_c('vc-collection-primitive', {
 	    attrs: {
 	      "show": _vm.show
@@ -26157,46 +27092,91 @@
 	      }
 	    })], 1)], 1) : _vm._e()];
 	  })], 2) : _c('vc-collection-primitive-polyline', {
-	    ref: "polylineCollection"
-	  }, _vm._l(_vm.polylines, function (polyline, index) {
-	    return _c('vc-primitive-polyline', {
-	      key: index,
-	      attrs: {
-	        "material": _vm.polylineMaterial,
-	        "positions": polyline.positions,
-	        "width": _vm.polylineWidth,
-	        "loop": ""
+	    ref: "polylineCollection",
+	    attrs: {
+	      "polylines": _vm.primitivePolylines
+	    }
+	  }), _vm._v(" "), _c('vc-collection-primitive-point', {
+	    ref: "pointCollection",
+	    attrs: {
+	      "points": _vm.points
+	    },
+	    on: {
+	      "mouseover": _vm.pointMouseOver,
+	      "mouseout": _vm.pointMouseOut
+	    }
+	  })], 1), _vm._v(" "), _vm.showToolbar ? _c('vc-overlay-html', {
+	    attrs: {
+	      "position": _vm.toolbarPosition
+	    }
+	  }, [_c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingMove,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('move');
 	      }
-	    });
-	  }), 1), _vm._v(" "), _c('vc-collection-primitive-point', {
-	    ref: "pointCollection"
-	  }, [_vm._l(_vm.polylines, function (polyline, index) {
-	    return [_vm._l(polyline.positions, function (position, subIndex) {
-	      return [_c('vc-primitive-point', {
-	        key: 'point' + index + 'position' + subIndex,
-	        attrs: {
-	          "color": _vm.pointColor,
-	          "pixelSize": _vm.pointPixelSize,
-	          "position": position
-	        }
-	      })];
-	    })];
-	  })], 2)], 1)], 1);
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-move"
+	    }
+	  })], 1), _vm._v(" "), _c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingInsert,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('insert');
+	      }
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-add"
+	    }
+	  })], 1), _vm._v(" "), _c('button', {
+	    staticClass: "vc-btn",
+	    attrs: {
+	      "title": _vm.$vc.lang.draw.editingDelete,
+	      "type": "button"
+	    },
+	    on: {
+	      "click": function click($event) {
+	        return _vm.onEditClick('delete');
+	      }
+	    }
+	  }, [_c('vc-icon-svg', {
+	    attrs: {
+	      "name": "icon-delete"
+	    }
+	  })], 1)]) : _vm._e(), _vm._v(" "), _vm.showTooltip && _vm.showDrawTip ? _c('vc-overlay-html', {
+	    attrs: {
+	      "position": _vm.tooltipPosition,
+	      "pixelOffset": [32, 32]
+	    }
+	  }, [_c('div', {
+	    staticClass: "vc-html-bubble"
+	  }, [_vm._v(_vm._s(_vm.tooltip))])]) : _vm._e()], 1);
 	};
 
-	var __vue_staticRenderFns__$6 = [];
+	var __vue_staticRenderFns__$8 = [];
 	/* style */
 
-	var __vue_inject_styles__$1z = undefined;
+	var __vue_inject_styles__$1B = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1z = undefined;
+	var __vue_scope_id__$1B = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1z = false;
+	var __vue_is_functional_template__$1B = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1B(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcDrawHandlerPolygon.vue";
@@ -26217,18 +27197,18 @@
 	/* style inject SSR */
 
 
-	var VcDrawHandlerPolygon = __vue_normalize__$1z({
-	  render: __vue_render__$6,
-	  staticRenderFns: __vue_staticRenderFns__$6
-	}, __vue_inject_styles__$1z, __vue_script__$1z, __vue_scope_id__$1z, __vue_is_functional_template__$1z);
+	var VcDrawHandlerPolygon = __vue_normalize__$1B({
+	  render: __vue_render__$8,
+	  staticRenderFns: __vue_staticRenderFns__$8
+	}, __vue_inject_styles__$1B, __vue_script__$1B, __vue_scope_id__$1B, __vue_is_functional_template__$1B);
 
-	function plugin$1z(Vue) {
+	function plugin$1A(Vue) {
 
-	  if (plugin$1z.installed) {
+	  if (plugin$1A.installed) {
 	    return;
 	  }
 
-	  plugin$1z.installed = true;
+	  plugin$1A.installed = true;
 	  Vue.use(PrimitiveCollection$1);
 	  Vue.use(GroundPrimitive$1);
 	  Vue.use(GeometryInstance$1);
@@ -26240,14 +27220,15 @@
 	  Vue.use(Polyline$1);
 	  Vue.use(PointPrimitiveCollection$1);
 	  Vue.use(PointPrimitive$1);
+	  Vue.use(VcHTMLOverlay$1);
 	  Vue.component(VcDrawHandlerPolygon.name, VcDrawHandlerPolygon);
 	}
 
 	var VcDrawHandlerPolygon$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1z,
+		'default': plugin$1A,
 		VcDrawHandlerPolygon: VcDrawHandlerPolygon,
-		install: plugin$1z
+		install: plugin$1A
 	});
 
 	/**
@@ -33146,315 +34127,6 @@
 	  return MouseCoords;
 	}();
 
-	//
-	//
-	//
-	//
-	var icons = {};
-	var notLoadedIcons = [];
-	var defaultWidth = '';
-	var defaultHeight = '';
-	var classPrefix = 'vc-svg';
-	var isStroke = false;
-	var isOriginalDefault = false;
-	var script$1A = {
-	  name: 'svgicon',
-	  data: function data() {
-	    return {
-	      loaded: false
-	    };
-	  },
-	  props: {
-	    icon: String,
-	    name: String,
-	    width: {
-	      type: String,
-	      default: ''
-	    },
-	    height: {
-	      type: String,
-	      default: ''
-	    },
-	    scale: String,
-	    dir: String,
-	    fill: {
-	      type: Boolean,
-	      default: function _default() {
-	        return !isStroke;
-	      }
-	    },
-	    color: String,
-	    original: {
-	      type: Boolean,
-	      default: function _default() {
-	        return isOriginalDefault;
-	      }
-	    },
-	    title: String
-	  },
-	  computed: {
-	    clazz: function clazz() {
-	      var clazz = "".concat(classPrefix, "-icon");
-
-	      if (this.fill) {
-	        clazz += " ".concat(classPrefix, "-fill");
-	      }
-
-	      if (this.dir) {
-	        clazz += " ".concat(classPrefix, "-").concat(this.dir);
-	      }
-
-	      return clazz;
-	    },
-	    iconName: function iconName() {
-	      return this.name || this.icon;
-	    },
-	    iconData: function iconData() {
-	      var iconData = icons[this.iconName];
-
-	      if (iconData || this.loaded) {
-	        return iconData;
-	      }
-
-	      return null;
-	    },
-	    colors: function colors() {
-	      if (this.color) {
-	        return this.color.split(' ');
-	      }
-
-	      return [];
-	    },
-	    path: function path() {
-	      var pathData = '';
-
-	      if (this.iconData) {
-	        pathData = this.iconData.data;
-	        pathData = this.setTitle(pathData); // use original color
-
-	        if (this.original) {
-	          pathData = this.addOriginalColor(pathData);
-	        }
-
-	        if (this.colors.length > 0) {
-	          pathData = this.addColor(pathData);
-	        }
-	      } else {
-	        // if no iconData, push to notLoadedIcons
-	        notLoadedIcons.push({
-	          name: this.iconName,
-	          component: this
-	        });
-	      }
-
-	      return this.getValidPathData(pathData);
-	    },
-	    box: function box() {
-	      var width = this.width || 16;
-	      var height = this.width || 16;
-
-	      if (this.iconData) {
-	        if (this.iconData.viewBox) {
-	          return this.iconData.viewBox;
-	        }
-
-	        return "0 0 ".concat(this.iconData.width, " ").concat(this.iconData.height);
-	      }
-
-	      return "0 0 ".concat(_parseFloat$2(width), " ").concat(_parseFloat$2(height));
-	    },
-	    style: function style() {
-	      var digitReg = /^\d+$/;
-	      var scale = Number(this.scale);
-	      var width;
-	      var height; // apply scale
-
-	      if (!isNaN(scale) && this.iconData) {
-	        width = Number(this.iconData.width) * scale + 'px';
-	        height = Number(this.iconData.height) * scale + 'px';
-	      } else {
-	        width = digitReg.test(this.width) ? this.width + 'px' : this.width || defaultWidth;
-	        height = digitReg.test(this.height) ? this.height + 'px' : this.height || defaultHeight;
-	      }
-
-	      var style = {};
-
-	      if (width) {
-	        style.width = width;
-	      }
-
-	      if (height) {
-	        style.height = height;
-	      }
-
-	      return style;
-	    }
-	  },
-	  created: function created() {
-	    if (icons[this.iconName]) {
-	      this.loaded = true;
-	    }
-	  },
-	  methods: {
-	    addColor: function addColor(data) {
-	      var _this = this;
-
-	      var reg = /<(path|rect|circle|polygon|line|polyline|ellipse)\s/gi;
-	      var i = 0;
-	      return data.replace(reg, function (match) {
-	        var color = _this.colors[i++] || _this.colors[_this.colors.length - 1];
-	        var fill = _this.fill; // if color is '_', ignore it
-
-	        if (color && color === '_') {
-	          return match;
-	        } // if color start with 'r-', reverse the fill value
-
-
-	        if (color && color.indexOf('r-') === 0) {
-	          fill = !fill;
-	          color = color.split('r-')[1];
-	        }
-
-	        var style = fill ? 'fill' : 'stroke';
-	        var reverseStyle = fill ? 'stroke' : 'fill';
-	        return match + "".concat(style, "=\"").concat(color, "\" ").concat(reverseStyle, "=\"none\" ");
-	      });
-	    },
-	    addOriginalColor: function addOriginalColor(data) {
-	      var styleReg = /_fill="|_stroke="/gi;
-	      return data.replace(styleReg, function (styleName) {
-	        return styleName && styleName.slice(1);
-	      });
-	    },
-	    getValidPathData: function getValidPathData(pathData) {
-	      // If use original and colors, clear double fill or stroke
-	      if (this.original && this.colors.length > 0) {
-	        // eslint-disable-next-line no-useless-escape
-	        var reg = /<(path|rect|circle|polygon|line|polyline|ellipse)(\sfill|\sstroke)([="\w\s\.\-\+#\$\&>]+)(fill|stroke)/gi;
-	        pathData = pathData.replace(reg, function (match, p1, p2, p3, p4) {
-	          return "<".concat(p1).concat(p2).concat(p3, "_").concat(p4);
-	        });
-	      }
-
-	      return pathData;
-	    },
-	    setTitle: function setTitle(pathData) {
-	      if (this.title) {
-	        var title = this.title // eslint-disable-next-line no-useless-escape
-	        .replace(/\</gi, '&lt;').replace(/>/gi, '&gt;').replace(/&/g, '&amp;');
-	        return "<title>".concat(title, "</title>") + pathData;
-	      }
-
-	      return pathData;
-	    },
-	    onClick: function onClick(e) {
-	      this.$emit('click', e);
-	    }
-	  },
-	  install: function install(Vue) {
-	    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	    var tagName = options.tagName || 'svgicon';
-
-	    if (options.classPrefix) {
-	      classPrefix = options.classPrefix;
-	    }
-
-	    isStroke = !!options.isStroke;
-	    isOriginalDefault = !!options.isOriginalDefault; // default size
-
-	    options.defaultWidth && (defaultWidth = options.defaultWidth);
-	    options.defaultHeight && (defaultHeight = options.defaultHeight);
-	    Vue.component(tagName, this);
-	  },
-	  // register icons
-	  register: function register(data) {
-	    var _loop = function _loop(name) {
-	      if (!icons[name]) {
-	        icons[name] = data[name];
-	      } // check new register icon is not loaded, and set loaded to true
-
-
-	      notLoadedIcons = notLoadedIcons.filter(function (v, ix) {
-	        if (v.name === name) {
-	          v.component.$set(v.component, 'loaded', true);
-	        }
-
-	        return v.name !== name;
-	      });
-	    };
-
-	    for (var name in data) {
-	      _loop(name);
-	    }
-	  },
-	  icons: icons
-	};
-
-	/* script */
-	var __vue_script__$1A = script$1A;
-	/* template */
-
-	var __vue_render__$7 = function __vue_render__() {
-	  var _vm = this;
-
-	  var _h = _vm.$createElement;
-
-	  var _c = _vm._self._c || _h;
-
-	  return _c('svg', {
-	    class: _vm.clazz,
-	    style: _vm.style,
-	    attrs: {
-	      "viewBox": _vm.box,
-	      "version": "1.1"
-	    },
-	    domProps: {
-	      "innerHTML": _vm._s(_vm.path)
-	    },
-	    on: {
-	      "click": _vm.onClick
-	    }
-	  });
-	};
-
-	var __vue_staticRenderFns__$7 = [];
-	/* style */
-
-	var __vue_inject_styles__$1A = undefined;
-	/* scoped */
-
-	var __vue_scope_id__$1A = "data-v-b5224d78";
-	/* functional template */
-
-	var __vue_is_functional_template__$1A = false;
-	/* component normalizer */
-
-	function __vue_normalize__$1A(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-	  component.__file = "VcIconSvg.vue";
-
-	  if (!component.render) {
-	    component.render = template.render;
-	    component.staticRenderFns = template.staticRenderFns;
-	    component._compiled = true;
-	    if (functional) component.functional = true;
-	  }
-
-	  component._scopeId = scope;
-
-	  return component;
-	}
-	/* style inject */
-
-	/* style inject SSR */
-
-
-	var VcIconSvg = __vue_normalize__$1A({
-	  render: __vue_render__$7,
-	  staticRenderFns: __vue_staticRenderFns__$7
-	}, __vue_inject_styles__$1A, __vue_script__$1A, __vue_scope_id__$1A, __vue_is_functional_template__$1A);
-
 	VcIconSvg.register({
 	  'compass-outer': {
 	    width: 162,
@@ -33915,7 +34587,7 @@
 	var oldTransformScratch = {};
 	var newTransformScratch = {};
 	var centerScratch = {};
-	var script$1B = {
+	var script$1C = {
 	  name: 'vc-compass',
 	  props: {
 	    enableCompassOuterRing: Boolean
@@ -34329,10 +35001,10 @@
 	}
 
 	/* script */
-	var __vue_script__$1B = script$1B;
+	var __vue_script__$1C = script$1C;
 	/* template */
 
-	var __vue_render__$8 = function __vue_render__() {
+	var __vue_render__$9 = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -34374,19 +35046,19 @@
 	  })], 1)]);
 	};
 
-	var __vue_staticRenderFns__$8 = [];
+	var __vue_staticRenderFns__$9 = [];
 	/* style */
 
-	var __vue_inject_styles__$1B = undefined;
+	var __vue_inject_styles__$1C = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1B = undefined;
+	var __vue_scope_id__$1C = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1B = false;
+	var __vue_is_functional_template__$1C = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1B(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1C(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcCompass.vue";
@@ -34407,10 +35079,10 @@
 	/* style inject SSR */
 
 
-	var VcCompass = __vue_normalize__$1B({
-	  render: __vue_render__$8,
-	  staticRenderFns: __vue_staticRenderFns__$8
-	}, __vue_inject_styles__$1B, __vue_script__$1B, __vue_scope_id__$1B, __vue_is_functional_template__$1B);
+	var VcCompass = __vue_normalize__$1C({
+	  render: __vue_render__$9,
+	  staticRenderFns: __vue_staticRenderFns__$9
+	}, __vue_inject_styles__$1C, __vue_script__$1C, __vue_scope_id__$1C, __vue_is_functional_template__$1C);
 
 	VcIconSvg.register({
 	  increase: {
@@ -34440,7 +35112,7 @@
 	});
 
 	//
-	var script$1C = {
+	var script$1D = {
 	  name: 'vc-zoomControl',
 	  components: {
 	    VcIconSvg: VcIconSvg
@@ -34651,10 +35323,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1C = script$1C;
+	var __vue_script__$1D = script$1D;
 	/* template */
 
-	var __vue_render__$9 = function __vue_render__() {
+	var __vue_render__$a = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -34707,19 +35379,19 @@
 	  })], 1)])])]);
 	};
 
-	var __vue_staticRenderFns__$9 = [];
+	var __vue_staticRenderFns__$a = [];
 	/* style */
 
-	var __vue_inject_styles__$1C = undefined;
+	var __vue_inject_styles__$1D = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1C = undefined;
+	var __vue_scope_id__$1D = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1C = false;
+	var __vue_is_functional_template__$1D = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1C(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1D(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcZoomControl.vue";
@@ -34740,13 +35412,13 @@
 	/* style inject SSR */
 
 
-	var VcZoomControl = __vue_normalize__$1C({
-	  render: __vue_render__$9,
-	  staticRenderFns: __vue_staticRenderFns__$9
-	}, __vue_inject_styles__$1C, __vue_script__$1C, __vue_scope_id__$1C, __vue_is_functional_template__$1C);
+	var VcZoomControl = __vue_normalize__$1D({
+	  render: __vue_render__$a,
+	  staticRenderFns: __vue_staticRenderFns__$a
+	}, __vue_inject_styles__$1D, __vue_script__$1D, __vue_scope_id__$1D, __vue_is_functional_template__$1D);
 
 	//
-	var script$1D = {
+	var script$1E = {
 	  name: 'vc-legend-distance',
 	  data: function data() {
 	    return {
@@ -34873,10 +35545,10 @@
 	var distances = [1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 20000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000, 2000000, 3000000, 5000000, 10000000, 20000000, 30000000, 50000000];
 
 	/* script */
-	var __vue_script__$1D = script$1D;
+	var __vue_script__$1E = script$1E;
 	/* template */
 
-	var __vue_render__$a = function __vue_render__() {
+	var __vue_render__$b = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -34891,19 +35563,19 @@
 	  })]) : _vm._e();
 	};
 
-	var __vue_staticRenderFns__$a = [];
+	var __vue_staticRenderFns__$b = [];
 	/* style */
 
-	var __vue_inject_styles__$1D = undefined;
+	var __vue_inject_styles__$1E = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1D = undefined;
+	var __vue_scope_id__$1E = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1D = false;
+	var __vue_is_functional_template__$1E = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1D(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1E(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcDistanceLegend.vue";
@@ -34924,13 +35596,13 @@
 	/* style inject SSR */
 
 
-	var VcDistanceLegend = __vue_normalize__$1D({
-	  render: __vue_render__$a,
-	  staticRenderFns: __vue_staticRenderFns__$a
-	}, __vue_inject_styles__$1D, __vue_script__$1D, __vue_scope_id__$1D, __vue_is_functional_template__$1D);
+	var VcDistanceLegend = __vue_normalize__$1E({
+	  render: __vue_render__$b,
+	  staticRenderFns: __vue_staticRenderFns__$b
+	}, __vue_inject_styles__$1E, __vue_script__$1E, __vue_scope_id__$1E, __vue_is_functional_template__$1E);
 
 	//
-	var script$1E = {
+	var script$1F = {
 	  name: 'vc-bar-location',
 	  data: function data() {
 	    return {
@@ -35144,10 +35816,10 @@
 	}
 
 	/* script */
-	var __vue_script__$1E = script$1E;
+	var __vue_script__$1F = script$1F;
 	/* template */
 
-	var __vue_render__$b = function __vue_render__() {
+	var __vue_render__$c = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -35179,19 +35851,19 @@
 	  }, [_c('span', [_vm._v(_vm._s(_vm.$vc.lang.navigation.legend.cameraHeight))]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.cameraHeight))])]) : _vm._e()], 2);
 	};
 
-	var __vue_staticRenderFns__$b = [];
+	var __vue_staticRenderFns__$c = [];
 	/* style */
 
-	var __vue_inject_styles__$1E = undefined;
+	var __vue_inject_styles__$1F = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1E = undefined;
+	var __vue_scope_id__$1F = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1E = false;
+	var __vue_is_functional_template__$1F = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1E(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1F(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcLocationBar.vue";
@@ -35212,10 +35884,10 @@
 	/* style inject SSR */
 
 
-	var VcLocationBar = __vue_normalize__$1E({
-	  render: __vue_render__$b,
-	  staticRenderFns: __vue_staticRenderFns__$b
-	}, __vue_inject_styles__$1E, __vue_script__$1E, __vue_scope_id__$1E, __vue_is_functional_template__$1E);
+	var VcLocationBar = __vue_normalize__$1F({
+	  render: __vue_render__$c,
+	  staticRenderFns: __vue_staticRenderFns__$c
+	}, __vue_inject_styles__$1F, __vue_script__$1F, __vue_scope_id__$1F, __vue_is_functional_template__$1F);
 
 	VcIconSvg.register({
 	  share: {
@@ -35298,7 +35970,7 @@
 	}
 
 	//
-	var script$1F = {
+	var script$1G = {
 	  props: {
 	    options: Object
 	  },
@@ -35372,10 +36044,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1F = script$1F;
+	var __vue_script__$1G = script$1G;
 	/* template */
 
-	var __vue_render__$c = function __vue_render__() {
+	var __vue_render__$d = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -35398,19 +36070,19 @@
 	  })], 2) : _vm._e()]);
 	};
 
-	var __vue_staticRenderFns__$c = [];
+	var __vue_staticRenderFns__$d = [];
 	/* style */
 
-	var __vue_inject_styles__$1F = undefined;
+	var __vue_inject_styles__$1G = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1F = undefined;
+	var __vue_scope_id__$1G = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1F = false;
+	var __vue_is_functional_template__$1G = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1F(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1G(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcPrintView.vue";
@@ -35431,13 +36103,13 @@
 	/* style inject SSR */
 
 
-	var VcPrintView = __vue_normalize__$1F({
-	  render: __vue_render__$c,
-	  staticRenderFns: __vue_staticRenderFns__$c
-	}, __vue_inject_styles__$1F, __vue_script__$1F, __vue_scope_id__$1F, __vue_is_functional_template__$1F);
+	var VcPrintView = __vue_normalize__$1G({
+	  render: __vue_render__$d,
+	  staticRenderFns: __vue_staticRenderFns__$d
+	}, __vue_inject_styles__$1G, __vue_script__$1G, __vue_scope_id__$1G, __vue_is_functional_template__$1G);
 
 	//
-	var script$1G = {
+	var script$1H = {
 	  name: 'vc-view-print',
 	  components: {
 	    VcIconSvg: VcIconSvg
@@ -35561,10 +36233,10 @@
 	}
 
 	/* script */
-	var __vue_script__$1G = script$1G;
+	var __vue_script__$1H = script$1H;
 	/* template */
 
-	var __vue_render__$d = function __vue_render__() {
+	var __vue_render__$e = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -35589,19 +36261,19 @@
 	  })], 1)]);
 	};
 
-	var __vue_staticRenderFns__$d = [];
+	var __vue_staticRenderFns__$e = [];
 	/* style */
 
-	var __vue_inject_styles__$1G = undefined;
+	var __vue_inject_styles__$1H = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1G = undefined;
+	var __vue_scope_id__$1H = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1G = false;
+	var __vue_is_functional_template__$1H = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1G(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1H(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcPrintViewBtn.vue";
@@ -35622,10 +36294,10 @@
 	/* style inject SSR */
 
 
-	var VcPrintViewBtn = __vue_normalize__$1G({
-	  render: __vue_render__$d,
-	  staticRenderFns: __vue_staticRenderFns__$d
-	}, __vue_inject_styles__$1G, __vue_script__$1G, __vue_scope_id__$1G, __vue_is_functional_template__$1G);
+	var VcPrintViewBtn = __vue_normalize__$1H({
+	  render: __vue_render__$e,
+	  staticRenderFns: __vue_staticRenderFns__$e
+	}, __vue_inject_styles__$1H, __vue_script__$1H, __vue_scope_id__$1H, __vue_is_functional_template__$1H);
 
 	VcIconSvg.register({
 	  geolocation: {
@@ -35644,7 +36316,7 @@
 	1)-1==k.plugins.indexOf(a.plugins[g])&&l.push(a.plugins[g]);"loaded"==f?l.length?window.AMap.plugin(l,function(){d(window.AMap);}):d(window.AMap):"loading"==f&&p(function(){l.length?window.AMap.plugin(l,function(){d(window.AMap);}):d(window.AMap);});}})}}});
 	});
 
-	var script$1H = {
+	var script$1I = {
 	  components: {
 	    VcIconSvg: VcIconSvg
 	  },
@@ -35860,10 +36532,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1H = script$1H;
+	var __vue_script__$1I = script$1I;
 	/* template */
 
-	var __vue_render__$e = function __vue_render__() {
+	var __vue_render__$f = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -35888,19 +36560,19 @@
 	  })], 1)]);
 	};
 
-	var __vue_staticRenderFns__$e = [];
+	var __vue_staticRenderFns__$f = [];
 	/* style */
 
-	var __vue_inject_styles__$1H = undefined;
+	var __vue_inject_styles__$1I = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1H = undefined;
+	var __vue_scope_id__$1I = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1H = false;
+	var __vue_is_functional_template__$1I = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1H(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1I(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcMyLocation.vue";
@@ -35921,12 +36593,12 @@
 	/* style inject SSR */
 
 
-	var VcMyLocation = __vue_normalize__$1H({
-	  render: __vue_render__$e,
-	  staticRenderFns: __vue_staticRenderFns__$e
-	}, __vue_inject_styles__$1H, __vue_script__$1H, __vue_scope_id__$1H, __vue_is_functional_template__$1H);
+	var VcMyLocation = __vue_normalize__$1I({
+	  render: __vue_render__$f,
+	  staticRenderFns: __vue_staticRenderFns__$f
+	}, __vue_inject_styles__$1I, __vue_script__$1I, __vue_scope_id__$1I, __vue_is_functional_template__$1I);
 
-	var script$1I = {
+	var script$1J = {
 	  name: 'vc-navigation',
 	  components: {
 	    VcCompass: VcCompass,
@@ -36096,10 +36768,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1I = script$1I;
+	var __vue_script__$1J = script$1J;
 	/* template */
 
-	var __vue_render__$f = function __vue_render__() {
+	var __vue_render__$g = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -36164,19 +36836,19 @@
 	  }) : _vm._e()], 1)]) : _vm._e();
 	};
 
-	var __vue_staticRenderFns__$f = [];
+	var __vue_staticRenderFns__$g = [];
 	/* style */
 
-	var __vue_inject_styles__$1I = undefined;
+	var __vue_inject_styles__$1J = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1I = undefined;
+	var __vue_scope_id__$1J = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1I = false;
+	var __vue_is_functional_template__$1J = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1I(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1J(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcNavigation.vue";
@@ -36197,30 +36869,30 @@
 	/* style inject SSR */
 
 
-	var VcNavigation = __vue_normalize__$1I({
-	  render: __vue_render__$f,
-	  staticRenderFns: __vue_staticRenderFns__$f
-	}, __vue_inject_styles__$1I, __vue_script__$1I, __vue_scope_id__$1I, __vue_is_functional_template__$1I);
+	var VcNavigation = __vue_normalize__$1J({
+	  render: __vue_render__$g,
+	  staticRenderFns: __vue_staticRenderFns__$g
+	}, __vue_inject_styles__$1J, __vue_script__$1J, __vue_scope_id__$1J, __vue_is_functional_template__$1J);
 
-	function plugin$1A(Vue) {
+	function plugin$1B(Vue) {
 
-	  if (plugin$1A.installed) {
+	  if (plugin$1B.installed) {
 	    return;
 	  }
 
-	  plugin$1A.installed = true;
+	  plugin$1B.installed = true;
 	  Vue.component(VcNavigation.name, VcNavigation);
 	}
 
 	var VcNavigation$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1A,
+		'default': plugin$1B,
 		VcNavigation: VcNavigation,
-		install: plugin$1A
+		install: plugin$1B
 	});
 
 	//
-	var script$1J = {
+	var script$1K = {
 	  name: 'vc-compass-sm',
 	  props: {
 	    enableCompassOuterRing: Boolean
@@ -36713,10 +37385,10 @@
 	}
 
 	/* script */
-	var __vue_script__$1J = script$1J;
+	var __vue_script__$1K = script$1K;
 	/* template */
 
-	var __vue_render__$g = function __vue_render__() {
+	var __vue_render__$h = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -36756,19 +37428,19 @@
 	  })]);
 	};
 
-	var __vue_staticRenderFns__$g = [];
+	var __vue_staticRenderFns__$h = [];
 	/* style */
 
-	var __vue_inject_styles__$1J = undefined;
+	var __vue_inject_styles__$1K = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1J = undefined;
+	var __vue_scope_id__$1K = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1J = false;
+	var __vue_is_functional_template__$1K = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1J(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1K(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcCompassSM.vue";
@@ -36789,13 +37461,13 @@
 	/* style inject SSR */
 
 
-	var VcCompassSM = __vue_normalize__$1J({
-	  render: __vue_render__$g,
-	  staticRenderFns: __vue_staticRenderFns__$g
-	}, __vue_inject_styles__$1J, __vue_script__$1J, __vue_scope_id__$1J, __vue_is_functional_template__$1J);
+	var VcCompassSM = __vue_normalize__$1K({
+	  render: __vue_render__$h,
+	  staticRenderFns: __vue_staticRenderFns__$h
+	}, __vue_inject_styles__$1K, __vue_script__$1K, __vue_scope_id__$1K, __vue_is_functional_template__$1K);
 
 	//
-	var script$1K = {
+	var script$1L = {
 	  data: function data() {
 	    return {
 	      zoombarTop: 65
@@ -37046,10 +37718,10 @@
 	}
 
 	/* script */
-	var __vue_script__$1K = script$1K;
+	var __vue_script__$1L = script$1L;
 	/* template */
 
-	var __vue_render__$h = function __vue_render__() {
+	var __vue_render__$i = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -37086,19 +37758,19 @@
 	  })]);
 	};
 
-	var __vue_staticRenderFns__$h = [];
+	var __vue_staticRenderFns__$i = [];
 	/* style */
 
-	var __vue_inject_styles__$1K = undefined;
+	var __vue_inject_styles__$1L = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1K = undefined;
+	var __vue_scope_id__$1L = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1K = false;
+	var __vue_is_functional_template__$1L = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1K(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1L(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcZoomControlSM.vue";
@@ -37119,12 +37791,12 @@
 	/* style inject SSR */
 
 
-	var VcZoomControlSM = __vue_normalize__$1K({
-	  render: __vue_render__$h,
-	  staticRenderFns: __vue_staticRenderFns__$h
-	}, __vue_inject_styles__$1K, __vue_script__$1K, __vue_scope_id__$1K, __vue_is_functional_template__$1K);
+	var VcZoomControlSM = __vue_normalize__$1L({
+	  render: __vue_render__$i,
+	  staticRenderFns: __vue_staticRenderFns__$i
+	}, __vue_inject_styles__$1L, __vue_script__$1L, __vue_scope_id__$1L, __vue_is_functional_template__$1L);
 
-	var script$1L = {
+	var script$1M = {
 	  name: 'vc-navigation-sm',
 	  components: {
 	    'vc-compass-sm': VcCompassSM,
@@ -37232,10 +37904,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1L = script$1L;
+	var __vue_script__$1M = script$1M;
 	/* template */
 
-	var __vue_render__$i = function __vue_render__() {
+	var __vue_render__$j = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -37253,19 +37925,19 @@
 	  }) : _vm._e(), _vm._v(" "), _vm.defaultOptions.enableZoomControl ? _c('vc-zoom-control-sm') : _vm._e()], 1);
 	};
 
-	var __vue_staticRenderFns__$i = [];
+	var __vue_staticRenderFns__$j = [];
 	/* style */
 
-	var __vue_inject_styles__$1L = undefined;
+	var __vue_inject_styles__$1M = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1L = undefined;
+	var __vue_scope_id__$1M = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1L = false;
+	var __vue_is_functional_template__$1M = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1L(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1M(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcNavigationSM.vue";
@@ -37286,26 +37958,26 @@
 	/* style inject SSR */
 
 
-	var VcNavigationSM = __vue_normalize__$1L({
-	  render: __vue_render__$i,
-	  staticRenderFns: __vue_staticRenderFns__$i
-	}, __vue_inject_styles__$1L, __vue_script__$1L, __vue_scope_id__$1L, __vue_is_functional_template__$1L);
+	var VcNavigationSM = __vue_normalize__$1M({
+	  render: __vue_render__$j,
+	  staticRenderFns: __vue_staticRenderFns__$j
+	}, __vue_inject_styles__$1M, __vue_script__$1M, __vue_scope_id__$1M, __vue_is_functional_template__$1M);
 
-	function plugin$1B(Vue) {
+	function plugin$1C(Vue) {
 
-	  if (plugin$1B.installed) {
+	  if (plugin$1C.installed) {
 	    return;
 	  }
 
-	  plugin$1B.installed = true;
+	  plugin$1C.installed = true;
 	  Vue.component(VcNavigationSM.name, VcNavigationSM);
 	}
 
 	var index = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1B,
+		'default': plugin$1C,
 		VcNavigationSM: VcNavigationSM,
-		install: plugin$1B
+		install: plugin$1C
 	});
 
 	/* @preserve
@@ -51498,7 +52170,7 @@
 	  CLASS_NAME: 'CesiumOverviewMapControl'
 	};
 
-	var script$1M = {
+	var script$1N = {
 	  name: 'vc-map-overview',
 	  mixins: [cmp],
 	  props: {
@@ -51718,10 +52390,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1M = script$1M;
+	var __vue_script__$1N = script$1N;
 	/* template */
 
-	var __vue_render__$j = function __vue_render__() {
+	var __vue_render__$k = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -51738,19 +52410,19 @@
 	  });
 	};
 
-	var __vue_staticRenderFns__$j = [];
+	var __vue_staticRenderFns__$k = [];
 	/* style */
 
-	var __vue_inject_styles__$1M = undefined;
+	var __vue_inject_styles__$1N = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1M = undefined;
+	var __vue_scope_id__$1N = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1M = false;
+	var __vue_is_functional_template__$1N = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1M(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1N(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcOverviewMap.vue";
@@ -51771,29 +52443,29 @@
 	/* style inject SSR */
 
 
-	var VcOverviewMap = __vue_normalize__$1M({
-	  render: __vue_render__$j,
-	  staticRenderFns: __vue_staticRenderFns__$j
-	}, __vue_inject_styles__$1M, __vue_script__$1M, __vue_scope_id__$1M, __vue_is_functional_template__$1M);
+	var VcOverviewMap = __vue_normalize__$1N({
+	  render: __vue_render__$k,
+	  staticRenderFns: __vue_staticRenderFns__$k
+	}, __vue_inject_styles__$1N, __vue_script__$1N, __vue_scope_id__$1N, __vue_is_functional_template__$1N);
 
-	function plugin$1C(Vue) {
+	function plugin$1D(Vue) {
 
-	  if (plugin$1C.installed) {
+	  if (plugin$1D.installed) {
 	    return;
 	  }
 
-	  plugin$1C.installed = true;
+	  plugin$1D.installed = true;
 	  Vue.component(VcOverviewMap.name, VcOverviewMap);
 	}
 
 	var index$2 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1C,
+		'default': plugin$1D,
 		VcOverviewMap: VcOverviewMap,
-		install: plugin$1C
+		install: plugin$1D
 	});
 
-	var script$1N = {
+	var script$1O = {
 	  name: 'vc-analytics-flood',
 	  data: function data() {
 	    return {
@@ -51944,10 +52616,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1N = script$1N;
+	var __vue_script__$1O = script$1O;
 	/* template */
 
-	var __vue_render__$k = function __vue_render__() {
+	var __vue_render__$l = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -51984,19 +52656,19 @@
 	  })], 1)], 1)], 1);
 	};
 
-	var __vue_staticRenderFns__$k = [];
+	var __vue_staticRenderFns__$l = [];
 	/* style */
 
-	var __vue_inject_styles__$1N = undefined;
+	var __vue_inject_styles__$1O = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1N = undefined;
+	var __vue_scope_id__$1O = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1N = false;
+	var __vue_is_functional_template__$1O = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1N(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1O(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcFlood.vue";
@@ -52017,18 +52689,18 @@
 	/* style inject SSR */
 
 
-	var VcFlood = __vue_normalize__$1N({
-	  render: __vue_render__$k,
-	  staticRenderFns: __vue_staticRenderFns__$k
-	}, __vue_inject_styles__$1N, __vue_script__$1N, __vue_scope_id__$1N, __vue_is_functional_template__$1N);
+	var VcFlood = __vue_normalize__$1O({
+	  render: __vue_render__$l,
+	  staticRenderFns: __vue_staticRenderFns__$l
+	}, __vue_inject_styles__$1O, __vue_script__$1O, __vue_scope_id__$1O, __vue_is_functional_template__$1O);
 
-	function plugin$1D(Vue) {
+	function plugin$1E(Vue) {
 
-	  if (plugin$1D.installed) {
+	  if (plugin$1E.installed) {
 	    return;
 	  }
 
-	  plugin$1D.installed = true;
+	  plugin$1E.installed = true;
 	  Vue.use(ClassificationPrimitive$1);
 	  Vue.use(GeometryInstance$1);
 	  Vue.use(PolygonGeometry$1);
@@ -52037,9 +52709,9 @@
 
 	var VcFlood$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1D,
+		'default': plugin$1E,
 		VcFlood: VcFlood,
-		install: plugin$1D
+		install: plugin$1E
 	});
 
 	var $JSON$1 = _core.JSON || (_core.JSON = { stringify: JSON.stringify });
@@ -52763,7 +53435,7 @@
 	});
 	});
 
-	var script$1O = {
+	var script$1P = {
 	  name: 'vc-heatmap',
 	  data: function data() {
 	    return {
@@ -53232,10 +53904,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1O = script$1O;
+	var __vue_script__$1P = script$1P;
 	/* template */
 
-	var __vue_render__$l = function __vue_render__() {
+	var __vue_render__$m = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -53289,19 +53961,19 @@
 	  })], 1) : _vm._e()], 1);
 	};
 
-	var __vue_staticRenderFns__$l = [];
+	var __vue_staticRenderFns__$m = [];
 	/* style */
 
-	var __vue_inject_styles__$1O = undefined;
+	var __vue_inject_styles__$1P = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1O = undefined;
+	var __vue_scope_id__$1P = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1O = false;
+	var __vue_is_functional_template__$1P = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1O(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1P(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcHeatMap.vue";
@@ -53322,14 +53994,14 @@
 	/* style inject SSR */
 
 
-	var VcHeatMap = __vue_normalize__$1O({
-	  render: __vue_render__$l,
-	  staticRenderFns: __vue_staticRenderFns__$l
-	}, __vue_inject_styles__$1O, __vue_script__$1O, __vue_scope_id__$1O, __vue_is_functional_template__$1O);
+	var VcHeatMap = __vue_normalize__$1P({
+	  render: __vue_render__$m,
+	  staticRenderFns: __vue_staticRenderFns__$m
+	}, __vue_inject_styles__$1P, __vue_script__$1P, __vue_scope_id__$1P, __vue_is_functional_template__$1P);
 
-	function plugin$1E(Vue) {
+	function plugin$1F(Vue) {
 
-	  if (plugin$1E.installed) {
+	  if (plugin$1F.installed) {
 	    return;
 	  }
 
@@ -53340,15 +54012,15 @@
 	  Vue.use(RectangleGeometry$1);
 	  Vue.use(ImageryLayer$1);
 	  Vue.use(SingleTileImageryProvider$1);
-	  plugin$1E.installed = true;
+	  plugin$1F.installed = true;
 	  Vue.component(VcHeatMap.name, VcHeatMap);
 	}
 
 	var VcHeatMap$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1E,
+		'default': plugin$1F,
 		VcHeatMap: VcHeatMap,
-		install: plugin$1E
+		install: plugin$1F
 	});
 
 	var kriging = createCommonjsModule(function (module, exports) {
@@ -64445,7 +65117,7 @@
 	var default_1$4 = isobands;
 	main$c.default = default_1$4;
 
-	var script$1P = {
+	var script$1Q = {
 	  name: 'vc-kriging-map',
 	  data: function data() {
 	    return {
@@ -64709,10 +65381,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1P = script$1P;
+	var __vue_script__$1Q = script$1Q;
 	/* template */
 
-	var __vue_render__$m = function __vue_render__() {
+	var __vue_render__$n = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -64734,19 +65406,19 @@
 	  }) : _vm._e()], 1);
 	};
 
-	var __vue_staticRenderFns__$m = [];
+	var __vue_staticRenderFns__$n = [];
 	/* style */
 
-	var __vue_inject_styles__$1P = undefined;
+	var __vue_inject_styles__$1Q = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1P = undefined;
+	var __vue_scope_id__$1Q = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1P = false;
+	var __vue_is_functional_template__$1Q = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1P(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1Q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcKrigingMap.vue";
@@ -64767,27 +65439,27 @@
 	/* style inject SSR */
 
 
-	var VcKrigingMap = __vue_normalize__$1P({
-	  render: __vue_render__$m,
-	  staticRenderFns: __vue_staticRenderFns__$m
-	}, __vue_inject_styles__$1P, __vue_script__$1P, __vue_scope_id__$1P, __vue_is_functional_template__$1P);
+	var VcKrigingMap = __vue_normalize__$1Q({
+	  render: __vue_render__$n,
+	  staticRenderFns: __vue_staticRenderFns__$n
+	}, __vue_inject_styles__$1Q, __vue_script__$1Q, __vue_scope_id__$1Q, __vue_is_functional_template__$1Q);
 
-	function plugin$1F(Vue) {
+	function plugin$1G(Vue) {
 
-	  if (plugin$1F.installed) {
+	  if (plugin$1G.installed) {
 	    return;
 	  }
 
-	  plugin$1F.installed = true;
+	  plugin$1G.installed = true;
 	  Vue.use(GeoJsonDataSource$1);
 	  Vue.component(VcKrigingMap.name, VcKrigingMap);
 	}
 
 	var VcKrigingMap$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1F,
+		'default': plugin$1G,
 		VcKrigingMap: VcKrigingMap,
-		install: plugin$1F
+		install: plugin$1G
 	});
 
 	var colorTable = {
@@ -65814,7 +66486,7 @@
 	  return Wind3D;
 	}();
 
-	var script$1Q = {
+	var script$1R = {
 	  name: 'vc-windmap',
 	  mixins: [cmp],
 	  props: {
@@ -65950,21 +66622,21 @@
 	};
 
 	/* script */
-	var __vue_script__$1Q = script$1Q;
+	var __vue_script__$1R = script$1R;
 	/* template */
 
 	/* style */
 
-	var __vue_inject_styles__$1Q = undefined;
+	var __vue_inject_styles__$1R = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1Q = undefined;
+	var __vue_scope_id__$1R = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1Q = undefined;
+	var __vue_is_functional_template__$1R = undefined;
 	/* component normalizer */
 
-	function __vue_normalize__$1Q(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1R(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcWindMap.vue";
@@ -65985,26 +66657,26 @@
 	/* style inject SSR */
 
 
-	var VcWindMap = __vue_normalize__$1Q({}, __vue_inject_styles__$1Q, __vue_script__$1Q, __vue_scope_id__$1Q, __vue_is_functional_template__$1Q);
+	var VcWindMap = __vue_normalize__$1R({}, __vue_inject_styles__$1R, __vue_script__$1R, __vue_scope_id__$1R, __vue_is_functional_template__$1R);
 
-	function plugin$1G(Vue) {
+	function plugin$1H(Vue) {
 
-	  if (plugin$1G.installed) {
+	  if (plugin$1H.installed) {
 	    return;
 	  }
 
-	  plugin$1G.installed = true;
+	  plugin$1H.installed = true;
 	  Vue.component(VcWindMap.name, VcWindMap);
 	}
 
 	var VcWindMap$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1G,
+		'default': plugin$1H,
 		VcWindMap: VcWindMap,
-		install: plugin$1G
+		install: plugin$1H
 	});
 
-	var script$1R = {
+	var script$1S = {
 	  name: 'vc-scan-circle',
 	  mixins: [cmp, position, color],
 	  props: {
@@ -66149,10 +66821,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1R = script$1R;
+	var __vue_script__$1S = script$1S;
 	/* template */
 
-	var __vue_render__$n = function __vue_render__() {
+	var __vue_render__$o = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -66173,19 +66845,19 @@
 	  })], 1);
 	};
 
-	var __vue_staticRenderFns__$n = [];
+	var __vue_staticRenderFns__$o = [];
 	/* style */
 
-	var __vue_inject_styles__$1R = undefined;
+	var __vue_inject_styles__$1S = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1R = undefined;
+	var __vue_scope_id__$1S = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1R = false;
+	var __vue_is_functional_template__$1S = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1R(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1S(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcScanCircle.vue";
@@ -66206,30 +66878,30 @@
 	/* style inject SSR */
 
 
-	var VcScanCircle = __vue_normalize__$1R({
-	  render: __vue_render__$n,
-	  staticRenderFns: __vue_staticRenderFns__$n
-	}, __vue_inject_styles__$1R, __vue_script__$1R, __vue_scope_id__$1R, __vue_is_functional_template__$1R);
+	var VcScanCircle = __vue_normalize__$1S({
+	  render: __vue_render__$o,
+	  staticRenderFns: __vue_staticRenderFns__$o
+	}, __vue_inject_styles__$1S, __vue_script__$1S, __vue_scope_id__$1S, __vue_is_functional_template__$1S);
 
-	function plugin$1H(Vue) {
+	function plugin$1I(Vue) {
 
-	  if (plugin$1H.installed) {
+	  if (plugin$1I.installed) {
 	    return;
 	  }
 
-	  plugin$1H.installed = true;
+	  plugin$1I.installed = true;
 	  Vue.use(PostProcessStage$1);
 	  Vue.component(VcScanCircle.name, VcScanCircle);
 	}
 
 	var VcScanCircle$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1H,
+		'default': plugin$1I,
 		VcScanCircle: VcScanCircle,
-		install: plugin$1H
+		install: plugin$1I
 	});
 
-	var script$1S = {
+	var script$1T = {
 	  name: 'vc-scan-radar',
 	  mixins: [cmp, position, color],
 	  props: {
@@ -66404,10 +67076,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1S = script$1S;
+	var __vue_script__$1T = script$1T;
 	/* template */
 
-	var __vue_render__$o = function __vue_render__() {
+	var __vue_render__$p = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -66428,19 +67100,19 @@
 	  })], 1);
 	};
 
-	var __vue_staticRenderFns__$o = [];
+	var __vue_staticRenderFns__$p = [];
 	/* style */
 
-	var __vue_inject_styles__$1S = undefined;
+	var __vue_inject_styles__$1T = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1S = undefined;
+	var __vue_scope_id__$1T = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1S = false;
+	var __vue_is_functional_template__$1T = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1S(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1T(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcScanRadar.vue";
@@ -66461,30 +67133,30 @@
 	/* style inject SSR */
 
 
-	var VcScanRadar = __vue_normalize__$1S({
-	  render: __vue_render__$o,
-	  staticRenderFns: __vue_staticRenderFns__$o
-	}, __vue_inject_styles__$1S, __vue_script__$1S, __vue_scope_id__$1S, __vue_is_functional_template__$1S);
+	var VcScanRadar = __vue_normalize__$1T({
+	  render: __vue_render__$p,
+	  staticRenderFns: __vue_staticRenderFns__$p
+	}, __vue_inject_styles__$1T, __vue_script__$1T, __vue_scope_id__$1T, __vue_is_functional_template__$1T);
 
-	function plugin$1I(Vue) {
+	function plugin$1J(Vue) {
 
-	  if (plugin$1I.installed) {
+	  if (plugin$1J.installed) {
 	    return;
 	  }
 
-	  plugin$1I.installed = true;
+	  plugin$1J.installed = true;
 	  Vue.use(PostProcessStage$1);
 	  Vue.component(VcScanRadar.name, VcScanRadar);
 	}
 
 	var VcScanRadar$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1I,
+		'default': plugin$1J,
 		VcScanRadar: VcScanRadar,
-		install: plugin$1I
+		install: plugin$1J
 	});
 
-	var script$1T = {
+	var script$1U = {
 	  name: 'vc-ripple-circle-double',
 	  mixins: [cmp, position, show, color, height],
 	  props: {
@@ -66665,10 +67337,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1T = script$1T;
+	var __vue_script__$1U = script$1U;
 	/* template */
 
-	var __vue_render__$p = function __vue_render__() {
+	var __vue_render__$q = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -66709,19 +67381,19 @@
 	  })], 1)], 1);
 	};
 
-	var __vue_staticRenderFns__$p = [];
+	var __vue_staticRenderFns__$q = [];
 	/* style */
 
-	var __vue_inject_styles__$1T = undefined;
+	var __vue_inject_styles__$1U = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1T = undefined;
+	var __vue_scope_id__$1U = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1T = false;
+	var __vue_is_functional_template__$1U = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1T(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1U(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcDoubleCircleRipple.vue";
@@ -66742,18 +67414,18 @@
 	/* style inject SSR */
 
 
-	var VcDoubleCircleRipple = __vue_normalize__$1T({
-	  render: __vue_render__$p,
-	  staticRenderFns: __vue_staticRenderFns__$p
-	}, __vue_inject_styles__$1T, __vue_script__$1T, __vue_scope_id__$1T, __vue_is_functional_template__$1T);
+	var VcDoubleCircleRipple = __vue_normalize__$1U({
+	  render: __vue_render__$q,
+	  staticRenderFns: __vue_staticRenderFns__$q
+	}, __vue_inject_styles__$1U, __vue_script__$1U, __vue_scope_id__$1U, __vue_is_functional_template__$1U);
 
-	function plugin$1J(Vue) {
+	function plugin$1K(Vue) {
 
-	  if (plugin$1J.installed) {
+	  if (plugin$1K.installed) {
 	    return;
 	  }
 
-	  plugin$1J.installed = true;
+	  plugin$1K.installed = true;
 	  Vue.use(Entity$1);
 	  Vue.use(EllipseGraphics$1);
 	  Vue.component(VcDoubleCircleRipple.name, VcDoubleCircleRipple);
@@ -66761,12 +67433,12 @@
 
 	var VcDoubleCircleRipple$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1J,
+		'default': plugin$1K,
 		VcDoubleCircleRipple: VcDoubleCircleRipple,
-		install: plugin$1J
+		install: plugin$1K
 	});
 
-	var script$1U = {
+	var script$1V = {
 	  name: 'vc-circle-roatating-double',
 	  mixins: [cmp, position, show, height],
 	  props: {
@@ -66905,10 +67577,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1U = script$1U;
+	var __vue_script__$1V = script$1V;
 	/* template */
 
-	var __vue_render__$q = function __vue_render__() {
+	var __vue_render__$r = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -66953,19 +67625,19 @@
 	  })], 1)], 1);
 	};
 
-	var __vue_staticRenderFns__$q = [];
+	var __vue_staticRenderFns__$r = [];
 	/* style */
 
-	var __vue_inject_styles__$1U = undefined;
+	var __vue_inject_styles__$1V = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1U = undefined;
+	var __vue_scope_id__$1V = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1U = false;
+	var __vue_is_functional_template__$1V = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1U(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1V(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcDoubleRotatingCircle.vue";
@@ -66986,18 +67658,18 @@
 	/* style inject SSR */
 
 
-	var VcDoubleRotatingCircle = __vue_normalize__$1U({
-	  render: __vue_render__$q,
-	  staticRenderFns: __vue_staticRenderFns__$q
-	}, __vue_inject_styles__$1U, __vue_script__$1U, __vue_scope_id__$1U, __vue_is_functional_template__$1U);
+	var VcDoubleRotatingCircle = __vue_normalize__$1V({
+	  render: __vue_render__$r,
+	  staticRenderFns: __vue_staticRenderFns__$r
+	}, __vue_inject_styles__$1V, __vue_script__$1V, __vue_scope_id__$1V, __vue_is_functional_template__$1V);
 
-	function plugin$1K(Vue) {
+	function plugin$1L(Vue) {
 
-	  if (plugin$1K.installed) {
+	  if (plugin$1L.installed) {
 	    return;
 	  }
 
-	  plugin$1K.installed = true;
+	  plugin$1L.installed = true;
 	  Vue.use(Entity$1);
 	  Vue.use(EllipseGraphics$1);
 	  Vue.component(VcDoubleRotatingCircle.name, VcDoubleRotatingCircle);
@@ -67005,12 +67677,12 @@
 
 	var VcDoubleRotatingCircle$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1K,
+		'default': plugin$1L,
 		VcDoubleRotatingCircle: VcDoubleRotatingCircle,
-		install: plugin$1K
+		install: plugin$1L
 	});
 
-	var script$1V = {
+	var script$1W = {
 	  name: 'vc-shine-ellipse',
 	  mixins: [cmp, position, color, show],
 	  props: {
@@ -67143,10 +67815,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1V = script$1V;
+	var __vue_script__$1W = script$1W;
 	/* template */
 
-	var __vue_render__$r = function __vue_render__() {
+	var __vue_render__$s = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -67174,19 +67846,19 @@
 	  })], 1)], 1);
 	};
 
-	var __vue_staticRenderFns__$r = [];
+	var __vue_staticRenderFns__$s = [];
 	/* style */
 
-	var __vue_inject_styles__$1V = undefined;
+	var __vue_inject_styles__$1W = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1V = undefined;
+	var __vue_scope_id__$1W = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1V = false;
+	var __vue_is_functional_template__$1W = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1V(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1W(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcShineEllipse.vue";
@@ -67207,18 +67879,18 @@
 	/* style inject SSR */
 
 
-	var VcShineEllipse = __vue_normalize__$1V({
-	  render: __vue_render__$r,
-	  staticRenderFns: __vue_staticRenderFns__$r
-	}, __vue_inject_styles__$1V, __vue_script__$1V, __vue_scope_id__$1V, __vue_is_functional_template__$1V);
+	var VcShineEllipse = __vue_normalize__$1W({
+	  render: __vue_render__$s,
+	  staticRenderFns: __vue_staticRenderFns__$s
+	}, __vue_inject_styles__$1W, __vue_script__$1W, __vue_scope_id__$1W, __vue_is_functional_template__$1W);
 
-	function plugin$1L(Vue) {
+	function plugin$1M(Vue) {
 
-	  if (plugin$1L.installed) {
+	  if (plugin$1M.installed) {
 	    return;
 	  }
 
-	  plugin$1L.installed = true;
+	  plugin$1M.installed = true;
 	  Vue.use(Entity$1);
 	  Vue.use(EllipseGraphics$1);
 	  Vue.component(VcShineEllipse.name, VcShineEllipse);
@@ -67226,12 +67898,12 @@
 
 	var VcShineEllipse$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1L,
+		'default': plugin$1M,
 		VcShineEllipse: VcShineEllipse,
-		install: plugin$1L
+		install: plugin$1M
 	});
 
-	var script$1W = {
+	var script$1X = {
 	  name: 'vc-shine-point',
 	  mixins: [cmp, position, color, show],
 	  props: {
@@ -67351,10 +68023,10 @@
 	};
 
 	/* script */
-	var __vue_script__$1W = script$1W;
+	var __vue_script__$1X = script$1X;
 	/* template */
 
-	var __vue_render__$s = function __vue_render__() {
+	var __vue_render__$t = function __vue_render__() {
 	  var _vm = this;
 
 	  var _h = _vm.$createElement;
@@ -67382,19 +68054,19 @@
 	  })], 1)], 1);
 	};
 
-	var __vue_staticRenderFns__$s = [];
+	var __vue_staticRenderFns__$t = [];
 	/* style */
 
-	var __vue_inject_styles__$1W = undefined;
+	var __vue_inject_styles__$1X = undefined;
 	/* scoped */
 
-	var __vue_scope_id__$1W = undefined;
+	var __vue_scope_id__$1X = undefined;
 	/* functional template */
 
-	var __vue_is_functional_template__$1W = false;
+	var __vue_is_functional_template__$1X = false;
 	/* component normalizer */
 
-	function __vue_normalize__$1W(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
+	function __vue_normalize__$1X(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
 	  component.__file = "VcShinePoint.vue";
@@ -67415,18 +68087,18 @@
 	/* style inject SSR */
 
 
-	var VcShinePoint = __vue_normalize__$1W({
-	  render: __vue_render__$s,
-	  staticRenderFns: __vue_staticRenderFns__$s
-	}, __vue_inject_styles__$1W, __vue_script__$1W, __vue_scope_id__$1W, __vue_is_functional_template__$1W);
+	var VcShinePoint = __vue_normalize__$1X({
+	  render: __vue_render__$t,
+	  staticRenderFns: __vue_staticRenderFns__$t
+	}, __vue_inject_styles__$1X, __vue_script__$1X, __vue_scope_id__$1X, __vue_is_functional_template__$1X);
 
-	function plugin$1M(Vue) {
+	function plugin$1N(Vue) {
 
-	  if (plugin$1M.installed) {
+	  if (plugin$1N.installed) {
 	    return;
 	  }
 
-	  plugin$1M.installed = true;
+	  plugin$1N.installed = true;
 	  Vue.use(Entity$1);
 	  Vue.use(PointGraphics$1);
 	  Vue.component(VcShinePoint.name, VcShinePoint);
@@ -67434,9 +68106,9 @@
 
 	var VcShinePoint$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
-		'default': plugin$1M,
+		'default': plugin$1N,
 		VcShinePoint: VcShinePoint,
-		install: plugin$1M
+		install: plugin$1N
 	});
 
 	var PolylineTrailMaterialProperty =
@@ -67527,210 +68199,9 @@
 	  return PolylineTrailMaterialProperty;
 	}();
 
-	var script$1X = {
+	var script$1Y = {
 	  name: 'vc-trail-polyline',
 	  mixins: [cmp, positions, width, clampToGround, show],
-	  props: {
-	    color: {
-	      type: [Object, String, Array],
-	      default: 'yellow'
-	    },
-	    interval: {
-	      type: Number,
-	      default: 3000
-	    },
-	    imageUrl: String,
-	    loop: {
-	      type: Boolean,
-	      default: true
-	    }
-	  },
-	  data: function data() {
-	    return {
-	      nowaiting: true,
-	      material: {}
-	    };
-	  },
-	  mounted: function mounted() {
-	    var _this = this;
-
-	    this.getParent(this.$parent).createPromise.then(function (_ref) {
-	      var Cesium = _ref.Cesium,
-	          viewer = _ref.viewer;
-	      var color = _this.color,
-	          imageUrl = _this.imageUrl,
-	          interval = _this.interval,
-	          loop = _this.loop;
-	      var colorCesium = makeColor(color);
-	      _this.material = new PolylineTrailMaterialProperty(colorCesium, interval, imageUrl, loop);
-	    });
-	  },
-	  methods: {
-	    createCesiumObject: function createCesiumObject() {
-	      var _this2 = this;
-
-	      return regenerator.async(function createCesiumObject$(_context) {
-	        while (1) {
-	          switch (_context.prev = _context.next) {
-	            case 0:
-	              return _context.abrupt("return", this.$refs.entity.createPromise.then(function (_ref2) {
-	                var Cesium = _ref2.Cesium,
-	                    viewer = _ref2.viewer,
-	                    cesiumObject = _ref2.cesiumObject;
-
-	                if (!_this2.$refs.entity._mounted) {
-	                  return _this2.$refs.entity.load().then(function (_ref3) {
-	                    var Cesium = _ref3.Cesium,
-	                        viewer = _ref3.viewer,
-	                        cesiumObject = _ref3.cesiumObject;
-	                    return cesiumObject;
-	                  });
-	                } else {
-	                  return cesiumObject;
-	                }
-	              }));
-
-	            case 1:
-	            case "end":
-	              return _context.stop();
-	          }
-	        }
-	      }, null, this);
-	    },
-	    mount: function mount() {
-	      return regenerator.async(function mount$(_context2) {
-	        while (1) {
-	          switch (_context2.prev = _context2.next) {
-	            case 0:
-	              return _context2.abrupt("return", true);
-
-	            case 1:
-	            case "end":
-	              return _context2.stop();
-	          }
-	        }
-	      });
-	    },
-	    unmount: function unmount() {
-	      return regenerator.async(function unmount$(_context3) {
-	        while (1) {
-	          switch (_context3.prev = _context3.next) {
-	            case 0:
-	              return _context3.abrupt("return", this.$refs.entity && this.$refs.entity.unload());
-
-	            case 1:
-	            case "end":
-	              return _context3.stop();
-	          }
-	        }
-	      }, null, this);
-	    }
-	  },
-	  created: function created() {
-	    var _this3 = this;
-
-	    defineProperties$1(this, {
-	      entity: {
-	        enumerable: true,
-	        get: function get() {
-	          return _this3.cesiumObject;
-	        }
-	      }
-	    });
-	  }
-	};
-
-	/* script */
-	var __vue_script__$1X = script$1X;
-	/* template */
-
-	var __vue_render__$t = function __vue_render__() {
-	  var _vm = this;
-
-	  var _h = _vm.$createElement;
-
-	  var _c = _vm._self._c || _h;
-
-	  return _c('i', {
-	    class: _vm.$options.name,
-	    staticStyle: {
-	      "display": "none !important"
-	    }
-	  }, [_c('vc-entity', {
-	    ref: "entity",
-	    attrs: {
-	      "show": _vm.show
-	    }
-	  }, [_c('vc-graphics-polyline', {
-	    attrs: {
-	      "material": _vm.material,
-	      "positions": _vm.positions,
-	      "width": _vm.width,
-	      "clampToGround": _vm.clampToGround
-	    }
-	  })], 1)], 1);
-	};
-
-	var __vue_staticRenderFns__$t = [];
-	/* style */
-
-	var __vue_inject_styles__$1X = undefined;
-	/* scoped */
-
-	var __vue_scope_id__$1X = undefined;
-	/* functional template */
-
-	var __vue_is_functional_template__$1X = false;
-	/* component normalizer */
-
-	function __vue_normalize__$1X(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
-	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
-
-	  component.__file = "VcPolylineTrail.vue";
-
-	  if (!component.render) {
-	    component.render = template.render;
-	    component.staticRenderFns = template.staticRenderFns;
-	    component._compiled = true;
-	    if (functional) component.functional = true;
-	  }
-
-	  component._scopeId = scope;
-
-	  return component;
-	}
-	/* style inject */
-
-	/* style inject SSR */
-
-
-	var VcPolylineTrail = __vue_normalize__$1X({
-	  render: __vue_render__$t,
-	  staticRenderFns: __vue_staticRenderFns__$t
-	}, __vue_inject_styles__$1X, __vue_script__$1X, __vue_scope_id__$1X, __vue_is_functional_template__$1X);
-
-	function plugin$1N(Vue) {
-
-	  if (plugin$1N.installed) {
-	    return;
-	  }
-
-	  plugin$1N.installed = true;
-	  Vue.use(Entity$1);
-	  Vue.use(PolylineGraphics$1);
-	  Vue.component(VcPolylineTrail.name, VcPolylineTrail);
-	}
-
-	var VcPolylineTrail$1 = /*#__PURE__*/Object.freeze({
-		__proto__: null,
-		'default': plugin$1N,
-		VcPolylineTrail: VcPolylineTrail,
-		install: plugin$1N
-	});
-
-	var script$1Y = {
-	  name: 'vc-trail-wall',
-	  mixins: [cmp, positions, minimumHeights, maximumHeights, outline, show],
 	  props: {
 	    color: {
 	      type: [Object, String, Array],
@@ -67858,15 +68329,16 @@
 	      "display": "none !important"
 	    }
 	  }, [_c('vc-entity', {
-	    ref: "entity"
-	  }, [_c('vc-graphics-wall', {
+	    ref: "entity",
+	    attrs: {
+	      "show": _vm.show
+	    }
+	  }, [_c('vc-graphics-polyline', {
 	    attrs: {
 	      "material": _vm.material,
-	      "maximumHeights": _vm.maximumHeights,
-	      "minimumHeights": _vm.minimumHeights,
-	      "outline": _vm.outline,
 	      "positions": _vm.positions,
-	      "show": _vm.show
+	      "width": _vm.width,
+	      "clampToGround": _vm.clampToGround
 	    }
 	  })], 1)], 1);
 	};
@@ -67886,7 +68358,7 @@
 	function __vue_normalize__$1Y(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
-	  component.__file = "VcWallTrail.vue";
+	  component.__file = "VcPolylineTrail.vue";
 
 	  if (!component.render) {
 	    component.render = template.render;
@@ -67904,7 +68376,7 @@
 	/* style inject SSR */
 
 
-	var VcWallTrail = __vue_normalize__$1Y({
+	var VcPolylineTrail = __vue_normalize__$1Y({
 	  render: __vue_render__$u,
 	  staticRenderFns: __vue_staticRenderFns__$u
 	}, __vue_inject_styles__$1Y, __vue_script__$1Y, __vue_scope_id__$1Y, __vue_is_functional_template__$1Y);
@@ -67917,43 +68389,81 @@
 
 	  plugin$1O.installed = true;
 	  Vue.use(Entity$1);
-	  Vue.use(WallGraphics$1);
-	  Vue.component(VcWallTrail.name, VcWallTrail);
+	  Vue.use(PolylineGraphics$1);
+	  Vue.component(VcPolylineTrail.name, VcPolylineTrail);
 	}
 
-	var VcWallTrail$1 = /*#__PURE__*/Object.freeze({
+	var VcPolylineTrail$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
 		'default': plugin$1O,
-		VcWallTrail: VcWallTrail,
+		VcPolylineTrail: VcPolylineTrail,
 		install: plugin$1O
 	});
 
 	var script$1Z = {
-	  name: 'vc-overlay-html',
-	  mixins: [cmp, pixelOffset, position],
+	  name: 'vc-trail-wall',
+	  mixins: [cmp, positions, minimumHeights, maximumHeights, outline, show],
 	  props: {
-	    hiddenOnBack: {
+	    color: {
+	      type: [Object, String, Array],
+	      default: 'yellow'
+	    },
+	    interval: {
+	      type: Number,
+	      default: 3000
+	    },
+	    imageUrl: String,
+	    loop: {
 	      type: Boolean,
 	      default: true
 	    }
 	  },
 	  data: function data() {
 	    return {
-	      nowaiting: true
+	      nowaiting: true,
+	      material: {}
 	    };
+	  },
+	  mounted: function mounted() {
+	    var _this = this;
+
+	    this.getParent(this.$parent).createPromise.then(function (_ref) {
+	      var Cesium = _ref.Cesium,
+	          viewer = _ref.viewer;
+	      var color = _this.color,
+	          imageUrl = _this.imageUrl,
+	          interval = _this.interval,
+	          loop = _this.loop;
+	      var colorCesium = makeColor(color);
+	      _this.material = new PolylineTrailMaterialProperty(colorCesium, interval, imageUrl, loop);
+	    });
 	  },
 	  methods: {
 	    createCesiumObject: function createCesiumObject() {
-	      var viewer, onPreRender;
+	      var _this2 = this;
+
 	      return regenerator.async(function createCesiumObject$(_context) {
 	        while (1) {
 	          switch (_context.prev = _context.next) {
 	            case 0:
-	              viewer = this.viewer, onPreRender = this.onPreRender;
-	              viewer.scene.preRender.addEventListener(onPreRender);
-	              return _context.abrupt("return", this.$el);
+	              return _context.abrupt("return", this.$refs.entity.createPromise.then(function (_ref2) {
+	                var Cesium = _ref2.Cesium,
+	                    viewer = _ref2.viewer,
+	                    cesiumObject = _ref2.cesiumObject;
 
-	            case 3:
+	                if (!_this2.$refs.entity._mounted) {
+	                  return _this2.$refs.entity.load().then(function (_ref3) {
+	                    var Cesium = _ref3.Cesium,
+	                        viewer = _ref3.viewer,
+	                        cesiumObject = _ref3.cesiumObject;
+	                    return cesiumObject;
+	                  });
+	                } else {
+	                  return cesiumObject;
+	                }
+	              }));
+
+	            case 1:
 	            case "end":
 	              return _context.stop();
 	          }
@@ -67975,67 +68485,28 @@
 	      });
 	    },
 	    unmount: function unmount() {
-	      var viewer, onPreRender;
 	      return regenerator.async(function unmount$(_context3) {
 	        while (1) {
 	          switch (_context3.prev = _context3.next) {
 	            case 0:
-	              viewer = this.viewer, onPreRender = this.onPreRender;
-	              viewer.scene.preRender.removeEventListener(onPreRender);
-	              this.$el.style.display = 'none';
-	              return _context3.abrupt("return", true);
+	              return _context3.abrupt("return", this.$refs.entity && this.$refs.entity.unload());
 
-	            case 4:
+	            case 1:
 	            case "end":
 	              return _context3.stop();
 	          }
 	        }
 	      }, null, this);
-	    },
-	    onPreRender: function onPreRender() {
-	      var viewer = this.viewer,
-	          position = this.position,
-	          pixelOffset = this.pixelOffset,
-	          hiddenOnBack = this.hiddenOnBack;
-	      var cartesian2 = makeCartesian2(pixelOffset);
-	      var cartesian3 = makeCartesian3(position);
-	      var scratch = {};
-	      var canvasPosition = viewer.scene.cartesianToCanvasCoordinates(cartesian3, scratch);
-
-	      if (Cesium.defined(canvasPosition)) {
-	        this.$el.style.left = canvasPosition.x + cartesian2.x + 'px';
-	        this.$el.style.top = canvasPosition.y + cartesian2.y + 'px';
-
-	        if (hiddenOnBack) {
-	          var cameraPosition = viewer.camera.position;
-	          var cartographicPosition = viewer.scene.globe.ellipsoid.cartesianToCartographic(cameraPosition);
-
-	          if (Cesium.defined(cartographicPosition)) {
-	            var cameraHeight = cartographicPosition.height;
-	            cameraHeight += 1 * viewer.scene.globe.ellipsoid.maximumRadius;
-
-	            if (Cesium.Cartesian3.distance(cameraPosition, cartesian3) > cameraHeight) {
-	              this.$el.style.display = 'none';
-	            } else {
-	              this.$el.style.display = 'block';
-	            }
-	          }
-	        }
-	      }
-	    },
-	    onClick: function onClick(e) {
-	      var listener = this.$listeners.click;
-	      listener && this.$emit('click', e);
 	    }
 	  },
 	  created: function created() {
-	    var _this = this;
+	    var _this3 = this;
 
 	    defineProperties$1(this, {
-	      element: {
+	      entity: {
 	        enumerable: true,
 	        get: function get() {
-	          return _this.cesiumObject;
+	          return _this3.cesiumObject;
 	        }
 	      }
 	    });
@@ -68053,12 +68524,23 @@
 
 	  var _c = _vm._self._c || _h;
 
-	  return _c('div', {
-	    staticClass: "vc-html-container",
-	    on: {
-	      "click": _vm.onClick
+	  return _c('i', {
+	    class: _vm.$options.name,
+	    staticStyle: {
+	      "display": "none !important"
 	    }
-	  }, [_vm._t("default")], 2);
+	  }, [_c('vc-entity', {
+	    ref: "entity"
+	  }, [_c('vc-graphics-wall', {
+	    attrs: {
+	      "material": _vm.material,
+	      "maximumHeights": _vm.maximumHeights,
+	      "minimumHeights": _vm.minimumHeights,
+	      "outline": _vm.outline,
+	      "positions": _vm.positions,
+	      "show": _vm.show
+	    }
+	  })], 1)], 1);
 	};
 
 	var __vue_staticRenderFns__$v = [];
@@ -68076,7 +68558,7 @@
 	function __vue_normalize__$1Z(template, style, script, scope, functional, moduleIdentifier, createInjector, createInjectorSSR) {
 	  var component = (typeof script === 'function' ? script.options : script) || {}; // For security concerns, we use only base name in production mode.
 
-	  component.__file = "VcHTMLOverlay.vue";
+	  component.__file = "VcWallTrail.vue";
 
 	  if (!component.render) {
 	    component.render = template.render;
@@ -68094,7 +68576,7 @@
 	/* style inject SSR */
 
 
-	var VcHTMLOverlay = __vue_normalize__$1Z({
+	var VcWallTrail = __vue_normalize__$1Z({
 	  render: __vue_render__$v,
 	  staticRenderFns: __vue_staticRenderFns__$v
 	}, __vue_inject_styles__$1Z, __vue_script__$1Z, __vue_scope_id__$1Z, __vue_is_functional_template__$1Z);
@@ -68106,13 +68588,15 @@
 	  }
 
 	  plugin$1P.installed = true;
-	  Vue.component(VcHTMLOverlay.name, VcHTMLOverlay);
+	  Vue.use(Entity$1);
+	  Vue.use(WallGraphics$1);
+	  Vue.component(VcWallTrail.name, VcWallTrail);
 	}
 
-	var VcHTMLOverlay$1 = /*#__PURE__*/Object.freeze({
+	var VcWallTrail$1 = /*#__PURE__*/Object.freeze({
 		__proto__: null,
 		'default': plugin$1P,
-		VcHTMLOverlay: VcHTMLOverlay,
+		VcWallTrail: VcWallTrail,
 		install: plugin$1P
 	});
 
@@ -68120,7 +68604,7 @@
 	 * @const {string} VueCesium version
 	 */
 
-	var VERSION = '2.1.9'; // const $vc = {
+	var VERSION = '2.2.0'; // const $vc = {
 	//   VERSION
 	// }
 

@@ -1,4 +1,4 @@
-/*! UIkit 3.6.13 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! UIkit 3.6.16 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -104,21 +104,25 @@
                                 : this$1.hasTransition
                                     ? toggleHeight(this$1)
                                     : toggleAnimation(this$1)
-                        )(el, show) || uikitUtil.Promise.resolve();
+                        )(el, show);
 
-                        uikitUtil.addClass(el, show ? this$1.clsEnter : this$1.clsLeave);
+                        var cls = show ? this$1.clsEnter : this$1.clsLeave;
+
+                        uikitUtil.addClass(el, cls);
 
                         uikitUtil.trigger(el, show ? 'show' : 'hide', [this$1]);
 
-                        promise
-                            .catch(uikitUtil.noop)
-                            .then(function () { return uikitUtil.removeClass(el, show ? this$1.clsEnter : this$1.clsLeave); });
-
-                        return promise.then(function () {
-                            uikitUtil.removeClass(el, show ? this$1.clsEnter : this$1.clsLeave);
+                        var done = function () {
+                            uikitUtil.removeClass(el, cls);
                             uikitUtil.trigger(el, show ? 'shown' : 'hidden', [this$1]);
                             this$1.$update(el);
-                        });
+                        };
+
+                        return promise ? promise.then(done, function () {
+                            uikitUtil.removeClass(el, cls);
+                            return uikitUtil.Promise.reject();
+                        }) : done();
+
                     })).then(resolve, uikitUtil.noop); }
                 );
             },

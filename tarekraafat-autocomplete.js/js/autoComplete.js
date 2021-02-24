@@ -173,7 +173,7 @@
 
   var createItem = (function (item, index, config) {
     var result = document.createElement(config.resultItem.element);
-    result.setAttribute("id", "".concat(config.resultItem.className, "_").concat(index));
+    result.setAttribute("id", "".concat(config.resultItem.idName, "_").concat(index));
     result.setAttribute("class", config.resultItem.className);
     result.setAttribute("role", "option");
     result.innerHTML = item.match;
@@ -195,8 +195,9 @@
     var _loop = function _loop(index) {
       var item = data.results[index];
       var resultItem = createItem(item, index, config);
-      resultItem.addEventListener("click", function () {
+      resultItem.addEventListener("click", function (event) {
         var dataFeedback = {
+          event: event,
           matches: matches,
           input: data.input,
           query: data.query,
@@ -273,6 +274,8 @@
       }
     };
     var navigate = config.resultsList.navigation || navigation;
+    if (config.inputField.autoCompleteNavigate) config.inputField.removeEventListener("keydown", config.inputField.autoCompleteNavigate);
+    config.inputField.autoCompleteNavigate = navigate;
     config.inputField.addEventListener("keydown", navigate);
   };
 
@@ -482,6 +485,7 @@
       this.highlight = highlight;
       this.feedback = feedback;
       this.onSelection = onSelection;
+      this.inputField = typeof this.selector === "string" ? document.querySelector(this.selector) : this.selector();
       this.observer ? this.preInit() : this.init();
     }
     _createClass(autoComplete, [{
@@ -498,7 +502,7 @@
         eventEmitter(this.inputField, dataFeedback, "results");
         if (!results.length) return this.noResults ? this.noResults(dataFeedback, generateList) : null;
         if (!this.resultsList.render) return this.feedback(dataFeedback);
-        var list = results.length ? generateList(this, dataFeedback, results) : null;
+        results.length ? generateList(this, dataFeedback, results) : null;
         eventEmitter(this.inputField, dataFeedback, "rendered");
         navigate(this, dataFeedback);
         document.addEventListener("click", function (event) {
@@ -559,7 +563,6 @@
       key: "init",
       value: function init() {
         var _this4 = this;
-        this.inputField = typeof this.selector === "string" ? document.querySelector(this.selector) : this.selector();
         inputComponent(this);
         if (this.placeHolder) this.inputField.setAttribute("placeholder", this.placeHolder);
         this.hook = debouncer(function () {
@@ -575,21 +578,19 @@
       key: "preInit",
       value: function preInit() {
         var _this5 = this;
-        var targetNode = document;
         var config = {
           childList: true,
           subtree: true
         };
         var callback = function callback(mutationsList, observer) {
-          var inputField = targetNode.querySelector(_this5.selector);
           var _iterator = _createForOfIteratorHelper(mutationsList),
               _step;
           try {
             for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var mutation = _step.value;
-              if (inputField) {
+              if (_this5.inputField) {
                 observer.disconnect();
-                eventEmitter(inputField, null, "connect");
+                eventEmitter(_this5.inputField, null, "connect");
                 _this5.init();
               }
             }
@@ -600,7 +601,7 @@
           }
         };
         var observer = new MutationObserver(callback);
-        observer.observe(targetNode, config);
+        observer.observe(document, config);
       }
     }, {
       key: "unInit",

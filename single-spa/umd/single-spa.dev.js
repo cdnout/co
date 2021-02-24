@@ -1,4 +1,4 @@
-/* single-spa@5.9.0 - UMD - dev */
+/* single-spa@5.9.1 - UMD - dev */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :

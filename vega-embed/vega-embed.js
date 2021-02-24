@@ -28,7 +28,7 @@
   var vegaLiteImport__namespace = /*#__PURE__*/_interopNamespace(vegaLiteImport);
 
   var name = "vega-embed";
-  var version = "6.15.0";
+  var version = "6.15.1";
   var description = "Publish Vega visualizations as embedded web components.";
   var keywords = [
   	"vega",
@@ -67,16 +67,16 @@
   	"build-es5"
   ];
   var devDependencies = {
-  	"@rollup/plugin-commonjs": "17.0.0",
+  	"@rollup/plugin-commonjs": "17.1.0",
   	"@rollup/plugin-json": "^4.1.0",
-  	"@rollup/plugin-node-resolve": "^11.0.1",
+  	"@rollup/plugin-node-resolve": "^11.1.1",
   	"@types/semver": "^7.3.4",
   	"@wessberg/rollup-plugin-ts": "^1.3.8",
-  	"browser-sync": "^2.26.13",
+  	"browser-sync": "^2.26.14",
   	concurrently: "^5.3.0",
   	"jest-canvas-mock": "^2.3.0",
   	"node-sass": "^5.0.0",
-  	rollup: "^2.35.1",
+  	rollup: "^2.38.3",
   	"rollup-plugin-bundle-size": "^1.0.3",
   	"rollup-plugin-terser": "^7.0.2",
   	typescript: "^4.1.3",
@@ -94,7 +94,7 @@
   	semver: "^7.3.4",
   	"vega-schema-url-parser": "^2.1.0",
   	"vega-themes": "^2.9.1",
-  	"vega-tooltip": "^0.24.2"
+  	"vega-tooltip": "^0.25.0"
   };
   var scripts = {
   	prebuild: "yarn clean && yarn build:style",
@@ -2324,7 +2324,7 @@
       if (options.max && (typeof options.max !== 'number' || options.max < 0))
         throw new TypeError('max must be a non-negative number')
       // Kind of weird to have a default max of Infinity, but oh well.
-      const max = this[MAX] = options.max || Infinity;
+      this[MAX] = options.max || Infinity;
 
       const lc = options.length || naiveLength;
       this[LENGTH_CALCULATOR] = (typeof lc !== 'function') ? naiveLength : lc;
@@ -2747,7 +2747,7 @@
       // if any comparators are the null set, then replace with JUST null set
       // if more than one comparator, remove any * comparators
       // also, don't include the same comparator more than once
-      const l = rangeList.length;
+      rangeList.length;
       const rangeMap = new Map();
       for (const comp of rangeList) {
         if (isNullSet(comp))
@@ -4539,12 +4539,12 @@
     return accessor((opt && opt.get || getter)(path), [field], name || field);
   }
 
-  const id = field('id');
-  const identity = accessor(_ => _, [], 'identity');
-  const zero = accessor(() => 0, [], 'zero');
-  const one = accessor(() => 1, [], 'one');
-  const truthy = accessor(() => true, [], 'true');
-  const falsy = accessor(() => false, [], 'false');
+  field('id');
+  accessor(_ => _, [], 'identity');
+  accessor(() => 0, [], 'zero');
+  accessor(() => 1, [], 'one');
+  accessor(() => true, [], 'true');
+  accessor(() => false, [], 'false');
 
   var isArray = Array.isArray;
 
@@ -4784,6 +4784,7 @@
       constructor(options) {
           this.options = Object.assign(Object.assign({}, DEFAULT_OPTIONS), options);
           const elementId = this.options.id;
+          this.el = null;
           // bind this to call
           this.call = this.tooltipHandler.bind(this);
           // prepend a default stylesheet for tooltips to the head
@@ -4799,21 +4800,22 @@
                   head.appendChild(style);
               }
           }
-          // append a div element that we use as a tooltip unless it already exists
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.el = document.getElementById(elementId);
-          if (!this.el) {
-              this.el = document.createElement('div');
-              this.el.setAttribute('id', elementId);
-              this.el.classList.add('vg-tooltip');
-              document.body.appendChild(this.el);
-          }
       }
       /**
        * The tooltip handler function.
        */
       tooltipHandler(handler, event, item, value) {
           // console.log(handler, event, item, value);
+          // append a div element that we use as a tooltip unless it already exists
+          this.el = document.getElementById(this.options.id);
+          if (!this.el) {
+              this.el = document.createElement('div');
+              this.el.setAttribute('id', this.options.id);
+              this.el.classList.add('vg-tooltip');
+              document.body.appendChild(this.el);
+          }
+          const tooltipContainer = document.fullscreenElement != null ? document.fullscreenElement : document.body;
+          tooltipContainer.appendChild(this.el);
           // hide tooltip for null, undefined, or empty string values
           if (value == null || value === '') {
               this.el.classList.remove('visible', `${this.options.theme}-theme`);
@@ -4969,6 +4971,13 @@
   function isLoader(o) {
       return !!(o && 'load' in o);
   }
+  function createLoader(opts) {
+      return isLoader(opts) ? opts : vega.loader(opts);
+  }
+  function embedOptionsFromUsermeta(parsedSpec) {
+      var _a;
+      return (_a = (parsedSpec.usermeta && parsedSpec.usermeta['embedOptions'])) !== null && _a !== void 0 ? _a : {};
+  }
   /**
    * Embed a Vega visualization component in a web page. This function returns a promise.
    *
@@ -4981,31 +4990,35 @@
       var _a, _b, _c;
       if (opts === void 0) { opts = {}; }
       return __awaiter(this, void 0, void 0, function () {
-          var loader, parsedSpec, _d, _e, _f, usermetaOpts, parsedOpts, mergedOpts;
-          return __generator(this, function (_g) {
-              switch (_g.label) {
+          var parsedSpec, loader, _d, _e, usermetaLoader, usermetaOpts, parsedOpts, mergedOpts;
+          return __generator(this, function (_f) {
+              switch (_f.label) {
                   case 0:
-                      loader = isLoader(opts.loader) ? opts.loader : vega.loader(opts.loader);
                       if (!vegaImport.isString(spec)) return [3 /*break*/, 2];
-                      _f = (_e = JSON).parse;
+                      loader = createLoader(opts.loader);
+                      _e = (_d = JSON).parse;
                       return [4 /*yield*/, loader.load(spec)];
                   case 1:
-                      _d = _f.apply(_e, [_g.sent()]);
+                      parsedSpec = _e.apply(_d, [_f.sent()]);
                       return [3 /*break*/, 3];
                   case 2:
-                      _d = spec;
-                      _g.label = 3;
+                      parsedSpec = spec;
+                      _f.label = 3;
                   case 3:
-                      parsedSpec = _d;
-                      return [4 /*yield*/, loadOpts((_a = (parsedSpec.usermeta && parsedSpec.usermeta['embedOptions'])) !== null && _a !== void 0 ? _a : {}, loader)];
+                      usermetaLoader = embedOptionsFromUsermeta(parsedSpec).loader;
+                      // either create the loader for the first time or create a new loader if the spec has new loader options
+                      if (!loader || usermetaLoader) {
+                          loader = createLoader((_a = opts.loader) !== null && _a !== void 0 ? _a : usermetaLoader);
+                      }
+                      return [4 /*yield*/, loadOpts(embedOptionsFromUsermeta(parsedSpec), loader)];
                   case 4:
-                      usermetaOpts = _g.sent();
+                      usermetaOpts = _f.sent();
                       return [4 /*yield*/, loadOpts(opts, loader)];
                   case 5:
-                      parsedOpts = _g.sent();
+                      parsedOpts = _f.sent();
                       mergedOpts = __assign(__assign({}, mergeDeep(parsedOpts, usermetaOpts)), { config: vegaImport.mergeConfig((_b = parsedOpts.config) !== null && _b !== void 0 ? _b : {}, (_c = usermetaOpts.config) !== null && _c !== void 0 ? _c : {}) });
                       return [4 /*yield*/, _embed(el, parsedSpec, mergedOpts, loader)];
-                  case 6: return [2 /*return*/, _g.sent()];
+                  case 6: return [2 /*return*/, _f.sent()];
               }
           });
       });

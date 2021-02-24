@@ -1,4 +1,4 @@
-/*! UIkit 3.6.13 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
+/*! UIkit 3.6.16 | https://www.getuikit.com | (c) 2014 - 2021 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('uikit-util')) :
@@ -202,21 +202,25 @@
                                 : this$1.hasTransition
                                     ? toggleHeight(this$1)
                                     : toggleAnimation(this$1)
-                        )(el, show) || uikitUtil.Promise.resolve();
+                        )(el, show);
 
-                        uikitUtil.addClass(el, show ? this$1.clsEnter : this$1.clsLeave);
+                        var cls = show ? this$1.clsEnter : this$1.clsLeave;
+
+                        uikitUtil.addClass(el, cls);
 
                         uikitUtil.trigger(el, show ? 'show' : 'hide', [this$1]);
 
-                        promise
-                            .catch(uikitUtil.noop)
-                            .then(function () { return uikitUtil.removeClass(el, show ? this$1.clsEnter : this$1.clsLeave); });
-
-                        return promise.then(function () {
-                            uikitUtil.removeClass(el, show ? this$1.clsEnter : this$1.clsLeave);
+                        var done = function () {
+                            uikitUtil.removeClass(el, cls);
                             uikitUtil.trigger(el, show ? 'shown' : 'hidden', [this$1]);
                             this$1.$update(el);
-                        });
+                        };
+
+                        return promise ? promise.then(done, function () {
+                            uikitUtil.removeClass(el, cls);
+                            return uikitUtil.Promise.reject();
+                        }) : done();
+
                     })).then(resolve, uikitUtil.noop); }
                 );
             },
@@ -486,7 +490,9 @@
                     var this$1 = this;
 
 
-                    active.splice(active.indexOf(this), 1);
+                    if (uikitUtil.includes(active, this)) {
+                        active.splice(active.indexOf(this), 1);
+                    }
 
                     if (!active.length) {
                         uikitUtil.css(document.body, 'overflowY', '');
@@ -513,11 +519,6 @@
             show: function() {
                 var this$1 = this;
 
-
-                if (this.isToggled()) {
-                    return uikitUtil.Promise.resolve();
-                }
-
                 if (this.container && uikitUtil.parent(this.$el) !== this.container) {
                     uikitUtil.append(this.container, this.$el);
                     return new uikitUtil.Promise(function (resolve) { return requestAnimationFrame(function () { return this$1.show().then(resolve); }
@@ -529,11 +530,6 @@
             },
 
             hide: function() {
-
-                if (!this.isToggled()) {
-                    return uikitUtil.Promise.resolve();
-                }
-
                 return this.toggleElement(this.$el, false, animate(this));
             }
 
@@ -681,7 +677,9 @@
 
                 name: 'visibilitychange',
 
-                el: uikitUtil.inBrowser && document,
+                el: function() {
+                    return document;
+                },
 
                 filter: function() {
                     return this.autoplay;
@@ -815,10 +813,6 @@
                     this.prevIndex = this.index;
                 }
 
-                // Workaround for iOS's inert scrolling preventing pointerdown event
-                // https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
-                uikitUtil.on(this.list, 'touchmove', this.move, {passive: false});
-
                 uikitUtil.on(document, uikitUtil.pointerMove, this.move, {passive: false});
                 uikitUtil.on(document, (uikitUtil.pointerUp + " " + uikitUtil.pointerCancel), this.end, true);
 
@@ -835,6 +829,9 @@
                 if (distance === 0 || this.prevPos === this.pos || !this.dragging && Math.abs(distance) < this.threshold) {
                     return;
                 }
+
+                // prevent click event
+                uikitUtil.css(this.list, 'pointerEvents', 'none');
 
                 e.cancelable && e.preventDefault();
 
@@ -902,7 +899,6 @@
 
             end: function() {
 
-                uikitUtil.off(this.list, 'touchmove', this.move, {passive: false});
                 uikitUtil.off(document, uikitUtil.pointerMove, this.move, {passive: false});
                 uikitUtil.off(document, (uikitUtil.pointerUp + " " + uikitUtil.pointerCancel), this.end, true);
 
@@ -1397,7 +1393,7 @@
             caption: function(ref, $el) {
                 var selCaption = ref.selCaption;
 
-                return uikitUtil.$('.uk-lightbox-caption', $el);
+                return uikitUtil.$(selCaption, $el);
             }
 
         },
@@ -1477,7 +1473,9 @@
 
                 name: 'keyup',
 
-                el: uikitUtil.inBrowser && document,
+                el: function() {
+                    return document;
+                },
 
                 handler: function(e) {
 
@@ -1577,7 +1575,7 @@
                     };
 
                     // Image
-                    if (type === 'image' || src.match(/\.(jpe?g|png|gif|svg|webp)($|\?)/i)) {
+                    if (type === 'image' || src.match(/\.(avif|jpe?g|a?png|gif|svg|webp)($|\?)/i)) {
 
                         uikitUtil.getImage(src, attrs.srcset, attrs.size).then(
                             function (ref) {

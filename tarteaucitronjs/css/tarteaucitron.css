@@ -42,8 +42,8 @@
     border-spacing: 0;
 }
 
-#tarteaucitronRoot a:focus, #tarteaucitronRoot button:focus {
-    /*outline: 2px solid #cb3333;*/
+#tarteaucitronRoot a:focus-visible, #tarteaucitronRoot button:focus-visible {
+    outline: 3px dashed #3d86d8;
 }
 
 /***
@@ -71,7 +71,7 @@ div#tarteaucitronServices {
 }
 
 div#tarteaucitronServices {
-    box-shadow: 0 0 35px #575757;
+    box-shadow: 0 40px 60px #545454;
 }
 
 /***
@@ -140,10 +140,6 @@ div#tarteaucitronServices {
 /***
  * Common value
  */
-#tarteaucitron * {
-    zoom: 1;
-}
-
 #tarteaucitronRoot div#tarteaucitron {
     left: 0;
     right: 0;
@@ -287,13 +283,9 @@ div#tarteaucitronServices {
     width: 80%;
 }
 
-.tarteaucitronSelfLink, #tarteaucitronAlertSmall #tarteaucitronCookiesListContainer #tarteaucitronCookiesList .tarteaucitronHidden,
+#tarteaucitronAlertSmall #tarteaucitronCookiesListContainer #tarteaucitronCookiesList .tarteaucitronHidden,
 #tarteaucitron #tarteaucitronServices .tarteaucitronHidden {
     background: rgba(51, 51, 51, 0.07);
-}a.tarteaucitronSelfLink {
-    text-align: center!important;
-    display: block;
-    padding: 7px!important;
 }
 
 #tarteaucitron #tarteaucitronServices .tarteaucitronHidden {
@@ -478,6 +470,9 @@ div#tarteaucitronServices {
 span#tarteaucitronDisclaimerAlert {
     padding: 0 10px;
     display: inline-block;
+}
+#tarteaucitron .tarteaucitronBorder, #tarteaucitronAlertSmall #tarteaucitronCookiesListContainer #tarteaucitronCookiesList .tarteaucitronCookiesListMain, #tarteaucitronAlertSmall #tarteaucitronCookiesListContainer #tarteaucitronCookiesList, #tarteaucitronAlertSmall #tarteaucitronCookiesListContainer #tarteaucitronCookiesList .tarteaucitronHidden, #tarteaucitron #tarteaucitronServices .tarteaucitronMainLine {
+    border-color: #333!important;
 }
 
 /***
@@ -859,11 +854,13 @@ a.tarteaucitronSelfLink {
     position: absolute;
     left: 0;
     right: 0;
-    padding-top: 13px!important;
+    bottom: -30px;
+    text-align: center!important;
     display: block;
-    text-shadow: 0 0 14px white;
-    text-transform: uppercase;
-}.tarteaucitronMainLine .tarteaucitronH2 {
+    height:30px;
+}
+
+.tarteaucitronMainLine .tarteaucitronH2 {
     font-size: 1.2em!important;
     margin-top: 4px!important;
 }

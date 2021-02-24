@@ -1,5 +1,5 @@
 /*!
- * wavesurfer.js timeline plugin 4.4.0 (2021-01-14)
+ * wavesurfer.js timeline plugin 4.5.0 (2021-02-14)
  * https://wavesurfer-js.org
  * @license BSD-3-Clause
  */

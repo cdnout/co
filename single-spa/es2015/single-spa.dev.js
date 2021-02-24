@@ -1,4 +1,4 @@
-/* single-spa@5.9.0 - ES2015 - dev */
+/* single-spa@5.9.1 - ES2015 - dev */
 var singleSpa = /*#__PURE__*/Object.freeze({
 	__proto__: null,
 	get start () { return start; },
