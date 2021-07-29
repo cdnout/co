@@ -417,7 +417,7 @@ EOD;
                 } else {
                   $index_file = "";
                 }
-                foreach($css_file_list as $cdn_file_url) {
+                foreach($key_css_file_list as $cdn_file_url) {
                   if($cdn_file_url == $index_file && file_exists("../../$director/css/base.css")) {
                     
                     if(isset($latest_v)) {
