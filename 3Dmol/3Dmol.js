@@ -1,15 +1,15 @@
 /*!
- * jQuery JavaScript Library v3.5.0
+ * jQuery JavaScript Library v3.6.0
  * https://jquery.com/
  *
  * Includes Sizzle.js
  * https://sizzlejs.com/
  *
- * Copyright JS Foundation and other contributors
+ * Copyright OpenJS Foundation and other contributors
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2020-04-10T15:07Z
+ * Date: 2021-03-02T17:08Z
  */
 ( function( global, factory ) {
 
@@ -76,12 +76,16 @@ var support = {};
 
 var isFunction = function isFunction( obj ) {
 
-      // Support: Chrome <=57, Firefox <=52
-      // In some browsers, typeof returns "function" for HTML <object> elements
-      // (i.e., `typeof document.createElement( "object" ) === "function"`).
-      // We don't want to classify *any* DOM node as a function.
-      return typeof obj === "function" && typeof obj.nodeType !== "number";
-  };
+		// Support: Chrome <=57, Firefox <=52
+		// In some browsers, typeof returns "function" for HTML <object> elements
+		// (i.e., `typeof document.createElement( "object" ) === "function"`).
+		// We don't want to classify *any* DOM node as a function.
+		// Support: QtWeb <=3.8.5, WebKit <=534.34, wkhtmltopdf tool <=0.12.5
+		// Plus for old WebKit, typeof returns "function" for HTML collections
+		// (e.g., `typeof document.getElementsByTagName("div") === "function"`). (gh-4756)
+		return typeof obj === "function" && typeof obj.nodeType !== "number" &&
+			typeof obj.item !== "function";
+	};
 
 
 var isWindow = function isWindow( obj ) {
@@ -147,7 +151,7 @@ function toType( obj ) {
 
 
 var
-	version = "3.5.0",
+	version = "3.6.0",
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -401,7 +405,7 @@ jQuery.extend( {
 			if ( isArrayLike( Object( arr ) ) ) {
 				jQuery.merge( ret,
 					typeof arr === "string" ?
-					[ arr ] : arr
+						[ arr ] : arr
 				);
 			} else {
 				push.call( ret, arr );
@@ -496,9 +500,9 @@ if ( typeof Symbol === "function" ) {
 
 // Populate the class2type map
 jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),
-function( _i, name ) {
-	class2type[ "[object " + name + "]" ] = name.toLowerCase();
-} );
+	function( _i, name ) {
+		class2type[ "[object " + name + "]" ] = name.toLowerCase();
+	} );
 
 function isArrayLike( obj ) {
 
@@ -518,14 +522,14 @@ function isArrayLike( obj ) {
 }
 var Sizzle =
 /*!
- * Sizzle CSS Selector Engine v2.3.5
+ * Sizzle CSS Selector Engine v2.3.6
  * https://sizzlejs.com/
  *
  * Copyright JS Foundation and other contributors
  * Released under the MIT license
  * https://js.foundation/
  *
- * Date: 2020-03-14
+ * Date: 2021-02-16
  */
 ( function( window ) {
 var i,
@@ -1108,8 +1112,8 @@ support = Sizzle.support = {};
  * @returns {Boolean} True iff elem is a non-HTML XML node
  */
 isXML = Sizzle.isXML = function( elem ) {
-	var namespace = elem.namespaceURI,
-		docElem = ( elem.ownerDocument || elem ).documentElement;
+	var namespace = elem && elem.namespaceURI,
+		docElem = elem && ( elem.ownerDocument || elem ).documentElement;
 
 	// Support: IE <=8
 	// Assume HTML when documentElement doesn't yet exist, such as inside loading iframes
@@ -3024,9 +3028,9 @@ var rneedsContext = jQuery.expr.match.needsContext;
 
 function nodeName( elem, name ) {
 
-  return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+	return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
 
-};
+}
 var rsingleTag = ( /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i );
 
 
@@ -3997,8 +4001,8 @@ jQuery.extend( {
 			resolveContexts = Array( i ),
 			resolveValues = slice.call( arguments ),
 
-			// the master Deferred
-			master = jQuery.Deferred(),
+			// the primary Deferred
+			primary = jQuery.Deferred(),
 
 			// subordinate callback factory
 			updateFunc = function( i ) {
@@ -4006,30 +4010,30 @@ jQuery.extend( {
 					resolveContexts[ i ] = this;
 					resolveValues[ i ] = arguments.length > 1 ? slice.call( arguments ) : value;
 					if ( !( --remaining ) ) {
-						master.resolveWith( resolveContexts, resolveValues );
+						primary.resolveWith( resolveContexts, resolveValues );
 					}
 				};
 			};
 
 		// Single- and empty arguments are adopted like Promise.resolve
 		if ( remaining <= 1 ) {
-			adoptValue( singleValue, master.done( updateFunc( i ) ).resolve, master.reject,
+			adoptValue( singleValue, primary.done( updateFunc( i ) ).resolve, primary.reject,
 				!remaining );
 
 			// Use .then() to unwrap secondary thenables (cf. gh-3000)
-			if ( master.state() === "pending" ||
+			if ( primary.state() === "pending" ||
 				isFunction( resolveValues[ i ] && resolveValues[ i ].then ) ) {
 
-				return master.then();
+				return primary.then();
 			}
 		}
 
 		// Multiple arguments are aggregated like Promise.all array elements
 		while ( i-- ) {
-			adoptValue( resolveValues[ i ], updateFunc( i ), master.reject );
+			adoptValue( resolveValues[ i ], updateFunc( i ), primary.reject );
 		}
 
-		return master.promise();
+		return primary.promise();
 	}
 } );
 
@@ -4180,8 +4184,8 @@ var access = function( elems, fn, key, value, chainable, emptyGet, raw ) {
 			for ( ; i < len; i++ ) {
 				fn(
 					elems[ i ], key, raw ?
-					value :
-					value.call( elems[ i ], i, fn( elems[ i ], key ) )
+						value :
+						value.call( elems[ i ], i, fn( elems[ i ], key ) )
 				);
 			}
 		}
@@ -4244,7 +4248,7 @@ Data.prototype = {
 
 		// If not, create one
 		if ( !value ) {
-			value = Object.create( null );
+			value = {};
 
 			// We can accept data for non-element nodes in modern browsers,
 			// but we should not, see #8335.
@@ -5089,10 +5093,7 @@ function buildFragment( elems, context, scripts, selection, ignored ) {
 }
 
 
-var
-	rkeyEvent = /^key/,
-	rmouseEvent = /^(?:mouse|pointer|contextmenu|drag|drop)|click/,
-	rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
+var rtypenamespace = /^([^.]*)(?:\.(.+)|)/;
 
 function returnTrue() {
 	return true;
@@ -5387,8 +5388,8 @@ jQuery.event = {
 			event = jQuery.event.fix( nativeEvent ),
 
 			handlers = (
-					dataPriv.get( this, "events" ) || Object.create( null )
-				)[ event.type ] || [],
+				dataPriv.get( this, "events" ) || Object.create( null )
+			)[ event.type ] || [],
 			special = jQuery.event.special[ event.type ] || {};
 
 		// Use the fix-ed jQuery.Event rather than the (read-only) native event
@@ -5512,12 +5513,12 @@ jQuery.event = {
 			get: isFunction( hook ) ?
 				function() {
 					if ( this.originalEvent ) {
-							return hook( this.originalEvent );
+						return hook( this.originalEvent );
 					}
 				} :
 				function() {
 					if ( this.originalEvent ) {
-							return this.originalEvent[ name ];
+						return this.originalEvent[ name ];
 					}
 				},
 
@@ -5656,7 +5657,13 @@ function leverageNative( el, type, expectSync ) {
 						// Cancel the outer synthetic event
 						event.stopImmediatePropagation();
 						event.preventDefault();
-						return result.value;
+
+						// Support: Chrome 86+
+						// In Chrome, if an element having a focusout handler is blurred by
+						// clicking outside of it, it invokes the handler synchronously. If
+						// that handler calls `.remove()` on the element, the data is cleared,
+						// leaving `result` undefined. We need to guard against this.
+						return result && result.value;
 					}
 
 				// If this is an inner synthetic event for an event with a bubbling surrogate
@@ -5821,34 +5828,7 @@ jQuery.each( {
 	targetTouches: true,
 	toElement: true,
 	touches: true,
-
-	which: function( event ) {
-		var button = event.button;
-
-		// Add which for key events
-		if ( event.which == null && rkeyEvent.test( event.type ) ) {
-			return event.charCode != null ? event.charCode : event.keyCode;
-		}
-
-		// Add which for click: 1 === left; 2 === middle; 3 === right
-		if ( !event.which && button !== undefined && rmouseEvent.test( event.type ) ) {
-			if ( button & 1 ) {
-				return 1;
-			}
-
-			if ( button & 2 ) {
-				return 3;
-			}
-
-			if ( button & 4 ) {
-				return 2;
-			}
-
-			return 0;
-		}
-
-		return event.which;
-	}
+	which: true
 }, jQuery.event.addProp );
 
 jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateType ) {
@@ -5871,6 +5851,12 @@ jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateTyp
 			leverageNative( this, type );
 
 			// Return non-false to allow normal event-path propagation
+			return true;
+		},
+
+		// Suppress native focus or blur as it's already being fired
+		// in leverageNative.
+		_default: function() {
 			return true;
 		},
 
@@ -6541,6 +6527,10 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 		// set in CSS while `offset*` properties report correct values.
 		// Behavior in IE 9 is more subtle than in newer versions & it passes
 		// some versions of this test; make sure not to make it pass there!
+		//
+		// Support: Firefox 70+
+		// Only Firefox includes border widths
+		// in computed dimensions. (gh-4529)
 		reliableTrDimensions: function() {
 			var table, tr, trChild, trStyle;
 			if ( reliableTrDimensionsVal == null ) {
@@ -6548,9 +6538,22 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 				tr = document.createElement( "tr" );
 				trChild = document.createElement( "div" );
 
-				table.style.cssText = "position:absolute;left:-11111px";
+				table.style.cssText = "position:absolute;left:-11111px;border-collapse:separate";
+				tr.style.cssText = "border:1px solid";
+
+				// Support: Chrome 86+
+				// Height set through cssText does not get applied.
+				// Computed height then comes back as 0.
 				tr.style.height = "1px";
 				trChild.style.height = "9px";
+
+				// Support: Android 8 Chrome 86+
+				// In our bodyBackground.html iframe,
+				// display for all div elements is set to "inline",
+				// which causes a problem only in Android 8 Chrome 86.
+				// Ensuring the div is display: block
+				// gets around this issue.
+				trChild.style.display = "block";
 
 				documentElement
 					.appendChild( table )
@@ -6558,7 +6561,9 @@ var rboxStyle = new RegExp( cssExpand.join( "|" ), "i" );
 					.appendChild( trChild );
 
 				trStyle = window.getComputedStyle( tr );
-				reliableTrDimensionsVal = parseInt( trStyle.height ) > 3;
+				reliableTrDimensionsVal = ( parseInt( trStyle.height, 10 ) +
+					parseInt( trStyle.borderTopWidth, 10 ) +
+					parseInt( trStyle.borderBottomWidth, 10 ) ) === tr.offsetHeight;
 
 				documentElement.removeChild( table );
 			}
@@ -7022,10 +7027,10 @@ jQuery.each( [ "height", "width" ], function( _i, dimension ) {
 					// Running getBoundingClientRect on a disconnected node
 					// in IE throws an error.
 					( !elem.getClientRects().length || !elem.getBoundingClientRect().width ) ?
-						swap( elem, cssShow, function() {
-							return getWidthOrHeight( elem, dimension, extra );
-						} ) :
-						getWidthOrHeight( elem, dimension, extra );
+					swap( elem, cssShow, function() {
+						return getWidthOrHeight( elem, dimension, extra );
+					} ) :
+					getWidthOrHeight( elem, dimension, extra );
 			}
 		},
 
@@ -7084,7 +7089,7 @@ jQuery.cssHooks.marginLeft = addGetHookIf( support.reliableMarginLeft,
 					swap( elem, { marginLeft: 0 }, function() {
 						return elem.getBoundingClientRect().left;
 					} )
-				) + "px";
+			) + "px";
 		}
 	}
 );
@@ -7223,7 +7228,7 @@ Tween.propHooks = {
 			if ( jQuery.fx.step[ tween.prop ] ) {
 				jQuery.fx.step[ tween.prop ]( tween );
 			} else if ( tween.elem.nodeType === 1 && (
-					jQuery.cssHooks[ tween.prop ] ||
+				jQuery.cssHooks[ tween.prop ] ||
 					tween.elem.style[ finalPropName( tween.prop ) ] != null ) ) {
 				jQuery.style( tween.elem, tween.prop, tween.now + tween.unit );
 			} else {
@@ -7468,7 +7473,7 @@ function defaultPrefilter( elem, props, opts ) {
 
 			anim.done( function() {
 
-			/* eslint-enable no-loop-func */
+				/* eslint-enable no-loop-func */
 
 				// The final step of a "hide" animation is actually hiding the element
 				if ( !hidden ) {
@@ -7588,7 +7593,7 @@ function Animation( elem, properties, options ) {
 			tweens: [],
 			createTween: function( prop, end ) {
 				var tween = jQuery.Tween( elem, animation.opts, prop, end,
-						animation.opts.specialEasing[ prop ] || animation.opts.easing );
+					animation.opts.specialEasing[ prop ] || animation.opts.easing );
 				animation.tweens.push( tween );
 				return tween;
 			},
@@ -7761,7 +7766,8 @@ jQuery.fn.extend( {
 					anim.stop( true );
 				}
 			};
-			doAnimation.finish = doAnimation;
+
+		doAnimation.finish = doAnimation;
 
 		return empty || optall.queue === false ?
 			this.each( doAnimation ) :
@@ -8401,8 +8407,8 @@ jQuery.fn.extend( {
 				if ( this.setAttribute ) {
 					this.setAttribute( "class",
 						className || value === false ?
-						"" :
-						dataPriv.get( this, "__className__" ) || ""
+							"" :
+							dataPriv.get( this, "__className__" ) || ""
 					);
 				}
 			}
@@ -8417,7 +8423,7 @@ jQuery.fn.extend( {
 		while ( ( elem = this[ i++ ] ) ) {
 			if ( elem.nodeType === 1 &&
 				( " " + stripAndCollapse( getClass( elem ) ) + " " ).indexOf( className ) > -1 ) {
-					return true;
+				return true;
 			}
 		}
 
@@ -8707,9 +8713,7 @@ jQuery.extend( jQuery.event, {
 				special.bindType || type;
 
 			// jQuery handler
-			handle = (
-					dataPriv.get( cur, "events" ) || Object.create( null )
-				)[ event.type ] &&
+			handle = ( dataPriv.get( cur, "events" ) || Object.create( null ) )[ event.type ] &&
 				dataPriv.get( cur, "handle" );
 			if ( handle ) {
 				handle.apply( cur, data );
@@ -8856,7 +8860,7 @@ var rquery = ( /\?/ );
 
 // Cross-browser xml parsing
 jQuery.parseXML = function( data ) {
-	var xml;
+	var xml, parserErrorElem;
 	if ( !data || typeof data !== "string" ) {
 		return null;
 	}
@@ -8865,12 +8869,17 @@ jQuery.parseXML = function( data ) {
 	// IE throws on parseFromString with invalid input.
 	try {
 		xml = ( new window.DOMParser() ).parseFromString( data, "text/xml" );
-	} catch ( e ) {
-		xml = undefined;
-	}
+	} catch ( e ) {}
 
-	if ( !xml || xml.getElementsByTagName( "parsererror" ).length ) {
-		jQuery.error( "Invalid XML: " + data );
+	parserErrorElem = xml && xml.getElementsByTagName( "parsererror" )[ 0 ];
+	if ( !xml || parserErrorElem ) {
+		jQuery.error( "Invalid XML: " + (
+			parserErrorElem ?
+				jQuery.map( parserErrorElem.childNodes, function( el ) {
+					return el.textContent;
+				} ).join( "\n" ) :
+				data
+		) );
 	}
 	return xml;
 };
@@ -8971,16 +8980,14 @@ jQuery.fn.extend( {
 			// Can add propHook for "elements" to filter or add form elements
 			var elements = jQuery.prop( this, "elements" );
 			return elements ? jQuery.makeArray( elements ) : this;
-		} )
-		.filter( function() {
+		} ).filter( function() {
 			var type = this.type;
 
 			// Use .is( ":disabled" ) so that fieldset[disabled] works
 			return this.name && !jQuery( this ).is( ":disabled" ) &&
 				rsubmittable.test( this.nodeName ) && !rsubmitterTypes.test( type ) &&
 				( this.checked || !rcheckableType.test( type ) );
-		} )
-		.map( function( _i, elem ) {
+		} ).map( function( _i, elem ) {
 			var val = jQuery( this ).val();
 
 			if ( val == null ) {
@@ -9033,7 +9040,8 @@ var
 
 	// Anchor tag for parsing the document origin
 	originAnchor = document.createElement( "a" );
-	originAnchor.href = location.href;
+
+originAnchor.href = location.href;
 
 // Base "constructor" for jQuery.ajaxPrefilter and jQuery.ajaxTransport
 function addToPrefiltersOrTransports( structure ) {
@@ -9414,8 +9422,8 @@ jQuery.extend( {
 			// Context for global events is callbackContext if it is a DOM node or jQuery collection
 			globalEventContext = s.context &&
 				( callbackContext.nodeType || callbackContext.jquery ) ?
-					jQuery( callbackContext ) :
-					jQuery.event,
+				jQuery( callbackContext ) :
+				jQuery.event,
 
 			// Deferreds
 			deferred = jQuery.Deferred(),
@@ -9727,8 +9735,10 @@ jQuery.extend( {
 				response = ajaxHandleResponses( s, jqXHR, responses );
 			}
 
-			// Use a noop converter for missing script
-			if ( !isSuccess && jQuery.inArray( "script", s.dataTypes ) > -1 ) {
+			// Use a noop converter for missing script but not if jsonp
+			if ( !isSuccess &&
+				jQuery.inArray( "script", s.dataTypes ) > -1 &&
+				jQuery.inArray( "json", s.dataTypes ) < 0 ) {
 				s.converters[ "text script" ] = function() {};
 			}
 
@@ -10466,12 +10476,6 @@ jQuery.offset = {
 			options.using.call( elem, props );
 
 		} else {
-			if ( typeof props.top === "number" ) {
-				props.top += "px";
-			}
-			if ( typeof props.left === "number" ) {
-				props.left += "px";
-			}
 			curElem.css( props );
 		}
 	}
@@ -10640,8 +10644,11 @@ jQuery.each( [ "top", "left" ], function( _i, prop ) {
 
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods
 jQuery.each( { Height: "height", Width: "width" }, function( name, type ) {
-	jQuery.each( { padding: "inner" + name, content: type, "": "outer" + name },
-		function( defaultExtra, funcName ) {
+	jQuery.each( {
+		padding: "inner" + name,
+		content: type,
+		"": "outer" + name
+	}, function( defaultExtra, funcName ) {
 
 		// Margin is only for outerHeight, outerWidth
 		jQuery.fn[ funcName ] = function( margin, value ) {
@@ -10726,7 +10733,8 @@ jQuery.fn.extend( {
 	}
 } );
 
-jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
+jQuery.each(
+	( "blur focus focusin focusout resize scroll click dblclick " +
 	"mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
 	"change select submit keydown keypress keyup contextmenu" ).split( " " ),
 	function( _i, name ) {
@@ -10737,7 +10745,8 @@ jQuery.each( ( "blur focus focusin focusout resize scroll click dblclick " +
 				this.on( name, null, data, fn ) :
 				this.trigger( name );
 		};
-	} );
+	}
+);
 
 
 
@@ -18090,7 +18099,7 @@ $3Dmol.download = function(query, viewer, options, callback) {
                 viewer.zoomTo();
                 viewer.render();
                 resolve(m);
-            });
+            },function() {console.log("fetch of "+uri+" failed.");});
         });
     }
     else {
@@ -18141,13 +18150,28 @@ $3Dmol.download = function(query, viewer, options, callback) {
                 .then(function(ret) {
                     handler(ret);
                     resolve(m);
-                });
+                }).catch(function(){
+                    //if mmtf server is being annoying, fallback to text
+                    pdbUri = options && options.pdbUri ? options.pdbUri : "https://files.rcsb.org/view/";
+                    uri = pdbUri + query + "." + type;
+                    console.log("falling back to pdb format");
+                    $.get(uri, function(ret) {
+                        handler(ret);
+                        resolve(m);
+                    }).fail(function(e) {
+                       handler("");
+                       resolve(m);
+                       console.log("fetch of "+uri+" failed: "+e.statusText);
+                       });
+                }); //an error msg has already been printed
             }
             else {        
                $.get(uri, function(ret) {
                    handler(ret);
                    resolve(m);
                }).fail(function(e) {
+                   handler("");
+                   resolve(m);
                    console.log("fetch of "+uri+" failed: "+e.statusText);
                });
             }
@@ -18790,6 +18814,13 @@ $3Dmol.Vector3.prototype = {
         return this;
     },
 
+    multiplyVectors: function(a, b) { //elementwise
+        this.x = a.x * b.x;
+        this.y = a.y * b.y;
+        this.z = a.z * b.z;
+
+        return this;
+    },
     sub : function(v) {
 
         this.x -= v.x;
@@ -22916,14 +22947,14 @@ $3Dmol.Renderer = function(parameters) {
     this.setSize = function(width, height) {
         //zooming (in the browser) changes the pixel ratio and width/height
         this.devicePixelRatio = (window.devicePixelRatio !== undefined) ? window.devicePixelRatio : 1;
-        //with antialiasing on (which doesn't seem to do much), render at double rsolution to eliminate jaggies
-	//my iphone crashes if we do though, so as a hacky workaround, don't do it with retina displays
-        if(_antialias && this.devicePixelRatio < 2.0) this.devicePixelRatio *= 2.0;
+        //with antialiasing on, render at double rsolution to eliminate jaggies
+        //my iphone crashes if we do this and set the antialias property on the canvas
+        if(_antialias) this.devicePixelRatio *= 2.0;
         
         if(this.rows != undefined && this.cols != undefined && this.row != undefined && this.col != undefined){
             var wid = width/this.cols;
             var hei = height/this.rows;
-            _canvas.width =width* this.devicePixelRatio;
+            _canvas.width = width* this.devicePixelRatio;
             _canvas.height = height*this.devicePixelRatio;
 
             _viewportWidth =  wid * this.devicePixelRatio;
@@ -24587,26 +24618,28 @@ $3Dmol.Renderer = function(parameters) {
     }
 
     function initGL() {
+        //note setting antialis to true doesn't seem to do much and
+        //causes problems on iOS Safari
 
         try {
             if (!(_gl = _canvas.getContext('webgl2', {
                 alpha : _alpha,
                 premultipliedAlpha : _premultipliedAlpha,
-                antialias : _antialias,
+                antialias : false, 
                 stencil : _stencil,
                 preserveDrawingBuffer : _preserveDrawingBuffer
             }))) {
                 if (!(_gl = _canvas.getContext('experimental-webgl', {
                     alpha : _alpha,
                     premultipliedAlpha : _premultipliedAlpha,
-                    antialias : _antialias,
+                    antialias : false, 
                     stencil : _stencil,
                     preserveDrawingBuffer : _preserveDrawingBuffer
                 }))) {
                     if (!(_gl = _canvas.getContext('webgl', {
                         alpha : _alpha,
                         premultipliedAlpha : _premultipliedAlpha,
-                        antialias : _antialias,
+                        antialias : false, 
                         stencil : _stencil,
                         preserveDrawingBuffer : _preserveDrawingBuffer
                     }))) {
@@ -26720,7 +26753,10 @@ $3Dmol.autoload=function(viewer,callback){
             if(viewerdiv.data("options"))
                 options = $3Dmol.specStringToObject(viewerdiv.data("options"));
                 
+            //note that data tags must be lowercase
             var bgcolor = $3Dmol.CC.color(viewerdiv.data("backgroundcolor"));
+            var bgalpha = viewerdiv.data("backgroundalpha");
+            bgalpha = bgalpha == undefined ? 1.0 : parseFloat(bgalpha);
             var style = {line:{}};
             if(viewerdiv.data("style")) style = $3Dmol.specStringToObject(viewerdiv.data("style"));
             var select = {};
@@ -26801,9 +26837,12 @@ $3Dmol.autoload=function(viewer,callback){
                 if(glviewer==null) {
                     var config = viewerdiv.data('config') || {};
                     config.defaultcolors = config.defaultcolors || $3Dmol.rasmolElementColors;
+                    if(config.backgroundColor === undefined) config.backgroundColor = bgcolor;
+                    if(config.backgroundAlpha === undefined) config.backgroundAlpha = bgalpha;                     
                     glviewer = $3Dmol.viewers[this.id || nviewers++] = $3Dmol.createViewer(viewerdiv, config);
-                }
-                glviewer.setBackgroundColor(bgcolor);                            
+                } else {
+                    glviewer.setBackgroundColor(bgcolor, bgalpha);
+                } 
             } catch ( error ) {
                 console.log(error);
                 //for autoload, provide a useful error message
@@ -27075,6 +27114,7 @@ var htmlColors = $3Dmol.htmlColors = {
 // in an attempt to reduce memory overhead, cache all $3Dmol.Colors
 // this makes things a little faster
 $3Dmol.CC = {
+    rgbRegEx : /rgb(a?)\(\s*([^ ,\)\t]+)\s*,\s*([^ ,\)\t]+)\s*,\s*([^ ,\)\t]+)/i,
     cache : {0:new $3Dmol.Color(0)},
     color : function color_(hex) {
         // Undefined values default to black
@@ -27114,9 +27154,22 @@ $3Dmol.CC = {
             if(hex.length == 7 && hex[0] == '#') {
                 return parseInt(hex.substring(1),16);
             } 
-            else {
-                return htmlColors[hex.toLowerCase()] || 0x000000;
+            
+            let m = this.rgbRegEx.exec(hex);
+            if(m) {
+                if(m[1] != "") {
+                    console.log("WARNING: Opacity value in rgba ignored.  Specify separately as opacity attribute.");
+                }
+                let ret = 0;
+                for(let i = 2; i < 5; i++) {
+                    ret *= 256;
+                    let val = m[i].endsWith("%") ? 255*parseFloat(m[i])/100 : parseFloat(m[i]);
+                    ret += Math.round(val);
+                }
+                return ret;
             }
+            return htmlColors[hex.toLowerCase()] || 0x000000;
+            
         }
         return hex;
     }
@@ -31572,7 +31625,15 @@ $3Dmol.GLModel = (function() {
               end = numFrames;
             }
             
+            //to enable multiple setting of vibrate with bothWays, must record original position
+            if(frames !== undefined && frames.origIndex !== undefined) {
+                this.setFrame(frames.origIndex);
+            } else {
+                this.setFrame(0);
+            }
+            
             if(start < end) frames = []; //clear
+            if(bothWays) frames.origIndex = numFrames;
 
             for (var i = start; i < end; i++) {
                 var newAtoms = [];
@@ -33311,35 +33372,33 @@ $3Dmol.GLShape = (function() {
     var updateBoundingFromPoints = function(sphere, components, points, numPoints) {
 
         sphere.center.set(0, 0, 0);
-
-        var i, il;
-
-        if (components.length > 0) {
-
-            for (i = 0, il = components.length; i < il; ++i) {
-                var centroid = components[i].centroid;
-                sphere.center.add(centroid);
-            }
-
-            sphere.center.divideScalar(components.length);
+        
+        //previously I weighted each component's center equally, but I think
+        //it is better to use all points
+        let xmin = Infinity, ymin = Infinity, zmin = Infinity;
+        let xmax = -Infinity, ymax = -Infinity, zmax = -Infinity;
+        if(sphere.box) {
+            xmin = sphere.box.min.x;
+            xmax = sphere.box.max.x;
+            ymin = sphere.box.min.y;
+            ymax = sphere.box.max.y;
+            zmin = sphere.box.min.z;
+            zmax = sphere.box.max.z;
         }
 
-        var maxRadiusSq = sphere.radius * sphere.radius;
-        if (points.length / 3 < numPoints)
-            numPoints = points.length / 3;
-
-        for (i = 0, il = numPoints; i < il; i++) {
+        for (let i = 0, il = numPoints; i < il; i++) {
             var x = points[i * 3], y = points[i * 3 + 1], z = points[i * 3 + 2];
-            var radiusSq = sphere.center.distanceToSquared({
-                x: x,
-                y: y,
-                z: z
-            });
-            maxRadiusSq = Math.max(maxRadiusSq, radiusSq);
+            if(x < xmin) xmin = x;
+            if(y < ymin) ymin = y;
+            if(z < zmin) zmin = z;
+            if(x > xmax) xmax = x;
+            if(y > ymax) ymax = y;
+            if(z > zmax) zmax = z;
         }
 
-        sphere.radius = Math.sqrt(maxRadiusSq);
-
+        sphere.center.set((xmax+xmin)/2,(ymax+ymin)/2,(zmax+zmin)/2);        
+        sphere.radius = sphere.center.distanceTo({x:xmax,y:ymax,z:zmax});
+        sphere.box = {min:{x:xmin,y:ymin,z:zmin},max:{x:xmax,y:ymax,z:zmax}};
     };
 
     //helper function for adding an appropriately sized mesh
@@ -33539,6 +33598,10 @@ $3Dmol.GLShape = (function() {
          * @function $3Dmol.GLShape#updateStyle
          * @param {ShapeSpec} newspec
          * @return {$3Dmol.GLShape}
+           @example 
+            let sphere = viewer.addSphere({center:{x:0,y:0,z:0},radius:10.0,color:'red'});
+            sphere.updateStyle({color:'yellow',opacity:0.5});
+            viewer.render();
          */
         this.updateStyle = function(newspec) {
 
@@ -34448,6 +34511,8 @@ $3Dmol.GLViewer = (function() {
         if(typeof(config.backgroundColor) != undefined) {
             bgColor = $3Dmol.CC.color(config.backgroundColor).getHex();
         }
+        config.backgroundAlpha = config.backgroundAlpha == undefined ? 1.0 : config.backgroundAlpha;
+        
 
         var camerax = 0;
         if(typeof(config.camerax) != undefined) {
@@ -34666,7 +34731,7 @@ $3Dmol.GLViewer = (function() {
         };
 
         initializeScene();
-        renderer.setClearColorHex(bgColor, 1.0);
+        renderer.setClearColorHex(bgColor, config.backgroundAlpha);
         scene.fog.color = $3Dmol.CC.color(bgColor);
 
         var clickedAtom = null;
@@ -34689,9 +34754,15 @@ $3Dmol.GLViewer = (function() {
                     let hoverable_atoms = model.selectedAtoms({
                         hoverable : true
                     });
-                    Array.prototype.push.apply(hoverables,hoverable_atoms);
+                    // Array.prototype.push.apply(hoverables,hoverable_atoms);
+                    for (let n = 0; n < hoverable_atoms.length; n++) {
+                        hoverables.push(hoverable_atoms[n]);
+                    }
 
-                    Array.prototype.push.apply(clickables, atoms); //add atoms into clickables
+                    // Array.prototype.push.apply(clickables, atoms); //add atoms into clickables
+                    for (let m = 0; m < atoms.length; m++) {
+                        clickables.push(atoms[m]);
+                    }
                     
                 }
             }
@@ -34755,11 +34826,11 @@ $3Dmol.GLViewer = (function() {
             }
             
             let results = [];
+            let offset = canvasOffset();
             coords.forEach(coord => {
                 let t = new $3Dmol.Vector3(coord.x,coord.y,coord.z);
                 t.applyMatrix4(modelGroup.matrixWorld);   
                 projector.projectVector(t, camera);       
-                let offset = canvasOffset();
                 let screenX = WIDTH*(t.x+1)/2.0+offset.left;
                 let screenY = -HEIGHT*(t.y-1)/2.0+offset.top;
                 results.push({x:screenX,y:screenY});
@@ -34868,12 +34939,18 @@ $3Dmol.GLViewer = (function() {
             }            
             return y;
         };
-
-        //for a given screen (x,y) displacement return model displacement 
-        var screenXY2model = function(x,y) {
+        
+        /**
+         * For a given screen (x,y) displacement return model displacement
+         * @param{x} x displacement in screen coordinates
+         * @param{y} y displacement in screen corodinates
+         * @param{modelz} z coordinate in model coordinates to compute offset for, default is model axis 
+         * @function $3Dmol.GLViewer#screenOffsetToModel
+        */        
+        var screenOffsetToModel = this.screenOffsetToModel = function(x,y,modelz) {
             var dx = x/WIDTH;
             var dy = y/HEIGHT;
-            var zpos = rotationGroup.position.z; 
+            var zpos = (modelz === undefined ? rotationGroup.position.z : modelz); 
             var q = rotationGroup.quaternion;                        
             var t = new $3Dmol.Vector3(0,0,zpos);
             projector.projectVector(t, camera);
@@ -34883,7 +34960,29 @@ $3Dmol.GLViewer = (function() {
             t.z = 0;                            
             t.applyQuaternion(q);
             return t;
-        };                
+        };
+        
+        /**
+         * Distance from screen coordinate to model coordinate assuming screen point
+         * is projected to the same depth as model coordinate
+         * @param{screen} xy screen coordinate
+         * @param{model} xyz model coordinate
+         * @function $3Dmol.GLViewer#screenToModelDistance
+        */   
+        this.screenToModelDistance = function(screen,model) {
+            let offset = canvasOffset();
+            
+            //convert model to screen to get screen z                     
+            let mvec = new $3Dmol.Vector3(model.x,model.y,model.z);
+            mvec.applyMatrix4(modelGroup.matrixWorld);   
+            let m = mvec.clone();
+            projector.projectVector(mvec, camera);
+            
+            let t = new $3Dmol.Vector3((screen.x-offset.left)*2/WIDTH-1,(screen.y-offset.top)*2/-HEIGHT+1,mvec.z);
+            projector.unprojectVector(t, camera);
+            
+            return t.distanceTo(m);
+        };                         
         
         //for grid viewers, return true if point is in this viewer
         var isInViewer = function(x,y) {
@@ -35039,6 +35138,8 @@ $3Dmol.GLViewer = (function() {
          * @example
           $.get("data/set1_122_complex.mol2", function(data) {
                 var m = viewer.addModel(data);
+                viewer.setStyle({stick:{}});
+                viewer.zoomTo();
                 viewer.setCameraParameters({ fov: 10 , z: 300 });
                 viewer.render();
             });
@@ -35212,7 +35313,7 @@ $3Dmol.GLViewer = (function() {
                 rotationGroup.position.z = cz + dy * scaleFactor;
                 rotationGroup.position.z = adjustZoomToLimits(rotationGroup.position.z); 
             } else if (mode == 1 || mouseButton == 2 || ev.ctrlKey) { // Translate
-                var t = screenXY2model(ratioX*(x-mouseStartX), ratioY*(y-mouseStartY));
+                var t = screenOffsetToModel(ratioX*(x-mouseStartX), ratioY*(y-mouseStartY));
                 modelGroup.position.addVectors(currentModelPos,t);
                 
             } else if ((mode === 0 || mouseButton == 1) && r !== 0) { // Rotate
@@ -35507,10 +35608,13 @@ $3Dmol.GLViewer = (function() {
          * @function $3Dmol.GLViewer#spin
          * @param {string}
          *            [axis] - Axis ("x", "y", "z", "vx", "vy", or "vz") to rotate around.
-         *            Default "y".  View relative (rather than model relative) axes are prefixed with v.        
+         *            Default "y".  View relative (rather than model relative) axes are prefixed with v. 
+         * @param {number}
+         *            [speed] - Speed multiplier for spinning the viewer. 1 is default and a negative
+         *             value reverses the direction of the spin.        
          *  
          */        
-        this.spin = function(axis){
+        this.spin = function(axis, speed){
             clearInterval(spinInterval);
             if(typeof axis == 'undefined')
                 axis = 'y';
@@ -35519,6 +35623,9 @@ $3Dmol.GLViewer = (function() {
                     return;
                 else
                     axis = 'y';
+            }
+            if(typeof speed != 'number'){
+                speed = 1;
             }
 
             if(Array.isArray(axis)){
@@ -35530,10 +35637,10 @@ $3Dmol.GLViewer = (function() {
 
             spinInterval = setInterval(
                 function(){
-                    viewer.rotate(1,axis);
+                    viewer.rotate(1 * speed,axis);
                 }, 25);            
             
-        };        
+        };         
 
         //animate motion between current position and passed position
         // can set some parameters to null
@@ -36139,7 +36246,7 @@ $3Dmol.GLViewer = (function() {
         this.translateScene = function(x, y, animationDuration, fixedPath) {
             animationDuration = animationDuration!==undefined ? animationDuration : 0;
             
-            var t = screenXY2model(x,y);
+            var t = screenOffsetToModel(x,y);
             var final_position=modelGroup.position.clone().add(t);
                 
             if(animationDuration>0){
@@ -36326,48 +36433,55 @@ $3Dmol.GLViewer = (function() {
          */
         this.zoomTo = function(sel, animationDuration,fixedPath) {
             animationDuration=animationDuration!==undefined ? animationDuration : 0;
-            var allatoms, alltmp;
             sel = sel || {};
-            var atoms = getAtomsFromSel(sel);
-            var tmp = $3Dmol.getExtent(atoms);
+            let atoms = getAtomsFromSel(sel);
+            let atombox = $3Dmol.getExtent(atoms);
+            let allbox = atombox;
 
             if($3Dmol.isEmptyObject(sel)) {
                 //include shapes when zooming to full scene
                 //TODO: figure out a good way to specify shapes as part of a selection
+                let natoms = atoms && atoms.length;
                 shapes.forEach((shape) => {
-                if(shape && shape.boundingSphere && shape.boundingSphere.center) {
-                    var c = shape.boundingSphere.center;
-                    var r = shape.boundingSphere.radius;
-                    if(r > 0) {
-                        //make sure full shape is visible
-                            atoms.push(new $3Dmol.Vector3(c.x+r,c.y,c.z));
-                            atoms.push(new $3Dmol.Vector3(c.x-r,c.y,c.z));
-                            atoms.push(new $3Dmol.Vector3(c.x,c.y+r,c.z));
-                            atoms.push(new $3Dmol.Vector3(c.x,c.y-r,c.z));
-                            atoms.push(new $3Dmol.Vector3(c.x,c.y,c.z+r));
-                            atoms.push(new $3Dmol.Vector3(c.x,c.y,c.z-r));
-                    } else {
-                            atoms.push(c);
+                if(shape && shape.boundingSphere) {
+                    if(shape.boundingSphere.box) {
+                        let box = shape.boundingSphere.box;
+                        atoms.push(new $3Dmol.Vector3(box.min.x,box.min.y,box.min.z));
+                        atoms.push(new $3Dmol.Vector3(box.max.x,box.max.y,box.max.z));                        
+                    } else if(shape.boundingSphere.center) {
+                        var c = shape.boundingSphere.center;
+                        var r = shape.boundingSphere.radius;
+                        if(r > 0) {
+                            //make sure full shape is visible
+                                atoms.push(new $3Dmol.Vector3(c.x+r,c.y,c.z));
+                                atoms.push(new $3Dmol.Vector3(c.x-r,c.y,c.z));
+                                atoms.push(new $3Dmol.Vector3(c.x,c.y+r,c.z));
+                                atoms.push(new $3Dmol.Vector3(c.x,c.y-r,c.z));
+                                atoms.push(new $3Dmol.Vector3(c.x,c.y,c.z+r));
+                                atoms.push(new $3Dmol.Vector3(c.x,c.y,c.z-r));
+                        } else {
+                                atoms.push(c);
+                        }
                     }
                   }
                 });
-                tmp = $3Dmol.getExtent(atoms);
-                allatoms = atoms;
-                alltmp = tmp;
-
-            }
-            else {
-                allatoms = getAtomsFromSel({});
-                alltmp = $3Dmol.getExtent(allatoms);
+                allbox = $3Dmol.getExtent(atoms);
+                if(!natoms) { //if no atoms, use shapes for center
+                    for(let i = 0; i < 3; i++) { //center of bounding box
+                        atombox[2][i] = (allbox[0][i]+allbox[1][i])/2; 
+                     }
+                }
+            } else { //include all atoms in slab calculation
+                let allatoms = getAtomsFromSel({});
+                allbox = $3Dmol.getExtent(allatoms);  
             }
 
             // use selection for center
-            var center = new $3Dmol.Vector3(tmp[2][0], tmp[2][1], tmp[2][2]);
-
+            var center = new $3Dmol.Vector3(atombox[2][0], atombox[2][1], atombox[2][2]);
             
             // but all for bounding box
-            var x = alltmp[1][0] - alltmp[0][0], y = alltmp[1][1]
-                    - alltmp[0][1], z = alltmp[1][2] - alltmp[0][2];
+            var x = allbox[1][0] - allbox[0][0], y = allbox[1][1]
+                    - allbox[0][1], z = allbox[1][2] - allbox[0][2];
 
             var maxD = Math.sqrt(x * x + y * y + z * z);
             if (maxD < 5)
@@ -36386,9 +36500,9 @@ $3Dmol.GLViewer = (function() {
             // keep at least this much space in view
             var MAXD = config.minimumZoomToDistance || 5;
             // for zoom, use selection box
-            x = tmp[1][0] - tmp[0][0];
-            y = tmp[1][1] - tmp[0][1];
-            z = tmp[1][2] - tmp[0][2];
+            x = atombox[1][0] - atombox[0][0];
+            y = atombox[1][1] - atombox[0][1];
+            z = atombox[1][2] - atombox[0][2];
             maxD = Math.sqrt(x * x + y * y + z * z);           
             if (maxD < MAXD)
                 maxD = MAXD;
@@ -37032,8 +37146,15 @@ $3Dmol.GLViewer = (function() {
                                 new $3Dmol.Vector3(1, 0, 1),
                                 new $3Dmol.Vector3(1, 1, 1)  ];
                             
-                for (var i = 0; i < points.length; i++) {
-                    points[i] = points[i].applyMatrix3(matrix);
+                if(data.matrix4) {
+                    for (let i = 0; i < points.length; i++) {
+                        if(data.size) points[i].multiplyVectors(points[i],data.size); //matrix is for unit vectors, not whole box
+                        points[i] = points[i].applyMatrix4(data.matrix4);
+                    }
+                } else {
+                    for (let i = 0; i < points.length; i++) {
+                        points[i] = points[i].applyMatrix3(matrix);
+                    }
                 }
             
                 //draw box
@@ -38580,6 +38701,16 @@ $3Dmol.GLViewer = (function() {
         *  @function $3Dmol.GLViewer#setSurfaceMaterialStyle
          * @param {number} surf - Surface ID to apply changes to
          * @param {SurfaceStyleSpec} style - new material style specification
+         @example
+         $.get("data/9002806.cif",function(data){
+            viewer.addModel(data);
+            viewer.setStyle({stick:{}});
+            let surf = viewer.addSurface("SAS");
+            surf.then(function() {
+                viewer.setSurfaceMaterialStyle(surf.surfid, {color:'blue',opacity:0.5});
+                viewer.render();
+                });
+           });
          */ 
         this.setSurfaceMaterialStyle = function(surf, style) {
             $3Dmol.adjustVolumeStyle(style);
@@ -39166,6 +39297,7 @@ $3Dmol.Label.prototype = {
          * @prop {boolean} inFront - always put labels in from of model
          * @prop {boolean} showBackground - show background rounded rectangle, default true
          * @prop {boolean} fixed - sets the label to change with the model when zooming
+         * @prop {boolean} useScreen - position is in screen (not model) coordinates
          * @prop {Object} backgroundImage - An element to draw into the label.  Any CanvasImageSource is allowed.
          * @prop {string} alignment - how to orient the label w/respect to position: topLeft (default), topCenter, topRight, centerLeft, center, centerRight, bottomLeft, bottomCenter, bottomRight
          * @prop {number} frame - if set, only display in this frame of an animation
@@ -39968,6 +40100,18 @@ $3Dmol.Parsers = (function() {
 
             // None of the bottom row or any of the Lanthanides have bond lengths
     };
+    var anumToSymbol = {
+            1: 'H',                                                                                                                                2: 'He',
+            3:'Li',4:'Be',                                                                                  5: 'B', 6: 'C', 7:'N', 8:'O', 9:'F',  10: 'Ne',
+            11: 'Na',12:'Mg',                                                                               13: 'Al',14:'Si',15:'P',16:'S',17:'Cl',18:'Ar',
+            19: 'K',20:'Ca',21:'Sc',22:'Ti',23:'V',24:'Cr',25:'Mn',26:'Fe',27:'Co',28:'Ni',29:'Cu',30:'Zn',31:'Ga',32:'Ge',33:'As',34:'Se',35:'Br',36:'Kr',
+            37:'Rb',38:'Sr',39:'Y',40:'Zr',41:'Nb',42:'Mo',43:'Tc',44:'Ru',45:'Rh',46:'Pd',47:'Ag',48:'Cd',49:'In',50:'Sn',51:'Sb',52:'Te',53:'I', 54:'Xe',
+            55:'Cs',56:'Ba',71:'Lu',72:'Hf',73:'Ta',74:'W',75:'Re',76:'Os',77:'Ir',78:'Pt',79:'Au',80:'Hg',81:'Tl',82:'Pb',83:'Bi',84:'Po',85:'At',86:'Rn',
+            87:'Fr',88:'Ra',104:'Rf',105:'Db',106:'Sg',107:'Bh',108:'Hs',109:'Mt',110:'Ds',111:'Rg',112:'Cn',113:'Nh',114:'Fl',115:'Mc',116:'Lv',117:'Ts',118:'Og',
+            
+            57:'La',58:'Ce',59:'Pr',60:'Nd',61:'Pm',62:'Sm',63:'Eu',64:'Gd',65:'Tb',66:'Dy',67:'Ho',68:'Er',69:'Tm',70:'Yb',
+            89:'Ac',90:'Th',91:'Pa',92:'U',93:'Np',94:'Pu',95:'Am',96:'Cm',97:'Bk',98:'Cf',99:'Es',100:'Fm',101:'Md',102:'No',
+    };
     var bondLength = function(elem) {
         return bondTable[elem] || 1.6;
     };
@@ -40597,20 +40741,67 @@ $3Dmol.Parsers = (function() {
      */
     parsers.cube = parsers.CUBE = function(str /*, options*/) {
         var atoms = [[]];
-        var lines = str.replace(/^\s+/, "").split(/\n\r|\r+|\n/);
-
+        var lines = str.split(/\r?\n/);
+ 
         if (lines.length < 6)
             return atoms;
 
-        var lineArr = lines[2].replace(/^\s+/, "").replace(/\s+/g, " ").split(
-                " ");
+        var lineArr = lines[2].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
 
         var natoms = Math.abs(parseFloat(lineArr[0]));
 
-        lineArr = lines[3].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
+        let cryst = {};
+        var origin = cryst.origin = new $3Dmol.Vector3(parseFloat(lineArr[1]),
+                parseFloat(lineArr[2]), parseFloat(lineArr[3]));
 
+        lineArr = lines[3].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
+        lineArr = lines[3].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
+       
         // might have to convert from bohr units to angstroms
-        var convFactor = (parseFloat(lineArr[0]) > 0) ? 0.529177 : 1;
+        // there is a great deal of confusion here:
+        // n>0 means angstroms: http://www.gaussian.com/g_tech/g_ur/u_cubegen.htm
+        // n<0 means angstroms: http://paulbourke.net/dataformats/cube/
+        // always assume bohr: openbabel source code
+        // always assume angstrom: http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/cubeplugin.html
+        // we are going to go with n<0 means angstrom - note this is just the first n
+        var convFactor = (lineArr[0] > 0) ? 0.529177 : 1;
+        origin.multiplyScalar(convFactor);
+
+        var nX = Math.abs(lineArr[0]);
+        var xVec = new $3Dmol.Vector3(parseFloat(lineArr[1]),
+                parseFloat(lineArr[2]), parseFloat(lineArr[3]))
+                .multiplyScalar(convFactor);
+    
+        lineArr = lines[4].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
+        var nY = Math.abs(lineArr[0]);
+        var yVec = new $3Dmol.Vector3(parseFloat(lineArr[1]),
+                parseFloat(lineArr[2]), parseFloat(lineArr[3]))
+                .multiplyScalar(convFactor);
+    
+        lineArr = lines[5].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
+        var nZ = Math.abs(lineArr[0]);
+        var zVec = new $3Dmol.Vector3(parseFloat(lineArr[1]),
+                parseFloat(lineArr[2]), parseFloat(lineArr[3]))
+                .multiplyScalar(convFactor);
+
+        cryst.size = {x:nX, y:nY, z:nZ};
+        cryst.unit = new $3Dmol.Vector3(xVec.x, yVec.y, zVec.z);
+    
+        if (xVec.y != 0 || xVec.z != 0 || yVec.x != 0 || yVec.z != 0 || zVec.x != 0
+                || zVec.y != 0) {
+            //need a transformation matrix
+            cryst.matrix4 =  new $3Dmol.Matrix4(xVec.x, yVec.x, zVec.x, 0, xVec.y, yVec.y, zVec.y, 0, xVec.z, yVec.z, zVec.z, 0, 0,0,0,1);
+            // include translation in matrix
+            let t = new $3Dmol.Matrix4().makeTranslation(origin.x, origin.y, origin.z);
+            cryst.matrix4 = cryst.matrix4.multiplyMatrices(t,cryst.matrix4);
+            cryst.matrix = cryst.matrix4.matrix3FromTopLeft();
+            // all translation and scaling done by matrix, so reset origin and unit
+            cryst.origin = new $3Dmol.Vector3(0,0,0);
+            cryst.unit = new $3Dmol.Vector3(1,1,1);
+        }
+
+        atoms.modelData = [{cryst:cryst}];
+
 
         // Extract atom portion; send to new GLModel...
         lines = lines.splice(6, natoms);
@@ -40624,19 +40815,7 @@ $3Dmol.Parsers = (function() {
             var line = lines[i - start];
             var tokens = line.replace(/^\s+/, "").replace(/\s+/g, " ").split(
                     " ");
-
-            if (tokens[0] == 6)
-                atom.elem = "C";
-
-            else if (tokens[0] == 1)
-                atom.elem = "H";
-
-            else if (tokens[0] == 8)
-                atom.elem = "O";
-
-            else if (tokens[0] == 17)
-                atom.elem = "Cl";
-
+            atom.elem = anumToSymbol[tokens[0]];
             atom.x = parseFloat(tokens[2]) * convFactor;
             atom.y = parseFloat(tokens[3]) * convFactor;
             atom.z = parseFloat(tokens[4]) * convFactor;
@@ -40673,6 +40852,19 @@ $3Dmol.Parsers = (function() {
                 break;
             if (lines.length < atomCount + 2)
                 break;
+
+            var lattice_re = /Lattice\s*=\s*["\{\}]([^"\{\}]+)["\{\}]\s*/gi;
+            var lattice_match = lattice_re.exec(lines[1]);
+            if ((lattice_match != null) && (lattice_match.length > 1)) {
+                var lattice = new Float32Array(lattice_match[1].split(/\s+/));
+                var matrix = new $3Dmol.Matrix3(
+                    lattice[0], lattice[3], lattice[6],
+                    lattice[1], lattice[4], lattice[7],
+                    lattice[2], lattice[5], lattice[8]
+                );
+                atoms.modelData = [{cryst:{matrix:matrix}}];
+            }
+
             var offset = 2;
             var start = atoms[atoms.length-1].length;
             var end = start + atomCount;
@@ -42647,7 +42839,8 @@ $3Dmol.applyPartialCharges = function(atom, keepexisting) {
                 'mousedown touchstart': viewer._handleMouseDown,
                 'DOMMouseScroll mousewheel': viewer._handleMouseScroll
                 'mousemove touchmove': viewer._handleMouseMove                
- * @prop {string} backgroundColor - Color of the canvas' background
+ * @prop {string} backgroundColor - Color of the canvas background
+ * @prop {number} backgroundAlpha - Alpha transparency of canvas background
  * @prop {number} camerax
  * @prop {number} hoverDuration
  * @prop {string} id - id of the canvas
@@ -43287,63 +43480,23 @@ $3Dmol.VolumeData.prototype.dx = function(str) {
 
 // parse cube data
 $3Dmol.VolumeData.prototype.cube = function(str) {
-    var lines = str.replace(/^\s+/, "").split(/[\n\r]+/);
+    var lines = str.split(/\r?\n/);
 
     if (lines.length < 6)
         return;
 
+    var cryst = $3Dmol.Parsers.cube(str).modelData[0].cryst;
+    
     var lineArr = lines[2].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
 
     var atomsnum = parseFloat(lineArr[0]); //includes sign, which indicates presence of oribital line in header
     var natoms = Math.abs(atomsnum);
 
-    var origin = this.origin = new $3Dmol.Vector3(parseFloat(lineArr[1]),
-            parseFloat(lineArr[2]), parseFloat(lineArr[3]));
+    this.origin = cryst.origin;
+    this.size = cryst.size;
+    this.unit = cryst.unit;
+    this.matrix = cryst.matrix4;
 
-    lineArr = lines[3].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
-
-    // might have to convert from bohr units to angstroms
-    // there is a great deal of confusion here:
-    // n>0 means angstroms: http://www.gaussian.com/g_tech/g_ur/u_cubegen.htm
-    // n<0 means angstroms: http://paulbourke.net/dataformats/cube/
-    // always assume bohr: openbabel source code
-    // always assume angstrom: http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/cubeplugin.html
-    // we are going to go with n<0 means angstrom - note this is just the first n
-    var convFactor = (lineArr[0] > 0) ? 0.529177 : 1;
-    origin.multiplyScalar(convFactor);
-
-    var nX = Math.abs(lineArr[0]);
-    var xVec = new $3Dmol.Vector3(parseFloat(lineArr[1]),
-            parseFloat(lineArr[2]), parseFloat(lineArr[3]))
-            .multiplyScalar(convFactor);
-
-    lineArr = lines[4].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
-    var nY = Math.abs(lineArr[0]);
-    var yVec = new $3Dmol.Vector3(parseFloat(lineArr[1]),
-            parseFloat(lineArr[2]), parseFloat(lineArr[3]))
-            .multiplyScalar(convFactor);
-
-    lineArr = lines[5].replace(/^\s+/, "").replace(/\s+/g, " ").split(" ");
-    var nZ = Math.abs(lineArr[0]);
-    var zVec = new $3Dmol.Vector3(parseFloat(lineArr[1]),
-            parseFloat(lineArr[2]), parseFloat(lineArr[3]))
-            .multiplyScalar(convFactor);
-
-    this.size = {x:nX, y:nY, z:nZ};
-    this.unit = new $3Dmol.Vector3(xVec.x, yVec.y, zVec.z);
-    
-    if (xVec.y != 0 || xVec.z != 0 || yVec.x != 0 || yVec.z != 0 || zVec.x != 0
-            || zVec.y != 0) {
-        //need a transformation matrix
-        this.matrix =  new $3Dmol.Matrix4(xVec.x, yVec.x, zVec.x, 0, xVec.y, yVec.y, zVec.y, 0, xVec.z, yVec.z, zVec.z, 0, 0,0,0,1);
-        //include translation in matrix
-        this.matrix = this.matrix.multiplyMatrices(this.matrix, 
-                new $3Dmol.Matrix4().makeTranslation(origin.x, origin.y, origin.z));
-        //all translation and scaling done by matrix, so reset origin and unit
-        this.origin = new $3Dmol.Vector3(0,0,0);
-        this.unit = new $3Dmol.Vector3(1,1,1);
-    }
-    
     var headerlines = 6;
     if(atomsnum < 0) headerlines++; //see: http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/cubeplugin.html
     var raw = lines.splice(natoms + headerlines).join(" ");
