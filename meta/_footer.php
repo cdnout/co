@@ -6,5 +6,5 @@
     </div>
   </footer>
 </div>
-<script src="https://cdnout.com/jquery/"></script>
+<script type="text/javascript" src="https://cdnout.com/jquery/"></script> 
 <script src="<?php echo $base_url; ?>js/js.js"></script>
