@@ -1,0 +1,1 @@
+"use strict";"production"===process.env.NODE_ENV?module.exports=require("./emotion-core.cjs.prod.js"):module.exports=require("./emotion-core.cjs.dev.js");
