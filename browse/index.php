@@ -116,6 +116,7 @@ EOD;
             
           ?>
          <article class="cdn">
+             <?php echo $type_s; ?>
           <div class="text-box">            
             <h2><a href="../cdn/<?php echo $director ?>/"><?php echo $title; ?></a></h2>
             <ul class="meta">
