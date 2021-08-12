@@ -2,17 +2,13 @@
 <html lang="en">
 <head>
   <?php 
-    include('config.php');
-    ini_set('max_execution_time', 60000);
-    set_time_limit(60000);
     $head_title = "The Open Source and Live First CDN Resources of Libraries, Plugins or Custom Codes | CDN OUT";
     $description = "CDN Out provides Live First CDN resources of Libraries for developers. Host custom files on CDN, Auto Updating and One Click Installation makes your website and workflow faster.";
     $base_url = "";
     include($base_url.'meta/_head.php');
-    
   ?>
 </head>
-<body class="search-active page-browse">
+<body class="home">
   <div id="page">
     <?php include($base_url.'meta/_header.php'); ?>
     <div class="content">
@@ -29,7 +25,7 @@
     </div>
     <main class="container main">
        <section class="cdn-library ">
-         <?php /*
+         <?php 
         function scan_dir($dir) {
         $ignored = array('.', '..', '.svn', '.node_modules', '.htaccess', "$dir@");
 
@@ -121,33 +117,9 @@ EOD;
   }
 } 
 }
-        */  ?>
-         <?php 
-           try {
-            $today = date("Y-m-d");
-            
-				    $stmt = $db->prepare("SELECT title, version FROM cdn ORDER BY title ASC LIMIT 4000"); 
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-            // Define how we want to fetch the results
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $iterator = new IteratorIterator($stmt);
-            foreach ($iterator as $row) {
-            $title = $row['title'];
-                $latest_version = $row['version']
-                /*$director = $row['director'];
-                $npm = $row['npm'];
-                $github = "";
-                ;
-                $key_css_live = $row['css_files'];
-                $key_js_live = $row['js_files'];*/
-              ?>
-           <article class="cdn">
-           <h2><?php echo $title; ?> - <small><?php echo $latest_version ?></small></h2>
-           </article>
-                   <?php /*
+          ?>
+         
          <article class="cdn">
-             
           <div class="text-box">            
             <h2><a href="cdn/<?php echo $director ?>/"><?php echo $title; ?></a></h2>
             <ul class="meta">
@@ -173,44 +145,11 @@ EOD;
               </div>
             
           </div>
-          */ ?>
-             <?php 
-                  /*
-                  $type = "newtype";
-             try {
-					//insert into database
-					$stmt = $db->prepare('INSERT INTO cdn (title, director, npm, version, css_files, js_files) VALUES (:title, :director, :npm, :version, :css_files, :js_files)') ;
-					$stmt->execute(array(
-						':title' => $title,
-                        ':director' => $director,
-                        ':npm' => $npm,
-                       // ':github' => $github,
-                        ':version' => $latest_version,
-                        ':css_files' => $key_css_live,
-                        ':js_files' => $key_js_live,
-                        
-					));
-        } catch(PDOException $e) {
-					echo $e->getMessage();
-			}*/
-            ?>
         </article>
         
         <?php
-    /*
           }
-        }*/
-        ?>
-            <?php
-             }  
-             }
-             else {
-              echo "";
-            } 
-            
-            } catch(PDOException $e) {
-              echo $e->getMessage();
-            }
+        }
         ?>
          <span class="noResults">Sorry, no results found.</span>
       </section>
