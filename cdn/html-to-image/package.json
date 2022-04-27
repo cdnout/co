@@ -1,0 +1,1 @@
+[{"name":"html-to-image","version":"1.9.0","description":"Generates an image from a DOM node using HTML5 canvas and SVG.","repository":"git+https:\/\/github.com\/bubkoo\/html-to-image.git","keyfiles":"html-to-image.js","keywords":["screenshot","capture","canvas","html","dom","image","vector","svg"],"npm":"html-to-image"}]

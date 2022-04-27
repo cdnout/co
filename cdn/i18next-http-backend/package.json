@@ -1,0 +1,1 @@
+[{"name":"i18next-http-backend","version":"1.4.0","description":"Backend layer for i18next using browsers XHR or fetch api","repository":"https:\/\/github.com\/i18next\/i18next-http-backend.git","keyfiles":"i18nextHttpBackend.min.js","keywords":["i18next","i18next-backend","browser","xhr","fetch","http"],"npm":"i18next-http-backend"}]
