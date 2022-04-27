@@ -1,11 +1,9 @@
-$transition: all .25s ease-in-out;
-$primary: #30C2C9;
-$primary:#C41E24;
+
 
 $gray-light: #F3F4F6;
 $gray-lighter: lighten(#46535A, 10%);
-$gray-dark: #414E55;
-$gray-darker: #111;
+$gray-dark: #676767;
+$gray-darker: #333e63;
 
 $blue: #2e87da;
 $blue: #3870df;
@@ -29,6 +27,32 @@ $danger: $red;
 $warning: $yellow;
 $light: $gray-light;
 
-$family: "Averta", "Open Sans", sans serif;
+$family: "Open Sans", sans serif, Arial;
 $font-montserrat: "Montserrat", Arial;
 $font-opensans: "Open Sans", Arial;
+
+
+
+
+
+// new variables
+$transition: all .25s ease-in-out;
+
+$primary: #5f6be7;
+$secondary:#f4c20a;
+$contrast: #55acee;
+
+$gray: #F3F4F6;
+$gray-dark: #676767;
+$gray-darker: #333e63;
+
+$white: #fff;
+$black: #000;
+$green: #2cbc84;
+$lightgreen: #63d594;
+$red: #f24e4e;
+$yellow: #fc3;
+
+$family: "Open Sans", sans serif, Arial;
+$familyH: "Sarala", Arial;
+$familySerif: "Abril Fatface", "Cursive", "Georgia", Serif;

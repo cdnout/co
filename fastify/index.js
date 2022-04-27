@@ -1,21 +1,23 @@
 'use strict'
 
+const VERSION = '4.0.0-rc.1'
+
 const Avvio = require('avvio')
 const http = require('http')
 const querystring = require('querystring')
 let lightMyRequest
-let version
-let versionLoaded = false
 
 const {
   kAvvioBoot,
   kChildren,
+  kServerBindings,
   kBodyLimit,
   kRoutePrefix,
   kLogLevel,
   kLogSerializers,
   kHooks,
   kSchemaController,
+  kRequestAcceptVersion,
   kReplySerializerDefault,
   kContentTypeParser,
   kReply,
@@ -25,17 +27,19 @@ const {
   kOptions,
   kPluginNameChain,
   kSchemaErrorFormatter,
-  kErrorHandler
+  kErrorHandler,
+  kKeepAliveConnections,
+  kFourOhFourContext
 } = require('./lib/symbols.js')
 
-const { createServer } = require('./lib/server')
+const createServer = require('./lib/server')
 const Reply = require('./lib/reply')
 const Request = require('./lib/request')
 const supportedMethods = ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'OPTIONS']
 const decorator = require('./lib/decorate')
 const ContentTypeParser = require('./lib/contentTypeParser')
 const SchemaController = require('./lib/schema-controller')
-const { Hooks, hookRunnerApplication } = require('./lib/hooks')
+const { Hooks, hookRunnerApplication, supportedHooks } = require('./lib/hooks')
 const { createLogger } = require('./lib/logger')
 const pluginUtils = require('./lib/pluginUtils')
 const reqIdGenFactory = require('./lib/reqIdGenFactory')
@@ -43,33 +47,37 @@ const { buildRouting, validateBodyLimitOption } = require('./lib/route')
 const build404 = require('./lib/fourOhFour')
 const getSecuredInitialConfig = require('./lib/initialConfigValidation')
 const override = require('./lib/pluginOverride')
+const warning = require('./lib/warnings')
+const noopSet = require('./lib/noop-set')
 const { defaultInitOptions } = getSecuredInitialConfig
 
 const {
   FST_ERR_BAD_URL,
-  FST_ERR_MISSING_MIDDLEWARE
+  AVVIO_ERRORS_MAP,
+  appendStackTrace
 } = require('./lib/errors')
+
+const { buildErrorHandler } = require('./lib/error-handler.js')
 
 const onBadUrlContext = {
   config: {
   },
   onSend: [],
-  onError: []
+  onError: [],
+  [kFourOhFourContext]: null
 }
 
-function defaultErrorHandler (error, request, reply) {
-  if (reply.statusCode < 500) {
-    reply.log.info(
-      { res: reply, err: error },
-      error && error.message
-    )
-  } else {
-    reply.log.error(
-      { req: request, res: reply, err: error },
-      error && error.message
-    )
-  }
-  reply.send(error)
+function defaultBuildPrettyMeta (route) {
+  // return a shallow copy of route's sanitized context
+
+  const cleanKeys = {}
+  const allowedProps = ['errorHandler', 'logLevel', 'logSerializers']
+
+  allowedProps.concat(supportedHooks).forEach(k => {
+    cleanKeys[k] = route.store[k]
+  })
+
+  return Object.assign({}, cleanKeys)
 }
 
 function fastify (options) {
@@ -96,7 +104,6 @@ function fastify (options) {
   const requestIdLogLabel = options.requestIdLogLabel || 'reqId'
   const bodyLimit = options.bodyLimit || defaultInitOptions.bodyLimit
   const disableRequestLogging = options.disableRequestLogging || false
-  const exposeHeadRoutes = options.exposeHeadRoutes != null ? options.exposeHeadRoutes : false
 
   const ajvOptions = Object.assign({
     customOptions: {},
@@ -112,16 +119,15 @@ function fastify (options) {
     throw new Error(`ajv.plugins option should be an array, instead got '${typeof ajvOptions.plugins}'`)
   }
 
-  ajvOptions.plugins = ajvOptions.plugins.map(plugin => {
-    return Array.isArray(plugin) ? plugin : [plugin]
-  })
-
   // Instance Fastify components
   const { logger, hasLogger } = createLogger(options)
 
   // Update the options with the fixed values
   options.connectionTimeout = options.connectionTimeout || defaultInitOptions.connectionTimeout
   options.keepAliveTimeout = options.keepAliveTimeout || defaultInitOptions.keepAliveTimeout
+  options.forceCloseConnections = typeof options.forceCloseConnections === 'boolean' ? options.forceCloseConnections : defaultInitOptions.forceCloseConnections
+  options.maxRequestsPerSocket = options.maxRequestsPerSocket || defaultInitOptions.maxRequestsPerSocket
+  options.requestTimeout = options.requestTimeout || defaultInitOptions.requestTimeout
   options.logger = logger
   options.genReqId = genReqId
   options.requestIdHeader = requestIdHeader
@@ -130,20 +136,45 @@ function fastify (options) {
   options.disableRequestLogging = disableRequestLogging
   options.ajv = ajvOptions
   options.clientErrorHandler = options.clientErrorHandler || defaultClientErrorHandler
-  options.exposeHeadRoutes = exposeHeadRoutes
 
   const initialConfig = getSecuredInitialConfig(options)
+  const keepAliveConnections = options.forceCloseConnections === true ? new Set() : noopSet()
+
+  // exposeHeadRoutes have its defult set from the validatorfrom the validatorfrom the validatorfrom the validator
+  options.exposeHeadRoutes = initialConfig.exposeHeadRoutes
+
+  let constraints = options.constraints
+  if (options.versioning) {
+    warning.emit('FSTDEP009')
+    constraints = {
+      ...constraints,
+      version: {
+        name: 'version',
+        mustMatchWhenDerived: true,
+        storage: options.versioning.storage,
+        deriveConstraint: options.versioning.deriveVersion,
+        validate (value) {
+          if (typeof value !== 'string') {
+            throw new Error('Version constraint should be a string.')
+          }
+        }
+      }
+    }
+  }
 
   // Default router
   const router = buildRouting({
     config: {
-      defaultRoute: defaultRoute,
-      onBadUrl: onBadUrl,
+      defaultRoute,
+      onBadUrl,
+      constraints,
       ignoreTrailingSlash: options.ignoreTrailingSlash || defaultInitOptions.ignoreTrailingSlash,
       maxParamLength: options.maxParamLength || defaultInitOptions.maxParamLength,
       caseSensitive: options.caseSensitive,
-      versioning: options.versioning
-    }
+      allowUnsafeRegex: options.allowUnsafeRegex || defaultInitOptions.allowUnsafeRegex,
+      buildPrettyMeta: defaultBuildPrettyMeta
+    },
+    keepAliveConnections
   })
 
   // 404 router, used for handling encapsulated 404 handlers
@@ -167,8 +198,10 @@ function fastify (options) {
       closing: false,
       started: false
     },
+    [kKeepAliveConnections]: keepAliveConnections,
     [kOptions]: options,
     [kChildren]: [],
+    [kServerBindings]: [],
     [kBodyLimit]: bodyLimit,
     [kRoutePrefix]: '',
     [kLogLevel]: '',
@@ -176,7 +209,7 @@ function fastify (options) {
     [kHooks]: new Hooks(),
     [kSchemaController]: schemaController,
     [kSchemaErrorFormatter]: null,
-    [kErrorHandler]: defaultErrorHandler,
+    [kErrorHandler]: buildErrorHandler(),
     [kReplySerializerDefault]: null,
     [kContentTypeParser]: new ContentTypeParser(
       bodyLimit,
@@ -226,31 +259,42 @@ function fastify (options) {
     },
     // expose logger instance
     log: logger,
+    // type provider
+    withTypeProvider,
     // hooks
-    addHook: addHook,
+    addHook,
     // schemas
-    addSchema: addSchema,
+    addSchema,
     getSchema: schemaController.getSchema.bind(schemaController),
     getSchemas: schemaController.getSchemas.bind(schemaController),
-    setValidatorCompiler: setValidatorCompiler,
-    setSerializerCompiler: setSerializerCompiler,
-    setSchemaController: setSchemaController,
-    setReplySerializer: setReplySerializer,
-    setSchemaErrorFormatter: setSchemaErrorFormatter,
+    setValidatorCompiler,
+    setSerializerCompiler,
+    setSchemaController,
+    setReplySerializer,
+    setSchemaErrorFormatter,
     // custom parsers
     addContentTypeParser: ContentTypeParser.helpers.addContentTypeParser,
     hasContentTypeParser: ContentTypeParser.helpers.hasContentTypeParser,
     getDefaultJsonParser: ContentTypeParser.defaultParsers.getDefaultJsonParser,
     defaultTextParser: ContentTypeParser.defaultParsers.defaultTextParser,
+    removeContentTypeParser: ContentTypeParser.helpers.removeContentTypeParser,
+    removeAllContentTypeParsers: ContentTypeParser.helpers.removeAllContentTypeParsers,
     // Fastify architecture methods (initialized by Avvio)
     register: null,
     after: null,
     ready: null,
     onClose: null,
     close: null,
+    printPlugins: null,
     // http server
-    listen: listen,
-    server: server,
+    listen,
+    server,
+    addresses: function () {
+      /* istanbul ignore next */
+      const binded = this[kServerBindings].map(b => b.address())
+      binded.push(this.server.address())
+      return binded.filter(adr => adr)
+    },
     // extend fastify objects
     decorate: decorator.add,
     hasDecorator: decorator.exist,
@@ -259,12 +303,12 @@ function fastify (options) {
     hasRequestDecorator: decorator.existRequest,
     hasReplyDecorator: decorator.existReply,
     // fake http injection
-    inject: inject,
+    inject,
     // pretty print of the registered routes
-    printRoutes: router.printRoutes,
+    printRoutes,
     // custom error handling
-    setNotFoundHandler: setNotFoundHandler,
-    setErrorHandler: setErrorHandler,
+    setNotFoundHandler,
+    setErrorHandler,
     // Set fastify initial configuration options read-only object
     initialConfig
   }
@@ -288,24 +332,14 @@ function fastify (options) {
       get () { return this[kSchemaController].getSerializerCompiler() }
     },
     version: {
-      get () {
-        if (versionLoaded === false) {
-          version = loadVersion()
-        }
-        return version
-      }
+      get () { return VERSION }
     },
     errorHandler: {
       get () {
-        return this[kErrorHandler]
+        return this[kErrorHandler].func
       }
     }
   })
-
-  // We are adding `use` to the fastify prototype so the user
-  // can still access it (and get the expected error), but `decorate`
-  // will not detect it, and allow the user to override it.
-  Object.setPrototypeOf(fastify, { use })
 
   if (options.schemaErrorFormatter) {
     validateSchemaErrorFormatter(options.schemaErrorFormatter)
@@ -319,9 +353,11 @@ function fastify (options) {
   // - ready
   // - onClose
   // - close
+
+  const avvioPluginTimeout = Number(options.pluginTimeout)
   const avvio = Avvio(fastify, {
     autostart: false,
-    timeout: Number(options.pluginTimeout) || defaultInitOptions.pluginTimeout,
+    timeout: isNaN(avvioPluginTimeout) === false ? avvioPluginTimeout : defaultInitOptions.pluginTimeout,
     expose: {
       use: 'register'
     }
@@ -331,6 +367,8 @@ function fastify (options) {
   avvio.on('start', () => (fastify[kState].started = true))
   fastify[kAvvioBoot] = fastify.ready // the avvio ready function
   fastify.ready = ready // overwrite the avvio ready function
+  fastify.printPlugins = avvio.prettyPrint.bind(avvio)
+
   // cache the closing value, since we are checking it in an hot path
   avvio.once('preReady', () => {
     fastify.onClose((instance, done) => {
@@ -339,6 +377,15 @@ function fastify (options) {
       if (fastify[kState].listening) {
         // No new TCP connections are accepted
         instance.server.close(done)
+
+        for (const conn of fastify[kKeepAliveConnections]) {
+          // We must invoke the destroy method instead of merely unreffing
+          // the sockets. If we only unref, then the callback passed to
+          // `fastify.close` will never be invoked; nor will any of the
+          // registered `onClose` hooks.
+          conn.destroy()
+          fastify[kKeepAliveConnections].delete(conn)
+        }
       } else {
         done(null)
       }
@@ -361,6 +408,17 @@ function fastify (options) {
   // Delay configuring clientError handler so that it can access fastify state.
   server.on('clientError', options.clientErrorHandler.bind(fastify))
 
+  try {
+    const dc = require('diagnostics_channel')
+    const initChannel = dc.channel('fastify.initialization')
+    if (initChannel.hasSubscribers) {
+      initChannel.publish({ fastify })
+    }
+  } catch (e) {
+    // This only happens if `diagnostics_channel` isn't available, i.e. earlier
+    // versions of Node.js. In that event, we don't care, so ignore the error.
+  }
+
   return fastify
 
   function throwIfAlreadyStarted (msg) {
@@ -371,7 +429,7 @@ function fastify (options) {
   // If the server is not ready yet, this
   // utility will automatically force it.
   function inject (opts, cb) {
-    // lightMyRequest is dynamically laoded as it seems very expensive
+    // lightMyRequest is dynamically loaded as it seems very expensive
     // because of Ajv
     if (lightMyRequest === undefined) {
       lightMyRequest = require('light-my-request')
@@ -436,6 +494,13 @@ function fastify (options) {
     }
 
     function manageErr (err) {
+      // If the error comes out of Avvio's Error codes
+      // We create a make and preserve the previous error
+      // as cause
+      err = err != null && AVVIO_ERRORS_MAP[err.code] != null
+        ? appendStackTrace(err, new AVVIO_ERRORS_MAP[err.code](err.message))
+        : err
+
       if (cb) {
         if (err) {
           cb(err)
@@ -451,15 +516,16 @@ function fastify (options) {
     }
   }
 
-  function use () {
-    throw new FST_ERR_MISSING_MIDDLEWARE()
+  // Used exclusively in TypeScript contexts to enable auto type inference from JSON schema.
+  function withTypeProvider () {
+    return this
   }
 
   // wrapper that we expose to the user for hooks handling
   function addHook (name, fn) {
     throwIfAlreadyStarted('Cannot call "addHook" when fastify instance is already started!')
 
-    if (name === 'onSend' || name === 'preSerialization' || name === 'onError') {
+    if (name === 'onSend' || name === 'preSerialization' || name === 'onError' || name === 'preParsing') {
       if (fn.constructor.name === 'AsyncFunction' && fn.length === 4) {
         throw new Error('Async function has too many arguments. Async hooks should not use the \'done\' argument.')
       }
@@ -467,16 +533,17 @@ function fastify (options) {
       if (fn.constructor.name === 'AsyncFunction' && fn.length !== 0) {
         throw new Error('Async function has too many arguments. Async hooks should not use the \'done\' argument.')
       }
-    } else if (name !== 'preParsing') {
+    } else {
       if (fn.constructor.name === 'AsyncFunction' && fn.length === 3) {
         throw new Error('Async function has too many arguments. Async hooks should not use the \'done\' argument.')
       }
     }
 
     if (name === 'onClose') {
-      this[kHooks].validate(name, fn)
       this.onClose(fn)
     } else if (name === 'onReady') {
+      this[kHooks].add(name, fn)
+    } else if (name === 'onRoute') {
       this[kHooks].validate(name, fn)
       this[kHooks].add(name, fn)
     } else {
@@ -503,9 +570,8 @@ function fastify (options) {
 
   function defaultClientErrorHandler (err, socket) {
     // In case of a connection reset, the socket has been destroyed and there is nothing that needs to be done.
-    // https://github.com/fastify/fastify/issues/2036
-    // https://github.com/nodejs/node/issues/33302
-    if (err.code === 'ECONNRESET') {
+    // https://nodejs.org/api/http.html#http_event_clienterror
+    if (err.code === 'ECONNRESET' || socket.destroyed) {
       return
     }
 
@@ -517,19 +583,26 @@ function fastify (options) {
 
     // Most devs do not know what to do with this error.
     // In the vast majority of cases, it's a network error and/or some
-    // config issue on the the load balancer side.
+    // config issue on the load balancer side.
     this.log.trace({ err }, 'client error')
+    // Copying standard node behaviour
+    // https://github.com/nodejs/node/blob/6ca23d7846cb47e84fd344543e394e50938540be/lib/_http_server.js#L666
 
     // If the socket is not writable, there is no reason to try to send data.
-    if (socket.writable) {
-      socket.end(`HTTP/1.1 400 Bad Request\r\nContent-Length: ${body.length}\r\nContent-Type: application/json\r\n\r\n${body}`)
+    if (socket.writable && socket.bytesWritten === 0) {
+      socket.write(`HTTP/1.1 400 Bad Request\r\nContent-Length: ${body.length}\r\nContent-Type: application/json\r\n\r\n${body}`)
     }
+    socket.destroy(err)
   }
 
   // If the router does not match any route, every request will land here
   // req and res are Node.js core objects
   function defaultRoute (req, res) {
     if (req.headers['accept-version'] !== undefined) {
+      // we remove the accept-version header for performance result
+      // because we do not want to go through the constraint checking
+      // the usage of symbol here to prevent any colision on custom header name
+      req.headers[kRequestAcceptVersion] = req.headers['accept-version']
       req.headers['accept-version'] = undefined
     }
     fourOhFour.router.lookup(req, res)
@@ -583,7 +656,7 @@ function fastify (options) {
   function setSchemaController (schemaControllerOpts) {
     throwIfAlreadyStarted('Cannot call "setSchemaController" when fastify instance is already started!')
     const old = this[kSchemaController]
-    const schemaController = SchemaController.buildSchemaController(old.parent, Object.assign({}, old.opts, schemaControllerOpts))
+    const schemaController = SchemaController.buildSchemaController(old, Object.assign({}, old.opts, schemaControllerOpts))
     this[kSchemaController] = schemaController
     this.getSchema = schemaController.getSchema.bind(schemaController)
     this.getSchemas = schemaController.getSchemas.bind(schemaController)
@@ -601,8 +674,14 @@ function fastify (options) {
   function setErrorHandler (func) {
     throwIfAlreadyStarted('Cannot call "setErrorHandler" when fastify instance is already started!')
 
-    this[kErrorHandler] = func.bind(this)
+    this[kErrorHandler] = buildErrorHandler(this[kErrorHandler], func.bind(this))
     return this
+  }
+
+  function printRoutes (opts = {}) {
+    // includeHooks:true - shortcut to include all supported hooks exported by fastify.Hooks
+    opts.includeMeta = opts.includeHooks ? opts.includeMeta ? supportedHooks.concat(opts.includeMeta) : supportedHooks : opts.includeMeta
+    return router.printRoutes(opts)
   }
 }
 
@@ -630,20 +709,6 @@ function wrapRouting (httpHandler, { rewriteUrl, logger }) {
       }
     }
     httpHandler(req, res)
-  }
-}
-
-function loadVersion () {
-  versionLoaded = true
-  const fs = require('fs')
-  const path = require('path')
-  try {
-    const pkgPath = path.join(__dirname, 'package.json')
-    fs.accessSync(pkgPath, fs.constants.R_OK)
-    const pkg = JSON.parse(fs.readFileSync(pkgPath))
-    return pkg.name === 'fastify' ? pkg.version : undefined
-  } catch (e) {
-    return undefined
   }
 }
 

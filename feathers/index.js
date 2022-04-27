@@ -1,212 +1,96 @@
-const { hooks, isPromise } = require('@feathersjs/commons');
-const baseHooks = require('./base');
-
-const {
-  createHookObject,
-  getHooks,
-  processHooks,
-  enableHooks,
-  ACTIVATE_HOOKS
-} = hooks;
-
-const withHooks = function withHooks ({
-  app,
-  service,
-  method,
-  original
-}) {
-  return (_hooks = {}) => {
-    const hooks = app.hookTypes.reduce((result, type) => {
-      const value = _hooks[type] || [];
-
-      result[type] = Array.isArray(value) ? value : [ value ];
-
-      return result;
-    }, {});
-
-    return function (...args) {
-      const returnHook = args[args.length - 1] === true
-        ? args.pop() : false;
-
-      // Create the hook object that gets passed through
-      const hookObject = createHookObject(method, {
-        type: 'before', // initial hook object type
-        arguments: args,
-        service,
-        app
-      });
-
-      return Promise.resolve(hookObject)
-
-        // Run `before` hooks
-        .then(hookObject => {
-          return processHooks.call(service, baseHooks.concat(hooks.before), hookObject);
-        })
-
-        // Run the original method
-        .then(hookObject => {
-          // If `hookObject.result` is set, skip the original method
-          if (typeof hookObject.result !== 'undefined') {
-            return hookObject;
-          }
-
-          // Otherwise, call it with arguments created from the hook object
-          const promise = new Promise(resolve => {
-            const func = original || service[method];
-            const args = service.methods[method].map((value) => hookObject[value]);
-            const result = func.apply(service, args);
-
-            if (!isPromise(result)) {
-              throw new Error(`Service method '${hookObject.method}' for '${hookObject.path}' service must return a promise`);
-            }
-
-            resolve(result);
-          });
-
-          return promise
-            .then(result => {
-              hookObject.result = result;
-              return hookObject;
-            })
-            .catch(error => {
-              error.hook = hookObject;
-              throw error;
-            });
-        })
-
-        // Run `after` hooks
-        .then(hookObject => {
-          const afterHookObject = Object.assign({}, hookObject, {
-            type: 'after'
-          });
-
-          return processHooks.call(service, hooks.after, afterHookObject);
-        })
-
-        // Run `errors` hooks
-        .catch(error => {
-          const errorHookObject = Object.assign({}, error.hook, {
-            type: 'error',
-            original: error.hook,
-            error,
-            result: undefined
-          });
-
-          return processHooks.call(service, hooks.error, errorHookObject)
-            .catch(error => {
-              const errorHookObject = Object.assign({}, error.hook, {
-                error,
-                result: undefined
-              });
-
-              return errorHookObject;
-            });
-        })
-
-        // Run `finally` hooks
-        .then(hookObject => {
-          return processHooks.call(service, hooks.finally, hookObject)
-            .catch(error => {
-              const errorHookObject = Object.assign({}, error.hook, {
-                error,
-                result: undefined
-              });
-
-              return errorHookObject;
-            });
-        })
-
-        // Resolve with a result or reject with an error
-        .then(hookObject => {
-          if (typeof hookObject.error !== 'undefined' && typeof hookObject.result === 'undefined') {
-            return Promise.reject(returnHook ? hookObject : hookObject.error);
-          } else {
-            return returnHook ? hookObject : hookObject.result;
-          }
-        });
-    };
-  };
-};
-
-// A service mixin that adds `service.hooks()` method and functionality
-const hookMixin = exports.hookMixin = function hookMixin (service) {
-  if (typeof service.hooks === 'function') {
-    return;
-  }
-
-  service.methods = Object.getOwnPropertyNames(service)
-    .filter(key => typeof service[key] === 'function' && service[key][ACTIVATE_HOOKS])
-    .reduce((result, methodName) => {
-      result[methodName] = service[methodName][ACTIVATE_HOOKS];
-      return result;
-    }, service.methods || {});
-
-  Object.assign(service.methods, {
-    find: ['params'],
-    get: ['id', 'params'],
-    create: ['data', 'params'],
-    update: ['id', 'data', 'params'],
-    patch: ['id', 'data', 'params'],
-    remove: ['id', 'params']
-  });
-
-  const app = this;
-  const methodNames = Object.keys(service.methods);
-  // Assemble the mixin object that contains all "hooked" service methods
-  const mixin = methodNames.reduce((mixin, method) => {
-    if (typeof service[method] !== 'function') {
-      return mixin;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.hookMixin = exports.FeathersHookManager = exports.createContext = exports.fromErrorHooks = exports.fromErrorHook = exports.fromAfterHooks = exports.fromAfterHook = exports.fromBeforeHooks = exports.fromBeforeHook = void 0;
+const dependencies_1 = require("../dependencies");
+const service_1 = require("../service");
+const regular_1 = require("./regular");
+var regular_2 = require("./regular");
+Object.defineProperty(exports, "fromBeforeHook", { enumerable: true, get: function () { return regular_2.fromBeforeHook; } });
+Object.defineProperty(exports, "fromBeforeHooks", { enumerable: true, get: function () { return regular_2.fromBeforeHooks; } });
+Object.defineProperty(exports, "fromAfterHook", { enumerable: true, get: function () { return regular_2.fromAfterHook; } });
+Object.defineProperty(exports, "fromAfterHooks", { enumerable: true, get: function () { return regular_2.fromAfterHooks; } });
+Object.defineProperty(exports, "fromErrorHook", { enumerable: true, get: function () { return regular_2.fromErrorHook; } });
+Object.defineProperty(exports, "fromErrorHooks", { enumerable: true, get: function () { return regular_2.fromErrorHooks; } });
+function createContext(service, method, data = {}) {
+    const createContext = service[method].createContext;
+    if (typeof createContext !== 'function') {
+        throw new Error(`Can not create context for method ${method}`);
     }
-
-    mixin[method] = function () {
-      const service = this;
-      const args = Array.from(arguments);
-      const original = service._super.bind(service);
-
-      return withHooks({
-        app,
-        service,
-        method,
-        original
-      })({
-        before: getHooks(app, service, 'before', method),
-        after: getHooks(app, service, 'after', method, true),
-        error: getHooks(app, service, 'error', method, true),
-        finally: getHooks(app, service, 'finally', method, true)
-      })(...args);
+    return createContext(data);
+}
+exports.createContext = createContext;
+class FeathersHookManager extends dependencies_1.HookManager {
+    constructor(app, method) {
+        super();
+        this.app = app;
+        this.method = method;
+        this._middleware = [];
+    }
+    collectMiddleware(self, args) {
+        const app = this.app;
+        const appHooks = app.appHooks[dependencies_1.HOOKS].concat(app.appHooks[this.method] || []);
+        const regularAppHooks = (0, regular_1.collectRegularHooks)(this.app, this.method);
+        const middleware = super.collectMiddleware(self, args);
+        const regularHooks = (0, regular_1.collectRegularHooks)(self, this.method);
+        return [...appHooks, ...regularAppHooks, ...middleware, ...regularHooks];
+    }
+    initializeContext(self, args, context) {
+        const ctx = super.initializeContext(self, args, context);
+        ctx.params = ctx.params || {};
+        return ctx;
+    }
+    middleware(mw) {
+        this._middleware.push(...mw);
+        return this;
+    }
+}
+exports.FeathersHookManager = FeathersHookManager;
+function hookMixin(service, path, options) {
+    if (typeof service.hooks === 'function') {
+        return service;
+    }
+    const app = this;
+    const hookMethods = (0, service_1.getHookMethods)(service, options);
+    const serviceMethodHooks = hookMethods.reduce((res, method) => {
+        const params = service_1.defaultServiceArguments[method] || ['data', 'params'];
+        res[method] = new FeathersHookManager(app, method)
+            .params(...params)
+            .props({
+            app,
+            path,
+            method,
+            service,
+            event: null,
+            type: null,
+            get statusCode() {
+                var _a;
+                return (_a = this.http) === null || _a === void 0 ? void 0 : _a.status;
+            },
+            set statusCode(value) {
+                (this.http || (this.http = {})).status = value;
+            }
+        });
+        return res;
+    }, {});
+    const handleRegularHooks = (0, regular_1.enableRegularHooks)(service, hookMethods);
+    (0, dependencies_1.hooks)(service, serviceMethodHooks);
+    service.hooks = function (hookOptions) {
+        if (hookOptions.before || hookOptions.after || hookOptions.error) {
+            return handleRegularHooks.call(this, hookOptions);
+        }
+        if (Array.isArray(hookOptions)) {
+            return (0, dependencies_1.hooks)(this, hookOptions);
+        }
+        Object.keys(hookOptions).forEach(method => {
+            const manager = (0, dependencies_1.getManager)(this[method]);
+            if (!(manager instanceof FeathersHookManager)) {
+                throw new Error(`Method ${method} is not a Feathers hooks enabled service method`);
+            }
+            manager.middleware(hookOptions[method]);
+        });
+        return this;
     };
-
-    return mixin;
-  }, {});
-
-  // Add .hooks method and properties to the service
-  enableHooks(service, methodNames, app.hookTypes);
-
-  service.mixin(mixin);
-};
-
-module.exports = function () {
-  return function (app) {
-    // We store a reference of all supported hook types on the app
-    // in case someone needs it
-    Object.assign(app, {
-      hookTypes: ['before', 'after', 'error', 'finally']
-    });
-
-    // Add functionality for hooks to be registered as app.hooks
-    enableHooks(app, app.methods, app.hookTypes);
-
-    app.mixins.push(hookMixin);
-  };
-};
-
-module.exports.withHooks = withHooks;
-
-module.exports.ACTIVATE_HOOKS = ACTIVATE_HOOKS;
-
-module.exports.activateHooks = function activateHooks (args) {
-  return fn => {
-    Object.defineProperty(fn, ACTIVATE_HOOKS, { value: args });
-    return fn;
-  };
-};
+    return service;
+}
+exports.hookMixin = hookMixin;
+//# sourceMappingURL=index.js.map

@@ -1,0 +1,1 @@
+[{"name":"asap","version":"2.0.6","description":"High-priority task queue for Node.js and browsers","repository":"git+https:\/\/github.com\/kriskowal\/asap.git","keyfiles":"browser-asap.js","keywords":["event","task","queue"],"npm":"asap"}]

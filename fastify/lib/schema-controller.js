@@ -1,14 +1,13 @@
 'use strict'
 
 const { buildSchemas } = require('./schemas')
-const {
-  ValidatorSelector,
-  SerializerCompiler: buildDefaultSerializer
-} = require('./schema-compilers')
+const SerializerSelector = require('@fastify/fast-json-stringify-compiler')
+const ValidatorSelector = require('@fastify/ajv-compiler')
 
 /**
  * Called at every fastify context that is being created.
  * @param {object} parentSchemaCtrl: the SchemaController instance of the Fastify parent context
+ * @param {object} opts: the `schemaController` server option. It can be undefined when a parentSchemaCtrl is set
  * @return {object}:a new SchemaController
  */
 function buildSchemaController (parentSchemaCtrl, opts) {
@@ -16,13 +15,18 @@ function buildSchemaController (parentSchemaCtrl, opts) {
     return new SchemaController(parentSchemaCtrl, opts)
   }
 
-  const option = Object.assign({
-    bucket: buildSchemas,
-    compilersFactory: {
-      buildValidator: ValidatorSelector(),
-      buildSerializer: buildDefaultSerializer
-    }
-  }, opts)
+  let compilersFactory = {
+    buildValidator: ValidatorSelector(),
+    buildSerializer: SerializerSelector()
+  }
+  if (opts && opts.compilersFactory) {
+    compilersFactory = Object.assign(compilersFactory, opts.compilersFactory)
+  }
+
+  const option = {
+    bucket: (opts && opts.bucket) || buildSchemas,
+    compilersFactory
+  }
 
   return new SchemaController(undefined, option)
 }
@@ -75,6 +79,14 @@ class SchemaController {
     return this.serializerCompiler || (this.parent && this.parent.getSerializerCompiler())
   }
 
+  getSerializerBuilder () {
+    return this.compilersFactory.buildSerializer || (this.parent && this.parent.getSerializerBuilder())
+  }
+
+  getValidatorBuilder () {
+    return this.compilersFactory.buildValidator || (this.parent && this.parent.getValidatorBuilder())
+  }
+
   /**
    * This method will be called when a validator must be setup.
    * Do not setup the compiler more than once
@@ -85,7 +97,7 @@ class SchemaController {
     if (isReady) {
       return
     }
-    this.validatorCompiler = this.compilersFactory.buildValidator(this.schemaBucket.getSchemas(), serverOption.ajv)
+    this.validatorCompiler = this.getValidatorBuilder()(this.schemaBucket.getSchemas(), serverOption.ajv)
   }
 
   /**
@@ -98,9 +110,10 @@ class SchemaController {
     if (isReady) {
       return
     }
-    this.serializerCompiler = this.compilersFactory.buildSerializer(this.schemaBucket.getSchemas())
+
+    this.serializerCompiler = this.getSerializerBuilder()(this.schemaBucket.getSchemas(), serverOption.serializerOpts)
   }
 }
 
+SchemaController.buildSchemaController = buildSchemaController
 module.exports = SchemaController
-module.exports.buildSchemaController = buildSchemaController

@@ -1,0 +1,1 @@
+[{"name":"bcryptjs","version":"2.4.3","description":"Optimized bcrypt in plain JavaScript with zero dependencies. Compatible to 'bcrypt'.","repository":"git+https:\/\/github.com\/dcodeIO\/bcrypt.js.git","keyfiles":"bcrypt.min.js","keywords":["bcrypt","password","auth","authentication","encryption","crypt","crypto"],"npm":"bcryptjs"}]

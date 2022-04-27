@@ -1,154 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <?php 
-    $head_title = "The Open Source and Live First CDN Resources of Libraries, Plugins or Custom Codes";
-    $description = "CDN Out provides Live First CDN resources of Libraries for developers. Host custom files on CDN, Auto Updating and One Click Installation makes your website and workflow faster.";
+    <?php
+    $head_title = "Browse 3500+ CDN Resources for Javascript Libraries & Plugins | One Click Installation | CDN OUT";
+    $description = "Browse 3500+ CDN Resources for Javascript Libraries & Plugins. Use our Live First CDN files or Version based CDN in your website or download complete zip with just one click. ";
     $base_url = "../";
-    include($base_url.'meta/_head.php');
-  ?>
+    include($base_url . 'meta/_head.php');
+    ?>
 </head>
-<body class="search-active page-browse">
-  <div id="page">
-    <?php include($base_url.'meta/_header.php'); ?>
-    <div class="content">
-      <div class="container">
-        <div class="search-bar">
-          
-          <input id="search" type="search" class="form-control" placeholder="Search from 3000+ libraries...">
+<body class="no-scroll page-browse">
+<div id="page">
+    <?php  include($base_url.'meta/_header.php'); ?>
+    <section class="intro">
+        <div class="img-bg" style="background-image: url(<?php echo $base_url; ?>images/hero.jpg)"></div>
+        <div class="container-large">
+            <div class="side-text">
+                <p>Browse 3500+ CDN Resources for Javascript Libraries & Plugins. Use our Live First CDN files or Version based CDN in your website or download complete zip with just one click.</p>
+                <ul>
+                    <li>Quick & Easiest way to Implement</li>
+                    <li><i class="icon-live text-success"></i>One Click Copy Live-First Files.</li>
+                    <li><i class="icon-cloud text-white"></i>One Click Copy Latest Files.</li>
+                    <li><i class="icon-download text-danger"></i>Download Latest Source ZIP File.</li>
+                </ul>
+            </div>
+            <div class="cdn-search">
+                <div class="cdn-search-wrap">
+                    <div class="search-bar">
+                        <input id="cdn-search" type="search" class="form-control">
+                        <label for="cdn-search">Search in 3500+ libraries...</label>
+                        <i class="icon-search"></i>
+                    </div>
+                    <ul class="search-major">
+                        <li>Filter:</li>
+                        <li><a class="current" href="<?php echo $base_url; ?>vendor/popular.php?b=true">Popular</a></li>
+                        <li><a href="<?php echo $base_url; ?>vendor/react.php?b=true">React</a></li>
+                        <li><a href="<?php echo $base_url; ?>vendor/jquery.php?b=true">jQuery</a></li>
+                        <li><a href="<?php echo $base_url; ?>vendor/angular.php?b=true">Angular</a></li>
+                        <li><a href="<?php echo $base_url; ?>vendor/vue.php?b=true">VUE</a></li>
+                    </ul>
+                    <div class="cdn-smartlist">
+                        <div class="cdn-smartlist-holder">
+                            <div id="ajax-content">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <main class="container main">
-       <section class="cdn-library ">
-         <?php 
-        function scan_dir($dir) {
-        $ignored = array('.', '..', '.svn', '.node_modules', '.htaccess', "$dir@");
+    </section>
+</div>
+<?php include($base_url . 'meta/_footer.php'); ?>
+<script>
+    $(document).ready(function() {
+        jQuery("#cdn-search").each(function() {
+            jQuery(this).val('');
+        });
+        $(".search-major li a").click(function() {
 
-        $files = array();    
-        foreach (scandir($dir) as $file) {
-          if (in_array($file, $ignored)) continue;
-          $files[$file] = filemtime($dir . '/' . $file);
-        }
-        arsort($files);
-        $files = array_keys($files);
-        return ($files) ? $files : false;
-        }        
-        $dirs = scan_dir("../zip/");
-        foreach($dirs as $value){
-          $value = str_replace(".zip", "", $value);
-          $url = '../cdn/'.$value.'/var.php';
-        if(file_exists($url)){
-        include($url);
-        $json_url = '../cdn/'.$value.'/package.json';
-        $json = file_get_contents($json_url);   
-        $data = json_decode($json, TRUE);
+            $("#ajax-content").empty().append("<div class='loading'><img src='<?php echo $base_url; ?>images/loader.gif' width='30' alt='Loading' /></div>");
+            $(".search-major li a").removeClass('current');
+            $(this).addClass('current');
 
-foreach($data as $data_as) {
-  $director = $data_as['name'];
-  $title = str_replace("-", " ", $director);
-  $title = ucwords($title);
-  $latest_version = $data_as['version'];
-  $keyfiles = $data_as['keyfiles'];
-  $keyfiles_list = explode(",", $keyfiles);
-  $about = $data_as['description'];
-  $about = ucfirst($about);
-  $github_code = $data_as['repository'];
-  
-  if(isset($data_as['npm'])) {
-    $npm = $data_as['npm'];  
-  } else {
-    if(isset($npm_check)) {
-      $npm = $npm_check; 
-    } else {
-      $npm = "";
-    }
-  }
-  
-  $github = str_replace('git:', '', $github_code); 
-  $github = str_replace('+ssh', '', $github);
-  $github = str_replace('git+', '', $github);
-  $github = str_replace('http:', '', $github);
-  $github = str_replace('https:', '', $github);
-  $github = str_replace('.git', '', $github);
-  
-    if(!empty($keyfiles_add)) {
-    $keyfiles_list_ar = array_merge($keyfiles_list, $keyfiles_add);
-    
-} else {
-    $keyfiles_add = array("");
-    $keyfiles_list_ar = $keyfiles_list;
-  }
+            $.ajax({ url: this.href, success: function(html) {
+                    $("#ajax-content").empty().append(html);
+                }
 
-$key_css_live = $key_js_live = "";
-foreach($keyfiles_list_ar as $file_ext) {
-  $file_ext_i = explode("/", $file_ext);
-  $file_ext_filename = end($file_ext_i);
-  $file_ext_final = pathinfo($file_ext_filename, PATHINFO_EXTENSION);
-
-  if($file_ext_final == "js") {
-    if(file_exists("../$director/index.js")) {
-  
-    $key_js_live = <<<EOD
-<script src="https://cdnout.com/$director/"></script>
-
-EOD;
-    } else {
-      $key_js_live = <<<EOD
-<script src="https://cdnout.com/$director/$file_ext"></script>
-
-EOD;
-    }
-  } 
-  if($file_ext_final == "css") {
-    if(file_exists("../$director/css/base.css")) {
-    $key_css_live = <<<EOD
-<link rel="stylesheet" href="https://cdnout.com/$director/css/base.css" media="all">
-EOD;
-    } else { 
-      $key_css_live = <<<EOD
-<link rel="stylesheet" href="https://cdnout.com/$director/$file_ext" media="all">
-EOD;
-    }
-  }
-} 
-}      
-            
-          ?>
-         <article class="cdn">
-          <div class="text-box">            
-            <h2><a href="../cdn/<?php echo $director ?>/"><?php echo $title; ?></a></h2>
-            <ul class="meta">
-              <?php if(!empty($npm)) { ?>
-              <li class="node"><a href="../cdn/<?php echo $director; ?>#node"><i class="icon-node"></i> Node</a></li>
-              <?php }
-              if(!empty($github)) {
-              ?>
-              <li><a rel="nofollow" target="_blank" href="<?php echo $github; ?>"><i class='icon-github'></i>Github</a></li>
-              <?php } ?>
-              <li class="version" title="Current Version: <?php echo $latest_version; ?>"><span><i class="icon-layers"></i>v<?php echo $latest_version; ?></span></li>
-            </ul>
-          </div>
-          <div class="path">
-            <div class="btn-block">
-              
-                <button title='Copy <?php echo $director ?> <?php echo  $latest_version; ?> necessary CDN Files' 
-                        data-clipboard-text='<?php echo $key_js_live.$key_css_live; ?>'
-                        type="button" class="btn btn-dark copycat">
-                  <i class="icon-copy"></i> Copy Key Files
-                </button>
-                <a href="../cdn/<?php echo $director ?>/" class="btn btn-light-outline"><i class="icon-code-fork"></i> View All Files</a>
-              </div>
-            
-          </div>
-        </article>        
-        <?php
-          }
-        }
-        ?>
-         <span class="noResults">Sorry, no results found.</span>
-      </section>
-    </main>
-    <?php include($base_url.'meta/_footer.php'); ?>
+            });
+            return false;
+        });
+        $("#ajax-content").empty().append("<div class='loading'><img src='<?php echo $base_url; ?>images/loader.gif' width='30' alt='Loading' /></div>");
+        $.ajax({ url: '<?php echo $base_url; ?>vendor/popular.php?b=true', success: function(html) {
+                $("#ajax-content").empty().append(html);
+            }
+        });
+    });
+</script>
 </body>
 </html>

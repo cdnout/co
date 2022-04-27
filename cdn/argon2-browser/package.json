@@ -1,0 +1,1 @@
+[{"name":"argon2-browser","version":"1.18.0","description":"Argon2 library compiled for browser runtime","repository":"git+https:\/\/github.com\/antelle\/argon2-browser.git","keyfiles":"argon2-bundled.min.js","keywords":["argon2","keeweb","webassembly","wasm","hash","keepass","kdf"],"npm":"argon2-browser"}]

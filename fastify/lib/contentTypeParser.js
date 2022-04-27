@@ -1,6 +1,12 @@
 'use strict'
 
-const lru = require('tiny-lru')
+const { AsyncResource } = require('async_hooks')
+let lru = require('tiny-lru')
+// Needed to handle Webpack and faux modules
+// See https://github.com/fastify/fastify/issues/2356
+// and https://github.com/fastify/fastify/discussions/2907.
+lru = typeof lru === 'function' ? lru : lru.default
+
 const secureJson = require('secure-json-parse')
 const {
   kDefaultJsonParse,
@@ -8,7 +14,8 @@ const {
   kBodyLimit,
   kRequestPayloadStream,
   kState,
-  kTestInternals
+  kTestInternals,
+  kReplyIsError
 } = require('./symbols')
 
 const {
@@ -22,7 +29,6 @@ const {
   FST_ERR_CTP_INVALID_CONTENT_LENGTH,
   FST_ERR_CTP_EMPTY_JSON_BODY
 } = require('./errors')
-const warning = require('./warnings')
 
 function ContentTypeParser (bodyLimit, onProtoPoisoning, onConstructorPoisoning) {
   this[kDefaultJsonParse] = getDefaultJsonParser(onProtoPoisoning, onConstructorPoisoning)
@@ -30,12 +36,15 @@ function ContentTypeParser (bodyLimit, onProtoPoisoning, onConstructorPoisoning)
   this.customParsers['application/json'] = new Parser(true, false, bodyLimit, this[kDefaultJsonParse])
   this.customParsers['text/plain'] = new Parser(true, false, bodyLimit, defaultPlainTextParser)
   this.parserList = ['application/json', 'text/plain']
+  this.parserRegExpList = []
   this.cache = lru(100)
 }
 
 ContentTypeParser.prototype.add = function (contentType, opts, parserFn) {
-  if (typeof contentType !== 'string') throw new FST_ERR_CTP_INVALID_TYPE()
-  if (contentType.length === 0) throw new FST_ERR_CTP_EMPTY_TYPE()
+  const contentTypeIsString = typeof contentType === 'string'
+
+  if (!contentTypeIsString && !(contentType instanceof RegExp)) throw new FST_ERR_CTP_INVALID_TYPE()
+  if (contentTypeIsString && contentType.length === 0) throw new FST_ERR_CTP_EMPTY_TYPE()
   if (typeof parserFn !== 'function') throw new FST_ERR_CTP_INVALID_HANDLER()
 
   if (this.existingParser(contentType)) {
@@ -55,12 +64,13 @@ ContentTypeParser.prototype.add = function (contentType, opts, parserFn) {
     parserFn
   )
 
-  if (contentType === '*') {
-    this.parserList.push('')
+  if (contentTypeIsString && contentType === '*') {
     this.customParsers[''] = parser
   } else {
-    if (contentType !== 'application/json') {
+    if (contentTypeIsString) {
       this.parserList.unshift(contentType)
+    } else {
+      this.parserRegExpList.unshift(contentType)
     }
     this.customParsers[contentType] = parser
   }
@@ -72,19 +82,31 @@ ContentTypeParser.prototype.hasParser = function (contentType) {
 
 ContentTypeParser.prototype.existingParser = function (contentType) {
   if (contentType === 'application/json') {
-    return this.customParsers['application/json'].fn !== this[kDefaultJsonParse]
+    return this.customParsers['application/json'] && this.customParsers['application/json'].fn !== this[kDefaultJsonParse]
   }
   if (contentType === 'text/plain') {
-    return this.customParsers['text/plain'].fn !== defaultPlainTextParser
+    return this.customParsers['text/plain'] && this.customParsers['text/plain'].fn !== defaultPlainTextParser
   }
+
   return contentType in this.customParsers
 }
 
 ContentTypeParser.prototype.getParser = function (contentType) {
-  /* eslint-disable no-var */
-  for (var i = 0; i < this.parserList.length; i++) {
-    if (contentType.indexOf(this.parserList[i]) > -1) {
-      const parser = this.customParsers[this.parserList[i]]
+  // eslint-disable-next-line no-var
+  for (var i = 0; i !== this.parserList.length; ++i) {
+    const parserName = this.parserList[i]
+    if (contentType.indexOf(parserName) > -1) {
+      const parser = this.customParsers[parserName]
+      this.cache.set(contentType, parser)
+      return parser
+    }
+  }
+
+  // eslint-disable-next-line no-var
+  for (var j = 0; j !== this.parserRegExpList.length; ++j) {
+    const parserRegExp = this.parserRegExpList[j]
+    if (parserRegExp.test(contentType)) {
+      const parser = this.customParsers[parserRegExp]
       this.cache.set(contentType, parser)
       return parser
     }
@@ -93,8 +115,30 @@ ContentTypeParser.prototype.getParser = function (contentType) {
   return this.customParsers['']
 }
 
+ContentTypeParser.prototype.removeAll = function () {
+  this.customParsers = {}
+  this.parserRegExpList = []
+  this.parserList = []
+  this.cache = lru(100)
+}
+
+ContentTypeParser.prototype.remove = function (contentType) {
+  if (!(typeof contentType === 'string' || contentType instanceof RegExp)) throw new FST_ERR_CTP_INVALID_TYPE()
+
+  delete this.customParsers[contentType]
+
+  const parsers = typeof contentType === 'string' ? this.parserList : this.parserRegExpList
+
+  const idx = parsers.findIndex(ct => ct.toString() === contentType.toString())
+
+  if (idx > -1) {
+    parsers.splice(idx, 1)
+  }
+}
+
 ContentTypeParser.prototype.run = function (contentType, handler, request, reply) {
   const parser = this.cache.get(contentType) || this.getParser(contentType)
+  const resource = new AsyncResource('content-type-parser:run', request)
 
   if (parser === undefined) {
     reply.send(new FST_ERR_CTP_INVALID_MEDIA_TYPE(contentType))
@@ -107,13 +151,7 @@ ContentTypeParser.prototype.run = function (contentType, handler, request, reply
       done
     )
   } else {
-    let result
-
-    if (parser.isDeprecatedSignature) {
-      result = parser.fn(request[kRequestPayloadStream], done)
-    } else {
-      result = parser.fn(request, request[kRequestPayloadStream], done)
-    }
+    const result = parser.fn(request, request[kRequestPayloadStream], done)
 
     if (result && typeof result.then === 'function') {
       result.then(body => done(null, body), done)
@@ -121,12 +159,16 @@ ContentTypeParser.prototype.run = function (contentType, handler, request, reply
   }
 
   function done (error, body) {
-    if (error) {
-      reply.send(error)
-    } else {
-      request.body = body
-      handler(request, reply)
-    }
+    // We cannot use resource.bind() because it is broken in node v12 and v14
+    resource.runInAsyncScope(() => {
+      if (error) {
+        reply[kReplyIsError] = true
+        reply.send(error)
+      } else {
+        request.body = body
+        handler(request, reply)
+      }
+    })
   }
 }
 
@@ -181,6 +223,7 @@ function rawBody (request, reply, options, parser, done) {
 
     if (err !== undefined) {
       err.statusCode = 400
+      reply[kReplyIsError] = true
       reply.code(err.statusCode).send(err)
       return
     }
@@ -232,12 +275,6 @@ function Parser (asString, asBuffer, bodyLimit, fn) {
   this.asBuffer = asBuffer
   this.bodyLimit = bodyLimit
   this.fn = fn
-
-  // Check for deprecation syntax
-  if (fn.length === (fn.constructor.name === 'AsyncFunction' ? 1 : 2)) {
-    warning.emit('FSTDEP003')
-    this.isDeprecatedSignature = true
-  }
 }
 
 function buildContentTypeParser (c) {
@@ -274,11 +311,35 @@ function hasContentTypeParser (contentType) {
   return this[kContentTypeParser].hasParser(contentType)
 }
 
+function removeContentTypeParser (contentType) {
+  if (this[kState].started) {
+    throw new Error('Cannot call "removeContentTypeParser" when fastify instance is already started!')
+  }
+
+  if (Array.isArray(contentType)) {
+    for (const type of contentType) {
+      this[kContentTypeParser].remove(type)
+    }
+  } else {
+    this[kContentTypeParser].remove(contentType)
+  }
+}
+
+function removeAllContentTypeParsers () {
+  if (this[kState].started) {
+    throw new Error('Cannot call "removeAllContentTypeParsers" when fastify instance is already started!')
+  }
+
+  this[kContentTypeParser].removeAll()
+}
+
 module.exports = ContentTypeParser
 module.exports.helpers = {
   buildContentTypeParser,
   addContentTypeParser,
-  hasContentTypeParser
+  hasContentTypeParser,
+  removeContentTypeParser,
+  removeAllContentTypeParsers
 }
 module.exports.defaultParsers = {
   getDefaultJsonParser,

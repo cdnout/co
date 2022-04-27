@@ -3,12 +3,12 @@
 const keys = {
   kAvvioBoot: Symbol('fastify.avvioBoot'),
   kChildren: Symbol('fastify.children'),
+  kServerBindings: Symbol('fastify.serverBindings'),
   kBodyLimit: Symbol('fastify.bodyLimit'),
   kRoutePrefix: Symbol('fastify.routePrefix'),
   kLogLevel: Symbol('fastify.logLevel'),
   kLogSerializers: Symbol('fastify.logSerializers'),
   kHooks: Symbol('fastify.hooks'),
-  kHooksDeprecatedPreParsing: Symbol('fastify.hooks.DeprecatedPreParsing'),
   kSchemaController: Symbol('fastify.schemaController'),
   kSchemaHeaders: Symbol('headers-schema'),
   kSchemaParams: Symbol('params-schema'),
@@ -21,6 +21,7 @@ const keys = {
   kReply: Symbol('fastify.Reply'),
   kRequest: Symbol('fastify.Request'),
   kRequestPayloadStream: Symbol('fastify.RequestPayloadStream'),
+  kRequestAcceptVersion: Symbol('fastify.RequestAcceptVersion'),
   kCanSetNotFoundHandler: Symbol('fastify.canSetNotFoundHandler'),
   kFourOhFour: Symbol('fastify.404'),
   kFourOhFourLevelInstance: Symbol('fastify.404LogLevelInstance'),
@@ -29,10 +30,12 @@ const keys = {
   kReplySerializer: Symbol('fastify.reply.serializer'),
   kReplyIsError: Symbol('fastify.reply.isError'),
   kReplyHeaders: Symbol('fastify.reply.headers'),
+  kReplyTrailers: Symbol('fastify.reply.trailers'),
   kReplyHasStatusCode: Symbol('fastify.reply.hasStatusCode'),
-  kReplySent: Symbol('fastify.reply.sent'),
-  kReplySentOverwritten: Symbol('fastify.reply.sentOverwritten'),
+  kReplyHijacked: Symbol('fastify.reply.hijacked'),
   kReplyStartTime: Symbol('fastify.reply.startTime'),
+  kReplyNextErrorHandler: Symbol('fastify.reply.nextErrorHandler'),
+  kReplyEndTime: Symbol('fastify.reply.endTime'),
   kReplyErrorHandlerCalled: Symbol('fastify.reply.errorHandlerCalled'),
   kReplyIsRunningOnErrorHook: Symbol('fastify.reply.isRunningOnErrorHook'),
   kSchemaVisited: Symbol('fastify.schemas.visited'),
@@ -42,7 +45,9 @@ const keys = {
   kPluginNameChain: Symbol('fastify.pluginNameChain'),
   // This symbol is only meant to be used for fastify tests and should not be used for any other purpose
   kTestInternals: Symbol('fastify.testInternals'),
-  kErrorHandler: Symbol('fastify.errorHandler')
+  kErrorHandler: Symbol('fastify.errorHandler'),
+  kHasBeenDecorated: Symbol('fastify.hasBeenDecorated'),
+  kKeepAliveConnections: Symbol('fastify.keepAliveConnections')
 }
 
 module.exports = keys

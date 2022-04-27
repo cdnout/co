@@ -1,0 +1,1 @@
+[{"name":"diff-match-patch","version":"1.0.5","description":"The Diff Match and Patch libraries offer robust algorithms to perform the operations required for synchronizing plain text.","repository":"https:\/\/github.com\/google\/diff-match-patch.git","keyfiles":"index.js","keywords":["diff","match","patch","text-processing","difference"],"npm":"diff-match-patch"}]

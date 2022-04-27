@@ -3,10 +3,14 @@
 const { validate: validateSchema } = require('./validation')
 const { hookRunner, hookIterator } = require('./hooks')
 const wrapThenable = require('./wrapThenable')
+const {
+  kReplyIsError
+} = require('./symbols')
 
 function handleRequest (err, request, reply) {
   if (reply.sent === true) return
   if (err != null) {
+    reply[kReplyIsError] = true
     reply.send(err)
     return
   }
@@ -53,7 +57,7 @@ function handleRequest (err, request, reply) {
   }
 
   // Return 404 instead of 405 see https://github.com/fastify/fastify/pull/862 for discussion
-  reply.code(404).send(new Error('Not Found'))
+  handler(request, reply)
 }
 
 function handler (request, reply) {
@@ -75,11 +79,10 @@ function handler (request, reply) {
 }
 
 function preValidationCallback (err, request, reply) {
-  if (reply.sent === true ||
-    reply.raw.writableEnded === true ||
-    reply.raw.writable === false) return
+  if (reply.sent === true) return
 
   if (err != null) {
+    reply[kReplyIsError] = true
     reply.send(err)
     return
   }
@@ -109,11 +112,10 @@ function preValidationCallback (err, request, reply) {
 }
 
 function preHandlerCallback (err, request, reply) {
-  if (reply.sent ||
-    reply.raw.writableEnded === true ||
-    reply.raw.writable === false) return
+  if (reply.sent) return
 
   if (err != null) {
+    reply[kReplyIsError] = true
     reply.send(err)
     return
   }
@@ -123,6 +125,7 @@ function preHandlerCallback (err, request, reply) {
   try {
     result = reply.context.handler(request, reply)
   } catch (err) {
+    reply[kReplyIsError] = true
     reply.send(err)
     return
   }

@@ -4,10 +4,9 @@ const semver = require('semver')
 const assert = require('assert')
 const registeredPlugins = Symbol.for('registered-plugin')
 const {
-  kReply,
-  kRequest,
   kTestInternals
 } = require('./symbols.js')
+const { exist, existReply, existRequest } = require('./decorate')
 const { FST_ERR_PLUGIN_VERSION_MISMATCH } = require('./errors')
 
 function getMeta (fn) {
@@ -15,14 +14,20 @@ function getMeta (fn) {
 }
 
 function getPluginName (func) {
+  const display = getDisplayName(func)
+  if (display) {
+    return display
+  }
+
   // let's see if this is a file, and in that case use that
   // this is common for plugins
   const cache = require.cache
   const keys = Object.keys(cache)
 
   for (let i = 0; i < keys.length; i++) {
-    if (cache[keys[i]].exports === func) {
-      return keys[i]
+    const key = keys[i]
+    if (cache[key].exports === func) {
+      return key
     }
   }
 
@@ -70,20 +75,25 @@ function checkDecorators (fn) {
   const { decorators, name } = meta
   if (!decorators) return
 
-  if (decorators.fastify) _checkDecorators.call(this, 'Fastify', decorators.fastify, name)
-  if (decorators.reply) _checkDecorators.call(this[kReply], 'Reply', decorators.reply, name)
-  if (decorators.request) _checkDecorators.call(this[kRequest], 'Request', decorators.request, name)
+  if (decorators.fastify) _checkDecorators(this, 'Fastify', decorators.fastify, name)
+  if (decorators.reply) _checkDecorators(this, 'Reply', decorators.reply, name)
+  if (decorators.request) _checkDecorators(this, 'Request', decorators.request, name)
 }
 
-function _checkDecorators (instance, decorators, name) {
+const checks = {
+  Fastify: exist,
+  Request: existRequest,
+  Reply: existReply
+}
+
+function _checkDecorators (that, instance, decorators, name) {
   assert(Array.isArray(decorators), 'The decorators should be an array of strings')
 
   decorators.forEach(decorator => {
     const withPluginName = typeof name === 'string' ? ` required by '${name}'` : ''
-    assert(
-      instance === 'Fastify' ? decorator in this : decorator in this.prototype,
-      `The decorator '${decorator}'${withPluginName} is not present in ${instance}`
-    )
+    if (!checks[instance].call(that, decorator)) {
+      throw new Error(`The decorator '${decorator}'${withPluginName} is not present in ${instance}`)
+    }
   })
 }
 
@@ -92,9 +102,10 @@ function checkVersion (fn) {
   if (!meta) return
 
   const requiredVersion = meta.fastify
-  if (!requiredVersion) return
 
-  if (!semver.satisfies(this.version, requiredVersion)) throw new FST_ERR_PLUGIN_VERSION_MISMATCH(meta.name, requiredVersion, this.version)
+  if (requiredVersion && !semver.satisfies(this.version, requiredVersion)) {
+    throw new FST_ERR_PLUGIN_VERSION_MISMATCH(meta.name, requiredVersion, this.version)
+  }
 }
 
 function registerPluginName (fn) {
@@ -108,9 +119,7 @@ function registerPluginName (fn) {
 
 function registerPlugin (fn) {
   registerPluginName.call(this, fn)
-  if (this.version !== undefined) {
-    checkVersion.call(this, fn)
-  }
+  checkVersion.call(this, fn)
   checkDecorators.call(this, fn)
   checkDependencies.call(this, fn)
   return shouldSkipOverride(fn)

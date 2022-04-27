@@ -37,8 +37,10 @@ module.exports = function override (old, fn, opts) {
   old[kChildren].push(instance)
   instance.ready = old[kAvvioBoot].bind(instance)
   instance[kChildren] = []
+
   instance[kReply] = Reply.buildReply(instance[kReply])
   instance[kRequest] = Request.buildRequest(instance[kRequest])
+
   instance[kContentTypeParser] = ContentTypeParser.helpers.buildContentTypeParser(instance[kContentTypeParser])
   instance[kHooks] = buildHooks(instance[kHooks])
   instance[kRoutePrefix] = buildRoutePrefix(instance[kRoutePrefix], opts.prefix)

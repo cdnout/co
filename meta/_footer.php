@@ -1,8 +1,13 @@
-<footer id="mast-foot">
-    <div class="container">
+<footer id="mastfooter">
+    <div class="container-large">
       <div class="holder">
-        <p>CDN Powered by Cloudflare, crafted by YesViz.</p>
+        <p>
+            2020 - <?php echo date("Y"); ?> &copy; cdnout.com
+        </p>
       </div>
+        <div class="links">
+            <a href="<?php echo $base_url; ?>privacy.php">Cookies & Privacy</a>
+        </div>
     </div>
   </footer>
 </div>

@@ -9,21 +9,17 @@ const {
   kRoutePrefix,
   kCanSetNotFoundHandler,
   kFourOhFourLevelInstance,
-  kReply,
-  kRequest,
-  kContentTypeParser,
-  kBodyLimit,
-  kLogLevel,
   kFourOhFourContext,
-  kHooks,
-  kErrorHandler
+  kHooks
 } = require('./symbols.js')
 const { lifecycleHooks } = require('./hooks')
+const { buildErrorHandler } = require('./error-handler.js')
 const fourOhFourContext = {
   config: {
   },
   onSend: [],
-  onError: []
+  onError: [],
+  errorHandler: buildErrorHandler()
 }
 
 /**
@@ -37,7 +33,8 @@ function fourOhFour (options) {
   const { logger, genReqId } = options
 
   // 404 router, used for handling encapsulated 404 handlers
-  const router = FindMyWay({ defaultRoute: fourOhFourFallBack })
+  const router = FindMyWay({ onBadUrl: createOnBadUrl(), defaultRoute: fourOhFourFallBack })
+  let _onBadUrlHandler = null
 
   return { router, setNotFoundHandler, setContext, arrange404 }
 
@@ -45,6 +42,8 @@ function fourOhFour (options) {
     // Change the pointer of the fastify instance to itself, so register + prefix can add new 404 handler
     instance[kFourOhFourLevelInstance] = instance
     instance[kCanSetNotFoundHandler] = true
+    // we need to bind instance for the context
+    router.onBadUrl = router.onBadUrl.bind(instance)
   }
 
   function basic404 (request, reply) {
@@ -56,6 +55,18 @@ function fourOhFour (options) {
       error: 'Not Found',
       statusCode: 404
     })
+  }
+
+  function createOnBadUrl () {
+    return function onBadUrl (path, req, res) {
+      const id = genReqId(req)
+      const childLogger = logger.child({ reqId: id })
+      const fourOhFourContext = this[kFourOhFourLevelInstance][kFourOhFourContext]
+      const request = new Request(id, null, req, null, childLogger, fourOhFourContext)
+      const reply = new Reply(res, request, childLogger)
+
+      _onBadUrlHandler(request, reply)
+    }
   }
 
   function setContext (instance, context) {
@@ -107,8 +118,12 @@ function fourOhFour (options) {
     if (handler) {
       this[kFourOhFourLevelInstance][kCanSetNotFoundHandler] = false
       handler = handler.bind(this)
+      // update onBadUrl handler
+      _onBadUrlHandler = handler
     } else {
       handler = basic404
+      // update onBadUrl handler
+      _onBadUrlHandler = basic404
     }
 
     this.after((notHandledErr, done) => {
@@ -118,17 +133,12 @@ function fourOhFour (options) {
   }
 
   function _setNotFoundHandler (prefix, opts, handler, avvio, routeHandler) {
-    const context = new Context(
-      opts.schema,
+    const context = new Context({
+      schema: opts.schema,
       handler,
-      this[kReply],
-      this[kRequest],
-      this[kContentTypeParser],
-      opts.config || {},
-      this[kErrorHandler],
-      this[kBodyLimit],
-      this[kLogLevel]
-    )
+      config: opts.config || {},
+      server: this
+    })
 
     avvio.once('preReady', () => {
       const context = this[kFourOhFourContext]

@@ -2,5 +2,5 @@
 $npm_check = "vue-tables-2";
 $keyfiles_add = array("");
 $version_limit = "-10";
-$type_s = "jquery";
+$type_s = "vue";
 ?>

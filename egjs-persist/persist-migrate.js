@@ -5,7 +5,7 @@ Copyright (c) 2017 NAVER Corp.
 @egjs/persist JavaScript library
 
 
-@version 2.2.2
+@version 2.7.0-beta.0
 */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -34,22 +34,31 @@ Copyright (c) 2017 NAVER Corp.
 	var TYPE_NAVIGATE = navigation && navigation.TYPE_NAVIGATE || 0;
 	var TYPE_RELOAD = navigation && navigation.TYPE_RELOAD || 1;
 	var TYPE_BACK_FORWARD = navigation && navigation.TYPE_BACK_FORWARD || 2;
-
 	var userAgent = navigator ? navigator.userAgent : "";
-
-	var isNeeded = function () {
+	var IS_PERSIST_NEEDED = function () {
 	  var isIOS = new RegExp("iPhone|iPad", "i").test(userAgent);
 	  var isMacSafari = new RegExp("Mac", "i").test(userAgent) && !new RegExp("Chrome", "i").test(userAgent) && new RegExp("Apple", "i").test(userAgent);
 	  var isAndroid = new RegExp("Android ", "i").test(userAgent);
 	  var isWebview = new RegExp("wv; |inapp;", "i").test(userAgent);
 	  var androidVersion = isAndroid ? parseFloat(new RegExp("(Android)\\s([\\d_\\.]+|\\d_0)", "i").exec(userAgent)[2]) : undefined;
 	  return !(isIOS || isMacSafari || isAndroid && (androidVersion <= 4.3 && isWebview || androidVersion < 3));
+	}();
+
+	var userAgent$1 = navigator ? navigator.userAgent : "";
+	var isNeeded = function () {
+	  var isIOS = new RegExp("iPhone|iPad", "i").test(userAgent$1);
+	  var isMacSafari = new RegExp("Mac", "i").test(userAgent$1) && !new RegExp("Chrome", "i").test(userAgent$1) && new RegExp("Apple", "i").test(userAgent$1);
+	  var isAndroid = new RegExp("Android ", "i").test(userAgent$1);
+	  var isWebview = new RegExp("wv; |inapp;", "i").test(userAgent$1);
+	  var androidVersion = isAndroid ? parseFloat(new RegExp("(Android)\\s([\\d_\\.]+|\\d_0)", "i").exec(userAgent$1)[2]) : undefined;
+	  return !(isIOS || isMacSafari || isAndroid && (androidVersion <= 4.3 && isWebview || androidVersion < 3));
 	}(); // In case of IE8, TYPE_BACK_FORWARD is undefined.
-
-	function getUrl() {
-	  return location ? location.href.split("#")[0] : "";
+	function getHashUrl() {
+	  return location ? location.href : "";
 	}
-
+	function getUrl() {
+	  return getHashUrl().split("#")[0];
+	}
 	function getStorageKey(name) {
 	  return name + CONST_PERSIST;
 	}

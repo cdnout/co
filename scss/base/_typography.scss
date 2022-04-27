@@ -9,14 +9,16 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $text;
-  background: $gray-lightest;
+  color: $gray-dark;
+  background: $white;
   min-width: 320px;
+
   margin: 0;
-  font: 13px/1.2 $family;
+  font: 14px/(1.625) $family;
 
   @media (min-width: 1024px) {
-    @include font(15, 25);
+    font-size: 16px;
+    line-height: 1.625;
   }
 }
 
@@ -40,6 +42,13 @@ a {
     color: darken($primary, 10%);
   }
 }
+p {
+  margin: 0 0 20px;
+  &:last-child {
+    margin-bottom: 0;
+
+  }
+}
 
 h1,
 .h1,
@@ -54,7 +63,9 @@ h5,
 h6,
 .h6,
 .h {
-  color: $dark;
+  color: $gray-darker;
+  font-family: $familyH;
+  font-weight: 700;
 
   &:last-child {
     margin-bottom: 0;
@@ -71,49 +82,41 @@ h6,
 }
 
 h1 {
-  font-size: 27px;
-  line-height: 1.2;
-  margin: 0 0 20px;
-  font-weight: 400;
-}
+  color: #333e63;
+  margin: 0 0 15px;
+  font-size: 20px;
+  line-height: (55/30);
+  font-weight: 700;
+  @media (min-width: 1200px) {
+    font-size: 24px;
+  }
+  @media (min-width: 1350px) {
+    font-size: 26px;
+  }
 
-.btn {
-  border: 0;
-  background: $primary;
-  border-radius: 5px;
-  padding: 11px 20px 12px;
-  text-align: center;
-  display: inline-flex;
-  vertical-align: top;
-  text-transform: uppercase;
-  font-size: 13px;
-  line-height: 20px;
-  font-weight: 600;
-  align-items: center;
-  letter-spacing: .5px;
-  font-family: "Open Sans", Arial;
-  position: relative;
-  box-shadow: 0 4px 8px 0 rgba($primary, .1);
-  color: $white;
-
-  &.btn-light-outline {
-    border: 1px solid $primary;
-    background: none;
+  @media (min-width: 1440px) {
+    font-size: 33.5px;
+    margin: 0 0 20px;
+  }
+  span {
+    display: block;
     color: $primary;
-  }
+    font: 42px/1 $familySerif;
+    margin: 0 0 10px;
+    letter-spacing: 0;
 
-  &.btn-dark {
-    background: $dark;
-    box-shadow: 0 4px 8px 0 rgba($dark, .1);
-  }
+    @media (min-width: 1200px) {
+      font-size: 52px;
+    }
 
-  &:hover,
-  &:focus {
-    background: darken($primary, 10%);
-    color: $white !important;
-  }
+    @media (min-width: 1350px) {
+      font-size: 60px;
+    }
 
-  i {
-    font-size: 14px;
+    @media (min-width: 1440px) {
+      font-size: 80px;
+    }
   }
 }
+
+

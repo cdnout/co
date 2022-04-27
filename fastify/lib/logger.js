@@ -35,7 +35,7 @@ function createPinoLogger (opts, stream) {
     if (prevLogger[serializersSym]) {
       opts.serializers = Object.assign({}, opts.serializers, prevLogger[serializersSym])
     }
-    logger = prevLogger.child(opts)
+    logger = prevLogger.child({}, opts)
     opts.logger = prevLogger
     opts.genReqId = prevGenReqId
   } else {
@@ -50,10 +50,10 @@ const serializers = {
     return {
       method: req.method,
       url: req.url,
-      version: req.headers['accept-version'],
+      version: req.headers && req.headers['accept-version'],
       hostname: req.hostname,
       remoteAddress: req.ip,
-      remotePort: req.socket.remotePort
+      remotePort: req.socket ? req.socket.remotePort : undefined
     }
   },
   err: pino.stdSerializers.err,

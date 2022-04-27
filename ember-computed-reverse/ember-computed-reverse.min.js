@@ -1,1 +1,1 @@
-(function(e){var t=e.get,n="length";e.computed.reverse=function(r){return e.arrayComputed(r,{addedItem:function(e,r,u){e.insertAt(t(e,n)-u.index,r);return e},removedItem:function(e,r,u){e.removeAt(t(e,n)-u.index-1);return e}})}})(Ember);
+!function(t){var r=t.get,u="length";t.computed.reverse=function(e){return t.arrayComputed(e,{addedItem:function(e,t,n){return e.insertAt(r(e,u)-n.index,t),e},removedItem:function(e,t,n){return e.removeAt(r(e,u)-n.index-1),e}})}}(Ember);

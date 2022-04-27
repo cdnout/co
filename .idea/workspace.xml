@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="88e1f7f9-9654-4618-bfd1-26688e82b7c8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/browse/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/browse/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/3Dmol/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/3Dmol/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/6pac-slickgrid/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/6pac-slickgrid/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/RyanMullins-angular-hammer/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/RyanMullins-angular-hammer/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/Vue.Draggable/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/Vue.Draggable/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/Vue2Leaflet/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/Vue2Leaflet/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/ace/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/ace/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/alexandernst-angular-multi-select/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/alexandernst-angular-multi-select/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.0.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.0.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.0.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.0.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.1.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.1.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.1.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.1.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.1.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.1.2/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.2.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.2.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.2.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.2.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.2.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.2.2/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/amazeui-react@1.2.3/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/amazeui-react@1.2.3/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-animate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-animate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-aria/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-aria/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-audio/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-audio/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-auth0/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-auth0/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-auto-validate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-auto-validate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-autofields/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-autofields/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-bacon/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-bacon/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-base64-upload/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-base64-upload/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-base64/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-base64/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-bindonce/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-bindonce/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-block-ui/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-block-ui/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-bootstrap-colorpicker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-bootstrap-colorpicker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-bootstrap-datetimepicker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-bootstrap-datetimepicker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-bootstrap-lightbox/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-bootstrap-lightbox/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-bootstrap-slider/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-bootstrap-slider/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-bootstrap-switch/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-bootstrap-switch/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-br-filters/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-br-filters/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-breadcrumb/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-breadcrumb/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-busy/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-busy/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-cache/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-cache/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-cached-resource/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-cached-resource/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-carousel/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-carousel/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-chart.js/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-chart.js/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-chartist.js/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-chartist.js/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-charts/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-charts/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-chosen-localytics/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-chosen-localytics/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ckeditor/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ckeditor/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-clipboard/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-clipboard/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-confirm/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-confirm/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-cookie/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-cookie/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-cookies/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-cookies/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-css-injector/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-css-injector/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-css/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-css/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-data-table/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-data-table/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-data/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-data/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-datatables/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-datatables/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-debounce/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-debounce/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-deckgrid/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-deckgrid/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-dialog-service/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-dialog-service/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-drag-and-drop-lists/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-drag-and-drop-lists/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-dragula/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-dragula/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-dynamic-locale/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-dynamic-locale/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-elastic-input/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-elastic-input/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-elastic/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-elastic/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-elevatezoom-plus/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-elevatezoom-plus/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-file-saver/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-file-saver/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-file-upload/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-file-upload/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-filemanager/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-filemanager/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-filter/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-filter/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-flatpickr/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-flatpickr/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-fontselect/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-fontselect/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-formly-material/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-formly-material/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-formly-templates-bootstrap/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-formly-templates-bootstrap/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-formly/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-formly/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-foundation-6/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-foundation-6/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-foundation/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-foundation/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-gantt/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-gantt/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-gettext/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-gettext/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-google-analytics/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-google-analytics/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-google-chart/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-google-chart/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-google-maps/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-google-maps/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-gravatar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-gravatar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-gridster/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-gridster/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-growl-2/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-growl-2/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-growl/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-growl/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-hal/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-hal/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-highlightjs/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-highlightjs/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-hotkeys/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-hotkeys/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-http-auth/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-http-auth/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-image-spinner/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-image-spinner/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-img-cropper/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-img-cropper/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-imgcache.js/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-imgcache.js/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-input-masks/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-input-masks/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-inview/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-inview/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-js-bootstrap-datetimepicker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-js-bootstrap-datetimepicker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ladda/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ladda/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-leaflet-directive/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-leaflet-directive/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-linkify/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-linkify/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-loader/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-loader/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-loading-bar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-loading-bar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-local-storage/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-local-storage/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-mapboxgl-directive/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-mapboxgl-directive/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-material-calendar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-material-calendar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-material-data-table/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-material-data-table/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-material-icons/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-material-icons/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-material/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-material/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-materialize/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-materialize/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-md5/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-md5/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-media-queries/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-media-queries/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-message-format/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-message-format/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-messages/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-messages/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-mixpanel/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-mixpanel/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-mocks/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-mocks/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-moment-picker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-moment-picker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-moment/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-moment/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-morris/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-morris/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-motion/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-motion/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-mousewheel/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-mousewheel/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-multi-select/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-multi-select/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-notification/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-notification/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-numeraljs/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-numeraljs/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-nvd3/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-nvd3/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-pageslide-directive/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-pageslide-directive/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-parse-ext/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-parse-ext/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-patternfly/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-patternfly/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-pdf-viewer/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-pdf-viewer/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-permission/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-permission/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-poller/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-poller/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-pusher/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-pusher/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-qrcode/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-qrcode/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-recaptcha/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-recaptcha/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-relative-date/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-relative-date/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-resizable/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-resizable/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-resource/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-resource/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-restmod/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-restmod/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-retina/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-retina/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-route-segment/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-route-segment/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-route/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-route/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-sanitize/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-sanitize/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-schema-form/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-schema-form/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-scroll/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-scroll/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-signalr-hub/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-signalr-hub/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-simple-logger/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-simple-logger/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-slick-carousel/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-slick-carousel/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-smart-table/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-smart-table/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-smooth-scrollbar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-smooth-scrollbar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-socialshare/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-socialshare/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-socket-io/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-socket-io/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-sortable-view/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-sortable-view/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-soundmanager2/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-soundmanager2/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-spinner/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-spinner/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-storage/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-storage/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-strap/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-strap/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-stripe/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-stripe/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-summernote/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-summernote/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-svg-round-progressbar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-svg-round-progressbar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-sweetalert/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-sweetalert/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-timer/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-timer/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-toarrayfilter/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-toarrayfilter/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-toastr/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-toastr/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-tooltips/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-tooltips/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-touch/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-touch/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate-handler-log/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate-handler-log/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate-interpolation-messageformat/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate-interpolation-messageformat/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate-loader-partial/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate-loader-partial/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate-loader-static-files/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate-loader-static-files/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate-loader-url/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate-loader-url/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate-storage-cookie/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate-storage-cookie/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate-storage-local/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate-storage-local/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-translate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-translate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-tree-control/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-tree-control/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-truncate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-truncate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-ace/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-ace/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-bootstrap/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-bootstrap/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-calendar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-calendar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-codemirror/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-codemirror/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-date/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-date/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-grid/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-grid/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-mask/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-mask/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-notification/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-notification/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-router-default/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-router-default/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-router-title/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-router-title/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-router.statehelper/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-router.statehelper/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-router/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-router/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-scrollpoint/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-scrollpoint/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-select/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-select/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-slider/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-slider/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-sortable/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-sortable/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-switch/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-switch/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-tinymce/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-tinymce/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-tree/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-tree/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-utils/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-utils/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui-validate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui-validate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-ui/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-ui/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-utf8-base64/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-utf8-base64/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-validation/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-validation/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-validator/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-validator/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-vertxbus/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-vertxbus/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-video-bg/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-video-bg/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-websocket/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-websocket/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-wizard/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-wizard/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-wysiwyg/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-wysiwyg/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular-xeditable/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular-xeditable/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular2-materialize/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular2-materialize/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angular2-polyfill/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angular2-polyfill/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularFire/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularFire/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularLocalStorage/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularLocalStorage/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularSubkit/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularSubkit/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-color-picker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-color-picker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-datepicker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-datepicker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-dropdown-multiselect/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-dropdown-multiselect/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-google-maps/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-google-maps/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-ie8-build/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-ie8-build/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-nvd3-directives/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-nvd3-directives/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-pdf/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-pdf/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-scroll-glue/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-scroll-glue/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-slider/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-slider/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angularjs-toaster/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angularjs-toaster/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angulartics-google-analytics/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angulartics-google-analytics/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/angulartics/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/angulartics/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/antv-x6-react-shape/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/antv-x6-react-shape/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/backbone-react-component/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/backbone-react-component/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/bootstrap-vue/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/bootstrap-vue/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/c3-angular/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/c3-angular/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/danialfarid-angular-file-upload/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/danialfarid-angular-file-upload/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/fluentui-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/fluentui-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/formsy-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/formsy-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/griddle-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/griddle-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/hchs-vue-charts/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/hchs-vue-charts/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/js-data-angular/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/js-data-angular/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/machineboy2045-angular-selectize2/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/machineboy2045-angular-selectize2/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/mobile-angular-ui/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/mobile-angular-ui/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/mobx-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/mobx-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/myforce-angularjs-dropdown-multiselect/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/myforce-angularjs-dropdown-multiselect/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/pusher-angular/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/pusher-angular/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-ace/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-ace/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-autocomplete/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-autocomplete/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-autosuggest/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-autosuggest/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-big-calendar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-big-calendar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-block-ui/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-block-ui/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-bootstrap-select/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-bootstrap-select/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-bootstrap-table/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-bootstrap-table/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-bootstrap-typeahead/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-bootstrap-typeahead/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-bootstrap/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-bootstrap/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-card-flip/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-card-flip/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-chartjs-2/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-chartjs-2/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-chartjs/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-chartjs/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-chartkick/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-chartkick/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-contextmenu/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-contextmenu/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-cookie/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-cookie/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-data-grid/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-data-grid/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-date-picker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-date-picker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-datepicker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-datepicker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-dates/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-dates/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-datetime/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-datetime/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-day-picker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-day-picker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-disqus-thread/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-disqus-thread/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-dnd/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-dnd/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-dropzone/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-dropzone/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-extras/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-extras/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-faux-dom/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-faux-dom/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-flip-move/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-flip-move/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-flip-toolkit/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-flip-toolkit/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-foundation-apps/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-foundation-apps/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-geosuggest/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-geosuggest/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-grid-layout/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-grid-layout/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-helmet/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-helmet/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-highcharts/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-highcharts/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-image-crop/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-image-crop/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-imgix/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-imgix/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-inlinesvg/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-inlinesvg/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-inputs-validation/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-inputs-validation/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-instantsearch-theme-algolia/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-instantsearch-theme-algolia/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-instantsearch/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-instantsearch/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-intl/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-intl/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-ios-switch/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-ios-switch/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-is/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-is/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-json-tree/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-json-tree/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-jsonschema-form/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-jsonschema-form/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-leaflet/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-leaflet/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-localstorage/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-localstorage/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-markdown-editor-lite/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-markdown-editor-lite/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-markdown/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-markdown/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-mdl/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-mdl/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-modal/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-modal/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-motion-ui-pack/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-motion-ui-pack/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-motion/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-motion/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-move/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-move/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-native-elements/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-native-elements/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-native-web/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-native-web/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-nvd3/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-nvd3/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-plotlyjs/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-plotlyjs/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-popper/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-popper/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-quill/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-quill/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-redux-form/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-redux-form/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-redux/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-redux/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-relay/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-relay/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-router-bootstrap/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-router-bootstrap/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-router-dom/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-router-dom/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-router-redux/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-router-redux/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-router/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-router/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-select/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-select/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-semantify/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-semantify/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-slick/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-slick/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-sortable-hoc/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-sortable-hoc/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-spring/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-spring/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-swipe/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-swipe/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-table/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-table/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-textarea-autosize/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-textarea-autosize/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-three-renderer/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-three-renderer/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-timeago/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-timeago/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-tinymce/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-tinymce/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-toolbox/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-toolbox/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-transition-group/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-transition-group/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-trend/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-trend/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-uwp/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-uwp/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-virtualized/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-virtualized/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react-widgets/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react-widgets/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/reactable/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/reactable/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/reacthttp/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/reacthttp/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/reactive-coffee/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/reactive-coffee/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/reactive-elements/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/reactive-elements/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/reactstrap/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/reactstrap/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/reading-time/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/reading-time/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/rx-angular/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/rx-angular/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/semantic-ui-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/semantic-ui-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/shards-vue/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/shards-vue/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/survey-angular/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/survey-angular/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/survey-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/survey-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/survey-vue/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/survey-vue/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap/twitter-bootstrap@4.5.3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.3.5/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.3.5/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.3.6/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.3.6/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.3.7/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.3.7/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.4.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.4.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.4.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@3.4.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.0.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.0.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.2/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.3/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.1.3/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.2.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.2.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.3.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.3.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.3.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.3.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.4.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.4.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.4.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.4.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.2/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.3/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.5.3/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.6.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@4.6.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@5.0.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@5.0.0/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@5.0.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@5.0.1/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/twitter-bootstrap@5.0.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/twitter-bootstrap@5.0.2/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/voerro-vue-tagsinput/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/voerro-vue-tagsinput/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-async-data/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-async-data/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-bootstrap-datetimepicker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-bootstrap-datetimepicker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-bootstrap-typeahead/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-bootstrap-typeahead/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-cesium/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-cesium/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-chartjs/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-chartjs/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-clickaway/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-clickaway/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-clipboard2/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-clipboard2/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-color/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-color/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-disqus/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-disqus/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-echarts/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-echarts/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-filter/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-filter/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-flow-form/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-flow-form/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-focus/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-focus/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-form/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-form/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-functional-calendar/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-functional-calendar/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-google-maps/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-google-maps/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-i18n/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-i18n/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-imgix/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-imgix/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-instant/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-instant/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-js-toggle-button/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-js-toggle-button/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-lazyload/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-lazyload/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-ls/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-ls/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-markdown/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-markdown/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-material-components/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-material-components/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-material/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-material/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-meta/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-meta/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-multiselect/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-multiselect/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-paginate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-paginate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-resource/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-resource/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-router/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-router/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-select/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-select/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-shortkey/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-shortkey/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-smart-table/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-smart-table/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-strap/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-strap/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-svgicon/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-svgicon/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-tables-2/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-tables-2/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-the-mask/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-the-mask/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-toasted/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-toasted/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue-validator/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue-validator/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vue/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuefire/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuefire/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuejs-datepicker/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuejs-datepicker/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuejs-paginate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuejs-paginate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuejs-paginator/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuejs-paginator/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuejs-storage/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuejs-storage/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuetify/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuetify/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuex-persistedstate/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuex-persistedstate/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuex/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuex/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/vuikit/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vuikit/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/zingchart-angularjs/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/zingchart-angularjs/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/zingchart-react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/zingchart-react/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdn/zumper-angular-payments/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/zumper-angular-payments/var.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/css.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/css.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/icomoon.eot" beforeDir="false" afterPath="$PROJECT_DIR$/fonts/icomoon.eot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/icomoon.svg" beforeDir="false" afterPath="$PROJECT_DIR$/fonts/icomoon.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/icomoon.ttf" beforeDir="false" afterPath="$PROJECT_DIR$/fonts/icomoon.ttf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/icomoon.woff" beforeDir="false" afterPath="$PROJECT_DIR$/fonts/icomoon.woff" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fonts/selection.json" beforeDir="false" afterPath="$PROJECT_DIR$/fonts/selection.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/hero.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/hero.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/js.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/js.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/meta/_footer.php" beforeDir="false" afterPath="$PROJECT_DIR$/meta/_footer.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/meta/_head.php" beforeDir="false" afterPath="$PROJECT_DIR$/meta/_head.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/meta/_header.php" beforeDir="false" afterPath="$PROJECT_DIR$/meta/_header.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/base/_icons.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/base/_icons.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/base/_typography.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/base/_typography.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/base/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/base/_variables.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/css.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/css.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scss/prepros-6.config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/.htaccess" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/css/base.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-grid.css" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-grid.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-grid.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-grid.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-grid.rtl.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-grid.rtl.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-reboot.css" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-reboot.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-reboot.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-reboot.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-reboot.rtl.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-reboot.rtl.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-utilities.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-utilities.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-utilities.rtl.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap-utilities.rtl.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap.css" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap.rtl.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/css/bootstrap.rtl.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/home.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.bundle.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.bundle.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.bundle.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.esm.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.esm.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/js/bootstrap.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_accordion.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_alert.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_alert.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_badge.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_badge.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_breadcrumb.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_breadcrumb.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_button-group.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_button-group.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_buttons.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_buttons.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_card.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_card.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_carousel.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_carousel.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_close.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_close.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_containers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_dropdown.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_dropdown.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_forms.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_forms.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_functions.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_functions.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_grid.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_grid.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_helpers.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_list-group.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_list-group.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_mixins.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_mixins.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_modal.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_modal.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_nav.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_nav.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_navbar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_navbar.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_offcanvas.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_pagination.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_pagination.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_popover.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_popover.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_progress.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_progress.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_reboot.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_reboot.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_root.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_root.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_spinners.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_spinners.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_tables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_tables.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_toasts.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_toasts.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_tooltip.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_tooltip.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_transitions.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_transitions.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_type.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_type.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_utilities.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_utilities.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/_variables.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/bootstrap-grid.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/bootstrap-grid.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/bootstrap-reboot.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/bootstrap-reboot.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/bootstrap-utilities.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/bootstrap.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/bootstrap.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_floating-labels.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_form-check.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_form-control.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_form-range.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_form-select.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_form-text.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_input-group.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_labels.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/forms/_validation.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/helpers/_clearfix.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/helpers/_colored-links.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/helpers/_position.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/helpers/_ratio.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/helpers/_stretched-link.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/helpers/_text-truncation.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/helpers/_visually-hidden.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_alert.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_alert.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_border-radius.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_border-radius.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_box-shadow.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_box-shadow.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_breakpoints.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_breakpoints.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_buttons.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_buttons.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_caret.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_caret.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_clearfix.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_clearfix.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_color-scheme.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_container.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_forms.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_forms.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_gradients.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_gradients.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_grid.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_grid.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_image.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_image.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_list-group.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_list-group.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_lists.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_lists.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_pagination.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_pagination.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_reset-text.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_reset-text.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_table-variants.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_transition.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_transition.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_utilities.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/mixins/_visually-hidden.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/utilities/_api.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter-bootstrap/scss/vendor/_rfs.scss" beforeDir="false" afterPath="$PROJECT_DIR$/twitter-bootstrap/scss/vendor/_rfs.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/zip/twitter-bootstrap.zip" beforeDir="false" afterPath="$PROJECT_DIR$/zip/twitter-bootstrap.zip" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="22sJVRHXUdleTjZumVwUQ5J6gL8" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.date" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
+    <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="G:\server\htdocs\Projects\co" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="88e1f7f9-9654-4618-bfd1-26688e82b7c8" name="Changes" comment="" />
+      <created>1640620385095</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1640620385095</updated>
+      <workItem from="1640620388889" duration="2332000" />
+      <workItem from="1647493612283" duration="44623000" />
+      <workItem from="1647846155984" duration="23069000" />
+      <workItem from="1650996153319" duration="216000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/cash/cash.js" />
+        <option value="$PROJECT_DIR$/cash/cash.d.ts" />
+        <option value="$PROJECT_DIR$/hi-sven/index.js" />
+        <option value="$PROJECT_DIR$/hi-sven/index.mjs" />
+        <option value="$PROJECT_DIR$/hi-sven-git/index.js" />
+        <option value="$PROJECT_DIR$/hi-sven-git/index.mjs" />
+      </list>
+    </option>
+  </component>
+</project>

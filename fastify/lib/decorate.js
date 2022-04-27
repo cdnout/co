@@ -5,13 +5,15 @@
 const {
   kReply,
   kRequest,
-  kState
+  kState,
+  kHasBeenDecorated
 } = require('./symbols.js')
 
 const {
   FST_ERR_DEC_ALREADY_PRESENT,
   FST_ERR_DEC_MISSING_DEPENDENCY,
-  FST_ERR_DEC_AFTER_START
+  FST_ERR_DEC_AFTER_START,
+  FST_ERR_DEC_DEPENDENCY_INVALID_TYPE
 } = require('./errors')
 
 const warning = require('./warnings')
@@ -21,9 +23,7 @@ function decorate (instance, name, fn, dependencies) {
     throw new FST_ERR_DEC_ALREADY_PRESENT(name)
   }
 
-  if (dependencies) {
-    checkDependencies(instance, dependencies)
-  }
+  checkDependencies(instance, name, dependencies)
 
   if (fn && (typeof fn.getter === 'function' || typeof fn.setter === 'function')) {
     Object.defineProperty(instance, name, {
@@ -32,6 +32,27 @@ function decorate (instance, name, fn, dependencies) {
     })
   } else {
     instance[name] = fn
+  }
+}
+
+function decorateConstructor (konstructor, name, fn, dependencies) {
+  const instance = konstructor.prototype
+  if (instance.hasOwnProperty(name) || hasKey(konstructor, name)) {
+    throw new FST_ERR_DEC_ALREADY_PRESENT(name)
+  }
+
+  konstructor[kHasBeenDecorated] = true
+  checkDependencies(konstructor, name, dependencies)
+
+  if (fn && (typeof fn.getter === 'function' || typeof fn.setter === 'function')) {
+    Object.defineProperty(instance, name, {
+      get: fn.getter,
+      set: fn.setter
+    })
+  } else if (typeof fn === 'function') {
+    instance[name] = fn
+  } else {
+    konstructor.props.push({ key: name, value: fn })
   }
 }
 
@@ -49,22 +70,40 @@ function decorateFastify (name, fn, dependencies) {
 
 function checkExistence (instance, name) {
   if (name) {
-    return name in instance
+    return name in instance || (instance.prototype && name in instance.prototype) || hasKey(instance, name)
   }
 
   return instance in this
 }
 
+function hasKey (fn, name) {
+  if (fn.props) {
+    return fn.props.find(({ key }) => key === name)
+  }
+  return false
+}
+
 function checkRequestExistence (name) {
+  if (name && hasKey(this[kRequest], name)) return true
   return checkExistence(this[kRequest].prototype, name)
 }
 
 function checkReplyExistence (name) {
+  if (name && hasKey(this[kReply], name)) return true
   return checkExistence(this[kReply].prototype, name)
 }
 
-function checkDependencies (instance, deps) {
-  for (let i = 0; i < deps.length; i++) {
+function checkDependencies (instance, name, deps) {
+  if (deps === undefined || deps === null) {
+    return
+  }
+
+  if (!Array.isArray(deps)) {
+    throw new FST_ERR_DEC_DEPENDENCY_INVALID_TYPE(name)
+  }
+
+  // eslint-disable-next-line no-var
+  for (var i = 0; i !== deps.length; ++i) {
     if (!checkExistence(instance, deps[i])) {
       throw new FST_ERR_DEC_MISSING_DEPENDENCY(deps[i])
     }
@@ -74,14 +113,14 @@ function checkDependencies (instance, deps) {
 function decorateReply (name, fn, dependencies) {
   assertNotStarted(this, name)
   checkReferenceType(name, fn)
-  decorate(this[kReply].prototype, name, fn, dependencies)
+  decorateConstructor(this[kReply], name, fn, dependencies)
   return this
 }
 
 function decorateRequest (name, fn, dependencies) {
   assertNotStarted(this, name)
   checkReferenceType(name, fn)
-  decorate(this[kRequest].prototype, name, fn, dependencies)
+  decorateConstructor(this[kRequest], name, fn, dependencies)
   return this
 }
 
@@ -97,6 +136,6 @@ module.exports = {
   existRequest: checkRequestExistence,
   existReply: checkReplyExistence,
   dependencies: checkDependencies,
-  decorateReply: decorateReply,
-  decorateRequest: decorateRequest
+  decorateReply,
+  decorateRequest
 }

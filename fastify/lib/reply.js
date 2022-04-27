@@ -1,22 +1,21 @@
 'use strict'
 
-const eos = require('readable-stream').finished
-const statusCodes = require('http').STATUS_CODES
-const flatstr = require('flatstr')
-const FJS = require('fast-json-stringify')
+const eos = require('stream').finished
+
 const {
-  kSchemaResponse,
   kFourOhFourContext,
   kReplyErrorHandlerCalled,
-  kReplySent,
-  kReplySentOverwritten,
+  kReplyHijacked,
   kReplyStartTime,
+  kReplyEndTime,
   kReplySerializer,
   kReplySerializerDefault,
   kReplyIsError,
   kReplyHeaders,
+  kReplyTrailers,
   kReplyHasStatusCode,
   kReplyIsRunningOnErrorHook,
+  kReplyNextErrorHandler,
   kDisableRequestLogging
 } = require('./symbols.js')
 const { hookRunner, hookIterator, onSendHookRunner } = require('./hooks')
@@ -24,17 +23,8 @@ const { hookRunner, hookIterator, onSendHookRunner } = require('./hooks')
 const internals = require('./handleRequest')[Symbol.for('internals')]
 const loggerUtils = require('./logger')
 const now = loggerUtils.now
-const wrapThenable = require('./wrapThenable')
-
-const serializeError = FJS({
-  type: 'object',
-  properties: {
-    statusCode: { type: 'number' },
-    code: { type: 'string' },
-    error: { type: 'string' },
-    message: { type: 'string' }
-  }
-})
+const { handleError } = require('./error-handler')
+const { getSchemaSerializer } = require('./schemas')
 
 const CONTENT_TYPE = {
   JSON: 'application/json; charset=utf-8',
@@ -46,23 +36,26 @@ const {
   FST_ERR_REP_ALREADY_SENT,
   FST_ERR_REP_SENT_VALUE,
   FST_ERR_SEND_INSIDE_ONERR,
-  FST_ERR_BAD_STATUS_CODE
+  FST_ERR_BAD_STATUS_CODE,
+  FST_ERR_BAD_TRAILER_NAME,
+  FST_ERR_BAD_TRAILER_VALUE
 } = require('./errors')
 const warning = require('./warnings')
 
 function Reply (res, request, log) {
   this.raw = res
-  this[kReplySent] = false
   this[kReplySerializer] = null
   this[kReplyErrorHandlerCalled] = false
   this[kReplyIsError] = false
   this[kReplyIsRunningOnErrorHook] = false
   this.request = request
   this[kReplyHeaders] = {}
+  this[kReplyTrailers] = null
   this[kReplyHasStatusCode] = false
   this[kReplyStartTime] = undefined
   this.log = log
 }
+Reply.props = []
 
 Object.defineProperties(Reply.prototype, {
   context: {
@@ -70,28 +63,30 @@ Object.defineProperties(Reply.prototype, {
       return this.request.context
     }
   },
-  res: {
+  server: {
     get () {
-      warning.emit('FSTDEP002')
-      return this.raw
+      return this.request.context.server
     }
   },
   sent: {
     enumerable: true,
     get () {
-      return this[kReplySent]
+      // We are checking whether reply was hijacked or the response has ended.
+      return (this[kReplyHijacked] || this.raw.writableEnded) === true
     },
     set (value) {
+      warning.emit('FSTDEP010')
+
       if (value !== true) {
         throw new FST_ERR_REP_SENT_VALUE()
       }
 
-      if (this[kReplySent]) {
+      // We throw only if sent was overwritten from Fastify
+      if (this.sent && this[kReplyHijacked]) {
         throw new FST_ERR_REP_ALREADY_SENT()
       }
 
-      this[kReplySentOverwritten] = true
-      this[kReplySent] = true
+      this[kReplyHijacked] = true
     }
   },
   statusCode: {
@@ -105,7 +100,7 @@ Object.defineProperties(Reply.prototype, {
 })
 
 Reply.prototype.hijack = function () {
-  this[kReplySent] = true
+  this[kReplyHijacked] = true
   return this
 }
 
@@ -114,12 +109,13 @@ Reply.prototype.send = function (payload) {
     throw new FST_ERR_SEND_INSIDE_ONERR()
   }
 
-  if (this[kReplySent]) {
+  if (this.sent) {
     this.log.warn({ err: new FST_ERR_REP_ALREADY_SENT() }, 'Reply already sent')
     return this
   }
 
   if (payload instanceof Error || this[kReplyIsError] === true) {
+    this[kReplyIsError] = false
     onErrorHook(this, payload, onSendHook)
     return this
   }
@@ -133,7 +129,12 @@ Reply.prototype.send = function (payload) {
   const hasContentType = contentType !== undefined
 
   if (payload !== null) {
-    if (Buffer.isBuffer(payload) || typeof payload.pipe === 'function') {
+    if (typeof payload.pipe === 'function') {
+      onSendHook(this, payload)
+      return this
+    }
+
+    if (Buffer.isBuffer(payload)) {
       if (hasContentType === false) {
         this[kReplyHeaders]['content-type'] = CONTENT_TYPE.OCTET
       }
@@ -161,22 +162,14 @@ Reply.prototype.send = function (payload) {
     if (hasContentType === false) {
       this[kReplyHeaders]['content-type'] = CONTENT_TYPE.JSON
     } else {
-      // If hasContentType === true, we have a JSON mimetype
+      // If user doesn't set charset, we will set charset to utf-8
       if (contentType.indexOf('charset') === -1) {
-        // If we have simply application/json instead of a custom json mimetype
-        if (contentType.indexOf('/json') > -1) {
-          this[kReplyHeaders]['content-type'] = CONTENT_TYPE.JSON
+        const customContentType = contentType.trim()
+        if (customContentType.endsWith(';')) {
+          // custom content-type is ended with ';'
+          this[kReplyHeaders]['content-type'] = `${customContentType} charset=utf-8`
         } else {
-          const currContentType = this[kReplyHeaders]['content-type']
-          // We extract the custom mimetype part (e.g. 'hal+' from 'application/hal+json')
-          const customJsonType = currContentType.substring(
-            currContentType.indexOf('/'),
-            currContentType.indexOf('json') + 4
-          )
-
-          // We ensure we set the header to the proper JSON content-type if necessary
-          // (e.g. 'application/hal+json' instead of 'application/json')
-          this[kReplyHeaders]['content-type'] = CONTENT_TYPE.JSON.replace('/json', customJsonType)
+          this[kReplyHeaders]['content-type'] = `${customContentType}; charset=utf-8`
         }
       }
     }
@@ -209,7 +202,11 @@ Reply.prototype.getHeaders = function () {
 }
 
 Reply.prototype.hasHeader = function (key) {
-  return this[kReplyHeaders][key.toLowerCase()] !== undefined
+  key = key.toLowerCase()
+  if (this[kReplyHeaders][key] !== undefined) {
+    return true
+  }
+  return this.raw.hasHeader(key)
 }
 
 Reply.prototype.removeHeader = function (key) {
@@ -244,9 +241,51 @@ Reply.prototype.header = function (key, value) {
 Reply.prototype.headers = function (headers) {
   const keys = Object.keys(headers)
   /* eslint-disable no-var */
-  for (var i = 0; i < keys.length; i++) {
-    this.header(keys[i], headers[keys[i]])
+  for (var i = 0; i !== keys.length; ++i) {
+    const key = keys[i]
+    this.header(key, headers[key])
   }
+  return this
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Trailer#directives
+// https://httpwg.org/specs/rfc7230.html#chunked.trailer.part
+const INVALID_TRAILERS = new Set([
+  'transfer-encoding',
+  'content-length',
+  'host',
+  'cache-control',
+  'max-forwards',
+  'te',
+  'authorization',
+  'set-cookie',
+  'content-encoding',
+  'content-type',
+  'content-range',
+  'trailer'
+])
+
+Reply.prototype.trailer = function (key, fn) {
+  key = key.toLowerCase()
+  if (INVALID_TRAILERS.has(key)) {
+    throw new FST_ERR_BAD_TRAILER_NAME(key)
+  }
+  if (typeof fn !== 'function') {
+    throw new FST_ERR_BAD_TRAILER_VALUE(key, typeof fn)
+  }
+  if (this[kReplyTrailers] === null) this[kReplyTrailers] = {}
+  this[kReplyTrailers][key] = fn
+  return this
+}
+
+Reply.prototype.hasTrailer = function (key) {
+  if (this[kReplyTrailers] === null) return false
+  return this[kReplyTrailers][key.toLowerCase()] !== undefined
+}
+
+Reply.prototype.removeTrailer = function (key) {
+  if (this[kReplyTrailers] === null) return this
+  this[kReplyTrailers][key.toLowerCase()] = undefined
   return this
 }
 
@@ -302,7 +341,7 @@ Reply.prototype.getResponseTime = function () {
   let responseTime = 0
 
   if (this[kReplyStartTime] !== undefined) {
-    responseTime = now() - this[kReplyStartTime]
+    responseTime = (this[kReplyEndTime] || now()) - this[kReplyStartTime]
   }
 
   return responseTime
@@ -319,12 +358,14 @@ Reply.prototype.then = function (fulfilled, rejected) {
     return
   }
 
-  eos(this.raw, function (err) {
+  eos(this.raw, (err) => {
     // We must not treat ERR_STREAM_PREMATURE_CLOSE as
     // an error because it is created by eos, not by the stream.
     if (err && err.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
       if (rejected) {
         rejected(err)
+      } else {
+        this.log && this.log.warn('unhandled rejection on reply.then')
       }
     } else {
       fulfilled()
@@ -352,21 +393,28 @@ function preserializeHookEnd (err, request, reply, payload) {
     return
   }
 
-  if (reply[kReplySerializer] !== null) {
-    payload = reply[kReplySerializer](payload)
-  } else if (reply.context && reply.context[kReplySerializerDefault]) {
-    payload = reply.context[kReplySerializerDefault](payload, reply.raw.statusCode)
-  } else {
-    payload = serialize(reply.context, payload, reply.raw.statusCode)
+  try {
+    if (reply[kReplySerializer] !== null) {
+      payload = reply[kReplySerializer](payload)
+    } else if (reply.context && reply.context[kReplySerializerDefault]) {
+      payload = reply.context[kReplySerializerDefault](payload, reply.raw.statusCode)
+    } else {
+      payload = serialize(reply.context, payload, reply.raw.statusCode)
+    }
+  } catch (e) {
+    wrapSeralizationError(e, reply)
+    onErrorHook(reply, e)
+    return
   }
-
-  flatstr(payload)
 
   onSendHook(reply, payload)
 }
 
+function wrapSeralizationError (error, reply) {
+  error.serialization = reply.context.config
+}
+
 function onSendHook (reply, payload) {
-  reply[kReplySent] = true
   if (reply.context.onSend !== null) {
     onSendHookRunner(
       reply.context.onSend,
@@ -393,18 +441,33 @@ function onSendEnd (reply, payload) {
   const req = reply.request
   const statusCode = res.statusCode
 
-  if (payload === undefined || payload === null) {
-    reply[kReplySent] = true
+  // we check if we need to update the trailers header and set it
+  if (reply[kReplyTrailers] !== null) {
+    const trailerHeaders = Object.keys(reply[kReplyTrailers])
+    let header = ''
+    for (const trailerName of trailerHeaders) {
+      if (typeof reply[kReplyTrailers][trailerName] !== 'function') continue
+      header += ' '
+      header += trailerName
+    }
+    // it must be chunked for trailer to work
+    reply.header('Transfer-Encoding', 'chunked')
+    reply.header('Trailer', header.trim())
+  }
 
+  if (payload === undefined || payload === null) {
     // according to https://tools.ietf.org/html/rfc7230#section-3.3.2
     // we cannot send a content-length for 304 and 204, and all status code
-    // < 200.
+    // < 200
+    // A sender MUST NOT send a Content-Length header field in any message
+    // that contains a Transfer-Encoding header field.
     // For HEAD we don't overwrite the `content-length`
-    if (statusCode >= 200 && statusCode !== 204 && statusCode !== 304 && req.method !== 'HEAD') {
+    if (statusCode >= 200 && statusCode !== 204 && statusCode !== 304 && req.method !== 'HEAD' && reply[kReplyTrailers] === null) {
       reply[kReplyHeaders]['content-length'] = '0'
     }
 
     res.writeHead(statusCode, reply[kReplyHeaders])
+    sendTrailer(payload, res, reply)
     // avoid ArgumentsAdaptorTrampoline from V8
     res.end(null, null, null)
     return
@@ -419,16 +482,21 @@ function onSendEnd (reply, payload) {
     throw new FST_ERR_REP_INVALID_PAYLOAD_TYPE(typeof payload)
   }
 
-  if (!reply[kReplyHeaders]['content-length']) {
-    reply[kReplyHeaders]['content-length'] = '' + Buffer.byteLength(payload)
+  if (reply[kReplyTrailers] === null) {
+    if (!reply[kReplyHeaders]['content-length']) {
+      reply[kReplyHeaders]['content-length'] = '' + Buffer.byteLength(payload)
+    } else if (req.raw.method !== 'HEAD' && reply[kReplyHeaders]['content-length'] !== Buffer.byteLength(payload)) {
+      reply[kReplyHeaders]['content-length'] = '' + Buffer.byteLength(payload)
+    }
   }
 
-  reply[kReplySent] = true
-
   res.writeHead(statusCode, reply[kReplyHeaders])
-
+  // write payload first
+  res.write(payload)
+  // then send trailers
+  sendTrailer(payload, res, reply)
   // avoid ArgumentsAdaptorTrampoline from V8
-  res.end(payload, null, null)
+  res.end(null, null, null)
 }
 
 function logStreamError (logger, err, res) {
@@ -445,10 +513,13 @@ function sendStream (payload, res, reply) {
   let sourceOpen = true
   let errorLogged = false
 
+  // set trailer when stream ended
+  sendStreamTrailer(payload, res, reply)
+
   eos(payload, { readable: true, writable: false }, function (err) {
     sourceOpen = false
     if (err != null) {
-      if (res.headersSent) {
+      if (res.headersSent || reply.request.raw.aborted === true) {
         if (!errorLogged) {
           errorLogged = true
           logStreamError(reply.log, err, res)
@@ -462,21 +533,19 @@ function sendStream (payload, res, reply) {
   })
 
   eos(res, function (err) {
-    if (err != null) {
-      if (sourceOpen) {
-        if (res.headersSent) {
-          if (!errorLogged) {
-            errorLogged = true
-            logStreamError(reply.log, err, res)
-          }
-        }
-        if (payload.destroy) {
-          payload.destroy()
-        } else if (typeof payload.close === 'function') {
-          payload.close(noop)
-        } else if (typeof payload.abort === 'function') {
-          payload.abort()
-        }
+    if (sourceOpen) {
+      if (err != null && res.headersSent && !errorLogged) {
+        errorLogged = true
+        logStreamError(reply.log, err, res)
+      }
+      if (typeof payload.destroy === 'function') {
+        payload.destroy()
+      } else if (typeof payload.close === 'function') {
+        payload.close(noop)
+      } else if (typeof payload.abort === 'function') {
+        payload.abort()
+      } else {
+        reply.log.warn('stream payload does not end properly')
       }
     }
   })
@@ -495,9 +564,24 @@ function sendStream (payload, res, reply) {
   payload.pipe(res)
 }
 
+function sendTrailer (payload, res, reply) {
+  if (reply[kReplyTrailers] === null) return
+  const trailerHeaders = Object.keys(reply[kReplyTrailers])
+  const trailers = {}
+  for (const trailerName of trailerHeaders) {
+    if (typeof reply[kReplyTrailers][trailerName] !== 'function') continue
+    trailers[trailerName] = reply[kReplyTrailers][trailerName](reply, payload)
+  }
+  res.addTrailers(trailers)
+}
+
+function sendStreamTrailer (payload, res, reply) {
+  if (reply[kReplyTrailers] === null) return
+  payload.on('end', () => sendTrailer(null, res, reply))
+}
+
 function onErrorHook (reply, error, cb) {
-  reply[kReplySent] = true
-  if (reply.context.onError !== null && reply[kReplyErrorHandlerCalled] === true) {
+  if (reply.context.onError !== null && !reply[kReplyNextErrorHandler]) {
     reply[kReplyIsRunningOnErrorHook] = true
     onSendHookRunner(
       reply.context.onError,
@@ -511,70 +595,11 @@ function onErrorHook (reply, error, cb) {
   }
 }
 
-function handleError (reply, error, cb) {
-  reply[kReplyIsRunningOnErrorHook] = false
-  const res = reply.raw
-  let statusCode = res.statusCode
-  statusCode = (statusCode >= 400) ? statusCode : 500
-  // treat undefined and null as same
-  if (error != null) {
-    if (error.headers !== undefined) {
-      reply.headers(error.headers)
-    }
-    if (error.status >= 400) {
-      statusCode = error.status
-    } else if (error.statusCode >= 400) {
-      statusCode = error.statusCode
-    }
-  }
-
-  res.statusCode = statusCode
-
-  const errorHandler = reply.context.errorHandler
-  if (errorHandler && reply[kReplyErrorHandlerCalled] === false) {
-    reply[kReplySent] = false
-    reply[kReplyIsError] = false
-    reply[kReplyErrorHandlerCalled] = true
-    reply[kReplyHeaders]['content-length'] = undefined
-    const result = errorHandler(error, reply.request, reply)
-    if (result && typeof result.then === 'function') {
-      wrapThenable(result, reply)
-    }
-    return
-  }
-
-  const serializerFn = getSchemaSerializer(reply.context, statusCode)
-  const payload = (serializerFn === false)
-    ? serializeError({
-        error: statusCodes[statusCode + ''],
-        code: error.code,
-        message: error.message || '',
-        statusCode: statusCode
-      })
-    : serializerFn(Object.create(error, {
-      error: { value: statusCodes[statusCode + ''] },
-      message: { value: error.message || '' },
-      statusCode: { value: statusCode }
-    }))
-
-  flatstr(payload)
-  reply[kReplyHeaders]['content-type'] = CONTENT_TYPE.JSON
-  reply[kReplyHeaders]['content-length'] = '' + Buffer.byteLength(payload)
-
-  if (cb) {
-    cb(reply, payload)
-    return
-  }
-
-  reply[kReplySent] = true
-  res.writeHead(res.statusCode, reply[kReplyHeaders])
-  res.end(payload)
-}
-
 function setupResponseListeners (reply) {
   reply[kReplyStartTime] = now()
 
   const onResFinished = err => {
+    reply[kReplyEndTime] = now()
     reply.raw.removeListener('finish', onResFinished)
     reply.raw.removeListener('error', onResFinished)
 
@@ -624,26 +649,37 @@ function onResponseCallback (err, request, reply) {
 }
 
 function buildReply (R) {
+  const props = [...R.props]
+
   function _Reply (res, request, log) {
     this.raw = res
     this[kReplyIsError] = false
     this[kReplyErrorHandlerCalled] = false
-    this[kReplySent] = false
-    this[kReplySentOverwritten] = false
+    this[kReplyHijacked] = false
     this[kReplySerializer] = null
     this.request = request
     this[kReplyHeaders] = {}
+    this[kReplyTrailers] = null
     this[kReplyStartTime] = undefined
+    this[kReplyEndTime] = undefined
     this.log = log
+
+    // eslint-disable-next-line no-var
+    var prop
+    // eslint-disable-next-line no-var
+    for (var i = 0; i < props.length; i++) {
+      prop = props[i]
+      this[prop.key] = prop.value
+    }
   }
-  _Reply.prototype = new R()
+  Object.setPrototypeOf(_Reply.prototype, R.prototype)
+  Object.setPrototypeOf(_Reply, R)
+  _Reply.parent = R
+  _Reply.props = props
   return _Reply
 }
 
 function notFound (reply) {
-  reply[kReplySent] = false
-  reply[kReplyIsError] = false
-
   if (reply.context[kFourOhFourContext] === null) {
     reply.log.warn('Trying to send a NotFound error inside a 404 handler. Sending basic 404 response.')
     reply.code(404).send('404 Not Found')
@@ -682,31 +718,6 @@ function serialize (context, data, statusCode) {
     return fnSerialize(data)
   }
   return JSON.stringify(data)
-}
-
-/**
- * Search for the right JSON schema compiled function in the request context
- * setup by the route configuration `schema.response`.
- * It will look for the exact match (eg 200) or generic (eg 2xx)
- *
- * @param {object} context the request context
- * @param {number} statusCode the http status code
- * @returns {function|boolean} the right JSON Schema function to serialize
- * the reply or false if it is not set
- */
-function getSchemaSerializer (context, statusCode) {
-  const responseSchemaDef = context[kSchemaResponse]
-  if (!responseSchemaDef) {
-    return false
-  }
-  if (responseSchemaDef[statusCode]) {
-    return responseSchemaDef[statusCode]
-  }
-  const fallbackStatusCode = (statusCode + '')[0] + 'xx'
-  if (responseSchemaDef[fallbackStatusCode]) {
-    return responseSchemaDef[fallbackStatusCode]
-  }
-  return false
 }
 
 function noop () { }

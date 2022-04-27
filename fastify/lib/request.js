@@ -1,8 +1,11 @@
 'use strict'
 
-const proxyAddr = require('@fastify/proxy-addr')
+const proxyAddr = require('proxy-addr')
 const semver = require('semver')
 const warning = require('./warnings')
+const {
+  kHasBeenDecorated
+} = require('./symbols')
 
 function Request (id, params, req, query, log, context) {
   this.id = id
@@ -11,8 +14,9 @@ function Request (id, params, req, query, log, context) {
   this.raw = req
   this.query = query
   this.log = log
-  this.body = null
+  this.body = undefined
 }
+Request.props = []
 
 function getTrustProxyFn (tp) {
   if (typeof tp === 'function') {
@@ -43,6 +47,7 @@ function buildRequest (R, trustProxy) {
 }
 
 function buildRegularRequest (R) {
+  const props = [...R.props]
   function _Request (id, params, req, query, log, context) {
     this.id = id
     this.context = context
@@ -50,9 +55,20 @@ function buildRegularRequest (R) {
     this.raw = req
     this.query = query
     this.log = log
-    this.body = null
+    this.body = undefined
+
+    // eslint-disable-next-line no-var
+    var prop
+    // eslint-disable-next-line no-var
+    for (var i = 0; i < props.length; i++) {
+      prop = props[i]
+      this[prop.key] = prop.value
+    }
   }
-  _Request.prototype = new R()
+  Object.setPrototypeOf(_Request.prototype, Request.prototype)
+  Object.setPrototypeOf(_Request, Request)
+  _Request.props = props
+  _Request.parent = R
 
   return _Request
 }
@@ -66,6 +82,9 @@ function getLastEntryInMultiHeaderValue (headerValue) {
 function buildRequestWithTrustProxy (R, trustProxy) {
   const _Request = buildRegularRequest(R)
   const proxyFn = getTrustProxyFn(trustProxy)
+
+  // This is a more optimized version of decoration
+  _Request[kHasBeenDecorated] = true
 
   Object.defineProperties(_Request.prototype, {
     ip: {
@@ -91,7 +110,9 @@ function buildRequestWithTrustProxy (R, trustProxy) {
         if (this.headers['x-forwarded-proto']) {
           return getLastEntryInMultiHeaderValue(this.headers['x-forwarded-proto'])
         }
-        return this.socket.encrypted ? 'https' : 'http'
+        if (this.socket) {
+          return this.socket.encrypted ? 'https' : 'http'
+        }
       }
     }
   })
@@ -100,10 +121,9 @@ function buildRequestWithTrustProxy (R, trustProxy) {
 }
 
 Object.defineProperties(Request.prototype, {
-  req: {
+  server: {
     get () {
-      warning.emit('FSTDEP001')
-      return this.raw
+      return this.context.server
     }
   },
   url: {
@@ -133,6 +153,7 @@ Object.defineProperties(Request.prototype, {
   },
   connection: {
     get () {
+      /* istanbul ignore next */
       if (semver.gte(process.versions.node, '13.0.0')) {
         warning.emit('FSTDEP005')
       }
@@ -146,7 +167,9 @@ Object.defineProperties(Request.prototype, {
   },
   ip: {
     get () {
-      return this.socket.remoteAddress
+      if (this.socket) {
+        return this.socket.remoteAddress
+      }
     }
   },
   hostname: {
@@ -156,12 +179,20 @@ Object.defineProperties(Request.prototype, {
   },
   protocol: {
     get () {
-      return this.socket.encrypted ? 'https' : 'http'
+      if (this.socket) {
+        return this.socket.encrypted ? 'https' : 'http'
+      }
     }
   },
   headers: {
     get () {
+      if (this.additionalHeaders) {
+        return Object.assign({}, this.raw.headers, this.additionalHeaders)
+      }
       return this.raw.headers
+    },
+    set (headers) {
+      this.additionalHeaders = headers
     }
   }
 })

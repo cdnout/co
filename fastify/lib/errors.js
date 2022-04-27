@@ -20,7 +20,7 @@ const codes = {
   ),
   FST_ERR_CTP_INVALID_TYPE: createError(
     'FST_ERR_CTP_INVALID_TYPE',
-    'The content type should be a string',
+    'The content type should be a string or a RegExp',
     500,
     TypeError
   ),
@@ -72,6 +72,10 @@ const codes = {
     'FST_ERR_DEC_ALREADY_PRESENT',
     "The decorator '%s' has already been added!"
   ),
+  FST_ERR_DEC_DEPENDENCY_INVALID_TYPE: createError(
+    'FST_ERR_DEC_DEPENDENCY_INVALID_TYPE',
+    "The dependencies of decorator '%s' must be of type Array."
+  ),
   FST_ERR_DEC_MISSING_DEPENDENCY: createError(
     'FST_ERR_DEC_MISSING_DEPENDENCY',
     "The decorator is missing dependency '%s'."
@@ -102,8 +106,13 @@ const codes = {
    */
   FST_ERR_MISSING_MIDDLEWARE: createError(
     'FST_ERR_MISSING_MIDDLEWARE',
-    'You must register a plugin for handling middlewares, visit fastify.io/docs/latest/Middleware/ for more info.',
+    'You must register a plugin for handling middlewares, visit fastify.io/docs/latest/Reference/Middleware/ for more info.',
     500
+  ),
+
+  FST_ERR_HOOK_TIMEOUT: createError(
+    'FST_ERR_HOOK_TIMEOUT',
+    "A callback for '%s' hook timed out. You may have forgotten to call 'done' function or to resolve a Promise"
   ),
 
   /**
@@ -137,11 +146,19 @@ const codes = {
   ),
   FST_ERR_SEND_UNDEFINED_ERR: createError(
     'FST_ERR_SEND_UNDEFINED_ERR',
-    'Undefined error has occured'
+    'Undefined error has occurred'
   ),
   FST_ERR_BAD_STATUS_CODE: createError(
     'FST_ERR_BAD_STATUS_CODE',
     'Called reply with an invalid status code: %s'
+  ),
+  FST_ERR_BAD_TRAILER_NAME: createError(
+    'FST_ERR_BAD_TRAILER_NAME',
+    'Called reply.trailer with an invalid header name: %s'
+  ),
+  FST_ERR_BAD_TRAILER_VALUE: createError(
+    'FST_ERR_BAD_TRAILER_VALUE',
+    "Called reply.trailer('%s', fn) with an invalid type: %s. Expected a function."
   ),
 
   /**
@@ -169,14 +186,6 @@ const codes = {
   ),
 
   /**
-   * wrapThenable
-   */
-  FST_ERR_PROMISE_NOT_FULFILLED: createError(
-    'FST_ERR_PROMISE_NOT_FULFILLED',
-    "Promise may not be fulfilled with 'undefined' when statusCode is not 204"
-  ),
-
-  /**
    * http2
    */
   FST_ERR_HTTP2_INVALID_VERSION: createError(
@@ -195,6 +204,10 @@ const codes = {
   /**
    * router
    */
+  FST_ERR_DUPLICATED_ROUTE: createError(
+    'FST_ERR_DUPLICATED_ROUTE',
+    "Method '%s' already declared for route '%s'"
+  ),
   FST_ERR_BAD_URL: createError(
     'FST_ERR_BAD_URL',
     "'%s' is not a valid url component",
@@ -205,6 +218,11 @@ const codes = {
     'The defaultRoute type should be a function',
     500,
     TypeError
+  ),
+  FST_ERR_INVALID_URL: createError(
+    'FST_ERR_INVALID_URL',
+    "URL must be a string. Received '%s'",
+    400
   ),
 
   /**
@@ -225,7 +243,40 @@ const codes = {
   FST_ERR_PLUGIN_VERSION_MISMATCH: createError(
     'FST_ERR_PLUGIN_VERSION_MISMATCH',
     "fastify-plugin: %s - expected '%s' fastify version, '%s' is installed"
-  )
+  ),
+
+  /**
+   *  Avvio Errors map
+   */
+  AVVIO_ERRORS_MAP: {
+    AVV_ERR_CALLBACK_NOT_FN: createError(
+      'FST_ERR_PLUGIN_CALLBACK_NOT_FN',
+      'fastify-plugin: %s'
+    ),
+    AVV_ERR_PLUGIN_NOT_VALID: createError(
+      'FST_ERR_PLUGIN_NOT_VALID',
+      'fastify-plugin: %s'
+    ),
+    AVV_ERR_ROOT_PLG_BOOTED: createError(
+      'FST_ERR_ROOT_PLG_BOOTED',
+      'fastify-plugin: %s'
+    ),
+    AVV_ERR_PARENT_PLG_LOADED: createError(
+      'FST_ERR_PARENT_PLUGIN_BOOTED',
+      'fastify-plugin: %s'
+    ),
+    AVV_ERR_READY_TIMEOUT: createError(
+      'FST_ERR_PLUGIN_TIMEOUT',
+      'fastify-plugin: %s'
+    )
+  },
+
+  //  Util function
+  appendStackTrace (oldErr, newErr) {
+    newErr.cause = oldErr
+
+    return newErr
+  }
 }
 
 module.exports = codes

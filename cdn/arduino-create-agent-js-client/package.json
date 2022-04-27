@@ -1,0 +1,1 @@
+[{"name":"arduino-create-agent-js-client","version":"2.8.0","description":"JS module providing discovery of the Arduino Create Plugin and communication with it","repository":"git+https:\/\/github.com\/arduino\/arduino-create-agent-js-client.git","keyfiles":"create-plugin.min.js","keywords":["arduino","create","agent","plugin"],"npm":"arduino-create-agent-js-client"}]
