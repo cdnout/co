@@ -15,6 +15,7 @@ interface Functor<T> {
 // https://github.com/fantasyland/fantasy-land#applicative
 interface Applicative<T> {
   ap<V>(afn: Applicative<(val: T) => V>): Applicative<V>
+  apTo<V> (value: Applicative<V>): T extends (arg: V) => any ? Applicative<ReturnType<T>> : never;
   'fantasy-land/ap'?<V>(afn: Applicative<(val: T) => V>): Applicative<V>
 }
 
@@ -87,6 +88,7 @@ export interface Identity<T> extends IMonad<T>, Setoid<Identity<T>>, Iterable<T>
 
   /* Inherited from Applicative */
   ap<V>(applyFn: Identity<(val: T) => V>): Identity<V>;
+  apTo<V> (value: Identity<V>): T extends (arg: V) => any ? Identity<ReturnType<T>> : never;
 
   /* Identity specific */
   contains(val: T): boolean;
@@ -133,13 +135,16 @@ export interface Maybe<T extends NonNullable<{}>>
 
   /* Inherited from Applicative */
   ap<V extends NonNullable<{}>>(maybeFn: Maybe<(val: T) => V>): Maybe<V>;
+  apTo<V extends NonNullable<{}>> (value: Maybe<V>): T extends (arg: V) => any ? Maybe<ReturnType<T>> : never;
 
   /* Maybe specific */
   cata<Z>(none: () => Z, some: (val: T) => Z): Z;
   fold<V>(val: V): (fn: (val: T) => V) => V;
   catchMap(fn: () => Maybe<T>): Maybe<T>;
 
+  filter<U extends T>(fn: (val: T) => val is U): Maybe<U>;
   filter(fn: (val: T) => boolean): Maybe<T>;
+  filterNot<U extends T>(fn: (val: T) => val is U): Maybe<Exclude<T, U>>;
   filterNot(fn: (val: T) => boolean): Maybe<T>;
 
   isSome(): boolean;
@@ -190,6 +195,7 @@ interface IMaybeStatic extends IMonadStatic {
   fromFalsy<V>(val: V|null|undefined): Maybe<V>;
   fromNull<V>(val: V|null|undefined): Maybe<V>;
   fromUndefined<V>(val: V|undefined): Maybe<V>;
+  fromEmpty<V>(val: V|null|undefined): Maybe<V>;
   unit: ISomeStatic;
   of: ISomeStatic;    // alias for unit
   pure: ISomeStatic;  // alias for unit
@@ -220,6 +226,7 @@ export interface Either<E, T>
 
   /* Inherited from Applicative */
   ap<V>(eitherFn: Either<E, (val: T) => V>): Either<E, V>;
+  apTo<V> (value: Either<E,V>): T extends (arg: V) => any ? Either<E,ReturnType<T>> : never;
 
   /* Either specific */
   cata<Z>(leftFn: (err: E) => Z, rightFn: (val: T) => Z): Z;
@@ -289,6 +296,7 @@ export interface Validation<E, T>
 
   /* Inherited from Applicative */
   ap<V>(eitherFn: Validation<E, (val: T) => V>): Validation<E, V>;
+  apTo<V> (value: Validation<E,V>): T extends (arg: V) => any ? Validation<E,ReturnType<T>> : never;
 
   /* Validation specific */
   cata<Z>(failFn: (fail: E) => Z, successFn: (val: T) => Z): Z;
@@ -353,6 +361,7 @@ export interface List<T> extends IMonad<T>, Setoid<List<T>>, ITraversable<T>, It
 
   /* Inherited from Applicative */
   ap<V>(listFn: List<(val: T) => V>): List<V>;
+  apTo<V> (listVal: List<V>): T extends (arg: V) => any ? List<ReturnType<T>> : never;
 
   /* List specific */
   filter(fn: (val: T) => boolean): List<T>;
@@ -364,6 +373,8 @@ export interface List<T> extends IMonad<T>, Setoid<List<T>>, ITraversable<T>, It
   size(): number;
   head(): T | undefined;
   headMaybe(): Maybe<NonNullable<T>>;
+  lookup(i: number): Maybe<T>;
+  nth(i: number): T | undefined;
   append(list: List<T>): List<T>;
   concat(list: List<T>): List<T>;
   reverse(): List<T>;
@@ -442,6 +453,7 @@ export interface NEL<T> extends IMonad<T>, Setoid<NEL<T>>, ITraversable<T>, Iter
 
   /* Inherited from Applicative */
   ap<V>(listFn: NEL<(val: T) => V>): NEL<V>;
+  apTo<V> (listVal: NEL<V>): T extends (arg: V) => any ? NEL<ReturnType<T>> : never;
 
   /* NEL specific */
   reduceLeft(fn: (acc: T, element: T) => T): T;
@@ -454,6 +466,8 @@ export interface NEL<T> extends IMonad<T>, Setoid<NEL<T>>, ITraversable<T>, Iter
   isNEL(): boolean;
   size(): number;
   head(): T;
+  lookup(i: number): Maybe<T>;
+  nth(i: number): T | undefined;
   append(list: NEL<T>): NEL<T>;
   concat(list: NEL<T>): NEL<T>;
   reverse(): NEL<T>;
@@ -509,6 +523,7 @@ export interface IO<T> extends IMonad<T> {
 
   /* Inherited from Applicative: */
   ap<V>(ioFn: IO<(v: T) => V>): IO<V>;
+  apTo<V> (value: IO<V>): T extends (arg: V) => any ? IO<ReturnType<T>> : never;
 
   /* IO specific: */
   run(): T;
@@ -545,6 +560,7 @@ export interface Reader<E, A> extends IMonad<A> {
   takeLeft<X>(m: Reader<E, X>): Reader<E, A>;
   takeRight<B>(m: Reader<E, B>): Reader<E, B>;
   ap<B>(rfn: Reader<E, (val: A) => B>): Reader<E, B>;
+  apTo<B> (value: Reader<E, B>): A extends (arg: B) => any ? Reader<E,ReturnType<A>> : never;
 
   /* Reader-specific: */
   run(config: E): A;

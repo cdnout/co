@@ -1,0 +1,1 @@
+[{"name":"lzutf8","version":"0.6.2","description":"A high-performance string compression library","repository":"git+https:\/\/github.com\/rotemdan\/lzutf8.js.git","keyfiles":"lzutf8.min.js","keywords":["compression","string compression","text compression","lz77","utf8","utf-8"],"npm":"lzutf8"}]

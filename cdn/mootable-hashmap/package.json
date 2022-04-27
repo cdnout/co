@@ -1,0 +1,1 @@
+[{"name":"mootable-hashmap","version":"1.0.7","description":"Full featured, fast, HAMT based HashMaps","repository":"git+https:\/\/github.com\/mootable\/hashmap.git","keyfiles":"hashmap.js","keywords":["map","hashmap","linkedhashmap","hamt"],"npm":"@mootable\/hashmap"}]

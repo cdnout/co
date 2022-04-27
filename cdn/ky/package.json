@@ -1,0 +1,1 @@
+[{"name":"ky","version":"0.27.0","description":"Tiny and elegant HTTP client based on the browser Fetch API","repository":"git+https:\/\/github.com\/sindresorhus\/ky.git","keyfiles":"index.js","keywords":["fetch","request","requests","http","https","fetching","get","url","curl","wget","net","network","ajax","api","rest","xhr","browser","got","axios","node-fetch"],"npm":"ky"}]

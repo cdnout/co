@@ -1,1 +1,1 @@
-[{"name":"jasmine","version":"3.6.0","description":"Official packaging of Jasmine's core files for use by Node.js projects.","repository":"https:\/\/github.com\/jasmine\/jasmine.git","keyfiles":"jasmine.min.js","keywords":["bdd","testing"],"npm":null}]
+[{"name":"jasmine","version":"4.1.0","description":"Official packaging of Jasmine's core files for use by Node.js projects.","repository":"https:\/\/github.com\/jasmine\/jasmine.git","keyfiles":"jasmine.min.js","keywords":["bdd","testing"],"npm":null}]

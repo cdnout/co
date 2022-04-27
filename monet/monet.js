@@ -1,7 +1,7 @@
 /**
- * Monet.js 0.9.0-rc.1
+ * Monet.js 0.9.3
  *
- * (c) 2012-2018 Chris Myers
+ * (c) 2012-2021 Chris Myers
  * @license Monet.js may be freely distributed under the MIT license.
  * For all details and documentation:
  * https://monet.github.io/monet.js/
@@ -357,6 +357,12 @@
         headMaybe: function() {
             return this.isNil ? None() : Some(this.head_);
         },
+        lookup: function(i) {
+            return this.isNil || i >= this.size() ? None() : Maybe.fromNull(this.toArray()[i]);
+        },
+        nth: function(i) {
+            return this.isNil || i >= this.size() ? undefined : this.toArray()[i];
+        },
         tail: function() {
             return this.isNil ? Nil : this.tail_;
         },
@@ -365,6 +371,9 @@
         },
         ap: function(list) {
             return listAp(this, list);
+        },
+        apTo: function(listWithValues) {
+            return listAp(listWithValues, this);
         },
         isNEL: falseFunction,
         toString: function() {
@@ -445,6 +454,12 @@
         },
         head: function() {
             return this.head_;
+        },
+        lookup: function(i) {
+            return i >= this.size() ? None() : Maybe.fromNull(this.toArray()[i]);
+        },
+        nth: function(i) {
+            return i >= this.size() ? undefined : this.toArray()[i];
         },
         tail: function() {
             return this.tail_;
@@ -529,6 +544,7 @@
     NEL.prototype.cojoin = NEL.prototype.tails;
     NEL.prototype.coflatMap = NEL.prototype.mapTails = NEL.prototype.cobind;
     NEL.prototype.ap = List.prototype.ap;
+    NEL.prototype.apTo = List.prototype.apTo;
     var Maybe = Monet.Maybe = {};
     Maybe.fromFalsy = function(val) {
         return !val ? Maybe.None() : Maybe.Some(val);
@@ -600,6 +616,9 @@
             return this.isValue ? maybeWithFunction.map(function(fn) {
                 return fn(value);
             }) : this;
+        },
+        apTo: function(maybeWithValue) {
+            return maybeWithValue.ap(this);
         },
         equals: function(other) {
             return Maybe.isOfType(other) && this.cata(function() {
@@ -724,6 +743,9 @@
             return this.isSuccess() ? validationWithFn.map(function(fn) {
                 return fn(value);
             }) : validationWithFn.isFail() ? Validation.Fail(Semigroup.append(value, validationWithFn.fail())) : this;
+        },
+        apTo: function(validationWithValue) {
+            return validationWithValue.ap(this);
         },
         acc: function() {
             var x = function() {
@@ -859,6 +881,9 @@
                 return fn(self.effectFn());
             });
         },
+        apTo: function(ioWithValue) {
+            return ioWithValue.ap(this);
+        },
         run: function() {
             return this.effectFn();
         }
@@ -903,6 +928,9 @@
             return this.isRightValue ? eitherWithFn.map(function(fn) {
                 return fn(self.value);
             }) : this;
+        },
+        apTo: function(eitherWithValue) {
+            return eitherWithValue.ap(this);
         },
         leftMap: function(fn) {
             return this.isLeft() ? Left(fn(this.value)) : this;
@@ -1019,6 +1047,9 @@
                 });
             });
         },
+        apTo: function(readerWithValue) {
+            return readerWithValue.ap(this);
+        },
         map: function(fn) {
             var self = this;
             return Reader(function(config) {
@@ -1078,6 +1109,9 @@
                     return f(x);
                 });
             });
+        },
+        apTo: function(f) {
+            return f.ap(this);
         },
         resume: function() {
             return this.isSuspend ? Left(this.functor) : Right(this.val);
@@ -1142,6 +1176,9 @@
             return applyWithFunction.map(function(fn) {
                 return fn(value);
             });
+        },
+        apTo: function(identityWithValue) {
+            return identityWithValue.ap(this);
         },
         toArray: function() {
             return [ this.get() ];

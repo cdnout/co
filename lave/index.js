@@ -62,7 +62,7 @@ export default function(object, options) {
 
   if (!options.generate) return program
 
-  let code = options.generate(program)
+  let code = generate(program)
   return code.replace(functionPattern, (_, i) => {
     return Array.from(functions)[i].toString().replace(/^function |^/, 'function ')
   })
@@ -201,91 +201,24 @@ export default function(object, options) {
 
       case Set.prototype:
       case WeakSet.prototype:
-        let members = Array.from(value)
-        let index = 0
-
-        for (let member of members) {
-          let element = getExpression(member)
-          if (element.type) index++
-          else break
-        }
-
-        node.type = 'NewExpression'
-        node.callee = getExpression(value.constructor)
-        node.arguments = []
-        if (index > 0) {
-          node.arguments.push(getExpression(members.slice(0, index)))
-        }
-
-        for (let member of members.slice(index)) {
-          statements.push({
-            type: 'ExpressionStatement',
-            expression: {
-              type: 'CallExpression',
-              callee: {
-                type: 'MemberExpression',
-                object: node,
-                computed: false,
-                property: {type: 'Identifier', name: 'add'}
-              },
-              arguments: [getExpression(member)]
-            }
-          })
-        }
-        break
-
       case Map.prototype:
       case WeakMap.prototype:
-        let entries = Array.from(value)
-
-        for (let entry of entries) {
-          let element = getExpression(entry[1])
-          if (!element.type) {
-            entry.pop()
-            statements.push({
-              type: 'ExpressionStatement',
-              expression: {
-                type: 'CallExpression',
-                callee: {
-                  type: 'MemberExpression',
-                  object: node,
-                  computed: false,
-                  property: {type: 'Identifier', name: 'set'}
-                },
-                arguments: [getExpression(entry[0]), element]
-              }
-            })
-          }
-        }
-
-        node.arguments = [getExpression(entries)]
-        node.callee = getExpression(value.constructor)
         node.type = 'NewExpression'
+        node.callee = getExpression(value.constructor)
+        node.arguments = [getExpression(Array.from(value))]
         break
 
       case Object.prototype:
-        node.properties = []
-        for (let property of properties) {
-          let element = getExpression(property[1].value)
-
-          if (!element.type) {
-            node.properties.push({
-              type: 'Property',
-              key: getExpression(property[0]),
-              value: getExpression(null)
-            })
-            continue
-          }
-
-          properties.delete(property[0])
-          node.properties.push({
-            type: 'Property',
-            key: getExpression(property[0]),
-            value: getExpression(property[1].value)
-          })
-        }
-
         node.type = 'ObjectExpression'
+        node.properties = Array.from(properties).map(pair => {
+          properties.delete(pair[0])
+
+          return {
+            type: 'Property',
+            key: getExpression(pair[0]),
+            value: getExpression(pair[1].value)
+          }
+        })
         break
 
       default:
@@ -413,12 +346,8 @@ function Globals() {
   return crawl(globals, (0, eval)('this'))
 }
 
-const STANDARD_GLOBALS = require('vm')
-  .runInNewContext('Object.getOwnPropertyNames(this)')
-  .concat('Buffer')
-
 function crawl(map, value, object) {
-  let names = object ? Object.getOwnPropertyNames(value) : STANDARD_GLOBALS
+  let names = Object.getOwnPropertyNames(value)
   let properties = []
 
   for (let name of names) {

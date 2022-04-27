@@ -1,0 +1,1 @@
+[{"name":"libass-wasm","version":"4.0.0","description":"libass Subtitle Renderer and Parser library for browsers","repository":"git+https:\/\/github.com\/Dador\/JavascriptSubtitlesOctopus.git","keyfiles":"js\/subtitles-octopus.js","keywords":["libass","subtitle","wasm","emscripten"],"npm":"libass-wasm"}]

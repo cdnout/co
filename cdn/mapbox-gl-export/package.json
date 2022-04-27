@@ -1,0 +1,1 @@
+[{"name":"mapbox-gl-export","version":"1.2.15","description":"This module adds control which can export PDF and images.","repository":"git+https:\/\/github.com\/watergis\/mapbox-gl-export.git","keyfiles":"mapbox-gl-export.js","keywords":["mapbox","mapbox-gl-js","export","image","pdf"],"npm":"@watergis\/mapbox-gl-export"}]

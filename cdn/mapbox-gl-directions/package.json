@@ -1,0 +1,1 @@
+[{"name":"mapbox-gl-directions","version":"4.1.0","description":"A mapboxgl plugin for the Mapbox Directions API","repository":"git+ssh:\/\/git@github.com\/mapbox\/mapbox-gl-directions.git","keyfiles":"mapbox-gl-directions.js","keywords":["directions","routing","osm","gl"],"npm":"@mapbox\/mapbox-gl-directions"}]

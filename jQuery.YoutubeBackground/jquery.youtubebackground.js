@@ -1,3 +1,4 @@
+/* a3562218df581ce7b480b327f4c19693a4104e352239c7080bed548f2559718d */
 /*
  * YoutubeBackground - A wrapper for the Youtube API - Great for fullscreen background videos or just regular videos.
  *
@@ -5,7 +6,7 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *
  *
- * Version:  1.0.4
+ * Version:  1.0.5
  *
  */
 
@@ -218,7 +219,7 @@ if (typeof Object.create !== "function") {
      */
     resize: function resize(self) {
       //var self = this;
-      var container = $(window);
+      var container = self.$node;
 
       if (!self.options.fitToBackground) {
         container = self.$node;
@@ -234,12 +235,14 @@ if (typeof Object.create !== "function") {
       if (width / self.options.ratio < height) {
         pWidth = Math.ceil(height * self.options.ratio); // get new player width
         $YTPlayerPlayer.width(pWidth).height(height).css({
+          position: 'absolute',
           left: (width - pWidth) / 2,
           top: 0
         }); // player width is greater, offset left; reset top
       } else { // new video width < window width (gap to right)
         pHeight = Math.ceil(width / self.options.ratio); // get new player height
         $YTPlayerPlayer.width(width).height(pHeight).css({
+          position: 'absolute',
           left: 0,
           top: (height - pHeight) / 2
         }); // player height is greater, offset top; reset left
@@ -267,7 +270,6 @@ if (typeof Object.create !== "function") {
       if (this.options.mute) {
         e.target.mute();
       }
-      e.target.playVideo();
     },
 
     /**
