@@ -1,0 +1,1 @@
+[{"name":"PubSub","version":"4.0.0","description":"Javascript implementation of the Publish\/Subscribe pattern.","repository":"git+https:\/\/github.com\/georapbox\/PubSub.git","keyfiles":"PubSub.umd.min.js","keywords":["subscribe","publish","publish\/subscribe","pubsub","pub\/sub","event","emitter","eventemitter"],"npm":"PubSub"}]

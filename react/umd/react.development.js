@@ -1,4 +1,5 @@
-/** @license React vundefined
+/**
+ * @license React
  * react.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -12,55 +13,36 @@
   (global = global || self, factory(global.React = {}));
 }(this, (function (exports) { 'use strict';
 
-  var ReactVersion = '18.0.0-34308b5ad-20210729';
+  var ReactVersion = '18.2.0-next-9f80a48ad-20220427';
+
+  // -----------------------------------------------------------------------------
+
+  var enableScopeAPI = false; // Experimental Create Event Handle API.
+  var enableCacheElement = false;
+  var enableTransitionTracing = false; // No known bugs, but needs performance testing
+
+  var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in Fiber
+  // stuff. Intended to enable React core members to more easily debug scheduling
+  // issues in DEV builds.
+
+  var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
 
   // ATTENTION
-  // When adding new symbols to this file,
-  // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
-  // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
-  // nor polyfill, then a plain number is used for performance.
-  var REACT_ELEMENT_TYPE = 0xeac7;
-  var REACT_PORTAL_TYPE = 0xeaca;
-  exports.Fragment = 0xeacb;
-  exports.StrictMode = 0xeacc;
-  exports.Profiler = 0xead2;
-  var REACT_PROVIDER_TYPE = 0xeacd;
-  var REACT_CONTEXT_TYPE = 0xeace;
-  var REACT_FORWARD_REF_TYPE = 0xead0;
-  exports.Suspense = 0xead1;
-  exports.SuspenseList = 0xead8;
-  var REACT_MEMO_TYPE = 0xead3;
-  var REACT_LAZY_TYPE = 0xead4;
-  var REACT_SCOPE_TYPE = 0xead7;
-  var REACT_OPAQUE_ID_TYPE = 0xeae0;
-  var REACT_DEBUG_TRACING_MODE_TYPE = 0xeae1;
-  var REACT_OFFSCREEN_TYPE = 0xeae2;
-  var REACT_LEGACY_HIDDEN_TYPE = 0xeae3;
-  var REACT_CACHE_TYPE = 0xeae4;
 
-  if (typeof Symbol === 'function' && Symbol.for) {
-    var symbolFor = Symbol.for;
-    REACT_ELEMENT_TYPE = symbolFor('react.element');
-    REACT_PORTAL_TYPE = symbolFor('react.portal');
-    exports.Fragment = symbolFor('react.fragment');
-    exports.StrictMode = symbolFor('react.strict_mode');
-    exports.Profiler = symbolFor('react.profiler');
-    REACT_PROVIDER_TYPE = symbolFor('react.provider');
-    REACT_CONTEXT_TYPE = symbolFor('react.context');
-    REACT_FORWARD_REF_TYPE = symbolFor('react.forward_ref');
-    exports.Suspense = symbolFor('react.suspense');
-    exports.SuspenseList = symbolFor('react.suspense_list');
-    REACT_MEMO_TYPE = symbolFor('react.memo');
-    REACT_LAZY_TYPE = symbolFor('react.lazy');
-    REACT_SCOPE_TYPE = symbolFor('react.scope');
-    REACT_OPAQUE_ID_TYPE = symbolFor('react.opaque.id');
-    REACT_DEBUG_TRACING_MODE_TYPE = symbolFor('react.debug_trace_mode');
-    REACT_OFFSCREEN_TYPE = symbolFor('react.offscreen');
-    REACT_LEGACY_HIDDEN_TYPE = symbolFor('react.legacy_hidden');
-    REACT_CACHE_TYPE = symbolFor('react.cache');
-  }
-
-  var MAYBE_ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+  var REACT_ELEMENT_TYPE =  Symbol.for('react.element');
+  var REACT_PORTAL_TYPE =  Symbol.for('react.portal');
+  var REACT_FRAGMENT_TYPE =  Symbol.for('react.fragment');
+  var REACT_STRICT_MODE_TYPE =  Symbol.for('react.strict_mode');
+  var REACT_PROFILER_TYPE =  Symbol.for('react.profiler');
+  var REACT_PROVIDER_TYPE =  Symbol.for('react.provider');
+  var REACT_CONTEXT_TYPE =  Symbol.for('react.context');
+  var REACT_FORWARD_REF_TYPE =  Symbol.for('react.forward_ref');
+  var REACT_SUSPENSE_TYPE =  Symbol.for('react.suspense');
+  var REACT_SUSPENSE_LIST_TYPE =  Symbol.for('react.suspense_list');
+  var REACT_MEMO_TYPE =  Symbol.for('react.memo');
+  var REACT_LAZY_TYPE =  Symbol.for('react.lazy');
+  var REACT_OFFSCREEN_TYPE =  Symbol.for('react.offscreen');
+  var MAYBE_ITERATOR_SYMBOL =  Symbol.iterator;
   var FAUX_ITERATOR_SYMBOL = '@@iterator';
   function getIteratorFn(maybeIterable) {
     if (maybeIterable === null || typeof maybeIterable !== 'object') {
@@ -75,34 +57,6 @@
 
     return null;
   }
-
-  var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-  var _assign = function (to, from) {
-    for (var key in from) {
-      if (hasOwnProperty.call(from, key)) {
-        to[key] = from[key];
-      }
-    }
-  };
-
-  var assign = Object.assign || function (target, sources) {
-    if (target == null) {
-      throw new TypeError('Object.assign target cannot be null or undefined');
-    }
-
-    var to = Object(target);
-
-    for (var nextIndex = 1; nextIndex < arguments.length; nextIndex++) {
-      var nextSource = arguments[nextIndex];
-
-      if (nextSource != null) {
-        _assign(to, Object(nextSource));
-      }
-    }
-
-    return to;
-  };
 
   /**
    * Keeps track of the current dispatcher.
@@ -120,17 +74,11 @@
    * should suspend for if it needs to.
    */
   var ReactCurrentBatchConfig = {
-    transition: 0
+    transition: null
   };
 
   var ReactCurrentActQueue = {
     current: null,
-    // Our internal tests use a custom implementation of `act` that works by
-    // mocking the Scheduler package. Use this field to disable the `act` warning.
-    // TODO: Maybe the warning should be disabled by default, and then turned
-    // on at the testing frameworks layer? Instead of what we do now, which
-    // is check if a `jest` global is defined.
-    disableActWarning: false,
     // Used to reproduce behavior of `batchedUpdates` in legacy mode.
     isBatchingLegacy: false,
     didScheduleLegacyUpdate: false
@@ -189,9 +137,7 @@
   var ReactSharedInternals = {
     ReactCurrentDispatcher: ReactCurrentDispatcher,
     ReactCurrentBatchConfig: ReactCurrentBatchConfig,
-    ReactCurrentOwner: ReactCurrentOwner,
-    // Used by renderers to avoid bundling object-assign twice in UMD bundles:
-    assign: assign
+    ReactCurrentOwner: ReactCurrentOwner
   };
 
   {
@@ -206,20 +152,24 @@
 
   function warn(format) {
     {
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
+      {
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
 
-      printWarning('warn', format, args);
+        printWarning('warn', format, args);
+      }
     }
   }
   function error(format) {
     {
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
+      {
+        for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          args[_key2 - 1] = arguments[_key2];
+        }
 
-      printWarning('error', format, args);
+        printWarning('error', format, args);
+      }
     }
   }
 
@@ -233,10 +183,11 @@
       if (stack !== '') {
         format += '%s';
         args = args.concat([stack]);
-      }
+      } // eslint-disable-next-line react-internal/safe-string-coercion
+
 
       var argsWithFormat = args.map(function (item) {
-        return '' + item;
+        return String(item);
       }); // Careful: RN currently depends on this prefix
 
       argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
@@ -334,6 +285,8 @@
     }
   };
 
+  var assign = Object.assign;
+
   var emptyObject = {};
 
   {
@@ -382,10 +335,8 @@
    */
 
   Component.prototype.setState = function (partialState, callback) {
-    if (!(typeof partialState === 'object' || typeof partialState === 'function' || partialState == null)) {
-      {
-        throw Error( "setState(...): takes an object of state variables to update or a function which returns an object of state variables." );
-      }
+    if (typeof partialState !== 'object' && typeof partialState !== 'function' && partialState != null) {
+      throw new Error('setState(...): takes an object of state variables to update or a ' + 'function which returns an object of state variables.');
     }
 
     this.updater.enqueueSetState(this, partialState, callback, 'setState');
@@ -458,7 +409,6 @@
   pureComponentPrototype.constructor = PureComponent; // Avoid an extra prototype jump for these methods.
 
   assign(pureComponentPrototype, Component.prototype);
-
   pureComponentPrototype.isPureReactComponent = true;
 
   // an immutable object with a single mutable value
@@ -478,6 +428,73 @@
 
   function isArray(a) {
     return isArrayImpl(a);
+  }
+
+  /*
+   * The `'' + value` pattern (used in in perf-sensitive code) throws for Symbol
+   * and Temporal.* types. See https://github.com/facebook/react/pull/22064.
+   *
+   * The functions in this module will throw an easier-to-understand,
+   * easier-to-debug exception with a clear errors message message explaining the
+   * problem. (Instead of a confusing exception thrown inside the implementation
+   * of the `value` object).
+   */
+  // $FlowFixMe only called in DEV, so void return is not possible.
+  function typeName(value) {
+    {
+      // toStringTag is needed for namespaced types like Temporal.Instant
+      var hasToStringTag = typeof Symbol === 'function' && Symbol.toStringTag;
+      var type = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || 'Object';
+      return type;
+    }
+  } // $FlowFixMe only called in DEV, so void return is not possible.
+
+
+  function willCoercionThrow(value) {
+    {
+      try {
+        testStringCoercion(value);
+        return false;
+      } catch (e) {
+        return true;
+      }
+    }
+  }
+
+  function testStringCoercion(value) {
+    // If you ended up here by following an exception call stack, here's what's
+    // happened: you supplied an object or symbol value to React (as a prop, key,
+    // DOM attribute, CSS property, string ref, etc.) and when React tried to
+    // coerce it to a string using `'' + value`, an exception was thrown.
+    //
+    // The most common types that will cause this exception are `Symbol` instances
+    // and Temporal objects like `Temporal.Instant`. But any object that has a
+    // `valueOf` or `[Symbol.toPrimitive]` method that throws will also cause this
+    // exception. (Library authors do this to prevent users from using built-in
+    // numeric operators like `+` or comparison operators like `>=` because custom
+    // methods are needed to perform accurate arithmetic or comparison.)
+    //
+    // To fix the problem, coerce this object or symbol value to a string before
+    // passing it to React. The most reliable way is usually `String(value)`.
+    //
+    // To find which value is throwing, check the browser or debugger console.
+    // Before this exception was thrown, there should be `console.error` output
+    // that shows the type (Symbol, Temporal.PlainDate, etc.) that caused the
+    // problem and how that type was used: key, atrribute, input value prop, etc.
+    // In most cases, this console output also shows the component and its
+    // ancestor components where the exception happened.
+    //
+    // eslint-disable-next-line react-internal/safe-string-coercion
+    return '' + value;
+  }
+  function checkKeyStringCoercion(value) {
+    {
+      if (willCoercionThrow(value)) {
+        error('The provided key is an unsupported type %s.' + ' This value must be coerced to a string before before using it here.', typeName(value));
+
+        return testStringCoercion(value); // throw (to help callers find troubleshooting comments)
+      }
+    }
   }
 
   function getWrappedName(outerType, innerType, wrapperName) {
@@ -518,26 +535,24 @@
     }
 
     switch (type) {
-      case exports.Fragment:
+      case REACT_FRAGMENT_TYPE:
         return 'Fragment';
 
       case REACT_PORTAL_TYPE:
         return 'Portal';
 
-      case exports.Profiler:
+      case REACT_PROFILER_TYPE:
         return 'Profiler';
 
-      case exports.StrictMode:
+      case REACT_STRICT_MODE_TYPE:
         return 'StrictMode';
 
-      case exports.Suspense:
+      case REACT_SUSPENSE_TYPE:
         return 'Suspense';
 
-      case exports.SuspenseList:
+      case REACT_SUSPENSE_LIST_TYPE:
         return 'SuspenseList';
 
-      case REACT_CACHE_TYPE:
-        return 'Cache';
     }
 
     if (typeof type === 'object') {
@@ -574,13 +589,15 @@
               return null;
             }
           }
+
+        // eslint-disable-next-line no-fallthrough
       }
     }
 
     return null;
   }
 
-  var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
+  var hasOwnProperty = Object.prototype.hasOwnProperty;
 
   var RESERVED_PROPS = {
     key: true,
@@ -596,7 +613,7 @@
 
   function hasValidRef(config) {
     {
-      if (hasOwnProperty$1.call(config, 'ref')) {
+      if (hasOwnProperty.call(config, 'ref')) {
         var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
 
         if (getter && getter.isReactWarning) {
@@ -610,7 +627,7 @@
 
   function hasValidKey(config) {
     {
-      if (hasOwnProperty$1.call(config, 'key')) {
+      if (hasOwnProperty.call(config, 'key')) {
         var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
 
         if (getter && getter.isReactWarning) {
@@ -770,6 +787,10 @@
       }
 
       if (hasValidKey(config)) {
+        {
+          checkKeyStringCoercion(config.key);
+        }
+
         key = '' + config.key;
       }
 
@@ -777,7 +798,7 @@
       source = config.__source === undefined ? null : config.__source; // Remaining properties are added to a new props object
 
       for (propName in config) {
-        if (hasOwnProperty$1.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+        if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
           props[propName] = config[propName];
         }
       }
@@ -842,16 +863,13 @@
    */
 
   function cloneElement(element, config, children) {
-    if (!!(element === null || element === undefined)) {
-      {
-        throw Error( "React.cloneElement(...): The argument must be a React element, but you passed " + element + "." );
-      }
+    if (element === null || element === undefined) {
+      throw new Error("React.cloneElement(...): The argument must be a React element, but you passed " + element + ".");
     }
 
     var propName; // Original props are copied
 
     var props = assign({}, element.props); // Reserved names are extracted
-
 
     var key = element.key;
     var ref = element.ref; // Self is preserved since the owner is preserved.
@@ -872,6 +890,10 @@
       }
 
       if (hasValidKey(config)) {
+        {
+          checkKeyStringCoercion(config.key);
+        }
+
         key = '' + config.key;
       } // Remaining properties override existing props
 
@@ -883,7 +905,7 @@
       }
 
       for (propName in config) {
-        if (hasOwnProperty$1.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+        if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
           if (config[propName] === undefined && defaultProps !== undefined) {
             // Resolve default props
             props[propName] = defaultProps[propName];
@@ -970,6 +992,10 @@
     // that we don't block potential future ES APIs.
     if (typeof element === 'object' && element !== null && element.key != null) {
       // Explicit key
+      {
+        checkKeyStringCoercion(element.key);
+      }
+
       return escape('' + element.key);
     } // Implicit key determined by the index in the set
 
@@ -1025,10 +1051,20 @@
         });
       } else if (mappedChild != null) {
         if (isValidElement(mappedChild)) {
+          {
+            // The `if` statement here prevents auto-disabling of the safe
+            // coercion ESLint rule, so we must manually disable it below.
+            // $FlowFixMe Flow incorrectly thinks React.Portal doesn't have a key
+            if (mappedChild.key && (!_child || _child.key !== mappedChild.key)) {
+              checkKeyStringCoercion(mappedChild.key);
+            }
+          }
+
           mappedChild = cloneAndReplaceKey(mappedChild, // Keep both the (mapped) and old keys if they differ, just as
           // traverseAllChildren used to do for objects as children
           escapedPrefix + ( // $FlowFixMe Flow incorrectly thinks React.Portal doesn't have a key
           mappedChild.key && (!_child || _child.key !== mappedChild.key) ? // $FlowFixMe Flow incorrectly thinks existing element's key can be a number
+          // eslint-disable-next-line react-internal/safe-string-coercion
           escapeUserProvidedKey('' + mappedChild.key) + '/' : '') + childKey);
         }
 
@@ -1077,13 +1113,9 @@
           subtreeCount += mapIntoArray(child, array, escapedPrefix, nextName, callback);
         }
       } else if (type === 'object') {
-        var childrenString = '' + children;
-
-        {
-          {
-            throw Error( "Objects are not valid as a React child (found: " + (childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString) + "). If you meant to render a collection of children, use an array instead." );
-          }
-        }
+        // eslint-disable-next-line react-internal/safe-string-coercion
+        var childrenString = String(children);
+        throw new Error("Objects are not valid as a React child (found: " + (childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString) + "). " + 'If you meant to render a collection of children, use an array ' + 'instead.');
       }
     }
 
@@ -1182,9 +1214,7 @@
 
   function onlyChild(children) {
     if (!isValidElement(children)) {
-      {
-        throw Error( "React.Children.only expected to receive a single React element child." );
-      }
+      throw new Error('React.Children.only expected to receive a single React element child.');
     }
 
     return children;
@@ -1207,7 +1237,10 @@
       _threadCount: 0,
       // These are circular
       Provider: null,
-      Consumer: null
+      Consumer: null,
+      // Add these to use same hidden class in VM as ServerContext
+      _defaultValue: null,
+      _globalName: null
     };
     context.Provider = {
       $$typeof: REACT_PROVIDER_TYPE,
@@ -1345,14 +1378,14 @@
 
       {
         if (moduleObject === undefined) {
-          error('lazy: Expected the result of a dynamic import() call. ' + 'Instead received: %s\n\nYour code should look like: \n  ' + // Break up imports to avoid accidentally parsing them as dependencies.
+          error('lazy: Expected the result of a dynamic imp' + 'ort() call. ' + 'Instead received: %s\n\nYour code should look like: \n  ' + // Break up imports to avoid accidentally parsing them as dependencies.
           'const MyComponent = lazy(() => imp' + "ort('./MyComponent'))\n\n" + 'Did you accidentally put curly braces around the import?', moduleObject);
         }
       }
 
       {
         if (!('default' in moduleObject)) {
-          error('lazy: Expected the result of a dynamic import() call. ' + 'Instead received: %s\n\nYour code should look like: \n  ' + // Break up imports to avoid accidentally parsing them as dependencies.
+          error('lazy: Expected the result of a dynamic imp' + 'ort() call. ' + 'Instead received: %s\n\nYour code should look like: \n  ' + // Break up imports to avoid accidentally parsing them as dependencies.
           'const MyComponent = lazy(() => imp' + "ort('./MyComponent'))", moduleObject);
         }
       }
@@ -1366,7 +1399,7 @@
   function lazy(ctor) {
     var payload = {
       // We use these fields to store the result.
-      _status: -1,
+      _status: Uninitialized,
       _result: ctor
     };
     var lazyType = {
@@ -1470,14 +1503,9 @@
     return elementType;
   }
 
-  // Filter certain DOM attributes (e.g. src, href) if their values are empty strings.
-  var enableCache = false; // Only used in www builds.
+  var REACT_MODULE_REFERENCE;
 
-  var enableScopeAPI = false; // Experimental Create Event Handle API.
-
-  var REACT_MODULE_REFERENCE = 0;
-
-  if (typeof Symbol === 'function') {
+  {
     REACT_MODULE_REFERENCE = Symbol.for('react.module.reference');
   }
 
@@ -1487,7 +1515,7 @@
     } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
 
 
-    if (type === exports.Fragment || type === exports.Profiler || type === REACT_DEBUG_TRACING_MODE_TYPE || type === exports.StrictMode || type === exports.Suspense || type === exports.SuspenseList || type === REACT_LEGACY_HIDDEN_TYPE || type === REACT_OFFSCREEN_TYPE || enableScopeAPI  || enableCache ) {
+    if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing  || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden  || type === REACT_OFFSCREEN_TYPE || enableScopeAPI  || enableCacheElement  || enableTransitionTracing ) {
       return true;
     }
 
@@ -1593,6 +1621,10 @@
     var dispatcher = resolveDispatcher();
     return dispatcher.useEffect(create, deps);
   }
+  function useInsertionEffect(create, deps) {
+    var dispatcher = resolveDispatcher();
+    return dispatcher.useInsertionEffect(create, deps);
+  }
   function useLayoutEffect(create, deps) {
     var dispatcher = resolveDispatcher();
     return dispatcher.useLayoutEffect(create, deps);
@@ -1623,13 +1655,13 @@
     var dispatcher = resolveDispatcher();
     return dispatcher.useDeferredValue(value);
   }
-  function useOpaqueIdentifier() {
+  function useId() {
     var dispatcher = resolveDispatcher();
-    return dispatcher.useOpaqueIdentifier();
+    return dispatcher.useId();
   }
-  function useMutableSource(source, getSnapshot, subscribe) {
+  function useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot) {
     var dispatcher = resolveDispatcher();
-    return dispatcher.useMutableSource(source, getSnapshot, subscribe);
+    return dispatcher.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   }
 
   // Helpers to patch console.logs to avoid logging during side-effect free
@@ -1863,7 +1895,14 @@
 
                 if (c < 0 || sampleLines[s] !== controlLines[c]) {
                   // V8 adds a "new" prefix for native classes. Let's remove it to make it prettier.
-                  var _frame = '\n' + sampleLines[s].replace(' at new ', ' at ');
+                  var _frame = '\n' + sampleLines[s].replace(' at new ', ' at '); // If our component frame is labeled "<anonymous>"
+                  // but we have a user-provided "displayName"
+                  // splice it in to make the stack more readable.
+
+
+                  if (fn.displayName && _frame.includes('<anonymous>')) {
+                    _frame = _frame.replace('<anonymous>', fn.displayName);
+                  }
 
                   {
                     if (typeof fn === 'function') {
@@ -1932,10 +1971,10 @@
     }
 
     switch (type) {
-      case exports.Suspense:
+      case REACT_SUSPENSE_TYPE:
         return describeBuiltInComponentFrame('Suspense');
 
-      case exports.SuspenseList:
+      case REACT_SUSPENSE_LIST_TYPE:
         return describeBuiltInComponentFrame('SuspenseList');
     }
 
@@ -1983,7 +2022,7 @@
   function checkPropTypes(typeSpecs, values, location, componentName, element) {
     {
       // $FlowFixMe This is okay but Flow doesn't know it.
-      var has = Function.call.bind(hasOwnProperty$1);
+      var has = Function.call.bind(hasOwnProperty);
 
       for (var typeSpecName in typeSpecs) {
         if (has(typeSpecs, typeSpecName)) {
@@ -1995,6 +2034,7 @@
             // This is intentionally an invariant that gets caught. It's the same
             // behavior as without this statement except with a better message.
             if (typeof typeSpecs[typeSpecName] !== 'function') {
+              // eslint-disable-next-line react-internal/prod-error-codes
               var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
               err.name = 'Invariant Violation';
               throw err;
@@ -2321,7 +2361,7 @@
       }
     }
 
-    if (type === exports.Fragment) {
+    if (type === REACT_FRAGMENT_TYPE) {
       validateFragmentProps(element);
     } else {
       validatePropTypes(element);
@@ -2368,28 +2408,9 @@
     return newElement;
   }
 
-  function createMutableSource(source, getVersion) {
-    var mutableSource = {
-      _getVersion: getVersion,
-      _source: source,
-      _workInProgressVersionPrimary: null,
-      _workInProgressVersionSecondary: null
-    };
-
-    {
-      mutableSource._currentPrimaryRenderer = null;
-      mutableSource._currentSecondaryRenderer = null; // Used to detect side effects that update a mutable source during render.
-      // See https://github.com/facebook/react/issues/19948
-
-      mutableSource._currentlyRenderingFiber = null;
-      mutableSource._initialVersionAsOfFirstRender = null;
-    }
-
-    return mutableSource;
-  }
-
   var enableSchedulerDebugging = false;
   var enableProfiling = false;
+  var frameYieldMs = 5;
 
   function push(heap, node) {
     var index = heap.length;
@@ -2519,7 +2540,7 @@
 
   var taskIdCounter = 1; // Pausing the scheduler is useful for debugging.
   var currentTask = null;
-  var currentPriorityLevel = NormalPriority; // This is set while performing work, to prevent re-entrancy.
+  var currentPriorityLevel = NormalPriority; // This is set while performing work, to prevent re-entrance.
 
   var isPerformingWork = false;
   var isHostCallbackScheduled = false;
@@ -2528,6 +2549,8 @@
   var localSetTimeout = typeof setTimeout === 'function' ? setTimeout : null;
   var localClearTimeout = typeof clearTimeout === 'function' ? clearTimeout : null;
   var localSetImmediate = typeof setImmediate !== 'undefined' ? setImmediate : null; // IE and Node.js + jsdom
+
+  var isInputPending = typeof navigator !== 'undefined' && navigator.scheduling !== undefined && navigator.scheduling.isInputPending !== undefined ? navigator.scheduling.isInputPending.bind(navigator.scheduling) : null;
 
   function advanceTimers(currentTime) {
     // Check for tasks that are no longer delayed and add them to the queue.
@@ -2841,15 +2864,20 @@
   // It does not attempt to align with frame boundaries, since most tasks don't
   // need to be frame aligned; for those that do, use requestAnimationFrame.
 
-  var yieldInterval = 5;
-  var deadline = 0; // TODO: Make this configurable
+  var frameInterval = frameYieldMs;
+  var startTime = -1;
 
   function shouldYieldToHost() {
-    {
-      // `isInputPending` is not available. Since we have no way of knowing if
-      // there's pending input, always yield at the end of the frame.
-      return getCurrentTime() >= deadline;
-    }
+    var timeElapsed = getCurrentTime() - startTime;
+
+    if (timeElapsed < frameInterval) {
+      // The main thread has only been blocked for a really short amount of time;
+      // smaller than a single frame. Don't yield yet.
+      return false;
+    } // The main thread has been blocked for a non-negligible amount of time. We
+
+
+    return true;
   }
 
   function requestPaint() {
@@ -2864,20 +2892,19 @@
     }
 
     if (fps > 0) {
-      yieldInterval = Math.floor(1000 / fps);
+      frameInterval = Math.floor(1000 / fps);
     } else {
       // reset the framerate
-      yieldInterval = 5;
+      frameInterval = frameYieldMs;
     }
   }
 
   var performWorkUntilDeadline = function () {
     if (scheduledHostCallback !== null) {
-      var currentTime = getCurrentTime(); // Yield after `yieldInterval` ms, regardless of where we are in the vsync
-      // cycle. This means there's always time remaining at the beginning of
-      // the message event.
+      var currentTime = getCurrentTime(); // Keep track of the start time so we can measure how long the main thread
+      // has been blocked.
 
-      deadline = currentTime + yieldInterval;
+      startTime = currentTime;
       var hasTimeRemaining = true; // If a scheduler task throws, exit the current browser task so the
       // error can be observed.
       //
@@ -2990,8 +3017,6 @@
     ReactCurrentDispatcher: ReactCurrentDispatcher,
     ReactCurrentOwner: ReactCurrentOwner,
     ReactCurrentBatchConfig: ReactCurrentBatchConfig,
-    // Used by renderers to avoid bundling object-assign twice in UMD bundles:
-    assign: assign,
     // Re-export the schedule API(s) for UMD bundles.
     // This avoids introducing a dependency on a new UMD global in a minor update,
     // Since that would be a breaking change (e.g. for all existing CodeSandboxes).
@@ -3001,17 +3026,35 @@
   };
 
   {
+    ReactSharedInternals$1.ReactCurrentActQueue = ReactCurrentActQueue;
     ReactSharedInternals$1.ReactDebugCurrentFrame = ReactDebugCurrentFrame;
   }
 
-  function startTransition(scope) {
+  function startTransition(scope, options) {
     var prevTransition = ReactCurrentBatchConfig.transition;
-    ReactCurrentBatchConfig.transition = 1;
+    ReactCurrentBatchConfig.transition = {};
+    var currentTransition = ReactCurrentBatchConfig.transition;
+
+    {
+      ReactCurrentBatchConfig.transition._updatedFibers = new Set();
+    }
 
     try {
       scope();
     } finally {
       ReactCurrentBatchConfig.transition = prevTransition;
+
+      {
+        if (prevTransition === null && currentTransition._updatedFibers) {
+          var updatedFibersCount = currentTransition._updatedFibers.size;
+
+          if (updatedFibersCount > 10) {
+            warn('Detected a large number of updates inside startTransition. ' + 'If this is due to a subscription please re-write it to use React provided hooks. ' + 'Otherwise concurrent mode guarantees are off the table.');
+          }
+
+          currentTransition._updatedFibers.clear();
+        }
+      }
     }
   }
 
@@ -3222,7 +3265,7 @@
   function flushActQueue(queue) {
     {
       if (!isFlushing) {
-        // Prevent re-entrancy.
+        // Prevent re-entrance.
         isFlushing = true;
         var i = 0;
 
@@ -3260,7 +3303,11 @@
 
   exports.Children = Children;
   exports.Component = Component;
+  exports.Fragment = REACT_FRAGMENT_TYPE;
+  exports.Profiler = REACT_PROFILER_TYPE;
   exports.PureComponent = PureComponent;
+  exports.StrictMode = REACT_STRICT_MODE_TYPE;
+  exports.Suspense = REACT_SUSPENSE_TYPE;
   exports.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = ReactSharedInternals$1;
   exports.cloneElement = cloneElement$1;
   exports.createContext = createContext;
@@ -3273,20 +3320,20 @@
   exports.memo = memo;
   exports.startTransition = startTransition;
   exports.unstable_act = act;
-  exports.unstable_createMutableSource = createMutableSource;
-  exports.unstable_useMutableSource = useMutableSource;
-  exports.unstable_useOpaqueIdentifier = useOpaqueIdentifier;
   exports.useCallback = useCallback;
   exports.useContext = useContext;
   exports.useDebugValue = useDebugValue;
   exports.useDeferredValue = useDeferredValue;
   exports.useEffect = useEffect;
+  exports.useId = useId;
   exports.useImperativeHandle = useImperativeHandle;
+  exports.useInsertionEffect = useInsertionEffect;
   exports.useLayoutEffect = useLayoutEffect;
   exports.useMemo = useMemo;
   exports.useReducer = useReducer;
   exports.useRef = useRef;
   exports.useState = useState;
+  exports.useSyncExternalStore = useSyncExternalStore;
   exports.useTransition = useTransition;
   exports.version = ReactVersion;
 

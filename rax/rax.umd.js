@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = global || self, factory(global.Rax = {}));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Rax = {}));
 }(this, (function (exports) {
   /*
    * Stateful things in runtime
@@ -25,23 +25,29 @@
    * LICENSE file in the root directory of this source tree.
    */
 
-  var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
-  var ReactPropTypesSecret_1 = ReactPropTypesSecret;
+  var ReactPropTypesSecret$1 = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
-  var printWarning = function printWarning() {};
+  var ReactPropTypesSecret_1 = ReactPropTypesSecret$1;
+
+  /**
+   * Copyright (c) 2013-present, Facebook, Inc.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */
+
+  var printWarning = function() {};
 
   {
-    var ReactPropTypesSecret$1 = ReactPropTypesSecret_1;
+    var ReactPropTypesSecret = ReactPropTypesSecret_1;
     var loggedTypeFailures = {};
     var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
-    printWarning = function printWarning(text) {
+    printWarning = function(text) {
       var message = 'Warning: ' + text;
-
       if (typeof console !== 'undefined') {
         console.error(message);
       }
-
       try {
         // --- Welcome to debugging React ---
         // This error was thrown as a convenience so that you can use this stack
@@ -50,6 +56,7 @@
       } catch (x) {}
     };
   }
+
   /**
    * Assert that the values match with the type specs.
    * Error messages are memorized and will only be shown once.
@@ -61,53 +68,61 @@
    * @param {?Function} getStack Returns the component stack.
    * @private
    */
-
-
   function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
     {
       for (var typeSpecName in typeSpecs) {
         if (has(typeSpecs, typeSpecName)) {
-          var error; // Prop type validation may throw. In case they do, we don't want to
+          var error;
+          // Prop type validation may throw. In case they do, we don't want to
           // fail the render phase where it didn't fail before. So we log it.
           // After these have been cleaned up, we'll let them throw.
-
           try {
             // This is intentionally an invariant that gets caught. It's the same
             // behavior as without this statement except with a better message.
             if (typeof typeSpecs[typeSpecName] !== 'function') {
-              var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.');
+              var err = Error(
+                (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
+                'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.'
+              );
               err.name = 'Invariant Violation';
               throw err;
             }
-
-            error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret$1);
+            error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
           } catch (ex) {
             error = ex;
           }
-
           if (error && !(error instanceof Error)) {
-            printWarning((componentName || 'React class') + ': type specification of ' + location + ' `' + typeSpecName + '` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a ' + typeof error + '. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).');
+            printWarning(
+              (componentName || 'React class') + ': type specification of ' +
+              location + ' `' + typeSpecName + '` is invalid; the type checker ' +
+              'function must return `null` or an `Error` but returned a ' + typeof error + '. ' +
+              'You may have forgotten to pass an argument to the type checker ' +
+              'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+              'shape all require an argument).'
+            );
           }
-
           if (error instanceof Error && !(error.message in loggedTypeFailures)) {
             // Only monitor this failure once because there tends to be a lot of the
             // same error.
             loggedTypeFailures[error.message] = true;
+
             var stack = getStack ? getStack() : '';
-            printWarning('Failed ' + location + ' type: ' + error.message + (stack != null ? stack : ''));
+
+            printWarning(
+              'Failed ' + location + ' type: ' + error.message + (stack != null ? stack : '')
+            );
           }
         }
       }
     }
   }
+
   /**
    * Resets warning cache when testing.
    *
    * @private
    */
-
-
-  checkPropTypes.resetWarningCache = function () {
+  checkPropTypes.resetWarningCache = function() {
     {
       loggedTypeFailures = {};
     }
@@ -170,6 +185,9 @@
   }
   function isNumber(string) {
     return typeof string === 'number';
+  }
+  function isFalsy(val) {
+    return !Boolean(val);
   }
   var NOOP = function NOOP() {};
   var EMPTY_OBJECT = {};
@@ -577,7 +595,7 @@
 
         if (!is(newState, eagerState)) {
           // Current instance is in render update phase.
-          // After this one render finish, will containue run.
+          // After this one render finish, will continue run.
           hook[2] = newState;
 
           if (getCurrentInstance() === currentInstance) {
@@ -968,7 +986,17 @@
   function _inheritsLoose(subClass, superClass) {
     subClass.prototype = Object.create(superClass.prototype);
     subClass.prototype.constructor = subClass;
-    subClass.__proto__ = superClass;
+
+    _setPrototypeOf(subClass, superClass);
+  }
+
+  function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+      o.__proto__ = p;
+      return o;
+    };
+
+    return _setPrototypeOf(o, p);
   }
 
   /**
@@ -1160,11 +1188,11 @@
   }
 
   function shouldUpdateComponent(prevElement, nextElement) {
-    var prevEmpty = isNull(prevElement);
-    var nextEmpty = isNull(nextElement);
+    var prevFalsy = isFalsy(prevElement);
+    var nextFalsy = isFalsy(nextElement);
 
-    if (prevEmpty || nextEmpty) {
-      return prevEmpty === nextEmpty;
+    if (prevFalsy || nextFalsy) {
+      return prevFalsy === nextFalsy;
     }
 
     if (isArray(prevElement) && isArray(nextElement)) {
@@ -1182,7 +1210,8 @@
   }
 
   function getElementKeyName(children, element, index) {
-    var elementKey = element && element.key;
+    // `element && element.key` will cause elementKey receive "" when element is ""
+    var elementKey = element ? element.key : void 0;
     var defaultName = '.' + index.toString(36); // Inner child name default format fallback
     // Key should must be string type
 
@@ -2008,7 +2037,6 @@
     };
 
     _proto.__update = function __update() {
-      this[INTERNAL].__isPendingForceUpdate = true;
       this.setState(EMPTY_OBJECT);
     };
 
@@ -2135,7 +2163,7 @@
     }
 
     if (shouldAsyncUpdate) {
-      // If have been scheduled before, don't not need schedule again
+      // If have been scheduled before, do not need schedule again
       if (dirtyComponents.length > 1) {
         return;
       }
@@ -2150,6 +2178,12 @@
     var internal = component[INTERNAL];
 
     if (!internal) {
+      {
+        // Block other render
+        Host.__isUpdating = false;
+        console.error("Warning: Can't perform a Rax state update on an unmounted component. This " + 'is a no-op, but it indicates a memory leak in your application. To ' + 'fix, cancel all subscriptions and asynchronous tasks in %s.', component.__isReactiveComponent ? 'a useEffect cleanup function' : 'the componentWillUnmount method');
+      }
+
       return;
     }
 
@@ -2160,6 +2194,11 @@
     var hasComponentRendered = internal[RENDERED_COMPONENT]; // setState
 
     if (partialState) {
+      // Function Component should force update
+      if (component.__isReactiveComponent) {
+        internal.__isPendingForceUpdate = true;
+      }
+
       enqueueState(internal, partialState); // State pending when request update in componentWillMount and componentWillReceiveProps,
       // isPendingState default is false value (false or null) and set to true after componentWillReceiveProps,
       // _renderedComponent is null when componentWillMount exec.
@@ -2203,12 +2242,12 @@
     }
   }
   /**
-   * A class component becomes an error boundary if 
+   * A class component becomes an error boundary if
    * it defines either (or both) of the lifecycle methods static getDerivedStateFromError() or componentDidCatch().
    * Use static getDerivedStateFromError() to render a fallback UI after an error has been thrown.
    * Use componentDidCatch() to log error information.
-   * @param {*} instance 
-   * @param {*} error 
+   * @param {*} instance
+   * @param {*} error
    */
 
   function handleError(instance, error) {
@@ -2228,7 +2267,7 @@
 
 
             if (boundary.constructor && boundary.constructor.getDerivedStateFromError) {
-              var state = boundary.constructor.getDerivedStateFromError();
+              var state = boundary.constructor.getDerivedStateFromError(error);
               boundary.setState(state);
             }
           }, boundaryInternal.__parentInstance);
@@ -2310,8 +2349,6 @@
         } else {
           if ("development" !== 'production') {
             throwError('Invalid component type, expected a class or function component.', Component);
-          } else {
-            throwMinifiedError(6, Component);
           }
         }
       }, parentInstance);
@@ -2343,8 +2380,6 @@
             measureLifeCycle(function () {
               instance.componentWillMount();
             }, _this._mountID, 'componentWillMount');
-          } else {
-            instance.componentWillMount();
           }
         }, instance);
       }
@@ -2359,8 +2394,6 @@
           measureLifeCycle(function () {
             renderedElement = instance.render();
           }, _this._mountID, 'render');
-        } else {
-          renderedElement = instance.render();
         }
       }, instance);
 
@@ -2839,7 +2872,7 @@
     return componentInstance;
   }
 
-  var version = '1.1.0';
+  var version = "1.2.3";
 
   var DevtoolsHook = {
     ComponentTree: {
@@ -2920,7 +2953,4 @@
   exports.useState = useState;
   exports.version = version;
 
-  Object.defineProperty(exports, '__esModule', { value: true });
-
 })));
-//# sourceMappingURL=rax.umd.js.map

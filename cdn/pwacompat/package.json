@@ -1,0 +1,1 @@
+[{"name":"pwacompat","version":"2.0.17","description":"library to bring Web App Manifest contents to non-compliant browsers","repository":"git+https:\/\/github.com\/GoogleChrome\/pwacompat.git","keyfiles":"pwacompat.min.js","keywords":["pwa","compatibility","ios","homescreen","manifest"],"npm":"pwacompat"}]
