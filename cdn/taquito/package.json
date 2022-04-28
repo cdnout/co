@@ -1,0 +1,1 @@
+[{"name":"taquito","version":"12.1.0","description":"High level functionality that builds upon the other packages in the Tezos Typescript Library Suite.","repository":"git+https:\/\/github.com\/ecadlabs\/taquito.git","keyfiles":"taquito.min.js","keywords":["tezos","blockchain"],"npm":"@taquito\/taquito"}]

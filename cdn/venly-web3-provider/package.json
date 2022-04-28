@@ -1,0 +1,1 @@
+[{"name":"venly-web3-provider","version":"0.32.0","description":"Venly enabled Web3 Provider for the web","repository":"git+https:\/\/github.com\/ArkaneNetwork\/web3-arkane-provider.git","keyfiles":"web3-provider.js","keywords":["ethereum","hd","wallet","mnemonic","provider","arkane","venly","venly.io","truffle","blockchain","crypto"],"npm":"@venly\/web3-provider"}]

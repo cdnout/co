@@ -30435,3 +30435,7 @@ function (_Element) {
 
 /******/ })["default"];
 });
+console.warn("Please upgrade to the newest release of VexFlow.\nSee: https://github.com/0xfe/vexflow for more information.\nThis page uses version 3.0.9, which is no longer supported.");
+
+// YOU ARE LOOKING AT VEXFLOW LEGACY VERSION 3.0.9.
+// SEE THE `build/` FOLDER FOR THE NEWEST RELEASE.
