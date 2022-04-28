@@ -3,13 +3,13 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _createElement = _interopRequireDefault(require("../createElement"));
+var React = _interopRequireWildcard(require("react"));
 
-var _css = _interopRequireDefault(require("../StyleSheet/css"));
+var _createElement = _interopRequireDefault(require("../createElement"));
 
 var _AssetRegistry = require("../../modules/AssetRegistry");
 
-var _resolveShadowValue = _interopRequireDefault(require("../StyleSheet/resolveShadowValue"));
+var _preprocess = require("../StyleSheet/preprocess");
 
 var _ImageLoader = _interopRequireDefault(require("../../modules/ImageLoader"));
 
@@ -21,23 +21,21 @@ var _TextAncestorContext = _interopRequireDefault(require("../Text/TextAncestorC
 
 var _View = _interopRequireDefault(require("../View"));
 
-var _react = _interopRequireWildcard(require("react"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 var ERRORED = 'ERRORED';
 var LOADED = 'LOADED';
@@ -47,37 +45,27 @@ var _filterId = 0;
 var svgDataUriPattern = /^(data:image\/svg\+xml;utf8,)(.*)/;
 
 function createTintColorSVG(tintColor, id) {
-  return tintColor && id != null ?
-  /*#__PURE__*/
-  _react.default.createElement("svg", {
+  return tintColor && id != null ? /*#__PURE__*/React.createElement("svg", {
     style: {
       position: 'absolute',
       height: 0,
       visibility: 'hidden',
       width: 0
     }
-  },
-  /*#__PURE__*/
-  _react.default.createElement("defs", null,
-  /*#__PURE__*/
-  _react.default.createElement("filter", {
+  }, /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("filter", {
     id: "tint-" + id,
     suppressHydrationWarning: true
-  },
-  /*#__PURE__*/
-  _react.default.createElement("feFlood", {
+  }, /*#__PURE__*/React.createElement("feFlood", {
     floodColor: "" + tintColor,
     key: tintColor
-  }),
-  /*#__PURE__*/
-  _react.default.createElement("feComposite", {
+  }), /*#__PURE__*/React.createElement("feComposite", {
     in2: "SourceAlpha",
     operator: "atop"
   })))) : null;
 }
 
 function getFlatStyle(style, blurRadius, filterId) {
-  var flatStyle = _objectSpread({}, _StyleSheet.default.flatten(style));
+  var flatStyle = _StyleSheet.default.flatten(style);
 
   var filter = flatStyle.filter,
       resizeMode = flatStyle.resizeMode,
@@ -97,7 +85,7 @@ function getFlatStyle(style, blurRadius, filterId) {
   }
 
   if (shadowOffset) {
-    var shadowString = (0, _resolveShadowValue.default)(flatStyle);
+    var shadowString = (0, _preprocess.createBoxShadowValue)(flatStyle);
 
     if (shadowString) {
       filters.push("drop-shadow(" + shadowString + ")");
@@ -129,19 +117,19 @@ function getFlatStyle(style, blurRadius, filterId) {
 function resolveAssetDimensions(source) {
   if (typeof source === 'number') {
     var _getAssetByID = (0, _AssetRegistry.getAssetByID)(source),
-        height = _getAssetByID.height,
-        width = _getAssetByID.width;
+        _height = _getAssetByID.height,
+        _width = _getAssetByID.width;
 
-    return {
-      height: height,
-      width: width
-    };
-  } else if (source != null && !Array.isArray(source) && typeof source === 'object') {
-    var _height = source.height,
-        _width = source.width;
     return {
       height: _height,
       width: _width
+    };
+  } else if (source != null && !Array.isArray(source) && typeof source === 'object') {
+    var _height2 = source.height,
+        _width2 = source.width;
+    return {
+      height: _height2,
+      width: _width2
     };
   }
 }
@@ -185,9 +173,7 @@ function resolveAssetUri(source) {
   return uri;
 }
 
-var Image =
-/*#__PURE__*/
-(0, _react.forwardRef)(function (props, ref) {
+var Image = /*#__PURE__*/React.forwardRef(function (props, ref) {
   var accessibilityLabel = props.accessibilityLabel,
       blurRadius = props.blurRadius,
       defaultSource = props.defaultSource,
@@ -208,7 +194,7 @@ var Image =
     }
   }
 
-  var _useState = (0, _react.useState)(function () {
+  var _React$useState = React.useState(function () {
     var uri = resolveAssetUri(source);
 
     if (uri != null) {
@@ -221,17 +207,17 @@ var Image =
 
     return IDLE;
   }),
-      state = _useState[0],
-      updateState = _useState[1];
+      state = _React$useState[0],
+      updateState = _React$useState[1];
 
-  var _useState2 = (0, _react.useState)({}),
-      layout = _useState2[0],
-      updateLayout = _useState2[1];
+  var _React$useState2 = React.useState({}),
+      layout = _React$useState2[0],
+      updateLayout = _React$useState2[1];
 
-  var hasTextAncestor = (0, _react.useContext)(_TextAncestorContext.default);
-  var hiddenImageRef = (0, _react.useRef)(null);
-  var filterRef = (0, _react.useRef)(_filterId++);
-  var requestRef = (0, _react.useRef)(null);
+  var hasTextAncestor = React.useContext(_TextAncestorContext.default);
+  var hiddenImageRef = React.useRef(null);
+  var filterRef = React.useRef(_filterId++);
+  var requestRef = React.useRef(null);
   var shouldDisplaySource = state === LOADED || state === LOADING && defaultSource == null;
 
   var _getFlatStyle = getFlatStyle(style, blurRadius, filterRef.current),
@@ -249,7 +235,7 @@ var Image =
 
   var hiddenImage = displayImageUri ? (0, _createElement.default)('img', {
     alt: accessibilityLabel || '',
-    classList: [classes.accessibilityImage],
+    style: styles.accessibilityImage$raw,
     draggable: draggable || false,
     ref: hiddenImageRef,
     src: displayImageUri
@@ -260,11 +246,11 @@ var Image =
       var _hiddenImageRef$curre = hiddenImageRef.current,
           naturalHeight = _hiddenImageRef$curre.naturalHeight,
           naturalWidth = _hiddenImageRef$curre.naturalWidth;
-      var height = layout.height,
-          width = layout.width;
+      var _height3 = layout.height,
+          _width3 = layout.width;
 
-      if (naturalHeight && naturalWidth && height && width) {
-        var scaleFactor = Math.min(1, width / naturalWidth, height / naturalHeight);
+      if (naturalHeight && naturalWidth && _height3 && _width3) {
+        var scaleFactor = Math.min(1, _width3 / naturalWidth, _height3 / naturalHeight);
         var x = Math.ceil(scaleFactor * naturalWidth);
         var y = Math.ceil(scaleFactor * naturalHeight);
         return x + "px " + y + "px";
@@ -282,7 +268,7 @@ var Image =
 
 
   var uri = resolveAssetUri(source);
-  (0, _react.useEffect)(function () {
+  React.useEffect(function () {
     abortPendingRequest();
 
     if (uri != null) {
@@ -329,51 +315,37 @@ var Image =
 
     return abortPendingRequest;
   }, [uri, requestRef, updateState, onError, onLoad, onLoadEnd, onLoadStart]);
-  return (
-    /*#__PURE__*/
-    _react.default.createElement(_View.default, _extends({}, rest, {
-      accessibilityLabel: accessibilityLabel,
-      onLayout: handleLayout,
-      pointerEvents: pointerEvents,
-      ref: ref,
-      style: [styles.root, hasTextAncestor && styles.inline, imageSizeStyle, flatStyle]
-    }),
-    /*#__PURE__*/
-    _react.default.createElement(_View.default, {
-      style: [styles.image, resizeModeStyles[resizeMode], {
-        backgroundImage: backgroundImage,
-        filter: filter
-      }, backgroundSize != null && {
-        backgroundSize: backgroundSize
-      }],
-      suppressHydrationWarning: true
-    }), hiddenImage, createTintColorSVG(tintColor, filterRef.current))
-  );
+  return /*#__PURE__*/React.createElement(_View.default, _extends({}, rest, {
+    accessibilityLabel: accessibilityLabel,
+    onLayout: handleLayout,
+    pointerEvents: pointerEvents,
+    ref: ref,
+    style: [styles.root, hasTextAncestor && styles.inline, imageSizeStyle, flatStyle]
+  }), /*#__PURE__*/React.createElement(_View.default, {
+    style: [styles.image, resizeModeStyles[resizeMode], {
+      backgroundImage: backgroundImage,
+      filter: filter
+    }, backgroundSize != null && {
+      backgroundSize: backgroundSize
+    }],
+    suppressHydrationWarning: true
+  }), hiddenImage, createTintColorSVG(tintColor, filterRef.current));
 });
-Image.displayName = 'Image'; // $FlowFixMe
+Image.displayName = 'Image'; // $FlowIgnore: This is the correct type, but casting makes it unhappy since the variables aren't defined yet
 
-Image.getSize = function (uri, success, failure) {
+var ImageWithStatics = Image;
+
+ImageWithStatics.getSize = function (uri, success, failure) {
   _ImageLoader.default.getSize(uri, success, failure);
-}; // $FlowFixMe
-
-
-Image.prefetch = function (uri) {
-  return _ImageLoader.default.prefetch(uri);
-}; // $FlowFixMe
-
-
-Image.queryCache = function (uris) {
-  return _ImageLoader.default.queryCache(uris);
 };
 
-var classes = _css.default.create({
-  accessibilityImage: _objectSpread(_objectSpread({}, _StyleSheet.default.absoluteFillObject), {}, {
-    height: '100%',
-    opacity: 0,
-    width: '100%',
-    zIndex: -1
-  })
-});
+ImageWithStatics.prefetch = function (uri) {
+  return _ImageLoader.default.prefetch(uri);
+};
+
+ImageWithStatics.queryCache = function (uris) {
+  return _ImageLoader.default.queryCache(uris);
+};
 
 var styles = _StyleSheet.default.create({
   root: {
@@ -392,6 +364,12 @@ var styles = _StyleSheet.default.create({
     height: '100%',
     width: '100%',
     zIndex: -1
+  }),
+  accessibilityImage$raw: _objectSpread(_objectSpread({}, _StyleSheet.default.absoluteFillObject), {}, {
+    height: '100%',
+    opacity: 0,
+    width: '100%',
+    zIndex: -1
   })
 });
 
@@ -406,11 +384,11 @@ var resizeModeStyles = _StyleSheet.default.create({
     backgroundSize: 'cover'
   },
   none: {
-    backgroundPosition: '0 0',
+    backgroundPosition: '0',
     backgroundSize: 'auto'
   },
   repeat: {
-    backgroundPosition: '0 0',
+    backgroundPosition: '0',
     backgroundRepeat: 'repeat',
     backgroundSize: 'auto'
   },
@@ -419,6 +397,6 @@ var resizeModeStyles = _StyleSheet.default.create({
   }
 });
 
-var _default = Image;
+var _default = ImageWithStatics;
 exports.default = _default;
 module.exports = exports.default;

@@ -3,7 +3,7 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _react = require("react");
+var React = _interopRequireWildcard(require("react"));
 
 var _StyleSheet = _interopRequireDefault(require("../StyleSheet"));
 
@@ -11,9 +11,13 @@ var _createElement = _interopRequireDefault(require("../createElement"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -41,13 +45,13 @@ function ModalAnimation(props) {
       onShow = props.onShow,
       visible = props.visible;
 
-  var _useState = (0, _react.useState)(false),
-      isRendering = _useState[0],
-      setIsRendering = _useState[1];
+  var _React$useState = React.useState(false),
+      isRendering = _React$useState[0],
+      setIsRendering = _React$useState[1];
 
-  var wasVisible = (0, _react.useRef)(false);
+  var wasVisible = React.useRef(false);
   var isAnimated = animationType && animationType !== 'none';
-  var animationEndCallback = (0, _react.useCallback)(function (e) {
+  var animationEndCallback = React.useCallback(function (e) {
     if (e && e.currentTarget !== e.target) {
       // If the event was generated for something NOT this element we
       // should ignore it as it's not relevant to us
@@ -66,7 +70,7 @@ function ModalAnimation(props) {
       }
     }
   }, [onDismiss, onShow, visible]);
-  (0, _react.useEffect)(function () {
+  React.useEffect(function () {
     if (visible) {
       setIsRendering(true);
     }

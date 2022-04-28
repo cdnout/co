@@ -1,13 +1,13 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import { useEffect, useCallback, useState, useRef } from 'react';
+import * as React from 'react';
 import StyleSheet from '../StyleSheet';
 import createElement from '../createElement';
 var ANIMATION_DURATION = 300;
@@ -31,13 +31,13 @@ function ModalAnimation(props) {
       onShow = props.onShow,
       visible = props.visible;
 
-  var _useState = useState(false),
-      isRendering = _useState[0],
-      setIsRendering = _useState[1];
+  var _React$useState = React.useState(false),
+      isRendering = _React$useState[0],
+      setIsRendering = _React$useState[1];
 
-  var wasVisible = useRef(false);
+  var wasVisible = React.useRef(false);
   var isAnimated = animationType && animationType !== 'none';
-  var animationEndCallback = useCallback(function (e) {
+  var animationEndCallback = React.useCallback(function (e) {
     if (e && e.currentTarget !== e.target) {
       // If the event was generated for something NOT this element we
       // should ignore it as it's not relevant to us
@@ -56,7 +56,7 @@ function ModalAnimation(props) {
       }
     }
   }, [onDismiss, onShow, visible]);
-  useEffect(function () {
+  React.useEffect(function () {
     if (visible) {
       setIsRendering(true);
     }

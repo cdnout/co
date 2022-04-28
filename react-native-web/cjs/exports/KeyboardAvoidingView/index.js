@@ -3,11 +3,15 @@
 exports.__esModule = true;
 exports.default = void 0;
 
+var React = _interopRequireWildcard(require("react"));
+
 var _View = _interopRequireDefault(require("../View"));
 
-var _react = _interopRequireDefault(require("react"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -17,9 +21,7 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var KeyboardAvoidingView =
-/*#__PURE__*/
-function (_React$Component) {
+var KeyboardAvoidingView = /*#__PURE__*/function (_React$Component) {
   _inheritsLoose(KeyboardAvoidingView, _React$Component);
 
   function KeyboardAvoidingView() {
@@ -61,16 +63,13 @@ function (_React$Component) {
         keyboardVerticalOffset = _this$props.keyboardVerticalOffset,
         rest = _objectWithoutPropertiesLoose(_this$props, ["behavior", "contentContainerStyle", "keyboardVerticalOffset"]);
 
-    return (
-      /*#__PURE__*/
-      _react.default.createElement(_View.default, _extends({
-        onLayout: this.onLayout
-      }, rest))
-    );
+    return /*#__PURE__*/React.createElement(_View.default, _extends({
+      onLayout: this.onLayout
+    }, rest));
   };
 
   return KeyboardAvoidingView;
-}(_react.default.Component);
+}(React.Component);
 
 var _default = KeyboardAvoidingView;
 exports.default = _default;

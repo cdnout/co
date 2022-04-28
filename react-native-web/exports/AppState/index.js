@@ -4,16 +4,17 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
-import findIndex from 'array-find-index';
-import invariant from 'fbjs/lib/invariant'; // Android 4.4 browser
+import invariant from 'fbjs/lib/invariant';
+import EventEmitter from '../../vendor/react-native/emitter/_EventEmitter';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM; // Android 4.4 browser
 
 var isPrefixed = canUseDOM && !document.hasOwnProperty('hidden') && document.hasOwnProperty('webkitHidden');
 var EVENT_TYPES = ['change', 'memoryWarning'];
@@ -23,11 +24,9 @@ var AppStates = {
   BACKGROUND: 'background',
   ACTIVE: 'active'
 };
-var listeners = [];
+var changeEmitter = null;
 
-var AppState =
-/*#__PURE__*/
-function () {
+var AppState = /*#__PURE__*/function () {
   function AppState() {}
 
   AppState.addEventListener = function addEventListener(type, handler) {
@@ -35,28 +34,27 @@ function () {
       invariant(EVENT_TYPES.indexOf(type) !== -1, 'Trying to subscribe to unknown event: "%s"', type);
 
       if (type === 'change') {
-        var callback = function callback() {
-          return handler(AppState.currentState);
-        };
+        if (!changeEmitter) {
+          changeEmitter = new EventEmitter();
+          document.addEventListener(VISIBILITY_CHANGE_EVENT, function () {
+            if (changeEmitter) {
+              changeEmitter.emit('change', AppState.currentState);
+            }
+          }, false);
+        }
 
-        listeners.push([handler, callback]);
-        document.addEventListener(VISIBILITY_CHANGE_EVENT, callback, false);
+        return changeEmitter.addListener(type, handler);
       }
     }
   };
 
   AppState.removeEventListener = function removeEventListener(type, handler) {
     if (AppState.isAvailable) {
+      console.error("AppState.removeListener('" + type + "', ...): Method has been " + 'deprecated. Please instead use `remove()` on the subscription ' + 'returned by `AppState.addEventListener`.');
       invariant(EVENT_TYPES.indexOf(type) !== -1, 'Trying to remove listener for unknown event: "%s"', type);
 
-      if (type === 'change') {
-        var listenerIndex = findIndex(listeners, function (pair) {
-          return pair[0] === handler;
-        });
-        invariant(listenerIndex !== -1, 'Trying to remove AppState listener for unregistered handler');
-        var callback = listeners[listenerIndex][1];
-        document.removeEventListener(VISIBILITY_CHANGE_EVENT, callback, false);
-        listeners.splice(listenerIndex, 1);
+      if (type === 'change' && changeEmitter) {
+        changeEmitter.removeListener(handler);
       }
     }
   };

@@ -6,9 +6,10 @@
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import useLayoutEffect from '../useLayoutEffect';
 import UIManager from '../../exports/UIManager';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 var DOM_LAYOUT_HANDLER_NAME = '__reactLayoutHandler';
 var didWarn = !canUseDOM;
 var resizeObserver = null;

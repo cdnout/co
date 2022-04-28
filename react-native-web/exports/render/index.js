@@ -6,6 +6,13 @@
  *
  * 
  */
-import { hydrate, render } from 'react-dom';
-export { hydrate };
-export default render;
+import { hydrate as domHydrate, render as domRender } from 'react-dom';
+import { createSheet } from '../StyleSheet/dom';
+export function hydrate(element, root, callback) {
+  createSheet(root);
+  return domHydrate(element, root, callback);
+}
+export default function render(element, root, callback) {
+  createSheet(root);
+  return domRender(element, root, callback);
+}

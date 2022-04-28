@@ -16,9 +16,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 /**
  * Common implementation for a simple stubbed view.
  */
-var UnimplementedView =
-/*#__PURE__*/
-function (_React$Component) {
+var UnimplementedView = /*#__PURE__*/function (_React$Component) {
   _inheritsLoose(UnimplementedView, _React$Component);
 
   function UnimplementedView() {
@@ -31,12 +29,9 @@ function (_React$Component) {
   };
 
   _proto.render = function render() {
-    return (
-      /*#__PURE__*/
-      _react.default.createElement(_View.default, {
-        style: [unimplementedViewStyles, this.props.style]
-      }, this.props.children)
-    );
+    return /*#__PURE__*/_react.default.createElement(_View.default, {
+      style: [unimplementedViewStyles, this.props.style]
+    }, this.props.children);
   };
 
   return UnimplementedView;

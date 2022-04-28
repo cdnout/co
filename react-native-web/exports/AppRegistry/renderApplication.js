@@ -2,7 +2,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,7 +12,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 import AppContainer from './AppContainer';
 import invariant from 'fbjs/lib/invariant';
 import render, { hydrate } from '../render';
-import styleResolver from '../StyleSheet/styleResolver';
+import StyleSheet from '../StyleSheet';
 import React from 'react';
 export default function renderApplication(RootComponent, WrapperComponent, callback, options) {
   var shouldHydrate = options.hydrate,
@@ -20,36 +20,25 @@ export default function renderApplication(RootComponent, WrapperComponent, callb
       rootTag = options.rootTag;
   var renderFn = shouldHydrate ? hydrate : render;
   invariant(rootTag, 'Expect to have a valid rootTag, instead got ', rootTag);
-  renderFn(
-  /*#__PURE__*/
-  React.createElement(AppContainer, {
+  renderFn( /*#__PURE__*/React.createElement(AppContainer, {
     WrapperComponent: WrapperComponent,
     rootTag: rootTag
-  },
-  /*#__PURE__*/
-  React.createElement(RootComponent, initialProps)), rootTag, callback);
+  }, /*#__PURE__*/React.createElement(RootComponent, initialProps)), rootTag, callback);
 }
 export function getApplication(RootComponent, initialProps, WrapperComponent) {
-  var element =
-  /*#__PURE__*/
-  React.createElement(AppContainer, {
+  var element = /*#__PURE__*/React.createElement(AppContainer, {
     WrapperComponent: WrapperComponent,
     rootTag: {}
-  },
-  /*#__PURE__*/
-  React.createElement(RootComponent, initialProps)); // Don't escape CSS text
+  }, /*#__PURE__*/React.createElement(RootComponent, initialProps)); // Don't escape CSS text
 
   var getStyleElement = function getStyleElement(props) {
-    var sheet = styleResolver.getStyleSheet();
-    return (
-      /*#__PURE__*/
-      React.createElement("style", _extends({}, props, {
-        dangerouslySetInnerHTML: {
-          __html: sheet.textContent
-        },
-        id: sheet.id
-      }))
-    );
+    var sheet = StyleSheet.getSheet();
+    return /*#__PURE__*/React.createElement("style", _extends({}, props, {
+      dangerouslySetInnerHTML: {
+        __html: sheet.textContent
+      },
+      id: sheet.id
+    }));
   };
 
   return {

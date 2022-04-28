@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,7 +11,11 @@
 exports.__esModule = true;
 exports.default = createEventHandle;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
 
 var emptyFunction = function emptyFunction() {};
 
@@ -19,7 +23,7 @@ function supportsPassiveEvents() {
   var supported = false; // Check if browser supports event with passive listeners
   // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Safely_detecting_option_support
 
-  if (_ExecutionEnvironment.canUseDOM) {
+  if (canUseDOM) {
     try {
       var options = {};
       Object.defineProperty(options, 'passive', {

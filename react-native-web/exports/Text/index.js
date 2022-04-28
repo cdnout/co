@@ -1,3 +1,5 @@
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -6,7 +8,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,9 +16,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  * 
  */
 import * as React from 'react';
-import { forwardRef, useContext, useRef } from 'react';
 import createElement from '../createElement';
-import css from '../StyleSheet/css';
 import * as forwardedProps from '../../modules/forwardedProps';
 import pick from '../../modules/pick';
 import useElementLayout from '../../modules/useElementLayout';
@@ -25,6 +25,7 @@ import usePlatformMethods from '../../modules/usePlatformMethods';
 import useResponderEvents from '../../modules/useResponderEvents';
 import StyleSheet from '../StyleSheet';
 import TextAncestorContext from './TextAncestorContext';
+import { useLocaleContext, getLocaleDirection } from '../../modules/useLocale';
 
 var forwardPropsList = _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, forwardedProps.defaultProps), forwardedProps.accessibilityProps), forwardedProps.clickProps), forwardedProps.focusProps), forwardedProps.keyboardProps), forwardedProps.mouseProps), forwardedProps.touchProps), forwardedProps.styleProps), {}, {
   href: true,
@@ -36,11 +37,8 @@ var pickProps = function pickProps(props) {
   return pick(props, forwardPropsList);
 };
 
-var Text =
-/*#__PURE__*/
-forwardRef(function (props, forwardedRef) {
-  var dir = props.dir,
-      hrefAttrs = props.hrefAttrs,
+var Text = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
+  var hrefAttrs = props.hrefAttrs,
       numberOfLines = props.numberOfLines,
       onClick = props.onClick,
       onLayout = props.onLayout,
@@ -61,13 +59,15 @@ forwardRef(function (props, forwardedRef) {
       onSelectionChangeShouldSetResponderCapture = props.onSelectionChangeShouldSetResponderCapture,
       onStartShouldSetResponder = props.onStartShouldSetResponder,
       onStartShouldSetResponderCapture = props.onStartShouldSetResponderCapture,
-      selectable = props.selectable;
-  var hasTextAncestor = useContext(TextAncestorContext);
-  var hostRef = useRef(null);
-  var classList = [classes.text, hasTextAncestor === true && classes.textHasAncestor, numberOfLines === 1 && classes.textOneLine, numberOfLines != null && numberOfLines > 1 && classes.textMultiLine];
-  var style = [props.style, numberOfLines != null && numberOfLines > 1 && {
-    WebkitLineClamp: numberOfLines
-  }, selectable === true && styles.selectable, selectable === false && styles.notSelectable, onPress && styles.pressable];
+      selectable = props.selectable,
+      rest = _objectWithoutPropertiesLoose(props, ["hrefAttrs", "numberOfLines", "onClick", "onLayout", "onPress", "onMoveShouldSetResponder", "onMoveShouldSetResponderCapture", "onResponderEnd", "onResponderGrant", "onResponderMove", "onResponderReject", "onResponderRelease", "onResponderStart", "onResponderTerminate", "onResponderTerminationRequest", "onScrollShouldSetResponder", "onScrollShouldSetResponderCapture", "onSelectionChangeShouldSetResponder", "onSelectionChangeShouldSetResponderCapture", "onStartShouldSetResponder", "onStartShouldSetResponderCapture", "selectable"]);
+
+  var hasTextAncestor = React.useContext(TextAncestorContext);
+  var hostRef = React.useRef(null);
+
+  var _useLocaleContext = useLocaleContext(),
+      contextDirection = _useLocaleContext.direction;
+
   useElementLayout(hostRef, onLayout);
   useResponderEvents(hostRef, {
     onMoveShouldSetResponder: onMoveShouldSetResponder,
@@ -87,81 +87,94 @@ forwardRef(function (props, forwardedRef) {
     onStartShouldSetResponder: onStartShouldSetResponder,
     onStartShouldSetResponderCapture: onStartShouldSetResponderCapture
   });
-
-  function handleClick(e) {
+  var handleClick = React.useCallback(function (e) {
     if (onClick != null) {
       onClick(e);
-    }
-
-    if (onClick == null && onPress != null) {
+    } else if (onPress != null) {
       e.stopPropagation();
       onPress(e);
     }
-  }
-
+  }, [onClick, onPress]);
   var component = hasTextAncestor ? 'span' : 'div';
-  var supportedProps = pickProps(props);
-  supportedProps.classList = classList;
-  supportedProps.dir = dir; // 'auto' by default allows browsers to infer writing direction (root elements only)
+  var langDirection = props.lang != null ? getLocaleDirection(props.lang) : null;
+  var componentDirection = props.dir || langDirection;
+  var writingDirection = componentDirection || contextDirection;
+  var supportedProps = pickProps(rest);
+  supportedProps.dir = componentDirection; // 'auto' by default allows browsers to infer writing direction (root elements only)
 
   if (!hasTextAncestor) {
-    supportedProps.dir = dir != null ? dir : 'auto';
+    supportedProps.dir = componentDirection != null ? componentDirection : 'auto';
   }
 
-  supportedProps.onClick = handleClick;
-  supportedProps.style = style;
+  if (onClick || onPress) {
+    supportedProps.onClick = handleClick;
+  }
 
-  if (props.href != null && hrefAttrs != null) {
-    var download = hrefAttrs.download,
-        rel = hrefAttrs.rel,
-        target = hrefAttrs.target;
+  supportedProps.style = [numberOfLines != null && numberOfLines > 1 && {
+    WebkitLineClamp: numberOfLines
+  }, hasTextAncestor === true ? styles.textHasAncestor$raw : styles.text$raw, numberOfLines === 1 && styles.textOneLine, numberOfLines != null && numberOfLines > 1 && styles.textMultiLine, props.style, selectable === true && styles.selectable, selectable === false && styles.notSelectable, onPress && styles.pressable];
 
-    if (download != null) {
-      supportedProps.download = download;
-    }
+  if (props.href != null) {
+    component = 'a';
 
-    if (rel != null) {
-      supportedProps.rel = rel;
-    }
+    if (hrefAttrs != null) {
+      var download = hrefAttrs.download,
+          rel = hrefAttrs.rel,
+          target = hrefAttrs.target;
 
-    if (typeof target === 'string' && target.charAt(0) !== '_') {
-      supportedProps.target = '_' + target;
+      if (download != null) {
+        supportedProps.download = download;
+      }
+
+      if (rel != null) {
+        supportedProps.rel = rel;
+      }
+
+      if (typeof target === 'string') {
+        supportedProps.target = target.charAt(0) !== '_' ? '_' + target : target;
+      }
     }
   }
 
   var platformMethodsRef = usePlatformMethods(supportedProps);
   var setRef = useMergeRefs(hostRef, platformMethodsRef, forwardedRef);
   supportedProps.ref = setRef;
-  var element = createElement(component, supportedProps);
-  return hasTextAncestor ? element :
-  /*#__PURE__*/
-  React.createElement(TextAncestorContext.Provider, {
+  var element = createElement(component, supportedProps, {
+    writingDirection: writingDirection
+  });
+  return hasTextAncestor ? element : /*#__PURE__*/React.createElement(TextAncestorContext.Provider, {
     value: true
   }, element);
 });
 Text.displayName = 'Text';
-var classes = css.create({
-  text: {
-    border: '0 solid black',
-    boxSizing: 'border-box',
-    color: 'black',
-    display: 'inline',
-    font: '14px System',
-    margin: 0,
-    padding: 0,
-    whiteSpace: 'pre-wrap',
-    wordWrap: 'break-word'
-  },
-  textHasAncestor: {
+var textStyle = {
+  backgroundColor: 'transparent',
+  border: '0 solid black',
+  boxSizing: 'border-box',
+  color: 'black',
+  display: 'inline',
+  font: '14px System',
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+  textAlign: 'inherit',
+  textDecoration: 'none',
+  whiteSpace: 'pre-wrap',
+  wordWrap: 'break-word'
+};
+var styles = StyleSheet.create({
+  text$raw: textStyle,
+  textHasAncestor$raw: _objectSpread(_objectSpread({}, textStyle), {}, {
     color: 'inherit',
     font: 'inherit',
     whiteSpace: 'inherit'
-  },
+  }),
   textOneLine: {
     maxWidth: '100%',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
+    wordWrap: 'normal'
   },
   // See #13
   textMultiLine: {
@@ -170,9 +183,7 @@ var classes = css.create({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     WebkitBoxOrient: 'vertical'
-  }
-});
-var styles = StyleSheet.create({
+  },
   notSelectable: {
     userSelect: 'none'
   },

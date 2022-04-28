@@ -3,7 +3,7 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
+var React = _interopRequireWildcard(require("react"));
 
 var _ModalPortal = _interopRequireDefault(require("./ModalPortal"));
 
@@ -21,7 +21,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -68,9 +68,7 @@ function addActiveModal(modalId, listener) {
   notifyActiveModalListeners();
 }
 
-var Modal =
-/*#__PURE__*/
-(0, _react.forwardRef)(function (props, forwardedRef) {
+var Modal = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var animationType = props.animationType,
       children = props.children,
       onDismiss = props.onDismiss,
@@ -81,55 +79,46 @@ var Modal =
       visible = _props$visible === void 0 ? true : _props$visible; // Set a unique model identifier so we can correctly route
   // dismissals and check the layering of modals.
 
-  var modalId = (0, _react.useMemo)(function () {
+  var modalId = React.useMemo(function () {
     return uniqueModalIdentifier++;
   }, []);
 
-  var _useState = (0, _react.useState)(false),
-      isActive = _useState[0],
-      setIsActive = _useState[1];
+  var _React$useState = React.useState(false),
+      isActive = _React$useState[0],
+      setIsActive = _React$useState[1];
 
-  var onDismissCallback = (0, _react.useCallback)(function () {
+  var onDismissCallback = React.useCallback(function () {
     removeActiveModal(modalId);
 
     if (onDismiss) {
       onDismiss();
     }
   }, [modalId, onDismiss]);
-  var onShowCallback = (0, _react.useCallback)(function () {
+  var onShowCallback = React.useCallback(function () {
     addActiveModal(modalId, setIsActive);
 
     if (onShow) {
       onShow();
     }
   }, [modalId, onShow]);
-  (0, _react.useEffect)(function () {
+  React.useEffect(function () {
     return function () {
       return removeActiveModal(modalId);
     };
   }, [modalId]);
-  return (
-    /*#__PURE__*/
-    _react.default.createElement(_ModalPortal.default, null,
-    /*#__PURE__*/
-    _react.default.createElement(_ModalAnimation.default, {
-      animationType: animationType,
-      onDismiss: onDismissCallback,
-      onShow: onShowCallback,
-      visible: visible
-    },
-    /*#__PURE__*/
-    _react.default.createElement(_ModalFocusTrap.default, {
-      active: isActive
-    },
-    /*#__PURE__*/
-    _react.default.createElement(_ModalContent.default, {
-      active: isActive,
-      onRequestClose: onRequestClose,
-      ref: forwardedRef,
-      transparent: transparent
-    }, children))))
-  );
+  return /*#__PURE__*/React.createElement(_ModalPortal.default, null, /*#__PURE__*/React.createElement(_ModalAnimation.default, {
+    animationType: animationType,
+    onDismiss: onDismissCallback,
+    onShow: onShowCallback,
+    visible: visible
+  }, /*#__PURE__*/React.createElement(_ModalFocusTrap.default, {
+    active: isActive
+  }, /*#__PURE__*/React.createElement(_ModalContent.default, {
+    active: isActive,
+    onRequestClose: onRequestClose,
+    ref: forwardedRef,
+    transparent: transparent
+  }, children))));
 });
 var _default = Modal;
 exports.default = _default;

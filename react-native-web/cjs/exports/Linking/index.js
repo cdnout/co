@@ -3,26 +3,25 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
 var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-var initialURL = _ExecutionEnvironment.canUseDOM ? window.location.href : '';
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+var initialURL = canUseDOM ? window.location.href : '';
 
-var Linking =
-/*#__PURE__*/
-function () {
+var Linking = /*#__PURE__*/function () {
   function Linking() {
     var _this = this;
 
@@ -102,9 +101,14 @@ function () {
 }();
 
 var open = function open(url) {
-  if (_ExecutionEnvironment.canUseDOM) {
+  if (canUseDOM) {
     var urlToOpen = new URL(url, window.location).toString();
-    window.open(urlToOpen, '_blank', 'noopener');
+
+    if (urlToOpen.indexOf('tel:') === 0) {
+      window.location = urlToOpen;
+    } else {
+      window.open(urlToOpen, '_blank', 'noopener');
+    }
   }
 };
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -80,17 +80,10 @@ function TouchableWithoutFeedback(props, forwardedRef) {
   supportedProps.focusable = !disabled && focusable !== false;
   supportedProps.ref = (0, _useMergeRefs.default)(forwardedRef, hostRef, element.ref);
   var elementProps = Object.assign(supportedProps, pressEventHandlers);
-  return (
-    /*#__PURE__*/
-    React.cloneElement.apply(React, [element, elementProps].concat(children))
-  );
+  return /*#__PURE__*/React.cloneElement.apply(React, [element, elementProps].concat(children));
 }
 
-var MemoedTouchableWithoutFeedback =
-/*#__PURE__*/
-React.memo(
-/*#__PURE__*/
-React.forwardRef(TouchableWithoutFeedback));
+var MemoedTouchableWithoutFeedback = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef(TouchableWithoutFeedback));
 MemoedTouchableWithoutFeedback.displayName = 'TouchableWithoutFeedback';
 var _default = MemoedTouchableWithoutFeedback;
 exports.default = _default;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -74,11 +74,11 @@ var isTerminalSignal = function isTerminalSignal(signal) {
 };
 
 var isValidKeyPress = function isValidKeyPress(event) {
-  var key = event.key;
-  var target = event.currentTarget;
+  var key = event.key,
+      target = event.target;
   var role = target.getAttribute('role');
   var isSpacebar = key === ' ' || key === 'Spacebar';
-  return !event.repeat && (key === 'Enter' || isSpacebar && (role === 'button' || role === 'menuitem'));
+  return key === 'Enter' || isSpacebar && role === 'button';
 };
 
 var DEFAULT_LONG_PRESS_DELAY_MS = 450; // 500 - 50
@@ -159,9 +159,7 @@ var DEFAULT_PRESS_DELAY_MS = 50;
  * `click` event is `onPress` invoked.
  */
 
-var PressResponder =
-/*#__PURE__*/
-function () {
+var PressResponder = /*#__PURE__*/function () {
   function PressResponder(config) {
     this._eventHandlers = null;
     this._isPointerTouch = false;
@@ -212,7 +210,6 @@ function () {
       _this._cancelPressOutDelayTimeout();
 
       _this._longPressDispatched = false;
-      _this._responder = event.currentTarget;
       _this._selectionTerminated = false;
       _this._touchState = NOT_RESPONDER;
       _this._isPointerTouch = event.nativeEvent.type === 'touchstart';
@@ -240,9 +237,19 @@ function () {
     };
 
     var keyupHandler = function keyupHandler(event) {
-      if (_this._touchState !== NOT_RESPONDER) {
+      var onPress = _this._config.onPress;
+      var target = event.target;
+
+      if (_this._touchState !== NOT_RESPONDER && isValidKeyPress(event)) {
         end(event);
         document.removeEventListener('keyup', keyupHandler);
+        var role = target.getAttribute('role');
+        var elementType = target.tagName.toLowerCase();
+        var isNativeInteractiveElement = role === 'link' || elementType === 'a' || elementType === 'button' || elementType === 'input' || elementType === 'select' || elementType === 'textarea';
+
+        if (onPress != null && !isNativeInteractiveElement) {
+          onPress(event);
+        }
       }
     };
 
@@ -261,12 +268,26 @@ function () {
         return !disabled;
       },
       onKeyDown: function onKeyDown(event) {
-        if (isValidKeyPress(event)) {
+        var disabled = _this._config.disabled;
+        var key = event.key,
+            target = event.target;
+
+        if (!disabled && isValidKeyPress(event)) {
           if (_this._touchState === NOT_RESPONDER) {
             start(event, false); // Listen to 'keyup' on document to account for situations where
             // focus is moved to another element during 'keydown'.
 
             document.addEventListener('keyup', keyupHandler);
+          }
+
+          var role = target.getAttribute('role');
+          var isSpacebarKey = key === ' ' || key === 'Spacebar';
+
+          var _isButtonRole = role === 'button' || role === 'menuitem';
+
+          if (isSpacebarKey && _isButtonRole) {
+            // Prevent spacebar scrolling the window
+            event.preventDefault();
           }
 
           event.stopPropagation();
@@ -339,7 +360,7 @@ function () {
 
           if (_this._longPressDispatched || _this._selectionTerminated) {
             event.preventDefault();
-          } else if (onPress != null && event.ctrlKey === false && event.altKey === false) {
+          } else if (onPress != null && event.altKey === false) {
             onPress(event);
           }
         } else {
@@ -382,7 +403,7 @@ function () {
       nextState = Transitions[prevState][signal];
     }
 
-    if (this._responder == null && signal === RESPONDER_RELEASE) {
+    if (this._touchState === NOT_RESPONDER && signal === RESPONDER_RELEASE) {
       return;
     }
 

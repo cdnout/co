@@ -68,9 +68,7 @@ function shouldEmitScrollEvent(lastTick, eventThrottle) {
  */
 
 
-var ScrollViewBase =
-/*#__PURE__*/
-(0, React.forwardRef)(function (props, forwardedRef) {
+var ScrollViewBase = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var onScroll = props.onScroll,
       onTouchMove = props.onTouchMove,
       onWheel = props.onWheel,
@@ -83,12 +81,12 @@ var ScrollViewBase =
       style = props.style,
       rest = _objectWithoutPropertiesLoose(props, ["onScroll", "onTouchMove", "onWheel", "scrollEnabled", "scrollEventThrottle", "showsHorizontalScrollIndicator", "showsVerticalScrollIndicator", "style"]);
 
-  var scrollState = (0, React.useRef)({
+  var scrollState = React.useRef({
     isScrolling: false,
     scrollLastTick: 0
   });
-  var scrollTimeout = (0, React.useRef)(null);
-  var scrollRef = (0, React.useRef)(null);
+  var scrollTimeout = React.useRef(null);
+  var scrollRef = React.useRef(null);
 
   function createPreventableScrollHandler(handler) {
     return function (e) {
@@ -148,16 +146,13 @@ var ScrollViewBase =
   }
 
   var hideScrollbar = showsHorizontalScrollIndicator === false || showsVerticalScrollIndicator === false;
-  return (
-    /*#__PURE__*/
-    React.createElement(_View.default, _extends({}, rest, {
-      onScroll: handleScroll,
-      onTouchMove: createPreventableScrollHandler(onTouchMove),
-      onWheel: createPreventableScrollHandler(onWheel),
-      ref: (0, _useMergeRefs.default)(scrollRef, forwardedRef),
-      style: [style, !scrollEnabled && styles.scrollDisabled, hideScrollbar && styles.hideScrollbar]
-    }))
-  );
+  return /*#__PURE__*/React.createElement(_View.default, _extends({}, rest, {
+    onScroll: handleScroll,
+    onTouchMove: createPreventableScrollHandler(onTouchMove),
+    onWheel: createPreventableScrollHandler(onWheel),
+    ref: (0, _useMergeRefs.default)(scrollRef, forwardedRef),
+    style: [style, !scrollEnabled && styles.scrollDisabled, hideScrollbar && styles.hideScrollbar]
+  }));
 }); // Chrome doesn't support e.preventDefault in this case; touch-action must be
 // used to disable scrolling.
 // https://developers.google.com/web/updates/2017/01/scrolling-intervention

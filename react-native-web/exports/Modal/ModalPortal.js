@@ -1,19 +1,20 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import { useEffect, useRef } from 'react';
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 
 function ModalPortal(props) {
   var children = props.children;
-  var elementRef = useRef(null);
+  var elementRef = React.useRef(null);
 
   if (canUseDOM && !elementRef.current) {
     var element = document.createElement('div');
@@ -24,7 +25,7 @@ function ModalPortal(props) {
     }
   }
 
-  useEffect(function () {
+  React.useEffect(function () {
     if (canUseDOM) {
       return function () {
         if (document.body && elementRef.current) {
@@ -34,9 +35,7 @@ function ModalPortal(props) {
       };
     }
   }, []);
-  return elementRef.current && canUseDOM ?
-  /*#__PURE__*/
-  ReactDOM.createPortal(children, elementRef.current) : null;
+  return elementRef.current && canUseDOM ? /*#__PURE__*/ReactDOM.createPortal(children, elementRef.current) : null;
 }
 
 export default ModalPortal;

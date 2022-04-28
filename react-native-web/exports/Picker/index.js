@@ -8,22 +8,20 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
+import * as React from 'react';
 import createElement from '../createElement';
 import useMergeRefs from '../../modules/useMergeRefs';
 import usePlatformMethods from '../../modules/usePlatformMethods';
 import PickerItem from './PickerItem';
 import StyleSheet from '../StyleSheet';
-import { forwardRef, useRef } from 'react';
-var Picker =
-/*#__PURE__*/
-forwardRef(function (props, forwardedRef) {
+var Picker = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var children = props.children,
       enabled = props.enabled,
       onValueChange = props.onValueChange,
@@ -35,7 +33,7 @@ forwardRef(function (props, forwardedRef) {
       prompt = props.prompt,
       other = _objectWithoutPropertiesLoose(props, ["children", "enabled", "onValueChange", "selectedValue", "style", "testID", "itemStyle", "mode", "prompt"]);
 
-  var hostRef = useRef(null);
+  var hostRef = React.useRef(null);
 
   function handleChange(e) {
     var _e$target = e.target,
@@ -45,7 +43,8 @@ forwardRef(function (props, forwardedRef) {
     if (onValueChange) {
       onValueChange(value, selectedIndex);
     }
-  }
+  } // $FlowFixMe
+
 
   var supportedProps = _objectSpread({
     children: children,

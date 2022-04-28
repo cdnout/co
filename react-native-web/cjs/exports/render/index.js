@@ -1,11 +1,12 @@
 "use strict";
 
 exports.__esModule = true;
-exports.default = void 0;
+exports.hydrate = hydrate;
+exports.default = render;
 
 var _reactDom = require("react-dom");
 
-exports.hydrate = _reactDom.hydrate;
+var _dom = require("../StyleSheet/dom");
 
 /**
  * Copyright (c) Nicolas Gallagher.
@@ -15,5 +16,12 @@ exports.hydrate = _reactDom.hydrate;
  *
  * 
  */
-var _default = _reactDom.render;
-exports.default = _default;
+function hydrate(element, root, callback) {
+  (0, _dom.createSheet)(root);
+  return (0, _reactDom.hydrate)(element, root, callback);
+}
+
+function render(element, root, callback) {
+  (0, _dom.createSheet)(root);
+  return (0, _reactDom.render)(element, root, callback);
+}

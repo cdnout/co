@@ -10,7 +10,7 @@ var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
 
 var _render = _interopRequireWildcard(require("../render"));
 
-var _styleResolver = _interopRequireDefault(require("../StyleSheet/styleResolver"));
+var _StyleSheet = _interopRequireDefault(require("../StyleSheet"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -28,39 +28,28 @@ function renderApplication(RootComponent, WrapperComponent, callback, options) {
       rootTag = options.rootTag;
   var renderFn = shouldHydrate ? _render.hydrate : _render.default;
   (0, _invariant.default)(rootTag, 'Expect to have a valid rootTag, instead got ', rootTag);
-  renderFn(
-  /*#__PURE__*/
-  _react.default.createElement(_AppContainer.default, {
+  renderFn( /*#__PURE__*/_react.default.createElement(_AppContainer.default, {
     WrapperComponent: WrapperComponent,
     rootTag: rootTag
-  },
-  /*#__PURE__*/
-  _react.default.createElement(RootComponent, initialProps)), rootTag, callback);
+  }, /*#__PURE__*/_react.default.createElement(RootComponent, initialProps)), rootTag, callback);
 }
 
 function getApplication(RootComponent, initialProps, WrapperComponent) {
-  var element =
-  /*#__PURE__*/
-  _react.default.createElement(_AppContainer.default, {
+  var element = /*#__PURE__*/_react.default.createElement(_AppContainer.default, {
     WrapperComponent: WrapperComponent,
     rootTag: {}
-  },
-  /*#__PURE__*/
-  _react.default.createElement(RootComponent, initialProps)); // Don't escape CSS text
+  }, /*#__PURE__*/_react.default.createElement(RootComponent, initialProps)); // Don't escape CSS text
 
 
   var getStyleElement = function getStyleElement(props) {
-    var sheet = _styleResolver.default.getStyleSheet();
+    var sheet = _StyleSheet.default.getSheet();
 
-    return (
-      /*#__PURE__*/
-      _react.default.createElement("style", _extends({}, props, {
-        dangerouslySetInnerHTML: {
-          __html: sheet.textContent
-        },
-        id: sheet.id
-      }))
-    );
+    return /*#__PURE__*/_react.default.createElement("style", _extends({}, props, {
+      dangerouslySetInnerHTML: {
+        __html: sheet.textContent
+      },
+      id: sheet.id
+    }));
   };
 
   return {

@@ -1,6 +1,6 @@
-import { BehaviorSubject } from 'rxjs';
-import type { RxCollection, RxDocument, RxQueryOP, RxQuery, MangoQuery, MangoQuerySortPart, MangoQuerySelector } from './types';
-import { PreparedQuery } from './rx-storate.interface';
+import { BehaviorSubject, Observable } from 'rxjs';
+import type { RxCollection, RxDocument, RxQueryOP, RxQuery, MangoQuery, MangoQuerySortPart, MangoQuerySelector, PreparedQuery, RxDocumentWriteData, RxDocumentData } from './types';
+import type { QueryMatcher } from 'event-reduce-js';
 export declare class RxQueryBase<RxDocumentType = any, RxQueryResult = RxDocument<RxDocumentType[]> | RxDocument<RxDocumentType>> {
     op: RxQueryOP;
     mangoQuery: Readonly<MangoQuery>;
@@ -15,14 +15,27 @@ export declare class RxQueryBase<RxDocumentType = any, RxQueryResult = RxDocumen
     other: any;
     uncached: boolean;
     refCount$: BehaviorSubject<null>;
+    isFindOneByIdQuery: false | string;
+    /**
+     * Contains the current result state
+     * or null if query has not run yet.
+     */
+    _result: {
+        docsData: RxDocumentType[];
+        docsDataMap: Map<string, RxDocumentType>;
+        docs: RxDocument<RxDocumentType>[];
+        /**
+         * Time at which the current _result state was created.
+         * Used to determine if the result set has changed since X
+         * so that we do not emit the same result multiple times on subscription.
+         */
+        time: number;
+    } | null;
     constructor(op: RxQueryOP, mangoQuery: Readonly<MangoQuery>, collection: RxCollection<RxDocumentType>);
     get $(): BehaviorSubject<RxQueryResult>;
-    _latestChangeEvent: -1 | any;
-    _resultsData: any;
-    _resultsDataMap: Map<string, RxDocumentType>;
+    _latestChangeEvent: -1 | number;
     _lastExecStart: number;
     _lastExecEnd: number;
-    _resultsDocs$: BehaviorSubject<any>;
     /**
      * ensures that the exec-runs
      * are not run in parallel
@@ -35,17 +48,17 @@ export declare class RxQueryBase<RxDocumentType = any, RxQueryResult = RxDocumen
      * - Emit the new result-set when an RxChangeEvent comes in
      * - Do not emit anything before the first result-set was created (no null)
      */
-    _$?: BehaviorSubject<RxQueryResult>;
+    _$?: Observable<RxQueryResult>;
     /**
      * set the new result-data as result-docs of the query
-     * @param newResultData json-docs that were recieved from pouchdb
+     * @param newResultData json-docs that were received from pouchdb
      */
-    _setResultData(newResultData: any[]): RxDocument[];
+    _setResultData(newResultData: RxDocumentData<RxDocumentType[]>): void;
     /**
      * executes the query on the database
      * @return results-array with document-data
      */
-    _execOverDatabase(): Promise<any[]>;
+    _execOverDatabase(): Promise<RxDocumentData<RxDocumentType>[]>;
     /**
      * Execute the query
      * To have an easier implementations,
@@ -54,10 +67,10 @@ export declare class RxQueryBase<RxDocumentType = any, RxQueryResult = RxDocumen
     exec(throwIfMissing: true): Promise<RxDocument<RxDocumentType>>;
     exec(): Promise<RxQueryResult>;
     /**
-     * cached call to get the massageSelector
+     * cached call to get the queryMatcher
      * @overwrites itself with the actual value
      */
-    get massageSelector(): any;
+    get queryMatcher(): QueryMatcher<RxDocumentWriteData<RxDocumentType>>;
     /**
      * returns a string that is used for equal-comparisons
      * @overwrites itself with the actual value
@@ -65,18 +78,13 @@ export declare class RxQueryBase<RxDocumentType = any, RxQueryResult = RxDocumen
     toString(): string;
     /**
      * returns the prepared query
-     * @overwrites itself with the actual value
+     * which can be send to the storage instance to query for documents.
+     * @overwrites itself with the actual value.
      */
-    toJSON(): PreparedQuery<RxDocumentType>;
-    /**
-     * returns the key-compressed version of the query
-     * @overwrites itself with the actual value
-     */
-    keyCompress(): MangoQuery<any>;
+    getPreparedQuery(): PreparedQuery<RxDocumentType>;
     /**
      * returns true if the document matches the query,
      * does not use the 'skip' and 'limit'
-     * // TODO this was moved to rx-storage
      */
     doesDocumentDataMatch(docData: RxDocumentType | any): boolean;
     /**
@@ -98,10 +106,26 @@ export declare class RxQueryBase<RxDocumentType = any, RxQueryResult = RxDocumen
     skip(_amount: number | null): RxQuery<RxDocumentType, RxQueryResult>;
     limit(_amount: number | null): RxQuery<RxDocumentType, RxQueryResult>;
 }
-export declare function _getDefaultQuery(collection: RxCollection): MangoQuery;
+export declare function _getDefaultQuery(): MangoQuery;
 /**
  * run this query through the QueryCache
  */
 export declare function tunnelQueryCache<RxDocumentType, RxQueryResult>(rxQuery: RxQueryBase<RxDocumentType, RxQueryResult>): RxQuery<RxDocumentType, RxQueryResult>;
 export declare function createRxQuery(op: RxQueryOP, queryObj: MangoQuery, collection: RxCollection): RxQueryBase<any, any>;
+/**
+ * Runs the query over the storage instance
+ * of the collection.
+ * Does some optimizations to ensuer findById is used
+ * when specific queries are used.
+ */
+export declare function queryCollection<RxDocType>(rxQuery: RxQuery<RxDocType> | RxQueryBase<RxDocType>): Promise<RxDocumentData<RxDocType>[]>;
+/**
+ * Returns true if the given query
+ * selects exactly one document by its id.
+ * Used to optimize performance because these kind of
+ * queries do not have to run over an index and can use get-by-id instead.
+ * Returns false if no query of that kind.
+ * Returns the document id otherwise.
+ */
+export declare function isFindOneByIdQuery(primaryPath: string, query: MangoQuery<any>): false | string;
 export declare function isInstanceOf(obj: any): boolean;

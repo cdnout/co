@@ -3,23 +3,27 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+
 function isScreenReaderEnabled() {
   return new Promise(function (resolve, reject) {
     resolve(true);
   });
 }
 
-var prefersReducedMotionMedia = _ExecutionEnvironment.canUseDOM && typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+var prefersReducedMotionMedia = canUseDOM && typeof window.matchMedia === 'function' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
 
 function isReduceMotionEnabled() {
   return new Promise(function (resolve, reject) {

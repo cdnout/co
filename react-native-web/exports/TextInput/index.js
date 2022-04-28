@@ -6,16 +6,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import { forwardRef, useCallback, useMemo, useRef } from 'react';
+import * as React from 'react';
 import createElement from '../createElement';
-import css from '../StyleSheet/css';
 import * as forwardedProps from '../../modules/forwardedProps';
 import pick from '../../modules/pick';
 import useElementLayout from '../../modules/useElementLayout';
@@ -23,6 +22,7 @@ import useLayoutEffect from '../../modules/useLayoutEffect';
 import useMergeRefs from '../../modules/useMergeRefs';
 import usePlatformMethods from '../../modules/usePlatformMethods';
 import useResponderEvents from '../../modules/useResponderEvents';
+import { getLocaleDirection, useLocaleContext } from '../../modules/useLocale';
 import StyleSheet from '../StyleSheet';
 import TextInputState from '../../modules/TextInputState';
 /**
@@ -84,9 +84,8 @@ function isEventComposing(nativeEvent) {
   return nativeEvent.isComposing || nativeEvent.keyCode === 229;
 }
 
-var TextInput =
-/*#__PURE__*/
-forwardRef(function (props, forwardedRef) {
+var focusTimeout = null;
+var TextInput = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var _props$autoCapitalize = props.autoCapitalize,
       autoCapitalize = _props$autoCapitalize === void 0 ? 'sentences' : _props$autoCapitalize,
       autoComplete = props.autoComplete,
@@ -174,17 +173,15 @@ forwardRef(function (props, forwardedRef) {
     type = 'password';
   }
 
-  var dimensions = useRef({
+  var dimensions = React.useRef({
     height: null,
     width: null
   });
-  var hostRef = useRef(null);
-  var handleContentSizeChange = useCallback(function () {
-    var node = hostRef.current;
-
-    if (multiline && onContentSizeChange && node != null) {
-      var newHeight = node.scrollHeight;
-      var newWidth = node.scrollWidth;
+  var hostRef = React.useRef(null);
+  var handleContentSizeChange = React.useCallback(function (hostNode) {
+    if (multiline && onContentSizeChange && hostNode != null) {
+      var newHeight = hostNode.scrollHeight;
+      var newWidth = hostNode.scrollWidth;
 
       if (newHeight !== dimensions.current.height || newWidth !== dimensions.current.width) {
         dimensions.current.height = newHeight;
@@ -199,8 +196,8 @@ forwardRef(function (props, forwardedRef) {
         });
       }
     }
-  }, [hostRef, multiline, onContentSizeChange]);
-  var imperativeRef = useMemo(function () {
+  }, [multiline, onContentSizeChange]);
+  var imperativeRef = React.useMemo(function () {
     return function (hostNode) {
       // TextInput needs to add more methods to the hostNode in addition to those
       // added by `usePlatformMethods`. This is temporarily until an API like
@@ -216,7 +213,7 @@ forwardRef(function (props, forwardedRef) {
           return hostNode != null && TextInputState.currentlyFocusedField() === hostNode;
         };
 
-        handleContentSizeChange();
+        handleContentSizeChange(hostNode);
       }
     };
   }, [handleContentSizeChange]);
@@ -231,9 +228,10 @@ forwardRef(function (props, forwardedRef) {
   }
 
   function handleChange(e) {
-    var text = e.target.value;
+    var hostNode = e.target;
+    var text = hostNode.value;
     e.nativeEvent.text = text;
-    handleContentSizeChange();
+    handleContentSizeChange(hostNode);
 
     if (onChange) {
       onChange(e);
@@ -245,31 +243,38 @@ forwardRef(function (props, forwardedRef) {
   }
 
   function handleFocus(e) {
-    var node = hostRef.current;
+    var hostNode = e.target;
 
-    if (node != null) {
-      TextInputState._currentlyFocusedNode = node;
+    if (onFocus) {
+      e.nativeEvent.text = hostNode.value;
+      onFocus(e);
+    }
 
-      if (onFocus) {
-        e.nativeEvent.text = e.target.value;
-        onFocus(e);
-      }
+    if (hostNode != null) {
+      TextInputState._currentlyFocusedNode = hostNode;
 
       if (clearTextOnFocus) {
-        node.value = '';
+        hostNode.value = '';
       }
 
       if (selectTextOnFocus) {
         // Safari requires selection to occur in a setTimeout
-        setTimeout(function () {
-          node.select();
+        if (focusTimeout != null) {
+          clearTimeout(focusTimeout);
+        }
+
+        focusTimeout = setTimeout(function () {
+          if (hostNode != null) {
+            hostNode.select();
+          }
         }, 0);
       }
     }
   }
 
   function handleKeyDown(e) {
-    // Prevent key events bubbling (see #612)
+    var hostNode = e.target; // Prevent key events bubbling (see #612)
+
     e.stopPropagation();
     var blurOnSubmitDefault = !multiline;
     var shouldBlurOnSubmit = blurOnSubmit == null ? blurOnSubmitDefault : blurOnSubmit;
@@ -289,8 +294,8 @@ forwardRef(function (props, forwardedRef) {
         onSubmitEditing(e);
       }
 
-      if (shouldBlurOnSubmit && hostRef.current != null) {
-        hostRef.current.blur();
+      if (shouldBlurOnSubmit && hostNode != null) {
+        hostNode.blur();
       }
     }
   }
@@ -323,10 +328,6 @@ forwardRef(function (props, forwardedRef) {
     }
   }, [hostRef, selection]);
   var component = multiline ? 'textarea' : 'input';
-  var classList = [classes.textinput];
-  var style = StyleSheet.compose(props.style, placeholderTextColor && {
-    placeholderTextColor: placeholderTextColor
-  });
   useElementLayout(hostRef, onLayout);
   useResponderEvents(hostRef, {
     onMoveShouldSetResponder: onMoveShouldSetResponder,
@@ -346,14 +347,18 @@ forwardRef(function (props, forwardedRef) {
     onStartShouldSetResponder: onStartShouldSetResponder,
     onStartShouldSetResponderCapture: onStartShouldSetResponderCapture
   });
+
+  var _useLocaleContext = useLocaleContext(),
+      contextDirection = _useLocaleContext.direction;
+
   var supportedProps = pickProps(props);
   supportedProps.autoCapitalize = autoCapitalize;
   supportedProps.autoComplete = autoComplete || autoCompleteType || 'on';
-  supportedProps.autoCorrect = autoCorrect ? 'on' : 'off';
-  supportedProps.classList = classList; // 'auto' by default allows browsers to infer writing direction
+  supportedProps.autoCorrect = autoCorrect ? 'on' : 'off'; // 'auto' by default allows browsers to infer writing direction
 
   supportedProps.dir = dir !== undefined ? dir : 'auto';
   supportedProps.enterKeyHint = returnKeyType;
+  supportedProps.inputMode = inputMode;
   supportedProps.onBlur = handleBlur;
   supportedProps.onChange = handleChange;
   supportedProps.onFocus = handleFocus;
@@ -362,19 +367,26 @@ forwardRef(function (props, forwardedRef) {
   supportedProps.readOnly = !editable;
   supportedProps.rows = multiline ? numberOfLines : undefined;
   supportedProps.spellCheck = spellCheck != null ? spellCheck : autoCorrect;
-  supportedProps.style = style;
+  supportedProps.style = [{
+    '--placeholderTextColor': placeholderTextColor
+  }, styles.textinput$raw, styles.placeholder, props.style];
   supportedProps.type = multiline ? undefined : type;
-  supportedProps.inputMode = inputMode;
   var platformMethodsRef = usePlatformMethods(supportedProps);
   var setRef = useMergeRefs(hostRef, platformMethodsRef, imperativeRef, forwardedRef);
   supportedProps.ref = setRef;
-  return createElement(component, supportedProps);
+  var langDirection = props.lang != null ? getLocaleDirection(props.lang) : null;
+  var componentDirection = props.dir || langDirection;
+  var writingDirection = componentDirection || contextDirection;
+  var element = createElement(component, supportedProps, {
+    writingDirection: writingDirection
+  });
+  return element;
 });
 TextInput.displayName = 'TextInput'; // $FlowFixMe
 
 TextInput.State = TextInputState;
-var classes = css.create({
-  textinput: {
+var styles = StyleSheet.create({
+  textinput$raw: {
     MozAppearance: 'textfield',
     WebkitAppearance: 'none',
     backgroundColor: 'transparent',
@@ -385,6 +397,9 @@ var classes = css.create({
     margin: 0,
     padding: 0,
     resize: 'none'
+  },
+  placeholder: {
+    placeholderTextColor: 'var(--placeholderTextColor)'
   }
 });
 export default TextInput;

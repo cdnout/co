@@ -3,19 +3,23 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+
 function getQuery() {
-  return _ExecutionEnvironment.canUseDOM && window.matchMedia != null ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  return canUseDOM && window.matchMedia != null ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 }
 
 var query = getQuery();

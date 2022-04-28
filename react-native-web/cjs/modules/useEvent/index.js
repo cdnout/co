@@ -12,7 +12,7 @@ var _useStable = _interopRequireDefault(require("../useStable"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -53,16 +53,12 @@ function useEvent(event, options) {
   });
   (0, _useLayoutEffect.default)(function () {
     return function () {
-      if (addListener != null) {
-        targetListeners.forEach(function (removeListener) {
-          removeListener();
-        });
-        targetListeners.clear();
-      }
-
-      addListener = null;
+      targetListeners.forEach(function (removeListener) {
+        removeListener();
+      });
+      targetListeners.clear();
     };
-  }, [addListener]);
+  }, [targetListeners]);
   return addListener;
 }
 

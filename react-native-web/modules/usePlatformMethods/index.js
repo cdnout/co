@@ -16,14 +16,19 @@ import UIManager from '../../exports/UIManager';
 import createDOMProps from '../createDOMProps';
 import useStable from '../useStable';
 import { useRef } from 'react';
+var didWarn = false;
 var emptyObject = {};
 
-function setNativeProps(node, nativeProps, classList, pointerEvents, style, previousStyleRef) {
+function setNativeProps(node, nativeProps, pointerEvents, style, previousStyleRef) {
+  if (!didWarn) {
+    console.warn('setNativeProps is deprecated. Please update props using React state instead.');
+    didWarn = true;
+  }
+
   if (node != null && nativeProps) {
     var domProps = createDOMProps(null, _objectSpread(_objectSpread({
       pointerEvents: pointerEvents
     }, nativeProps), {}, {
-      classList: [classList, nativeProps.className],
       style: [style, nativeProps.style]
     }));
     var nextDomStyle = domProps.style;
@@ -51,13 +56,11 @@ function setNativeProps(node, nativeProps, classList, pointerEvents, style, prev
 
 
 export default function usePlatformMethods(_ref) {
-  var classList = _ref.classList,
-      pointerEvents = _ref.pointerEvents,
+  var pointerEvents = _ref.pointerEvents,
       style = _ref.style;
   var previousStyleRef = useRef(null);
   var setNativePropsArgsRef = useRef(null);
   setNativePropsArgsRef.current = {
-    classList: classList,
     pointerEvents: pointerEvents,
     style: style
   }; // Avoid creating a new ref on every render. The props only need to be
@@ -80,11 +83,10 @@ export default function usePlatformMethods(_ref) {
 
         hostNode.setNativeProps = function (nativeProps) {
           var _ref2 = setNativePropsArgsRef.current || emptyObject,
-              classList = _ref2.classList,
               style = _ref2.style,
               pointerEvents = _ref2.pointerEvents;
 
-          setNativeProps(hostNode, nativeProps, classList, pointerEvents, style, previousStyleRef);
+          setNativeProps(hostNode, nativeProps, pointerEvents, style, previousStyleRef);
         };
       }
     };

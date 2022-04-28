@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -374,7 +374,11 @@ var TouchableMixin = {
 
     this.touchableDelayTimeout && clearTimeout(this.touchableDelayTimeout);
     this.longPressDelayTimeout && clearTimeout(this.longPressDelayTimeout);
-    this.pressOutDelayTimeout && clearTimeout(this.pressOutDelayTimeout);
+    this.pressOutDelayTimeout && clearTimeout(this.pressOutDelayTimeout); // Clear DOM nodes
+
+    this.pressInLocation = null;
+    this.state.touchable.responderID = null;
+    this._touchableNode = null;
   },
 
   /**
@@ -886,20 +890,17 @@ var Touchable = {
     }
 
     var hexColor = '#' + ('00000000' + normalizedColor.toString(16)).substr(-8);
-    return (
-      /*#__PURE__*/
-      React.createElement(View, {
-        pointerEvents: "none",
-        style: _objectSpread({
-          position: 'absolute',
-          borderColor: hexColor.slice(0, -2) + '55',
-          // More opaque
-          borderWidth: 1,
-          borderStyle: 'dashed',
-          backgroundColor: hexColor.slice(0, -2) + '0F'
-        }, debugHitSlopStyle)
-      })
-    );
+    return /*#__PURE__*/React.createElement(View, {
+      pointerEvents: "none",
+      style: _objectSpread({
+        position: 'absolute',
+        borderColor: hexColor.slice(0, -2) + '55',
+        // More opaque
+        borderWidth: 1,
+        borderStyle: 'dashed',
+        backgroundColor: hexColor.slice(0, -2) + '0F'
+      }, debugHitSlopStyle)
+    });
   }
 };
 export default Touchable;

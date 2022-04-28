@@ -1,120 +1,35 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('@hypnosphi/create-react-context'), require('popper.js')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'react', '@hypnosphi/create-react-context', 'popper.js'], factory) :
-  (factory((global.ReactPopper = {}),global.React,null,global.Popper));
-}(this, (function (exports,React,createContext,PopperJS) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('react-dom'), require('@popperjs/core')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'react', 'react-dom', '@popperjs/core'], factory) :
+  (global = global || self, factory(global.ReactPopper = {}, global.React, global.ReactDOM, global.Popper));
+}(this, (function (exports, React, ReactDOM, core) { 'use strict';
 
-  createContext = createContext && createContext.hasOwnProperty('default') ? createContext['default'] : createContext;
-  PopperJS = PopperJS && PopperJS.hasOwnProperty('default') ? PopperJS['default'] : PopperJS;
+  var ManagerReferenceNodeContext = React.createContext();
+  var ManagerReferenceNodeSetterContext = React.createContext();
+  function Manager(_ref) {
+    var children = _ref.children;
 
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
+    var _React$useState = React.useState(null),
+        referenceNode = _React$useState[0],
+        setReferenceNode = _React$useState[1];
 
-    return obj;
-  }
-
-  function _extends() {
-    _extends = Object.assign || function (target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i];
-
-        for (var key in source) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            target[key] = source[key];
-          }
-        }
+    var hasUnmounted = React.useRef(false);
+    React.useEffect(function () {
+      return function () {
+        hasUnmounted.current = true;
+      };
+    }, []);
+    var handleSetReferenceNode = React.useCallback(function (node) {
+      if (!hasUnmounted.current) {
+        setReferenceNode(node);
       }
-
-      return target;
-    };
-
-    return _extends.apply(this, arguments);
+    }, []);
+    return /*#__PURE__*/React.createElement(ManagerReferenceNodeContext.Provider, {
+      value: referenceNode
+    }, /*#__PURE__*/React.createElement(ManagerReferenceNodeSetterContext.Provider, {
+      value: handleSetReferenceNode
+    }, children));
   }
-
-  function _inheritsLoose(subClass, superClass) {
-    subClass.prototype = Object.create(superClass.prototype);
-    subClass.prototype.constructor = subClass;
-    subClass.__proto__ = superClass;
-  }
-
-  function _objectWithoutPropertiesLoose(source, excluded) {
-    if (source == null) return {};
-    var target = {};
-    var sourceKeys = Object.keys(source);
-    var key, i;
-
-    for (i = 0; i < sourceKeys.length; i++) {
-      key = sourceKeys[i];
-      if (excluded.indexOf(key) >= 0) continue;
-      target[key] = source[key];
-    }
-
-    return target;
-  }
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-    }
-
-    return self;
-  }
-
-  var ManagerReferenceNodeContext = createContext();
-  var ManagerReferenceNodeSetterContext = createContext();
-
-  var Manager =
-  /*#__PURE__*/
-  function (_React$Component) {
-    _inheritsLoose(Manager, _React$Component);
-
-    function Manager() {
-      var _this;
-
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "referenceNode", void 0);
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setReferenceNode", function (newReferenceNode) {
-        if (newReferenceNode && _this.referenceNode !== newReferenceNode) {
-          _this.referenceNode = newReferenceNode;
-
-          _this.forceUpdate();
-        }
-      });
-
-      return _this;
-    }
-
-    var _proto = Manager.prototype;
-
-    _proto.componentWillUnmount = function componentWillUnmount() {
-      this.referenceNode = null;
-    };
-
-    _proto.render = function render() {
-      return React.createElement(ManagerReferenceNodeContext.Provider, {
-        value: this.referenceNode
-      }, React.createElement(ManagerReferenceNodeSetterContext.Provider, {
-        value: this.setReferenceNode
-      }, this.props.children));
-    };
-
-    return Manager;
-  }(React.Component);
 
   /**
    * Takes an argument and if it's an array, returns the first item in the array,
@@ -129,7 +44,7 @@
    */
 
   var safeInvoke = function safeInvoke(fn) {
-    if (typeof fn === "function") {
+    if (typeof fn === 'function') {
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
@@ -138,231 +53,335 @@
     }
   };
   /**
-   * Does a shallow equality check of two objects by comparing the reference
-   * equality of each value.
-   */
-
-  var shallowEqual = function shallowEqual(objA, objB) {
-    var aKeys = Object.keys(objA);
-    var bKeys = Object.keys(objB);
-
-    if (bKeys.length !== aKeys.length) {
-      return false;
-    }
-
-    for (var i = 0; i < bKeys.length; i++) {
-      var key = aKeys[i];
-
-      if (objA[key] !== objB[key]) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-  /**
    * Sets a ref using either a ref callback or a ref object
    */
 
   var setRef = function setRef(ref, node) {
     // if its a function call it
-    if (typeof ref === "function") {
+    if (typeof ref === 'function') {
       return safeInvoke(ref, node);
     } // otherwise we should treat it as a ref object
     else if (ref != null) {
         ref.current = node;
       }
   };
+  /**
+   * Simple ponyfill for Object.fromEntries
+   */
 
-  var initialStyle = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    opacity: 0,
-    pointerEvents: 'none'
+  var fromEntries = function fromEntries(entries) {
+    return entries.reduce(function (acc, _ref) {
+      var key = _ref[0],
+          value = _ref[1];
+      acc[key] = value;
+      return acc;
+    }, {});
   };
-  var initialArrowStyle = {};
-  var InnerPopper =
-  /*#__PURE__*/
-  function (_React$Component) {
-    _inheritsLoose(InnerPopper, _React$Component);
+  /**
+   * Small wrapper around `useLayoutEffect` to get rid of the warning on SSR envs
+   */
 
-    function InnerPopper() {
-      var _this;
+  var useIsomorphicLayoutEffect = typeof window !== 'undefined' && window.document && window.document.createElement ? React.useLayoutEffect : React.useEffect;
 
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+  /* global Map:readonly, Set:readonly, ArrayBuffer:readonly */
+
+  var hasElementType = typeof Element !== 'undefined';
+  var hasMap = typeof Map === 'function';
+  var hasSet = typeof Set === 'function';
+  var hasArrayBuffer = typeof ArrayBuffer === 'function';
+
+  // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
+
+  function equal(a, b) {
+    // START: fast-deep-equal es6/index.js 3.1.1
+    if (a === b) return true;
+
+    if (a && b && typeof a == 'object' && typeof b == 'object') {
+      if (a.constructor !== b.constructor) return false;
+
+      var length, i, keys;
+      if (Array.isArray(a)) {
+        length = a.length;
+        if (length != b.length) return false;
+        for (i = length; i-- !== 0;)
+          if (!equal(a[i], b[i])) return false;
+        return true;
       }
 
-      _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
+      // START: Modifications:
+      // 1. Extra `has<Type> &&` helpers in initial condition allow es6 code
+      //    to co-exist with es5.
+      // 2. Replace `for of` with es5 compliant iteration using `for`.
+      //    Basically, take:
+      //
+      //    ```js
+      //    for (i of a.entries())
+      //      if (!b.has(i[0])) return false;
+      //    ```
+      //
+      //    ... and convert to:
+      //
+      //    ```js
+      //    it = a.entries();
+      //    while (!(i = it.next()).done)
+      //      if (!b.has(i.value[0])) return false;
+      //    ```
+      //
+      //    **Note**: `i` access switches to `i.value`.
+      var it;
+      if (hasMap && (a instanceof Map) && (b instanceof Map)) {
+        if (a.size !== b.size) return false;
+        it = a.entries();
+        while (!(i = it.next()).done)
+          if (!b.has(i.value[0])) return false;
+        it = a.entries();
+        while (!(i = it.next()).done)
+          if (!equal(i.value[1], b.get(i.value[0]))) return false;
+        return true;
+      }
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
-        data: undefined,
-        placement: undefined
-      });
+      if (hasSet && (a instanceof Set) && (b instanceof Set)) {
+        if (a.size !== b.size) return false;
+        it = a.entries();
+        while (!(i = it.next()).done)
+          if (!b.has(i.value[0])) return false;
+        return true;
+      }
+      // END: Modifications
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "popperInstance", void 0);
+      if (hasArrayBuffer && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
+        length = a.length;
+        if (length != b.length) return false;
+        for (i = length; i-- !== 0;)
+          if (a[i] !== b[i]) return false;
+        return true;
+      }
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "popperNode", null);
+      if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
+      if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
+      if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "arrowNode", null);
+      keys = Object.keys(a);
+      length = keys.length;
+      if (length !== Object.keys(b).length) return false;
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setPopperNode", function (popperNode) {
-        if (!popperNode || _this.popperNode === popperNode) return;
-        setRef(_this.props.innerRef, popperNode);
-        _this.popperNode = popperNode;
+      for (i = length; i-- !== 0;)
+        if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
+      // END: fast-deep-equal
 
-        _this.updatePopperInstance();
-      });
+      // START: react-fast-compare
+      // custom handling for DOM elements
+      if (hasElementType && a instanceof Element) return false;
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "setArrowNode", function (arrowNode) {
-        _this.arrowNode = arrowNode;
-      });
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "updateStateModifier", {
-        enabled: true,
-        order: 900,
-        fn: function fn(data) {
-          var placement = data.placement;
-
-          _this.setState({
-            data: data,
-            placement: placement
-          });
-
-          return data;
+      // custom handling for React
+      for (i = length; i-- !== 0;) {
+        if (keys[i] === '_owner' && a.$$typeof) {
+          // React-specific: avoid traversing React elements' _owner.
+          //  _owner contains circular references
+          // and is not needed when comparing the actual elements (and not their owners)
+          // .$$typeof and ._store on just reasonable markers of a react element
+          continue;
         }
-      });
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getOptions", function () {
-        return {
-          placement: _this.props.placement,
-          eventsEnabled: _this.props.eventsEnabled,
-          positionFixed: _this.props.positionFixed,
-          modifiers: _extends({}, _this.props.modifiers, {
-            arrow: _extends({}, _this.props.modifiers && _this.props.modifiers.arrow, {
-              enabled: !!_this.arrowNode,
-              element: _this.arrowNode
-            }),
-            applyStyle: {
-              enabled: false
-            },
-            updateStateModifier: _this.updateStateModifier
-          })
-        };
-      });
+        // all other properties should be traversed as usual
+        if (!equal(a[keys[i]], b[keys[i]])) return false;
+      }
+      // END: react-fast-compare
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getPopperStyle", function () {
-        return !_this.popperNode || !_this.state.data ? initialStyle : _extends({
-          position: _this.state.data.offsets.popper.position
-        }, _this.state.data.styles);
-      });
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getPopperPlacement", function () {
-        return !_this.state.data ? undefined : _this.state.placement;
-      });
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getArrowStyle", function () {
-        return !_this.arrowNode || !_this.state.data ? initialArrowStyle : _this.state.data.arrowStyles;
-      });
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "getOutOfBoundariesState", function () {
-        return _this.state.data ? _this.state.data.hide : undefined;
-      });
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "destroyPopperInstance", function () {
-        if (!_this.popperInstance) return;
-
-        _this.popperInstance.destroy();
-
-        _this.popperInstance = null;
-      });
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "updatePopperInstance", function () {
-        _this.destroyPopperInstance();
-
-        var _assertThisInitialize = _assertThisInitialized(_assertThisInitialized(_this)),
-            popperNode = _assertThisInitialize.popperNode;
-
-        var referenceElement = _this.props.referenceElement;
-        if (!referenceElement || !popperNode) return;
-        _this.popperInstance = new PopperJS(referenceElement, popperNode, _this.getOptions());
-      });
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "scheduleUpdate", function () {
-        if (_this.popperInstance) {
-          _this.popperInstance.scheduleUpdate();
-        }
-      });
-
-      return _this;
+      // START: fast-deep-equal
+      return true;
     }
 
-    var _proto = InnerPopper.prototype;
+    return a !== a && b !== b;
+  }
+  // end fast-deep-equal
 
-    _proto.componentDidUpdate = function componentDidUpdate(prevProps, prevState) {
-      // If the Popper.js options have changed, update the instance (destroy + create)
-      if (this.props.placement !== prevProps.placement || this.props.referenceElement !== prevProps.referenceElement || this.props.positionFixed !== prevProps.positionFixed || this.props.modifiers !== prevProps.modifiers) {
-        // develop only check that modifiers isn't being updated needlessly
-        {
-          if (this.props.modifiers !== prevProps.modifiers && this.props.modifiers != null && prevProps.modifiers != null && shallowEqual(this.props.modifiers, prevProps.modifiers)) {
-            console.warn("'modifiers' prop reference updated even though all values appear the same.\nConsider memoizing the 'modifiers' object to avoid needless rendering.");
-          }
-        }
-
-        this.updatePopperInstance();
-      } else if (this.props.eventsEnabled !== prevProps.eventsEnabled && this.popperInstance) {
-        this.props.eventsEnabled ? this.popperInstance.enableEventListeners() : this.popperInstance.disableEventListeners();
-      } // A placement difference in state means popper determined a new placement
-      // apart from the props value. By the time the popper element is rendered with
-      // the new position Popper has already measured it, if the place change triggers
-      // a size change it will result in a misaligned popper. So we schedule an update to be sure.
-
-
-      if (prevState.placement !== this.state.placement) {
-        this.scheduleUpdate();
+  var reactFastCompare = function isEqual(a, b) {
+    try {
+      return equal(a, b);
+    } catch (error) {
+      if (((error.message || '').match(/stack|recursion/i))) {
+        // warn on circular references, don't crash
+        // browsers give this different errors name and messages:
+        // chrome/safari: "RangeError", "Maximum call stack size exceeded"
+        // firefox: "InternalError", too much recursion"
+        // edge: "Error", "Out of stack space"
+        console.warn('react-fast-compare cannot handle circular refs');
+        return false;
       }
+      // some other error. we should definitely know about these
+      throw error;
+    }
+  };
+
+  var EMPTY_MODIFIERS = [];
+  var usePopper = function usePopper(referenceElement, popperElement, options) {
+    if (options === void 0) {
+      options = {};
+    }
+
+    var prevOptions = React.useRef(null);
+    var optionsWithDefaults = {
+      onFirstUpdate: options.onFirstUpdate,
+      placement: options.placement || 'bottom',
+      strategy: options.strategy || 'absolute',
+      modifiers: options.modifiers || EMPTY_MODIFIERS
     };
 
-    _proto.componentWillUnmount = function componentWillUnmount() {
-      setRef(this.props.innerRef, null);
-      this.destroyPopperInstance();
-    };
-
-    _proto.render = function render() {
-      return unwrapArray(this.props.children)({
-        ref: this.setPopperNode,
-        style: this.getPopperStyle(),
-        placement: this.getPopperPlacement(),
-        outOfBoundaries: this.getOutOfBoundariesState(),
-        scheduleUpdate: this.scheduleUpdate,
-        arrowProps: {
-          ref: this.setArrowNode,
-          style: this.getArrowStyle()
+    var _React$useState = React.useState({
+      styles: {
+        popper: {
+          position: optionsWithDefaults.strategy,
+          left: '0',
+          top: '0'
+        },
+        arrow: {
+          position: 'absolute'
         }
-      });
+      },
+      attributes: {}
+    }),
+        state = _React$useState[0],
+        setState = _React$useState[1];
+
+    var updateStateModifier = React.useMemo(function () {
+      return {
+        name: 'updateState',
+        enabled: true,
+        phase: 'write',
+        fn: function fn(_ref) {
+          var state = _ref.state;
+          var elements = Object.keys(state.elements);
+          ReactDOM.flushSync(function () {
+            setState({
+              styles: fromEntries(elements.map(function (element) {
+                return [element, state.styles[element] || {}];
+              })),
+              attributes: fromEntries(elements.map(function (element) {
+                return [element, state.attributes[element]];
+              }))
+            });
+          });
+        },
+        requires: ['computeStyles']
+      };
+    }, []);
+    var popperOptions = React.useMemo(function () {
+      var newOptions = {
+        onFirstUpdate: optionsWithDefaults.onFirstUpdate,
+        placement: optionsWithDefaults.placement,
+        strategy: optionsWithDefaults.strategy,
+        modifiers: [].concat(optionsWithDefaults.modifiers, [updateStateModifier, {
+          name: 'applyStyles',
+          enabled: false
+        }])
+      };
+
+      if (reactFastCompare(prevOptions.current, newOptions)) {
+        return prevOptions.current || newOptions;
+      } else {
+        prevOptions.current = newOptions;
+        return newOptions;
+      }
+    }, [optionsWithDefaults.onFirstUpdate, optionsWithDefaults.placement, optionsWithDefaults.strategy, optionsWithDefaults.modifiers, updateStateModifier]);
+    var popperInstanceRef = React.useRef();
+    useIsomorphicLayoutEffect(function () {
+      if (popperInstanceRef.current) {
+        popperInstanceRef.current.setOptions(popperOptions);
+      }
+    }, [popperOptions]);
+    useIsomorphicLayoutEffect(function () {
+      if (referenceElement == null || popperElement == null) {
+        return;
+      }
+
+      var createPopper = options.createPopper || core.createPopper;
+      var popperInstance = createPopper(referenceElement, popperElement, popperOptions);
+      popperInstanceRef.current = popperInstance;
+      return function () {
+        popperInstance.destroy();
+        popperInstanceRef.current = null;
+      };
+    }, [referenceElement, popperElement, options.createPopper]);
+    return {
+      state: popperInstanceRef.current ? popperInstanceRef.current.state : null,
+      styles: state.styles,
+      attributes: state.attributes,
+      update: popperInstanceRef.current ? popperInstanceRef.current.update : null,
+      forceUpdate: popperInstanceRef.current ? popperInstanceRef.current.forceUpdate : null
     };
+  };
 
-    return InnerPopper;
-  }(React.Component);
+  var NOOP = function NOOP() {
+    return void 0;
+  };
 
-  _defineProperty(InnerPopper, "defaultProps", {
-    placement: 'bottom',
-    eventsEnabled: true,
-    referenceElement: undefined,
-    positionFixed: false
-  });
+  var NOOP_PROMISE = function NOOP_PROMISE() {
+    return Promise.resolve(null);
+  };
 
-  var placements = PopperJS.placements;
+  var EMPTY_MODIFIERS$1 = [];
   function Popper(_ref) {
-    var referenceElement = _ref.referenceElement,
-        props = _objectWithoutPropertiesLoose(_ref, ["referenceElement"]);
+    var _ref$placement = _ref.placement,
+        placement = _ref$placement === void 0 ? 'bottom' : _ref$placement,
+        _ref$strategy = _ref.strategy,
+        strategy = _ref$strategy === void 0 ? 'absolute' : _ref$strategy,
+        _ref$modifiers = _ref.modifiers,
+        modifiers = _ref$modifiers === void 0 ? EMPTY_MODIFIERS$1 : _ref$modifiers,
+        referenceElement = _ref.referenceElement,
+        onFirstUpdate = _ref.onFirstUpdate,
+        innerRef = _ref.innerRef,
+        children = _ref.children;
+    var referenceNode = React.useContext(ManagerReferenceNodeContext);
 
-    return React.createElement(ManagerReferenceNodeContext.Consumer, null, function (referenceNode) {
-      return React.createElement(InnerPopper, _extends({
-        referenceElement: referenceElement !== undefined ? referenceElement : referenceNode
-      }, props));
-    });
+    var _React$useState = React.useState(null),
+        popperElement = _React$useState[0],
+        setPopperElement = _React$useState[1];
+
+    var _React$useState2 = React.useState(null),
+        arrowElement = _React$useState2[0],
+        setArrowElement = _React$useState2[1];
+
+    React.useEffect(function () {
+      setRef(innerRef, popperElement);
+    }, [innerRef, popperElement]);
+    var options = React.useMemo(function () {
+      return {
+        placement: placement,
+        strategy: strategy,
+        onFirstUpdate: onFirstUpdate,
+        modifiers: [].concat(modifiers, [{
+          name: 'arrow',
+          enabled: arrowElement != null,
+          options: {
+            element: arrowElement
+          }
+        }])
+      };
+    }, [placement, strategy, onFirstUpdate, modifiers, arrowElement]);
+
+    var _usePopper = usePopper(referenceElement || referenceNode, popperElement, options),
+        state = _usePopper.state,
+        styles = _usePopper.styles,
+        forceUpdate = _usePopper.forceUpdate,
+        update = _usePopper.update;
+
+    var childrenProps = React.useMemo(function () {
+      return {
+        ref: setPopperElement,
+        style: styles.popper,
+        placement: state ? state.placement : placement,
+        hasPopperEscaped: state && state.modifiersData.hide ? state.modifiersData.hide.hasPopperEscaped : null,
+        isReferenceHidden: state && state.modifiersData.hide ? state.modifiersData.hide.isReferenceHidden : null,
+        arrowProps: {
+          style: styles.arrow,
+          ref: setArrowElement
+        },
+        forceUpdate: forceUpdate || NOOP,
+        update: update || NOOP_PROMISE
+      };
+    }, [setPopperElement, setArrowElement, placement, state, styles, update, forceUpdate]);
+    return unwrapArray(children)(childrenProps);
   }
 
   /**
@@ -417,59 +436,33 @@
 
   var warning_1 = warning;
 
-  var InnerReference =
-  /*#__PURE__*/
-  function (_React$Component) {
-    _inheritsLoose(InnerReference, _React$Component);
+  function Reference(_ref) {
+    var children = _ref.children,
+        innerRef = _ref.innerRef;
+    var setReferenceNode = React.useContext(ManagerReferenceNodeSetterContext);
+    var refHandler = React.useCallback(function (node) {
+      setRef(innerRef, node);
+      safeInvoke(setReferenceNode, node);
+    }, [innerRef, setReferenceNode]); // ran on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    function InnerReference() {
-      var _this;
-
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      _this = _React$Component.call.apply(_React$Component, [this].concat(args)) || this;
-
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "refHandler", function (node) {
-        setRef(_this.props.innerRef, node);
-        safeInvoke(_this.props.setReferenceNode, node);
-      });
-
-      return _this;
-    }
-
-    var _proto = InnerReference.prototype;
-
-    _proto.componentWillUnmount = function componentWillUnmount() {
-      setRef(this.props.innerRef, null);
-    };
-
-    _proto.render = function render() {
-      warning_1(Boolean(this.props.setReferenceNode), '`Reference` should not be used outside of a `Manager` component.');
-      return unwrapArray(this.props.children)({
-        ref: this.refHandler
-      });
-    };
-
-    return InnerReference;
-  }(React.Component);
-
-  function Reference(props) {
-    return React.createElement(ManagerReferenceNodeSetterContext.Consumer, null, function (setReferenceNode) {
-      return React.createElement(InnerReference, _extends({
-        setReferenceNode: setReferenceNode
-      }, props));
+    React.useEffect(function () {
+      return function () {
+        return setRef(innerRef, null);
+      };
+    }, []);
+    React.useEffect(function () {
+      warning_1(Boolean(setReferenceNode), '`Reference` should not be used outside of a `Manager` component.');
+    }, [setReferenceNode]);
+    return unwrapArray(children)({
+      ref: refHandler
     });
   }
 
-  // Public components
-   // Public types
-
-  exports.Popper = Popper;
-  exports.placements = placements;
   exports.Manager = Manager;
+  exports.Popper = Popper;
   exports.Reference = Reference;
+  exports.usePopper = usePopper;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

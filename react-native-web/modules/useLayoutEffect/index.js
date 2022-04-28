@@ -9,7 +9,8 @@
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import { useEffect, useLayoutEffect } from 'react';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 var useLayoutEffectImpl = canUseDOM ? useLayoutEffect : useEffect;
 export default useLayoutEffectImpl;

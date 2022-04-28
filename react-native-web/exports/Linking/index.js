@@ -1,19 +1,18 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import invariant from 'fbjs/lib/invariant';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 var initialURL = canUseDOM ? window.location.href : '';
 
-var Linking =
-/*#__PURE__*/
-function () {
+var Linking = /*#__PURE__*/function () {
   function Linking() {
     var _this = this;
 
@@ -95,7 +94,12 @@ function () {
 var open = function open(url) {
   if (canUseDOM) {
     var urlToOpen = new URL(url, window.location).toString();
-    window.open(urlToOpen, '_blank', 'noopener');
+
+    if (urlToOpen.indexOf('tel:') === 0) {
+      window.location = urlToOpen;
+    } else {
+      window.open(urlToOpen, '_blank', 'noopener');
+    }
   }
 };
 

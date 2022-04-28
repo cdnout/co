@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -16,7 +16,7 @@ import invariant from 'fbjs/lib/invariant';
  * area.
  */
 
-function elementsThatOverlapOffsets(offsets, itemCount, getFrameMetrics) {
+export function elementsThatOverlapOffsets(offsets, itemCount, getFrameMetrics) {
   var out = [];
   var outLength = 0;
 
@@ -46,8 +46,7 @@ function elementsThatOverlapOffsets(offsets, itemCount, getFrameMetrics) {
  * faster.
  */
 
-
-function newRangeCount(prev, next) {
+export function newRangeCount(prev, next) {
   return next.last - next.first + 1 - Math.max(0, 1 + Math.min(next.last, prev.last) - Math.max(next.first, prev.first));
 }
 /**
@@ -57,12 +56,7 @@ function newRangeCount(prev, next) {
  * biased in the direction of scroll.
  */
 
-
-function computeWindowedRenderLimits(props, prev, getFrameMetricsApprox, scrollMetrics) {
-  var data = props.data,
-      getItemCount = props.getItemCount,
-      maxToRenderPerBatch = props.maxToRenderPerBatch,
-      windowSize = props.windowSize;
+export function computeWindowedRenderLimits(data, getItemCount, maxToRenderPerBatch, windowSize, prev, getFrameMetricsApprox, scrollMetrics) {
   var itemCount = getItemCount(data);
 
   if (itemCount === 0) {
@@ -95,7 +89,7 @@ function computeWindowedRenderLimits(props, prev, getFrameMetricsApprox, scrollM
   } // Find the indices that correspond to the items at the render boundaries we're targeting.
 
 
-  var _elementsThatOverlapO = elementsThatOverlapOffsets([overscanBegin, visibleBegin, visibleEnd, overscanEnd], props.getItemCount(props.data), getFrameMetricsApprox),
+  var _elementsThatOverlapO = elementsThatOverlapOffsets([overscanBegin, visibleBegin, visibleEnd, overscanEnd], itemCount, getFrameMetricsApprox),
       overscanFirst = _elementsThatOverlapO[0],
       first = _elementsThatOverlapO[1],
       last = _elementsThatOverlapO[2],
@@ -168,11 +162,14 @@ function computeWindowedRenderLimits(props, prev, getFrameMetricsApprox, scrollM
     last: last
   };
 }
+export function keyExtractor(item, index) {
+  if (typeof item === 'object' && (item == null ? void 0 : item.key) != null) {
+    return item.key;
+  }
 
-var VirtualizeUtils = {
-  computeWindowedRenderLimits: computeWindowedRenderLimits,
-  elementsThatOverlapOffsets: elementsThatOverlapOffsets,
-  newRangeCount: newRangeCount
-};
-export { computeWindowedRenderLimits, elementsThatOverlapOffsets, newRangeCount };
-export default VirtualizeUtils;
+  if (typeof item === 'object' && (item == null ? void 0 : item.id) != null) {
+    return item.id;
+  }
+
+  return String(index);
+}

@@ -11,7 +11,6 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
  * 
  */
 import * as React from 'react';
-import { forwardRef, useRef } from 'react';
 import StyleSheet from '../StyleSheet';
 import View from '../View';
 import useMergeRefs from '../../modules/useMergeRefs';
@@ -63,9 +62,7 @@ function shouldEmitScrollEvent(lastTick, eventThrottle) {
  */
 
 
-var ScrollViewBase =
-/*#__PURE__*/
-forwardRef(function (props, forwardedRef) {
+var ScrollViewBase = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var onScroll = props.onScroll,
       onTouchMove = props.onTouchMove,
       onWheel = props.onWheel,
@@ -78,12 +75,12 @@ forwardRef(function (props, forwardedRef) {
       style = props.style,
       rest = _objectWithoutPropertiesLoose(props, ["onScroll", "onTouchMove", "onWheel", "scrollEnabled", "scrollEventThrottle", "showsHorizontalScrollIndicator", "showsVerticalScrollIndicator", "style"]);
 
-  var scrollState = useRef({
+  var scrollState = React.useRef({
     isScrolling: false,
     scrollLastTick: 0
   });
-  var scrollTimeout = useRef(null);
-  var scrollRef = useRef(null);
+  var scrollTimeout = React.useRef(null);
+  var scrollRef = React.useRef(null);
 
   function createPreventableScrollHandler(handler) {
     return function (e) {
@@ -143,16 +140,13 @@ forwardRef(function (props, forwardedRef) {
   }
 
   var hideScrollbar = showsHorizontalScrollIndicator === false || showsVerticalScrollIndicator === false;
-  return (
-    /*#__PURE__*/
-    React.createElement(View, _extends({}, rest, {
-      onScroll: handleScroll,
-      onTouchMove: createPreventableScrollHandler(onTouchMove),
-      onWheel: createPreventableScrollHandler(onWheel),
-      ref: useMergeRefs(scrollRef, forwardedRef),
-      style: [style, !scrollEnabled && styles.scrollDisabled, hideScrollbar && styles.hideScrollbar]
-    }))
-  );
+  return /*#__PURE__*/React.createElement(View, _extends({}, rest, {
+    onScroll: handleScroll,
+    onTouchMove: createPreventableScrollHandler(onTouchMove),
+    onWheel: createPreventableScrollHandler(onWheel),
+    ref: useMergeRefs(scrollRef, forwardedRef),
+    style: [style, !scrollEnabled && styles.scrollDisabled, hideScrollbar && styles.hideScrollbar]
+  }));
 }); // Chrome doesn't support e.preventDefault in this case; touch-action must be
 // used to disable scrolling.
 // https://developers.google.com/web/updates/2017/01/scrolling-intervention

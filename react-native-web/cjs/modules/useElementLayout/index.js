@@ -3,11 +3,11 @@
 exports.__esModule = true;
 exports.default = useElementLayout;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
 var _useLayoutEffect = _interopRequireDefault(require("../useLayoutEffect"));
 
 var _UIManager = _interopRequireDefault(require("../../exports/UIManager"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19,12 +19,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * 
  */
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
 var DOM_LAYOUT_HANDLER_NAME = '__reactLayoutHandler';
-var didWarn = !_ExecutionEnvironment.canUseDOM;
+var didWarn = !canUseDOM;
 var resizeObserver = null;
 
 function getResizeObserver() {
-  if (_ExecutionEnvironment.canUseDOM && typeof window.ResizeObserver !== 'undefined') {
+  if (canUseDOM && typeof window.ResizeObserver !== 'undefined') {
     if (resizeObserver == null) {
       resizeObserver = new window.ResizeObserver(function (entries) {
         entries.forEach(function (entry) {

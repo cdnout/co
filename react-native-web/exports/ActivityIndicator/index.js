@@ -4,38 +4,29 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
+import * as React from 'react';
 import StyleSheet from '../StyleSheet';
 import View from '../View';
-import React, { forwardRef } from 'react';
-var accessibilityValue = {
-  max: 1,
-  min: 0
-};
 
 var createSvgCircle = function createSvgCircle(style) {
-  return (
-    /*#__PURE__*/
-    React.createElement("circle", {
-      cx: "16",
-      cy: "16",
-      fill: "none",
-      r: "14",
-      strokeWidth: "4",
-      style: style
-    })
-  );
+  return /*#__PURE__*/React.createElement("circle", {
+    cx: "16",
+    cy: "16",
+    fill: "none",
+    r: "14",
+    strokeWidth: "4",
+    style: style
+  });
 };
 
-var ActivityIndicator =
-/*#__PURE__*/
-forwardRef(function (props, forwardedRef) {
+var ActivityIndicator = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var _props$animating = props.animating,
       animating = _props$animating === void 0 ? true : _props$animating,
       _props$color = props.color,
@@ -47,9 +38,7 @@ forwardRef(function (props, forwardedRef) {
       style = props.style,
       other = _objectWithoutPropertiesLoose(props, ["animating", "color", "hidesWhenStopped", "size", "style"]);
 
-  var svg =
-  /*#__PURE__*/
-  React.createElement("svg", {
+  var svg = /*#__PURE__*/React.createElement("svg", {
     height: "100%",
     viewBox: "0 0 32 32",
     width: "100%"
@@ -61,23 +50,19 @@ forwardRef(function (props, forwardedRef) {
     strokeDasharray: 80,
     strokeDashoffset: 60
   }));
-  return (
-    /*#__PURE__*/
-    React.createElement(View, _extends({}, other, {
-      accessibilityRole: "progressbar",
-      accessibilityValue: accessibilityValue,
-      ref: forwardedRef,
-      style: [styles.container, style]
-    }),
-    /*#__PURE__*/
-    React.createElement(View, {
-      children: svg,
-      style: [typeof size === 'number' ? {
-        height: size,
-        width: size
-      } : indicatorSizes[size], styles.animation, !animating && styles.animationPause, !animating && hidesWhenStopped && styles.hidesWhenStopped]
-    }))
-  );
+  return /*#__PURE__*/React.createElement(View, _extends({}, other, {
+    accessibilityRole: "progressbar",
+    accessibilityValueMax: 1,
+    accessibilityValueMin: 0,
+    ref: forwardedRef,
+    style: [styles.container, style]
+  }), /*#__PURE__*/React.createElement(View, {
+    children: svg,
+    style: [typeof size === 'number' ? {
+      height: size,
+      width: size
+    } : indicatorSizes[size], styles.animation, !animating && styles.animationPause, !animating && hidesWhenStopped && styles.hidesWhenStopped]
+  }));
 });
 ActivityIndicator.displayName = 'ActivityIndicator';
 var styles = StyleSheet.create({

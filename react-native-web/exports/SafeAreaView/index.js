@@ -4,17 +4,18 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import * as React from 'react';
 import StyleSheet from '../StyleSheet';
 import View from '../View';
-import React, { forwardRef } from 'react';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 
 var cssFunction = function () {
   if (canUseDOM && window.CSS && window.CSS.supports && window.CSS.supports('top: constant(safe-area-inset-top)')) {
@@ -24,19 +25,14 @@ var cssFunction = function () {
   return 'env';
 }();
 
-var SafeAreaView =
-/*#__PURE__*/
-forwardRef(function (props, ref) {
+var SafeAreaView = /*#__PURE__*/React.forwardRef(function (props, ref) {
   var style = props.style,
       rest = _objectWithoutPropertiesLoose(props, ["style"]);
 
-  return (
-    /*#__PURE__*/
-    React.createElement(View, _extends({}, rest, {
-      ref: ref,
-      style: StyleSheet.compose(styles.root, style)
-    }))
-  );
+  return /*#__PURE__*/React.createElement(View, _extends({}, rest, {
+    ref: ref,
+    style: StyleSheet.compose(styles.root, style)
+  }));
 });
 SafeAreaView.displayName = 'SafeAreaView';
 var styles = StyleSheet.create({

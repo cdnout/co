@@ -3,36 +3,39 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
 var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-var win = _ExecutionEnvironment.canUseDOM ? window : {
-  devicePixelRatio: undefined,
-  innerHeight: undefined,
-  innerWidth: undefined,
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+var dimensions = {
+  window: {
+    fontScale: 1,
+    height: 0,
+    scale: 1,
+    width: 0
+  },
   screen: {
-    height: undefined,
-    width: undefined
+    fontScale: 1,
+    height: 0,
+    scale: 1,
+    width: 0
   }
 };
-var dimensions = {};
 var listeners = {};
 
-var Dimensions =
-/*#__PURE__*/
-function () {
+var Dimensions = /*#__PURE__*/function () {
   function Dimensions() {}
 
   Dimensions.get = function get(dimension) {
@@ -42,21 +45,32 @@ function () {
 
   Dimensions.set = function set(initialDimensions) {
     if (initialDimensions) {
-      if (_ExecutionEnvironment.canUseDOM) {
+      if (canUseDOM) {
         (0, _invariant.default)(false, 'Dimensions cannot be set in the browser');
       } else {
-        dimensions.screen = initialDimensions.screen;
-        dimensions.window = initialDimensions.window;
+        if (initialDimensions.screen != null) {
+          dimensions.screen = initialDimensions.screen;
+        }
+
+        if (initialDimensions.window != null) {
+          dimensions.window = initialDimensions.window;
+        }
       }
     }
   };
 
   Dimensions._update = function _update() {
+    if (!canUseDOM) {
+      return;
+    }
+
+    var win = window;
+    var docEl = win.document.documentElement;
     dimensions.window = {
       fontScale: 1,
-      height: win.innerHeight,
+      height: docEl.clientHeight,
       scale: win.devicePixelRatio || 1,
-      width: win.innerWidth
+      width: docEl.clientWidth
     };
     dimensions.screen = {
       fontScale: 1,
@@ -73,8 +87,15 @@ function () {
   };
 
   Dimensions.addEventListener = function addEventListener(type, handler) {
+    var _this = this;
+
     listeners[type] = listeners[type] || [];
     listeners[type].push(handler);
+    return {
+      remove: function remove() {
+        _this.removeEventListener(type, handler);
+      }
+    };
   };
 
   Dimensions.removeEventListener = function removeEventListener(type, handler) {
@@ -90,9 +111,9 @@ function () {
 
 exports.default = Dimensions;
 
-Dimensions._update();
+if (canUseDOM) {
+  Dimensions._update();
 
-if (_ExecutionEnvironment.canUseDOM) {
   window.addEventListener('resize', Dimensions._update, false);
 }
 

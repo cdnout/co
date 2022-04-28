@@ -3,13 +3,13 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
-
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
+var React = _interopRequireWildcard(require("react"));
 
 var _View = _interopRequireDefault(require("../View"));
 
 var _StyleSheet = _interopRequireDefault(require("../StyleSheet"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19,22 +19,21 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-var ModalContent =
-/*#__PURE__*/
-(0, _react.forwardRef)(function (props, forwardedRef) {
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+var ModalContent = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var active = props.active,
       children = props.children,
       onRequestClose = props.onRequestClose,
       transparent = props.transparent;
-  (0, _react.useEffect)(function () {
-    if (_ExecutionEnvironment.canUseDOM) {
+  React.useEffect(function () {
+    if (canUseDOM) {
       var closeOnEscape = function closeOnEscape(e) {
         if (active && e.key === 'Escape') {
           e.stopPropagation();
@@ -51,22 +50,17 @@ var ModalContent =
       };
     }
   }, [active, onRequestClose]);
-  var style = (0, _react.useMemo)(function () {
+  var style = React.useMemo(function () {
     return [styles.modal, transparent ? styles.modalTransparent : styles.modalOpaque];
   }, [transparent]);
-  return (
-    /*#__PURE__*/
-    _react.default.createElement(_View.default, {
-      accessibilityRole: active ? 'dialog' : null,
-      "aria-modal": true,
-      ref: forwardedRef,
-      style: style
-    },
-    /*#__PURE__*/
-    _react.default.createElement(_View.default, {
-      style: styles.container
-    }, children))
-  );
+  return /*#__PURE__*/React.createElement(_View.default, {
+    accessibilityModal: true,
+    accessibilityRole: active ? 'dialog' : null,
+    ref: forwardedRef,
+    style: style
+  }, /*#__PURE__*/React.createElement(_View.default, {
+    style: styles.container
+  }, children));
 });
 
 var styles = _StyleSheet.default.create({

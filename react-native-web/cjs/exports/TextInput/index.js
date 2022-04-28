@@ -3,11 +3,9 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _react = require("react");
+var React = _interopRequireWildcard(require("react"));
 
 var _createElement = _interopRequireDefault(require("../createElement"));
-
-var _css = _interopRequireDefault(require("../StyleSheet/css"));
 
 var forwardedProps = _interopRequireWildcard(require("../../modules/forwardedProps"));
 
@@ -23,15 +21,17 @@ var _usePlatformMethods = _interopRequireDefault(require("../../modules/usePlatf
 
 var _useResponderEvents = _interopRequireDefault(require("../../modules/useResponderEvents"));
 
+var _useLocale = require("../../modules/useLocale");
+
 var _StyleSheet = _interopRequireDefault(require("../StyleSheet"));
 
 var _TextInputState = _interopRequireDefault(require("../../modules/TextInputState"));
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -97,9 +97,8 @@ function isEventComposing(nativeEvent) {
   return nativeEvent.isComposing || nativeEvent.keyCode === 229;
 }
 
-var TextInput =
-/*#__PURE__*/
-(0, _react.forwardRef)(function (props, forwardedRef) {
+var focusTimeout = null;
+var TextInput = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var _props$autoCapitalize = props.autoCapitalize,
       autoCapitalize = _props$autoCapitalize === void 0 ? 'sentences' : _props$autoCapitalize,
       autoComplete = props.autoComplete,
@@ -187,17 +186,15 @@ var TextInput =
     type = 'password';
   }
 
-  var dimensions = (0, _react.useRef)({
+  var dimensions = React.useRef({
     height: null,
     width: null
   });
-  var hostRef = (0, _react.useRef)(null);
-  var handleContentSizeChange = (0, _react.useCallback)(function () {
-    var node = hostRef.current;
-
-    if (multiline && onContentSizeChange && node != null) {
-      var newHeight = node.scrollHeight;
-      var newWidth = node.scrollWidth;
+  var hostRef = React.useRef(null);
+  var handleContentSizeChange = React.useCallback(function (hostNode) {
+    if (multiline && onContentSizeChange && hostNode != null) {
+      var newHeight = hostNode.scrollHeight;
+      var newWidth = hostNode.scrollWidth;
 
       if (newHeight !== dimensions.current.height || newWidth !== dimensions.current.width) {
         dimensions.current.height = newHeight;
@@ -212,8 +209,8 @@ var TextInput =
         });
       }
     }
-  }, [hostRef, multiline, onContentSizeChange]);
-  var imperativeRef = (0, _react.useMemo)(function () {
+  }, [multiline, onContentSizeChange]);
+  var imperativeRef = React.useMemo(function () {
     return function (hostNode) {
       // TextInput needs to add more methods to the hostNode in addition to those
       // added by `usePlatformMethods`. This is temporarily until an API like
@@ -229,7 +226,7 @@ var TextInput =
           return hostNode != null && _TextInputState.default.currentlyFocusedField() === hostNode;
         };
 
-        handleContentSizeChange();
+        handleContentSizeChange(hostNode);
       }
     };
   }, [handleContentSizeChange]);
@@ -244,9 +241,10 @@ var TextInput =
   }
 
   function handleChange(e) {
-    var text = e.target.value;
+    var hostNode = e.target;
+    var text = hostNode.value;
     e.nativeEvent.text = text;
-    handleContentSizeChange();
+    handleContentSizeChange(hostNode);
 
     if (onChange) {
       onChange(e);
@@ -258,31 +256,38 @@ var TextInput =
   }
 
   function handleFocus(e) {
-    var node = hostRef.current;
+    var hostNode = e.target;
 
-    if (node != null) {
-      _TextInputState.default._currentlyFocusedNode = node;
+    if (onFocus) {
+      e.nativeEvent.text = hostNode.value;
+      onFocus(e);
+    }
 
-      if (onFocus) {
-        e.nativeEvent.text = e.target.value;
-        onFocus(e);
-      }
+    if (hostNode != null) {
+      _TextInputState.default._currentlyFocusedNode = hostNode;
 
       if (clearTextOnFocus) {
-        node.value = '';
+        hostNode.value = '';
       }
 
       if (selectTextOnFocus) {
         // Safari requires selection to occur in a setTimeout
-        setTimeout(function () {
-          node.select();
+        if (focusTimeout != null) {
+          clearTimeout(focusTimeout);
+        }
+
+        focusTimeout = setTimeout(function () {
+          if (hostNode != null) {
+            hostNode.select();
+          }
         }, 0);
       }
     }
   }
 
   function handleKeyDown(e) {
-    // Prevent key events bubbling (see #612)
+    var hostNode = e.target; // Prevent key events bubbling (see #612)
+
     e.stopPropagation();
     var blurOnSubmitDefault = !multiline;
     var shouldBlurOnSubmit = blurOnSubmit == null ? blurOnSubmitDefault : blurOnSubmit;
@@ -302,8 +307,8 @@ var TextInput =
         onSubmitEditing(e);
       }
 
-      if (shouldBlurOnSubmit && hostRef.current != null) {
-        hostRef.current.blur();
+      if (shouldBlurOnSubmit && hostNode != null) {
+        hostNode.blur();
       }
     }
   }
@@ -336,12 +341,6 @@ var TextInput =
     }
   }, [hostRef, selection]);
   var component = multiline ? 'textarea' : 'input';
-  var classList = [classes.textinput];
-
-  var style = _StyleSheet.default.compose(props.style, placeholderTextColor && {
-    placeholderTextColor: placeholderTextColor
-  });
-
   (0, _useElementLayout.default)(hostRef, onLayout);
   (0, _useResponderEvents.default)(hostRef, {
     onMoveShouldSetResponder: onMoveShouldSetResponder,
@@ -361,14 +360,18 @@ var TextInput =
     onStartShouldSetResponder: onStartShouldSetResponder,
     onStartShouldSetResponderCapture: onStartShouldSetResponderCapture
   });
+
+  var _useLocaleContext = (0, _useLocale.useLocaleContext)(),
+      contextDirection = _useLocaleContext.direction;
+
   var supportedProps = pickProps(props);
   supportedProps.autoCapitalize = autoCapitalize;
   supportedProps.autoComplete = autoComplete || autoCompleteType || 'on';
-  supportedProps.autoCorrect = autoCorrect ? 'on' : 'off';
-  supportedProps.classList = classList; // 'auto' by default allows browsers to infer writing direction
+  supportedProps.autoCorrect = autoCorrect ? 'on' : 'off'; // 'auto' by default allows browsers to infer writing direction
 
   supportedProps.dir = dir !== undefined ? dir : 'auto';
   supportedProps.enterKeyHint = returnKeyType;
+  supportedProps.inputMode = inputMode;
   supportedProps.onBlur = handleBlur;
   supportedProps.onChange = handleChange;
   supportedProps.onFocus = handleFocus;
@@ -377,20 +380,27 @@ var TextInput =
   supportedProps.readOnly = !editable;
   supportedProps.rows = multiline ? numberOfLines : undefined;
   supportedProps.spellCheck = spellCheck != null ? spellCheck : autoCorrect;
-  supportedProps.style = style;
+  supportedProps.style = [{
+    '--placeholderTextColor': placeholderTextColor
+  }, styles.textinput$raw, styles.placeholder, props.style];
   supportedProps.type = multiline ? undefined : type;
-  supportedProps.inputMode = inputMode;
   var platformMethodsRef = (0, _usePlatformMethods.default)(supportedProps);
   var setRef = (0, _useMergeRefs.default)(hostRef, platformMethodsRef, imperativeRef, forwardedRef);
   supportedProps.ref = setRef;
-  return (0, _createElement.default)(component, supportedProps);
+  var langDirection = props.lang != null ? (0, _useLocale.getLocaleDirection)(props.lang) : null;
+  var componentDirection = props.dir || langDirection;
+  var writingDirection = componentDirection || contextDirection;
+  var element = (0, _createElement.default)(component, supportedProps, {
+    writingDirection: writingDirection
+  });
+  return element;
 });
 TextInput.displayName = 'TextInput'; // $FlowFixMe
 
 TextInput.State = _TextInputState.default;
 
-var classes = _css.default.create({
-  textinput: {
+var styles = _StyleSheet.default.create({
+  textinput$raw: {
     MozAppearance: 'textfield',
     WebkitAppearance: 'none',
     backgroundColor: 'transparent',
@@ -401,6 +411,9 @@ var classes = _css.default.create({
     margin: 0,
     padding: 0,
     resize: 'none'
+  },
+  placeholder: {
+    placeholderTextColor: 'var(--placeholderTextColor)'
   }
 });
 

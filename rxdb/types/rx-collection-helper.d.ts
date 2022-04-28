@@ -1,12 +1,11 @@
-import type { RxCollection } from './types';
+import type { RxDatabase, RxDocumentData, RxStorageInstance, RxStorageInstanceCreationParams } from './types';
+import type { RxSchema } from './rx-schema';
 /**
- * wrappers for Pouch.put/get to handle keycompression etc
+ * fills in the default data.
+ * This also clones the data.
  */
-export declare function _handleToPouch(col: RxCollection | any, data: any): any;
-export declare function _handleFromPouch(col: RxCollection | any, data: any, noDecrypt?: boolean): any;
+export declare function fillObjectDataBeforeInsert<RxDocType>(schema: RxSchema<RxDocType>, data: Partial<RxDocumentData<RxDocType>> | any): RxDocumentData<RxDocType>;
 /**
- * fills in the _id and the
- * default data.
- * This also clones the data
+ * Creates the storage instances that are used internally in the collection
  */
-export declare function fillObjectDataBeforeInsert(collection: RxCollection | any, data: any): any;
+export declare function createRxCollectionStorageInstance<RxDocumentType, Internals, InstanceCreationOptions>(rxDatabase: RxDatabase<{}, Internals, InstanceCreationOptions>, storageInstanceCreationParams: RxStorageInstanceCreationParams<RxDocumentType, InstanceCreationOptions>): Promise<RxStorageInstance<RxDocumentType, Internals, InstanceCreationOptions>>;

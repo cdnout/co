@@ -3,9 +3,11 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
 var _react = require("react");
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Copyright (c) Nicolas Gallagher.
@@ -18,7 +20,8 @@ var _react = require("react");
  *
  * 
  */
-var useLayoutEffectImpl = _ExecutionEnvironment.canUseDOM ? _react.useLayoutEffect : _react.useEffect;
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+var useLayoutEffectImpl = canUseDOM ? _react.useLayoutEffect : _react.useEffect;
 var _default = useLayoutEffectImpl;
 exports.default = _default;
 module.exports = exports.default;

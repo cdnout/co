@@ -3,9 +3,7 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _react = _interopRequireWildcard(require("react"));
-
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
+var React = _interopRequireWildcard(require("react"));
 
 var _View = _interopRequireDefault(require("../View"));
 
@@ -15,6 +13,8 @@ var _StyleSheet = _interopRequireDefault(require("../StyleSheet"));
 
 var _UIManager = _interopRequireDefault(require("../UIManager"));
 
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
@@ -23,14 +23,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
 /**
  * This Component is used to "wrap" the modal we're opening
  * so that changing focus via tab will never leave the document.
@@ -38,6 +38,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
  * This allows us to properly trap the focus within a modal
  * even if the modal is at the start or end of a document.
  */
+
 var FocusBracket = function FocusBracket() {
   return (0, _createElement.default)('div', {
     accessibilityRole: 'none',
@@ -47,7 +48,7 @@ var FocusBracket = function FocusBracket() {
 };
 
 function attemptFocus(element) {
-  if (!_ExecutionEnvironment.canUseDOM) {
+  if (!canUseDOM) {
     return false;
   }
 
@@ -86,13 +87,13 @@ function focusLastDescendant(element) {
 var ModalFocusTrap = function ModalFocusTrap(_ref) {
   var active = _ref.active,
       children = _ref.children;
-  var trapElementRef = (0, _react.useRef)();
-  var focusRef = (0, _react.useRef)({
+  var trapElementRef = React.useRef();
+  var focusRef = React.useRef({
     trapFocusInProgress: false,
     lastFocusedElement: null
   });
-  (0, _react.useEffect)(function () {
-    if (_ExecutionEnvironment.canUseDOM) {
+  React.useEffect(function () {
+    if (canUseDOM) {
       var trapFocus = function trapFocus() {
         // We should not trap focus if:
         // - The modal hasn't fully initialized with an HTMLElement ref
@@ -140,8 +141,8 @@ var ModalFocusTrap = function ModalFocusTrap(_ref) {
   }, [active]); // To be fully compliant with WCAG we need to refocus element that triggered opening modal
   // after closing it
 
-  (0, _react.useEffect)(function () {
-    if (_ExecutionEnvironment.canUseDOM) {
+  React.useEffect(function () {
+    if (canUseDOM) {
       var lastFocusedElementOutsideTrap = document.activeElement;
       return function () {
         if (lastFocusedElementOutsideTrap && document.contains(lastFocusedElementOutsideTrap)) {
@@ -150,18 +151,9 @@ var ModalFocusTrap = function ModalFocusTrap(_ref) {
       };
     }
   }, []);
-  return (
-    /*#__PURE__*/
-    _react.default.createElement(_react.default.Fragment, null,
-    /*#__PURE__*/
-    _react.default.createElement(FocusBracket, null),
-    /*#__PURE__*/
-    _react.default.createElement(_View.default, {
-      ref: trapElementRef
-    }, children),
-    /*#__PURE__*/
-    _react.default.createElement(FocusBracket, null))
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FocusBracket, null), /*#__PURE__*/React.createElement(_View.default, {
+    ref: trapElementRef
+  }, children), /*#__PURE__*/React.createElement(FocusBracket, null));
 };
 
 var _default = ModalFocusTrap;

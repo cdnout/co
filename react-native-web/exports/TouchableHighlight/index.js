@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -127,19 +127,14 @@ function TouchableHighlight(props, forwardedRef) {
   }, [delayLongPress, delayPressIn, delayPressOut, disabled, onLongPress, onPress, onPressIn, onPressOut, rejectResponderTermination, showUnderlay, hideUnderlay]);
   var pressEventHandlers = usePressEvents(hostRef, pressConfig);
   var child = React.Children.only(children);
-  return (
-    /*#__PURE__*/
-    React.createElement(View, _extends({}, rest, pressEventHandlers, {
-      accessibilityDisabled: disabled,
-      focusable: !disabled && focusable !== false,
-      ref: setRef,
-      style: [styles.root, style, !disabled && styles.actionable, extraStyles && extraStyles.underlay]
-    }),
-    /*#__PURE__*/
-    React.cloneElement(child, {
-      style: StyleSheet.compose(child.props.style, extraStyles && extraStyles.child)
-    }))
-  );
+  return /*#__PURE__*/React.createElement(View, _extends({}, rest, pressEventHandlers, {
+    accessibilityDisabled: disabled,
+    focusable: !disabled && focusable !== false,
+    ref: setRef,
+    style: [styles.root, style, !disabled && styles.actionable, extraStyles && extraStyles.underlay]
+  }), /*#__PURE__*/React.cloneElement(child, {
+    style: StyleSheet.compose(child.props.style, extraStyles && extraStyles.child)
+  }));
 }
 
 var styles = StyleSheet.create({
@@ -151,10 +146,6 @@ var styles = StyleSheet.create({
     touchAction: 'manipulation'
   }
 });
-var MemoedTouchableHighlight =
-/*#__PURE__*/
-React.memo(
-/*#__PURE__*/
-React.forwardRef(TouchableHighlight));
+var MemoedTouchableHighlight = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef(TouchableHighlight));
 MemoedTouchableHighlight.displayName = 'TouchableHighlight';
 export default MemoedTouchableHighlight;

@@ -9,12 +9,10 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
  * 
  */
 import AccessibilityUtil from '../AccessibilityUtil';
-import css from '../../exports/StyleSheet/css';
 import StyleSheet from '../../exports/StyleSheet';
-import styleResolver from '../../exports/StyleSheet/styleResolver';
-import { STYLE_GROUPS } from '../../exports/StyleSheet/constants';
 var emptyObject = {};
 var hasOwnProperty = Object.prototype.hasOwnProperty;
+var isArray = Array.isArray;
 var uppercasePattern = /[A-Z]/g;
 
 function toHyphenLower(match) {
@@ -23,23 +21,12 @@ function toHyphenLower(match) {
 
 function hyphenateString(str) {
   return str.replace(uppercasePattern, toHyphenLower);
-} // Reset styles for heading, link, and list DOM elements
+}
 
+function processIDRefList(idRefList) {
+  return isArray(idRefList) ? idRefList.join(' ') : idRefList;
+}
 
-var classes = css.create({
-  reset: {
-    backgroundColor: 'transparent',
-    color: 'inherit',
-    font: 'inherit',
-    listStyle: 'none',
-    margin: 0,
-    textAlign: 'inherit',
-    textDecoration: 'none'
-  },
-  cursor: {
-    cursor: 'pointer'
-  }
-}, STYLE_GROUPS.classicReset);
 var pointerEventsStyles = StyleSheet.create({
   auto: {
     pointerEvents: 'auto'
@@ -55,7 +42,7 @@ var pointerEventsStyles = StyleSheet.create({
   }
 });
 
-var createDOMProps = function createDOMProps(elementType, props) {
+var createDOMProps = function createDOMProps(elementType, props, options) {
   if (!props) {
     props = emptyObject;
   }
@@ -70,6 +57,7 @@ var createDOMProps = function createDOMProps(elementType, props) {
       accessibilityColumnIndex = _props.accessibilityColumnIndex,
       accessibilityColumnSpan = _props.accessibilityColumnSpan,
       accessibilityControls = _props.accessibilityControls,
+      accessibilityCurrent = _props.accessibilityCurrent,
       accessibilityDescribedBy = _props.accessibilityDescribedBy,
       accessibilityDetails = _props.accessibilityDetails,
       accessibilityDisabled = _props.accessibilityDisabled,
@@ -106,50 +94,16 @@ var createDOMProps = function createDOMProps(elementType, props) {
       accessibilityValueMin = _props.accessibilityValueMin,
       accessibilityValueNow = _props.accessibilityValueNow,
       accessibilityValueText = _props.accessibilityValueText,
-      classList = _props.classList,
       dataSet = _props.dataSet,
       focusable = _props.focusable,
       nativeID = _props.nativeID,
       pointerEvents = _props.pointerEvents,
-      providedStyle = _props.style,
+      style = _props.style,
       testID = _props.testID,
-      accessible = _props.accessible,
-      accessibilityState = _props.accessibilityState,
-      accessibilityValue = _props.accessibilityValue,
-      domProps = _objectWithoutPropertiesLoose(_props, ["accessibilityActiveDescendant", "accessibilityAtomic", "accessibilityAutoComplete", "accessibilityBusy", "accessibilityChecked", "accessibilityColumnCount", "accessibilityColumnIndex", "accessibilityColumnSpan", "accessibilityControls", "accessibilityDescribedBy", "accessibilityDetails", "accessibilityDisabled", "accessibilityErrorMessage", "accessibilityExpanded", "accessibilityFlowTo", "accessibilityHasPopup", "accessibilityHidden", "accessibilityInvalid", "accessibilityKeyShortcuts", "accessibilityLabel", "accessibilityLabelledBy", "accessibilityLevel", "accessibilityLiveRegion", "accessibilityModal", "accessibilityMultiline", "accessibilityMultiSelectable", "accessibilityOrientation", "accessibilityOwns", "accessibilityPlaceholder", "accessibilityPosInSet", "accessibilityPressed", "accessibilityReadOnly", "accessibilityRequired", "accessibilityRole", "accessibilityRoleDescription", "accessibilityRowCount", "accessibilityRowIndex", "accessibilityRowSpan", "accessibilitySelected", "accessibilitySetSize", "accessibilitySort", "accessibilityValueMax", "accessibilityValueMin", "accessibilityValueNow", "accessibilityValueText", "classList", "dataSet", "focusable", "nativeID", "pointerEvents", "style", "testID", "accessible", "accessibilityState", "accessibilityValue"]);
+      domProps = _objectWithoutPropertiesLoose(_props, ["accessibilityActiveDescendant", "accessibilityAtomic", "accessibilityAutoComplete", "accessibilityBusy", "accessibilityChecked", "accessibilityColumnCount", "accessibilityColumnIndex", "accessibilityColumnSpan", "accessibilityControls", "accessibilityCurrent", "accessibilityDescribedBy", "accessibilityDetails", "accessibilityDisabled", "accessibilityErrorMessage", "accessibilityExpanded", "accessibilityFlowTo", "accessibilityHasPopup", "accessibilityHidden", "accessibilityInvalid", "accessibilityKeyShortcuts", "accessibilityLabel", "accessibilityLabelledBy", "accessibilityLevel", "accessibilityLiveRegion", "accessibilityModal", "accessibilityMultiline", "accessibilityMultiSelectable", "accessibilityOrientation", "accessibilityOwns", "accessibilityPlaceholder", "accessibilityPosInSet", "accessibilityPressed", "accessibilityReadOnly", "accessibilityRequired", "accessibilityRole", "accessibilityRoleDescription", "accessibilityRowCount", "accessibilityRowIndex", "accessibilityRowSpan", "accessibilitySelected", "accessibilitySetSize", "accessibilitySort", "accessibilityValueMax", "accessibilityValueMin", "accessibilityValueNow", "accessibilityValueText", "dataSet", "focusable", "nativeID", "pointerEvents", "style", "testID"]);
 
-  var disabled = accessibilityState != null && accessibilityState.disabled === true || accessibilityDisabled;
-  var role = AccessibilityUtil.propsToAriaRole(props);
-  var isNativeInteractiveElement = role === 'link' || elementType === 'a' || elementType === 'button' || elementType === 'input' || elementType === 'select' || elementType === 'textarea' || domProps.contentEditable != null; // DEPRECATED
-
-  if (accessibilityState != null) {
-    for (var prop in accessibilityState) {
-      var value = accessibilityState[prop];
-
-      if (value != null) {
-        if (prop === 'disabled' || prop === 'hidden') {
-          if (value === true) {
-            domProps["aria-" + prop] = value; // also set prop directly to pick up host elementType behaviour
-
-            domProps[prop] = value;
-          }
-        } else {
-          domProps["aria-" + prop] = value;
-        }
-      }
-    }
-  }
-
-  if (accessibilityValue != null) {
-    for (var _prop in accessibilityValue) {
-      var _value = accessibilityValue[_prop];
-
-      if (_value != null) {
-        domProps["aria-value" + _prop] = _value;
-      }
-    }
-  } // ACCESSIBILITY
-
+  var disabled = accessibilityDisabled;
+  var role = AccessibilityUtil.propsToAriaRole(props); // ACCESSIBILITY
 
   if (accessibilityActiveDescendant != null) {
     domProps['aria-activedescendant'] = accessibilityActiveDescendant;
@@ -184,11 +138,15 @@ var createDOMProps = function createDOMProps(elementType, props) {
   }
 
   if (accessibilityControls != null) {
-    domProps['aria-controls'] = accessibilityControls;
+    domProps['aria-controls'] = processIDRefList(accessibilityControls);
+  }
+
+  if (accessibilityCurrent != null) {
+    domProps['aria-current'] = accessibilityCurrent;
   }
 
   if (accessibilityDescribedBy != null) {
-    domProps['aria-describedby'] = accessibilityDescribedBy;
+    domProps['aria-describedby'] = processIDRefList(accessibilityDescribedBy);
   }
 
   if (accessibilityDetails != null) {
@@ -212,7 +170,7 @@ var createDOMProps = function createDOMProps(elementType, props) {
   }
 
   if (accessibilityFlowTo != null) {
-    domProps['aria-flowto'] = accessibilityFlowTo;
+    domProps['aria-flowto'] = processIDRefList(accessibilityFlowTo);
   }
 
   if (accessibilityHasPopup != null) {
@@ -236,7 +194,7 @@ var createDOMProps = function createDOMProps(elementType, props) {
   }
 
   if (accessibilityLabelledBy != null) {
-    domProps['aria-labelledby'] = accessibilityLabelledBy;
+    domProps['aria-labelledby'] = processIDRefList(accessibilityLabelledBy);
   }
 
   if (accessibilityLevel != null) {
@@ -264,7 +222,7 @@ var createDOMProps = function createDOMProps(elementType, props) {
   }
 
   if (accessibilityOwns != null) {
-    domProps['aria-owns'] = accessibilityOwns;
+    domProps['aria-owns'] = processIDRefList(accessibilityOwns);
   }
 
   if (accessibilityPlaceholder != null) {
@@ -360,43 +318,40 @@ var createDOMProps = function createDOMProps(elementType, props) {
   // "focusable" indicates that an element may be a keyboard tab-stop.
 
 
-  var _focusable = focusable != null ? focusable : accessible;
+  if (focusable === false) {
+    domProps.tabIndex = '-1';
+  }
 
-  if ( // These native elements are focusable by default
+  if ( // These native elements are keyboard focusable by default
   elementType === 'a' || elementType === 'button' || elementType === 'input' || elementType === 'select' || elementType === 'textarea') {
-    if (_focusable === false || accessibilityDisabled === true) {
+    if (focusable === false || accessibilityDisabled === true) {
       domProps.tabIndex = '-1';
     }
-  } else if ( // These roles are made focusable by default
-  role === 'button' || role === 'checkbox' || role === 'link' || role === 'menuitem' || role === 'radio' || role === 'textbox' || role === 'switch') {
-    if (_focusable !== false) {
+  } else if ( // These roles are made keyboard focusable by default
+  role === 'button' || role === 'checkbox' || role === 'link' || role === 'radio' || role === 'textbox' || role === 'switch') {
+    if (focusable !== false) {
       domProps.tabIndex = '0';
     }
   } else {
     // Everything else must explicitly set the prop
-    if (_focusable === true) {
+    if (focusable === true) {
       domProps.tabIndex = '0';
     }
-  } // STYLE
+  } // Resolve styles
 
 
-  var reactNativeStyle = StyleSheet.compose(pointerEvents && pointerEventsStyles[pointerEvents], providedStyle); // Additional style resets for interactive elements
+  var _StyleSheet = StyleSheet([style, pointerEvents && pointerEventsStyles[pointerEvents]], {
+    writingDirection: options ? options.writingDirection : 'ltr'
+  }),
+      className = _StyleSheet[0],
+      inlineStyle = _StyleSheet[1];
 
-  var needsCursor = (role === 'button' || role === 'link') && !disabled;
-  var needsReset = elementType === 'a' || elementType === 'button' || elementType === 'li' || elementType === 'ul' || role === 'heading'; // Classic CSS styles
-
-  var finalClassList = [needsReset && classes.reset, needsCursor && classes.cursor, classList]; // Resolve styles
-
-  var _styleResolver$resolv = styleResolver.resolve(reactNativeStyle, finalClassList),
-      className = _styleResolver$resolv.className,
-      style = _styleResolver$resolv.style;
-
-  if (className != null && className !== '') {
+  if (className) {
     domProps.className = className;
   }
 
-  if (style) {
-    domProps.style = style;
+  if (inlineStyle) {
+    domProps.style = inlineStyle;
   } // OTHER
   // Native element ID
 
@@ -408,48 +363,6 @@ var createDOMProps = function createDOMProps(elementType, props) {
 
   if (testID != null) {
     domProps['data-testid'] = testID;
-  } // Keyboard accessibility
-  // Button-like roles should trigger 'onClick' if SPACE key is pressed.
-  // Button-like roles should not trigger 'onClick' if they are disabled.
-
-
-  if (isNativeInteractiveElement || role === 'button' || role === 'menuitem' || _focusable === true && !disabled) {
-    var onClick = domProps.onClick;
-
-    if (onClick != null) {
-      if (disabled) {
-        // Prevent click propagating if the element is disabled. See #1757
-        domProps.onClick = function (e) {
-          e.stopPropagation();
-        };
-      } else if (!isNativeInteractiveElement) {
-        // For native elements that are focusable but don't dispatch 'click' events
-        // for keyboards.
-        var onKeyDown = domProps.onKeyDown;
-
-        domProps.onKeyDown = function (e) {
-          var key = e.key,
-              repeat = e.repeat;
-          var isSpacebarKey = key === ' ' || key === 'Spacebar';
-          var isButtonRole = role === 'button' || role === 'menuitem';
-
-          if (onKeyDown != null) {
-            onKeyDown(e);
-          }
-
-          if (!repeat && key === 'Enter') {
-            onClick(e);
-          } else if (isSpacebarKey && isButtonRole) {
-            if (!repeat) {
-              onClick(e);
-            } // Prevent spacebar scrolling the window
-
-
-            e.preventDefault();
-          }
-        };
-      }
-    }
   }
 
   return domProps;

@@ -7,8 +7,6 @@ exports.removeNode = removeNode;
 exports.terminateResponder = terminateResponder;
 exports.getResponderNode = getResponderNode;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
 var _createResponderEvent = _interopRequireDefault(require("./createResponderEvent"));
 
 var _ResponderEventTypes = require("./ResponderEventTypes");
@@ -16,6 +14,8 @@ var _ResponderEventTypes = require("./ResponderEventTypes");
 var _utils = require("./utils");
 
 var _ResponderTouchHistoryStore = _interopRequireDefault(require("./ResponderTouchHistoryStore"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -151,6 +151,9 @@ to return true:wantsResponderID|                            |
                                | +------------------------+ |
                                |                            |
                                +                            + */
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+/* ------------ TYPES ------------ */
+
 var emptyObject = {};
 /* ------------ IMPLEMENTATION ------------ */
 
@@ -559,7 +562,7 @@ var documentEventsBubblePhase = [// mouse
 'contextmenu', 'select', 'selectionchange'];
 
 function attachListeners() {
-  if (_ExecutionEnvironment.canUseDOM && window.__reactResponderSystemActive == null) {
+  if (canUseDOM && window.__reactResponderSystemActive == null) {
     window.addEventListener('blur', eventListener);
     documentEventsBubblePhase.forEach(function (eventType) {
       document.addEventListener(eventType, eventListener);

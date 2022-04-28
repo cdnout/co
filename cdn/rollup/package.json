@@ -1,0 +1,1 @@
+[{"name":"rollup","version":"2.70.2","description":"Next-generation ES module bundler","repository":"git+https:\/\/github.com\/rollup\/rollup.git","keyfiles":"rollup.browser.js","keywords":["modules","bundler","bundling","es6","optimizer"],"npm":"rollup"}]

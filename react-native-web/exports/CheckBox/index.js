@@ -10,7 +10,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,13 +18,10 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
  * 
  */
 import * as React from 'react';
-import { forwardRef } from 'react';
 import createElement from '../createElement';
 import StyleSheet from '../StyleSheet';
 import View from '../View';
-var CheckBox =
-/*#__PURE__*/
-forwardRef(function (props, forwardedRef) {
+var CheckBox = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var color = props.color,
       disabled = props.disabled,
       onChange = props.onChange,
@@ -40,9 +37,7 @@ forwardRef(function (props, forwardedRef) {
     onValueChange && onValueChange(value);
   }
 
-  var fakeControl =
-  /*#__PURE__*/
-  React.createElement(View, {
+  var fakeControl = /*#__PURE__*/React.createElement(View, {
     style: [styles.fakeControl, value && styles.fakeControlChecked, // custom color
     value && color && {
       backgroundColor: color,
@@ -57,13 +52,10 @@ forwardRef(function (props, forwardedRef) {
     style: [styles.nativeControl, styles.cursorInherit],
     type: 'checkbox'
   });
-  return (
-    /*#__PURE__*/
-    React.createElement(View, _extends({}, other, {
-      accessibilityDisabled: disabled,
-      style: [styles.root, style, disabled && styles.cursorDefault]
-    }), fakeControl, nativeControl)
-  );
+  return /*#__PURE__*/React.createElement(View, _extends({}, other, {
+    accessibilityDisabled: disabled,
+    style: [styles.root, style, disabled && styles.cursorDefault]
+  }), fakeControl, nativeControl);
 });
 CheckBox.displayName = 'CheckBox';
 var styles = StyleSheet.create({
@@ -106,7 +98,7 @@ var styles = StyleSheet.create({
   nativeControl: _objectSpread(_objectSpread({}, StyleSheet.absoluteFillObject), {}, {
     height: '100%',
     margin: 0,
-    opacity: 0,
+    appearance: 'none',
     padding: 0,
     width: '100%'
   })

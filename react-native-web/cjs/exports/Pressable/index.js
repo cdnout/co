@@ -1,11 +1,10 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
- * @format
  */
 'use strict';
 
@@ -46,9 +45,11 @@ function Pressable(props, forwardedRef) {
       disabled = props.disabled,
       focusable = props.focusable,
       onBlur = props.onBlur,
+      onContextMenu = props.onContextMenu,
       onFocus = props.onFocus,
       onHoverIn = props.onHoverIn,
       onHoverOut = props.onHoverOut,
+      onKeyDown = props.onKeyDown,
       onLongPress = props.onLongPress,
       onPress = props.onPress,
       onPressMove = props.onPressMove,
@@ -57,7 +58,7 @@ function Pressable(props, forwardedRef) {
       style = props.style,
       testOnly_hovered = props.testOnly_hovered,
       testOnly_pressed = props.testOnly_pressed,
-      rest = _objectWithoutPropertiesLoose(props, ["children", "delayLongPress", "delayPressIn", "delayPressOut", "disabled", "focusable", "onBlur", "onFocus", "onHoverIn", "onHoverOut", "onLongPress", "onPress", "onPressMove", "onPressIn", "onPressOut", "style", "testOnly_hovered", "testOnly_pressed"]);
+      rest = _objectWithoutPropertiesLoose(props, ["children", "delayLongPress", "delayPressIn", "delayPressOut", "disabled", "focusable", "onBlur", "onContextMenu", "onFocus", "onHoverIn", "onHoverOut", "onKeyDown", "onLongPress", "onPress", "onPressMove", "onPressIn", "onPressOut", "style", "testOnly_hovered", "testOnly_pressed"]);
 
   var _useForceableState = useForceableState(testOnly_hovered === true),
       hovered = _useForceableState[0],
@@ -88,6 +89,8 @@ function Pressable(props, forwardedRef) {
     };
   }, [delayLongPress, delayPressIn, delayPressOut, disabled, onLongPress, onPress, onPressIn, onPressMove, onPressOut, setPressed]);
   var pressEventHandlers = (0, _usePressEvents.default)(hostRef, pressConfig);
+  var onContextMenuPress = pressEventHandlers.onContextMenu,
+      onKeyDownPress = pressEventHandlers.onKeyDown;
   (0, _useHover.default)(hostRef, {
     contain: true,
     disabled: disabled,
@@ -100,30 +103,60 @@ function Pressable(props, forwardedRef) {
     focused: focused,
     pressed: pressed
   };
+  var blurHandler = React.useCallback(function (e) {
+    if (disabled) {
+      return;
+    }
 
-  function createFocusHandler(callback, value) {
-    return function (event) {
-      if (event.nativeEvent.target === hostRef.current) {
-        setFocused(value);
+    if (e.nativeEvent.target === hostRef.current) {
+      setFocused(false);
 
-        if (callback != null) {
-          callback(event);
-        }
+      if (onBlur != null) {
+        onBlur(e);
       }
-    };
-  }
+    }
+  }, [disabled, hostRef, setFocused, onBlur]);
+  var focusHandler = React.useCallback(function (e) {
+    if (disabled) {
+      return;
+    }
 
-  return (
-    /*#__PURE__*/
-    React.createElement(_View.default, _extends({}, rest, pressEventHandlers, {
-      accessibilityDisabled: disabled,
-      focusable: !disabled && focusable !== false,
-      onBlur: createFocusHandler(onBlur, false),
-      onFocus: createFocusHandler(onFocus, true),
-      ref: setRef,
-      style: [!disabled && styles.root, typeof style === 'function' ? style(interactionState) : style]
-    }), typeof children === 'function' ? children(interactionState) : children)
-  );
+    if (e.nativeEvent.target === hostRef.current) {
+      setFocused(true);
+
+      if (onFocus != null) {
+        onFocus(e);
+      }
+    }
+  }, [disabled, hostRef, setFocused, onFocus]);
+  var contextMenuHandler = React.useCallback(function (e) {
+    if (onContextMenuPress != null) {
+      onContextMenuPress(e);
+    }
+
+    if (onContextMenu != null) {
+      onContextMenu(e);
+    }
+  }, [onContextMenu, onContextMenuPress]);
+  var keyDownHandler = React.useCallback(function (e) {
+    if (onKeyDownPress != null) {
+      onKeyDownPress(e);
+    }
+
+    if (onKeyDown != null) {
+      onKeyDown(e);
+    }
+  }, [onKeyDown, onKeyDownPress]);
+  return /*#__PURE__*/React.createElement(_View.default, _extends({}, rest, pressEventHandlers, {
+    accessibilityDisabled: disabled,
+    focusable: !disabled && focusable !== false,
+    onBlur: blurHandler,
+    onContextMenu: contextMenuHandler,
+    onFocus: focusHandler,
+    onKeyDown: keyDownHandler,
+    ref: setRef,
+    style: [!disabled && styles.root, typeof style === 'function' ? style(interactionState) : style]
+  }), typeof children === 'function' ? children(interactionState) : children);
 }
 
 function useForceableState(forced) {
@@ -141,11 +174,7 @@ var styles = _StyleSheet.default.create({
   }
 });
 
-var MemoedPressable =
-/*#__PURE__*/
-(0, React.memo)(
-/*#__PURE__*/
-(0, React.forwardRef)(Pressable));
+var MemoedPressable = /*#__PURE__*/(0, React.memo)( /*#__PURE__*/(0, React.forwardRef)(Pressable));
 MemoedPressable.displayName = 'Pressable';
 var _default = MemoedPressable;
 exports.default = _default;

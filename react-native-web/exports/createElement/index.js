@@ -9,8 +9,9 @@
 import AccessibilityUtil from '../../modules/AccessibilityUtil';
 import createDOMProps from '../../modules/createDOMProps';
 import React from 'react';
+import { LocaleProvider } from '../../modules/useLocale';
 
-var createElement = function createElement(component, props) {
+var createElement = function createElement(component, props, options) {
   // Use equivalent platform elements where possible.
   var accessibilityComponent;
 
@@ -19,16 +20,15 @@ var createElement = function createElement(component, props) {
   }
 
   var Component = accessibilityComponent || component;
-  var domProps = createDOMProps(Component, props);
+  var domProps = createDOMProps(Component, props, options);
+  var element = /*#__PURE__*/React.createElement(Component, domProps); // Update locale context if element's writing direction prop changes
 
-  for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    children[_key - 2] = arguments[_key];
-  }
-
-  return (
-    /*#__PURE__*/
-    React.createElement.apply(React, [Component, domProps].concat(children))
-  );
+  var elementWithLocaleProvider = domProps.dir ? /*#__PURE__*/React.createElement(LocaleProvider, {
+    children: element,
+    direction: domProps.dir,
+    locale: domProps.lang
+  }) : element;
+  return elementWithLocaleProvider;
 };
 
 export default createElement;

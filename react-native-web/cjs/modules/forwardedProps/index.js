@@ -4,7 +4,7 @@ exports.__esModule = true;
 exports.styleProps = exports.touchProps = exports.mouseProps = exports.keyboardProps = exports.focusProps = exports.clickProps = exports.accessibilityProps = exports.defaultProps = void 0;
 
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -30,6 +30,7 @@ var accessibilityProps = {
   accessibilityColumnIndex: true,
   accessibilityColumnSpan: true,
   accessibilityControls: true,
+  accessibilityCurrent: true,
   accessibilityDescribedBy: true,
   accessibilityDetails: true,
   accessibilityDisabled: true,
@@ -67,11 +68,7 @@ var accessibilityProps = {
   accessibilityValueNow: true,
   accessibilityValueText: true,
   dir: true,
-  focusable: true,
-  // Deprecated
-  accessible: true,
-  accessibilityState: true,
-  accessibilityValue: true
+  focusable: true
 };
 exports.accessibilityProps = accessibilityProps;
 var clickProps = {

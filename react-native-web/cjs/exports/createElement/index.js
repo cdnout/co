@@ -9,6 +9,8 @@ var _createDOMProps = _interopRequireDefault(require("../../modules/createDOMPro
 
 var _react = _interopRequireDefault(require("react"));
 
+var _useLocale = require("../../modules/useLocale");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -19,7 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * 
  */
-var createElement = function createElement(component, props) {
+var createElement = function createElement(component, props, options) {
   // Use equivalent platform elements where possible.
   var accessibilityComponent;
 
@@ -28,16 +30,17 @@ var createElement = function createElement(component, props) {
   }
 
   var Component = accessibilityComponent || component;
-  var domProps = (0, _createDOMProps.default)(Component, props);
+  var domProps = (0, _createDOMProps.default)(Component, props, options);
 
-  for (var _len = arguments.length, children = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    children[_key - 2] = arguments[_key];
-  }
+  var element = /*#__PURE__*/_react.default.createElement(Component, domProps); // Update locale context if element's writing direction prop changes
 
-  return (
-    /*#__PURE__*/
-    _react.default.createElement.apply(_react.default, [Component, domProps].concat(children))
-  );
+
+  var elementWithLocaleProvider = domProps.dir ? /*#__PURE__*/_react.default.createElement(_useLocale.LocaleProvider, {
+    children: element,
+    direction: domProps.dir,
+    locale: domProps.lang
+  }) : element;
+  return elementWithLocaleProvider;
 };
 
 var _default = createElement;

@@ -6,7 +6,7 @@
  *
  * 
  */
-import warning from 'fbjs/lib/warning';
+import valueParser from 'postcss-value-parser';
 var invalidShortforms = {
   background: true,
   borderBottom: true,
@@ -18,14 +18,28 @@ var invalidShortforms = {
   outline: true,
   textDecoration: true
 };
+var invalidMultiValueShortforms = {
+  flex: true,
+  margin: true,
+  padding: true,
+  borderColor: true,
+  borderRadius: true,
+  borderStyle: true,
+  borderWidth: true,
+  marginHorizontal: true,
+  marginVertical: true,
+  paddingHorizontal: true,
+  paddingVertical: true,
+  overflow: true,
+  overscrollBehavior: true,
+  backgroundPosition: true
+};
 
 function error(message) {
-  warning(false, message);
+  console.error(message);
 }
 
-export default function validate(key, styles) {
-  var obj = styles[key];
-
+export function validate(obj) {
   for (var k in obj) {
     var prop = k.trim();
     var value = obj[prop];
@@ -55,6 +69,11 @@ export default function validate(key, styles) {
       } else if (invalidShortforms[prop]) {
         suggestion = 'Please use long-form properties.';
         isInvalid = true;
+      } else if (invalidMultiValueShortforms[prop]) {
+        if (typeof value === 'string' && valueParser(value).nodes.length > 1) {
+          suggestion = "Value is \"" + value + "\" but only single values are supported.";
+          isInvalid = true;
+        }
       }
 
       if (suggestion !== '') {

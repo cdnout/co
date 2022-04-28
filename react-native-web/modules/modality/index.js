@@ -6,8 +6,9 @@
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import createEventHandle from '../createEventHandle';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 
 var supportsPointerEvent = function supportsPointerEvent() {
   return !!(typeof window !== 'undefined' && window.PointerEvent != null);

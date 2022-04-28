@@ -1,24 +1,23 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import React, { forwardRef, useMemo, useEffect } from 'react';
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import * as React from 'react';
 import View from '../View';
 import StyleSheet from '../StyleSheet';
-var ModalContent =
-/*#__PURE__*/
-forwardRef(function (props, forwardedRef) {
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
+var ModalContent = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var active = props.active,
       children = props.children,
       onRequestClose = props.onRequestClose,
       transparent = props.transparent;
-  useEffect(function () {
+  React.useEffect(function () {
     if (canUseDOM) {
       var closeOnEscape = function closeOnEscape(e) {
         if (active && e.key === 'Escape') {
@@ -36,22 +35,17 @@ forwardRef(function (props, forwardedRef) {
       };
     }
   }, [active, onRequestClose]);
-  var style = useMemo(function () {
+  var style = React.useMemo(function () {
     return [styles.modal, transparent ? styles.modalTransparent : styles.modalOpaque];
   }, [transparent]);
-  return (
-    /*#__PURE__*/
-    React.createElement(View, {
-      accessibilityRole: active ? 'dialog' : null,
-      "aria-modal": true,
-      ref: forwardedRef,
-      style: style
-    },
-    /*#__PURE__*/
-    React.createElement(View, {
-      style: styles.container
-    }, children))
-  );
+  return /*#__PURE__*/React.createElement(View, {
+    accessibilityModal: true,
+    accessibilityRole: active ? 'dialog' : null,
+    ref: forwardedRef,
+    style: style
+  }, /*#__PURE__*/React.createElement(View, {
+    style: styles.container
+  }, children));
 });
 var styles = StyleSheet.create({
   modal: {

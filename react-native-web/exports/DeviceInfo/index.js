@@ -6,8 +6,9 @@
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import Dimensions from '../Dimensions';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 var DeviceInfo = {
   Dimensions: {
     get windowPhysicalPixels() {
@@ -44,20 +45,21 @@ var DeviceInfo = {
 
   get locale() {
     if (canUseDOM) {
-      if (window.navigator.languages) {
-        return window.navigator.languages[0];
+      if (navigator.languages) {
+        return navigator.languages[0];
       } else {
-        return window.navigator.language;
+        return navigator.language;
       }
     }
   },
 
   get totalMemory() {
-    return canUseDOM ? window.navigator.deviceMemory : undefined;
+    // $FlowIssue deviceMemory not defined in navigator
+    return canUseDOM ? navigator.deviceMemory : undefined;
   },
 
   get userAgent() {
-    return canUseDOM ? window.navigator.userAgent : '';
+    return canUseDOM ? navigator.userAgent : '';
   }
 
 };

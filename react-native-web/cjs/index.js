@@ -1,7 +1,7 @@
 "use strict";
 
 exports.__esModule = true;
-exports.useWindowDimensions = exports.useColorScheme = exports.DeviceEventEmitter = exports.TVEventHandler = exports.Systrace = exports.Settings = exports.PermissionsAndroid = exports.ToastAndroid = exports.InputAccessoryView = exports.DrawerLayoutAndroid = exports.LogBox = exports.YellowBox = exports.VirtualizedList = exports.View = exports.TouchableWithoutFeedback = exports.TouchableOpacity = exports.TouchableNativeFeedback = exports.TouchableHighlight = exports.Touchable = exports.TextInput = exports.Text = exports.Switch = exports.StatusBar = exports.SectionList = exports.ScrollView = exports.SafeAreaView = exports.RefreshControl = exports.ProgressBar = exports.Pressable = exports.Picker = exports.Modal = exports.KeyboardAvoidingView = exports.ImageBackground = exports.Image = exports.FlatList = exports.CheckBox = exports.Button = exports.ActivityIndicator = exports.Vibration = exports.UIManager = exports.StyleSheet = exports.Share = exports.Platform = exports.PixelRatio = exports.PanResponder = exports.NativeEventEmitter = exports.Linking = exports.LayoutAnimation = exports.InteractionManager = exports.Keyboard = exports.I18nManager = exports.Easing = exports.Dimensions = exports.DeviceInfo = exports.Clipboard = exports.BackHandler = exports.AppState = exports.AppRegistry = exports.Appearance = exports.Animated = exports.Alert = exports.AccessibilityInfo = exports.NativeModules = exports.unmountComponentAtNode = exports.render = exports.processColor = exports.findNodeHandle = exports.unstable_createElement = void 0;
+exports.useLocaleContext = exports.useWindowDimensions = exports.useColorScheme = exports.DeviceEventEmitter = exports.TVEventHandler = exports.Systrace = exports.Settings = exports.PermissionsAndroid = exports.ToastAndroid = exports.InputAccessoryView = exports.DrawerLayoutAndroid = exports.LogBox = exports.YellowBox = exports.VirtualizedList = exports.View = exports.TouchableWithoutFeedback = exports.TouchableOpacity = exports.TouchableNativeFeedback = exports.TouchableHighlight = exports.Touchable = exports.TextInput = exports.Text = exports.Switch = exports.StatusBar = exports.SectionList = exports.ScrollView = exports.SafeAreaView = exports.RefreshControl = exports.ProgressBar = exports.Pressable = exports.Picker = exports.Modal = exports.KeyboardAvoidingView = exports.ImageBackground = exports.Image = exports.FlatList = exports.CheckBox = exports.Button = exports.ActivityIndicator = exports.Vibration = exports.UIManager = exports.StyleSheet = exports.Share = exports.Platform = exports.PixelRatio = exports.PanResponder = exports.NativeEventEmitter = exports.Linking = exports.LayoutAnimation = exports.InteractionManager = exports.Keyboard = exports.I18nManager = exports.Easing = exports.Dimensions = exports.DeviceInfo = exports.Clipboard = exports.BackHandler = exports.AppState = exports.AppRegistry = exports.Appearance = exports.Animated = exports.Alert = exports.AccessibilityInfo = exports.NativeModules = exports.unmountComponentAtNode = exports.render = exports.processColor = exports.findNodeHandle = exports.unstable_createElement = void 0;
 
 var _createElement = _interopRequireDefault(require("./exports/createElement"));
 
@@ -270,6 +270,10 @@ exports.DeviceEventEmitter = _DeviceEventEmitter.default;
 var _useColorScheme = _interopRequireDefault(require("./exports/useColorScheme"));
 
 exports.useColorScheme = _useColorScheme.default;
+
+var _useLocaleContext = require("./exports/useLocaleContext");
+
+exports.useLocaleContext = _useLocaleContext.useLocaleContext;
 
 var _useWindowDimensions = _interopRequireDefault(require("./exports/useWindowDimensions"));
 

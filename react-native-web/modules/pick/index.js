@@ -11,8 +11,7 @@ export default function pick(obj, list) {
 
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      if (list[key] === true || // Temporary until ARIA is mapped to explicit props
-      key.indexOf('aria-') === 0) {
+      if (list[key] === true) {
         nextObj[key] = obj[key];
       }
     }

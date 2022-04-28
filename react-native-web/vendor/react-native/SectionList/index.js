@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,24 +11,15 @@
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 import Platform from '../../../exports/Platform';
 import * as React from 'react';
-import ScrollView from '../../../exports/ScrollView';
 import VirtualizedSectionList from '../VirtualizedSectionList';
-
-var defaultProps = _objectSpread(_objectSpread({}, VirtualizedSectionList.defaultProps), {}, {
-  stickySectionHeadersEnabled: Platform.OS === 'ios'
-});
 
 /**
  * A performant interface for rendering sectioned lists, supporting the most handy features:
@@ -45,7 +36,7 @@ var defaultProps = _objectSpread(_objectSpread({}, VirtualizedSectionList.defaul
  *  - Scroll loading.
  *
  * If you don't need section support and want a simpler interface, use
- * [`<FlatList>`](/react-native/docs/flatlist.html).
+ * [`<FlatList>`](https://reactnative.dev/docs/flatlist).
  *
  * Simple Examples:
  *
@@ -67,7 +58,7 @@ var defaultProps = _objectSpread(_objectSpread({}, VirtualizedSectionList.defaul
  *       ]}
  *     />
  *
- * This is a convenience wrapper around [`<VirtualizedList>`](docs/virtualizedlist.html),
+ * This is a convenience wrapper around [`<VirtualizedList>`](docs/virtualizedlist),
  * and thus inherits its props (as well as those of `ScrollView`) that aren't explicitly listed
  * here, along with the following caveats:
  *
@@ -85,9 +76,7 @@ var defaultProps = _objectSpread(_objectSpread({}, VirtualizedSectionList.defaul
  *   Alternatively, you can provide a custom `keyExtractor` prop.
  *
  */
-var SectionList =
-/*#__PURE__*/
-function (_React$PureComponent) {
+var SectionList = /*#__PURE__*/function (_React$PureComponent) {
   _inheritsLoose(SectionList, _React$PureComponent);
 
   function SectionList() {
@@ -100,7 +89,6 @@ function (_React$PureComponent) {
     _this = _React$PureComponent.call.apply(_React$PureComponent, [this].concat(args)) || this;
 
     _this._captureRef = function (ref) {
-      // $FlowFixMe
       _this._wrapperListRef = ref;
     };
 
@@ -178,26 +166,24 @@ function (_React$PureComponent) {
   };
 
   _proto.render = function render() {
-    return (
-      /*#__PURE__*/
+    var _this$props = this.props,
+        _stickySectionHeadersEnabled = _this$props.stickySectionHeadersEnabled,
+        restProps = _objectWithoutPropertiesLoose(_this$props, ["stickySectionHeadersEnabled"]);
 
-      /* $FlowFixMe(>=0.66.0 site=react_native_fb) This comment suppresses an
-       * error found when Flow v0.66 was deployed. To see the error delete this
-       * comment and run Flow. */
-      React.createElement(VirtualizedSectionList, _extends({}, this.props, {
-        ref: this._captureRef,
-        getItemCount: function getItemCount(items) {
-          return items.length;
-        },
-        getItem: function getItem(items, index) {
-          return items[index];
-        }
-      }))
-    );
+    var stickySectionHeadersEnabled = _stickySectionHeadersEnabled !== null && _stickySectionHeadersEnabled !== void 0 ? _stickySectionHeadersEnabled : Platform.OS === 'ios';
+    return /*#__PURE__*/React.createElement(VirtualizedSectionList, _extends({}, restProps, {
+      stickySectionHeadersEnabled: stickySectionHeadersEnabled,
+      ref: this._captureRef,
+      getItemCount: function getItemCount(items) {
+        return items.length;
+      },
+      getItem: function getItem(items, index) {
+        return items[index];
+      }
+    }));
   };
 
   return SectionList;
 }(React.PureComponent);
 
-SectionList.defaultProps = defaultProps;
-export default SectionList;
+export { SectionList as default };

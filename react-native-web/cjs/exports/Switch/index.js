@@ -32,28 +32,28 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 var emptyObject = {};
 var thumbDefaultBoxShadow = '0px 1px 3px rgba(0,0,0,0.5)';
 var thumbFocusedBoxShadow = thumbDefaultBoxShadow + ", 0 0 0 10px rgba(0,0,0,0.1)";
-var Switch =
-/*#__PURE__*/
-(0, React.forwardRef)(function (props, forwardedRef) {
+var defaultActiveTrackColor = '#A3D3CF';
+var defaultTrackColor = '#939393';
+var defaultDisabledTrackColor = '#D5D5D5';
+var defaultActiveThumbColor = '#009688';
+var defaultThumbColor = '#FAFAFA';
+var defaultDisabledThumbColor = '#BDBDBD';
+var Switch = /*#__PURE__*/React.forwardRef(function (props, forwardedRef) {
   var accessibilityLabel = props.accessibilityLabel,
-      _props$activeThumbCol = props.activeThumbColor,
-      activeThumbColor = _props$activeThumbCol === void 0 ? '#009688' : _props$activeThumbCol,
-      _props$activeTrackCol = props.activeTrackColor,
-      activeTrackColor = _props$activeTrackCol === void 0 ? '#A3D3CF' : _props$activeTrackCol,
+      activeThumbColor = props.activeThumbColor,
+      activeTrackColor = props.activeTrackColor,
       _props$disabled = props.disabled,
       disabled = _props$disabled === void 0 ? false : _props$disabled,
       onValueChange = props.onValueChange,
       _props$style = props.style,
       style = _props$style === void 0 ? emptyObject : _props$style,
-      _props$thumbColor = props.thumbColor,
-      thumbColor = _props$thumbColor === void 0 ? '#FAFAFA' : _props$thumbColor,
-      _props$trackColor = props.trackColor,
-      trackColor = _props$trackColor === void 0 ? '#939393' : _props$trackColor,
+      thumbColor = props.thumbColor,
+      trackColor = props.trackColor,
       _props$value = props.value,
       value = _props$value === void 0 ? false : _props$value,
       other = _objectWithoutPropertiesLoose(props, ["accessibilityLabel", "activeThumbColor", "activeTrackColor", "disabled", "onValueChange", "style", "thumbColor", "trackColor", "value"]);
 
-  var thumbRef = (0, React.useRef)(null);
+  var thumbRef = React.useRef(null);
 
   function handleChange(event) {
     if (onValueChange != null) {
@@ -84,30 +84,63 @@ var Switch =
       if (trackColor != null && typeof trackColor === 'object') {
         return trackColor.true;
       } else {
-        return activeTrackColor;
+        return activeTrackColor !== null && activeTrackColor !== void 0 ? activeTrackColor : defaultActiveTrackColor;
       }
     } else {
       if (trackColor != null && typeof trackColor === 'object') {
         return trackColor.false;
       } else {
-        return trackColor;
+        return trackColor !== null && trackColor !== void 0 ? trackColor : defaultTrackColor;
       }
     }
   }();
 
-  var thumbCurrentColor = value ? activeThumbColor : thumbColor;
+  var thumbCurrentColor = value ? activeThumbColor !== null && activeThumbColor !== void 0 ? activeThumbColor : defaultActiveThumbColor : thumbColor !== null && thumbColor !== void 0 ? thumbColor : defaultThumbColor;
   var thumbHeight = height;
   var thumbWidth = thumbHeight;
   var rootStyle = [styles.root, style, disabled && styles.cursorDefault, {
     height: height,
     width: width
   }];
+
+  var disabledTrackColor = function () {
+    if (value === true) {
+      if (typeof activeTrackColor === 'string' && activeTrackColor != null || typeof trackColor === 'object' && trackColor != null && trackColor.true) {
+        return trackCurrentColor;
+      } else {
+        return defaultDisabledTrackColor;
+      }
+    } else {
+      if (typeof trackColor === 'string' && trackColor != null || typeof trackColor === 'object' && trackColor != null && trackColor.false) {
+        return trackCurrentColor;
+      } else {
+        return defaultDisabledTrackColor;
+      }
+    }
+  }();
+
+  var disabledThumbColor = function () {
+    if (value === true) {
+      if (activeThumbColor == null) {
+        return defaultDisabledThumbColor;
+      } else {
+        return thumbCurrentColor;
+      }
+    } else {
+      if (thumbColor == null) {
+        return defaultDisabledThumbColor;
+      } else {
+        return thumbCurrentColor;
+      }
+    }
+  }();
+
   var trackStyle = [styles.track, {
-    backgroundColor: disabled ? '#D5D5D5' : trackCurrentColor,
+    backgroundColor: disabled ? disabledTrackColor : trackCurrentColor,
     borderRadius: trackBorderRadius
   }];
   var thumbStyle = [styles.thumb, value && styles.thumbActive, {
-    backgroundColor: disabled ? '#BDBDBD' : thumbCurrentColor,
+    backgroundColor: disabled ? disabledThumbColor : thumbCurrentColor,
     height: thumbHeight,
     marginStart: value ? (0, _multiplyStyleLengthValue.default)(thumbWidth, -1) : 0,
     width: thumbWidth
@@ -124,21 +157,14 @@ var Switch =
     type: 'checkbox',
     role: 'switch'
   });
-  return (
-    /*#__PURE__*/
-    React.createElement(_View.default, _extends({}, other, {
-      style: rootStyle
-    }),
-    /*#__PURE__*/
-    React.createElement(_View.default, {
-      style: trackStyle
-    }),
-    /*#__PURE__*/
-    React.createElement(_View.default, {
-      ref: thumbRef,
-      style: thumbStyle
-    }), nativeControl)
-  );
+  return /*#__PURE__*/React.createElement(_View.default, _extends({}, other, {
+    style: rootStyle
+  }), /*#__PURE__*/React.createElement(_View.default, {
+    style: trackStyle
+  }), /*#__PURE__*/React.createElement(_View.default, {
+    ref: thumbRef,
+    style: thumbStyle
+  }), nativeControl);
 });
 Switch.displayName = 'Switch';
 
@@ -153,13 +179,16 @@ var styles = _StyleSheet.default.create({
   cursorInherit: {
     cursor: 'inherit'
   },
-  track: _objectSpread(_objectSpread({}, _StyleSheet.default.absoluteFillObject), {}, {
+  track: _objectSpread(_objectSpread({
+    forcedColorAdjust: 'none'
+  }, _StyleSheet.default.absoluteFillObject), {}, {
     height: '70%',
     margin: 'auto',
     transitionDuration: '0.1s',
     width: '100%'
   }),
   thumb: {
+    forcedColorAdjust: 'none',
     alignSelf: 'flex-start',
     borderRadius: '100%',
     boxShadow: thumbDefaultBoxShadow,
@@ -175,7 +204,7 @@ var styles = _StyleSheet.default.create({
   nativeControl: _objectSpread(_objectSpread({}, _StyleSheet.default.absoluteFillObject), {}, {
     height: '100%',
     margin: 0,
-    opacity: 0,
+    appearance: 'none',
     padding: 0,
     width: '100%'
   })

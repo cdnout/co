@@ -6,9 +6,9 @@ exports.getModality = getModality;
 exports.addModalityListener = addModalityListener;
 exports.testOnly_resetActiveModality = testOnly_resetActiveModality;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
 var _createEventHandle = _interopRequireDefault(require("../createEventHandle"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20,6 +20,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * 
  */
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
+
 var supportsPointerEvent = function supportsPointerEvent() {
   return !!(typeof window !== 'undefined' && window.PointerEvent != null);
 };
@@ -189,7 +191,7 @@ function onPointerish(event) {
     }
 }
 
-if (_ExecutionEnvironment.canUseDOM) {
+if (canUseDOM) {
   addBlurListener(window, onBlurWindow);
   addFocusListener(window, onFocusWindow);
   addKeyDownListener(document, onKeyDown);

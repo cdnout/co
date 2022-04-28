@@ -3,11 +3,11 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
-var _arrayFindIndex = _interopRequireDefault(require("array-find-index"));
-
 var _invariant = _interopRequireDefault(require("fbjs/lib/invariant"));
+
+var _EventEmitter = _interopRequireDefault(require("../../vendor/react-native/emitter/_EventEmitter"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15,8 +15,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-// Android 4.4 browser
-var isPrefixed = _ExecutionEnvironment.canUseDOM && !document.hasOwnProperty('hidden') && document.hasOwnProperty('webkitHidden');
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM; // Android 4.4 browser
+
+var isPrefixed = canUseDOM && !document.hasOwnProperty('hidden') && document.hasOwnProperty('webkitHidden');
 var EVENT_TYPES = ['change', 'memoryWarning'];
 var VISIBILITY_CHANGE_EVENT = isPrefixed ? 'webkitvisibilitychange' : 'visibilitychange';
 var VISIBILITY_STATE_PROPERTY = isPrefixed ? 'webkitVisibilityState' : 'visibilityState';
@@ -24,11 +25,9 @@ var AppStates = {
   BACKGROUND: 'background',
   ACTIVE: 'active'
 };
-var listeners = [];
+var changeEmitter = null;
 
-var AppState =
-/*#__PURE__*/
-function () {
+var AppState = /*#__PURE__*/function () {
   function AppState() {}
 
   AppState.addEventListener = function addEventListener(type, handler) {
@@ -36,28 +35,27 @@ function () {
       (0, _invariant.default)(EVENT_TYPES.indexOf(type) !== -1, 'Trying to subscribe to unknown event: "%s"', type);
 
       if (type === 'change') {
-        var callback = function callback() {
-          return handler(AppState.currentState);
-        };
+        if (!changeEmitter) {
+          changeEmitter = new _EventEmitter.default();
+          document.addEventListener(VISIBILITY_CHANGE_EVENT, function () {
+            if (changeEmitter) {
+              changeEmitter.emit('change', AppState.currentState);
+            }
+          }, false);
+        }
 
-        listeners.push([handler, callback]);
-        document.addEventListener(VISIBILITY_CHANGE_EVENT, callback, false);
+        return changeEmitter.addListener(type, handler);
       }
     }
   };
 
   AppState.removeEventListener = function removeEventListener(type, handler) {
     if (AppState.isAvailable) {
+      console.error("AppState.removeListener('" + type + "', ...): Method has been " + 'deprecated. Please instead use `remove()` on the subscription ' + 'returned by `AppState.addEventListener`.');
       (0, _invariant.default)(EVENT_TYPES.indexOf(type) !== -1, 'Trying to remove listener for unknown event: "%s"', type);
 
-      if (type === 'change') {
-        var listenerIndex = (0, _arrayFindIndex.default)(listeners, function (pair) {
-          return pair[0] === handler;
-        });
-        (0, _invariant.default)(listenerIndex !== -1, 'Trying to remove AppState listener for unregistered handler');
-        var callback = listeners[listenerIndex][1];
-        document.removeEventListener(VISIBILITY_CHANGE_EVENT, callback, false);
-        listeners.splice(listenerIndex, 1);
+      if (type === 'change' && changeEmitter) {
+        changeEmitter.removeListener(handler);
       }
     }
   };
@@ -85,5 +83,5 @@ function () {
 }();
 
 exports.default = AppState;
-AppState.isAvailable = _ExecutionEnvironment.canUseDOM && document[VISIBILITY_STATE_PROPERTY];
+AppState.isAvailable = canUseDOM && document[VISIBILITY_STATE_PROPERTY];
 module.exports = exports.default;

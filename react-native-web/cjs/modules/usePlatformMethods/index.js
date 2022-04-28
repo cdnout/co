@@ -19,14 +19,19 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+var didWarn = false;
 var emptyObject = {};
 
-function setNativeProps(node, nativeProps, classList, pointerEvents, style, previousStyleRef) {
+function setNativeProps(node, nativeProps, pointerEvents, style, previousStyleRef) {
+  if (!didWarn) {
+    console.warn('setNativeProps is deprecated. Please update props using React state instead.');
+    didWarn = true;
+  }
+
   if (node != null && nativeProps) {
     var domProps = (0, _createDOMProps.default)(null, _objectSpread(_objectSpread({
       pointerEvents: pointerEvents
     }, nativeProps), {}, {
-      classList: [classList, nativeProps.className],
       style: [style, nativeProps.style]
     }));
     var nextDomStyle = domProps.style;
@@ -55,13 +60,11 @@ function setNativeProps(node, nativeProps, classList, pointerEvents, style, prev
 
 
 function usePlatformMethods(_ref) {
-  var classList = _ref.classList,
-      pointerEvents = _ref.pointerEvents,
+  var pointerEvents = _ref.pointerEvents,
       style = _ref.style;
   var previousStyleRef = (0, _react.useRef)(null);
   var setNativePropsArgsRef = (0, _react.useRef)(null);
   setNativePropsArgsRef.current = {
-    classList: classList,
     pointerEvents: pointerEvents,
     style: style
   }; // Avoid creating a new ref on every render. The props only need to be
@@ -84,11 +87,10 @@ function usePlatformMethods(_ref) {
 
         hostNode.setNativeProps = function (nativeProps) {
           var _ref2 = setNativePropsArgsRef.current || emptyObject,
-              classList = _ref2.classList,
               style = _ref2.style,
               pointerEvents = _ref2.pointerEvents;
 
-          setNativeProps(hostNode, nativeProps, classList, pointerEvents, style, previousStyleRef);
+          setNativeProps(hostNode, nativeProps, pointerEvents, style, previousStyleRef);
         };
       }
     };

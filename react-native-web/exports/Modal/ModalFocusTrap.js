@@ -1,18 +1,19 @@
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
-import React, { useRef, useEffect } from 'react';
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import * as React from 'react';
 import View from '../View';
 import createElement from '../createElement';
 import StyleSheet from '../StyleSheet';
 import UIManager from '../UIManager';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 /**
  * This Component is used to "wrap" the modal we're opening
  * so that changing focus via tab will never leave the document.
@@ -69,12 +70,12 @@ function focusLastDescendant(element) {
 var ModalFocusTrap = function ModalFocusTrap(_ref) {
   var active = _ref.active,
       children = _ref.children;
-  var trapElementRef = useRef();
-  var focusRef = useRef({
+  var trapElementRef = React.useRef();
+  var focusRef = React.useRef({
     trapFocusInProgress: false,
     lastFocusedElement: null
   });
-  useEffect(function () {
+  React.useEffect(function () {
     if (canUseDOM) {
       var trapFocus = function trapFocus() {
         // We should not trap focus if:
@@ -123,7 +124,7 @@ var ModalFocusTrap = function ModalFocusTrap(_ref) {
   }, [active]); // To be fully compliant with WCAG we need to refocus element that triggered opening modal
   // after closing it
 
-  useEffect(function () {
+  React.useEffect(function () {
     if (canUseDOM) {
       var lastFocusedElementOutsideTrap = document.activeElement;
       return function () {
@@ -133,18 +134,9 @@ var ModalFocusTrap = function ModalFocusTrap(_ref) {
       };
     }
   }, []);
-  return (
-    /*#__PURE__*/
-    React.createElement(React.Fragment, null,
-    /*#__PURE__*/
-    React.createElement(FocusBracket, null),
-    /*#__PURE__*/
-    React.createElement(View, {
-      ref: trapElementRef
-    }, children),
-    /*#__PURE__*/
-    React.createElement(FocusBracket, null))
-  );
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FocusBracket, null), /*#__PURE__*/React.createElement(View, {
+    ref: trapElementRef
+  }, children), /*#__PURE__*/React.createElement(FocusBracket, null));
 };
 
 export default ModalFocusTrap;

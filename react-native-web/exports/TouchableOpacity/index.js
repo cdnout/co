@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -87,19 +87,16 @@ function TouchableOpacity(props, forwardedRef) {
     };
   }, [delayLongPress, delayPressIn, delayPressOut, disabled, onLongPress, onPress, onPressIn, onPressOut, rejectResponderTermination, setOpacityActive, setOpacityInactive]);
   var pressEventHandlers = usePressEvents(hostRef, pressConfig);
-  return (
-    /*#__PURE__*/
-    React.createElement(View, _extends({}, rest, pressEventHandlers, {
-      accessibilityDisabled: disabled,
-      focusable: !disabled && focusable !== false,
-      ref: setRef,
-      style: [styles.root, !disabled && styles.actionable, style, opacityOverride != null && {
-        opacity: opacityOverride
-      }, {
-        transitionDuration: duration
-      }]
-    }))
-  );
+  return /*#__PURE__*/React.createElement(View, _extends({}, rest, pressEventHandlers, {
+    accessibilityDisabled: disabled,
+    focusable: !disabled && focusable !== false,
+    ref: setRef,
+    style: [styles.root, !disabled && styles.actionable, style, opacityOverride != null && {
+      opacity: opacityOverride
+    }, {
+      transitionDuration: duration
+    }]
+  }));
 }
 
 var styles = StyleSheet.create({
@@ -113,10 +110,6 @@ var styles = StyleSheet.create({
     touchAction: 'manipulation'
   }
 });
-var MemoedTouchableOpacity =
-/*#__PURE__*/
-React.memo(
-/*#__PURE__*/
-React.forwardRef(TouchableOpacity));
+var MemoedTouchableOpacity = /*#__PURE__*/React.memo( /*#__PURE__*/React.forwardRef(TouchableOpacity));
 MemoedTouchableOpacity.displayName = 'TouchableOpacity';
 export default MemoedTouchableOpacity;

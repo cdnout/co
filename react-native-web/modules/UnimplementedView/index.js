@@ -3,7 +3,7 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -16,9 +16,7 @@ import React from 'react';
  * Common implementation for a simple stubbed view.
  */
 
-var UnimplementedView =
-/*#__PURE__*/
-function (_React$Component) {
+var UnimplementedView = /*#__PURE__*/function (_React$Component) {
   _inheritsLoose(UnimplementedView, _React$Component);
 
   function UnimplementedView() {
@@ -31,12 +29,9 @@ function (_React$Component) {
   };
 
   _proto.render = function render() {
-    return (
-      /*#__PURE__*/
-      React.createElement(View, {
-        style: [unimplementedViewStyles, this.props.style]
-      }, this.props.children)
-    );
+    return /*#__PURE__*/React.createElement(View, {
+      style: [unimplementedViewStyles, this.props.style]
+    }, this.props.children);
   };
 
   return UnimplementedView;

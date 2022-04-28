@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -306,7 +306,13 @@ var PanResponder = {
         return config.onStartShouldSetPanResponderCapture != null ? config.onStartShouldSetPanResponderCapture(event, gestureState) : false;
       },
       onMoveShouldSetResponderCapture: function onMoveShouldSetResponderCapture(event) {
-        var touchHistory = event.touchHistory;
+        var touchHistory = event.touchHistory; // Responder system incorrectly dispatches should* to current responder
+        // Filter out any touch moves past the first one - we would have
+        // already processed multi-touch geometry during the first event.
+
+        if (gestureState._accountsForMovesUpTo === touchHistory.mostRecentTimeStamp) {
+          return false;
+        }
 
         PanResponder._updateGestureStateOnMove(gestureState, touchHistory);
 
@@ -352,8 +358,14 @@ var PanResponder = {
         }
       },
       onResponderMove: function onResponderMove(event) {
-        var touchHistory = event.touchHistory; // Filter out any touch moves past the first one - we would have
+        var touchHistory = event.touchHistory; // Guard against the dispatch of two touch moves when there are two
+        // simultaneously changed touches.
+
+        if (gestureState._accountsForMovesUpTo === touchHistory.mostRecentTimeStamp) {
+          return;
+        } // Filter out any touch moves past the first one - we would have
         // already processed multi-touch geometry during the first event.
+
 
         PanResponder._updateGestureStateOnMove(gestureState, touchHistory);
 

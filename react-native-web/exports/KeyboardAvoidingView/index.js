@@ -8,19 +8,17 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * 
  */
+import * as React from 'react';
 import View from '../View';
-import React from 'react';
 
-var KeyboardAvoidingView =
-/*#__PURE__*/
-function (_React$Component) {
+var KeyboardAvoidingView = /*#__PURE__*/function (_React$Component) {
   _inheritsLoose(KeyboardAvoidingView, _React$Component);
 
   function KeyboardAvoidingView() {
@@ -62,12 +60,9 @@ function (_React$Component) {
         keyboardVerticalOffset = _this$props.keyboardVerticalOffset,
         rest = _objectWithoutPropertiesLoose(_this$props, ["behavior", "contentContainerStyle", "keyboardVerticalOffset"]);
 
-    return (
-      /*#__PURE__*/
-      React.createElement(View, _extends({
-        onLayout: this.onLayout
-      }, rest))
-    );
+    return /*#__PURE__*/React.createElement(View, _extends({
+      onLayout: this.onLayout
+    }, rest));
   };
 
   return KeyboardAvoidingView;

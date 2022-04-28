@@ -2,7 +2,7 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 /**
  * Copyright (c) Nicolas Gallagher.
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -25,10 +25,7 @@ function RefreshControl(props) {
       titleColor = props.titleColor,
       rest = _objectWithoutPropertiesLoose(props, ["colors", "enabled", "onRefresh", "progressBackgroundColor", "progressViewOffset", "refreshing", "size", "tintColor", "title", "titleColor"]);
 
-  return (
-    /*#__PURE__*/
-    React.createElement(View, rest)
-  );
+  return /*#__PURE__*/React.createElement(View, rest);
 }
 
 export default RefreshControl;

@@ -1,9 +1,9 @@
 "use strict";
 
 exports.__esModule = true;
-exports.default = validate;
+exports.validate = validate;
 
-var _warning = _interopRequireDefault(require("fbjs/lib/warning"));
+var _postcssValueParser = _interopRequireDefault(require("postcss-value-parser"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26,14 +26,28 @@ var invalidShortforms = {
   outline: true,
   textDecoration: true
 };
+var invalidMultiValueShortforms = {
+  flex: true,
+  margin: true,
+  padding: true,
+  borderColor: true,
+  borderRadius: true,
+  borderStyle: true,
+  borderWidth: true,
+  marginHorizontal: true,
+  marginVertical: true,
+  paddingHorizontal: true,
+  paddingVertical: true,
+  overflow: true,
+  overscrollBehavior: true,
+  backgroundPosition: true
+};
 
 function error(message) {
-  (0, _warning.default)(false, message);
+  console.error(message);
 }
 
-function validate(key, styles) {
-  var obj = styles[key];
-
+function validate(obj) {
   for (var k in obj) {
     var prop = k.trim();
     var value = obj[prop];
@@ -63,6 +77,11 @@ function validate(key, styles) {
       } else if (invalidShortforms[prop]) {
         suggestion = 'Please use long-form properties.';
         isInvalid = true;
+      } else if (invalidMultiValueShortforms[prop]) {
+        if (typeof value === 'string' && (0, _postcssValueParser.default)(value).nodes.length > 1) {
+          suggestion = "Value is \"" + value + "\" but only single values are supported.";
+          isInvalid = true;
+        }
       }
 
       if (suggestion !== '') {
@@ -75,5 +94,3 @@ function validate(key, styles) {
     }
   }
 }
-
-module.exports = exports.default;

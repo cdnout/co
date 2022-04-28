@@ -6,7 +6,8 @@
  *
  * 
  */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 
 var _requestIdleCallback = function _requestIdleCallback(cb, options) {
   return setTimeout(function () {
@@ -18,8 +19,7 @@ var _requestIdleCallback = function _requestIdleCallback(cb, options) {
       }
     });
   }, 1);
-}; // $FlowFixMe (TimeoutID type is not recognized by eslint)
-
+};
 
 var _cancelIdleCallback = function _cancelIdleCallback(id) {
   clearTimeout(id);

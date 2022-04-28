@@ -1,42 +1,70 @@
 import { IdleQueue } from 'custom-idle-queue';
 import { BroadcastChannel } from 'broadcast-channel';
-import type { LeaderElector } from './plugins/leader-election';
-import type { CollectionsOfDatabase, PouchDBInstance, RxDatabase, RxCollectionCreator, RxJsonSchema, RxCollection, PouchSettings, ServerOptions, RxDatabaseCreator, RxDumpDatabase, RxDumpDatabaseAny, RxCollectionCreatorBase } from './types';
+import type { LeaderElector } from 'broadcast-channel';
+import type { CollectionsOfDatabase, RxDatabase, RxCollectionCreator, RxJsonSchema, RxCollection, ServerOptions, RxDumpDatabase, RxDumpDatabaseAny, AllMigrationStates, ServerResponse, BackupOptions, RxStorage, RxStorageInstance, RxChangeEvent, RxDatabaseCreator, RxChangeEventBulk, RxDocumentData, RxCleanupPolicy } from './types';
 import { Subject, Subscription, Observable } from 'rxjs';
-import { RxChangeEvent } from './rx-change-event';
-import { RxStorage } from './rx-storate.interface';
-export declare class RxDatabaseBase<Collections = CollectionsOfDatabase, RxStorageInstance = PouchDBInstance> {
-    name: string;
-    adapter: any;
-    password: any;
-    multiInstance: boolean;
-    eventReduce: boolean;
+import type { RxBackupState } from './plugins/backup';
+import { ObliviousSet } from 'oblivious-set';
+import { InternalStoreCollectionDocType, InternalStoreDocType } from './rx-database-internal-store';
+export declare class RxDatabaseBase<Internals, InstanceCreationOptions, Collections = CollectionsOfDatabase> {
+    readonly name: string;
+    readonly storage: RxStorage<Internals, InstanceCreationOptions>;
+    readonly instanceCreationOptions: InstanceCreationOptions;
+    readonly password: any;
+    readonly multiInstance: boolean;
+    readonly eventReduce: boolean;
     options: any;
-    pouchSettings: PouchSettings;
-    storage: RxStorage;
-    internalStore: RxStorageInstance;
-    constructor(name: string, adapter: any, password: any, multiInstance: boolean, eventReduce: boolean, options: any, pouchSettings: PouchSettings);
+    readonly idleQueue: IdleQueue;
+    /**
+     * Stores information documents about the collections of the database
+     */
+    readonly internalStore: RxStorageInstance<InternalStoreDocType, Internals, InstanceCreationOptions>;
+    /**
+     * Set if multiInstance: true
+     * This broadcast channel is used to send events to other instances like
+     * other browser tabs or nodejs processes.
+     * We transfer everything in EventBulks because sending many small events has been shown
+     * to be performance expensive.
+     */
+    readonly broadcastChannel?: BroadcastChannel<RxChangeEventBulk<any>> | undefined;
+    readonly cleanupPolicy?: Partial<RxCleanupPolicy> | undefined;
+    constructor(name: string, storage: RxStorage<Internals, InstanceCreationOptions>, instanceCreationOptions: InstanceCreationOptions, password: any, multiInstance: boolean, eventReduce: boolean, options: any, idleQueue: IdleQueue, 
+    /**
+     * Stores information documents about the collections of the database
+     */
+    internalStore: RxStorageInstance<InternalStoreDocType, Internals, InstanceCreationOptions>, 
+    /**
+     * Set if multiInstance: true
+     * This broadcast channel is used to send events to other instances like
+     * other browser tabs or nodejs processes.
+     * We transfer everything in EventBulks because sending many small events has been shown
+     * to be performance expensive.
+     */
+    broadcastChannel?: BroadcastChannel<RxChangeEventBulk<any>> | undefined, cleanupPolicy?: Partial<RxCleanupPolicy> | undefined);
     get $(): Observable<RxChangeEvent<any>>;
-    idleQueue: IdleQueue;
     readonly token: string;
     _subs: Subscription[];
     destroyed: boolean;
     collections: Collections;
-    private subject;
+    readonly eventBulks$: Subject<RxChangeEventBulk<any>>;
     private observable$;
-    broadcastChannel?: BroadcastChannel;
-    storageToken?: string;
-    broadcastChannel$?: Subject<RxChangeEvent>;
     /**
-     * removes all internal collection-info
-     * only use this if you have to upgrade from a major rxdb-version
-     * do NEVER use this to change the schema of a collection
+     * Unique token that is stored with the data.
+     * Used to detect if the dataset has been deleted
+     * and if two RxDatabase instances work on the same dataset or not.
+     *
+     * Because reading and writing the storageToken runs in the hot path
+     * of database creation, we do not await the storageWrites but instead
+     * work with the promise when we need the value.
      */
-    dangerousRemoveCollectionInfo(): Promise<void>;
+    storageToken: Promise<string>;
     /**
-     * spawns a new pouch-instance
+     * Contains the ids of all event bulks that have been emitted
+     * by the database.
+     * Used to detect duplicates that come in again via BroadcastChannel
+     * or other streams.
      */
-    _spawnPouchDB(collectionName: string, schemaVersion: number, pouchSettings?: PouchSettings): PouchDBInstance;
+    emittedEventBulkIds: ObliviousSet<string>;
     /**
      * This is the main handle-point for all change events
      * ChangeEvents created by this instance go:
@@ -44,29 +72,22 @@ export declare class RxDatabaseBase<Collections = CollectionsOfDatabase, RxStora
      * ChangeEvents created by other instances go:
      * MultiInstance -> RxDatabase.$emit -> RxCollection -> RxDatabase
      */
-    $emit(changeEvent: RxChangeEvent): void;
+    $emit(changeEventBulk: RxChangeEventBulk<any>): void;
     /**
-     * removes the collection-doc from this._collectionsPouch
+     * removes the collection-doc from the internalStore
      */
     removeCollectionDoc(name: string, schema: any): Promise<void>;
     /**
      * creates multiple RxCollections at once
      * to be much faster by saving db txs and doing stuff in bulk-operations
      * This function is not called often, but mostly in the critical path at the initial page load
-     * So it must be as fast as possible
+     * So it must be as fast as possible.
      */
-    addCollections(collectionCreators: {
-        [name: string]: RxCollectionCreatorBase;
+    addCollections<CreatedCollections = Partial<Collections>>(collectionCreators: {
+        [key in keyof CreatedCollections]: RxCollectionCreator;
     }): Promise<{
-        [key: string]: RxCollection;
+        [key in keyof CreatedCollections]: RxCollection;
     }>;
-    /**
-     * create or fetch a collection
-     * @deprecated use addCollections() instead, it is faster and better typed
-     */
-    collection<RxDocumentType = any, OrmMethods = {}, StaticMethods = {
-        [key: string]: any;
-    }>(args: RxCollectionCreator): Promise<RxCollection<RxDocumentType, OrmMethods, StaticMethods>>;
     /**
      * delete all data of the collection and its previous versions
      */
@@ -81,29 +102,27 @@ export declare class RxDatabaseBase<Collections = CollectionsOfDatabase, RxStora
      * @param _decrypted
      * When true, all encrypted values will be decrypted.
      */
-    dump(_decrypted: boolean, _collections?: string[]): Promise<RxDumpDatabase<Collections>>;
-    dump(_decrypted?: false, _collections?: string[]): Promise<RxDumpDatabaseAny<Collections>>;
+    exportJSON(_collections?: string[]): Promise<RxDumpDatabase<Collections>>;
+    exportJSON(_collections?: string[]): Promise<RxDumpDatabaseAny<Collections>>;
     /**
      * Import the parsed JSON export into the collection.
-     * @param _exportedJSON The previously exported data from the `<db>.dump()` method.
+     * @param _exportedJSON The previously exported data from the `<db>.exportJSON()` method.
      * @note When an interface is loaded in this collection all base properties of the type are typed as `any`
      * since data could be encrypted.
      */
-    importDump(_exportedJSON: RxDumpDatabaseAny<Collections>): Promise<void>;
+    importJSON(_exportedJSON: RxDumpDatabaseAny<Collections>): Promise<void>;
     /**
      * spawn server
      */
-    server(_options?: ServerOptions): {
-        app: any;
-        pouchApp: any;
-        server: any;
-    };
+    server(_options?: ServerOptions): Promise<ServerResponse>;
+    backup(_options: BackupOptions): RxBackupState;
     leaderElector(): LeaderElector;
     isLeader(): boolean;
     /**
      * returns a promise which resolves when the instance becomes leader
      */
     waitForLeadership(): Promise<boolean>;
+    migrationStates(): Observable<AllMigrationStates>;
     /**
      * destroys the database-instance and all collections
      */
@@ -112,46 +131,28 @@ export declare class RxDatabaseBase<Collections = CollectionsOfDatabase, RxStora
      * deletes the database and its stored data
      */
     remove(): Promise<void>;
+    get asRxDatabase(): RxDatabase<{}, Internals, InstanceCreationOptions>;
 }
-/**
- * to not confuse multiInstance-messages with other databases that have the same
- * name and adapter, but do not share state with this one (for example in-memory-instances),
- * we set a storage-token and use it in the broadcast-channel
- */
-export declare function _ensureStorageTokenExists(rxDatabase: RxDatabase): Promise<string>;
 /**
  * writes the changeEvent to the broadcastChannel
  */
-export declare function writeToSocket(rxDatabase: RxDatabase, changeEvent: RxChangeEvent): Promise<boolean>;
+export declare function writeToSocket(rxDatabase: RxDatabase, changeEventBulk: RxChangeEventBulk<any>): Promise<boolean>;
 /**
  * returns the primary for a given collection-data
  * used in the internal pouchdb-instances
  */
-export declare function _collectionNamePrimary(name: string, schema: RxJsonSchema): string;
+export declare function _collectionNamePrimary(name: string, schema: RxJsonSchema<any>): string;
 /**
  * removes all internal docs of a given collection
  * @return resolves all known collection-versions
  */
-export declare function _removeAllOfCollection(rxDatabase: RxDatabase, collectionName: string): Promise<number[]>;
+export declare function _removeAllOfCollection(rxDatabase: RxDatabaseBase<any, any, any>, collectionName: string): Promise<RxDocumentData<InternalStoreCollectionDocType>[]>;
 export declare function createRxDatabase<Collections = {
     [key: string]: RxCollection;
-}>({ name, adapter, password, multiInstance, eventReduce, ignoreDuplicate, options, pouchSettings }: RxDatabaseCreator): Promise<RxDatabase<Collections>>;
+}, Internals = any, InstanceCreationOptions = any>({ storage, instanceCreationOptions, name, password, multiInstance, eventReduce, ignoreDuplicate, options, cleanupPolicy, localDocuments }: RxDatabaseCreator<Internals, InstanceCreationOptions>): Promise<RxDatabase<Collections, Internals, InstanceCreationOptions>>;
 /**
  * removes the database and all its known data
  */
-export declare function removeRxDatabase(databaseName: string, adapter: any): Promise<any>;
-/**
- * check if the given adapter can be used
- */
-export declare function checkAdapter(adapter: any): Promise<boolean>;
-export declare function isInstanceOf(obj: any): boolean;
+export declare function removeRxDatabase(databaseName: string, storage: RxStorage<any, any>): Promise<any>;
+export declare function isRxDatabase(obj: any): boolean;
 export declare function dbCount(): number;
-declare const _default: {
-    createRxDatabase: typeof createRxDatabase;
-    removeRxDatabase: typeof removeRxDatabase;
-    checkAdapter: typeof checkAdapter;
-    isInstanceOf: typeof isInstanceOf;
-    RxDatabaseBase: typeof RxDatabaseBase;
-    dbCount: typeof dbCount;
-};
-export default _default;

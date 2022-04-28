@@ -1,3 +1,4 @@
+import type { BlobBuffer, DeepReadonlyObject, MaybeReadonly, RxDocumentData, RxDocumentMeta } from './types';
 /**
  * Returns an error that indicates that a plugin is missing
  * We do not throw a RxError because this should not be handled
@@ -13,9 +14,9 @@ export declare function fastUnsecureHash(obj: any): number;
 export declare const RXDB_HASH_SALT = "rxdb-specific-hash-salt";
 export declare function hash(msg: string | any): string;
 /**
- * generate a new _id as db-primary-key
+ * Returns the current time in milliseconds,
+ * also ensures to not return the same value twice.
  */
-export declare function generateId(): string;
 export declare function now(): number;
 /**
  * returns a promise that resolves on the next tick
@@ -23,7 +24,11 @@ export declare function now(): number;
 export declare function nextTick(): Promise<void>;
 export declare function promiseWait(ms?: number): Promise<void>;
 export declare function toPromise<T>(maybePromise: Promise<T> | T): Promise<T>;
-export declare function requestIdlePromise(timeout?: null): Promise<unknown>;
+export declare const PROMISE_RESOLVE_TRUE: Promise<true>;
+export declare const PROMISE_RESOLVE_FALSE: Promise<false>;
+export declare const PROMISE_RESOLVE_NULL: Promise<null>;
+export declare const PROMISE_RESOLVE_VOID: Promise<void>;
+export declare function requestIdlePromise(timeout?: number | null): Promise<unknown>;
 /**
  * like Promise.all() but runs in series instead of parallel
  * @link https://github.com/egoist/promise.series/blob/master/index.js
@@ -44,6 +49,9 @@ export declare function ucfirst(str: string): string;
  * removes trailing and ending dots from the string
  */
 export declare function trimDots(str: string): string;
+export declare function runXTimes(xTimes: number, fn: (idx: number) => void): void;
+export declare function ensureNotFalsy<T>(obj: T | false | undefined | null): T;
+export declare function ensureInteger(obj: unknown): number;
 /**
  * deep-sort an object so its attributes are in lexical order.
  * Also sorts the arrays inside of the object if no-array-sort not set
@@ -60,9 +68,19 @@ export declare function stringifyFilter(key: string, value: any): any;
  */
 export declare function randomCouchString(length?: number): string;
 /**
+ * A random string that is never inside of any storage
+ */
+export declare const RANDOM_STRING = "Fz7SZXPmYJujkzjY1rpXWvlWBqoGAfAX";
+export declare function lastOfArray<T>(ar: T[]): T;
+/**
  * shuffle the given array
  */
 export declare function shuffleArray<T>(arr: T[]): T[];
+/**
+ * Split array with items into smaller arrays with items
+ * @link https://stackoverflow.com/a/7273794/3443137
+ */
+export declare function batchArray<T>(array: T[], batchSize: number): T[][];
 /**
  * @link https://stackoverflow.com/a/15996017
  */
@@ -71,25 +89,43 @@ export declare function removeOneFromArrayIfMatches<T>(ar: T[], condition: (x: T
  * transforms the given adapter into a pouch-compatible object
  */
 export declare function adapterObject(adapter: any): any;
-declare function recursiveDeepCopy<T>(o: T): T;
+declare function recursiveDeepCopy<T>(o: T | DeepReadonlyObject<T>): T;
 export declare const clone: typeof recursiveDeepCopy;
 /**
  * does a flat copy on the objects,
  * is about 3 times faster then using deepClone
  * @link https://jsperf.com/object-rest-spread-vs-clone/2
  */
-export declare function flatClone<T>(obj: T): T;
+export declare function flatClone<T>(obj: T | DeepReadonlyObject<T>): T;
+/**
+ * @link https://stackoverflow.com/a/11509718/3443137
+ */
+export declare function firstPropertyNameOfObject(obj: any): string;
+export declare function firstPropertyValueOfObject<T>(obj: {
+    [k: string]: T;
+}): T;
 export declare const isElectronRenderer: boolean;
 /**
  * returns a flattened object
  * @link https://gist.github.com/penguinboy/762197
  */
 export declare function flattenObject(ob: any): any;
-export declare function getHeightOfRevision(revString: string): number;
+export declare function parseRevision(revision: string): {
+    height: number;
+    hash: string;
+};
+export declare function getHeightOfRevision(revision: string): number;
 /**
- * prefix of local pouchdb documents
+ * Creates the next write revision for a given document.
  */
-export declare const LOCAL_PREFIX: string;
+export declare function createRevision<RxDocType>(docData: RxDocumentData<RxDocType> & {
+    /**
+     * Passing a revision is optional here,
+     * because it is anyway not needed to calculate
+     * the new revision.
+     */
+    _rev?: string;
+}, previousDocData?: RxDocumentData<RxDocType>): string;
 /**
  * overwrites the getter with the actual value
  * Mostly used for caching stuff on the first run
@@ -99,4 +135,53 @@ export declare function overwriteGetterForCaching<ValueType = any>(obj: any, get
  * returns true if the given name is likely a folder path
  */
 export declare function isFolderPath(name: string): boolean;
+export declare function getFromMapOrThrow<K, V>(map: Map<K, V> | WeakMap<any, V>, key: K): V;
+export declare function getFromObjectOrThrow<V>(obj: {
+    [k: string]: V;
+}, key: string): V;
+/**
+ * returns true if the supplied argument is either an Array<T> or a Readonly<Array<T>>
+ */
+export declare function isMaybeReadonlyArray(x: any): x is MaybeReadonly<any[]>;
+export declare const blobBufferUtil: {
+    /**
+     * depending if we are on node or browser,
+     * we have to use Buffer(node) or Blob(browser)
+     */
+    createBlobBuffer(data: string, type: string): BlobBuffer;
+    /**
+     * depending if we are on node or browser,
+     * we have to use Buffer(node) or Blob(browser)
+     */
+    createBlobBufferFromBase64(base64String: string, type: string): Promise<BlobBuffer>;
+    isBlobBuffer(data: any): boolean;
+    toString(blobBuffer: BlobBuffer | string): Promise<string>;
+    toBase64String(blobBuffer: BlobBuffer | string): Promise<string>;
+    size(blobBuffer: BlobBuffer): number;
+};
+/**
+ * Using shareReplay() without settings will not unsubscribe
+ * if there are no more subscribers.
+ * So we use these defaults.
+ * @link https://cartant.medium.com/rxjs-whats-changed-with-sharereplay-65c098843e95
+ */
+export declare const RXJS_SHARE_REPLAY_DEFAULTS: {
+    bufferSize: number;
+    refCount: boolean;
+};
+/**
+ * We use 1 as minimum so that the value is never falsy.
+ * This const is used in several places because querying
+ * with a value lower then the minimum could give false results.
+ */
+export declare const RX_META_LWT_MINIMUM = 1;
+export declare function getDefaultRxDocumentMeta(): RxDocumentMeta;
+/**
+ * Returns a revision that is not valid.
+ * Use this to have correct typings
+ * while the storage wrapper anyway will overwrite the revision.
+ */
+export declare function getDefaultRevision(): string;
+export declare function getSortDocumentsByLastWriteTimeComparator<RxDocType>(primaryPath: string): (a: RxDocumentData<RxDocType>, b: RxDocumentData<RxDocType>) => number;
+export declare function sortDocumentsByLastWriteTime<RxDocType>(primaryPath: string, docs: RxDocumentData<RxDocType>[]): RxDocumentData<RxDocType>[];
 export {};

@@ -27,7 +27,6 @@ var roleComponents = {
   figure: 'figure',
   insertion: 'ins',
   form: 'form',
-  link: 'a',
   list: 'ul',
   listitem: 'li',
   main: 'main',
@@ -45,18 +44,13 @@ var propsToAccessibilityComponent = function propsToAccessibilityComponent(props
   // special-case for "label" role which doesn't map to an ARIA role
   if (props.accessibilityRole === 'label') {
     return 'label';
-  } // special-case for "href" which becomes a link
-
-
-  if (props.href != null) {
-    return 'a';
   }
 
   var role = (0, _propsToAriaRole.default)(props);
 
   if (role) {
     if (role === 'heading') {
-      var level = props['aria-level'];
+      var level = props.accessibilityLevel || props['aria-level'];
 
       if (level != null) {
         return "h" + level;

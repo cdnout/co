@@ -130,11 +130,12 @@ to return true:wantsResponderID|                            |
                                | +------------------------+ |
                                |                            |
                                +                            + */
-import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
 import createResponderEvent from './createResponderEvent';
 import { isCancelish, isEndish, isMoveish, isScroll, isSelectionChange, isStartish } from './ResponderEventTypes';
 import { getLowestCommonAncestor, getResponderPaths, hasTargetTouches, hasValidSelection, isPrimaryPointerDown, setResponderId } from './utils';
 import ResponderTouchHistoryStore from './ResponderTouchHistoryStore';
+import ExecutionEnvironment from 'fbjs/lib/ExecutionEnvironment';
+var canUseDOM = ExecutionEnvironment.canUseDOM;
 /* ------------ TYPES ------------ */
 
 var emptyObject = {};

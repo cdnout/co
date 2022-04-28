@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -33,9 +33,7 @@ import InteractionManager from '../../../exports/InteractionManager';
  *   }
  */
 
-var Batchinator =
-/*#__PURE__*/
-function () {
+var Batchinator = /*#__PURE__*/function () {
   function Batchinator(callback, delayMS) {
     this._delay = delayMS;
     this._callback = callback;

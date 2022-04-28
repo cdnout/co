@@ -10,12 +10,10 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
  *
  * 
  */
+import * as React from 'react';
 import StyleSheet from '../StyleSheet';
 import View from '../View';
-import React, { forwardRef, useEffect, useRef } from 'react';
-var ProgressBar =
-/*#__PURE__*/
-forwardRef(function (props, ref) {
+var ProgressBar = /*#__PURE__*/React.forwardRef(function (props, ref) {
   var _props$color = props.color,
       color = _props$color === void 0 ? '#1976D2' : _props$color,
       _props$indeterminate = props.indeterminate,
@@ -28,50 +26,34 @@ forwardRef(function (props, ref) {
       other = _objectWithoutPropertiesLoose(props, ["color", "indeterminate", "progress", "trackColor", "style"]);
 
   var percentageProgress = progress * 100;
-  var progressRef = useRef(null);
-  useEffect(function () {
-    var width = indeterminate ? '25%' : percentageProgress + "%";
-
-    if (progressRef.current != null) {
-      progressRef.current.setNativeProps({
-        style: {
-          width: width
-        }
-      });
-    }
-  }, [indeterminate, percentageProgress, progressRef]);
-  return (
-    /*#__PURE__*/
-    React.createElement(View, _extends({}, other, {
-      accessibilityRole: "progressbar",
-      accessibilityValue: {
-        max: 100,
-        min: 0,
-        now: indeterminate ? null : percentageProgress
-      },
-      ref: ref,
-      style: [styles.track, style, {
-        backgroundColor: trackColor
-      }]
-    }),
-    /*#__PURE__*/
-    React.createElement(View, {
-      ref: progressRef,
-      style: [styles.progress, indeterminate && styles.animation, {
-        backgroundColor: color
-      }]
-    }))
-  );
+  var width = indeterminate ? '25%' : percentageProgress + "%";
+  return /*#__PURE__*/React.createElement(View, _extends({}, other, {
+    accessibilityRole: "progressbar",
+    accessibilityValueMax: 100,
+    accessibilityValueMin: 0,
+    accessibilityValueNow: indeterminate ? null : percentageProgress,
+    ref: ref,
+    style: [styles.track, style, {
+      backgroundColor: trackColor
+    }]
+  }), /*#__PURE__*/React.createElement(View, {
+    style: [{
+      backgroundColor: color,
+      width: width
+    }, styles.progress, indeterminate && styles.animation]
+  }));
 });
 ProgressBar.displayName = 'ProgressBar';
 var styles = StyleSheet.create({
   track: {
+    forcedColorAdjust: 'none',
     height: 5,
     overflow: 'hidden',
     userSelect: 'none',
     zIndex: 0
   },
   progress: {
+    forcedColorAdjust: 'none',
     height: '100%',
     zIndex: -1
   },

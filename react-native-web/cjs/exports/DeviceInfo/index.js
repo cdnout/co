@@ -3,9 +3,9 @@
 exports.__esModule = true;
 exports.default = void 0;
 
-var _ExecutionEnvironment = require("fbjs/lib/ExecutionEnvironment");
-
 var _Dimensions = _interopRequireDefault(require("../Dimensions"));
+
+var _ExecutionEnvironment = _interopRequireDefault(require("fbjs/lib/ExecutionEnvironment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -17,6 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * 
  */
+var canUseDOM = _ExecutionEnvironment.default.canUseDOM;
 var DeviceInfo = {
   Dimensions: {
     get windowPhysicalPixels() {
@@ -52,21 +53,22 @@ var DeviceInfo = {
   },
 
   get locale() {
-    if (_ExecutionEnvironment.canUseDOM) {
-      if (window.navigator.languages) {
-        return window.navigator.languages[0];
+    if (canUseDOM) {
+      if (navigator.languages) {
+        return navigator.languages[0];
       } else {
-        return window.navigator.language;
+        return navigator.language;
       }
     }
   },
 
   get totalMemory() {
-    return _ExecutionEnvironment.canUseDOM ? window.navigator.deviceMemory : undefined;
+    // $FlowIssue deviceMemory not defined in navigator
+    return canUseDOM ? navigator.deviceMemory : undefined;
   },
 
   get userAgent() {
-    return _ExecutionEnvironment.canUseDOM ? window.navigator.userAgent : '';
+    return canUseDOM ? navigator.userAgent : '';
   }
 
 };
