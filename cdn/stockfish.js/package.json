@@ -1,0 +1,1 @@
+[{"name":"stockfish.js","version":"10.0.2","description":"The strong chess engine Stockfish with multi-variant support compiled to JavaScript and WebAssembly","repository":"git+https:\/\/github.com\/niklasf\/stockfish.js.git","keyfiles":"stockfish.js","keywords":["chess","stockfish","emscripten","lichess","asmjs","webassembly"],"npm":"stockfish.js"}]
