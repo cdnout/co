@@ -1,0 +1,1 @@
+[{"name":"waline","version":"2.0.3","description":"client for waline comment system","repository":"git+https:\/\/github.com\/walinejs\/waline.git","keyfiles":"Waline.min.js","keywords":["valine","waline","comment","blog"],"npm":"@waline\/client"}]

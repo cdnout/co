@@ -1,0 +1,1 @@
+[{"name":"vscode-webview-ui-toolkit","version":"1.0.0","description":"A component library for building webview-based extensions in Visual Studio Code.","repository":"git+https:\/\/github.com\/microsoft\/vscode-webview-ui-toolkit.git","keyfiles":"toolkit.min.js","keywords":["component","ui"],"npm":"@vscode\/webview-ui-toolkit"}]

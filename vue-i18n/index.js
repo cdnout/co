@@ -1,6 +1,2350 @@
 /*!
- * vue-i18n v8.23.0 
- * (c) 2021 kazuya kawaguchi
- * Released under the MIT License.
+  * vue-i18n v9.2.0-beta.35
+  * (c) 2022 kazuya kawaguchi
+  * Released under the MIT License.
+  */
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var shared = require('@intlify/shared');
+var coreBase = require('@intlify/core-base');
+var vue = require('vue');
+
+/**
+ * Vue I18n Version
+ *
+ * @remarks
+ * Semver format. Same format as the package.json `version` field.
+ *
+ * @VueI18nGeneral
  */
-var t,e;t=this,e=function(){"use strict";var t=["compactDisplay","currency","currencyDisplay","currencySign","localeMatcher","notation","numberingSystem","signDisplay","style","unit","unitDisplay","useGrouping","minimumIntegerDigits","minimumFractionDigits","maximumFractionDigits","minimumSignificantDigits","maximumSignificantDigits"];function e(t,e){"undefined"!=typeof console&&(console.warn("[vue-i18n] "+t),e&&console.warn(e.stack))}var n=Array.isArray;function r(t){return null!==t&&"object"==typeof t}function a(t){return"string"==typeof t}var i=Object.prototype.toString,o="[object Object]";function s(t){return i.call(t)===o}function l(t){return null==t}function c(t){return"function"==typeof t}function u(){for(var t=[],e=arguments.length;e--;)t[e]=arguments[e];var a=null,i=null;return 1===t.length?r(t[0])||n(t[0])?i=t[0]:"string"==typeof t[0]&&(a=t[0]):2===t.length&&("string"==typeof t[0]&&(a=t[0]),(r(t[1])||n(t[1]))&&(i=t[1])),{locale:a,params:i}}function f(t){return JSON.parse(JSON.stringify(t))}function h(t,e){return!!~t.indexOf(e)}var p=Object.prototype.hasOwnProperty;function m(t,e){return p.call(t,e)}function _(t){for(var e=arguments,n=Object(t),a=1;a<arguments.length;a++){var i=e[a];if(null!=i){var o=void 0;for(o in i)m(i,o)&&(r(i[o])?n[o]=_(n[o],i[o]):n[o]=i[o])}}return n}function g(t,e){if(t===e)return!0;var a=r(t),i=r(e);if(!a||!i)return!a&&!i&&String(t)===String(e);try{var o=n(t),s=n(e);if(o&&s)return t.length===e.length&&t.every(function(t,n){return g(t,e[n])});if(o||s)return!1;var l=Object.keys(t),c=Object.keys(e);return l.length===c.length&&l.every(function(n){return g(t[n],e[n])})}catch(t){return!1}}var v={beforeCreate:function(){var t=this.$options;if(t.i18n=t.i18n||(t.__i18n?{}:null),t.i18n){if(t.i18n instanceof nt){if(t.__i18n)try{var e=t.i18n&&t.i18n.messages?t.i18n.messages:{};t.__i18n.forEach(function(t){e=_(e,JSON.parse(t))}),Object.keys(e).forEach(function(n){t.i18n.mergeLocaleMessage(n,e[n])})}catch(t){}this._i18n=t.i18n,this._i18nWatcher=this._i18n.watchI18nData()}else if(s(t.i18n)){var n=this.$root&&this.$root.$i18n&&this.$root.$i18n instanceof nt?this.$root.$i18n:null;if(n&&(t.i18n.root=this.$root,t.i18n.formatter=n.formatter,t.i18n.fallbackLocale=n.fallbackLocale,t.i18n.formatFallbackMessages=n.formatFallbackMessages,t.i18n.silentTranslationWarn=n.silentTranslationWarn,t.i18n.silentFallbackWarn=n.silentFallbackWarn,t.i18n.pluralizationRules=n.pluralizationRules,t.i18n.preserveDirectiveContent=n.preserveDirectiveContent),t.__i18n)try{var r=t.i18n&&t.i18n.messages?t.i18n.messages:{};t.__i18n.forEach(function(t){r=_(r,JSON.parse(t))}),t.i18n.messages=r}catch(t){}var a=t.i18n.sharedMessages;a&&s(a)&&(t.i18n.messages=_(t.i18n.messages,a)),this._i18n=new nt(t.i18n),this._i18nWatcher=this._i18n.watchI18nData(),(void 0===t.i18n.sync||t.i18n.sync)&&(this._localeWatcher=this.$i18n.watchLocale()),n&&n.onComponentInstanceCreated(this._i18n)}}else this.$root&&this.$root.$i18n&&this.$root.$i18n instanceof nt?this._i18n=this.$root.$i18n:t.parent&&t.parent.$i18n&&t.parent.$i18n instanceof nt&&(this._i18n=t.parent.$i18n)},beforeMount:function(){var t=this.$options;t.i18n=t.i18n||(t.__i18n?{}:null),t.i18n?t.i18n instanceof nt?(this._i18n.subscribeDataChanging(this),this._subscribing=!0):s(t.i18n)&&(this._i18n.subscribeDataChanging(this),this._subscribing=!0):this.$root&&this.$root.$i18n&&this.$root.$i18n instanceof nt?(this._i18n.subscribeDataChanging(this),this._subscribing=!0):t.parent&&t.parent.$i18n&&t.parent.$i18n instanceof nt&&(this._i18n.subscribeDataChanging(this),this._subscribing=!0)},beforeDestroy:function(){if(this._i18n){var t=this;this.$nextTick(function(){t._subscribing&&(t._i18n.unsubscribeDataChanging(t),delete t._subscribing),t._i18nWatcher&&(t._i18nWatcher(),t._i18n.destroyVM(),delete t._i18nWatcher),t._localeWatcher&&(t._localeWatcher(),delete t._localeWatcher)})}}},b={name:"i18n",functional:!0,props:{tag:{type:[String,Boolean,Object],default:"span"},path:{type:String,required:!0},locale:{type:String},places:{type:[Array,Object]}},render:function(t,e){var n=e.data,r=e.parent,a=e.props,i=e.slots,o=r.$i18n;if(o){var s=a.path,l=a.locale,c=a.places,u=i(),f=o.i(s,l,function(t){var e;for(e in t)if("default"!==e)return!1;return Boolean(e)}(u)||c?function(t,e){var n=e?function(t){return Array.isArray(t)?t.reduce(y,{}):Object.assign({},t)}(e):{};if(!t)return n;var r=(t=t.filter(function(t){return t.tag||""!==t.text.trim()})).every(F);return t.reduce(r?d:y,n)}(u.default,c):u),h=a.tag&&!0!==a.tag||!1===a.tag?a.tag:"span";return h?t(h,n,f):f}}};function d(t,e){return e.data&&e.data.attrs&&e.data.attrs.place&&(t[e.data.attrs.place]=e),t}function y(t,e,n){return t[n]=e,t}function F(t){return Boolean(t.data&&t.data.attrs&&t.data.attrs.place)}var k,w={name:"i18n-n",functional:!0,props:{tag:{type:[String,Boolean,Object],default:"span"},value:{type:Number,required:!0},format:{type:[String,Object]},locale:{type:String}},render:function(e,n){var i=n.props,o=n.parent,s=n.data,l=o.$i18n;if(!l)return null;var c=null,u=null;a(i.format)?c=i.format:r(i.format)&&(i.format.key&&(c=i.format.key),u=Object.keys(i.format).reduce(function(e,n){var r;return h(t,n)?Object.assign({},e,((r={})[n]=i.format[n],r)):e},null));var f=i.locale||l.locale,p=l._ntp(i.value,f,c,u),m=p.map(function(t,e){var n,r=s.scopedSlots&&s.scopedSlots[t.type];return r?r(((n={})[t.type]=t.value,n.index=e,n.parts=p,n)):t.value}),_=i.tag&&!0!==i.tag||!1===i.tag?i.tag:"span";return _?e(_,{attrs:s.attrs,class:s.class,staticClass:s.staticClass},m):m}};function $(t,e,n){T(t,n)&&L(t,e,n)}function M(t,e,n,r){if(T(t,n)){var a=n.context.$i18n;(function(t,e){var n=e.context;return t._locale===n.$i18n.locale})(t,n)&&g(e.value,e.oldValue)&&g(t._localeMessage,a.getLocaleMessage(a.locale))||L(t,e,n)}}function C(t,n,r,a){if(r.context){var i=r.context.$i18n||{};n.modifiers.preserve||i.preserveDirectiveContent||(t.textContent=""),t._vt=void 0,delete t._vt,t._locale=void 0,delete t._locale,t._localeMessage=void 0,delete t._localeMessage}else e("Vue instance does not exists in VNode context")}function T(t,n){var r=n.context;return r?!!r.$i18n||(e("VueI18n instance does not exists in Vue instance"),!1):(e("Vue instance does not exists in VNode context"),!1)}function L(t,n,r){var i,o,l=function(t){var e,n,r,i;a(t)?e=t:s(t)&&(e=t.path,n=t.locale,r=t.args,i=t.choice);return{path:e,locale:n,args:r,choice:i}}(n.value),c=l.path,u=l.locale,f=l.args,h=l.choice;if(c||u||f)if(c){var p=r.context;t._vt=t.textContent=null!=h?(i=p.$i18n).tc.apply(i,[c,h].concat(D(u,f))):(o=p.$i18n).t.apply(o,[c].concat(D(u,f))),t._locale=p.$i18n.locale,t._localeMessage=p.$i18n.getLocaleMessage(p.$i18n.locale)}else e("`path` is required in v-t directive");else e("value type not supported")}function D(t,e){var n=[];return t&&n.push(t),e&&(Array.isArray(e)||s(e))&&n.push(e),n}function I(t){I.installed=!0;(k=t).version&&Number(k.version.split(".")[0]);!function(t){t.prototype.hasOwnProperty("$i18n")||Object.defineProperty(t.prototype,"$i18n",{get:function(){return this._i18n}}),t.prototype.$t=function(t){for(var e=[],n=arguments.length-1;n-- >0;)e[n]=arguments[n+1];var r=this.$i18n;return r._t.apply(r,[t,r.locale,r._getMessages(),this].concat(e))},t.prototype.$tc=function(t,e){for(var n=[],r=arguments.length-2;r-- >0;)n[r]=arguments[r+2];var a=this.$i18n;return a._tc.apply(a,[t,a.locale,a._getMessages(),this,e].concat(n))},t.prototype.$te=function(t,e){var n=this.$i18n;return n._te(t,n.locale,n._getMessages(),e)},t.prototype.$d=function(t){for(var e,n=[],r=arguments.length-1;r-- >0;)n[r]=arguments[r+1];return(e=this.$i18n).d.apply(e,[t].concat(n))},t.prototype.$n=function(t){for(var e,n=[],r=arguments.length-1;r-- >0;)n[r]=arguments[r+1];return(e=this.$i18n).n.apply(e,[t].concat(n))}}(k),k.mixin(v),k.directive("t",{bind:$,update:M,unbind:C}),k.component(b.name,b),k.component(w.name,w),k.config.optionMergeStrategies.i18n=function(t,e){return void 0===e?t:e}}var O=function(){this._caches=Object.create(null)};O.prototype.interpolate=function(t,e){if(!e)return[t];var n=this._caches[t];return n||(n=function(t){var e=[],n=0,r="";for(;n<t.length;){var a=t[n++];if("{"===a){r&&e.push({type:"text",value:r}),r="";var i="";for(a=t[n++];void 0!==a&&"}"!==a;)i+=a,a=t[n++];var o="}"===a,s=x.test(i)?"list":o&&W.test(i)?"named":"unknown";e.push({value:i,type:s})}else"%"===a?"{"!==t[n]&&(r+=a):r+=a}return r&&e.push({type:"text",value:r}),e}(t),this._caches[t]=n),function(t,e){var n=[],a=0,i=Array.isArray(e)?"list":r(e)?"named":"unknown";if("unknown"===i)return n;for(;a<t.length;){var o=t[a];switch(o.type){case"text":n.push(o.value);break;case"list":n.push(e[parseInt(o.value,10)]);break;case"named":"named"===i&&n.push(e[o.value])}a++}return n}(n,e)};var x=/^(?:\d)+/,W=/^(?:\w)+/,j=0,N=1,S=2,H=3,P=0,R=4,V=5,E=6,A=7,z=8,B=[];B[P]={ws:[P],ident:[3,j],"[":[R],eof:[A]},B[1]={ws:[1],".":[2],"[":[R],eof:[A]},B[2]={ws:[2],ident:[3,j],0:[3,j],number:[3,j]},B[3]={ident:[3,j],0:[3,j],number:[3,j],ws:[1,N],".":[2,N],"[":[R,N],eof:[A,N]},B[R]={"'":[V,j],'"':[E,j],"[":[R,S],"]":[1,H],eof:z,else:[R,j]},B[V]={"'":[R,j],eof:z,else:[V,j]},B[E]={'"':[R,j],eof:z,else:[E,j]};var U=/^\s?(?:true|false|-?[\d.]+|'[^']*'|"[^"]*")\s?$/;function q(t){if(null==t)return"eof";switch(t.charCodeAt(0)){case 91:case 93:case 46:case 34:case 39:return t;case 95:case 36:case 45:return"ident";case 9:case 10:case 13:case 160:case 65279:case 8232:case 8233:return"ws"}return"ident"}function J(t){var e,n,r,a=t.trim();return("0"!==t.charAt(0)||!isNaN(t))&&(r=a,U.test(r)?(n=(e=a).charCodeAt(0))!==e.charCodeAt(e.length-1)||34!==n&&39!==n?e:e.slice(1,-1):"*"+a)}var G=function(){this._cache=Object.create(null)};G.prototype.parsePath=function(t){var e=this._cache[t];return e||(e=function(t){var e,n,r,a,i,o,s,l=[],c=-1,u=P,f=0,h=[];function p(){var e=t[c+1];if(u===V&&"'"===e||u===E&&'"'===e)return c++,r="\\"+e,h[j](),!0}for(h[N]=function(){void 0!==n&&(l.push(n),n=void 0)},h[j]=function(){void 0===n?n=r:n+=r},h[S]=function(){h[j](),f++},h[H]=function(){if(f>0)f--,u=R,h[j]();else{if(f=0,void 0===n)return!1;if(!1===(n=J(n)))return!1;h[N]()}};null!==u;)if("\\"!==(e=t[++c])||!p()){if(a=q(e),(i=(s=B[u])[a]||s.else||z)===z)return;if(u=i[0],(o=h[i[1]])&&(r=void 0===(r=i[2])?e:r,!1===o()))return;if(u===A)return l}}(t))&&(this._cache[t]=e),e||[]},G.prototype.getPathValue=function(t,e){if(!r(t))return null;var n=this.parsePath(e);if(0===n.length)return null;for(var a=n.length,i=t,o=0;o<a;){var s=i[n[o]];if(void 0===s)return null;i=s,o++}return i};var X,Z=/<\/?[\w\s="/.':;#-\/]+>/,K=/(?:@(?:\.[a-z]+)?:(?:[\w\-_|.]+|\([\w\-_|.]+\)))/g,Q=/^@(?:\.([a-z]+))?:/,Y=/[()]/g,tt={upper:function(t){return t.toLocaleUpperCase()},lower:function(t){return t.toLocaleLowerCase()},capitalize:function(t){return""+t.charAt(0).toLocaleUpperCase()+t.substr(1)}},et=new O,nt=function(t){var e=this;void 0===t&&(t={}),!k&&"undefined"!=typeof window&&window.Vue&&I(window.Vue);var n=t.locale||"en-US",r=!1!==t.fallbackLocale&&(t.fallbackLocale||"en-US"),a=t.messages||{},i=t.dateTimeFormats||{},o=t.numberFormats||{};this._vm=null,this._formatter=t.formatter||et,this._modifiers=t.modifiers||{},this._missing=t.missing||null,this._root=t.root||null,this._sync=void 0===t.sync||!!t.sync,this._fallbackRoot=void 0===t.fallbackRoot||!!t.fallbackRoot,this._formatFallbackMessages=void 0!==t.formatFallbackMessages&&!!t.formatFallbackMessages,this._silentTranslationWarn=void 0!==t.silentTranslationWarn&&t.silentTranslationWarn,this._silentFallbackWarn=void 0!==t.silentFallbackWarn&&!!t.silentFallbackWarn,this._dateTimeFormatters={},this._numberFormatters={},this._path=new G,this._dataListeners=[],this._componentInstanceCreatedListener=t.componentInstanceCreatedListener||null,this._preserveDirectiveContent=void 0!==t.preserveDirectiveContent&&!!t.preserveDirectiveContent,this.pluralizationRules=t.pluralizationRules||{},this._warnHtmlInMessage=t.warnHtmlInMessage||"off",this._postTranslation=t.postTranslation||null,this._escapeParameterHtml=t.escapeParameterHtml||!1,this.getChoiceIndex=function(t,n){var r=Object.getPrototypeOf(e);if(r&&r.getChoiceIndex)return r.getChoiceIndex.call(e,t,n);var a,i;return e.locale in e.pluralizationRules?e.pluralizationRules[e.locale].apply(e,[t,n]):(a=t,i=n,a=Math.abs(a),2===i?a?a>1?1:0:1:a?Math.min(a,2):0)},this._exist=function(t,n){return!(!t||!n)&&(!l(e._path.getPathValue(t,n))||!!t[n])},"warn"!==this._warnHtmlInMessage&&"error"!==this._warnHtmlInMessage||Object.keys(a).forEach(function(t){e._checkLocaleMessage(t,e._warnHtmlInMessage,a[t])}),this._initVM({locale:n,fallbackLocale:r,messages:a,dateTimeFormats:i,numberFormats:o})},rt={vm:{configurable:!0},messages:{configurable:!0},dateTimeFormats:{configurable:!0},numberFormats:{configurable:!0},availableLocales:{configurable:!0},locale:{configurable:!0},fallbackLocale:{configurable:!0},formatFallbackMessages:{configurable:!0},missing:{configurable:!0},formatter:{configurable:!0},silentTranslationWarn:{configurable:!0},silentFallbackWarn:{configurable:!0},preserveDirectiveContent:{configurable:!0},warnHtmlInMessage:{configurable:!0},postTranslation:{configurable:!0}};return nt.prototype._checkLocaleMessage=function(t,r,i){var o=function(t,r,i,l){if(s(i))Object.keys(i).forEach(function(e){var n=i[e];s(n)?(l.push(e),l.push("."),o(t,r,n,l),l.pop(),l.pop()):(l.push(e),o(t,r,n,l),l.pop())});else if(n(i))i.forEach(function(e,n){s(e)?(l.push("["+n+"]"),l.push("."),o(t,r,e,l),l.pop(),l.pop()):(l.push("["+n+"]"),o(t,r,e,l),l.pop())});else if(a(i)){if(Z.test(i)){var c="Detected HTML in message '"+i+"' of keypath '"+l.join("")+"' at '"+r+"'. Consider component interpolation with '<i18n>' to avoid XSS. See https://bit.ly/2ZqJzkp";"warn"===t?e(c):"error"===t&&function(t,e){"undefined"!=typeof console&&(console.error("[vue-i18n] "+t),e&&console.error(e.stack))}(c)}}};o(r,t,i,[])},nt.prototype._initVM=function(t){var e=k.config.silent;k.config.silent=!0,this._vm=new k({data:t}),k.config.silent=e},nt.prototype.destroyVM=function(){this._vm.$destroy()},nt.prototype.subscribeDataChanging=function(t){this._dataListeners.push(t)},nt.prototype.unsubscribeDataChanging=function(t){!function(t,e){if(t.length){var n=t.indexOf(e);if(n>-1)t.splice(n,1)}}(this._dataListeners,t)},nt.prototype.watchI18nData=function(){var t=this;return this._vm.$watch("$data",function(){for(var e=t._dataListeners.length;e--;)k.nextTick(function(){t._dataListeners[e]&&t._dataListeners[e].$forceUpdate()})},{deep:!0})},nt.prototype.watchLocale=function(){if(!this._sync||!this._root)return null;var t=this._vm;return this._root.$i18n.vm.$watch("locale",function(e){t.$set(t,"locale",e),t.$forceUpdate()},{immediate:!0})},nt.prototype.onComponentInstanceCreated=function(t){this._componentInstanceCreatedListener&&this._componentInstanceCreatedListener(t,this)},rt.vm.get=function(){return this._vm},rt.messages.get=function(){return f(this._getMessages())},rt.dateTimeFormats.get=function(){return f(this._getDateTimeFormats())},rt.numberFormats.get=function(){return f(this._getNumberFormats())},rt.availableLocales.get=function(){return Object.keys(this.messages).sort()},rt.locale.get=function(){return this._vm.locale},rt.locale.set=function(t){this._vm.$set(this._vm,"locale",t)},rt.fallbackLocale.get=function(){return this._vm.fallbackLocale},rt.fallbackLocale.set=function(t){this._localeChainCache={},this._vm.$set(this._vm,"fallbackLocale",t)},rt.formatFallbackMessages.get=function(){return this._formatFallbackMessages},rt.formatFallbackMessages.set=function(t){this._formatFallbackMessages=t},rt.missing.get=function(){return this._missing},rt.missing.set=function(t){this._missing=t},rt.formatter.get=function(){return this._formatter},rt.formatter.set=function(t){this._formatter=t},rt.silentTranslationWarn.get=function(){return this._silentTranslationWarn},rt.silentTranslationWarn.set=function(t){this._silentTranslationWarn=t},rt.silentFallbackWarn.get=function(){return this._silentFallbackWarn},rt.silentFallbackWarn.set=function(t){this._silentFallbackWarn=t},rt.preserveDirectiveContent.get=function(){return this._preserveDirectiveContent},rt.preserveDirectiveContent.set=function(t){this._preserveDirectiveContent=t},rt.warnHtmlInMessage.get=function(){return this._warnHtmlInMessage},rt.warnHtmlInMessage.set=function(t){var e=this,n=this._warnHtmlInMessage;if(this._warnHtmlInMessage=t,n!==t&&("warn"===t||"error"===t)){var r=this._getMessages();Object.keys(r).forEach(function(t){e._checkLocaleMessage(t,e._warnHtmlInMessage,r[t])})}},rt.postTranslation.get=function(){return this._postTranslation},rt.postTranslation.set=function(t){this._postTranslation=t},nt.prototype._getMessages=function(){return this._vm.messages},nt.prototype._getDateTimeFormats=function(){return this._vm.dateTimeFormats},nt.prototype._getNumberFormats=function(){return this._vm.numberFormats},nt.prototype._warnDefault=function(t,e,n,r,i,o){if(!l(n))return n;if(this._missing){var s=this._missing.apply(null,[t,e,r,i]);if(a(s))return s}if(this._formatFallbackMessages){var c=u.apply(void 0,i);return this._render(e,o,c.params,e)}return e},nt.prototype._isFallbackRoot=function(t){return!t&&!l(this._root)&&this._fallbackRoot},nt.prototype._isSilentFallbackWarn=function(t){return this._silentFallbackWarn instanceof RegExp?this._silentFallbackWarn.test(t):this._silentFallbackWarn},nt.prototype._isSilentFallback=function(t,e){return this._isSilentFallbackWarn(e)&&(this._isFallbackRoot()||t!==this.fallbackLocale)},nt.prototype._isSilentTranslationWarn=function(t){return this._silentTranslationWarn instanceof RegExp?this._silentTranslationWarn.test(t):this._silentTranslationWarn},nt.prototype._interpolate=function(t,e,r,i,o,u,f){if(!e)return null;var h,p=this._path.getPathValue(e,r);if(n(p)||s(p))return p;if(l(p)){if(!s(e))return null;if(!a(h=e[r])&&!c(h))return null}else{if(!a(p)&&!c(p))return null;h=p}return a(h)&&(h.indexOf("@:")>=0||h.indexOf("@.")>=0)&&(h=this._link(t,e,h,i,"raw",u,f)),this._render(h,o,u,r)},nt.prototype._link=function(t,e,r,a,i,o,s){var l=r,c=l.match(K);for(var u in c)if(c.hasOwnProperty(u)){var f=c[u],p=f.match(Q),m=p[0],_=p[1],g=f.replace(m,"").replace(Y,"");if(h(s,g))return l;s.push(g);var v=this._interpolate(t,e,g,a,"raw"===i?"string":i,"raw"===i?void 0:o,s);if(this._isFallbackRoot(v)){if(!this._root)throw Error("unexpected error");var b=this._root.$i18n;v=b._translate(b._getMessages(),b.locale,b.fallbackLocale,g,a,i,o)}v=this._warnDefault(t,g,v,a,n(o)?o:[o],i),this._modifiers.hasOwnProperty(_)?v=this._modifiers[_](v):tt.hasOwnProperty(_)&&(v=tt[_](v)),s.pop(),l=v?l.replace(f,v):l}return l},nt.prototype._createMessageContext=function(t){var e=n(t)?t:[],a=r(t)?t:{};return{list:function(t){return e[t]},named:function(t){return a[t]}}},nt.prototype._render=function(t,e,n,r){if(c(t))return t(this._createMessageContext(n));var i=this._formatter.interpolate(t,n,r);return i||(i=et.interpolate(t,n,r)),"string"!==e||a(i)?i:i.join("")},nt.prototype._appendItemToChain=function(t,e,n){var r=!1;return h(t,e)||(r=!0,e&&(r="!"!==e[e.length-1],e=e.replace(/!/g,""),t.push(e),n&&n[e]&&(r=n[e]))),r},nt.prototype._appendLocaleToChain=function(t,e,n){var r,a=e.split("-");do{var i=a.join("-");r=this._appendItemToChain(t,i,n),a.splice(-1,1)}while(a.length&&!0===r);return r},nt.prototype._appendBlockToChain=function(t,e,n){for(var r=!0,i=0;i<e.length&&"boolean"==typeof r;i++){var o=e[i];a(o)&&(r=this._appendLocaleToChain(t,o,n))}return r},nt.prototype._getLocaleChain=function(t,e){if(""===t)return[];this._localeChainCache||(this._localeChainCache={});var i=this._localeChainCache[t];if(!i){e||(e=this.fallbackLocale),i=[];for(var o,s=[t];n(s);)s=this._appendBlockToChain(i,s,e);(s=a(o=n(e)?e:r(e)?e.default?e.default:null:e)?[o]:o)&&this._appendBlockToChain(i,s,null),this._localeChainCache[t]=i}return i},nt.prototype._translate=function(t,e,n,r,a,i,o){for(var s,c=this._getLocaleChain(e,n),u=0;u<c.length;u++){var f=c[u];if(!l(s=this._interpolate(f,t[f],r,a,i,o,[r])))return s}return null},nt.prototype._t=function(t,e,n,r){for(var a,i=[],o=arguments.length-4;o-- >0;)i[o]=arguments[o+4];if(!t)return"";var s,l=u.apply(void 0,i);this._escapeParameterHtml&&(l.params=(null!=(s=l.params)&&Object.keys(s).forEach(function(t){"string"==typeof s[t]&&(s[t]=s[t].replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;"))}),s));var c=l.locale||e,f=this._translate(n,c,this.fallbackLocale,t,r,"string",l.params);if(this._isFallbackRoot(f)){if(!this._root)throw Error("unexpected error");return(a=this._root).$t.apply(a,[t].concat(i))}return f=this._warnDefault(c,t,f,r,i,"string"),this._postTranslation&&null!=f&&(f=this._postTranslation(f,t)),f},nt.prototype.t=function(t){for(var e,n=[],r=arguments.length-1;r-- >0;)n[r]=arguments[r+1];return(e=this)._t.apply(e,[t,this.locale,this._getMessages(),null].concat(n))},nt.prototype._i=function(t,e,n,r,a){var i=this._translate(n,e,this.fallbackLocale,t,r,"raw",a);if(this._isFallbackRoot(i)){if(!this._root)throw Error("unexpected error");return this._root.$i18n.i(t,e,a)}return this._warnDefault(e,t,i,r,[a],"raw")},nt.prototype.i=function(t,e,n){return t?(a(e)||(e=this.locale),this._i(t,e,this._getMessages(),null,n)):""},nt.prototype._tc=function(t,e,n,r,a){for(var i,o=[],s=arguments.length-5;s-- >0;)o[s]=arguments[s+5];if(!t)return"";void 0===a&&(a=1);var l={count:a,n:a},c=u.apply(void 0,o);return c.params=Object.assign(l,c.params),o=null===c.locale?[c.params]:[c.locale,c.params],this.fetchChoice((i=this)._t.apply(i,[t,e,n,r].concat(o)),a)},nt.prototype.fetchChoice=function(t,e){if(!t||!a(t))return null;var n=t.split("|");return n[e=this.getChoiceIndex(e,n.length)]?n[e].trim():t},nt.prototype.tc=function(t,e){for(var n,r=[],a=arguments.length-2;a-- >0;)r[a]=arguments[a+2];return(n=this)._tc.apply(n,[t,this.locale,this._getMessages(),null,e].concat(r))},nt.prototype._te=function(t,e,n){for(var r=[],a=arguments.length-3;a-- >0;)r[a]=arguments[a+3];var i=u.apply(void 0,r).locale||e;return this._exist(n[i],t)},nt.prototype.te=function(t,e){return this._te(t,this.locale,this._getMessages(),e)},nt.prototype.getLocaleMessage=function(t){return f(this._vm.messages[t]||{})},nt.prototype.setLocaleMessage=function(t,e){"warn"!==this._warnHtmlInMessage&&"error"!==this._warnHtmlInMessage||this._checkLocaleMessage(t,this._warnHtmlInMessage,e),this._vm.$set(this._vm.messages,t,e)},nt.prototype.mergeLocaleMessage=function(t,e){"warn"!==this._warnHtmlInMessage&&"error"!==this._warnHtmlInMessage||this._checkLocaleMessage(t,this._warnHtmlInMessage,e),this._vm.$set(this._vm.messages,t,_(void 0!==this._vm.messages[t]&&Object.keys(this._vm.messages[t]).length?this._vm.messages[t]:{},e))},nt.prototype.getDateTimeFormat=function(t){return f(this._vm.dateTimeFormats[t]||{})},nt.prototype.setDateTimeFormat=function(t,e){this._vm.$set(this._vm.dateTimeFormats,t,e),this._clearDateTimeFormat(t,e)},nt.prototype.mergeDateTimeFormat=function(t,e){this._vm.$set(this._vm.dateTimeFormats,t,_(this._vm.dateTimeFormats[t]||{},e)),this._clearDateTimeFormat(t,e)},nt.prototype._clearDateTimeFormat=function(t,e){for(var n in e){var r=t+"__"+n;this._dateTimeFormatters.hasOwnProperty(r)&&delete this._dateTimeFormatters[r]}},nt.prototype._localizeDateTime=function(t,e,n,r,a){for(var i=e,o=r[i],s=this._getLocaleChain(e,n),c=0;c<s.length;c++){var u=s[c];if(i=u,!l(o=r[u])&&!l(o[a]))break}if(l(o)||l(o[a]))return null;var f=o[a],h=i+"__"+a,p=this._dateTimeFormatters[h];return p||(p=this._dateTimeFormatters[h]=new Intl.DateTimeFormat(i,f)),p.format(t)},nt.prototype._d=function(t,e,n){if(!n)return new Intl.DateTimeFormat(e).format(t);var r=this._localizeDateTime(t,e,this.fallbackLocale,this._getDateTimeFormats(),n);if(this._isFallbackRoot(r)){if(!this._root)throw Error("unexpected error");return this._root.$i18n.d(t,n,e)}return r||""},nt.prototype.d=function(t){for(var e=[],n=arguments.length-1;n-- >0;)e[n]=arguments[n+1];var i=this.locale,o=null;return 1===e.length?a(e[0])?o=e[0]:r(e[0])&&(e[0].locale&&(i=e[0].locale),e[0].key&&(o=e[0].key)):2===e.length&&(a(e[0])&&(o=e[0]),a(e[1])&&(i=e[1])),this._d(t,i,o)},nt.prototype.getNumberFormat=function(t){return f(this._vm.numberFormats[t]||{})},nt.prototype.setNumberFormat=function(t,e){this._vm.$set(this._vm.numberFormats,t,e),this._clearNumberFormat(t,e)},nt.prototype.mergeNumberFormat=function(t,e){this._vm.$set(this._vm.numberFormats,t,_(this._vm.numberFormats[t]||{},e)),this._clearNumberFormat(t,e)},nt.prototype._clearNumberFormat=function(t,e){for(var n in e){var r=t+"__"+n;this._numberFormatters.hasOwnProperty(r)&&delete this._numberFormatters[r]}},nt.prototype._getNumberFormatter=function(t,e,n,r,a,i){for(var o=e,s=r[o],c=this._getLocaleChain(e,n),u=0;u<c.length;u++){var f=c[u];if(o=f,!l(s=r[f])&&!l(s[a]))break}if(l(s)||l(s[a]))return null;var h,p=s[a];if(i)h=new Intl.NumberFormat(o,Object.assign({},p,i));else{var m=o+"__"+a;(h=this._numberFormatters[m])||(h=this._numberFormatters[m]=new Intl.NumberFormat(o,p))}return h},nt.prototype._n=function(t,e,n,r){if(!nt.availabilities.numberFormat)return"";if(!n)return(r?new Intl.NumberFormat(e,r):new Intl.NumberFormat(e)).format(t);var a=this._getNumberFormatter(t,e,this.fallbackLocale,this._getNumberFormats(),n,r),i=a&&a.format(t);if(this._isFallbackRoot(i)){if(!this._root)throw Error("unexpected error");return this._root.$i18n.n(t,Object.assign({},{key:n,locale:e},r))}return i||""},nt.prototype.n=function(e){for(var n=[],i=arguments.length-1;i-- >0;)n[i]=arguments[i+1];var o=this.locale,s=null,l=null;return 1===n.length?a(n[0])?s=n[0]:r(n[0])&&(n[0].locale&&(o=n[0].locale),n[0].key&&(s=n[0].key),l=Object.keys(n[0]).reduce(function(e,r){var a;return h(t,r)?Object.assign({},e,((a={})[r]=n[0][r],a)):e},null)):2===n.length&&(a(n[0])&&(s=n[0]),a(n[1])&&(o=n[1])),this._n(e,o,s,l)},nt.prototype._ntp=function(t,e,n,r){if(!nt.availabilities.numberFormat)return[];if(!n)return(r?new Intl.NumberFormat(e,r):new Intl.NumberFormat(e)).formatToParts(t);var a=this._getNumberFormatter(t,e,this.fallbackLocale,this._getNumberFormats(),n,r),i=a&&a.formatToParts(t);if(this._isFallbackRoot(i)){if(!this._root)throw Error("unexpected error");return this._root.$i18n._ntp(t,e,n,r)}return i||[]},Object.defineProperties(nt.prototype,rt),Object.defineProperty(nt,"availabilities",{get:function(){if(!X){var t="undefined"!=typeof Intl;X={dateTimeFormat:t&&void 0!==Intl.DateTimeFormat,numberFormat:t&&void 0!==Intl.NumberFormat}}return X}}),nt.install=I,nt.version="8.23.0",nt},"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.VueI18n=e();
+const VERSION = '9.2.0-beta.35';
+
+let code$1 = coreBase.CoreWarnCodes.__EXTEND_POINT__;
+const inc$1 = () => ++code$1;
+const I18nWarnCodes = {
+    FALLBACK_TO_ROOT: code$1,
+    NOT_SUPPORTED_PRESERVE: inc$1(),
+    NOT_SUPPORTED_FORMATTER: inc$1(),
+    NOT_SUPPORTED_PRESERVE_DIRECTIVE: inc$1(),
+    NOT_SUPPORTED_GET_CHOICE_INDEX: inc$1(),
+    COMPONENT_NAME_LEGACY_COMPATIBLE: inc$1(),
+    NOT_FOUND_PARENT_SCOPE: inc$1() // 13
+};
+const warnMessages = {
+    [I18nWarnCodes.FALLBACK_TO_ROOT]: `Fall back to {type} '{key}' with root locale.`,
+    [I18nWarnCodes.NOT_SUPPORTED_PRESERVE]: `Not supported 'preserve'.`,
+    [I18nWarnCodes.NOT_SUPPORTED_FORMATTER]: `Not supported 'formatter'.`,
+    [I18nWarnCodes.NOT_SUPPORTED_PRESERVE_DIRECTIVE]: `Not supported 'preserveDirectiveContent'.`,
+    [I18nWarnCodes.NOT_SUPPORTED_GET_CHOICE_INDEX]: `Not supported 'getChoiceIndex'.`,
+    [I18nWarnCodes.COMPONENT_NAME_LEGACY_COMPATIBLE]: `Component name legacy compatible: '{name}' -> 'i18n'`,
+    [I18nWarnCodes.NOT_FOUND_PARENT_SCOPE]: `Not found parent scope. use the global scope.`
+};
+function getWarnMessage(code, ...args) {
+    return shared.format(warnMessages[code], ...args);
+}
+
+let code = coreBase.CompileErrorCodes.__EXTEND_POINT__;
+const inc = () => ++code;
+const I18nErrorCodes = {
+    // composer module errors
+    UNEXPECTED_RETURN_TYPE: code,
+    // legacy module errors
+    INVALID_ARGUMENT: inc(),
+    // i18n module errors
+    MUST_BE_CALL_SETUP_TOP: inc(),
+    NOT_INSLALLED: inc(),
+    NOT_AVAILABLE_IN_LEGACY_MODE: inc(),
+    // directive module errors
+    REQUIRED_VALUE: inc(),
+    INVALID_VALUE: inc(),
+    // vue-devtools errors
+    CANNOT_SETUP_VUE_DEVTOOLS_PLUGIN: inc(),
+    NOT_INSLALLED_WITH_PROVIDE: inc(),
+    // unexpected error
+    UNEXPECTED_ERROR: inc(),
+    // not compatible legacy vue-i18n constructor
+    NOT_COMPATIBLE_LEGACY_VUE_I18N: inc(),
+    // bridge support vue 2.x only
+    BRIDGE_SUPPORT_VUE_2_ONLY: inc(),
+    // need to define `i18n` option in `allowComposition: true` and `useScope: 'local' at `useI18n``
+    MUST_DEFINE_I18N_OPTION_IN_ALLOW_COMPOSITION: inc(),
+    // Not available Compostion API in Legacy API mode. Please make sure that the legacy API mode is working properly
+    NOT_AVAILABLE_COMPOSITION_IN_LEGACY: inc(),
+    // for enhancement
+    __EXTEND_POINT__: inc() // 29
+};
+function createI18nError(code, ...args) {
+    return coreBase.createCompileError(code, null, { messages: errorMessages, args } );
+}
+const errorMessages = {
+    [I18nErrorCodes.UNEXPECTED_RETURN_TYPE]: 'Unexpected return type in composer',
+    [I18nErrorCodes.INVALID_ARGUMENT]: 'Invalid argument',
+    [I18nErrorCodes.MUST_BE_CALL_SETUP_TOP]: 'Must be called at the top of a `setup` function',
+    [I18nErrorCodes.NOT_INSLALLED]: 'Need to install with `app.use` function',
+    [I18nErrorCodes.UNEXPECTED_ERROR]: 'Unexpected error',
+    [I18nErrorCodes.NOT_AVAILABLE_IN_LEGACY_MODE]: 'Not available in legacy mode',
+    [I18nErrorCodes.REQUIRED_VALUE]: `Required in value: {0}`,
+    [I18nErrorCodes.INVALID_VALUE]: `Invalid value`,
+    [I18nErrorCodes.CANNOT_SETUP_VUE_DEVTOOLS_PLUGIN]: `Cannot setup vue-devtools plugin`,
+    [I18nErrorCodes.NOT_INSLALLED_WITH_PROVIDE]: 'Need to install with `provide` function',
+    [I18nErrorCodes.NOT_COMPATIBLE_LEGACY_VUE_I18N]: 'Not compatible legacy VueI18n.',
+    [I18nErrorCodes.BRIDGE_SUPPORT_VUE_2_ONLY]: 'vue-i18n-bridge support Vue 2.x only',
+    [I18nErrorCodes.MUST_DEFINE_I18N_OPTION_IN_ALLOW_COMPOSITION]: 'Must define ‘i18n’ option in Composition API with using local scope in Legacy API mode',
+    [I18nErrorCodes.NOT_AVAILABLE_COMPOSITION_IN_LEGACY]: 'Not available Compostion API in Legacy API mode. Please make sure that the legacy API mode is working properly'
+};
+
+const TransrateVNodeSymbol = 
+/* #__PURE__*/ shared.makeSymbol('__transrateVNode');
+const DatetimePartsSymbol = /* #__PURE__*/ shared.makeSymbol('__datetimeParts');
+const NumberPartsSymbol = /* #__PURE__*/ shared.makeSymbol('__numberParts');
+const EnableEmitter = /* #__PURE__*/ shared.makeSymbol('__enableEmitter');
+const DisableEmitter = /* #__PURE__*/ shared.makeSymbol('__disableEmitter');
+const SetPluralRulesSymbol = shared.makeSymbol('__setPluralRules');
+shared.makeSymbol('__intlifyMeta');
+const InejctWithOption = /* #__PURE__*/ shared.makeSymbol('__injectWithOption');
+const __VUE_I18N_BRIDGE__ =  '__VUE_I18N_BRIDGE__';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * Transform flat json in obj to normal json in obj
+ */
+function handleFlatJson(obj) {
+    // check obj
+    if (!shared.isObject(obj)) {
+        return obj;
+    }
+    for (const key in obj) {
+        // check key
+        if (!shared.hasOwn(obj, key)) {
+            continue;
+        }
+        // handle for normal json
+        if (!key.includes('.')) {
+            // recursive process value if value is also a object
+            if (shared.isObject(obj[key])) {
+                handleFlatJson(obj[key]);
+            }
+        }
+        // handle for flat json, transform to normal json
+        else {
+            // go to the last object
+            const subKeys = key.split('.');
+            const lastIndex = subKeys.length - 1;
+            let currentObj = obj;
+            for (let i = 0; i < lastIndex; i++) {
+                if (!(subKeys[i] in currentObj)) {
+                    currentObj[subKeys[i]] = {};
+                }
+                currentObj = currentObj[subKeys[i]];
+            }
+            // update last object value, delete old property
+            currentObj[subKeys[lastIndex]] = obj[key];
+            delete obj[key];
+            // recursive process value if value is also a object
+            if (shared.isObject(currentObj[subKeys[lastIndex]])) {
+                handleFlatJson(currentObj[subKeys[lastIndex]]);
+            }
+        }
+    }
+    return obj;
+}
+function getLocaleMessages(locale, options) {
+    const { messages, __i18n, messageResolver, flatJson } = options;
+    // prettier-ignore
+    const ret = shared.isPlainObject(messages)
+        ? messages
+        : shared.isArray(__i18n)
+            ? {}
+            : { [locale]: {} };
+    // merge locale messages of i18n custom block
+    if (shared.isArray(__i18n)) {
+        __i18n.forEach(custom => {
+            if ('locale' in custom && 'resource' in custom) {
+                const { locale, resource } = custom;
+                if (locale) {
+                    ret[locale] = ret[locale] || {};
+                    deepCopy(resource, ret[locale]);
+                }
+                else {
+                    deepCopy(resource, ret);
+                }
+            }
+            else {
+                shared.isString(custom) && deepCopy(JSON.parse(custom), ret);
+            }
+        });
+    }
+    // handle messages for flat json
+    if (messageResolver == null && flatJson) {
+        for (const key in ret) {
+            if (shared.hasOwn(ret, key)) {
+                handleFlatJson(ret[key]);
+            }
+        }
+    }
+    return ret;
+}
+const isNotObjectOrIsArray = (val) => !shared.isObject(val) || shared.isArray(val);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+function deepCopy(src, des) {
+    // src and des should both be objects, and non of then can be a array
+    if (isNotObjectOrIsArray(src) || isNotObjectOrIsArray(des)) {
+        throw createI18nError(I18nErrorCodes.INVALID_VALUE);
+    }
+    for (const key in src) {
+        if (shared.hasOwn(src, key)) {
+            if (isNotObjectOrIsArray(src[key]) || isNotObjectOrIsArray(des[key])) {
+                // replace with src[key] when:
+                // src[key] or des[key] is not a object, or
+                // src[key] or des[key] is a array
+                des[key] = src[key];
+            }
+            else {
+                // src[key] and des[key] are both object, merge them
+                deepCopy(src[key], des[key]);
+            }
+        }
+    }
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getComponentOptions(instance) {
+    return instance.type ;
+}
+function adjustI18nResources(global, options, componentOptions // eslint-disable-line @typescript-eslint/no-explicit-any
+) {
+    let messages = shared.isObject(options.messages) ? options.messages : {};
+    if ('__i18nGlobal' in componentOptions) {
+        messages = getLocaleMessages(global.locale.value, {
+            messages,
+            __i18n: componentOptions.__i18nGlobal
+        });
+    }
+    // merge locale messages
+    const locales = Object.keys(messages);
+    if (locales.length) {
+        locales.forEach(locale => {
+            global.mergeLocaleMessage(locale, messages[locale]);
+        });
+    }
+    {
+        // merge datetime formats
+        if (shared.isObject(options.datetimeFormats)) {
+            const locales = Object.keys(options.datetimeFormats);
+            if (locales.length) {
+                locales.forEach(locale => {
+                    global.mergeDateTimeFormat(locale, options.datetimeFormats[locale]);
+                });
+            }
+        }
+        // merge number formats
+        if (shared.isObject(options.numberFormats)) {
+            const locales = Object.keys(options.numberFormats);
+            if (locales.length) {
+                locales.forEach(locale => {
+                    global.mergeNumberFormat(locale, options.numberFormats[locale]);
+                });
+            }
+        }
+    }
+}
+function createTextNode(key) {
+    return vue.createVNode(vue.Text, null, key, 0)
+        ;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// extend VNode interface
+const DEVTOOLS_META = '__INTLIFY_META__';
+let composerID = 0;
+function defineCoreMissingHandler(missing) {
+    return ((ctx, locale, key, type) => {
+        return missing(locale, key, vue.getCurrentInstance() || undefined, type);
+    });
+}
+// for Intlify DevTools
+const getMetaInfo =  () => {
+    const instance = vue.getCurrentInstance();
+    let meta = null; // eslint-disable-line @typescript-eslint/no-explicit-any
+    return instance && (meta = getComponentOptions(instance)[DEVTOOLS_META])
+        ? { [DEVTOOLS_META]: meta } // eslint-disable-line @typescript-eslint/no-explicit-any
+        : null;
+};
+/**
+ * Create composer interface factory
+ *
+ * @internal
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function createComposer(options = {}, VueI18nLegacy) {
+    const { __root } = options;
+    const _isGlobal = __root === undefined;
+    let _inheritLocale = shared.isBoolean(options.inheritLocale)
+        ? options.inheritLocale
+        : true;
+    const _locale = vue.ref(
+    // prettier-ignore
+    __root && _inheritLocale
+        ? __root.locale.value
+        : shared.isString(options.locale)
+            ? options.locale
+            : coreBase.DEFAULT_LOCALE);
+    const _fallbackLocale = vue.ref(
+    // prettier-ignore
+    __root && _inheritLocale
+        ? __root.fallbackLocale.value
+        : shared.isString(options.fallbackLocale) ||
+            shared.isArray(options.fallbackLocale) ||
+            shared.isPlainObject(options.fallbackLocale) ||
+            options.fallbackLocale === false
+            ? options.fallbackLocale
+            : _locale.value);
+    const _messages = vue.ref(getLocaleMessages(_locale.value, options));
+    // prettier-ignore
+    const _datetimeFormats = vue.ref(shared.isPlainObject(options.datetimeFormats)
+            ? options.datetimeFormats
+            : { [_locale.value]: {} })
+        ;
+    // prettier-ignore
+    const _numberFormats = vue.ref(shared.isPlainObject(options.numberFormats)
+            ? options.numberFormats
+            : { [_locale.value]: {} })
+        ;
+    // warning suppress options
+    // prettier-ignore
+    let _missingWarn = __root
+        ? __root.missingWarn
+        : shared.isBoolean(options.missingWarn) || shared.isRegExp(options.missingWarn)
+            ? options.missingWarn
+            : true;
+    // prettier-ignore
+    let _fallbackWarn = __root
+        ? __root.fallbackWarn
+        : shared.isBoolean(options.fallbackWarn) || shared.isRegExp(options.fallbackWarn)
+            ? options.fallbackWarn
+            : true;
+    // prettier-ignore
+    let _fallbackRoot = __root
+        ? __root.fallbackRoot
+        : shared.isBoolean(options.fallbackRoot)
+            ? options.fallbackRoot
+            : true;
+    // configure fall back to root
+    let _fallbackFormat = !!options.fallbackFormat;
+    // runtime missing
+    let _missing = shared.isFunction(options.missing) ? options.missing : null;
+    let _runtimeMissing = shared.isFunction(options.missing)
+        ? defineCoreMissingHandler(options.missing)
+        : null;
+    // postTranslation handler
+    let _postTranslation = shared.isFunction(options.postTranslation)
+        ? options.postTranslation
+        : null;
+    // prettier-ignore
+    let _warnHtmlMessage = __root
+        ? __root.warnHtmlMessage
+        : shared.isBoolean(options.warnHtmlMessage)
+            ? options.warnHtmlMessage
+            : true;
+    let _escapeParameter = !!options.escapeParameter;
+    // custom linked modifiers
+    // prettier-ignore
+    const _modifiers = __root
+        ? __root.modifiers
+        : shared.isPlainObject(options.modifiers)
+            ? options.modifiers
+            : {};
+    // pluralRules
+    let _pluralRules = options.pluralRules || (__root && __root.pluralRules);
+    // runtime context
+    // eslint-disable-next-line prefer-const
+    let _context;
+    function getCoreContext() {
+        _isGlobal && coreBase.setFallbackContext(null);
+        const ctxOptions = {
+            version: VERSION,
+            locale: _locale.value,
+            fallbackLocale: _fallbackLocale.value,
+            messages: _messages.value,
+            modifiers: _modifiers,
+            pluralRules: _pluralRules,
+            missing: _runtimeMissing === null ? undefined : _runtimeMissing,
+            missingWarn: _missingWarn,
+            fallbackWarn: _fallbackWarn,
+            fallbackFormat: _fallbackFormat,
+            unresolving: true,
+            postTranslation: _postTranslation === null ? undefined : _postTranslation,
+            warnHtmlMessage: _warnHtmlMessage,
+            escapeParameter: _escapeParameter,
+            messageResolver: options.messageResolver,
+            __meta: { framework: 'vue' }
+        };
+        {
+            ctxOptions.datetimeFormats = _datetimeFormats.value;
+            ctxOptions.numberFormats = _numberFormats.value;
+            ctxOptions.__datetimeFormatters = shared.isPlainObject(_context)
+                ? _context.__datetimeFormatters
+                : undefined;
+            ctxOptions.__numberFormatters = shared.isPlainObject(_context)
+                ? _context.__numberFormatters
+                : undefined;
+        }
+        {
+            ctxOptions.__v_emitter = shared.isPlainObject(_context)
+                ? _context.__v_emitter
+                : undefined;
+        }
+        const ctx = coreBase.createCoreContext(ctxOptions);
+        _isGlobal && coreBase.setFallbackContext(ctx);
+        return ctx;
+    }
+    _context = getCoreContext();
+    coreBase.updateFallbackLocale(_context, _locale.value, _fallbackLocale.value);
+    // track reactivity
+    function trackReactivityValues() {
+        return [
+                _locale.value,
+                _fallbackLocale.value,
+                _messages.value,
+                _datetimeFormats.value,
+                _numberFormats.value
+            ]
+            ;
+    }
+    // locale
+    const locale = vue.computed({
+        get: () => _locale.value,
+        set: val => {
+            _locale.value = val;
+            _context.locale = _locale.value;
+        }
+    });
+    // fallbackLocale
+    const fallbackLocale = vue.computed({
+        get: () => _fallbackLocale.value,
+        set: val => {
+            _fallbackLocale.value = val;
+            _context.fallbackLocale = _fallbackLocale.value;
+            coreBase.updateFallbackLocale(_context, _locale.value, val);
+        }
+    });
+    // messages
+    const messages = vue.computed(() => _messages.value);
+    // datetimeFormats
+    const datetimeFormats = /* #__PURE__*/ vue.computed(() => _datetimeFormats.value);
+    // numberFormats
+    const numberFormats = /* #__PURE__*/ vue.computed(() => _numberFormats.value);
+    // getPostTranslationHandler
+    function getPostTranslationHandler() {
+        return shared.isFunction(_postTranslation) ? _postTranslation : null;
+    }
+    // setPostTranslationHandler
+    function setPostTranslationHandler(handler) {
+        _postTranslation = handler;
+        _context.postTranslation = handler;
+    }
+    // getMissingHandler
+    function getMissingHandler() {
+        return _missing;
+    }
+    // setMissingHandler
+    function setMissingHandler(handler) {
+        if (handler !== null) {
+            _runtimeMissing = defineCoreMissingHandler(handler);
+        }
+        _missing = handler;
+        _context.missing = _runtimeMissing;
+    }
+    function isResolvedTranslateMessage(type, arg // eslint-disable-line @typescript-eslint/no-explicit-any
+    ) {
+        return type !== 'translate' || !arg.resolvedMessage;
+    }
+    function wrapWithDeps(fn, argumentParser, warnType, fallbackSuccess, fallbackFail, successCondition) {
+        trackReactivityValues(); // track reactive dependency
+        // NOTE: experimental !!
+        let ret;
+        {
+            try {
+                coreBase.setAdditionalMeta(getMetaInfo());
+                if (!_isGlobal) {
+                    _context.fallbackContext = __root
+                        ? coreBase.getFallbackContext()
+                        : undefined;
+                }
+                ret = fn(_context);
+            }
+            finally {
+                coreBase.setAdditionalMeta(null);
+                if (!_isGlobal) {
+                    _context.fallbackContext = undefined;
+                }
+            }
+        }
+        if (shared.isNumber(ret) && ret === coreBase.NOT_REOSLVED) {
+            const [key, arg2] = argumentParser();
+            if (__root &&
+                shared.isString(key) &&
+                isResolvedTranslateMessage(warnType, arg2)) {
+                if (_fallbackRoot &&
+                    (coreBase.isTranslateFallbackWarn(_fallbackWarn, key) ||
+                        coreBase.isTranslateMissingWarn(_missingWarn, key))) {
+                    shared.warn(getWarnMessage(I18nWarnCodes.FALLBACK_TO_ROOT, {
+                        key,
+                        type: warnType
+                    }));
+                }
+                // for vue-devtools timeline event
+                {
+                    const { __v_emitter: emitter } = _context;
+                    if (emitter && _fallbackRoot) {
+                        emitter.emit("fallback" /* FALBACK */, {
+                            type: warnType,
+                            key,
+                            to: 'global',
+                            groupId: `${warnType}:${key}`
+                        });
+                    }
+                }
+            }
+            return __root && _fallbackRoot
+                ? fallbackSuccess(__root)
+                : fallbackFail(key);
+        }
+        else if (successCondition(ret)) {
+            return ret;
+        }
+        else {
+            /* istanbul ignore next */
+            throw createI18nError(I18nErrorCodes.UNEXPECTED_RETURN_TYPE);
+        }
+    }
+    // t
+    function t(...args) {
+        return wrapWithDeps(context => Reflect.apply(coreBase.translate, null, [context, ...args]), () => coreBase.parseTranslateArgs(...args), 'translate', root => Reflect.apply(root.t, root, [...args]), key => key, val => shared.isString(val));
+    }
+    // rt
+    function rt(...args) {
+        const [arg1, arg2, arg3] = args;
+        if (arg3 && !shared.isObject(arg3)) {
+            throw createI18nError(I18nErrorCodes.INVALID_ARGUMENT);
+        }
+        return t(...[arg1, arg2, shared.assign({ resolvedMessage: true }, arg3 || {})]);
+    }
+    // d
+    function d(...args) {
+        return wrapWithDeps(context => Reflect.apply(coreBase.datetime, null, [context, ...args]), () => coreBase.parseDateTimeArgs(...args), 'datetime format', root => Reflect.apply(root.d, root, [...args]), () => coreBase.MISSING_RESOLVE_VALUE, val => shared.isString(val));
+    }
+    // n
+    function n(...args) {
+        return wrapWithDeps(context => Reflect.apply(coreBase.number, null, [context, ...args]), () => coreBase.parseNumberArgs(...args), 'number format', root => Reflect.apply(root.n, root, [...args]), () => coreBase.MISSING_RESOLVE_VALUE, val => shared.isString(val));
+    }
+    // for custom processor
+    function normalize(values) {
+        return values.map(val => (shared.isString(val) ? createTextNode(val) : val));
+    }
+    const interpolate = (val) => val;
+    const processor = {
+        normalize,
+        interpolate,
+        type: 'vnode'
+    };
+    // transrateVNode, using for `i18n-t` component
+    function transrateVNode(...args) {
+        return wrapWithDeps(context => {
+            let ret;
+            const _context = context;
+            try {
+                _context.processor = processor;
+                ret = Reflect.apply(coreBase.translate, null, [_context, ...args]);
+            }
+            finally {
+                _context.processor = null;
+            }
+            return ret;
+        }, () => coreBase.parseTranslateArgs(...args), 'translate', 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        root => root[TransrateVNodeSymbol](...args), key => [createTextNode(key)], val => shared.isArray(val));
+    }
+    // numberParts, using for `i18n-n` component
+    function numberParts(...args) {
+        return wrapWithDeps(context => Reflect.apply(coreBase.number, null, [context, ...args]), () => coreBase.parseNumberArgs(...args), 'number format', 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        root => root[NumberPartsSymbol](...args), () => [], val => shared.isString(val) || shared.isArray(val));
+    }
+    // datetimeParts, using for `i18n-d` component
+    function datetimeParts(...args) {
+        return wrapWithDeps(context => Reflect.apply(coreBase.datetime, null, [context, ...args]), () => coreBase.parseDateTimeArgs(...args), 'datetime format', 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        root => root[DatetimePartsSymbol](...args), () => [], val => shared.isString(val) || shared.isArray(val));
+    }
+    function setPluralRules(rules) {
+        _pluralRules = rules;
+        _context.pluralRules = _pluralRules;
+    }
+    // te
+    function te(key, locale) {
+        const targetLocale = shared.isString(locale) ? locale : _locale.value;
+        const message = getLocaleMessage(targetLocale);
+        return _context.messageResolver(message, key) !== null;
+    }
+    function resolveMessages(key) {
+        let messages = null;
+        const locales = coreBase.fallbackWithLocaleChain(_context, _fallbackLocale.value, _locale.value);
+        for (let i = 0; i < locales.length; i++) {
+            const targetLocaleMessages = _messages.value[locales[i]] || {};
+            const messageValue = _context.messageResolver(targetLocaleMessages, key);
+            if (messageValue != null) {
+                messages = messageValue;
+                break;
+            }
+        }
+        return messages;
+    }
+    // tm
+    function tm(key) {
+        const messages = resolveMessages(key);
+        // prettier-ignore
+        return messages != null
+            ? messages
+            : __root
+                ? __root.tm(key) || {}
+                : {};
+    }
+    // getLocaleMessage
+    function getLocaleMessage(locale) {
+        return (_messages.value[locale] || {});
+    }
+    // setLocaleMessage
+    function setLocaleMessage(locale, message) {
+        _messages.value[locale] = message;
+        _context.messages = _messages.value;
+    }
+    // mergeLocaleMessage
+    function mergeLocaleMessage(locale, message) {
+        _messages.value[locale] = _messages.value[locale] || {};
+        deepCopy(message, _messages.value[locale]);
+        _context.messages = _messages.value;
+    }
+    // getDateTimeFormat
+    function getDateTimeFormat(locale) {
+        return _datetimeFormats.value[locale] || {};
+    }
+    // setDateTimeFormat
+    function setDateTimeFormat(locale, format) {
+        _datetimeFormats.value[locale] = format;
+        _context.datetimeFormats = _datetimeFormats.value;
+        coreBase.clearDateTimeFormat(_context, locale, format);
+    }
+    // mergeDateTimeFormat
+    function mergeDateTimeFormat(locale, format) {
+        _datetimeFormats.value[locale] = shared.assign(_datetimeFormats.value[locale] || {}, format);
+        _context.datetimeFormats = _datetimeFormats.value;
+        coreBase.clearDateTimeFormat(_context, locale, format);
+    }
+    // getNumberFormat
+    function getNumberFormat(locale) {
+        return _numberFormats.value[locale] || {};
+    }
+    // setNumberFormat
+    function setNumberFormat(locale, format) {
+        _numberFormats.value[locale] = format;
+        _context.numberFormats = _numberFormats.value;
+        coreBase.clearNumberFormat(_context, locale, format);
+    }
+    // mergeNumberFormat
+    function mergeNumberFormat(locale, format) {
+        _numberFormats.value[locale] = shared.assign(_numberFormats.value[locale] || {}, format);
+        _context.numberFormats = _numberFormats.value;
+        coreBase.clearNumberFormat(_context, locale, format);
+    }
+    // for debug
+    composerID++;
+    // watch root locale & fallbackLocale
+    if (__root && shared.inBrowser) {
+        vue.watch(__root.locale, (val) => {
+            if (_inheritLocale) {
+                _locale.value = val;
+                _context.locale = val;
+                coreBase.updateFallbackLocale(_context, _locale.value, _fallbackLocale.value);
+            }
+        });
+        vue.watch(__root.fallbackLocale, (val) => {
+            if (_inheritLocale) {
+                _fallbackLocale.value = val;
+                _context.fallbackLocale = val;
+                coreBase.updateFallbackLocale(_context, _locale.value, _fallbackLocale.value);
+            }
+        });
+    }
+    // define basic composition API!
+    const composer = {
+        id: composerID,
+        locale,
+        fallbackLocale,
+        get inheritLocale() {
+            return _inheritLocale;
+        },
+        set inheritLocale(val) {
+            _inheritLocale = val;
+            if (val && __root) {
+                _locale.value = __root.locale.value;
+                _fallbackLocale.value = __root.fallbackLocale.value;
+                coreBase.updateFallbackLocale(_context, _locale.value, _fallbackLocale.value);
+            }
+        },
+        get availableLocales() {
+            return Object.keys(_messages.value).sort();
+        },
+        messages,
+        get modifiers() {
+            return _modifiers;
+        },
+        get pluralRules() {
+            return _pluralRules || {};
+        },
+        get isGlobal() {
+            return _isGlobal;
+        },
+        get missingWarn() {
+            return _missingWarn;
+        },
+        set missingWarn(val) {
+            _missingWarn = val;
+            _context.missingWarn = _missingWarn;
+        },
+        get fallbackWarn() {
+            return _fallbackWarn;
+        },
+        set fallbackWarn(val) {
+            _fallbackWarn = val;
+            _context.fallbackWarn = _fallbackWarn;
+        },
+        get fallbackRoot() {
+            return _fallbackRoot;
+        },
+        set fallbackRoot(val) {
+            _fallbackRoot = val;
+        },
+        get fallbackFormat() {
+            return _fallbackFormat;
+        },
+        set fallbackFormat(val) {
+            _fallbackFormat = val;
+            _context.fallbackFormat = _fallbackFormat;
+        },
+        get warnHtmlMessage() {
+            return _warnHtmlMessage;
+        },
+        set warnHtmlMessage(val) {
+            _warnHtmlMessage = val;
+            _context.warnHtmlMessage = val;
+        },
+        get escapeParameter() {
+            return _escapeParameter;
+        },
+        set escapeParameter(val) {
+            _escapeParameter = val;
+            _context.escapeParameter = val;
+        },
+        t,
+        getLocaleMessage,
+        setLocaleMessage,
+        mergeLocaleMessage,
+        getPostTranslationHandler,
+        setPostTranslationHandler,
+        getMissingHandler,
+        setMissingHandler,
+        [SetPluralRulesSymbol]: setPluralRules
+    };
+    {
+        composer.datetimeFormats = datetimeFormats;
+        composer.numberFormats = numberFormats;
+        composer.rt = rt;
+        composer.te = te;
+        composer.tm = tm;
+        composer.d = d;
+        composer.n = n;
+        composer.getDateTimeFormat = getDateTimeFormat;
+        composer.setDateTimeFormat = setDateTimeFormat;
+        composer.mergeDateTimeFormat = mergeDateTimeFormat;
+        composer.getNumberFormat = getNumberFormat;
+        composer.setNumberFormat = setNumberFormat;
+        composer.mergeNumberFormat = mergeNumberFormat;
+        composer[InejctWithOption] = options.__injectWithOption;
+        composer[TransrateVNodeSymbol] = transrateVNode;
+        composer[DatetimePartsSymbol] = datetimeParts;
+        composer[NumberPartsSymbol] = numberParts;
+    }
+    // for vue-devtools timeline event
+    {
+        composer[EnableEmitter] = (emitter) => {
+            _context.__v_emitter = emitter;
+        };
+        composer[DisableEmitter] = () => {
+            _context.__v_emitter = undefined;
+        };
+    }
+    return composer;
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * Convert to I18n Composer Options from VueI18n Options
+ *
+ * @internal
+ */
+function convertComposerOptions(options) {
+    const locale = shared.isString(options.locale) ? options.locale : coreBase.DEFAULT_LOCALE;
+    const fallbackLocale = shared.isString(options.fallbackLocale) ||
+        shared.isArray(options.fallbackLocale) ||
+        shared.isPlainObject(options.fallbackLocale) ||
+        options.fallbackLocale === false
+        ? options.fallbackLocale
+        : locale;
+    const missing = shared.isFunction(options.missing) ? options.missing : undefined;
+    const missingWarn = shared.isBoolean(options.silentTranslationWarn) ||
+        shared.isRegExp(options.silentTranslationWarn)
+        ? !options.silentTranslationWarn
+        : true;
+    const fallbackWarn = shared.isBoolean(options.silentFallbackWarn) ||
+        shared.isRegExp(options.silentFallbackWarn)
+        ? !options.silentFallbackWarn
+        : true;
+    const fallbackRoot = shared.isBoolean(options.fallbackRoot)
+        ? options.fallbackRoot
+        : true;
+    const fallbackFormat = !!options.formatFallbackMessages;
+    const modifiers = shared.isPlainObject(options.modifiers) ? options.modifiers : {};
+    const pluralizationRules = options.pluralizationRules;
+    const postTranslation = shared.isFunction(options.postTranslation)
+        ? options.postTranslation
+        : undefined;
+    const warnHtmlMessage = shared.isString(options.warnHtmlInMessage)
+        ? options.warnHtmlInMessage !== 'off'
+        : true;
+    const escapeParameter = !!options.escapeParameterHtml;
+    const inheritLocale = shared.isBoolean(options.sync) ? options.sync : true;
+    if (options.formatter) {
+        shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_FORMATTER));
+    }
+    if (options.preserveDirectiveContent) {
+        shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_PRESERVE_DIRECTIVE));
+    }
+    let messages = options.messages;
+    if (shared.isPlainObject(options.sharedMessages)) {
+        const sharedMessages = options.sharedMessages;
+        const locales = Object.keys(sharedMessages);
+        messages = locales.reduce((messages, locale) => {
+            const message = messages[locale] || (messages[locale] = {});
+            shared.assign(message, sharedMessages[locale]);
+            return messages;
+        }, (messages || {}));
+    }
+    const { __i18n, __root, __injectWithOption } = options;
+    const datetimeFormats = options.datetimeFormats;
+    const numberFormats = options.numberFormats;
+    const flatJson = options.flatJson;
+    return {
+        locale,
+        fallbackLocale,
+        messages,
+        flatJson,
+        datetimeFormats,
+        numberFormats,
+        missing,
+        missingWarn,
+        fallbackWarn,
+        fallbackRoot,
+        fallbackFormat,
+        modifiers,
+        pluralRules: pluralizationRules,
+        postTranslation,
+        warnHtmlMessage,
+        escapeParameter,
+        messageResolver: options.messageResolver,
+        inheritLocale,
+        __i18n,
+        __root,
+        __injectWithOption
+    };
+}
+/**
+ * create VueI18n interface factory
+ *
+ * @internal
+ */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function createVueI18n(options = {}, VueI18nLegacy) {
+    {
+        const composer = createComposer(convertComposerOptions(options));
+        // defines VueI18n
+        const vueI18n = {
+            // id
+            id: composer.id,
+            // locale
+            get locale() {
+                return composer.locale.value;
+            },
+            set locale(val) {
+                composer.locale.value = val;
+            },
+            // fallbackLocale
+            get fallbackLocale() {
+                return composer.fallbackLocale.value;
+            },
+            set fallbackLocale(val) {
+                composer.fallbackLocale.value = val;
+            },
+            // messages
+            get messages() {
+                return composer.messages.value;
+            },
+            // datetimeFormats
+            get datetimeFormats() {
+                return composer.datetimeFormats.value;
+            },
+            // numberFormats
+            get numberFormats() {
+                return composer.numberFormats.value;
+            },
+            // availableLocales
+            get availableLocales() {
+                return composer.availableLocales;
+            },
+            // formatter
+            get formatter() {
+                shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_FORMATTER));
+                // dummy
+                return {
+                    interpolate() {
+                        return [];
+                    }
+                };
+            },
+            set formatter(val) {
+                shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_FORMATTER));
+            },
+            // missing
+            get missing() {
+                return composer.getMissingHandler();
+            },
+            set missing(handler) {
+                composer.setMissingHandler(handler);
+            },
+            // silentTranslationWarn
+            get silentTranslationWarn() {
+                return shared.isBoolean(composer.missingWarn)
+                    ? !composer.missingWarn
+                    : composer.missingWarn;
+            },
+            set silentTranslationWarn(val) {
+                composer.missingWarn = shared.isBoolean(val) ? !val : val;
+            },
+            // silentFallbackWarn
+            get silentFallbackWarn() {
+                return shared.isBoolean(composer.fallbackWarn)
+                    ? !composer.fallbackWarn
+                    : composer.fallbackWarn;
+            },
+            set silentFallbackWarn(val) {
+                composer.fallbackWarn = shared.isBoolean(val) ? !val : val;
+            },
+            // modifiers
+            get modifiers() {
+                return composer.modifiers;
+            },
+            // formatFallbackMessages
+            get formatFallbackMessages() {
+                return composer.fallbackFormat;
+            },
+            set formatFallbackMessages(val) {
+                composer.fallbackFormat = val;
+            },
+            // postTranslation
+            get postTranslation() {
+                return composer.getPostTranslationHandler();
+            },
+            set postTranslation(handler) {
+                composer.setPostTranslationHandler(handler);
+            },
+            // sync
+            get sync() {
+                return composer.inheritLocale;
+            },
+            set sync(val) {
+                composer.inheritLocale = val;
+            },
+            // warnInHtmlMessage
+            get warnHtmlInMessage() {
+                return composer.warnHtmlMessage ? 'warn' : 'off';
+            },
+            set warnHtmlInMessage(val) {
+                composer.warnHtmlMessage = val !== 'off';
+            },
+            // escapeParameterHtml
+            get escapeParameterHtml() {
+                return composer.escapeParameter;
+            },
+            set escapeParameterHtml(val) {
+                composer.escapeParameter = val;
+            },
+            // preserveDirectiveContent
+            get preserveDirectiveContent() {
+                shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_PRESERVE_DIRECTIVE));
+                return true;
+            },
+            set preserveDirectiveContent(val) {
+                shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_PRESERVE_DIRECTIVE));
+            },
+            // pluralizationRules
+            get pluralizationRules() {
+                return composer.pluralRules || {};
+            },
+            // for internal
+            __composer: composer,
+            // t
+            t(...args) {
+                const [arg1, arg2, arg3] = args;
+                const options = {};
+                let list = null;
+                let named = null;
+                if (!shared.isString(arg1)) {
+                    throw createI18nError(I18nErrorCodes.INVALID_ARGUMENT);
+                }
+                const key = arg1;
+                if (shared.isString(arg2)) {
+                    options.locale = arg2;
+                }
+                else if (shared.isArray(arg2)) {
+                    list = arg2;
+                }
+                else if (shared.isPlainObject(arg2)) {
+                    named = arg2;
+                }
+                if (shared.isArray(arg3)) {
+                    list = arg3;
+                }
+                else if (shared.isPlainObject(arg3)) {
+                    named = arg3;
+                }
+                // return composer.t(key, (list || named || {}) as any, options)
+                return Reflect.apply(composer.t, composer, [
+                    key,
+                    (list || named || {}),
+                    options
+                ]);
+            },
+            rt(...args) {
+                return Reflect.apply(composer.rt, composer, [...args]);
+            },
+            // tc
+            tc(...args) {
+                const [arg1, arg2, arg3] = args;
+                const options = { plural: 1 };
+                let list = null;
+                let named = null;
+                if (!shared.isString(arg1)) {
+                    throw createI18nError(I18nErrorCodes.INVALID_ARGUMENT);
+                }
+                const key = arg1;
+                if (shared.isString(arg2)) {
+                    options.locale = arg2;
+                }
+                else if (shared.isNumber(arg2)) {
+                    options.plural = arg2;
+                }
+                else if (shared.isArray(arg2)) {
+                    list = arg2;
+                }
+                else if (shared.isPlainObject(arg2)) {
+                    named = arg2;
+                }
+                if (shared.isString(arg3)) {
+                    options.locale = arg3;
+                }
+                else if (shared.isArray(arg3)) {
+                    list = arg3;
+                }
+                else if (shared.isPlainObject(arg3)) {
+                    named = arg3;
+                }
+                // return composer.t(key, (list || named || {}) as any, options)
+                return Reflect.apply(composer.t, composer, [
+                    key,
+                    (list || named || {}),
+                    options
+                ]);
+            },
+            // te
+            te(key, locale) {
+                return composer.te(key, locale);
+            },
+            // tm
+            tm(key) {
+                return composer.tm(key);
+            },
+            // getLocaleMessage
+            getLocaleMessage(locale) {
+                return composer.getLocaleMessage(locale);
+            },
+            // setLocaleMessage
+            setLocaleMessage(locale, message) {
+                composer.setLocaleMessage(locale, message);
+            },
+            // mergeLocaleMessage
+            mergeLocaleMessage(locale, message) {
+                composer.mergeLocaleMessage(locale, message);
+            },
+            // d
+            d(...args) {
+                return Reflect.apply(composer.d, composer, [...args]);
+            },
+            // getDateTimeFormat
+            getDateTimeFormat(locale) {
+                return composer.getDateTimeFormat(locale);
+            },
+            // setDateTimeFormat
+            setDateTimeFormat(locale, format) {
+                composer.setDateTimeFormat(locale, format);
+            },
+            // mergeDateTimeFormat
+            mergeDateTimeFormat(locale, format) {
+                composer.mergeDateTimeFormat(locale, format);
+            },
+            // n
+            n(...args) {
+                return Reflect.apply(composer.n, composer, [...args]);
+            },
+            // getNumberFormat
+            getNumberFormat(locale) {
+                return composer.getNumberFormat(locale);
+            },
+            // setNumberFormat
+            setNumberFormat(locale, format) {
+                composer.setNumberFormat(locale, format);
+            },
+            // mergeNumberFormat
+            mergeNumberFormat(locale, format) {
+                composer.mergeNumberFormat(locale, format);
+            },
+            // getChoiceIndex
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            getChoiceIndex(choice, choicesLength) {
+                shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_GET_CHOICE_INDEX));
+                return -1;
+            },
+            // for internal
+            __onComponentInstanceCreated(target) {
+                const { componentInstanceCreatedListener } = options;
+                if (componentInstanceCreatedListener) {
+                    componentInstanceCreatedListener(target, vueI18n);
+                }
+            }
+        };
+        // for vue-devtools timeline event
+        {
+            vueI18n.__enableEmitter = (emitter) => {
+                const __composer = composer;
+                __composer[EnableEmitter] && __composer[EnableEmitter](emitter);
+            };
+            vueI18n.__disableEmitter = () => {
+                const __composer = composer;
+                __composer[DisableEmitter] && __composer[DisableEmitter]();
+            };
+        }
+        return vueI18n;
+    }
+}
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+const baseFormatProps = {
+    tag: {
+        type: [String, Object]
+    },
+    locale: {
+        type: String
+    },
+    scope: {
+        type: String,
+        // NOTE: avoid https://github.com/microsoft/rushstack/issues/1050
+        validator: (val /* ComponetI18nScope */) => val === 'parent' || val === 'global',
+        default: 'parent' /* ComponetI18nScope */
+    },
+    i18n: {
+        type: Object
+    }
+};
+
+function getInterpolateArg(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+{ slots }, // SetupContext,
+keys) {
+    if (keys.length === 1 && keys[0] === 'default') {
+        // default slot with list
+        const ret = slots.default ? slots.default() : [];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return ret.reduce((slot, current) => {
+            return (slot = [
+                ...slot,
+                ...(shared.isArray(current.children) ? current.children : [current])
+            ]);
+        }, []);
+    }
+    else {
+        // named slots
+        return keys.reduce((arg, key) => {
+            const slot = slots[key];
+            if (slot) {
+                arg[key] = slot();
+            }
+            return arg;
+        }, {});
+    }
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getFragmentableTag(tag) {
+    return vue.Fragment ;
+}
+
+/**
+ * Translation Component
+ *
+ * @remarks
+ * See the following items for property about details
+ *
+ * @VueI18nSee [TranslationProps](component#translationprops)
+ * @VueI18nSee [BaseFormatProps](component#baseformatprops)
+ * @VueI18nSee [Component Interpolation](../guide/advanced/component)
+ *
+ * @example
+ * ```html
+ * <div id="app">
+ *   <!-- ... -->
+ *   <i18n path="term" tag="label" for="tos">
+ *     <a :href="url" target="_blank">{{ $t('tos') }}</a>
+ *   </i18n>
+ *   <!-- ... -->
+ * </div>
+ * ```
+ * ```js
+ * import { createApp } from 'vue'
+ * import { createI18n } from 'vue-i18n'
+ *
+ * const messages = {
+ *   en: {
+ *     tos: 'Term of Service',
+ *     term: 'I accept xxx {0}.'
+ *   },
+ *   ja: {
+ *     tos: '利用規約',
+ *     term: '私は xxx の{0}に同意します。'
+ *   }
+ * }
+ *
+ * const i18n = createI18n({
+ *   locale: 'en',
+ *   messages
+ * })
+ *
+ * const app = createApp({
+ *   data: {
+ *     url: '/term'
+ *   }
+ * }).use(i18n).mount('#app')
+ * ```
+ *
+ * @VueI18nComponent
+ */
+const Translation =  /* defineComponent */ {
+    /* eslint-disable */
+    name: 'i18n-t',
+    props: shared.assign({
+        keypath: {
+            type: String,
+            required: true
+        },
+        plural: {
+            type: [Number, String],
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            validator: (val) => shared.isNumber(val) || !isNaN(val)
+        }
+    }, baseFormatProps),
+    /* eslint-enable */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setup(props, context) {
+        const { slots, attrs } = context;
+        // NOTE: avoid https://github.com/microsoft/rushstack/issues/1050
+        const i18n = props.i18n ||
+            useI18n({
+                useScope: props.scope,
+                __useComponent: true
+            });
+        const keys = Object.keys(slots).filter(key => key !== '_');
+        return () => {
+            const options = {};
+            if (props.locale) {
+                options.locale = props.locale;
+            }
+            if (props.plural !== undefined) {
+                options.plural = shared.isString(props.plural) ? +props.plural : props.plural;
+            }
+            const arg = getInterpolateArg(context, keys);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const children = i18n[TransrateVNodeSymbol](props.keypath, arg, options);
+            const assignedAttrs = shared.assign({}, attrs);
+            const tag = shared.isString(props.tag) || shared.isObject(props.tag)
+                ? props.tag
+                : getFragmentableTag();
+            return vue.h(tag, assignedAttrs, children);
+        };
+    }
+};
+
+function isVNode(target) {
+    return shared.isArray(target) && !shared.isString(target[0]);
+}
+function renderFormatter(props, context, slotKeys, partFormatter) {
+    const { slots, attrs } = context;
+    return () => {
+        const options = { part: true };
+        let overrides = {};
+        if (props.locale) {
+            options.locale = props.locale;
+        }
+        if (shared.isString(props.format)) {
+            options.key = props.format;
+        }
+        else if (shared.isObject(props.format)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            if (shared.isString(props.format.key)) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                options.key = props.format.key;
+            }
+            // Filter out number format options only
+            overrides = Object.keys(props.format).reduce((options, prop) => {
+                return slotKeys.includes(prop)
+                    ? shared.assign({}, options, { [prop]: props.format[prop] }) // eslint-disable-line @typescript-eslint/no-explicit-any
+                    : options;
+            }, {});
+        }
+        const parts = partFormatter(...[props.value, options, overrides]);
+        let children = [options.key];
+        if (shared.isArray(parts)) {
+            children = parts.map((part, index) => {
+                const slot = slots[part.type];
+                const node = slot
+                    ? slot({ [part.type]: part.value, index, parts })
+                    : [part.value];
+                if (isVNode(node)) {
+                    node[0].key = `${part.type}-${index}`;
+                }
+                return node;
+            });
+        }
+        else if (shared.isString(parts)) {
+            children = [parts];
+        }
+        const assignedAttrs = shared.assign({}, attrs);
+        const tag = shared.isString(props.tag) || shared.isObject(props.tag)
+            ? props.tag
+            : getFragmentableTag();
+        return vue.h(tag, assignedAttrs, children);
+    };
+}
+
+const NUMBER_FORMAT_KEYS = [
+    'localeMatcher',
+    'style',
+    'unit',
+    'unitDisplay',
+    'currency',
+    'currencyDisplay',
+    'useGrouping',
+    'numberingSystem',
+    'minimumIntegerDigits',
+    'minimumFractionDigits',
+    'maximumFractionDigits',
+    'minimumSignificantDigits',
+    'maximumSignificantDigits',
+    'notation',
+    'formatMatcher'
+];
+/**
+ * Number Format Component
+ *
+ * @remarks
+ * See the following items for property about details
+ *
+ * @VueI18nSee [FormattableProps](component#formattableprops)
+ * @VueI18nSee [BaseFormatProps](component#baseformatprops)
+ * @VueI18nSee [Custom Formatting](../guide/essentials/number#custom-formatting)
+ *
+ * @VueI18nDanger
+ * Not supported IE, due to no support `Intl.NumberFormat#formatToParts` in [IE](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts)
+ *
+ * If you want to use it, you need to use [polyfill](https://github.com/formatjs/formatjs/tree/main/packages/intl-numberformat)
+ *
+ * @VueI18nComponent
+ */
+const NumberFormat =  /* defineComponent */ {
+    /* eslint-disable */
+    name: 'i18n-n',
+    props: shared.assign({
+        value: {
+            type: Number,
+            required: true
+        },
+        format: {
+            type: [String, Object]
+        }
+    }, baseFormatProps),
+    /* eslint-enable */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setup(props, context) {
+        const i18n = props.i18n ||
+            useI18n({ useScope: 'parent', __useComponent: true });
+        return renderFormatter(props, context, NUMBER_FORMAT_KEYS, (...args) => 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        i18n[NumberPartsSymbol](...args));
+    }
+};
+
+const DATETIME_FORMAT_KEYS = [
+    'dateStyle',
+    'timeStyle',
+    'fractionalSecondDigits',
+    'calendar',
+    'dayPeriod',
+    'numberingSystem',
+    'localeMatcher',
+    'timeZone',
+    'hour12',
+    'hourCycle',
+    'formatMatcher',
+    'weekday',
+    'era',
+    'year',
+    'month',
+    'day',
+    'hour',
+    'minute',
+    'second',
+    'timeZoneName'
+];
+/**
+ * Datetime Format Component
+ *
+ * @remarks
+ * See the following items for property about details
+ *
+ * @VueI18nSee [FormattableProps](component#formattableprops)
+ * @VueI18nSee [BaseFormatProps](component#baseformatprops)
+ * @VueI18nSee [Custom Formatting](../guide/essentials/datetime#custom-formatting)
+ *
+ * @VueI18nDanger
+ * Not supported IE, due to no support `Intl.DateTimeFormat#formatToParts` in [IE](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/formatToParts)
+ *
+ * If you want to use it, you need to use [polyfill](https://github.com/formatjs/formatjs/tree/main/packages/intl-datetimeformat)
+ *
+ * @VueI18nComponent
+ */
+const DatetimeFormat =  /*defineComponent */ {
+    /* eslint-disable */
+    name: 'i18n-d',
+    props: shared.assign({
+        value: {
+            type: [Number, Date],
+            required: true
+        },
+        format: {
+            type: [String, Object]
+        }
+    }, baseFormatProps),
+    /* eslint-enable */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setup(props, context) {
+        const i18n = props.i18n ||
+            useI18n({ useScope: 'parent', __useComponent: true });
+        return renderFormatter(props, context, DATETIME_FORMAT_KEYS, (...args) => 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        i18n[DatetimePartsSymbol](...args));
+    }
+};
+
+function getComposer$1(i18n, instance) {
+    const i18nInternal = i18n;
+    if (i18n.mode === 'composition') {
+        return (i18nInternal.__getInstance(instance) || i18n.global);
+    }
+    else {
+        const vueI18n = i18nInternal.__getInstance(instance);
+        return vueI18n != null
+            ? vueI18n.__composer
+            : i18n.global.__composer;
+    }
+}
+function vTDirective(i18n) {
+    const bind = (el, { instance, value, modifiers }) => {
+        /* istanbul ignore if */
+        if (!instance || !instance.$) {
+            throw createI18nError(I18nErrorCodes.UNEXPECTED_ERROR);
+        }
+        const composer = getComposer$1(i18n, instance.$);
+        if (modifiers.preserve) {
+            shared.warn(getWarnMessage(I18nWarnCodes.NOT_SUPPORTED_PRESERVE));
+        }
+        const parsedValue = parseValue(value);
+        // el.textContent = composer.t(...makeParams(parsedValue))
+        el.textContent = Reflect.apply(composer.t, composer, [
+            ...makeParams(parsedValue)
+        ]);
+    };
+    return {
+        beforeMount: bind,
+        beforeUpdate: bind
+    };
+}
+function parseValue(value) {
+    if (shared.isString(value)) {
+        return { path: value };
+    }
+    else if (shared.isPlainObject(value)) {
+        if (!('path' in value)) {
+            throw createI18nError(I18nErrorCodes.REQUIRED_VALUE, 'path');
+        }
+        return value;
+    }
+    else {
+        throw createI18nError(I18nErrorCodes.INVALID_VALUE);
+    }
+}
+function makeParams(value) {
+    const { path, locale, args, choice, plural } = value;
+    const options = {};
+    const named = args || {};
+    if (shared.isString(locale)) {
+        options.locale = locale;
+    }
+    if (shared.isNumber(choice)) {
+        options.plural = choice;
+    }
+    if (shared.isNumber(plural)) {
+        options.plural = plural;
+    }
+    return [path, named, options];
+}
+
+function apply(app, i18n, ...options) {
+    const pluginOptions = shared.isPlainObject(options[0])
+        ? options[0]
+        : {};
+    const useI18nComponentName = !!pluginOptions.useI18nComponentName;
+    const globalInstall = shared.isBoolean(pluginOptions.globalInstall)
+        ? pluginOptions.globalInstall
+        : true;
+    if (globalInstall && useI18nComponentName) {
+        shared.warn(getWarnMessage(I18nWarnCodes.COMPONENT_NAME_LEGACY_COMPATIBLE, {
+            name: Translation.name
+        }));
+    }
+    if (globalInstall) {
+        // install components
+        app.component(!useI18nComponentName ? Translation.name : 'i18n', Translation);
+        app.component(NumberFormat.name, NumberFormat);
+        app.component(DatetimeFormat.name, DatetimeFormat);
+    }
+    // install directive
+    {
+        app.directive('t', vTDirective(i18n));
+    }
+}
+
+/**
+ * Supports compatibility for legacy vue-i18n APIs
+ * This mixin is used when we use vue-i18n@v9.x or later
+ */
+function defineMixin(vuei18n, composer, i18n) {
+    return {
+        beforeCreate() {
+            const instance = vue.getCurrentInstance();
+            /* istanbul ignore if */
+            if (!instance) {
+                throw createI18nError(I18nErrorCodes.UNEXPECTED_ERROR);
+            }
+            const options = this.$options;
+            if (options.i18n) {
+                const optionsI18n = options.i18n;
+                if (options.__i18n) {
+                    optionsI18n.__i18n = options.__i18n;
+                }
+                optionsI18n.__root = composer;
+                if (this === this.$root) {
+                    this.$i18n = mergeToRoot(vuei18n, optionsI18n);
+                }
+                else {
+                    optionsI18n.__injectWithOption = true;
+                    this.$i18n = createVueI18n(optionsI18n);
+                }
+            }
+            else if (options.__i18n) {
+                if (this === this.$root) {
+                    this.$i18n = mergeToRoot(vuei18n, options);
+                }
+                else {
+                    this.$i18n = createVueI18n({
+                        __i18n: options.__i18n,
+                        __injectWithOption: true,
+                        __root: composer
+                    });
+                }
+            }
+            else {
+                // set global
+                this.$i18n = vuei18n;
+            }
+            if (options.__i18nGlobal) {
+                adjustI18nResources(composer, options, options);
+            }
+            vuei18n.__onComponentInstanceCreated(this.$i18n);
+            i18n.__setInstance(instance, this.$i18n);
+            // defines vue-i18n legacy APIs
+            this.$t = (...args) => this.$i18n.t(...args);
+            this.$rt = (...args) => this.$i18n.rt(...args);
+            this.$tc = (...args) => this.$i18n.tc(...args);
+            this.$te = (key, locale) => this.$i18n.te(key, locale);
+            this.$d = (...args) => this.$i18n.d(...args);
+            this.$n = (...args) => this.$i18n.n(...args);
+            this.$tm = (key) => this.$i18n.tm(key);
+        },
+        mounted() {
+        },
+        unmounted() {
+            const instance = vue.getCurrentInstance();
+            /* istanbul ignore if */
+            if (!instance) {
+                throw createI18nError(I18nErrorCodes.UNEXPECTED_ERROR);
+            }
+            delete this.$t;
+            delete this.$rt;
+            delete this.$tc;
+            delete this.$te;
+            delete this.$d;
+            delete this.$n;
+            delete this.$tm;
+            i18n.__deleteInstance(instance);
+            delete this.$i18n;
+        }
+    };
+}
+function mergeToRoot(root, options) {
+    root.locale = options.locale || root.locale;
+    root.fallbackLocale = options.fallbackLocale || root.fallbackLocale;
+    root.missing = options.missing || root.missing;
+    root.silentTranslationWarn =
+        options.silentTranslationWarn || root.silentFallbackWarn;
+    root.silentFallbackWarn =
+        options.silentFallbackWarn || root.silentFallbackWarn;
+    root.formatFallbackMessages =
+        options.formatFallbackMessages || root.formatFallbackMessages;
+    root.postTranslation = options.postTranslation || root.postTranslation;
+    root.warnHtmlInMessage = options.warnHtmlInMessage || root.warnHtmlInMessage;
+    root.escapeParameterHtml =
+        options.escapeParameterHtml || root.escapeParameterHtml;
+    root.sync = options.sync || root.sync;
+    root.__composer[SetPluralRulesSymbol](options.pluralizationRules || root.pluralizationRules);
+    const messages = getLocaleMessages(root.locale, {
+        messages: options.messages,
+        __i18n: options.__i18n
+    });
+    Object.keys(messages).forEach(locale => root.mergeLocaleMessage(locale, messages[locale]));
+    if (options.datetimeFormats) {
+        Object.keys(options.datetimeFormats).forEach(locale => root.mergeDateTimeFormat(locale, options.datetimeFormats[locale]));
+    }
+    if (options.numberFormats) {
+        Object.keys(options.numberFormats).forEach(locale => root.mergeNumberFormat(locale, options.numberFormats[locale]));
+    }
+    return root;
+}
+
+/**
+ * Injection key for {@link useI18n}
+ *
+ * @remarks
+ * The global injection key for I18n instances with `useI18n`. this injection key is used in Web Components.
+ * Specify the i18n instance created by {@link createI18n} together with `provide` function.
+ *
+ * @VueI18nGeneral
+ */
+const I18nInjectionKey = 
+/* #__PURE__*/ shared.makeSymbol('global-vue-i18n');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+function createI18n(options = {}, VueI18nLegacy) {
+    // prettier-ignore
+    const __legacyMode = shared.isBoolean(options.legacy)
+            ? options.legacy
+            : true;
+    // prettier-ignore
+    const __globalInjection = shared.isBoolean(options.globalInjection)
+        ? options.globalInjection
+        : true;
+    // prettier-ignore
+    const __allowComposition = __legacyMode
+            ? !!options.allowComposition
+            : true;
+    const __instances = new Map();
+    const [globalScope, __global] = createGlobal(options, __legacyMode);
+    const symbol = shared.makeSymbol('vue-i18n' );
+    function __getInstance(component) {
+        return __instances.get(component) || null;
+    }
+    function __setInstance(component, instance) {
+        __instances.set(component, instance);
+    }
+    function __deleteInstance(component) {
+        __instances.delete(component);
+    }
+    {
+        const i18n = {
+            // mode
+            get mode() {
+                return __legacyMode
+                    ? 'legacy'
+                    : 'composition';
+            },
+            // allowComposition
+            get allowComposition() {
+                return __allowComposition;
+            },
+            // install plugin
+            async install(app, ...options) {
+                // setup global provider
+                app.__VUE_I18N_SYMBOL__ = symbol;
+                app.provide(app.__VUE_I18N_SYMBOL__, i18n);
+                // global method and properties injection for Composition API
+                if (!__legacyMode && __globalInjection) {
+                    injectGlobalFields(app, i18n.global);
+                }
+                // install built-in components and directive
+                {
+                    apply(app, i18n, ...options);
+                }
+                // setup mixin for Legacy API
+                if (__legacyMode) {
+                    app.mixin(defineMixin(__global, __global.__composer, i18n));
+                }
+                // release global scope
+                const unmountApp = app.unmount;
+                app.unmount = () => {
+                    i18n.dispose();
+                    unmountApp();
+                };
+            },
+            // global accessor
+            get global() {
+                return __global;
+            },
+            dispose() {
+                globalScope.stop();
+            },
+            // @internal
+            __instances,
+            // @internal
+            __getInstance,
+            // @internal
+            __setInstance,
+            // @internal
+            __deleteInstance
+        };
+        return i18n;
+    }
+}
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function useI18n(options = {}) {
+    const instance = vue.getCurrentInstance();
+    if (instance == null) {
+        throw createI18nError(I18nErrorCodes.MUST_BE_CALL_SETUP_TOP);
+    }
+    if (!instance.isCE &&
+        instance.appContext.app != null &&
+        !instance.appContext.app.__VUE_I18N_SYMBOL__) {
+        throw createI18nError(I18nErrorCodes.NOT_INSLALLED);
+    }
+    const i18n = getI18nInstance(instance);
+    const global = getGlobalComposer(i18n);
+    const componentOptions = getComponentOptions(instance);
+    const scope = getScope(options, componentOptions);
+    {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (i18n.mode === 'legacy' && !options.__useComponent) {
+            if (!i18n.allowComposition) {
+                throw createI18nError(I18nErrorCodes.NOT_AVAILABLE_IN_LEGACY_MODE);
+            }
+            return useI18nForLegacy(instance, scope, global, options);
+        }
+    }
+    if (scope === 'global') {
+        adjustI18nResources(global, options, componentOptions);
+        return global;
+    }
+    if (scope === 'parent') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let composer = getComposer(i18n, instance, options.__useComponent);
+        if (composer == null) {
+            {
+                shared.warn(getWarnMessage(I18nWarnCodes.NOT_FOUND_PARENT_SCOPE));
+            }
+            composer = global;
+        }
+        return composer;
+    }
+    const i18nInternal = i18n;
+    let composer = i18nInternal.__getInstance(instance);
+    if (composer == null) {
+        const composerOptions = shared.assign({}, options);
+        if ('__i18n' in componentOptions) {
+            composerOptions.__i18n = componentOptions.__i18n;
+        }
+        if (global) {
+            composerOptions.__root = global;
+        }
+        composer = createComposer(composerOptions);
+        setupLifeCycle(i18nInternal, instance);
+        i18nInternal.__setInstance(instance, composer);
+    }
+    return composer;
+}
+/**
+ * Cast to VueI18n legacy compatible type
+ *
+ * @remarks
+ * This API is provided only with [vue-i18n-bridge](https://vue-i18n.intlify.dev/guide/migration/ways.html#what-is-vue-i18n-bridge).
+ *
+ * The purpose of this function is to convert an {@link I18n} instance created with {@link createI18n | createI18n(legacy: true)} into a `vue-i18n@v8.x` compatible instance of `new VueI18n` in a TypeScript environment.
+ *
+ * @param i18n - An instance of {@link I18n}
+ * @returns A i18n instance which is casted to {@link VueI18n} type
+ *
+ * @VueI18nTip
+ * :new: provided by **vue-i18n-bridge only**
+ *
+ * @VueI18nGeneral
+ */
+const castToVueI18n =  (i18n
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+) => {
+    if (!(__VUE_I18N_BRIDGE__ in i18n)) {
+        throw createI18nError(I18nErrorCodes.NOT_COMPATIBLE_LEGACY_VUE_I18N);
+    }
+    return i18n;
+};
+function createGlobal(options, legacyMode, VueI18nLegacy // eslint-disable-line @typescript-eslint/no-explicit-any
+) {
+    const scope = vue.effectScope();
+    {
+        const obj = legacyMode
+            ? scope.run(() => createVueI18n(options))
+            : scope.run(() => createComposer(options));
+        if (obj == null) {
+            throw createI18nError(I18nErrorCodes.UNEXPECTED_ERROR);
+        }
+        return [scope, obj];
+    }
+}
+function getI18nInstance(instance) {
+    {
+        const i18n = vue.inject(!instance.isCE
+            ? instance.appContext.app.__VUE_I18N_SYMBOL__
+            : I18nInjectionKey);
+        /* istanbul ignore if */
+        if (!i18n) {
+            throw createI18nError(!instance.isCE
+                ? I18nErrorCodes.UNEXPECTED_ERROR
+                : I18nErrorCodes.NOT_INSLALLED_WITH_PROVIDE);
+        }
+        return i18n;
+    }
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function getScope(options, componentOptions) {
+    // prettier-ignore
+    return shared.isEmptyObject(options)
+        ? ('__i18n' in componentOptions)
+            ? 'local'
+            : 'global'
+        : !options.useScope
+            ? 'local'
+            : options.useScope;
+}
+function getGlobalComposer(i18n) {
+    // prettier-ignore
+    return i18n.mode === 'composition'
+            ? i18n.global
+            : i18n.global.__composer
+        ;
+}
+function getComposer(i18n, target, useComponent = false) {
+    let composer = null;
+    const root = target.root;
+    let current = target.parent;
+    while (current != null) {
+        const i18nInternal = i18n;
+        if (i18n.mode === 'composition') {
+            composer = i18nInternal.__getInstance(current);
+        }
+        else {
+            {
+                const vueI18n = i18nInternal.__getInstance(current);
+                if (vueI18n != null) {
+                    composer = vueI18n
+                        .__composer;
+                    if (useComponent &&
+                        composer &&
+                        !composer[InejctWithOption] // eslint-disable-line @typescript-eslint/no-explicit-any
+                    ) {
+                        composer = null;
+                    }
+                }
+            }
+        }
+        if (composer != null) {
+            break;
+        }
+        if (root === current) {
+            break;
+        }
+        current = current.parent;
+    }
+    return composer;
+}
+function setupLifeCycle(i18n, target, composer) {
+    {
+        vue.onMounted(() => {
+        }, target);
+        vue.onUnmounted(() => {
+            i18n.__deleteInstance(target);
+        }, target);
+    }
+}
+function useI18nForLegacy(instance, scope, root, options = {} // eslint-disable-line @typescript-eslint/no-explicit-any
+) {
+    const isLocale = scope === 'local';
+    const _composer = vue.shallowRef(null);
+    if (isLocale && instance.proxy && !instance.proxy.$options.i18n) {
+        throw createI18nError(I18nErrorCodes.MUST_DEFINE_I18N_OPTION_IN_ALLOW_COMPOSITION);
+    }
+    const _inheritLocale = shared.isBoolean(options.inheritLocale)
+        ? options.inheritLocale
+        : true;
+    const _locale = vue.ref(
+    // prettier-ignore
+    isLocale && _inheritLocale
+        ? root.locale.value
+        : shared.isString(options.locale)
+            ? options.locale
+            : coreBase.DEFAULT_LOCALE);
+    const _fallbackLocale = vue.ref(
+    // prettier-ignore
+    isLocale && _inheritLocale
+        ? root.fallbackLocale.value
+        : shared.isString(options.fallbackLocale) ||
+            shared.isArray(options.fallbackLocale) ||
+            shared.isPlainObject(options.fallbackLocale) ||
+            options.fallbackLocale === false
+            ? options.fallbackLocale
+            : _locale.value);
+    const _messages = vue.ref(getLocaleMessages(_locale.value, options));
+    // prettier-ignore
+    const _datetimeFormats = vue.ref(shared.isPlainObject(options.datetimeFormats)
+        ? options.datetimeFormats
+        : { [_locale.value]: {} });
+    // prettier-ignore
+    const _numberFormats = vue.ref(shared.isPlainObject(options.numberFormats)
+        ? options.numberFormats
+        : { [_locale.value]: {} });
+    // prettier-ignore
+    const _missingWarn = isLocale
+        ? root.missingWarn
+        : shared.isBoolean(options.missingWarn) || shared.isRegExp(options.missingWarn)
+            ? options.missingWarn
+            : true;
+    // prettier-ignore
+    const _fallbackWarn = isLocale
+        ? root.fallbackWarn
+        : shared.isBoolean(options.fallbackWarn) || shared.isRegExp(options.fallbackWarn)
+            ? options.fallbackWarn
+            : true;
+    // prettier-ignore
+    const _fallbackRoot = isLocale
+        ? root.fallbackRoot
+        : shared.isBoolean(options.fallbackRoot)
+            ? options.fallbackRoot
+            : true;
+    // configure fall back to root
+    const _fallbackFormat = !!options.fallbackFormat;
+    // runtime missing
+    const _missing = shared.isFunction(options.missing) ? options.missing : null;
+    // postTranslation handler
+    const _postTranslation = shared.isFunction(options.postTranslation)
+        ? options.postTranslation
+        : null;
+    // prettier-ignore
+    const _warnHtmlMessage = isLocale
+        ? root.warnHtmlMessage
+        : shared.isBoolean(options.warnHtmlMessage)
+            ? options.warnHtmlMessage
+            : true;
+    const _escapeParameter = !!options.escapeParameter;
+    // prettier-ignore
+    const _modifiers = isLocale
+        ? root.modifiers
+        : shared.isPlainObject(options.modifiers)
+            ? options.modifiers
+            : {};
+    // pluralRules
+    const _pluralRules = options.pluralRules || (isLocale && root.pluralRules);
+    // track reactivity
+    function trackReactivityValues() {
+        return [
+            _locale.value,
+            _fallbackLocale.value,
+            _messages.value,
+            _datetimeFormats.value,
+            _numberFormats.value
+        ];
+    }
+    // locale
+    const locale = vue.computed({
+        get: () => {
+            return _composer.value ? _composer.value.locale.value : _locale.value;
+        },
+        set: val => {
+            if (_composer.value) {
+                _composer.value.locale.value = val;
+            }
+            _locale.value = val;
+        }
+    });
+    // fallbackLocale
+    const fallbackLocale = vue.computed({
+        get: () => {
+            return _composer.value
+                ? _composer.value.fallbackLocale.value
+                : _fallbackLocale.value;
+        },
+        set: val => {
+            if (_composer.value) {
+                _composer.value.fallbackLocale.value = val;
+            }
+            _fallbackLocale.value = val;
+        }
+    });
+    // messages
+    const messages = vue.computed(() => {
+        if (_composer.value) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return _composer.value.messages.value;
+        }
+        else {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return _messages.value;
+        }
+    });
+    const datetimeFormats = vue.computed(() => _datetimeFormats.value);
+    const numberFormats = vue.computed(() => _numberFormats.value);
+    function getPostTranslationHandler() {
+        return _composer.value
+            ? _composer.value.getPostTranslationHandler()
+            : _postTranslation;
+    }
+    function setPostTranslationHandler(handler) {
+        if (_composer.value) {
+            _composer.value.setPostTranslationHandler(handler);
+        }
+    }
+    function getMissingHandler() {
+        return _composer.value ? _composer.value.getMissingHandler() : _missing;
+    }
+    function setMissingHandler(handler) {
+        if (_composer.value) {
+            _composer.value.setMissingHandler(handler);
+        }
+    }
+    function warpWithDeps(fn) {
+        trackReactivityValues();
+        return fn();
+    }
+    function t(...args) {
+        return _composer.value
+            ? warpWithDeps(() => Reflect.apply(_composer.value.t, null, [...args]))
+            : warpWithDeps(() => '');
+    }
+    function rt(...args) {
+        return _composer.value
+            ? Reflect.apply(_composer.value.rt, null, [...args])
+            : '';
+    }
+    function d(...args) {
+        return _composer.value
+            ? warpWithDeps(() => Reflect.apply(_composer.value.d, null, [...args]))
+            : warpWithDeps(() => '');
+    }
+    function n(...args) {
+        return _composer.value
+            ? warpWithDeps(() => Reflect.apply(_composer.value.n, null, [...args]))
+            : warpWithDeps(() => '');
+    }
+    function tm(key) {
+        return _composer.value ? _composer.value.tm(key) : {};
+    }
+    function te(key, locale) {
+        return _composer.value ? _composer.value.te(key, locale) : false;
+    }
+    function getLocaleMessage(locale) {
+        return _composer.value ? _composer.value.getLocaleMessage(locale) : {};
+    }
+    function setLocaleMessage(locale, message) {
+        if (_composer.value) {
+            _composer.value.setLocaleMessage(locale, message);
+            _messages.value[locale] = message;
+        }
+    }
+    function mergeLocaleMessage(locale, message) {
+        if (_composer.value) {
+            _composer.value.mergeLocaleMessage(locale, message);
+        }
+    }
+    function getDateTimeFormat(locale) {
+        return _composer.value ? _composer.value.getDateTimeFormat(locale) : {};
+    }
+    function setDateTimeFormat(locale, format) {
+        if (_composer.value) {
+            _composer.value.setDateTimeFormat(locale, format);
+            _datetimeFormats.value[locale] = format;
+        }
+    }
+    function mergeDateTimeFormat(locale, format) {
+        if (_composer.value) {
+            _composer.value.mergeDateTimeFormat(locale, format);
+        }
+    }
+    function getNumberFormat(locale) {
+        return _composer.value ? _composer.value.getNumberFormat(locale) : {};
+    }
+    function setNumberFormat(locale, format) {
+        if (_composer.value) {
+            _composer.value.setNumberFormat(locale, format);
+            _numberFormats.value[locale] = format;
+        }
+    }
+    function mergeNumberFormat(locale, format) {
+        if (_composer.value) {
+            _composer.value.mergeNumberFormat(locale, format);
+        }
+    }
+    const wrapper = {
+        get id() {
+            return _composer.value ? _composer.value.id : -1;
+        },
+        locale,
+        fallbackLocale,
+        messages,
+        datetimeFormats,
+        numberFormats,
+        get inheritLocale() {
+            return _composer.value ? _composer.value.inheritLocale : _inheritLocale;
+        },
+        set inheritLocale(val) {
+            if (_composer.value) {
+                _composer.value.inheritLocale = val;
+            }
+        },
+        get availableLocales() {
+            return _composer.value
+                ? _composer.value.availableLocales
+                : Object.keys(_messages.value);
+        },
+        get modifiers() {
+            return (_composer.value ? _composer.value.modifiers : _modifiers);
+        },
+        get pluralRules() {
+            return (_composer.value ? _composer.value.pluralRules : _pluralRules);
+        },
+        get isGlobal() {
+            return _composer.value ? _composer.value.isGlobal : false;
+        },
+        get missingWarn() {
+            return _composer.value ? _composer.value.missingWarn : _missingWarn;
+        },
+        set missingWarn(val) {
+            if (_composer.value) {
+                _composer.value.missingWarn = val;
+            }
+        },
+        get fallbackWarn() {
+            return _composer.value ? _composer.value.fallbackWarn : _fallbackWarn;
+        },
+        set fallbackWarn(val) {
+            if (_composer.value) {
+                _composer.value.missingWarn = val;
+            }
+        },
+        get fallbackRoot() {
+            return _composer.value ? _composer.value.fallbackRoot : _fallbackRoot;
+        },
+        set fallbackRoot(val) {
+            if (_composer.value) {
+                _composer.value.fallbackRoot = val;
+            }
+        },
+        get fallbackFormat() {
+            return _composer.value ? _composer.value.fallbackFormat : _fallbackFormat;
+        },
+        set fallbackFormat(val) {
+            if (_composer.value) {
+                _composer.value.fallbackFormat = val;
+            }
+        },
+        get warnHtmlMessage() {
+            return _composer.value
+                ? _composer.value.warnHtmlMessage
+                : _warnHtmlMessage;
+        },
+        set warnHtmlMessage(val) {
+            if (_composer.value) {
+                _composer.value.warnHtmlMessage = val;
+            }
+        },
+        get escapeParameter() {
+            return _composer.value
+                ? _composer.value.escapeParameter
+                : _escapeParameter;
+        },
+        set escapeParameter(val) {
+            if (_composer.value) {
+                _composer.value.escapeParameter = val;
+            }
+        },
+        t,
+        getPostTranslationHandler,
+        setPostTranslationHandler,
+        getMissingHandler,
+        setMissingHandler,
+        rt,
+        d,
+        n,
+        tm,
+        te,
+        getLocaleMessage,
+        setLocaleMessage,
+        mergeLocaleMessage,
+        getDateTimeFormat,
+        setDateTimeFormat,
+        mergeDateTimeFormat,
+        getNumberFormat,
+        setNumberFormat,
+        mergeNumberFormat
+    };
+    function sync(composer) {
+        composer.locale.value = _locale.value;
+        composer.fallbackLocale.value = _fallbackLocale.value;
+        Object.keys(_messages.value).forEach(locale => {
+            composer.mergeLocaleMessage(locale, _messages.value[locale]);
+        });
+        Object.keys(_datetimeFormats.value).forEach(locale => {
+            composer.mergeDateTimeFormat(locale, _datetimeFormats.value[locale]);
+        });
+        Object.keys(_numberFormats.value).forEach(locale => {
+            composer.mergeNumberFormat(locale, _numberFormats.value[locale]);
+        });
+        composer.escapeParameter = _escapeParameter;
+        composer.fallbackFormat = _fallbackFormat;
+        composer.fallbackRoot = _fallbackRoot;
+        composer.fallbackWarn = _fallbackWarn;
+        composer.missingWarn = _missingWarn;
+        composer.warnHtmlMessage = _warnHtmlMessage;
+    }
+    vue.onBeforeMount(() => {
+        if (instance.proxy == null || instance.proxy.$i18n == null) {
+            throw createI18nError(I18nErrorCodes.NOT_AVAILABLE_COMPOSITION_IN_LEGACY);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const composer = (_composer.value = instance.proxy.$i18n
+            .__composer);
+        if (scope === 'global') {
+            _locale.value = composer.locale.value;
+            _fallbackLocale.value = composer.fallbackLocale.value;
+            _messages.value = composer.messages.value;
+            _datetimeFormats.value = composer.datetimeFormats.value;
+            _numberFormats.value = composer.numberFormats.value;
+        }
+        else if (isLocale) {
+            sync(composer);
+        }
+    });
+    return wrapper;
+}
+const globalExportProps = [
+    'locale',
+    'fallbackLocale',
+    'availableLocales'
+];
+const globalExportMethods = ['t', 'rt', 'd', 'n', 'tm'] ;
+function injectGlobalFields(app, composer) {
+    const i18n = Object.create(null);
+    globalExportProps.forEach(prop => {
+        const desc = Object.getOwnPropertyDescriptor(composer, prop);
+        if (!desc) {
+            throw createI18nError(I18nErrorCodes.UNEXPECTED_ERROR);
+        }
+        const wrap = vue.isRef(desc.value) // check computed props
+            ? {
+                get() {
+                    return desc.value.value;
+                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                set(val) {
+                    desc.value.value = val;
+                }
+            }
+            : {
+                get() {
+                    return desc.get && desc.get();
+                }
+            };
+        Object.defineProperty(i18n, prop, wrap);
+    });
+    app.config.globalProperties.$i18n = i18n;
+    globalExportMethods.forEach(method => {
+        const desc = Object.getOwnPropertyDescriptor(composer, method);
+        if (!desc || !desc.value) {
+            throw createI18nError(I18nErrorCodes.UNEXPECTED_ERROR);
+        }
+        Object.defineProperty(app.config.globalProperties, `$${method}`, desc);
+    });
+}
+
+// register message compiler at vue-i18n
+coreBase.registerMessageCompiler(coreBase.compileToFunction);
+// register message resolver at vue-i18n
+coreBase.registerMessageResolver(coreBase.resolveValue);
+// register fallback locale at vue-i18n
+coreBase.registerLocaleFallbacker(coreBase.fallbackWithLocaleChain);
+// NOTE: experimental !!
+{
+    const target = shared.getGlobalThis();
+    target.__INTLIFY__ = true;
+    coreBase.setDevToolsHook(target.__INTLIFY_DEVTOOLS_GLOBAL_HOOK__);
+}
+
+exports.DatetimeFormat = DatetimeFormat;
+exports.I18nInjectionKey = I18nInjectionKey;
+exports.NumberFormat = NumberFormat;
+exports.Translation = Translation;
+exports.VERSION = VERSION;
+exports.castToVueI18n = castToVueI18n;
+exports.createI18n = createI18n;
+exports.useI18n = useI18n;
+exports.vTDirective = vTDirective;
