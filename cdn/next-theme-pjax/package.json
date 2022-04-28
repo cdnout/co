@@ -1,0 +1,1 @@
+[{"name":"next-theme-pjax","version":"0.5.0","description":"Easily enable fast AJAX navigation on any website (using pushState + XHR)","repository":"git+https:\/\/github.com\/next-theme\/pjax.git","keyfiles":"pjax.min.js","keywords":["pjax","pushstate","ajax","navigation","transition","animation"],"npm":"@next-theme\/pjax"}]

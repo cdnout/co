@@ -1,8 +1,31 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/common'), require('rxjs'), require('rxjs/operators'), require('@angular/forms')) :
     typeof define === 'function' && define.amd ? define('ngb', ['exports', '@angular/core', '@angular/common', 'rxjs', 'rxjs/operators', '@angular/forms'], factory) :
-    (global = global || self, factory(global.ngb = {}, global.ng.core, global.ng.common, global.rxjs, global.rxjs.operators, global.ng.forms));
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ngb = {}, global.ng.core, global.ng.common, global.rxjs, global.rxjs.operators, global.ng.forms));
 }(this, (function (exports, i0, i1, rxjs, operators, forms) { 'use strict';
+
+    function _interopNamespace(e) {
+        if (e && e.__esModule) return e;
+        var n = Object.create(null);
+        if (e) {
+            Object.keys(e).forEach(function (k) {
+                if (k !== 'default') {
+                    var d = Object.getOwnPropertyDescriptor(e, k);
+                    Object.defineProperty(n, k, d.get ? d : {
+                        enumerable: true,
+                        get: function () {
+                            return e[k];
+                        }
+                    });
+                }
+            });
+        }
+        n['default'] = e;
+        return Object.freeze(n);
+    }
+
+    var i0__namespace = /*#__PURE__*/_interopNamespace(i0);
+    var i1__namespace = /*#__PURE__*/_interopNamespace(i1);
 
     function toInteger(value) {
         return parseInt("" + value, 10);
@@ -84,7 +107,7 @@
      * @param element element where to apply the reflow
      */
     function reflow(element) {
-        return (element || document.body).offsetHeight;
+        return (element || document.body).getBoundingClientRect();
     }
     /**
      * Creates an observable where all callbacks are executed inside a given zone
@@ -100,6 +123,9 @@
                 return source.subscribe(onNext, onError, onComplete);
             });
         };
+    }
+    function removeAccents(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
     var environment = {
@@ -118,7 +144,7 @@
         }
         return NgbConfig;
     }());
-    NgbConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbConfig_Factory() { return new NgbConfig(); }, token: NgbConfig, providedIn: "root" });
+    NgbConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbConfig_Factory() { return new NgbConfig(); }, token: NgbConfig, providedIn: "root" });
     NgbConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -142,7 +168,7 @@
         });
         return NgbAccordionConfig;
     }());
-    NgbAccordionConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbAccordionConfig_Factory() { return new NgbAccordionConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbAccordionConfig, providedIn: "root" });
+    NgbAccordionConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbAccordionConfig_Factory() { return new NgbAccordionConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbAccordionConfig, providedIn: "root" });
     NgbAccordionConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -158,7 +184,7 @@
     }
 
     var noopFn = function () { };
-    var ɵ0 = noopFn;
+    var ɵ0$5 = noopFn;
     var transitionTimerDelayMs = environment.transitionTimerDelayMs;
     var runningTransitions = new Map();
     var ngbRunTransition = function (zone, element, startFn, options) {
@@ -288,7 +314,7 @@
         };
     };
 
-    var nextId = 0;
+    var nextId$4 = 0;
     /**
      * A directive that wraps an accordion panel header with any HTML markup and a toggling button
      * marked with [`NgbPanelToggle`](#/components/accordion/api#NgbPanelToggle).
@@ -356,7 +382,7 @@
              *
              *  If not provided, it will be auto-generated in the `ngb-panel-xxx` format.
              */
-            this.id = "ngb-panel-" + nextId++;
+            this.id = "ngb-panel-" + nextId$4++;
             this.isOpen = false;
             /* A flag to specified that the transition panel classes have been initialized */
             this.initClassDone = false;
@@ -598,7 +624,7 @@
                     exportAs: 'ngbAccordion',
                     encapsulation: i0.ViewEncapsulation.None,
                     host: { 'class': 'accordion', 'role': 'tablist', '[attr.aria-multiselectable]': '!closeOtherPanels' },
-                    template: "\n    <ng-template #t ngbPanelHeader let-panel>\n      <button class=\"btn btn-link\" [ngbPanelToggle]=\"panel\">\n        {{panel.title}}<ng-template [ngTemplateOutlet]=\"panel.titleTpl?.templateRef\"></ng-template>\n      </button>\n    </ng-template>\n    <ng-template ngFor let-panel [ngForOf]=\"panels\">\n      <div [class]=\"'card ' + (panel.cardClass || '')\">\n        <div role=\"tab\" id=\"{{panel.id}}-header\" [class]=\"'card-header ' + (panel.type ? 'bg-'+panel.type: type ? 'bg-'+type : '')\">\n          <ng-template [ngTemplateOutlet]=\"panel.headerTpl?.templateRef || t\"\n                       [ngTemplateOutletContext]=\"{$implicit: panel, opened: panel.isOpen}\"></ng-template>\n        </div>\n        <div id=\"{{panel.id}}\" role=\"tabpanel\" [attr.aria-labelledby]=\"panel.id + '-header'\"\n             *ngIf=\"!destroyOnHide || panel.isOpen || panel.transitionRunning\">\n          <div class=\"card-body\">\n               <ng-template [ngTemplateOutlet]=\"panel.contentTpl?.templateRef || null\"></ng-template>\n          </div>\n        </div>\n      </div>\n    </ng-template>\n  "
+                    template: "\n    <ng-template #t ngbPanelHeader let-panel>\n      <button class=\"accordion-button\" [ngbPanelToggle]=\"panel\">\n        {{panel.title}}<ng-template [ngTemplateOutlet]=\"panel.titleTpl?.templateRef\"></ng-template>\n      </button>\n    </ng-template>\n    <ng-template ngFor let-panel [ngForOf]=\"panels\">\n      <div [class]=\"'accordion-item ' + (panel.cardClass || '')\">\n        <div role=\"tab\" id=\"{{panel.id}}-header\" [class]=\"'accordion-header ' + (panel.type ? 'bg-'+panel.type: type ? 'bg-'+type : '')\">\n          <ng-template [ngTemplateOutlet]=\"panel.headerTpl?.templateRef || t\"\n                       [ngTemplateOutletContext]=\"{$implicit: panel, opened: panel.isOpen}\"></ng-template>\n        </div>\n        <div id=\"{{panel.id}}\" role=\"tabpanel\" [attr.aria-labelledby]=\"panel.id + '-header'\"\n             *ngIf=\"!destroyOnHide || panel.isOpen || panel.transitionRunning\">\n          <div class=\"accordion-body\">\n            <ng-template [ngTemplateOutlet]=\"panel.contentTpl?.templateRef || null\"></ng-template>\n          </div>\n        </div>\n      </div>\n    </ng-template>\n  "
                 },] }
     ];
     NgbAccordion.ctorParameters = function () { return [
@@ -692,7 +718,7 @@
         });
         return NgbAlertConfig;
     }());
-    NgbAlertConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbAlertConfig_Factory() { return new NgbAlertConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbAlertConfig, providedIn: "root" });
+    NgbAlertConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbAlertConfig_Factory() { return new NgbAlertConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbAlertConfig, providedIn: "root" });
     NgbAlertConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -758,7 +784,7 @@
                     changeDetection: i0.ChangeDetectionStrategy.OnPush,
                     encapsulation: i0.ViewEncapsulation.None,
                     host: { 'role': 'alert', 'class': 'alert show', '[class.fade]': 'animation', '[class.alert-dismissible]': 'dismissible' },
-                    template: "\n    <ng-content></ng-content>\n    <button *ngIf=\"dismissible\" type=\"button\" class=\"close\" aria-label=\"Close\" i18n-aria-label=\"@@ngb.alert.close\"\n      (click)=\"close()\">\n      <span aria-hidden=\"true\">&times;</span>\n    </button>\n    ",
+                    template: "\n    <ng-content></ng-content>\n    <button *ngIf=\"dismissible\" type=\"button\" class=\"btn-close\" aria-label=\"Close\" i18n-aria-label=\"@@ngb.alert.close\"\n      (click)=\"close()\">\n    </button>\n    ",
                     styles: ["ngb-alert{display:block}"]
                 },] }
     ];
@@ -874,7 +900,7 @@
         valueUnChecked: [{ type: i0.Input }]
     };
 
-    var nextId$1 = 0;
+    var nextId$3 = 0;
     /**
      * Allows to easily create Bootstrap-style radio buttons.
      *
@@ -893,7 +919,7 @@
              *
              * If not provided, will be generated in the `ngb-radio-xx` format.
              */
-            this.name = "ngb-radio-" + nextId$1++;
+            this.name = "ngb-radio-" + nextId$3++;
             this.onChange = function (_) { };
             this.onTouched = function () { };
         }
@@ -1073,6 +1099,8 @@
         return extendStatics(d, b);
     };
     function __extends(d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -1258,11 +1286,13 @@
         }
         return ar;
     }
+    /** @deprecated */
     function __spread() {
         for (var ar = [], i = 0; i < arguments.length; i++)
             ar = ar.concat(__read(arguments[i]));
         return ar;
     }
+    /** @deprecated */
     function __spreadArrays() {
         for (var s = 0, i = 0, il = arguments.length; i < il; i++)
             s += arguments[i].length;
@@ -1271,7 +1301,17 @@
                 r[k] = a[j];
         return r;
     }
-    ;
+    function __spreadArray(to, from, pack) {
+        if (pack || arguments.length === 2)
+            for (var i = 0, l = from.length, ar; i < l; i++) {
+                if (ar || !(i in from)) {
+                    if (!ar)
+                        ar = Array.prototype.slice.call(from, 0, i);
+                    ar[i] = from[i];
+                }
+            }
+        return to.concat(ar || from);
+    }
     function __await(v) {
         return this instanceof __await ? (this.v = v, this) : new __await(v);
     }
@@ -1336,18 +1376,21 @@
     function __importDefault(mod) {
         return (mod && mod.__esModule) ? mod : { default: mod };
     }
-    function __classPrivateFieldGet(receiver, privateMap) {
-        if (!privateMap.has(receiver)) {
-            throw new TypeError("attempted to get private field on non-instance");
-        }
-        return privateMap.get(receiver);
+    function __classPrivateFieldGet(receiver, state, kind, f) {
+        if (kind === "a" && !f)
+            throw new TypeError("Private accessor was defined without a getter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+            throw new TypeError("Cannot read private member from an object whose class did not declare it");
+        return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
     }
-    function __classPrivateFieldSet(receiver, privateMap, value) {
-        if (!privateMap.has(receiver)) {
-            throw new TypeError("attempted to set private field on non-instance");
-        }
-        privateMap.set(receiver, value);
-        return value;
+    function __classPrivateFieldSet(receiver, state, value, kind, f) {
+        if (kind === "m")
+            throw new TypeError("Private method is not writable");
+        if (kind === "a" && !f)
+            throw new TypeError("Private accessor was defined without a setter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+            throw new TypeError("Cannot write private member to an object whose class did not declare it");
+        return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
     }
 
     /**
@@ -1375,7 +1418,7 @@
         });
         return NgbCarouselConfig;
     }());
-    NgbCarouselConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbCarouselConfig_Factory() { return new NgbCarouselConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbCarouselConfig, providedIn: "root" });
+    NgbCarouselConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbCarouselConfig_Factory() { return new NgbCarouselConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbCarouselConfig, providedIn: "root" });
     NgbCarouselConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -1383,26 +1426,30 @@
         { type: NgbConfig }
     ]; };
 
+    /**
+     * Defines the carousel slide transition direction.
+     */
+    exports.NgbSlideEventDirection = void 0;
     (function (NgbSlideEventDirection) {
-        NgbSlideEventDirection["LEFT"] = "left";
-        NgbSlideEventDirection["RIGHT"] = "right";
+        NgbSlideEventDirection["START"] = "start";
+        NgbSlideEventDirection["END"] = "end";
     })(exports.NgbSlideEventDirection || (exports.NgbSlideEventDirection = {}));
     var isBeingAnimated = function (_a) {
         var classList = _a.classList;
-        return classList.contains('carousel-item-left') || classList.contains('carousel-item-right');
+        return classList.contains('carousel-item-start') || classList.contains('carousel-item-end');
     };
-    var ɵ0$1 = isBeingAnimated;
+    var ɵ0$4 = isBeingAnimated;
     var removeDirectionClasses = function (classList) {
-        classList.remove('carousel-item-left');
-        classList.remove('carousel-item-right');
+        classList.remove('carousel-item-start');
+        classList.remove('carousel-item-end');
     };
-    var ɵ1 = removeDirectionClasses;
+    var ɵ1$1 = removeDirectionClasses;
     var removeClasses = function (classList) {
         removeDirectionClasses(classList);
         classList.remove('carousel-item-prev');
         classList.remove('carousel-item-next');
     };
-    var ɵ2 = removeClasses;
+    var ɵ2$1 = removeClasses;
     var ngbCarouselTransitionIn = function (element, animation, _a) {
         var direction = _a.direction;
         var classList = element.classList;
@@ -1418,7 +1465,7 @@
         }
         else {
             // For the 'in' transition, a 'pre-class' is applied to the element to ensure its visibility
-            classList.add('carousel-item-' + (direction === exports.NgbSlideEventDirection.LEFT ? 'next' : 'prev'));
+            classList.add('carousel-item-' + (direction === exports.NgbSlideEventDirection.START ? 'next' : 'prev'));
             reflow(element);
             classList.add('carousel-item-' + direction);
         }
@@ -1680,20 +1727,20 @@
          * Navigates to the previous slide.
          */
         NgbCarousel.prototype.prev = function (source) {
-            this._cycleToSelected(this._getPrevSlide(this.activeId), exports.NgbSlideEventDirection.RIGHT, source);
+            this._cycleToSelected(this._getPrevSlide(this.activeId), exports.NgbSlideEventDirection.END, source);
         };
         /**
          * Navigates to the next slide.
          */
         NgbCarousel.prototype.next = function (source) {
-            this._cycleToSelected(this._getNextSlide(this.activeId), exports.NgbSlideEventDirection.LEFT, source);
+            this._cycleToSelected(this._getNextSlide(this.activeId), exports.NgbSlideEventDirection.START, source);
         };
         /**
          * Pauses cycling through the slides.
          */
         NgbCarousel.prototype.pause = function () { this._pause$.next(true); };
         /**
-         * Restarts cycling through the slides from left to right.
+         * Restarts cycling through the slides from start to end.
          */
         NgbCarousel.prototype.cycle = function () { this._pause$.next(false); };
         /**
@@ -1729,7 +1776,7 @@
                 var transition = ngbRunTransition(this._ngZone, this._getSlideElement(selectedSlide.id), ngbCarouselTransitionIn, options);
                 transition.subscribe(function () { nextSlide_1 === null || nextSlide_1 === void 0 ? void 0 : nextSlide_1.slid.emit({ isShown: true, direction: direction, source: source }); });
                 transitions.push(transition);
-                rxjs.zip.apply(void 0, __spread(transitions)).pipe(operators.take(1)).subscribe(function () {
+                rxjs.zip.apply(void 0, __spreadArray([], __read(transitions))).pipe(operators.take(1)).subscribe(function () {
                     _this._transitionIds = null;
                     _this.slid.emit({ prev: previousId_1, current: selectedSlide.id, direction: direction, paused: _this._pause$.value, source: source });
                 });
@@ -1740,7 +1787,7 @@
         NgbCarousel.prototype._getSlideEventDirection = function (currentActiveSlideId, nextActiveSlideId) {
             var currentActiveSlideIdx = this._getSlideIdxById(currentActiveSlideId);
             var nextActiveSlideIdx = this._getSlideIdxById(nextActiveSlideId);
-            return currentActiveSlideIdx > nextActiveSlideIdx ? exports.NgbSlideEventDirection.RIGHT : exports.NgbSlideEventDirection.LEFT;
+            return currentActiveSlideIdx > nextActiveSlideIdx ? exports.NgbSlideEventDirection.END : exports.NgbSlideEventDirection.START;
         };
         NgbCarousel.prototype._getSlideById = function (slideId) {
             return this.slides.find(function (slide) { return slide.id === slideId; }) || null;
@@ -1784,9 +1831,9 @@
                         '(mouseleave)': 'mouseHover = false',
                         '(focusin)': 'focused = true',
                         '(focusout)': 'focused = false',
-                        '[attr.aria-activedescendant]': 'activeId'
+                        '[attr.aria-activedescendant]': "'slide-' + activeId"
                     },
-                    template: "\n    <ol class=\"carousel-indicators\" [class.sr-only]=\"!showNavigationIndicators\" role=\"tablist\">\n      <li *ngFor=\"let slide of slides\" [class.active]=\"slide.id === activeId\"\n          role=\"tab\" [attr.aria-labelledby]=\"'slide-' + slide.id\" [attr.aria-controls]=\"'slide-' + slide.id\"\n          [attr.aria-selected]=\"slide.id === activeId\"\n          (click)=\"focus();select(slide.id, NgbSlideEventSource.INDICATOR);\"></li>\n    </ol>\n    <div class=\"carousel-inner\">\n      <div *ngFor=\"let slide of slides; index as i; count as c\" class=\"carousel-item\" [id]=\"'slide-' + slide.id\" role=\"tabpanel\">\n        <span class=\"sr-only\" i18n=\"Currently selected slide number read by screen reader@@ngb.carousel.slide-number\">\n          Slide {{i + 1}} of {{c}}\n        </span>\n        <ng-template [ngTemplateOutlet]=\"slide.tplRef\"></ng-template>\n      </div>\n    </div>\n    <a class=\"carousel-control-prev\" role=\"button\" (click)=\"arrowLeft()\" *ngIf=\"showNavigationArrows\">\n      <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n      <span class=\"sr-only\" i18n=\"@@ngb.carousel.previous\">Previous</span>\n    </a>\n    <a class=\"carousel-control-next\" role=\"button\" (click)=\"arrowRight()\" *ngIf=\"showNavigationArrows\">\n      <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n      <span class=\"sr-only\" i18n=\"@@ngb.carousel.next\">Next</span>\n    </a>\n  "
+                    template: "\n    <ol class=\"carousel-indicators\" [class.visually-hidden]=\"!showNavigationIndicators\" role=\"tablist\">\n      <li *ngFor=\"let slide of slides\" [class.active]=\"slide.id === activeId\"\n          role=\"tab\" [attr.aria-labelledby]=\"'slide-' + slide.id\" [attr.aria-controls]=\"'slide-' + slide.id\"\n          [attr.aria-selected]=\"slide.id === activeId\"\n          (click)=\"focus();select(slide.id, NgbSlideEventSource.INDICATOR);\"></li>\n    </ol>\n    <div class=\"carousel-inner\">\n      <div *ngFor=\"let slide of slides; index as i; count as c\" class=\"carousel-item\" [id]=\"'slide-' + slide.id\" role=\"tabpanel\">\n        <span class=\"visually-hidden\" i18n=\"Currently selected slide number read by screen reader@@ngb.carousel.slide-number\">\n          Slide {{i + 1}} of {{c}}\n        </span>\n        <ng-template [ngTemplateOutlet]=\"slide.tplRef\"></ng-template>\n      </div>\n    </div>\n    <a class=\"carousel-control-prev\" role=\"button\" (click)=\"arrowLeft()\" *ngIf=\"showNavigationArrows\">\n      <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n      <span class=\"visually-hidden\" i18n=\"@@ngb.carousel.previous\">Previous</span>\n    </a>\n    <a class=\"carousel-control-next\" role=\"button\" (click)=\"arrowRight()\" *ngIf=\"showNavigationArrows\">\n      <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n      <span class=\"visually-hidden\" i18n=\"@@ngb.carousel.next\">Next</span>\n    </a>\n  "
                 },] }
     ];
     NgbCarousel.ctorParameters = function () { return [
@@ -1810,6 +1857,7 @@
         slide: [{ type: i0.Output }],
         slid: [{ type: i0.Output }]
     };
+    exports.NgbSlideEventSource = void 0;
     (function (NgbSlideEventSource) {
         NgbSlideEventSource["TIMER"] = "timer";
         NgbSlideEventSource["ARROW_LEFT"] = "arrowLeft";
@@ -1845,7 +1893,7 @@
         });
         return NgbCollapseConfig;
     }());
-    NgbCollapseConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbCollapseConfig_Factory() { return new NgbCollapseConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbCollapseConfig, providedIn: "root" });
+    NgbCollapseConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbCollapseConfig_Factory() { return new NgbCollapseConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbCollapseConfig, providedIn: "root" });
     NgbCollapseConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -2047,7 +2095,7 @@
         }
         return NgbCalendar;
     }());
-    NgbCalendar.ɵprov = i0.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_CALENDAR_FACTORY, token: NgbCalendar, providedIn: "root" });
+    NgbCalendar.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_CALENDAR_FACTORY, token: NgbCalendar, providedIn: "root" });
     NgbCalendar.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root', useFactory: NGB_DATEPICKER_CALENDAR_FACTORY },] }
     ];
@@ -2233,7 +2281,7 @@
     }
     function buildMonth(calendar, date, state, i18n, month) {
         if (month === void 0) { month = {}; }
-        var dayTemplateData = state.dayTemplateData, minDate = state.minDate, maxDate = state.maxDate, firstDayOfWeek = state.firstDayOfWeek, markDisabled = state.markDisabled, outsideDays = state.outsideDays;
+        var dayTemplateData = state.dayTemplateData, minDate = state.minDate, maxDate = state.maxDate, firstDayOfWeek = state.firstDayOfWeek, markDisabled = state.markDisabled, outsideDays = state.outsideDays, weekdayWidth = state.weekdayWidth, weekdaysVisible = state.weekdaysVisible;
         var calendarToday = calendar.getToday();
         month.firstDate = null;
         month.lastDate = null;
@@ -2242,6 +2290,10 @@
         month.weeks = month.weeks || [];
         month.weekdays = month.weekdays || [];
         date = getFirstViewDate(calendar, date, firstDayOfWeek);
+        // clearing weekdays, if not visible
+        if (!weekdaysVisible) {
+            month.weekdays.length = 0;
+        }
         // month has weeks
         for (var week = 0; week < calendar.getWeeksPerMonth(); week++) {
             var weekObject = month.weeks[week];
@@ -2251,8 +2303,8 @@
             var days = weekObject.days;
             // week has days
             for (var day = 0; day < calendar.getDaysPerWeek(); day++) {
-                if (week === 0) {
-                    month.weekdays[day] = calendar.getWeekday(date);
+                if (week === 0 && weekdaysVisible) {
+                    month.weekdays[day] = i18n.getWeekdayLabel(calendar.getWeekday(date), weekdayWidth);
                 }
                 var newDate = new NgbDate(date.year, date.month, date.day);
                 var nextDate = calendar.getNext(newDate);
@@ -2329,6 +2381,14 @@
         function NgbDatepickerI18n() {
         }
         /**
+         * Returns the text label to display above the day view.
+         *
+         * @since 9.1.0
+         */
+        NgbDatepickerI18n.prototype.getMonthLabel = function (date) {
+            return this.getMonthFullName(date.month, date.year) + " " + this.getYearNumerals(date.year);
+        };
+        /**
          * Returns the textual representation of a day that is rendered in a day cell.
          *
          * @since 3.0.0
@@ -2346,24 +2406,38 @@
          * @since 3.0.0
          */
         NgbDatepickerI18n.prototype.getYearNumerals = function (year) { return "" + year; };
+        /**
+         * Returns the week label to display in the heading of the month view.
+         *
+         * @since 9.1.0
+         */
+        NgbDatepickerI18n.prototype.getWeekLabel = function () { return ''; };
         return NgbDatepickerI18n;
     }());
-    NgbDatepickerI18n.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbDatepickerI18n_Factory() { return NGB_DATEPICKER_18N_FACTORY(i0.ɵɵinject(i0.LOCALE_ID)); }, token: NgbDatepickerI18n, providedIn: "root" });
+    NgbDatepickerI18n.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbDatepickerI18n_Factory() { return NGB_DATEPICKER_18N_FACTORY(i0__namespace.ɵɵinject(i0__namespace.LOCALE_ID)); }, token: NgbDatepickerI18n, providedIn: "root" });
     NgbDatepickerI18n.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root', useFactory: NGB_DATEPICKER_18N_FACTORY, deps: [i0.LOCALE_ID] },] }
     ];
+    /**
+     * A service providing default implementation for the datepicker i18n.
+     * It can be used as a base implementation if necessary.
+     *
+     * @since 9.1.0
+     */
     var NgbDatepickerI18nDefault = /** @class */ (function (_super) {
         __extends(NgbDatepickerI18nDefault, _super);
         function NgbDatepickerI18nDefault(_locale) {
             var _this = _super.call(this) || this;
             _this._locale = _locale;
-            var weekdaysStartingOnSunday = i1.getLocaleDayNames(_locale, i1.FormStyle.Standalone, i1.TranslationWidth.Short);
-            _this._weekdaysShort = weekdaysStartingOnSunday.map(function (day, index) { return weekdaysStartingOnSunday[(index + 1) % 7]; });
             _this._monthsShort = i1.getLocaleMonthNames(_locale, i1.FormStyle.Standalone, i1.TranslationWidth.Abbreviated);
             _this._monthsFull = i1.getLocaleMonthNames(_locale, i1.FormStyle.Standalone, i1.TranslationWidth.Wide);
             return _this;
         }
-        NgbDatepickerI18nDefault.prototype.getWeekdayShortName = function (weekday) { return this._weekdaysShort[weekday - 1] || ''; };
+        NgbDatepickerI18nDefault.prototype.getWeekdayLabel = function (weekday, width) {
+            var weekdaysStartingOnSunday = i1.getLocaleDayNames(this._locale, i1.FormStyle.Standalone, width === undefined ? i1.TranslationWidth.Short : width);
+            var weekdays = weekdaysStartingOnSunday.map(function (day, index) { return weekdaysStartingOnSunday[(index + 1) % 7]; });
+            return weekdays[weekday - 1] || '';
+        };
         NgbDatepickerI18nDefault.prototype.getMonthShortName = function (month) { return this._monthsShort[month - 1] || ''; };
         NgbDatepickerI18nDefault.prototype.getMonthFullName = function (month) { return this._monthsFull[month - 1] || ''; };
         NgbDatepickerI18nDefault.prototype.getDayAriaLabel = function (date) {
@@ -2438,6 +2512,13 @@
                     if (_this._state.outsideDays !== outsideDays) {
                         return { outsideDays: outsideDays };
                     }
+                },
+                weekdays: function (weekdays) {
+                    var weekdayWidth = weekdays === true || weekdays === false ? i1.TranslationWidth.Short : weekdays;
+                    var weekdaysVisible = weekdays === true || weekdays === false ? weekdays : true;
+                    if (_this._state.weekdayWidth !== weekdayWidth || _this._state.weekdaysVisible !== weekdaysVisible) {
+                        return { weekdayWidth: weekdayWidth, weekdaysVisible: weekdaysVisible };
+                    }
                 }
             };
             this._model$ = new rxjs.Subject();
@@ -2460,7 +2541,9 @@
                 prevDisabled: false,
                 nextDisabled: false,
                 selectedDate: null,
-                selectBoxes: { years: [], months: [] }
+                selectBoxes: { years: [], months: [] },
+                weekdayWidth: i1.TranslationWidth.Short,
+                weekdaysVisible: true
             };
         }
         Object.defineProperty(NgbDatepickerService.prototype, "model$", {
@@ -2615,7 +2698,8 @@
             // rebuilding months
             if (startDate) {
                 var forceRebuild = 'dayTemplateData' in patch || 'firstDayOfWeek' in patch || 'markDisabled' in patch ||
-                    'minDate' in patch || 'maxDate' in patch || 'disabled' in patch || 'outsideDays' in patch;
+                    'minDate' in patch || 'maxDate' in patch || 'disabled' in patch || 'outsideDays' in patch ||
+                    'weekdaysVisible' in patch;
                 var months = buildMonths(this._calendar, startDate, state, this._i18n, forceRebuild);
                 // updating months and boundary dates
                 state.months = months;
@@ -2686,12 +2770,12 @@
             this.firstDayOfWeek = 1;
             this.navigation = 'select';
             this.outsideDays = 'visible';
-            this.showWeekdays = true;
             this.showWeekNumbers = false;
+            this.weekdays = i1.TranslationWidth.Short;
         }
         return NgbDatepickerConfig;
     }());
-    NgbDatepickerConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbDatepickerConfig_Factory() { return new NgbDatepickerConfig(); }, token: NgbDatepickerConfig, providedIn: "root" });
+    NgbDatepickerConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbDatepickerConfig_Factory() { return new NgbDatepickerConfig(); }, token: NgbDatepickerConfig, providedIn: "root" });
     NgbDatepickerConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -2716,7 +2800,7 @@
         }
         return NgbDateAdapter;
     }());
-    NgbDateAdapter.ɵprov = i0.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_DATE_ADAPTER_FACTORY, token: NgbDateAdapter, providedIn: "root" });
+    NgbDateAdapter.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_DATE_ADAPTER_FACTORY, token: NgbDateAdapter, providedIn: "root" });
     NgbDateAdapter.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root', useFactory: NGB_DATEPICKER_DATE_ADAPTER_FACTORY },] }
     ];
@@ -2798,7 +2882,7 @@
             this.onChange = function (_) { };
             this.onTouched = function () { };
             ['dayTemplate', 'dayTemplateData', 'displayMonths', 'firstDayOfWeek', 'footerTemplate', 'markDisabled', 'minDate',
-                'maxDate', 'navigation', 'outsideDays', 'showWeekdays', 'showWeekNumbers', 'startDate']
+                'maxDate', 'navigation', 'outsideDays', 'showWeekNumbers', 'startDate', 'weekdays']
                 .forEach(function (input) { return _this[input] = config[input]; });
             _service.dateSelect$.pipe(operators.takeUntil(this._destroyed$)).subscribe(function (date) { _this.dateSelect.emit(date); });
             _service.model$.pipe(operators.takeUntil(this._destroyed$)).subscribe(function (model) {
@@ -2918,7 +3002,7 @@
             if (this.model === undefined) {
                 var inputs_1 = {};
                 ['dayTemplateData', 'displayMonths', 'markDisabled', 'firstDayOfWeek', 'navigation', 'minDate', 'maxDate',
-                    'outsideDays']
+                    'outsideDays', 'weekdays']
                     .forEach(function (name) { return inputs_1[name] = _this[name]; });
                 this._service.set(inputs_1);
                 this.navigateTo(this.startDate);
@@ -2931,7 +3015,7 @@
             var _this = this;
             var inputs = {};
             ['dayTemplateData', 'displayMonths', 'markDisabled', 'firstDayOfWeek', 'navigation', 'minDate', 'maxDate',
-                'outsideDays']
+                'outsideDays', 'weekdays']
                 .filter(function (name) { return name in changes; })
                 .forEach(function (name) { return inputs[name] = _this[name]; });
             this._service.set(inputs);
@@ -2972,9 +3056,9 @@
                     selector: 'ngb-datepicker',
                     changeDetection: i0.ChangeDetectionStrategy.OnPush,
                     encapsulation: i0.ViewEncapsulation.None,
-                    template: "\n    <ng-template #defaultDayTemplate let-date=\"date\" let-currentMonth=\"currentMonth\" let-selected=\"selected\"\n                 let-disabled=\"disabled\" let-focused=\"focused\">\n      <div ngbDatepickerDayView\n        [date]=\"date\"\n        [currentMonth]=\"currentMonth\"\n        [selected]=\"selected\"\n        [disabled]=\"disabled\"\n        [focused]=\"focused\">\n      </div>\n    </ng-template>\n\n    <ng-template #defaultContentTemplate>\n      <div *ngFor=\"let month of model.months; let i = index;\" class=\"ngb-dp-month\">\n        <div *ngIf=\"navigation === 'none' || (displayMonths > 1 && navigation === 'select')\" class=\"ngb-dp-month-name\">\n          {{ i18n.getMonthFullName(month.number, month.year) }} {{ i18n.getYearNumerals(month.year) }}\n        </div>\n        <ngb-datepicker-month [month]=\"month.firstDate\"></ngb-datepicker-month>\n      </div>\n    </ng-template>\n\n    <div class=\"ngb-dp-header\">\n      <ngb-datepicker-navigation *ngIf=\"navigation !== 'none'\"\n        [date]=\"model.firstDate!\"\n        [months]=\"model.months\"\n        [disabled]=\"model.disabled\"\n        [showSelect]=\"model.navigation === 'select'\"\n        [prevDisabled]=\"model.prevDisabled\"\n        [nextDisabled]=\"model.nextDisabled\"\n        [selectBoxes]=\"model.selectBoxes\"\n        (navigate)=\"onNavigateEvent($event)\"\n        (select)=\"onNavigateDateSelect($event)\">\n      </ngb-datepicker-navigation>\n    </div>\n\n    <div class=\"ngb-dp-content\" [class.ngb-dp-months]=\"!contentTemplate\" #content>\n      <ng-template [ngTemplateOutlet]=\"contentTemplate?.templateRef || defaultContentTemplate\"></ng-template>\n    </div>\n\n    <ng-template [ngTemplateOutlet]=\"footerTemplate\"></ng-template>\n  ",
+                    template: "\n    <ng-template #defaultDayTemplate let-date=\"date\" let-currentMonth=\"currentMonth\" let-selected=\"selected\"\n                 let-disabled=\"disabled\" let-focused=\"focused\">\n      <div ngbDatepickerDayView\n        [date]=\"date\"\n        [currentMonth]=\"currentMonth\"\n        [selected]=\"selected\"\n        [disabled]=\"disabled\"\n        [focused]=\"focused\">\n      </div>\n    </ng-template>\n\n    <ng-template #defaultContentTemplate>\n      <div *ngFor=\"let month of model.months; let i = index;\" class=\"ngb-dp-month\">\n        <div *ngIf=\"navigation === 'none' || (displayMonths > 1 && navigation === 'select')\" class=\"ngb-dp-month-name\">\n          {{ i18n.getMonthLabel(month.firstDate) }}\n        </div>\n        <ngb-datepicker-month [month]=\"month.firstDate\"></ngb-datepicker-month>\n      </div>\n    </ng-template>\n\n    <div class=\"ngb-dp-header\">\n      <ngb-datepicker-navigation *ngIf=\"navigation !== 'none'\"\n        [date]=\"model.firstDate!\"\n        [months]=\"model.months\"\n        [disabled]=\"model.disabled\"\n        [showSelect]=\"model.navigation === 'select'\"\n        [prevDisabled]=\"model.prevDisabled\"\n        [nextDisabled]=\"model.nextDisabled\"\n        [selectBoxes]=\"model.selectBoxes\"\n        (navigate)=\"onNavigateEvent($event)\"\n        (select)=\"onNavigateDateSelect($event)\">\n      </ngb-datepicker-navigation>\n    </div>\n\n    <div class=\"ngb-dp-content\" [class.ngb-dp-months]=\"!contentTemplate\" #content>\n      <ng-template [ngTemplateOutlet]=\"contentTemplate?.templateRef || defaultContentTemplate\"></ng-template>\n    </div>\n\n    <ng-template [ngTemplateOutlet]=\"footerTemplate\"></ng-template>\n  ",
                     providers: [{ provide: forms.NG_VALUE_ACCESSOR, useExisting: i0.forwardRef(function () { return NgbDatepicker; }), multi: true }, NgbDatepickerService],
-                    styles: ["ngb-datepicker{border:1px solid #dfdfdf;border-radius:.25rem;display:inline-block}ngb-datepicker-month{pointer-events:auto}ngb-datepicker.dropdown-menu{padding:0}.ngb-dp-body{z-index:1050}.ngb-dp-header{background-color:#f8f9fa;background-color:var(--light);border-bottom:0;border-radius:.25rem .25rem 0 0;padding-top:.25rem}.ngb-dp-months{display:-ms-flexbox;display:flex}.ngb-dp-month{pointer-events:none}.ngb-dp-month-name{background-color:#f8f9fa;background-color:var(--light);font-size:larger;height:2rem;line-height:2rem;text-align:center}.ngb-dp-month+.ngb-dp-month .ngb-dp-month-name,.ngb-dp-month+.ngb-dp-month .ngb-dp-week{padding-left:1rem}.ngb-dp-month:last-child .ngb-dp-week{padding-right:.25rem}.ngb-dp-month:first-child .ngb-dp-week{padding-left:.25rem}.ngb-dp-month .ngb-dp-week:last-child{padding-bottom:.25rem}"]
+                    styles: ["ngb-datepicker{border:1px solid #dfdfdf;border-radius:.25rem;display:inline-block}ngb-datepicker-month{pointer-events:auto}ngb-datepicker.dropdown-menu{padding:0}.ngb-dp-body{z-index:1050}.ngb-dp-header{border-bottom:0;border-radius:.25rem .25rem 0 0;padding-top:.25rem;background-color:#f8f9fa;background-color:var(--bs-light)}.ngb-dp-months{display:flex}.ngb-dp-month{pointer-events:none}.ngb-dp-month-name{font-size:larger;height:2rem;line-height:2rem;text-align:center;background-color:#f8f9fa;background-color:var(--bs-light)}.ngb-dp-month+.ngb-dp-month .ngb-dp-month-name,.ngb-dp-month+.ngb-dp-month .ngb-dp-week{padding-left:1rem}.ngb-dp-month:last-child .ngb-dp-week{padding-right:.25rem}.ngb-dp-month:first-child .ngb-dp-week{padding-left:.25rem}.ngb-dp-month .ngb-dp-week:last-child{padding-bottom:.25rem}"]
                 },] }
     ];
     NgbDatepicker.ctorParameters = function () { return [
@@ -3001,9 +3085,9 @@
         minDate: [{ type: i0.Input }],
         navigation: [{ type: i0.Input }],
         outsideDays: [{ type: i0.Input }],
-        showWeekdays: [{ type: i0.Input }],
         showWeekNumbers: [{ type: i0.Input }],
         startDate: [{ type: i0.Input }],
+        weekdays: [{ type: i0.Input }],
         navigate: [{ type: i0.Output }],
         dateSelect: [{ type: i0.Output }]
     };
@@ -3077,7 +3161,7 @@
         };
         return NgbDatepickerKeyboardService;
     }());
-    NgbDatepickerKeyboardService.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbDatepickerKeyboardService_Factory() { return new NgbDatepickerKeyboardService(); }, token: NgbDatepickerKeyboardService, providedIn: "root" });
+    NgbDatepickerKeyboardService.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbDatepickerKeyboardService_Factory() { return new NgbDatepickerKeyboardService(); }, token: NgbDatepickerKeyboardService, providedIn: "root" });
     NgbDatepickerKeyboardService.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -3123,8 +3207,8 @@
                     selector: 'ngb-datepicker-month',
                     host: { 'role': 'grid', '(keydown)': 'onKeyDown($event)' },
                     encapsulation: i0.ViewEncapsulation.None,
-                    template: "\n    <div *ngIf=\"datepicker.showWeekdays\" class=\"ngb-dp-week ngb-dp-weekdays\" role=\"row\">\n      <div *ngIf=\"datepicker.showWeekNumbers\" class=\"ngb-dp-weekday ngb-dp-showweek\"></div>\n      <div *ngFor=\"let w of viewModel.weekdays\" class=\"ngb-dp-weekday small\" role=\"columnheader\">\n        {{ i18n.getWeekdayShortName(w) }}\n      </div>\n    </div>\n    <ng-template ngFor let-week [ngForOf]=\"viewModel.weeks\">\n      <div *ngIf=\"!week.collapsed\" class=\"ngb-dp-week\" role=\"row\">\n        <div *ngIf=\"datepicker.showWeekNumbers\" class=\"ngb-dp-week-number small text-muted\">{{ i18n.getWeekNumerals(week.number) }}</div>\n        <div *ngFor=\"let day of week.days\" (click)=\"doSelect(day); $event.preventDefault()\" class=\"ngb-dp-day\" role=\"gridcell\"\n          [class.disabled]=\"day.context.disabled\"\n          [tabindex]=\"day.tabindex\"\n          [class.hidden]=\"day.hidden\"\n          [class.ngb-dp-today]=\"day.context.today\"\n          [attr.aria-label]=\"day.ariaLabel\">\n          <ng-template [ngIf]=\"!day.hidden\">\n            <ng-template [ngTemplateOutlet]=\"datepicker.dayTemplate\" [ngTemplateOutletContext]=\"day.context\"></ng-template>\n          </ng-template>\n        </div>\n      </div>\n    </ng-template>\n  ",
-                    styles: ["ngb-datepicker-month{display:block}.ngb-dp-week-number,.ngb-dp-weekday{font-style:italic;line-height:2rem;text-align:center}.ngb-dp-weekday{color:#5bc0de;color:var(--info)}.ngb-dp-week{border-radius:.25rem;display:-ms-flexbox;display:flex}.ngb-dp-weekdays{background-color:#f8f9fa;background-color:var(--light);border-bottom:1px solid rgba(0,0,0,.125);border-radius:0}.ngb-dp-day,.ngb-dp-week-number,.ngb-dp-weekday{height:2rem;width:2rem}.ngb-dp-day{cursor:pointer}.ngb-dp-day.disabled,.ngb-dp-day.hidden{cursor:default;pointer-events:none}.ngb-dp-day[tabindex=\"0\"]{z-index:1}"]
+                    template: "\n    <div *ngIf=\"viewModel.weekdays.length > 0\" class=\"ngb-dp-week ngb-dp-weekdays\" role=\"row\">\n      <div *ngIf=\"datepicker.showWeekNumbers\" class=\"ngb-dp-weekday ngb-dp-showweek small\">{{ i18n.getWeekLabel() }}</div>\n      <div *ngFor=\"let weekday of viewModel.weekdays\" class=\"ngb-dp-weekday small\" role=\"columnheader\">{{ weekday }}</div>\n    </div>\n    <ng-template ngFor let-week [ngForOf]=\"viewModel.weeks\">\n      <div *ngIf=\"!week.collapsed\" class=\"ngb-dp-week\" role=\"row\">\n        <div *ngIf=\"datepicker.showWeekNumbers\" class=\"ngb-dp-week-number small text-muted\">{{ i18n.getWeekNumerals(week.number) }}</div>\n        <div *ngFor=\"let day of week.days\" (click)=\"doSelect(day); $event.preventDefault()\" class=\"ngb-dp-day\" role=\"gridcell\"\n             [class.disabled]=\"day.context.disabled\"\n             [tabindex]=\"day.tabindex\"\n             [class.hidden]=\"day.hidden\"\n             [class.ngb-dp-today]=\"day.context.today\"\n             [attr.aria-label]=\"day.ariaLabel\">\n          <ng-template [ngIf]=\"!day.hidden\">\n            <ng-template [ngTemplateOutlet]=\"datepicker.dayTemplate\" [ngTemplateOutletContext]=\"day.context\"></ng-template>\n          </ng-template>\n        </div>\n      </div>\n    </ng-template>\n  ",
+                    styles: ["ngb-datepicker-month{display:block}.ngb-dp-week-number,.ngb-dp-weekday{line-height:2rem;text-align:center;font-style:italic}.ngb-dp-weekday{color:#0dcaf0;color:var(--bs-info)}.ngb-dp-week{border-radius:.25rem;display:flex}.ngb-dp-weekdays{border-bottom:1px solid rgba(0,0,0,.125);border-radius:0;background-color:#f8f9fa;background-color:var(--bs-light)}.ngb-dp-day,.ngb-dp-week-number,.ngb-dp-weekday{width:2rem;height:2rem}.ngb-dp-day{cursor:pointer}.ngb-dp-day.disabled,.ngb-dp-day.hidden{cursor:default;pointer-events:none}.ngb-dp-day[tabindex=\"0\"]{z-index:1}"]
                 },] }
     ];
     NgbDatepickerMonth.ctorParameters = function () { return [
@@ -3160,8 +3244,8 @@
                     selector: 'ngb-datepicker-navigation',
                     changeDetection: i0.ChangeDetectionStrategy.OnPush,
                     encapsulation: i0.ViewEncapsulation.None,
-                    template: "\n    <div class=\"ngb-dp-arrow\">\n      <button type=\"button\" class=\"btn btn-link ngb-dp-arrow-btn\" (click)=\"onClickPrev($event)\" [disabled]=\"prevDisabled\"\n              i18n-aria-label=\"@@ngb.datepicker.previous-month\" aria-label=\"Previous month\"\n              i18n-title=\"@@ngb.datepicker.previous-month\" title=\"Previous month\">\n        <span class=\"ngb-dp-navigation-chevron\"></span>\n      </button>\n    </div>\n    <ngb-datepicker-navigation-select *ngIf=\"showSelect\" class=\"ngb-dp-navigation-select\"\n      [date]=\"date\"\n      [disabled] = \"disabled\"\n      [months]=\"selectBoxes.months\"\n      [years]=\"selectBoxes.years\"\n      (select)=\"select.emit($event)\">\n    </ngb-datepicker-navigation-select>\n\n    <ng-template *ngIf=\"!showSelect\" ngFor let-month [ngForOf]=\"months\" let-i=\"index\">\n      <div class=\"ngb-dp-arrow\" *ngIf=\"i > 0\"></div>\n      <div class=\"ngb-dp-month-name\">\n        {{ i18n.getMonthFullName(month.number, month.year) }} {{ i18n.getYearNumerals(month.year) }}\n      </div>\n      <div class=\"ngb-dp-arrow\" *ngIf=\"i !== months.length - 1\"></div>\n    </ng-template>\n    <div class=\"ngb-dp-arrow right\">\n      <button type=\"button\" class=\"btn btn-link ngb-dp-arrow-btn\" (click)=\"onClickNext($event)\" [disabled]=\"nextDisabled\"\n              i18n-aria-label=\"@@ngb.datepicker.next-month\" aria-label=\"Next month\"\n              i18n-title=\"@@ngb.datepicker.next-month\" title=\"Next month\">\n        <span class=\"ngb-dp-navigation-chevron\"></span>\n      </button>\n    </div>\n    ",
-                    styles: ["ngb-datepicker-navigation{-ms-flex-align:center;align-items:center;display:-ms-flexbox;display:flex}.ngb-dp-navigation-chevron{-webkit-transform:rotate(-135deg);border-style:solid;border-width:.2em .2em 0 0;display:inline-block;height:.75em;margin-left:.25em;margin-right:.15em;transform:rotate(-135deg);width:.75em}.ngb-dp-arrow{-ms-flex:1 1 auto;display:-ms-flexbox;display:flex;flex:1 1 auto;height:2rem;margin:0;padding-left:0;padding-right:0;width:2rem}.ngb-dp-arrow.right{-ms-flex-pack:end;justify-content:flex-end}.ngb-dp-arrow.right .ngb-dp-navigation-chevron{-webkit-transform:rotate(45deg);margin-left:.15em;margin-right:.25em;transform:rotate(45deg)}.ngb-dp-arrow-btn{background-color:transparent;border:none;margin:0 .5rem;padding:0 .25rem;z-index:1}.ngb-dp-arrow-btn:focus{outline-style:auto;outline-width:1px}@media (-ms-high-contrast:active),(-ms-high-contrast:none){.ngb-dp-arrow-btn:focus{outline-style:solid}}.ngb-dp-month-name{font-size:larger;height:2rem;line-height:2rem;text-align:center}.ngb-dp-navigation-select{-ms-flex:1 1 9rem;display:-ms-flexbox;display:flex;flex:1 1 9rem}"]
+                    template: "\n    <div class=\"ngb-dp-arrow\">\n      <button type=\"button\" class=\"btn btn-link ngb-dp-arrow-btn\" (click)=\"onClickPrev($event)\" [disabled]=\"prevDisabled\"\n              i18n-aria-label=\"@@ngb.datepicker.previous-month\" aria-label=\"Previous month\"\n              i18n-title=\"@@ngb.datepicker.previous-month\" title=\"Previous month\">\n        <span class=\"ngb-dp-navigation-chevron\"></span>\n      </button>\n    </div>\n    <ngb-datepicker-navigation-select *ngIf=\"showSelect\" class=\"ngb-dp-navigation-select\"\n      [date]=\"date\"\n      [disabled] = \"disabled\"\n      [months]=\"selectBoxes.months\"\n      [years]=\"selectBoxes.years\"\n      (select)=\"select.emit($event)\">\n    </ngb-datepicker-navigation-select>\n\n    <ng-template *ngIf=\"!showSelect\" ngFor let-month [ngForOf]=\"months\" let-i=\"index\">\n      <div class=\"ngb-dp-arrow\" *ngIf=\"i > 0\"></div>\n      <div class=\"ngb-dp-month-name\">\n        {{ i18n.getMonthLabel(month.firstDate) }}\n      </div>\n      <div class=\"ngb-dp-arrow\" *ngIf=\"i !== months.length - 1\"></div>\n    </ng-template>\n    <div class=\"ngb-dp-arrow right\">\n      <button type=\"button\" class=\"btn btn-link ngb-dp-arrow-btn\" (click)=\"onClickNext($event)\" [disabled]=\"nextDisabled\"\n              i18n-aria-label=\"@@ngb.datepicker.next-month\" aria-label=\"Next month\"\n              i18n-title=\"@@ngb.datepicker.next-month\" title=\"Next month\">\n        <span class=\"ngb-dp-navigation-chevron\"></span>\n      </button>\n    </div>\n    ",
+                    styles: ["ngb-datepicker-navigation{display:flex;align-items:center}.ngb-dp-navigation-chevron{border-style:solid;border-width:.2em .2em 0 0;display:inline-block;width:.75em;height:.75em;margin-left:.25em;margin-right:.15em;transform:rotate(-135deg)}.ngb-dp-arrow{display:flex;flex:1 1 auto;padding-right:0;padding-left:0;margin:0;width:2rem;height:2rem}.ngb-dp-arrow.right{justify-content:flex-end}.ngb-dp-arrow.right .ngb-dp-navigation-chevron{transform:rotate(45deg);margin-left:.15em;margin-right:.25em}.ngb-dp-arrow-btn{padding:0 .25rem;margin:0 .5rem;border:none;background-color:transparent;z-index:1}.ngb-dp-arrow-btn:focus{outline-width:1px;outline-style:auto}@media (-ms-high-contrast:active),(-ms-high-contrast:none){.ngb-dp-arrow-btn:focus{outline-style:solid}}.ngb-dp-month-name{font-size:larger;height:2rem;line-height:2rem;text-align:center}.ngb-dp-navigation-select{display:flex;flex:1 1 9rem}"]
                 },] }
     ];
     NgbDatepickerNavigation.ctorParameters = function () { return [
@@ -3180,10 +3264,10 @@
     };
 
     var isContainedIn = function (element, array) { return array ? array.some(function (item) { return item.contains(element); }) : false; };
-    var ɵ0$2 = isContainedIn;
+    var ɵ0$3 = isContainedIn;
     var matchesSelectorIfAny = function (element, selector) { return !selector || closest(element, selector) != null; };
-    var ɵ1$1 = matchesSelectorIfAny;
-    var ɵ2$1 = function () {
+    var ɵ1 = matchesSelectorIfAny;
+    var ɵ2 = function () {
         var isIOS = function () { return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
             (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2); };
         var isAndroid = function () { return /Android/.test(navigator.userAgent); };
@@ -3191,7 +3275,7 @@
     };
     // we have to add a more significant delay to avoid re-opening when handling (click) on a toggling element
     // TODO: use proper Angular platform detection when NgbAutoClose becomes a service and we can inject PLATFORM_ID
-    var isMobile = (ɵ2$1)();
+    var isMobile = (ɵ2)();
     // setting 'ngbAutoClose' synchronously on mobile results in immediate popup closing
     // when tapping on the triggering element
     var wrapAsyncForMobile = function (fn) { return isMobile ? function () { return setTimeout(function () { return fn(); }, 100); } : fn; };
@@ -3389,10 +3473,10 @@
                 case 'bottom':
                     topPosition = (hostElPosition.top + hostElPosition.height);
                     break;
-                case 'left':
+                case 'start':
                     leftPosition = (hostElPosition.left - (targetElement.offsetWidth + marginLeft + marginRight));
                     break;
-                case 'right':
+                case 'end':
                     leftPosition = (hostElPosition.left + hostElPosition.width);
                     break;
             }
@@ -3403,10 +3487,10 @@
                 case 'bottom':
                     topPosition = hostElPosition.top + hostElPosition.height - targetElement.offsetHeight;
                     break;
-                case 'left':
+                case 'start':
                     leftPosition = hostElPosition.left;
                     break;
-                case 'right':
+                case 'end':
                     leftPosition = hostElPosition.left + hostElPosition.width - targetElement.offsetWidth;
                     break;
                 case 'center':
@@ -3437,18 +3521,18 @@
      * Accept the placement array and applies the appropriate placement dependent on the viewport.
      * Returns the applied placement.
      * In case of auto placement, placements are selected in order
-     *   'top', 'bottom', 'left', 'right',
-     *   'top-left', 'top-right',
-     *   'bottom-left', 'bottom-right',
-     *   'left-top', 'left-bottom',
-     *   'right-top', 'right-bottom'.
+     *   'top', 'bottom', 'start', 'end',
+     *   'top-start', 'top-end',
+     *   'bottom-start', 'bottom-end',
+     *   'start-top', 'start-bottom',
+     *   'end-top', 'end-bottom'.
      * */
     function positionElements(hostElement, targetElement, placement, appendToBody, baseClass) {
         var e_1, _a;
         var placementVals = Array.isArray(placement) ? placement : placement.split(placementSeparator);
         var allowedPlacements = [
-            'top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right', 'left-top', 'left-bottom',
-            'right-top', 'right-bottom'
+            'top', 'bottom', 'start', 'end', 'top-start', 'top-end', 'bottom-start', 'bottom-end', 'start-top', 'start-bottom',
+            'end-top', 'end-bottom'
         ];
         var classList = targetElement.classList;
         var addClassesToTarget = function (targetPlacement) {
@@ -3538,7 +3622,7 @@
         }
         return NgbDateParserFormatter;
     }());
-    NgbDateParserFormatter.ɵprov = i0.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_PARSER_FORMATTER_FACTORY, token: NgbDateParserFormatter, providedIn: "root" });
+    NgbDateParserFormatter.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_PARSER_FORMATTER_FACTORY, token: NgbDateParserFormatter, providedIn: "root" });
     NgbDateParserFormatter.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root', useFactory: NGB_DATEPICKER_PARSER_FORMATTER_FACTORY },] }
     ];
@@ -3584,15 +3668,15 @@
     var NgbInputDatepickerConfig = /** @class */ (function (_super) {
         __extends(NgbInputDatepickerConfig, _super);
         function NgbInputDatepickerConfig() {
-            var _this = _super.apply(this, __spread(arguments)) || this;
+            var _this = _super.apply(this, __spreadArray([], __read(arguments))) || this;
             _this.autoClose = true;
-            _this.placement = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
+            _this.placement = ['bottom-start', 'bottom-end', 'top-start', 'top-end'];
             _this.restoreFocus = true;
             return _this;
         }
         return NgbInputDatepickerConfig;
     }(NgbDatepickerConfig));
-    NgbInputDatepickerConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbInputDatepickerConfig_Factory() { return new NgbInputDatepickerConfig(); }, token: NgbInputDatepickerConfig, providedIn: "root" });
+    NgbInputDatepickerConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbInputDatepickerConfig_Factory() { return new NgbInputDatepickerConfig(); }, token: NgbInputDatepickerConfig, providedIn: "root" });
     NgbInputDatepickerConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -3795,6 +3879,10 @@
                     this._cRef.instance.ngOnChanges(changes);
                 }
             }
+            if (changes['datepickerClass']) {
+                var _b = changes['datepickerClass'], currentValue = _b.currentValue, previousValue = _b.previousValue;
+                this._applyPopupClass(currentValue, previousValue);
+            }
         };
         NgbInputDatepicker.prototype.ngOnDestroy = function () {
             this.close();
@@ -3803,7 +3891,7 @@
         NgbInputDatepicker.prototype._applyDatepickerInputs = function (datepickerInstance) {
             var _this = this;
             ['dayTemplate', 'dayTemplateData', 'displayMonths', 'firstDayOfWeek', 'footerTemplate', 'markDisabled', 'minDate',
-                'maxDate', 'navigation', 'outsideDays', 'showNavigation', 'showWeekdays', 'showWeekNumbers']
+                'maxDate', 'navigation', 'outsideDays', 'showNavigation', 'showWeekNumbers', 'weekdays']
                 .forEach(function (optionName) {
                 if (_this[optionName] !== undefined) {
                     datepickerInstance[optionName] = _this[optionName];
@@ -3811,12 +3899,25 @@
             });
             datepickerInstance.startDate = this.startDate || this._model;
         };
+        NgbInputDatepicker.prototype._applyPopupClass = function (newClass, oldClass) {
+            var _a;
+            var popupEl = (_a = this._cRef) === null || _a === void 0 ? void 0 : _a.location.nativeElement;
+            if (popupEl) {
+                if (newClass) {
+                    this._renderer.addClass(popupEl, newClass);
+                }
+                if (oldClass) {
+                    this._renderer.removeClass(popupEl, oldClass);
+                }
+            }
+        };
         NgbInputDatepicker.prototype._applyPopupStyling = function (nativeElement) {
             this._renderer.addClass(nativeElement, 'dropdown-menu');
             this._renderer.addClass(nativeElement, 'show');
             if (this.container === 'body') {
                 this._renderer.addClass(nativeElement, 'ngb-dp-body');
             }
+            this._applyPopupClass(this.datepickerClass);
         };
         NgbInputDatepicker.prototype._subscribeForDatepickerOutputs = function (datepickerInstance) {
             var _this = this;
@@ -3895,6 +3996,7 @@
     ]; };
     NgbInputDatepicker.propDecorators = {
         autoClose: [{ type: i0.Input }],
+        datepickerClass: [{ type: i0.Input }],
         dayTemplate: [{ type: i0.Input }],
         dayTemplateData: [{ type: i0.Input }],
         displayMonths: [{ type: i0.Input }],
@@ -3907,11 +4009,11 @@
         outsideDays: [{ type: i0.Input }],
         placement: [{ type: i0.Input }],
         restoreFocus: [{ type: i0.Input }],
-        showWeekdays: [{ type: i0.Input }],
         showWeekNumbers: [{ type: i0.Input }],
         startDate: [{ type: i0.Input }],
         container: [{ type: i0.Input }],
         positionTarget: [{ type: i0.Input }],
+        weekdays: [{ type: i0.Input }],
         dateSelect: [{ type: i0.Output }],
         navigate: [{ type: i0.Output }],
         closed: [{ type: i0.Output }],
@@ -3939,7 +4041,7 @@
                         '[class.active]': 'focused'
                     },
                     template: "{{ i18n.getDayNumerals(date) }}",
-                    styles: ["[ngbDatepickerDayView]{background:transparent;border-radius:.25rem;height:2rem;line-height:2rem;text-align:center;width:2rem}[ngbDatepickerDayView].outside{opacity:.5}"]
+                    styles: ["[ngbDatepickerDayView]{text-align:center;width:2rem;height:2rem;line-height:2rem;border-radius:.25rem;background:transparent}[ngbDatepickerDayView].outside{opacity:.5}"]
                 },] }
     ];
     NgbDatepickerDayView.ctorParameters = function () { return [
@@ -3982,8 +4084,8 @@
                     selector: 'ngb-datepicker-navigation-select',
                     changeDetection: i0.ChangeDetectionStrategy.OnPush,
                     encapsulation: i0.ViewEncapsulation.None,
-                    template: "\n    <select #month\n      [disabled]=\"disabled\"\n      class=\"custom-select\"\n      i18n-aria-label=\"@@ngb.datepicker.select-month\" aria-label=\"Select month\"\n      i18n-title=\"@@ngb.datepicker.select-month\" title=\"Select month\"\n      (change)=\"changeMonth($any($event).target.value)\">\n        <option *ngFor=\"let m of months\" [attr.aria-label]=\"i18n.getMonthFullName(m, date?.year)\"\n                [value]=\"m\">{{ i18n.getMonthShortName(m, date?.year) }}</option>\n    </select><select #year\n      [disabled]=\"disabled\"\n      class=\"custom-select\"\n      i18n-aria-label=\"@@ngb.datepicker.select-year\" aria-label=\"Select year\"\n      i18n-title=\"@@ngb.datepicker.select-year\" title=\"Select year\"\n      (change)=\"changeYear($any($event).target.value)\">\n        <option *ngFor=\"let y of years\" [value]=\"y\">{{ i18n.getYearNumerals(y) }}</option>\n    </select>\n  ",
-                    styles: ["ngb-datepicker-navigation-select>.custom-select{-ms-flex:1 1 auto;flex:1 1 auto;font-size:.875rem;height:1.85rem;padding:0 .5rem}ngb-datepicker-navigation-select>.custom-select:focus{z-index:1}ngb-datepicker-navigation-select>.custom-select::-ms-value{background-color:transparent!important}"]
+                    template: "\n    <select #month\n      [disabled]=\"disabled\"\n      class=\"form-select\"\n      i18n-aria-label=\"@@ngb.datepicker.select-month\" aria-label=\"Select month\"\n      i18n-title=\"@@ngb.datepicker.select-month\" title=\"Select month\"\n      (change)=\"changeMonth($any($event).target.value)\">\n        <option *ngFor=\"let m of months\" [attr.aria-label]=\"i18n.getMonthFullName(m, date?.year)\"\n                [value]=\"m\">{{ i18n.getMonthShortName(m, date?.year) }}</option>\n    </select><select #year\n      [disabled]=\"disabled\"\n      class=\"form-select\"\n      i18n-aria-label=\"@@ngb.datepicker.select-year\" aria-label=\"Select year\"\n      i18n-title=\"@@ngb.datepicker.select-year\" title=\"Select year\"\n      (change)=\"changeYear($any($event).target.value)\">\n        <option *ngFor=\"let y of years\" [value]=\"y\">{{ i18n.getYearNumerals(y) }}</option>\n    </select>\n  ",
+                    styles: ["ngb-datepicker-navigation-select>.form-select{flex:1 1 auto;padding:0 .5rem;font-size:.875rem;height:1.85rem}ngb-datepicker-navigation-select>.form-select:focus{z-index:1}ngb-datepicker-navigation-select>.form-select::-ms-value{background-color:transparent!important}"]
                 },] }
     ];
     NgbDatepickerNavigationSelect.ctorParameters = function () { return [
@@ -4101,7 +4203,7 @@
     /**
      * Checks if gregorian years is a leap year
      */
-    function isGregorianLeapYear(gDate) {
+    function isGregorianLeapYear$1(gDate) {
         var year = gDate.getFullYear();
         return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;
     }
@@ -4120,7 +4222,7 @@
     function getIslamicYearStart(year) {
         return (year - 1) * 354 + Math.floor((3 + 11 * year) / 30.0);
     }
-    function mod(a, b) {
+    function mod$1(a, b) {
         return a - b * Math.floor(a / b);
     }
     /**
@@ -4131,7 +4233,7 @@
      * All the calculations here are based on the equations from "Calendrical Calculations" By Edward M. Reingold, Nachum
      * Dershowitz.
      */
-    var GREGORIAN_EPOCH = 1721425.5;
+    var GREGORIAN_EPOCH$1 = 1721425.5;
     var ISLAMIC_EPOCH = 1948439.5;
     var NgbCalendarIslamicCivil = /** @class */ (function (_super) {
         __extends(NgbCalendarIslamicCivil, _super);
@@ -4144,9 +4246,9 @@
          */
         NgbCalendarIslamicCivil.prototype.fromGregorian = function (gDate) {
             var gYear = gDate.getFullYear(), gMonth = gDate.getMonth(), gDay = gDate.getDate();
-            var julianDay = GREGORIAN_EPOCH - 1 + 365 * (gYear - 1) + Math.floor((gYear - 1) / 4) +
+            var julianDay = GREGORIAN_EPOCH$1 - 1 + 365 * (gYear - 1) + Math.floor((gYear - 1) / 4) +
                 -Math.floor((gYear - 1) / 100) + Math.floor((gYear - 1) / 400) +
-                Math.floor((367 * (gMonth + 1) - 362) / 12 + (gMonth + 1 <= 2 ? 0 : isGregorianLeapYear(gDate) ? -1 : -2) + gDay);
+                Math.floor((367 * (gMonth + 1) - 362) / 12 + (gMonth + 1 <= 2 ? 0 : isGregorianLeapYear$1(gDate) ? -1 : -2) + gDay);
             julianDay = Math.floor(julianDay) + 0.5;
             var days = julianDay - ISLAMIC_EPOCH;
             var hYear = Math.floor((30 * days + 10646) / 10631.0);
@@ -4164,21 +4266,21 @@
             var hMonth = hDate.month - 1;
             var hDay = hDate.day;
             var julianDay = hDay + Math.ceil(29.5 * hMonth) + (hYear - 1) * 354 + Math.floor((3 + 11 * hYear) / 30) + ISLAMIC_EPOCH - 1;
-            var wjd = Math.floor(julianDay - 0.5) + 0.5, depoch = wjd - GREGORIAN_EPOCH, quadricent = Math.floor(depoch / 146097), dqc = mod(depoch, 146097), cent = Math.floor(dqc / 36524), dcent = mod(dqc, 36524), quad = Math.floor(dcent / 1461), dquad = mod(dcent, 1461), yindex = Math.floor(dquad / 365);
+            var wjd = Math.floor(julianDay - 0.5) + 0.5, depoch = wjd - GREGORIAN_EPOCH$1, quadricent = Math.floor(depoch / 146097), dqc = mod$1(depoch, 146097), cent = Math.floor(dqc / 36524), dcent = mod$1(dqc, 36524), quad = Math.floor(dcent / 1461), dquad = mod$1(dcent, 1461), yindex = Math.floor(dquad / 365);
             var year = quadricent * 400 + cent * 100 + quad * 4 + yindex;
             if (!(cent === 4 || yindex === 4)) {
                 year++;
             }
-            var gYearStart = GREGORIAN_EPOCH + 365 * (year - 1) + Math.floor((year - 1) / 4) - Math.floor((year - 1) / 100) +
+            var gYearStart = GREGORIAN_EPOCH$1 + 365 * (year - 1) + Math.floor((year - 1) / 4) - Math.floor((year - 1) / 100) +
                 Math.floor((year - 1) / 400);
             var yearday = wjd - gYearStart;
-            var tjd = GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) - Math.floor((year - 1) / 100) +
-                Math.floor((year - 1) / 400) + Math.floor(739 / 12 + (isGregorianLeapYear(new Date(year, 3, 1)) ? -1 : -2) + 1);
-            var leapadj = wjd < tjd ? 0 : isGregorianLeapYear(new Date(year, 3, 1)) ? 1 : 2;
+            var tjd = GREGORIAN_EPOCH$1 - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) - Math.floor((year - 1) / 100) +
+                Math.floor((year - 1) / 400) + Math.floor(739 / 12 + (isGregorianLeapYear$1(new Date(year, 3, 1)) ? -1 : -2) + 1);
+            var leapadj = wjd < tjd ? 0 : isGregorianLeapYear$1(new Date(year, 3, 1)) ? 1 : 2;
             var month = Math.floor(((yearday + leapadj) * 12 + 373) / 367);
-            var tjd2 = GREGORIAN_EPOCH - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) - Math.floor((year - 1) / 100) +
+            var tjd2 = GREGORIAN_EPOCH$1 - 1 + 365 * (year - 1) + Math.floor((year - 1) / 4) - Math.floor((year - 1) / 100) +
                 Math.floor((year - 1) / 400) +
-                Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : isGregorianLeapYear(new Date(year, month - 1, 1)) ? -1 : -2) +
+                Math.floor((367 * month - 362) / 12 + (month <= 2 ? 0 : isGregorianLeapYear$1(new Date(year, month - 1, 1)) ? -1 : -2) +
                     1);
             var day = wjd - tjd2 + 1;
             return new Date(year, month - 1, day);
@@ -4432,7 +4534,7 @@
      * Returns the equivalent JS date value for a give input Jalali date.
      * `jalaliDate` is an Jalali date to be converted to Gregorian.
      */
-    function toGregorian(jalaliDate) {
+    function toGregorian$2(jalaliDate) {
         var jdn = jalaliToJulian(jalaliDate.year, jalaliDate.month, jalaliDate.day);
         var date = julianToGregorian(jdn);
         date.setHours(6, 30, 3, 200);
@@ -4443,7 +4545,7 @@
      * `gdate` is a JS Date to be converted to jalali.
      * utc to local
      */
-    function fromGregorian(gdate) {
+    function fromGregorian$2(gdate) {
         var g2d = gregorianToJulian(gdate.getFullYear(), gdate.getMonth() + 1, gdate.getDate());
         return julianToJalali(g2d);
     }
@@ -4476,7 +4578,7 @@
         date.day = day;
         return date;
     }
-    function mod$1(a, b) {
+    function mod(a, b) {
         return a - b * Math.floor(a / b);
     }
     function div(a, b) {
@@ -4513,14 +4615,14 @@
             if (jalaliYear < jm) {
                 break;
             }
-            leapJ = leapJ + div(jump, 33) * 8 + div(mod$1(jump, 33), 4);
+            leapJ = leapJ + div(jump, 33) * 8 + div(mod(jump, 33), 4);
             jp = jm;
         }
         var n = jalaliYear - jp;
         // Find the number of leap years from AD 621 to the beginning
         // of the current Jalali year in the Persian calendar.
-        leapJ = leapJ + div(n, 33) * 8 + div(mod$1(n, 33) + 3, 4);
-        if (mod$1(jump, 33) === 4 && jump - n === 4) {
+        leapJ = leapJ + div(n, 33) * 8 + div(mod(n, 33) + 3, 4);
+        if (mod(jump, 33) === 4 && jump - n === 4) {
             leapJ += 1;
         }
         // And the same in the Gregorian calendar (until the year gYear).
@@ -4531,7 +4633,7 @@
         if (jump - n < 6) {
             n = n - jump + div(jump + 4, 33) * 33;
         }
-        var leap = mod$1(mod$1(n + 1, 33) - 1, 4);
+        var leap = mod(mod(n + 1, 33) - 1, 4);
         if (leap === -1) {
             leap = 4;
         }
@@ -4550,9 +4652,9 @@
     function julianToGregorian(julianDayNumber) {
         var j = 4 * julianDayNumber + 139361631;
         j = j + div(div(4 * julianDayNumber + 183187720, 146097) * 3, 4) * 4 - 3908;
-        var i = div(mod$1(j, 1461), 4) * 5 + 308;
-        var gDay = div(mod$1(i, 153), 5) + 1;
-        var gMonth = mod$1(div(i, 153), 12) + 1;
+        var i = div(mod(j, 1461), 4) * 5 + 308;
+        var gDay = div(mod(i, 153), 5) + 1;
+        var gMonth = mod(div(i, 153), 12) + 1;
         var gYear = div(j, 1461) - 100100 + div(8 - gMonth, 6);
         return new Date(gYear, gMonth - 1, gDay);
     }
@@ -4564,7 +4666,7 @@
      @return Julian Day number
      */
     function gregorianToJulian(gy, gm, gd) {
-        var d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) + div(153 * mod$1(gm + 9, 12) + 2, 5) + gd - 34840408;
+        var d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) + div(153 * mod(gm + 9, 12) + 2, 5) + gd - 34840408;
         d = d - div(div(gy + 100100 + div(gm - 8, 6), 100) * 3, 4) + 752;
         return d;
     }
@@ -4585,7 +4687,7 @@
             if (numberOfDays <= 185) {
                 // The first 6 months.
                 jalaliMonth = 1 + div(numberOfDays, 31);
-                jalaliDay = mod$1(numberOfDays, 31) + 1;
+                jalaliDay = mod(numberOfDays, 31) + 1;
                 return new NgbDate(jalaliYear, jalaliMonth, jalaliDay);
             }
             else {
@@ -4602,7 +4704,7 @@
             }
         }
         jalaliMonth = 7 + div(numberOfDays, 30);
-        jalaliDay = mod$1(numberOfDays, 30) + 1;
+        jalaliDay = mod(numberOfDays, 30) + 1;
         return new NgbDate(jalaliYear, jalaliMonth, jalaliDay);
     }
     /*
@@ -4666,7 +4768,7 @@
             return this.getNext(date, period, -number);
         };
         NgbCalendarPersian.prototype.getWeekday = function (date) {
-            var day = toGregorian(date).getDay();
+            var day = toGregorian$2(date).getDay();
             // in JS Date Sun=0, in ISO 8601 Sun=7
             return day === 0 ? 7 : day;
         };
@@ -4677,16 +4779,16 @@
             }
             var thursdayIndex = (4 + 7 - firstDayOfWeek) % 7;
             var date = week[thursdayIndex];
-            var jsDate = toGregorian(date);
+            var jsDate = toGregorian$2(date);
             jsDate.setDate(jsDate.getDate() + 4 - (jsDate.getDay() || 7)); // Thursday
             var time = jsDate.getTime();
-            var startDate = toGregorian(new NgbDate(date.year, 1, 1));
+            var startDate = toGregorian$2(new NgbDate(date.year, 1, 1));
             return Math.floor(Math.round((time - startDate.getTime()) / 86400000) / 7) + 1;
         };
-        NgbCalendarPersian.prototype.getToday = function () { return fromGregorian(new Date()); };
+        NgbCalendarPersian.prototype.getToday = function () { return fromGregorian$2(new Date()); };
         NgbCalendarPersian.prototype.isValid = function (date) {
             return date != null && isInteger(date.year) && isInteger(date.month) && isInteger(date.day) &&
-                !isNaN(toGregorian(date).getTime());
+                !isNaN(toGregorian$2(date).getTime());
         };
         return NgbCalendarPersian;
     }(NgbCalendar));
@@ -4700,8 +4802,8 @@
     var PARTS_PER_MONTH = 29 * PARTS_PER_DAY + PARTS_FRACTIONAL_MONTH;
     var BAHARAD = 11 * PARTS_PER_HOUR + 204;
     var HEBREW_DAY_ON_JAN_1_1970 = 2092591;
-    var GREGORIAN_EPOCH$1 = 1721425.5;
-    function isGregorianLeapYear$1(year) {
+    var GREGORIAN_EPOCH = 1721425.5;
+    function isGregorianLeapYear(year) {
         return year % 4 === 0 && year % 100 !== 0 || year % 400 === 0;
     }
     function numberOfFirstDayInYear(year) {
@@ -4724,7 +4826,7 @@
     }
     function getDaysInGregorianMonth(month, year) {
         var days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        if (isGregorianLeapYear$1(year)) {
+        if (isGregorianLeapYear(year)) {
             days[1]++;
         }
         return days[month - 1];
@@ -4851,9 +4953,9 @@
     function fromGregorian$1(gdate) {
         var date = new Date(gdate);
         var gYear = date.getFullYear(), gMonth = date.getMonth(), gDay = date.getDate();
-        var julianDay = GREGORIAN_EPOCH$1 - 1 + 365 * (gYear - 1) + Math.floor((gYear - 1) / 4) -
+        var julianDay = GREGORIAN_EPOCH - 1 + 365 * (gYear - 1) + Math.floor((gYear - 1) / 4) -
             Math.floor((gYear - 1) / 100) + Math.floor((gYear - 1) / 400) +
-            Math.floor((367 * (gMonth + 1) - 362) / 12 + (gMonth + 1 <= 2 ? 0 : isGregorianLeapYear$1(gYear) ? -1 : -2) + gDay);
+            Math.floor((367 * (gMonth + 1) - 362) / 12 + (gMonth + 1 <= 2 ? 0 : isGregorianLeapYear(gYear) ? -1 : -2) + gDay);
         julianDay = Math.floor(julianDay + 0.5);
         var daysSinceHebEpoch = julianDay - 347997;
         var monthsSinceHebEpoch = Math.floor(daysSinceHebEpoch * PARTS_PER_DAY / PARTS_PER_MONTH);
@@ -4896,8 +4998,8 @@
         var gDay = 1;
         while (diffDays > 0) {
             if (after) {
-                if (diffDays >= (isGregorianLeapYear$1(gYear) ? 366 : 365)) {
-                    diffDays -= isGregorianLeapYear$1(gYear) ? 366 : 365;
+                if (diffDays >= (isGregorianLeapYear(gYear) ? 366 : 365)) {
+                    diffDays -= isGregorianLeapYear(gYear) ? 366 : 365;
                     gYear++;
                 }
                 else if (diffDays >= getDaysInGregorianMonth(gMonth, gYear)) {
@@ -4910,8 +5012,8 @@
                 }
             }
             else {
-                if (diffDays >= (isGregorianLeapYear$1(gYear - 1) ? 366 : 365)) {
-                    diffDays -= isGregorianLeapYear$1(gYear - 1) ? 366 : 365;
+                if (diffDays >= (isGregorianLeapYear(gYear - 1) ? 366 : 365)) {
+                    diffDays -= isGregorianLeapYear(gYear - 1) ? 366 : 365;
                     gYear--;
                 }
                 else {
@@ -5085,7 +5187,7 @@
         NgbDatepickerI18nHebrew.prototype.getMonthFullName = function (month, year) {
             return isHebrewLeapYear(year) ? MONTHS_LEAP[month - 1] || '' : MONTHS[month - 1] || '';
         };
-        NgbDatepickerI18nHebrew.prototype.getWeekdayShortName = function (weekday) { return WEEKDAYS[weekday - 1] || ''; };
+        NgbDatepickerI18nHebrew.prototype.getWeekdayLabel = function (weekday, width) { return WEEKDAYS[weekday - 1] || ''; };
         NgbDatepickerI18nHebrew.prototype.getDayAriaLabel = function (date) {
             return hebrewNumerals(date.day) + " " + this.getMonthFullName(date.month, date.year) + " " + hebrewNumerals(date.year);
         };
@@ -5095,6 +5197,106 @@
         return NgbDatepickerI18nHebrew;
     }(NgbDatepickerI18n));
     NgbDatepickerI18nHebrew.decorators = [
+        { type: i0.Injectable }
+    ];
+
+    /**
+     * Returns the equivalent JS date value for a give input Buddhist date.
+     * `date` is an Buddhist date to be converted to Gregorian.
+     */
+    function toGregorian(date) {
+        return new Date(date.year - 543, date.month - 1, date.day);
+    }
+    /**
+     * Returns the equivalent Buddhist date value for a give input Gregorian date.
+     * `gdate` is a JS Date to be converted to Buddhist.
+     * utc to local
+     */
+    function fromGregorian(gdate) {
+        return new NgbDate(gdate.getFullYear() + 543, gdate.getMonth() + 1, gdate.getDate());
+    }
+
+    /**
+     * @since 9.1.0
+     */
+    var NgbCalendarBuddhist = /** @class */ (function (_super) {
+        __extends(NgbCalendarBuddhist, _super);
+        function NgbCalendarBuddhist() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        NgbCalendarBuddhist.prototype.getToday = function () { return fromGregorian(new Date()); };
+        NgbCalendarBuddhist.prototype.getNext = function (date, period, number) {
+            if (period === void 0) { period = 'd'; }
+            if (number === void 0) { number = 1; }
+            var jsDate = toGregorian(date);
+            var checkMonth = true;
+            var expectedMonth = jsDate.getMonth();
+            switch (period) {
+                case 'y':
+                    jsDate.setFullYear(jsDate.getFullYear() + number);
+                    break;
+                case 'm':
+                    expectedMonth += number;
+                    jsDate.setMonth(expectedMonth);
+                    expectedMonth = expectedMonth % 12;
+                    if (expectedMonth < 0) {
+                        expectedMonth = expectedMonth + 12;
+                    }
+                    break;
+                case 'd':
+                    jsDate.setDate(jsDate.getDate() + number);
+                    checkMonth = false;
+                    break;
+                default:
+                    return date;
+            }
+            if (checkMonth && jsDate.getMonth() !== expectedMonth) {
+                // this means the destination month has less days than the initial month
+                // let's go back to the end of the previous month:
+                jsDate.setDate(0);
+            }
+            return fromGregorian(jsDate);
+        };
+        NgbCalendarBuddhist.prototype.getPrev = function (date, period, number) {
+            if (period === void 0) { period = 'd'; }
+            if (number === void 0) { number = 1; }
+            return this.getNext(date, period, -number);
+        };
+        NgbCalendarBuddhist.prototype.getWeekday = function (date) {
+            var jsDate = toGregorian(date);
+            var day = jsDate.getDay();
+            // in JS Date Sun=0, in ISO 8601 Sun=7
+            return day === 0 ? 7 : day;
+        };
+        NgbCalendarBuddhist.prototype.getWeekNumber = function (week, firstDayOfWeek) {
+            // in JS Date Sun=0, in ISO 8601 Sun=7
+            if (firstDayOfWeek === 7) {
+                firstDayOfWeek = 0;
+            }
+            var thursdayIndex = (4 + 7 - firstDayOfWeek) % 7;
+            var date = week[thursdayIndex];
+            var jsDate = toGregorian(date);
+            jsDate.setDate(jsDate.getDate() + 4 - (jsDate.getDay() || 7)); // Thursday
+            var time = jsDate.getTime();
+            jsDate.setMonth(0); // Compare with Jan 1
+            jsDate.setDate(1);
+            return Math.floor(Math.round((time - jsDate.getTime()) / 86400000) / 7) + 1;
+        };
+        NgbCalendarBuddhist.prototype.isValid = function (date) {
+            if (!date || !isInteger(date.year) || !isInteger(date.month) || !isInteger(date.day)) {
+                return false;
+            }
+            // year 0 doesn't exist in Gregorian calendar
+            if (date.year === 0) {
+                return false;
+            }
+            var jsDate = toGregorian(date);
+            return !isNaN(jsDate.getTime()) && jsDate.getFullYear() === date.year - 543 &&
+                jsDate.getMonth() + 1 === date.month && jsDate.getDate() === date.day;
+        };
+        return NgbCalendarBuddhist;
+    }(NgbCalendarGregorian));
+    NgbCalendarBuddhist.decorators = [
         { type: i0.Injectable }
     ];
 
@@ -5186,11 +5388,11 @@
     var NgbDropdownConfig = /** @class */ (function () {
         function NgbDropdownConfig() {
             this.autoClose = true;
-            this.placement = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
+            this.placement = ['bottom-start', 'bottom-end', 'top-start', 'top-end'];
         }
         return NgbDropdownConfig;
     }());
-    NgbDropdownConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbDropdownConfig_Factory() { return new NgbDropdownConfig(); }, token: NgbDropdownConfig, providedIn: "root" });
+    NgbDropdownConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbDropdownConfig_Factory() { return new NgbDropdownConfig(); }, token: NgbDropdownConfig, providedIn: "root" });
     NgbDropdownConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -5372,6 +5574,10 @@
             }
             if (changes.placement && !changes.placement.isFirstChange) {
                 this._applyPlacementClasses();
+            }
+            if (changes.dropdownClass) {
+                var _a = changes.dropdownClass, currentValue = _a.currentValue, previousValue = _a.previousValue;
+                this._applyCustomDropdownClass(currentValue, previousValue);
             }
         };
         /**
@@ -5566,12 +5772,24 @@
                 var renderer = this._renderer;
                 var dropdownMenuElement = this._menu.nativeElement;
                 var bodyContainer = this._bodyContainer = this._bodyContainer || renderer.createElement('div');
-                // Override some styles to have the positionning working
+                // Override some styles to have the positioning working
                 renderer.setStyle(bodyContainer, 'position', 'absolute');
                 renderer.setStyle(dropdownMenuElement, 'position', 'static');
                 renderer.setStyle(bodyContainer, 'z-index', '1050');
                 renderer.appendChild(bodyContainer, dropdownMenuElement);
                 renderer.appendChild(this._document.body, bodyContainer);
+            }
+            this._applyCustomDropdownClass(this.dropdownClass);
+        };
+        NgbDropdown.prototype._applyCustomDropdownClass = function (newClass, oldClass) {
+            var targetElement = this.container === 'body' ? this._bodyContainer : this._elementRef.nativeElement;
+            if (targetElement) {
+                if (oldClass) {
+                    this._renderer.removeClass(targetElement, oldClass);
+                }
+                if (newClass) {
+                    this._renderer.addClass(targetElement, newClass);
+                }
             }
         };
         NgbDropdown.prototype._applyPlacementClasses = function (placement) {
@@ -5618,6 +5836,7 @@
         _menu: [{ type: i0.ContentChild, args: [NgbDropdownMenu, { static: false },] }],
         _anchor: [{ type: i0.ContentChild, args: [NgbDropdownAnchor, { static: false },] }],
         autoClose: [{ type: i0.Input }],
+        dropdownClass: [{ type: i0.Input }],
         _open: [{ type: i0.Input, args: ['open',] }],
         placement: [{ type: i0.Input }],
         container: [{ type: i0.Input }],
@@ -5657,7 +5876,7 @@
         });
         return NgbModalConfig;
     }());
-    NgbModalConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbModalConfig_Factory() { return new NgbModalConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbModalConfig, providedIn: "root" });
+    NgbModalConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbModalConfig_Factory() { return new NgbModalConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbModalConfig, providedIn: "root" });
     NgbModalConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -5740,7 +5959,7 @@
     }());
 
     var noop = function () { };
-    var ɵ0$3 = noop;
+    var ɵ0$2 = noop;
     /**
      * Utility to handle the scrollbar.
      *
@@ -5804,7 +6023,7 @@
         };
         return ScrollBar;
     }());
-    ScrollBar.ɵprov = i0.ɵɵdefineInjectable({ factory: function ScrollBar_Factory() { return new ScrollBar(i0.ɵɵinject(i1.DOCUMENT)); }, token: ScrollBar, providedIn: "root" });
+    ScrollBar.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function ScrollBar_Factory() { return new ScrollBar(i0__namespace.ɵɵinject(i1__namespace.DOCUMENT)); }, token: ScrollBar, providedIn: "root" });
     ScrollBar.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -6043,6 +6262,7 @@
         return NgbModalRef;
     }());
 
+    exports.ModalDismissReasons = void 0;
     (function (ModalDismissReasons) {
         ModalDismissReasons[ModalDismissReasons["BACKDROP_CLICK"] = 0] = "BACKDROP_CLICK";
         ModalDismissReasons[ModalDismissReasons["ESC"] = 1] = "ESC";
@@ -6062,8 +6282,11 @@
             this.hidden = new rxjs.Subject();
         }
         NgbModalWindow.prototype.dismiss = function (reason) { this.dismissEvent.emit(reason); };
-        NgbModalWindow.prototype.ngOnInit = function () { this._elWithFocus = this._document.activeElement; };
-        NgbModalWindow.prototype.ngAfterViewInit = function () { this._show(); };
+        NgbModalWindow.prototype.ngOnInit = function () {
+            var _this = this;
+            this._elWithFocus = this._document.activeElement;
+            this._zone.onStable.asObservable().pipe(operators.take(1)).subscribe(function () { _this._show(); });
+        };
         NgbModalWindow.prototype.ngOnDestroy = function () { this._disableEventHandling(); };
         NgbModalWindow.prototype.hide = function () {
             var _this = this;
@@ -6193,9 +6416,9 @@
                         '[attr.aria-labelledby]': 'ariaLabelledBy',
                         '[attr.aria-describedby]': 'ariaDescribedBy'
                     },
-                    template: "\n    <div #dialog [class]=\"'modal-dialog' + (size ? ' modal-' + size : '') + (centered ? ' modal-dialog-centered' : '') +\n     (scrollable ? ' modal-dialog-scrollable' : '')\" role=\"document\">\n        <div class=\"modal-content\"><ng-content></ng-content></div>\n    </div>\n    ",
+                    template: "\n    <div #dialog [class]=\"'modal-dialog' + (size ? ' modal-' + size : '') + (centered ? ' modal-dialog-centered' : '') +\n     (scrollable ? ' modal-dialog-scrollable' : '') + (modalDialogClass ? ' ' + modalDialogClass : '')\" role=\"document\">\n        <div class=\"modal-content\"><ng-content></ng-content></div>\n    </div>\n    ",
                     encapsulation: i0.ViewEncapsulation.None,
-                    styles: ["ngb-modal-window .component-host-scrollable{-ms-flex-direction:column;display:-ms-flexbox;display:flex;flex-direction:column;overflow:hidden}"]
+                    styles: ["ngb-modal-window .component-host-scrollable{display:flex;flex-direction:column;overflow:hidden}"]
                 },] }
     ];
     NgbModalWindow.ctorParameters = function () { return [
@@ -6214,6 +6437,7 @@
         scrollable: [{ type: i0.Input }],
         size: [{ type: i0.Input }],
         windowClass: [{ type: i0.Input }],
+        modalDialogClass: [{ type: i0.Input }],
         dismissEvent: [{ type: i0.Output, args: ['dismiss',] }]
     };
 
@@ -6232,7 +6456,7 @@
             this._modalRefs = [];
             this._windowAttributes = [
                 'animation', 'ariaLabelledBy', 'ariaDescribedBy', 'backdrop', 'centered', 'keyboard', 'scrollable', 'size',
-                'windowClass'
+                'windowClass', 'modalDialogClass'
             ];
             this._windowCmpts = [];
             this._activeInstances = new i0.EventEmitter();
@@ -6279,7 +6503,9 @@
             }
             if (backdropCmptRef && backdropCmptRef.instance) {
                 this._applyBackdropOptions(backdropCmptRef.instance, options);
+                backdropCmptRef.changeDetectorRef.detectChanges();
             }
+            windowCmptRef.changeDetectorRef.detectChanges();
             return ngbModalRef;
         };
         Object.defineProperty(NgbModalStack.prototype, "activeInstances", {
@@ -6409,7 +6635,7 @@
         };
         return NgbModalStack;
     }());
-    NgbModalStack.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbModalStack_Factory() { return new NgbModalStack(i0.ɵɵinject(i0.ApplicationRef), i0.ɵɵinject(i0.INJECTOR), i0.ɵɵinject(i1.DOCUMENT), i0.ɵɵinject(ScrollBar), i0.ɵɵinject(i0.RendererFactory2), i0.ɵɵinject(i0.NgZone)); }, token: NgbModalStack, providedIn: "root" });
+    NgbModalStack.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbModalStack_Factory() { return new NgbModalStack(i0__namespace.ɵɵinject(i0__namespace.ApplicationRef), i0__namespace.ɵɵinject(i0__namespace.INJECTOR), i0__namespace.ɵɵinject(i1__namespace.DOCUMENT), i0__namespace.ɵɵinject(ScrollBar), i0__namespace.ɵɵinject(i0__namespace.RendererFactory2), i0__namespace.ɵɵinject(i0__namespace.NgZone)); }, token: NgbModalStack, providedIn: "root" });
     NgbModalStack.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -6471,7 +6697,7 @@
         NgbModal.prototype.hasOpenModals = function () { return this._modalStack.hasOpenModals(); };
         return NgbModal;
     }());
-    NgbModal.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbModal_Factory() { return new NgbModal(i0.ɵɵinject(i0.ComponentFactoryResolver), i0.ɵɵinject(i0.INJECTOR), i0.ɵɵinject(NgbModalStack), i0.ɵɵinject(NgbModalConfig)); }, token: NgbModal, providedIn: "root" });
+    NgbModal.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbModal_Factory() { return new NgbModal(i0__namespace.ɵɵinject(i0__namespace.ComponentFactoryResolver), i0__namespace.ɵɵinject(i0__namespace.INJECTOR), i0__namespace.ɵɵinject(NgbModalStack), i0__namespace.ɵɵinject(NgbModalConfig)); }, token: NgbModal, providedIn: "root" });
     NgbModal.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -6519,7 +6745,7 @@
         });
         return NgbNavConfig;
     }());
-    NgbNavConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbNavConfig_Factory() { return new NgbNavConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbNavConfig, providedIn: "root" });
+    NgbNavConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbNavConfig_Factory() { return new NgbNavConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbNavConfig, providedIn: "root" });
     NgbNavConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -6528,7 +6754,7 @@
     ]; };
 
     var isValidNavId = function (id) { return isDefined(id) && id !== ''; };
-    var ɵ0$4 = isValidNavId;
+    var ɵ0$1 = isValidNavId;
     var navCounter = 0;
     /**
      * This directive must be used to wrap content to be displayed in the nav.
@@ -7016,7 +7242,7 @@
         }
         return NgbPaginationConfig;
     }());
-    NgbPaginationConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbPaginationConfig_Factory() { return new NgbPaginationConfig(); }, token: NgbPaginationConfig, providedIn: "root" });
+    NgbPaginationConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbPaginationConfig_Factory() { return new NgbPaginationConfig(); }, token: NgbPaginationConfig, providedIn: "root" });
     NgbPaginationConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -7121,6 +7347,23 @@
         { type: i0.Directive, args: [{ selector: 'ng-template[ngbPaginationPrevious]' },] }
     ];
     NgbPaginationPrevious.ctorParameters = function () { return [
+        { type: i0.TemplateRef }
+    ]; };
+    /**
+     * A directive to match the 'pages' whole content
+     *
+     * @since 9.1.0
+     */
+    var NgbPaginationPages = /** @class */ (function () {
+        function NgbPaginationPages(templateRef) {
+            this.templateRef = templateRef;
+        }
+        return NgbPaginationPages;
+    }());
+    NgbPaginationPages.decorators = [
+        { type: i0.Directive, args: [{ selector: 'ng-template[ngbPaginationPages]' },] }
+    ];
+    NgbPaginationPages.ctorParameters = function () { return [
         { type: i0.TemplateRef }
     ]; };
     /**
@@ -7273,7 +7516,7 @@
                     selector: 'ngb-pagination',
                     changeDetection: i0.ChangeDetectionStrategy.OnPush,
                     host: { 'role': 'navigation' },
-                    template: "\n    <ng-template #first><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.first\">&laquo;&laquo;</span></ng-template>\n    <ng-template #previous><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.previous\">&laquo;</span></ng-template>\n    <ng-template #next><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.next\">&raquo;</span></ng-template>\n    <ng-template #last><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.last\">&raquo;&raquo;</span></ng-template>\n    <ng-template #ellipsis>...</ng-template>\n    <ng-template #defaultNumber let-page let-currentPage=\"currentPage\">\n      {{ page }}\n      <span *ngIf=\"page === currentPage\" class=\"sr-only\">(current)</span>\n    </ng-template>\n    <ul [class]=\"'pagination' + (size ? ' pagination-' + size : '')\">\n      <li *ngIf=\"boundaryLinks\" class=\"page-item\"\n        [class.disabled]=\"previousDisabled()\">\n        <a aria-label=\"First\" i18n-aria-label=\"@@ngb.pagination.first-aria\" class=\"page-link\" href\n          (click)=\"selectPage(1); $event.preventDefault()\" [attr.tabindex]=\"previousDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"previousDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplFirst?.templateRef || first\"\n                       [ngTemplateOutletContext]=\"{disabled: previousDisabled(), currentPage: page}\"></ng-template>\n        </a>\n      </li>\n\n      <li *ngIf=\"directionLinks\" class=\"page-item\"\n        [class.disabled]=\"previousDisabled()\">\n        <a aria-label=\"Previous\" i18n-aria-label=\"@@ngb.pagination.previous-aria\" class=\"page-link\" href\n          (click)=\"selectPage(page-1); $event.preventDefault()\" [attr.tabindex]=\"previousDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"previousDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplPrevious?.templateRef || previous\"\n                       [ngTemplateOutletContext]=\"{disabled: previousDisabled()}\"></ng-template>\n        </a>\n      </li>\n      <li *ngFor=\"let pageNumber of pages\" class=\"page-item\" [class.active]=\"pageNumber === page\"\n        [class.disabled]=\"isEllipsis(pageNumber) || disabled\" [attr.aria-current]=\"(pageNumber === page ? 'page' : null)\">\n        <a *ngIf=\"isEllipsis(pageNumber)\" class=\"page-link\" tabindex=\"-1\" aria-disabled=\"true\">\n          <ng-template [ngTemplateOutlet]=\"tplEllipsis?.templateRef || ellipsis\"\n                       [ngTemplateOutletContext]=\"{disabled: true, currentPage: page}\"></ng-template>\n        </a>\n        <a *ngIf=\"!isEllipsis(pageNumber)\" class=\"page-link\" href (click)=\"selectPage(pageNumber); $event.preventDefault()\"\n          [attr.tabindex]=\"disabled ? '-1' : null\" [attr.aria-disabled]=\"disabled ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplNumber?.templateRef || defaultNumber\"\n                       [ngTemplateOutletContext]=\"{disabled: disabled, $implicit: pageNumber, currentPage: page}\"></ng-template>\n        </a>\n      </li>\n      <li *ngIf=\"directionLinks\" class=\"page-item\" [class.disabled]=\"nextDisabled()\">\n        <a aria-label=\"Next\" i18n-aria-label=\"@@ngb.pagination.next-aria\" class=\"page-link\" href\n          (click)=\"selectPage(page+1); $event.preventDefault()\" [attr.tabindex]=\"nextDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"nextDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplNext?.templateRef || next\"\n                       [ngTemplateOutletContext]=\"{disabled: nextDisabled(), currentPage: page}\"></ng-template>\n        </a>\n      </li>\n\n      <li *ngIf=\"boundaryLinks\" class=\"page-item\" [class.disabled]=\"nextDisabled()\">\n        <a aria-label=\"Last\" i18n-aria-label=\"@@ngb.pagination.last-aria\" class=\"page-link\" href\n          (click)=\"selectPage(pageCount); $event.preventDefault()\" [attr.tabindex]=\"nextDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"nextDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplLast?.templateRef || last\"\n                       [ngTemplateOutletContext]=\"{disabled: nextDisabled(), currentPage: page}\"></ng-template>\n        </a>\n      </li>\n    </ul>\n  "
+                    template: "\n    <ng-template #first><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.first\">&laquo;&laquo;</span></ng-template>\n    <ng-template #previous><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.previous\">&laquo;</span></ng-template>\n    <ng-template #next><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.next\">&raquo;</span></ng-template>\n    <ng-template #last><span aria-hidden=\"true\" i18n=\"@@ngb.pagination.last\">&raquo;&raquo;</span></ng-template>\n    <ng-template #ellipsis>...</ng-template>\n    <ng-template #defaultNumber let-page let-currentPage=\"currentPage\">\n      {{ page }}\n      <span *ngIf=\"page === currentPage\" class=\"visually-hidden\">(current)</span>\n    </ng-template>\n    <ng-template #defaultPages let-page let-pages=\"pages\" let-disabled=\"disabled\">\n      <li *ngFor=\"let pageNumber of pages\" class=\"page-item\" [class.active]=\"pageNumber === page\"\n        [class.disabled]=\"isEllipsis(pageNumber) || disabled\" [attr.aria-current]=\"(pageNumber === page ? 'page' : null)\">\n        <a *ngIf=\"isEllipsis(pageNumber)\" class=\"page-link\" tabindex=\"-1\" aria-disabled=\"true\">\n          <ng-template [ngTemplateOutlet]=\"tplEllipsis?.templateRef || ellipsis\"\n                      [ngTemplateOutletContext]=\"{disabled: true, currentPage: page}\"></ng-template>\n        </a>\n        <a *ngIf=\"!isEllipsis(pageNumber)\" class=\"page-link\" href (click)=\"selectPage(pageNumber); $event.preventDefault()\"\n          [attr.tabindex]=\"disabled ? '-1' : null\" [attr.aria-disabled]=\"disabled ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplNumber?.templateRef || defaultNumber\"\n                      [ngTemplateOutletContext]=\"{disabled: disabled, $implicit: pageNumber, currentPage: page}\"></ng-template>\n        </a>\n      </li>\n    </ng-template>\n    <ul [class]=\"'pagination' + (size ? ' pagination-' + size : '')\">\n      <li *ngIf=\"boundaryLinks\" class=\"page-item\"\n        [class.disabled]=\"previousDisabled()\">\n        <a aria-label=\"First\" i18n-aria-label=\"@@ngb.pagination.first-aria\" class=\"page-link\" href\n          (click)=\"selectPage(1); $event.preventDefault()\" [attr.tabindex]=\"previousDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"previousDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplFirst?.templateRef || first\"\n                       [ngTemplateOutletContext]=\"{disabled: previousDisabled(), currentPage: page}\"></ng-template>\n        </a>\n      </li>\n\n      <li *ngIf=\"directionLinks\" class=\"page-item\"\n        [class.disabled]=\"previousDisabled()\">\n        <a aria-label=\"Previous\" i18n-aria-label=\"@@ngb.pagination.previous-aria\" class=\"page-link\" href\n          (click)=\"selectPage(page-1); $event.preventDefault()\" [attr.tabindex]=\"previousDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"previousDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplPrevious?.templateRef || previous\"\n                       [ngTemplateOutletContext]=\"{disabled: previousDisabled()}\"></ng-template>\n        </a>\n      </li>\n      <ng-template\n        [ngTemplateOutlet]=\"tplPages?.templateRef || defaultPages\"\n        [ngTemplateOutletContext]=\"{ $implicit: page, pages: pages, disabled: disabled }\"\n      >\n      </ng-template>\n      <li *ngIf=\"directionLinks\" class=\"page-item\" [class.disabled]=\"nextDisabled()\">\n        <a aria-label=\"Next\" i18n-aria-label=\"@@ngb.pagination.next-aria\" class=\"page-link\" href\n          (click)=\"selectPage(page+1); $event.preventDefault()\" [attr.tabindex]=\"nextDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"nextDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplNext?.templateRef || next\"\n                       [ngTemplateOutletContext]=\"{disabled: nextDisabled(), currentPage: page}\"></ng-template>\n        </a>\n      </li>\n\n      <li *ngIf=\"boundaryLinks\" class=\"page-item\" [class.disabled]=\"nextDisabled()\">\n        <a aria-label=\"Last\" i18n-aria-label=\"@@ngb.pagination.last-aria\" class=\"page-link\" href\n          (click)=\"selectPage(pageCount); $event.preventDefault()\" [attr.tabindex]=\"nextDisabled() ? '-1' : null\"\n          [attr.aria-disabled]=\"nextDisabled() ? 'true' : null\">\n          <ng-template [ngTemplateOutlet]=\"tplLast?.templateRef || last\"\n                       [ngTemplateOutletContext]=\"{disabled: nextDisabled(), currentPage: page}\"></ng-template>\n        </a>\n      </li>\n    </ul>\n  "
                 },] }
     ];
     NgbPagination.ctorParameters = function () { return [
@@ -7286,6 +7529,7 @@
         tplNext: [{ type: i0.ContentChild, args: [NgbPaginationNext, { static: false },] }],
         tplNumber: [{ type: i0.ContentChild, args: [NgbPaginationNumber, { static: false },] }],
         tplPrevious: [{ type: i0.ContentChild, args: [NgbPaginationPrevious, { static: false },] }],
+        tplPages: [{ type: i0.ContentChild, args: [NgbPaginationPages, { static: false },] }],
         disabled: [{ type: i0.Input }],
         boundaryLinks: [{ type: i0.Input }],
         directionLinks: [{ type: i0.Input }],
@@ -7301,7 +7545,7 @@
 
     var DIRECTIVES = [
         NgbPagination, NgbPaginationEllipsis, NgbPaginationFirst, NgbPaginationLast, NgbPaginationNext, NgbPaginationNumber,
-        NgbPaginationPrevious
+        NgbPaginationPrevious, NgbPaginationPages
     ];
     var NgbPaginationModule = /** @class */ (function () {
         function NgbPaginationModule() {
@@ -7364,7 +7608,7 @@
         });
     }
     var delayOrNoop = function (time) { return time > 0 ? operators.delay(time) : function (a) { return a; }; };
-    var ɵ0$5 = delayOrNoop;
+    var ɵ0 = delayOrNoop;
     function triggerDelay(openDelay, closeDelay, isOpenedFn) {
         return function (input$) {
             var pending = null;
@@ -7428,7 +7672,7 @@
         });
         return NgbPopoverConfig;
     }());
-    NgbPopoverConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbPopoverConfig_Factory() { return new NgbPopoverConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbPopoverConfig, providedIn: "root" });
+    NgbPopoverConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbPopoverConfig_Factory() { return new NgbPopoverConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbPopoverConfig, providedIn: "root" });
     NgbPopoverConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -7436,7 +7680,7 @@
         { type: NgbConfig }
     ]; };
 
-    var nextId$3 = 0;
+    var nextId$1 = 0;
     var NgbPopoverWindow = /** @class */ (function () {
         function NgbPopoverWindow() {
         }
@@ -7454,8 +7698,8 @@
                         'role': 'tooltip',
                         '[id]': 'id'
                     },
-                    template: "\n    <div class=\"arrow\"></div>\n    <h3 class=\"popover-header\" *ngIf=\"title\">\n      <ng-template #simpleTitle>{{title}}</ng-template>\n      <ng-template [ngTemplateOutlet]=\"isTitleTemplate() ? $any(title) : simpleTitle\" [ngTemplateOutletContext]=\"context\"></ng-template>\n    </h3>\n    <div class=\"popover-body\"><ng-content></ng-content></div>",
-                    styles: ["ngb-popover-window.bs-popover-bottom>.arrow,ngb-popover-window.bs-popover-top>.arrow{left:50%;margin-left:-.5rem}ngb-popover-window.bs-popover-bottom-left>.arrow,ngb-popover-window.bs-popover-top-left>.arrow{left:2em}ngb-popover-window.bs-popover-bottom-right>.arrow,ngb-popover-window.bs-popover-top-right>.arrow{left:auto;right:2em}ngb-popover-window.bs-popover-left>.arrow,ngb-popover-window.bs-popover-right>.arrow{margin-top:-.5rem;top:50%}ngb-popover-window.bs-popover-left-top>.arrow,ngb-popover-window.bs-popover-right-top>.arrow{top:.7em}ngb-popover-window.bs-popover-left-bottom>.arrow,ngb-popover-window.bs-popover-right-bottom>.arrow{bottom:.7em;top:auto}"]
+                    template: "\n    <div class=\"popover-arrow\"></div>\n    <h3 class=\"popover-header\" *ngIf=\"title\">\n      <ng-template #simpleTitle>{{title}}</ng-template>\n      <ng-template [ngTemplateOutlet]=\"isTitleTemplate() ? $any(title) : simpleTitle\" [ngTemplateOutletContext]=\"context\"></ng-template>\n    </h3>\n    <div class=\"popover-body\"><ng-content></ng-content></div>",
+                    styles: ["ngb-popover-window.bs-popover-bottom,ngb-popover-window.bs-popover-top{margin-top:.5rem;margin-bottom:.5rem}ngb-popover-window.bs-popover-end,ngb-popover-window.bs-popover-start{margin-left:.5rem;margin-right:.5rem}ngb-popover-window.bs-popover-bottom>.popover-arrow,ngb-popover-window.bs-popover-top>.popover-arrow{left:50%;margin-left:-.5rem}ngb-popover-window.bs-popover-bottom-start>.popover-arrow,ngb-popover-window.bs-popover-top-start>.popover-arrow{left:2em}ngb-popover-window.bs-popover-bottom-end>.popover-arrow,ngb-popover-window.bs-popover-top-end>.popover-arrow{left:auto;right:2em}ngb-popover-window.bs-popover-end>.popover-arrow,ngb-popover-window.bs-popover-start>.popover-arrow{top:50%;margin-top:-.5rem}ngb-popover-window.bs-popover-end-top>.popover-arrow,ngb-popover-window.bs-popover-start-top>.popover-arrow{top:.7em}ngb-popover-window.bs-popover-end-bottom>.popover-arrow,ngb-popover-window.bs-popover-start-bottom>.popover-arrow{top:auto;bottom:.7em}"]
                 },] }
     ];
     NgbPopoverWindow.propDecorators = {
@@ -7486,7 +7730,7 @@
              * At this point popover is not in the DOM anymore.
              */
             this.hidden = new i0.EventEmitter();
-            this._ngbPopoverWindowId = "ngb-popover-" + nextId$3++;
+            this._ngbPopoverWindowId = "ngb-popover-" + nextId$1++;
             this._windowRef = null;
             this.animation = config.animation;
             this.autoClose = config.autoClose;
@@ -7665,7 +7909,7 @@
         }
         return NgbProgressbarConfig;
     }());
-    NgbProgressbarConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbProgressbarConfig_Factory() { return new NgbProgressbarConfig(); }, token: NgbProgressbarConfig, providedIn: "root" });
+    NgbProgressbarConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbProgressbarConfig_Factory() { return new NgbProgressbarConfig(); }, token: NgbProgressbarConfig, providedIn: "root" });
     NgbProgressbarConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -7752,7 +7996,7 @@
         }
         return NgbRatingConfig;
     }());
-    NgbRatingConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbRatingConfig_Factory() { return new NgbRatingConfig(); }, token: NgbRatingConfig, providedIn: "root" });
+    NgbRatingConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbRatingConfig_Factory() { return new NgbRatingConfig(); }, token: NgbRatingConfig, providedIn: "root" });
     NgbRatingConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -7882,7 +8126,7 @@
                         '(keydown)': 'handleKeyDown($event)',
                         '(mouseleave)': 'reset()'
                     },
-                    template: "\n    <ng-template #t let-fill=\"fill\">{{ fill === 100 ? '&#9733;' : '&#9734;' }}</ng-template>\n    <ng-template ngFor [ngForOf]=\"contexts\" let-index=\"index\">\n      <span class=\"sr-only\">({{ index < nextRate ? '*' : ' ' }})</span>\n      <span (mouseenter)=\"enter(index + 1)\" (click)=\"handleClick(index + 1)\" [style.cursor]=\"isInteractive() ? 'pointer' : 'default'\">\n        <ng-template [ngTemplateOutlet]=\"starTemplate || starTemplateFromContent || t\" [ngTemplateOutletContext]=\"contexts[index]\">\n        </ng-template>\n      </span>\n    </ng-template>\n  ",
+                    template: "\n    <ng-template #t let-fill=\"fill\">{{ fill === 100 ? '&#9733;' : '&#9734;' }}</ng-template>\n    <ng-template ngFor [ngForOf]=\"contexts\" let-index=\"index\">\n      <span class=\"visually-hidden\">({{ index < nextRate ? '*' : ' ' }})</span>\n      <span (mouseenter)=\"enter(index + 1)\" (click)=\"handleClick(index + 1)\" [style.cursor]=\"isInteractive() ? 'pointer' : 'default'\">\n        <ng-template [ngTemplateOutlet]=\"starTemplate || starTemplateFromContent || t\" [ngTemplateOutletContext]=\"contexts[index]\">\n        </ng-template>\n      </span>\n    </ng-template>\n  ",
                     providers: [{ provide: forms.NG_VALUE_ACCESSOR, useExisting: i0.forwardRef(function () { return NgbRating; }), multi: true }]
                 },] }
     ];
@@ -7983,7 +8227,7 @@
         }
         return NgbTimepickerConfig;
     }());
-    NgbTimepickerConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbTimepickerConfig_Factory() { return new NgbTimepickerConfig(); }, token: NgbTimepickerConfig, providedIn: "root" });
+    NgbTimepickerConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbTimepickerConfig_Factory() { return new NgbTimepickerConfig(); }, token: NgbTimepickerConfig, providedIn: "root" });
     NgbTimepickerConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -8009,7 +8253,7 @@
         }
         return NgbTimeAdapter;
     }());
-    NgbTimeAdapter.ɵprov = i0.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_TIME_ADAPTER_FACTORY, token: NgbTimeAdapter, providedIn: "root" });
+    NgbTimeAdapter.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: NGB_DATEPICKER_TIME_ADAPTER_FACTORY, token: NgbTimeAdapter, providedIn: "root" });
     NgbTimeAdapter.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root', useFactory: NGB_DATEPICKER_TIME_ADAPTER_FACTORY },] }
     ];
@@ -8053,7 +8297,7 @@
         }
         return NgbTimepickerI18n;
     }());
-    NgbTimepickerI18n.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbTimepickerI18n_Factory() { return NGB_TIMEPICKER_I18N_FACTORY(i0.ɵɵinject(i0.LOCALE_ID)); }, token: NgbTimepickerI18n, providedIn: "root" });
+    NgbTimepickerI18n.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbTimepickerI18n_Factory() { return NGB_TIMEPICKER_I18N_FACTORY(i0__namespace.ɵɵinject(i0__namespace.LOCALE_ID)); }, token: NgbTimepickerI18n, providedIn: "root" });
     NgbTimepickerI18n.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root', useFactory: NGB_TIMEPICKER_I18N_FACTORY, deps: [i0.LOCALE_ID] },] }
     ];
@@ -8192,6 +8436,7 @@
             }
         };
         NgbTimepicker.prototype.formatMinSec = function (value) { return padNumber(isNumber(value) ? value : NaN); };
+        NgbTimepicker.prototype.handleBlur = function () { this.onTouched(); };
         Object.defineProperty(NgbTimepicker.prototype, "isSmallSize", {
             get: function () { return this.size === 'small'; },
             enumerable: false,
@@ -8226,9 +8471,9 @@
         { type: i0.Component, args: [{
                     selector: 'ngb-timepicker',
                     encapsulation: i0.ViewEncapsulation.None,
-                    template: "\n    <fieldset [disabled]=\"disabled\" [class.disabled]=\"disabled\">\n      <div class=\"ngb-tp\">\n        <div class=\"ngb-tp-input-container ngb-tp-hour\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeHour(hourStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron\"></span>\n            <span class=\"sr-only\" i18n=\"@@ngb.timepicker.increment-hours\">Increment hours</span>\n          </button>\n          <input type=\"text\" class=\"ngb-tp-input form-control\" [class.form-control-sm]=\"isSmallSize\"\n            [class.form-control-lg]=\"isLargeSize\"\n            maxlength=\"2\" inputmode=\"numeric\" placeholder=\"HH\" i18n-placeholder=\"@@ngb.timepicker.HH\"\n            [value]=\"formatHour(model?.hour)\" (change)=\"updateHour($any($event).target.value)\"\n            [readOnly]=\"readonlyInputs\" [disabled]=\"disabled\" aria-label=\"Hours\" i18n-aria-label=\"@@ngb.timepicker.hours\"\n            (input)=\"formatInput($any($event).target)\"\n            (keydown.ArrowUp)=\"changeHour(hourStep); $event.preventDefault()\"\n            (keydown.ArrowDown)=\"changeHour(-hourStep); $event.preventDefault()\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeHour(-hourStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron bottom\"></span>\n            <span class=\"sr-only\" i18n=\"@@ngb.timepicker.decrement-hours\">Decrement hours</span>\n          </button>\n        </div>\n        <div class=\"ngb-tp-spacer\">:</div>\n        <div class=\"ngb-tp-input-container ngb-tp-minute\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeMinute(minuteStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron\"></span>\n            <span class=\"sr-only\" i18n=\"@@ngb.timepicker.increment-minutes\">Increment minutes</span>\n          </button>\n          <input type=\"text\" class=\"ngb-tp-input form-control\" [class.form-control-sm]=\"isSmallSize\" [class.form-control-lg]=\"isLargeSize\"\n            maxlength=\"2\" inputmode=\"numeric\" placeholder=\"MM\" i18n-placeholder=\"@@ngb.timepicker.MM\"\n            [value]=\"formatMinSec(model?.minute)\" (change)=\"updateMinute($any($event).target.value)\"\n            [readOnly]=\"readonlyInputs\" [disabled]=\"disabled\" aria-label=\"Minutes\" i18n-aria-label=\"@@ngb.timepicker.minutes\"\n            (input)=\"formatInput($any($event).target)\"\n            (keydown.ArrowUp)=\"changeMinute(minuteStep); $event.preventDefault()\"\n            (keydown.ArrowDown)=\"changeMinute(-minuteStep); $event.preventDefault()\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeMinute(-minuteStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\"  [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron bottom\"></span>\n            <span class=\"sr-only\"  i18n=\"@@ngb.timepicker.decrement-minutes\">Decrement minutes</span>\n          </button>\n        </div>\n        <div *ngIf=\"seconds\" class=\"ngb-tp-spacer\">:</div>\n        <div *ngIf=\"seconds\" class=\"ngb-tp-input-container ngb-tp-second\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeSecond(secondStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron\"></span>\n            <span class=\"sr-only\" i18n=\"@@ngb.timepicker.increment-seconds\">Increment seconds</span>\n          </button>\n          <input type=\"text\" class=\"ngb-tp-input form-control\" [class.form-control-sm]=\"isSmallSize\" [class.form-control-lg]=\"isLargeSize\"\n            maxlength=\"2\" inputmode=\"numeric\" placeholder=\"SS\" i18n-placeholder=\"@@ngb.timepicker.SS\"\n            [value]=\"formatMinSec(model?.second)\" (change)=\"updateSecond($any($event).target.value)\"\n            [readOnly]=\"readonlyInputs\" [disabled]=\"disabled\" aria-label=\"Seconds\" i18n-aria-label=\"@@ngb.timepicker.seconds\"\n            (input)=\"formatInput($any($event).target)\"\n            (keydown.ArrowUp)=\"changeSecond(secondStep); $event.preventDefault()\"\n            (keydown.ArrowDown)=\"changeSecond(-secondStep); $event.preventDefault()\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeSecond(-secondStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\"  [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron bottom\"></span>\n            <span class=\"sr-only\" i18n=\"@@ngb.timepicker.decrement-seconds\">Decrement seconds</span>\n          </button>\n        </div>\n        <div *ngIf=\"meridian\" class=\"ngb-tp-spacer\"></div>\n        <div *ngIf=\"meridian\" class=\"ngb-tp-meridian\">\n          <button type=\"button\" class=\"btn btn-outline-primary\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\"\n            [disabled]=\"disabled\" [class.disabled]=\"disabled\"\n                  (click)=\"toggleMeridian()\">\n            <ng-container *ngIf=\"model && model.hour >= 12; else am\"\n                          i18n=\"@@ngb.timepicker.PM\">{{ i18n.getAfternoonPeriod() }}</ng-container>\n            <ng-template #am i18n=\"@@ngb.timepicker.AM\">{{ i18n.getMorningPeriod() }}</ng-template>\n          </button>\n        </div>\n      </div>\n    </fieldset>\n  ",
+                    template: "\n    <fieldset [disabled]=\"disabled\" [class.disabled]=\"disabled\">\n      <div class=\"ngb-tp\">\n        <div class=\"ngb-tp-input-container ngb-tp-hour\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeHour(hourStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron\"></span>\n            <span class=\"visually-hidden\" i18n=\"@@ngb.timepicker.increment-hours\">Increment hours</span>\n          </button>\n          <input type=\"text\" class=\"ngb-tp-input form-control\" [class.form-control-sm]=\"isSmallSize\"\n            [class.form-control-lg]=\"isLargeSize\"\n            maxlength=\"2\" inputmode=\"numeric\" placeholder=\"HH\" i18n-placeholder=\"@@ngb.timepicker.HH\"\n            [value]=\"formatHour(model?.hour)\" (change)=\"updateHour($any($event).target.value)\"\n            [readOnly]=\"readonlyInputs\" [disabled]=\"disabled\" aria-label=\"Hours\" i18n-aria-label=\"@@ngb.timepicker.hours\"\n            (blur)=\"handleBlur()\"\n            (input)=\"formatInput($any($event).target)\"\n            (keydown.ArrowUp)=\"changeHour(hourStep); $event.preventDefault()\"\n            (keydown.ArrowDown)=\"changeHour(-hourStep); $event.preventDefault()\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeHour(-hourStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron bottom\"></span>\n            <span class=\"visually-hidden\" i18n=\"@@ngb.timepicker.decrement-hours\">Decrement hours</span>\n          </button>\n        </div>\n        <div class=\"ngb-tp-spacer\">:</div>\n        <div class=\"ngb-tp-input-container ngb-tp-minute\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeMinute(minuteStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron\"></span>\n            <span class=\"visually-hidden\" i18n=\"@@ngb.timepicker.increment-minutes\">Increment minutes</span>\n          </button>\n          <input type=\"text\" class=\"ngb-tp-input form-control\" [class.form-control-sm]=\"isSmallSize\" [class.form-control-lg]=\"isLargeSize\"\n            maxlength=\"2\" inputmode=\"numeric\" placeholder=\"MM\" i18n-placeholder=\"@@ngb.timepicker.MM\"\n            [value]=\"formatMinSec(model?.minute)\" (change)=\"updateMinute($any($event).target.value)\"\n            [readOnly]=\"readonlyInputs\" [disabled]=\"disabled\" aria-label=\"Minutes\" i18n-aria-label=\"@@ngb.timepicker.minutes\"\n            (blur)=\"handleBlur()\"\n            (input)=\"formatInput($any($event).target)\"\n            (keydown.ArrowUp)=\"changeMinute(minuteStep); $event.preventDefault()\"\n            (keydown.ArrowDown)=\"changeMinute(-minuteStep); $event.preventDefault()\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeMinute(-minuteStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\"  [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron bottom\"></span>\n            <span class=\"visually-hidden\"  i18n=\"@@ngb.timepicker.decrement-minutes\">Decrement minutes</span>\n          </button>\n        </div>\n        <div *ngIf=\"seconds\" class=\"ngb-tp-spacer\">:</div>\n        <div *ngIf=\"seconds\" class=\"ngb-tp-input-container ngb-tp-second\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeSecond(secondStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\" [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron\"></span>\n            <span class=\"visually-hidden\" i18n=\"@@ngb.timepicker.increment-seconds\">Increment seconds</span>\n          </button>\n          <input type=\"text\" class=\"ngb-tp-input form-control\" [class.form-control-sm]=\"isSmallSize\" [class.form-control-lg]=\"isLargeSize\"\n            maxlength=\"2\" inputmode=\"numeric\" placeholder=\"SS\" i18n-placeholder=\"@@ngb.timepicker.SS\"\n            [value]=\"formatMinSec(model?.second)\" (change)=\"updateSecond($any($event).target.value)\"\n            [readOnly]=\"readonlyInputs\" [disabled]=\"disabled\" aria-label=\"Seconds\" i18n-aria-label=\"@@ngb.timepicker.seconds\"\n            (blur)=\"handleBlur()\"\n            (input)=\"formatInput($any($event).target)\"\n            (keydown.ArrowUp)=\"changeSecond(secondStep); $event.preventDefault()\"\n            (keydown.ArrowDown)=\"changeSecond(-secondStep); $event.preventDefault()\">\n          <button *ngIf=\"spinners\" tabindex=\"-1\" type=\"button\" (click)=\"changeSecond(-secondStep)\"\n            class=\"btn btn-link\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\"  [class.disabled]=\"disabled\"\n            [disabled]=\"disabled\">\n            <span class=\"chevron ngb-tp-chevron bottom\"></span>\n            <span class=\"visually-hidden\" i18n=\"@@ngb.timepicker.decrement-seconds\">Decrement seconds</span>\n          </button>\n        </div>\n        <div *ngIf=\"meridian\" class=\"ngb-tp-spacer\"></div>\n        <div *ngIf=\"meridian\" class=\"ngb-tp-meridian\">\n          <button type=\"button\" class=\"btn btn-outline-primary\" [class.btn-sm]=\"isSmallSize\" [class.btn-lg]=\"isLargeSize\"\n            [disabled]=\"disabled\" [class.disabled]=\"disabled\"\n                  (click)=\"toggleMeridian()\">\n            <ng-container *ngIf=\"model && model.hour >= 12; else am\"\n                          i18n=\"@@ngb.timepicker.PM\">{{ i18n.getAfternoonPeriod() }}</ng-container>\n            <ng-template #am i18n=\"@@ngb.timepicker.AM\">{{ i18n.getMorningPeriod() }}</ng-template>\n          </button>\n        </div>\n      </div>\n    </fieldset>\n  ",
                     providers: [{ provide: forms.NG_VALUE_ACCESSOR, useExisting: i0.forwardRef(function () { return NgbTimepicker; }), multi: true }],
-                    styles: ["ngb-timepicker{font-size:1rem}.ngb-tp{-ms-flex-align:center;align-items:center;display:-ms-flexbox;display:flex}.ngb-tp-input-container{width:4em}.ngb-tp-chevron:before{-webkit-transform:rotate(-45deg);border-style:solid;border-width:.29em .29em 0 0;content:\"\";display:inline-block;height:.69em;left:.05em;position:relative;top:.15em;transform:rotate(-45deg);vertical-align:middle;width:.69em}.ngb-tp-chevron.bottom:before{-webkit-transform:rotate(135deg);top:-.3em;transform:rotate(135deg)}.ngb-tp-input{text-align:center}.ngb-tp-hour,.ngb-tp-meridian,.ngb-tp-minute,.ngb-tp-second{-ms-flex-align:center;-ms-flex-direction:column;-ms-flex-pack:distribute;align-items:center;display:-ms-flexbox;display:flex;flex-direction:column;justify-content:space-around}.ngb-tp-spacer{text-align:center;width:1em}"]
+                    styles: ["ngb-timepicker{font-size:1rem}.ngb-tp{display:flex;align-items:center}.ngb-tp-input-container{width:4em}.ngb-tp-chevron:before{border-style:solid;border-width:.29em .29em 0 0;content:\"\";display:inline-block;height:.69em;left:.05em;position:relative;top:.15em;transform:rotate(-45deg);vertical-align:middle;width:.69em}.ngb-tp-chevron.bottom:before{top:-.3em;transform:rotate(135deg)}.ngb-tp-input{text-align:center}.ngb-tp-hour,.ngb-tp-meridian,.ngb-tp-minute,.ngb-tp-second{display:flex;flex-direction:column;align-items:center;justify-content:space-around}.ngb-tp-spacer{width:1em;text-align:center}"]
                 },] }
     ];
     NgbTimepicker.ctorParameters = function () { return [
@@ -8268,7 +8513,7 @@
         function NgbToastConfig(_ngbConfig) {
             this._ngbConfig = _ngbConfig;
             this.autohide = true;
-            this.delay = 500;
+            this.delay = 5000;
             this.ariaLive = 'polite';
         }
         Object.defineProperty(NgbToastConfig.prototype, "animation", {
@@ -8279,7 +8524,7 @@
         });
         return NgbToastConfig;
     }());
-    NgbToastConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbToastConfig_Factory() { return new NgbToastConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbToastConfig, providedIn: "root" });
+    NgbToastConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbToastConfig_Factory() { return new NgbToastConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbToastConfig, providedIn: "root" });
     NgbToastConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -8438,8 +8683,8 @@
                         'class': 'toast',
                         '[class.fade]': 'animation',
                     },
-                    template: "\n    <ng-template #headerTpl>\n      <strong class=\"mr-auto\">{{header}}</strong>\n    </ng-template>\n    <ng-template [ngIf]=\"contentHeaderTpl || header\">\n      <div class=\"toast-header\">\n        <ng-template [ngTemplateOutlet]=\"contentHeaderTpl || headerTpl\"></ng-template>\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" i18n-aria-label=\"@@ngb.toast.close-aria\" (click)=\"hide()\">\n          <span aria-hidden=\"true\">&times;</span>\n        </button>\n      </div>\n    </ng-template>\n    <div class=\"toast-body\">\n      <ng-content></ng-content>\n    </div>\n  ",
-                    styles: [".ngb-toasts{margin:.5em;position:fixed;right:0;top:0;z-index:1200}ngb-toast{display:block}ngb-toast .toast-header .close{margin-bottom:.25rem;margin-left:auto}"]
+                    template: "\n    <ng-template #headerTpl>\n      <strong class=\"me-auto\">{{header}}</strong>\n    </ng-template>\n    <ng-template [ngIf]=\"contentHeaderTpl || header\">\n      <div class=\"toast-header\">\n        <ng-template [ngTemplateOutlet]=\"contentHeaderTpl || headerTpl\"></ng-template>\n        <button type=\"button\" class=\"btn-close\" aria-label=\"Close\" i18n-aria-label=\"@@ngb.toast.close-aria\" (click)=\"hide()\">\n        </button>\n      </div>\n    </ng-template>\n    <div class=\"toast-body\">\n      <ng-content></ng-content>\n    </div>\n  ",
+                    styles: ["ngb-toast{display:block}ngb-toast .toast-header .close{margin-left:auto;margin-bottom:.25rem}"]
                 },] }
     ];
     NgbToast.ctorParameters = function () { return [
@@ -8491,7 +8736,7 @@
         });
         return NgbTooltipConfig;
     }());
-    NgbTooltipConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbTooltipConfig_Factory() { return new NgbTooltipConfig(i0.ɵɵinject(NgbConfig)); }, token: NgbTooltipConfig, providedIn: "root" });
+    NgbTooltipConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbTooltipConfig_Factory() { return new NgbTooltipConfig(i0__namespace.ɵɵinject(NgbConfig)); }, token: NgbTooltipConfig, providedIn: "root" });
     NgbTooltipConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -8499,7 +8744,7 @@
         { type: NgbConfig }
     ]; };
 
-    var nextId$4 = 0;
+    var nextId = 0;
     var NgbTooltipWindow = /** @class */ (function () {
         function NgbTooltipWindow() {
         }
@@ -8516,8 +8761,8 @@
                         'role': 'tooltip',
                         '[id]': 'id'
                     },
-                    template: "<div class=\"arrow\"></div><div class=\"tooltip-inner\"><ng-content></ng-content></div>",
-                    styles: ["ngb-tooltip-window.bs-tooltip-bottom .arrow,ngb-tooltip-window.bs-tooltip-top .arrow{left:calc(50% - .4rem)}ngb-tooltip-window.bs-tooltip-bottom-left .arrow,ngb-tooltip-window.bs-tooltip-top-left .arrow{left:1em}ngb-tooltip-window.bs-tooltip-bottom-right .arrow,ngb-tooltip-window.bs-tooltip-top-right .arrow{left:auto;right:.8rem}ngb-tooltip-window.bs-tooltip-left .arrow,ngb-tooltip-window.bs-tooltip-right .arrow{top:calc(50% - .4rem)}ngb-tooltip-window.bs-tooltip-left-top .arrow,ngb-tooltip-window.bs-tooltip-right-top .arrow{top:.4rem}ngb-tooltip-window.bs-tooltip-left-bottom .arrow,ngb-tooltip-window.bs-tooltip-right-bottom .arrow{bottom:.4rem;top:auto}"]
+                    template: "<div class=\"tooltip-arrow\"></div><div class=\"tooltip-inner\"><ng-content></ng-content></div>",
+                    styles: ["ngb-tooltip-window{pointer-events:none}ngb-tooltip-window .tooltip-inner{pointer-events:auto}ngb-tooltip-window.bs-tooltip-bottom .tooltip-arrow,ngb-tooltip-window.bs-tooltip-top .tooltip-arrow{left:calc(50% - .4rem)}ngb-tooltip-window.bs-tooltip-bottom-start .tooltip-arrow,ngb-tooltip-window.bs-tooltip-top-start .tooltip-arrow{left:1em}ngb-tooltip-window.bs-tooltip-bottom-end .tooltip-arrow,ngb-tooltip-window.bs-tooltip-top-end .tooltip-arrow{left:auto;right:.8rem}ngb-tooltip-window.bs-tooltip-end .tooltip-arrow,ngb-tooltip-window.bs-tooltip-start .tooltip-arrow{top:calc(50% - .4rem)}ngb-tooltip-window.bs-tooltip-end-top .tooltip-arrow,ngb-tooltip-window.bs-tooltip-start-top .tooltip-arrow{top:.4rem}ngb-tooltip-window.bs-tooltip-end-bottom .tooltip-arrow,ngb-tooltip-window.bs-tooltip-start-bottom .tooltip-arrow{top:auto;bottom:.4rem}"]
                 },] }
     ];
     NgbTooltipWindow.propDecorators = {
@@ -8544,7 +8789,7 @@
              * An event emitted when the tooltip closing animation has finished. Contains no payload.
              */
             this.hidden = new i0.EventEmitter();
-            this._ngbTooltipWindowId = "ngb-tooltip-" + nextId$4++;
+            this._ngbTooltipWindowId = "ngb-tooltip-" + nextId++;
             this._windowRef = null;
             this.animation = config.animation;
             this.autoClose = config.autoClose;
@@ -8716,12 +8961,39 @@
              * The CSS class for `<span>` elements wrapping the `term` inside the `result`.
              */
             this.highlightClass = 'ngb-highlight';
+            /**
+             * Boolean option to determine if the highlighting should be sensitive to accents or not.
+             *
+             * This feature is only available for browsers that implement the `String.normalize` function
+             * (typically not Internet Explorer).
+             * If you want to use this feature in a browser that does not implement `String.normalize`,
+             * you will have to include a polyfill in your application (`unorm` for example).
+             *
+             * @since 9.1.0
+             */
+            this.accentSensitive = true;
         }
         NgbHighlight.prototype.ngOnChanges = function (changes) {
+            var _this = this;
+            if (!this.accentSensitive && !String.prototype.normalize) {
+                console.warn('The `accentSensitive` input in `ngb-highlight` cannot be set to `false` in a browser ' +
+                    'that does not implement the `String.normalize` function. ' +
+                    'You will have to include a polyfill in your application to use this feature in the current browser.');
+                this.accentSensitive = true;
+            }
             var result = toString(this.result);
             var terms = Array.isArray(this.term) ? this.term : [this.term];
-            var escapedTerms = terms.map(function (term) { return regExpEscape(toString(term)); }).filter(function (term) { return term; });
-            this.parts = escapedTerms.length ? result.split(new RegExp("(" + escapedTerms.join('|') + ")", 'gmi')) : [result];
+            var prepareTerm = function (term) { return _this.accentSensitive ? term : removeAccents(term); };
+            var escapedTerms = terms.map(function (term) { return regExpEscape(prepareTerm(toString(term))); }).filter(function (term) { return term; });
+            var toSplit = this.accentSensitive ? result : removeAccents(result);
+            var parts = escapedTerms.length ? toSplit.split(new RegExp("(" + escapedTerms.join('|') + ")", 'gmi')) : [result];
+            if (this.accentSensitive) {
+                this.parts = parts;
+            }
+            else {
+                var offset_1 = 0;
+                this.parts = parts.map(function (part) { return result.substring(offset_1, offset_1 += part.length); });
+            }
         };
         return NgbHighlight;
     }());
@@ -8739,7 +9011,8 @@
     NgbHighlight.propDecorators = {
         highlightClass: [{ type: i0.Input }],
         result: [{ type: i0.Input }],
-        term: [{ type: i0.Input }]
+        term: [{ type: i0.Input }],
+        accentSensitive: [{ type: i0.Input }]
     };
 
     var NgbTypeaheadWindow = /** @class */ (function () {
@@ -8803,7 +9076,12 @@
                     selector: 'ngb-typeahead-window',
                     exportAs: 'ngbTypeaheadWindow',
                     encapsulation: i0.ViewEncapsulation.None,
-                    host: { '(mousedown)': '$event.preventDefault()', 'class': 'dropdown-menu show', 'role': 'listbox', '[id]': 'id' },
+                    host: {
+                        '(mousedown)': '$event.preventDefault()',
+                        '[class]': '"dropdown-menu show" + (popupClass ? " " + popupClass : "")',
+                        'role': 'listbox',
+                        '[id]': 'id'
+                    },
                     template: "\n    <ng-template #rt let-result=\"result\" let-term=\"term\" let-formatter=\"formatter\">\n      <ngb-highlight [result]=\"formatter(result)\" [term]=\"term\"></ngb-highlight>\n    </ng-template>\n    <ng-template ngFor [ngForOf]=\"results\" let-result let-idx=\"index\">\n      <button type=\"button\" class=\"dropdown-item\" role=\"option\"\n        [id]=\"id + '-' + idx\"\n        [class.active]=\"idx === activeIdx\"\n        (mouseenter)=\"markActive(idx)\"\n        (click)=\"select(result)\">\n          <ng-template [ngTemplateOutlet]=\"resultTemplate || rt\"\n          [ngTemplateOutletContext]=\"{result: result, term: term, formatter: formatter}\"></ng-template>\n      </button>\n    </ng-template>\n  "
                 },] }
     ];
@@ -8814,6 +9092,7 @@
         term: [{ type: i0.Input }],
         formatter: [{ type: i0.Input }],
         resultTemplate: [{ type: i0.Input }],
+        popupClass: [{ type: i0.Input }],
         selectEvent: [{ type: i0.Output, args: ['select',] }],
         activeChangeEvent: [{ type: i0.Output, args: ['activeChange',] }]
     };
@@ -8830,7 +9109,7 @@
             element.setAttribute('id', 'ngb-live');
             element.setAttribute('aria-live', 'polite');
             element.setAttribute('aria-atomic', 'true');
-            element.classList.add('sr-only');
+            element.classList.add('visually-hidden');
             document.body.appendChild(element);
         }
         return element;
@@ -8863,7 +9142,7 @@
         };
         return Live;
     }());
-    Live.ɵprov = i0.ɵɵdefineInjectable({ factory: function Live_Factory() { return new Live(i0.ɵɵinject(i1.DOCUMENT), i0.ɵɵinject(ARIA_LIVE_DELAY)); }, token: Live, providedIn: "root" });
+    Live.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function Live_Factory() { return new Live(i0__namespace.ɵɵinject(i1__namespace.DOCUMENT), i0__namespace.ɵɵinject(ARIA_LIVE_DELAY)); }, token: Live, providedIn: "root" });
     Live.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -8883,11 +9162,11 @@
             this.editable = true;
             this.focusFirst = true;
             this.showHint = false;
-            this.placement = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
+            this.placement = ['bottom-start', 'bottom-end', 'top-start', 'top-end'];
         }
         return NgbTypeaheadConfig;
     }());
-    NgbTypeaheadConfig.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgbTypeaheadConfig_Factory() { return new NgbTypeaheadConfig(); }, token: NgbTypeaheadConfig, providedIn: "root" });
+    NgbTypeaheadConfig.ɵprov = i0__namespace.ɵɵdefineInjectable({ factory: function NgbTypeaheadConfig_Factory() { return new NgbTypeaheadConfig(); }, token: NgbTypeaheadConfig, providedIn: "root" });
     NgbTypeaheadConfig.decorators = [
         { type: i0.Injectable, args: [{ providedIn: 'root' },] }
     ];
@@ -8920,17 +9199,17 @@
             /**
              * The preferred placement of the typeahead.
              *
-             * Possible values are `"top"`, `"top-left"`, `"top-right"`, `"bottom"`, `"bottom-left"`,
-             * `"bottom-right"`, `"left"`, `"left-top"`, `"left-bottom"`, `"right"`, `"right-top"`,
-             * `"right-bottom"`
+             * Possible values are `"top"`, `"top-start"`, `"top-end"`, `"bottom"`, `"bottom-start"`,
+             * `"bottom-end"`, `"start"`, `"start-top"`, `"start-bottom"`, `"end"`, `"end-top"`,
+             * `"end-bottom"`
              *
              * Accepts an array of strings or a string with space separated possible values.
              *
-             * The default order of preference is `"bottom-left bottom-right top-left top-right"`
+             * The default order of preference is `"bottom-start bottom-end top-start top-end"`
              *
              * Please see the [positioning overview](#/positioning) for more details.
              */
-            this.placement = 'bottom-left';
+            this.placement = 'bottom-start';
             /**
              * An event emitted right before an item is selected from the result list.
              *
@@ -8956,15 +9235,13 @@
                 }
             });
         }
-        NgbTypeahead.prototype.ngOnInit = function () {
-            var _this = this;
-            var inputValues$ = this._valueChanges.pipe(operators.tap(function (value) {
-                _this._inputValueBackup = _this.showHint ? value : null;
-                _this._onChange(_this.editable ? value : undefined);
-            }));
-            var results$ = inputValues$.pipe(this.ngbTypeahead);
-            var userInput$ = this._resubscribeTypeahead.pipe(operators.switchMap(function () { return results$; }));
-            this._subscription = this._subscribeToUserInput(userInput$);
+        NgbTypeahead.prototype.ngOnInit = function () { this._subscribeToUserInput(); };
+        NgbTypeahead.prototype.ngOnChanges = function (_b) {
+            var ngbTypeahead = _b.ngbTypeahead;
+            if (ngbTypeahead && !ngbTypeahead.firstChange) {
+                this._unsubscribeFromUserInput();
+                this._subscribeToUserInput();
+            }
         };
         NgbTypeahead.prototype.ngOnDestroy = function () {
             this._closePopup();
@@ -9040,6 +9317,7 @@
                 this._windowRef.instance.id = this.popupId;
                 this._windowRef.instance.selectEvent.subscribe(function (result) { return _this._selectResultClosePopup(result); });
                 this._windowRef.instance.activeChangeEvent.subscribe(function (activeId) { return _this.activeDescendant = activeId; });
+                this._windowRef.instance.popupClass = this.popupClass;
                 if (this.container === 'body') {
                     this._document.querySelector(this.container).appendChild(this._windowRef.location.nativeElement);
                 }
@@ -9088,9 +9366,13 @@
         NgbTypeahead.prototype._writeInputValue = function (value) {
             this._renderer.setProperty(this._elementRef.nativeElement, 'value', toString(value));
         };
-        NgbTypeahead.prototype._subscribeToUserInput = function (userInput$) {
+        NgbTypeahead.prototype._subscribeToUserInput = function () {
             var _this = this;
-            return userInput$.subscribe(function (results) {
+            var results$ = this._valueChanges.pipe(operators.tap(function (value) {
+                _this._inputValueBackup = _this.showHint ? value : null;
+                _this._onChange(_this.editable ? value : undefined);
+            }), this.ngbTypeahead ? this.ngbTypeahead : function () { return rxjs.of([]); });
+            this._subscription = this._resubscribeTypeahead.pipe(operators.switchMap(function () { return results$; })).subscribe(function (results) {
                 if (!results || results.length === 0) {
                     _this._closePopup();
                 }
@@ -9171,6 +9453,7 @@
         resultTemplate: [{ type: i0.Input }],
         showHint: [{ type: i0.Input }],
         placement: [{ type: i0.Input }],
+        popupClass: [{ type: i0.Input }],
         selectItem: [{ type: i0.Output }]
     };
 
@@ -9216,6 +9499,7 @@
     exports.NgbButtonLabel = NgbButtonLabel;
     exports.NgbButtonsModule = NgbButtonsModule;
     exports.NgbCalendar = NgbCalendar;
+    exports.NgbCalendarBuddhist = NgbCalendarBuddhist;
     exports.NgbCalendarGregorian = NgbCalendarGregorian;
     exports.NgbCalendarHebrew = NgbCalendarHebrew;
     exports.NgbCalendarIslamicCivil = NgbCalendarIslamicCivil;
@@ -9238,6 +9522,7 @@
     exports.NgbDatepickerConfig = NgbDatepickerConfig;
     exports.NgbDatepickerContent = NgbDatepickerContent;
     exports.NgbDatepickerI18n = NgbDatepickerI18n;
+    exports.NgbDatepickerI18nDefault = NgbDatepickerI18nDefault;
     exports.NgbDatepickerI18nHebrew = NgbDatepickerI18nHebrew;
     exports.NgbDatepickerKeyboardService = NgbDatepickerKeyboardService;
     exports.NgbDatepickerModule = NgbDatepickerModule;
@@ -9274,6 +9559,7 @@
     exports.NgbPaginationModule = NgbPaginationModule;
     exports.NgbPaginationNext = NgbPaginationNext;
     exports.NgbPaginationNumber = NgbPaginationNumber;
+    exports.NgbPaginationPages = NgbPaginationPages;
     exports.NgbPaginationPrevious = NgbPaginationPrevious;
     exports.NgbPanel = NgbPanel;
     exports.NgbPanelContent = NgbPanelContent;
@@ -9309,32 +9595,31 @@
     exports.NgbTypeaheadModule = NgbTypeaheadModule;
     exports.ɵa = NGB_CAROUSEL_DIRECTIVES;
     exports.ɵb = NGB_DATEPICKER_CALENDAR_FACTORY;
-    exports.ɵba = NgbCalendarHijri;
-    exports.ɵbb = ContentRef;
+    exports.ɵba = ContentRef;
     exports.ɵc = NgbDatepickerDayView;
     exports.ɵd = NgbDatepickerNavigation;
     exports.ɵe = NgbDatepickerNavigationSelect;
     exports.ɵf = NGB_DATEPICKER_18N_FACTORY;
-    exports.ɵg = NgbDatepickerI18nDefault;
-    exports.ɵh = NGB_DATEPICKER_DATE_ADAPTER_FACTORY;
-    exports.ɵi = NgbDateStructAdapter;
-    exports.ɵj = NGB_DATEPICKER_PARSER_FORMATTER_FACTORY;
-    exports.ɵk = NgbDateISOParserFormatter;
-    exports.ɵl = NgbPopoverWindow;
-    exports.ɵm = NGB_DATEPICKER_TIME_ADAPTER_FACTORY;
-    exports.ɵn = NgbTimeStructAdapter;
-    exports.ɵo = NGB_TIMEPICKER_I18N_FACTORY;
-    exports.ɵp = NgbTimepickerI18nDefault;
-    exports.ɵq = NgbTooltipWindow;
-    exports.ɵr = NgbTypeaheadWindow;
-    exports.ɵs = NgbDatepickerService;
-    exports.ɵt = NgbModalBackdrop;
-    exports.ɵu = NgbModalWindow;
-    exports.ɵv = NgbModalStack;
-    exports.ɵw = ScrollBar;
-    exports.ɵx = ARIA_LIVE_DELAY;
-    exports.ɵy = ARIA_LIVE_DELAY_FACTORY;
-    exports.ɵz = Live;
+    exports.ɵg = NGB_DATEPICKER_DATE_ADAPTER_FACTORY;
+    exports.ɵh = NgbDateStructAdapter;
+    exports.ɵi = NGB_DATEPICKER_PARSER_FORMATTER_FACTORY;
+    exports.ɵj = NgbDateISOParserFormatter;
+    exports.ɵk = NgbPopoverWindow;
+    exports.ɵl = NGB_DATEPICKER_TIME_ADAPTER_FACTORY;
+    exports.ɵm = NgbTimeStructAdapter;
+    exports.ɵn = NGB_TIMEPICKER_I18N_FACTORY;
+    exports.ɵo = NgbTimepickerI18nDefault;
+    exports.ɵp = NgbTooltipWindow;
+    exports.ɵq = NgbTypeaheadWindow;
+    exports.ɵr = NgbDatepickerService;
+    exports.ɵs = NgbModalBackdrop;
+    exports.ɵt = NgbModalWindow;
+    exports.ɵu = NgbModalStack;
+    exports.ɵv = ScrollBar;
+    exports.ɵw = ARIA_LIVE_DELAY;
+    exports.ɵx = ARIA_LIVE_DELAY_FACTORY;
+    exports.ɵy = Live;
+    exports.ɵz = NgbCalendarHijri;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
