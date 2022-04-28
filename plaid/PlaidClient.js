@@ -115,6 +115,10 @@ const linkTokenConfigFields = [
   'account_filters',
   'cross_app_item_add',
   'payment_initiation',
+  'deposit_switch',
+  'income_verification',
+  'institution_id',
+  'eu_config',
 ];
 
 // createLinkToken(CreateLinkTokenOptions, Function)
@@ -314,6 +318,10 @@ Client.prototype.getHoldings =
 Client.prototype.getPaystub =
   requestWithIncomeVerificationId('/income/verification/paystub/get');
 
+// getPaystubs(String, Function)
+Client.prototype.getPaystubs =
+  requestWithIncomeVerificationId('/income/verification/paystubs/get');
+
 // getSummary(String, Function)
 Client.prototype.getSummary =
   requestWithIncomeVerificationId('/income/verification/summary/get');
@@ -471,9 +479,9 @@ Client.prototype.listPaymentRecipients =
     }, cb);
   };
 
-// createPayment(String, String, Object, Function)
+// createPayment(String, String, Object, Object?, Function)
 Client.prototype.createPayment =
-  function(recipient_id, reference, amount, cb) {
+  function(recipient_id, reference, amount, options, cb) {
     return this._authenticatedRequest({
       path: '/payment_initiation/payment/create',
       body: {
@@ -481,7 +489,7 @@ Client.prototype.createPayment =
         reference: reference,
         amount: amount,
       },
-    }, cb);
+    }, options, cb);
   };
 
 // createPaymentToken(String, Function)
@@ -541,6 +549,18 @@ Client.prototype.createDepositSwitch =
     }, options, cb);
   };
 
+// createDepositSwitchAlt(Object, Object, Object?, Function)
+Client.prototype.createDepositSwitchAlt =
+  function(target_account, target_user, options, cb) {
+    return this._authenticatedRequest({
+      path: '/deposit_switch/alt/create',
+      body: {
+        target_account: target_account,
+        target_user: target_user,
+      },
+    }, options, cb);
+  };
+
 // createDepositSwitchToken(String, Object?, Function)
 Client.prototype.createDepositSwitchToken =
   function(deposit_switch_id, options, cb) {
@@ -550,6 +570,17 @@ Client.prototype.createDepositSwitchToken =
         deposit_switch_id: deposit_switch_id,
       },
     }, options, cb);
+  };
+
+// createIncomeVerification(String, Object?, Function)
+Client.prototype.createIncomeVerification =
+  function(webhook, cb) {
+    return this._authenticatedRequest({
+      path: '/income/verification/create',
+      body: {
+        webhook: webhook,
+      },
+    }, cb);
   };
 
 // getInstitutions(Number, Number, [String], Object?, Function);
