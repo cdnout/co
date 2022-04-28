@@ -1,0 +1,1 @@
+[{"name":"oidc-client-ts","version":"2.0.3","description":"OpenID Connect (OIDC) & OAuth2 client library","repository":"git+https:\/\/github.com\/authts\/oidc-client-ts.git","keyfiles":"oidc-client-ts.min.js","keywords":["authentication","oauth2","oidc","openid","OpenID Connect"],"npm":"oidc-client-ts"}]

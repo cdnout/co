@@ -1,0 +1,1 @@
+[{"name":"onnxruntime-web","version":"1.11.0","description":"A Javascript library for running ONNX models on browsers","repository":"https:\/\/github.com\/Microsoft\/onnxruntime.git","keyfiles":"ort.min.js","keywords":["ONNX","ONNXRuntime","ONNX Runtime"],"npm":"onnxruntime-web"}]
