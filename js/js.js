@@ -72,6 +72,18 @@ $(function() {
     $('.btnlive-okay').click(function(){
         $("html").removeClass("copiedLive");
     });
+
+    $('.btncopy-normal').click(function(){
+        $("html").addClass("copied");
+        setTimeout(function() {
+            $('html').removeClass('copied');
+        },2000);
+    });
+});
+
+
+$(".btn-show").click(function(){
+    $(this).parent().parent().toggleClass("show-all");
 });
 
 

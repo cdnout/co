@@ -475,6 +475,17 @@ width: 100%;
 			order: -97;
 		}
 
+		&.cdn-react{
+			order: -94;
+		}
+
+		&.cdn-vue{
+			order: -93;
+		}
+		&.cdn-angular{
+			order: -93;
+		}
+
 		&:hover a:not(.btnSmall) {
 			color: $yellow;
 
@@ -1577,6 +1588,10 @@ width: 100%;
 		}
 	}
 
+	.show-all .code-line {
+		display: flex !important;
+	}
+
 	.code-line {
 		background: rgba($primary, .1);
 		border-radius: 15px;
@@ -1586,6 +1601,8 @@ width: 100%;
 		position: relative;
 		flex-flow: row nowrap;
 		color: $dark;
+
+		.show
 
 		&:last-child {
 			margin: 0;
@@ -2076,4 +2093,23 @@ width: 100%;
 	iframe {
 		width: 100%;
 	}
+}
+
+.btn-show {
+	.less  {
+		display: none;
+		.show-all & {
+			display: block;
+		}
+	}
+	.show {
+		display: block;
+		.show-all & {
+			display: none;
+		}
+	}
+}
+
+.page-details #mastfooter {
+	position: relative;
 }

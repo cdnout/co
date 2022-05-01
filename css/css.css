@@ -849,6 +849,21 @@ button {
       -ms-flex-order: -97;
           order: -97;
 }
+.cdn-smartlist .cdn.cdn-react {
+  -webkit-box-ordinal-group: -93;
+      -ms-flex-order: -94;
+          order: -94;
+}
+.cdn-smartlist .cdn.cdn-vue {
+  -webkit-box-ordinal-group: -92;
+      -ms-flex-order: -93;
+          order: -93;
+}
+.cdn-smartlist .cdn.cdn-angular {
+  -webkit-box-ordinal-group: -92;
+      -ms-flex-order: -93;
+          order: -93;
+}
 .cdn-smartlist .cdn:hover a:not(.btnSmall) {
   color: #fc3;
   padding-left: 10px;
@@ -1878,6 +1893,11 @@ button {
   background: #5f6be7;
   color: #fff;
 }
+.cdn-release .show-all .code-line {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+}
 .cdn-release .code-line {
   background: rgba(95, 107, 231, 0.1);
   border-radius: 15px;
@@ -1895,7 +1915,7 @@ button {
           flex-flow: row nowrap;
   color: #223464;
 }
-.cdn-release .code-line:last-child {
+.show .cdn-release .code-line:last-child {
   margin: 0;
 }
 .cdn-release .code-line + .code-line {
@@ -2347,4 +2367,21 @@ button {
 }
 .grids iframe {
   width: 100%;
+}
+
+.btn-show .less {
+  display: none;
+}
+.show-all .btn-show .less {
+  display: block;
+}
+.btn-show .show {
+  display: block;
+}
+.show-all .btn-show .show {
+  display: none;
+}
+
+.page-details #mastfooter {
+  position: relative;
 }

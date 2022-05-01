@@ -2,9 +2,9 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var compilerDom = require('@vue/compiler-dom');
 var runtimeDom = require('@vue/runtime-dom');
 var shared = require('@vue/shared');
-var compilerDom = require('@vue/compiler-dom');
 
 function _interopNamespace(e) {
   if (e && e.__esModule) return e;
@@ -46,18 +46,14 @@ function compileToFunction(template, options) {
     }
     const { code } = compilerDom.compile(template, shared.extend({
         hoistStatic: true,
-        onError(err) {
-            {
-                /* istanbul ignore next */
-                throw err;
-            }
-        }
+        onError: undefined,
+        onWarn: shared.NOOP
     }, options));
     // The wildcard import results in a huge object with every export
     // with keys that cannot be mangled, and can be quite heavy size-wise.
     // In the global build we know `Vue` is available globally so we can avoid
     // the wildcard object.
-    const render = ( new Function('Vue', code)(runtimeDom__namespace));
+    const render = (new Function('Vue', code)(runtimeDom__namespace));
     render._rc = true;
     return (compileCache[key] = render);
 }

@@ -152,6 +152,7 @@ EOD;
        
          <article class="cdn">
            <?php echo $keywords; ?>
+            <?php  /*
           <div class="text-box">            
             <h2><a href="../cdn/<?php echo $director ?>/"><?php echo $title; ?></a></h2>
             <ul class="meta">
@@ -164,7 +165,7 @@ EOD;
               <?php } ?>
               <li class="version" title="Current Version: <?php echo $latest_version; ?>"><span><i class="icon-layers"></i>v<?php echo $latest_version; ?></span></li>
             </ul>
-          </div>
+          </div> */ ?>
           <div class="path">
             <div class="btn-block">
                 <button title='Copy <?php echo $director ?> <?php echo  $latest_version; ?> necessary CDN Files'

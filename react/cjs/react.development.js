@@ -23,7 +23,7 @@ if (
 ) {
   __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
 }
-          var ReactVersion = '18.2.0-next-9f80a48ad-20220427';
+          var ReactVersion = '18.2.0-next-ce1386028-20220428';
 
 // -----------------------------------------------------------------------------
 

@@ -1,20 +1,19 @@
 import * as runtimeDom from '@vue/runtime-dom';
-import { setDevtoolsHook, initCustomFormatter, warn, registerRuntimeCompiler } from '@vue/runtime-dom';
+import { initCustomFormatter, warn, registerRuntimeCompiler } from '@vue/runtime-dom';
 export * from '@vue/runtime-dom';
-import { getGlobalThis, isString, NOOP, extend, generateCodeFrame } from '@vue/shared';
 import { compile } from '@vue/compiler-dom';
+import { isString, NOOP, extend, generateCodeFrame } from '@vue/shared';
 
 function initDev() {
-    const target = getGlobalThis();
-    target.__VUE__ = true;
-    setDevtoolsHook(target.__VUE_DEVTOOLS_GLOBAL_HOOK__);
     {
         initCustomFormatter();
     }
 }
 
 // This entry is the "full-build" that includes both the runtime
-(process.env.NODE_ENV !== 'production') && initDev();
+if ((process.env.NODE_ENV !== 'production')) {
+    initDev();
+}
 const compileCache = Object.create(null);
 function compileToFunction(template, options) {
     if (!isString(template)) {
@@ -44,24 +43,22 @@ function compileToFunction(template, options) {
     }
     const { code } = compile(template, extend({
         hoistStatic: true,
-        onError(err) {
-            if ((process.env.NODE_ENV !== 'production')) {
-                const message = `Template compilation error: ${err.message}`;
-                const codeFrame = err.loc &&
-                    generateCodeFrame(template, err.loc.start.offset, err.loc.end.offset);
-                warn(codeFrame ? `${message}\n${codeFrame}` : message);
-            }
-            else {
-                /* istanbul ignore next */
-                throw err;
-            }
-        }
+        onError: (process.env.NODE_ENV !== 'production') ? onError : undefined,
+        onWarn: (process.env.NODE_ENV !== 'production') ? e => onError(e, true) : NOOP
     }, options));
+    function onError(err, asWarning = false) {
+        const message = asWarning
+            ? err.message
+            : `Template compilation error: ${err.message}`;
+        const codeFrame = err.loc &&
+            generateCodeFrame(template, err.loc.start.offset, err.loc.end.offset);
+        warn(codeFrame ? `${message}\n${codeFrame}` : message);
+    }
     // The wildcard import results in a huge object with every export
     // with keys that cannot be mangled, and can be quite heavy size-wise.
     // In the global build we know `Vue` is available globally so we can avoid
     // the wildcard object.
-    const render = ( new Function('Vue', code)(runtimeDom));
+    const render = (new Function('Vue', code)(runtimeDom));
     render._rc = true;
     return (compileCache[key] = render);
 }

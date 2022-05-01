@@ -13,7 +13,7 @@
   (global = global || self, factory(global.React = {}));
 }(this, (function (exports) { 'use strict';
 
-  var ReactVersion = '18.2.0-next-9f80a48ad-20220427';
+  var ReactVersion = '18.2.0-next-ce1386028-20220428';
 
   // -----------------------------------------------------------------------------
 
