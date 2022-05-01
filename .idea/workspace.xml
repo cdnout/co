@@ -3,102 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="88e1f7f9-9654-4618-bfd1-26688e82b7c8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/assets/owl.carousel.css" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/assets/owl.carousel.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/assets/owl.carousel.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/assets/owl.carousel.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.default.css" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.default.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.default.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.default.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.green.css" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.green.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.green.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/assets/owl.theme.green.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/owl.carousel.js" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/owl.carousel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OwlCarousel2/owl.carousel.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/OwlCarousel2/owl.carousel.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/OwlCarousel2/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/OwlCarousel2/var.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react-dom@18.0.0-next-3e997fdba-20220329/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react-dom@18.0.0-next-7e3121e1c-20220330/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react/var.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@0.14.10/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@0.14.10/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@15.7.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@15.7.0/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.14.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.14.0/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.6.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.6.1/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.6.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.6.2/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.6.3/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.6.3/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.7.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.7.0/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.8.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.8.0/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.8.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.8.1/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.8.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.8.2/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.8.3/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.8.3/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.8.4/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.8.4/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.8.5/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.8.5/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.8.6/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.8.6/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@16.9.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@16.9.0/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@17.0.0/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@17.0.0/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@17.0.1/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@17.0.1/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@17.0.2/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/react@17.0.2/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.0.0-next-3e997fdba-20220329/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.0.0-next-7e3121e1c-20220330/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-0568c0f8c-20220409/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-057915477-20220407/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-168da8d55-20220412/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-2bf5eba72-20220416/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-354772952-20220420/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-5b2e7253f-20220408/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-726ba8029-20220415/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-aa05e7315-20220331/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-af730436c-20220405/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-bd0813766-20220420/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-bd4784c8f-20220425/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-ddb1ab1e9-20220413/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-df5d32f23-20220411/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-ebd7ff65b-20220401/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-f7cf077cc-20220412/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.1.0-next-fc47cb1b6-20220404/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/react@18.2.0-next-9f80a48ad-20220427/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdn/vue/var.php" beforeDir="false" afterPath="$PROJECT_DIR$/cdn/vue/var.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/co_json.json" beforeDir="false" afterPath="$PROJECT_DIR$/co_json.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/css.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/css.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/js.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/js.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jsonfilemaker/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/jsonfilemaker/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react-jsx-dev-runtime.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react-jsx-dev-runtime.development.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react-jsx-dev-runtime.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react-jsx-dev-runtime.production.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react-jsx-dev-runtime.profiling.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react-jsx-dev-runtime.profiling.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react-jsx-runtime.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react-jsx-runtime.development.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react-jsx-runtime.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react-jsx-runtime.production.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react-jsx-runtime.profiling.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react-jsx-runtime.profiling.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react.development.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react.development.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react.development.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react.production.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react.shared-subset.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react.shared-subset.development.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/cjs/react.shared-subset.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/cjs/react.shared-subset.production.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/umd/react.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/umd/react.development.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/umd/react.development.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/umd/react.development.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/umd/react.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/umd/react.production.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/react/umd/react.profiling.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/react/umd/react.profiling.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scss/css.scss" beforeDir="false" afterPath="$PROJECT_DIR$/scss/css.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scss/prepros.config" beforeDir="false" afterPath="$PROJECT_DIR$/scss/prepros.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.cjs.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.cjs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.cjs.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.cjs.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.cjs.prod.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.cjs.prod.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.cjs.prod.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.cjs.prod.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.esm-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.esm-browser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.esm-browser.prod.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.esm-browser.prod.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.esm-bundler.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.esm-bundler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.esm-bundler.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.esm-bundler.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.global.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.global.prod.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.global.prod.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.runtime.esm-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.runtime.esm-browser.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.runtime.esm-browser.prod.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.runtime.esm-browser.prod.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.runtime.esm-bundler.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.runtime.esm-bundler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.runtime.esm-bundler.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.runtime.esm-bundler.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.runtime.global.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.runtime.global.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vue/vue.runtime.global.prod.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue/vue.runtime.global.prod.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zip/OwlCarousel2.zip" beforeDir="false" afterPath="$PROJECT_DIR$/zip/OwlCarousel2.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zip/react.zip" beforeDir="false" afterPath="$PROJECT_DIR$/zip/react.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/zip/vue.zip" beforeDir="false" afterPath="$PROJECT_DIR$/zip/vue.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/meta/_head.php" beforeDir="false" afterPath="$PROJECT_DIR$/meta/_head.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +66,7 @@
       <workItem from="1651177946382" duration="419000" />
       <workItem from="1651179108415" duration="109000" />
       <workItem from="1651208686279" duration="194000" />
-      <workItem from="1651403909056" duration="8837000" />
+      <workItem from="1651403909056" duration="9609000" />
     </task>
     <servers />
   </component>
@@ -175,6 +80,16 @@
         <option value="$PROJECT_DIR$/hi-sven/index.mjs" />
         <option value="$PROJECT_DIR$/hi-sven-git/index.js" />
         <option value="$PROJECT_DIR$/hi-sven-git/index.mjs" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
       </list>
     </option>
   </component>
