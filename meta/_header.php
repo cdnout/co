@@ -6,14 +6,15 @@
     <p><strong><a href="<?php echo $base_url; ?>version-cdn/">Click here</a> for version based CDN.</strong></p>
     <a href="javascript:;" class="btn btnlive-okay">I'm Okay with Live First CDN</a>
 </div>
-<div class="cookies cookieConsentContainer" id="cookieConsentContainer" style="opacity: 1; display: block;">
-    <strong class="subtitle">Cookies</strong>
-    <p>This website uses cookies, We and our partners use technology such as cookies to analyse our traffic and to show you personalised content and ads. You consent to our cookies by clicking "Agree" or by continuing to use our website.</p>
-    <div class="btn-block">
-        <a class="btn btn-secondary" onclick="purecookieDismiss();">Agree</a>
+
+<div class="popup-overlay cookies cookieConsentContainer">
+    <div class="popup">
+        <p>This website uses cookies, We and our partners use technology such as cookies to analyse our traffic and to show you personalised content and ads. You consent to our cookies by clicking "Agree" or by continuing to use our website.</p>
+        <a href="javascript:;" class="submit btn btn-success">Agree</a>
         <a class="link" href="https://cdnout.com/privacy.php">Cookies Policy</a>
     </div>
 </div>
+
 <span class="alert-overlay btnlive-okay"></span>
 <header id="masthead">
     <div class="container-large">

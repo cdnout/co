@@ -2478,8 +2478,6 @@ button {
   text-align: center;
   display: inline-block;
   vertical-align: top;
-  background: #3b5998;
-  color: #fff;
   padding: 10px;
   font-size: 12px;
   cursor: pointer;
@@ -2488,7 +2486,7 @@ button {
 }
 
 .cookies .link {
-  color: #313131;
+  color: #5f6be7;
   text-decoration: underline;
 }
 

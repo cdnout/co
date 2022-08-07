@@ -2205,8 +2205,6 @@ width: 100%;
 	text-align: center;
 	display: inline-block;
 	vertical-align: top;
-	background: #3b5998;
-	color: #fff;
 	padding: 10px;
 	font-size: 12px;
 	cursor: pointer;
@@ -2215,7 +2213,7 @@ width: 100%;
 }
 
 .cookies .link {
-	color: #313131;
+	color: $primary; 
 	text-decoration: underline;
 }
 
