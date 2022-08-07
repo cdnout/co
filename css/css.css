@@ -2409,6 +2409,7 @@ button {
   z-index: 9999;
   font-weight: 600;
   letter-spacing: 0.25px;
+  display: none !important;
 }
 .palestineAlert img {
   -ms-flex-negative: 0;
@@ -2419,8 +2420,4 @@ button {
 .palestineAlert p {
   margin: 0;
   padding: 0 0 1px;
-}
-
-#masthead {
-  top: 26px;
 }
