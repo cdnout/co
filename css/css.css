@@ -2421,3 +2421,77 @@ button {
   margin: 0;
   padding: 0 0 1px;
 }
+
+.cookies {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #ffe05e;
+  color: #000;
+  padding: 20px 15px;
+  display: none;
+  z-index: 99999;
+  border-radius: 3px;
+  font-size: 12px;
+  width: 280px;
+}
+
+@media only screen and (min-width: 414px) {
+  .cookies {
+    font-size: 13px;
+    width: 320px;
+  }
+}
+.cookies .subtitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 5px;
+}
+
+.cookies p {
+  margin: 0 0 20px;
+}
+
+.cookies .btn-block {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: -5px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
+.cookies .btn-block > * {
+  margin: 5px;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.cookies .btn {
+  width: 100px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  background: #3b5998;
+  color: #fff;
+  padding: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
+.cookies .link {
+  color: #313131;
+  text-decoration: underline;
+}
+
+.cookies .link:hover {
+  text-decoration: none;
+}
