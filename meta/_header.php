@@ -1,3 +1,4 @@
+<div class="palestineAlert"><img src="<?php echo $base_url; ?>images/palestine-flag.png" alt="We Stand with Palestine" width="30" height=""><p>We stand with Palestine against Israeil's Military Oppression over innocent MUSLIMS.</p></div>
 <span class="text-alert"><i class="icon-check"></i>Selected CDN Resource Copied successfully!</span>
 <div class="box-alert">
     <span class="title">Be Careful!</span>

@@ -2113,3 +2113,36 @@ width: 100%;
 .page-details #mastfooter {
 	position: relative;
 }
+
+.palestineAlert {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 26px;
+	padding: 4px 5px;
+	color: #fff;
+	text-align: center;
+	font-size: 13px;
+	line-height: 18px;
+	background: #bd1f34;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	font-weight: 600;
+	letter-spacing: .25px;
+	img {
+		flex-shrink: 0;
+		width: 28px;
+		margin: 0 15px 0 0;
+	}
+	p {
+		margin: 0;
+		padding: 0 0 1px;
+	}
+}
+
+#masthead {
+	top: 26px;
+}

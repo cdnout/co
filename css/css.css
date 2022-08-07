@@ -1,4 +1,3 @@
-@charset "UTF-8";
 .clearfix:after {
   content: "";
   display: block;
@@ -218,111 +217,111 @@ h1 span {
 }
 
 .icon-zip:before {
-  content: "";
+  content: "\e912";
 }
 
 .icon-warning:before {
-  content: "";
+  content: "\e911";
 }
 
 .icon-in:before {
-  content: "";
+  content: "\e90c";
 }
 
 .icon-instagram:before {
-  content: "";
+  content: "\ea92";
 }
 
 .icon-linkedin:before {
-  content: "";
+  content: "\eaca";
 }
 
 .icon-download-cloud:before {
-  content: "";
+  content: "\e913";
 }
 
 .icon-warning1:before {
-  content: "";
+  content: "\e914";
 }
 
 .icon-one-finger-click:before {
-  content: "";
+  content: "\e910";
 }
 
 .icon-cloud:before {
-  content: "";
+  content: "\e90f";
 }
 
 .icon-live:before {
-  content: "";
+  content: "\e90e";
 }
 
 .icon-download:before {
-  content: "";
+  content: "\e90d";
 }
 
 .icon-check:before {
-  content: "";
+  content: "\e900";
 }
 
 .icon-cross:before {
-  content: "";
+  content: "\e901";
 }
 
 .icon-npm1:before {
-  content: "";
+  content: "\e902";
 }
 
 .icon-search:before {
-  content: "";
+  content: "\e903";
 }
 
 .icon-git:before {
-  content: "";
+  content: "\e904";
 }
 
 .icon-github:before {
-  content: "";
+  content: "\e904";
 }
 
 .icon-copy:before {
-  content: "";
+  content: "\e905";
 }
 
 .icon-node:before {
-  content: "";
+  content: "\e906";
 }
 
 .icon-chain:before {
-  content: "";
+  content: "\e907";
 }
 
 .icon-website:before {
-  content: "";
+  content: "\e907";
 }
 
 .icon-layers:before {
-  content: "";
+  content: "\e908";
 }
 
 .icon-code-fork:before {
-  content: "";
+  content: "\e909";
 }
 
 .icon-code:before {
-  content: "";
+  content: "\e90a";
 }
 
 .icon-code1:before {
-  content: "";
+  content: "\e90b";
 }
 
 .icon-facebook:before {
-  content: "";
+  content: "\ea90";
 }
 
 .icon-twitter:before {
-  content: "";
+  content: "\ea96";
 }
 
 @font-face {
@@ -2384,4 +2383,44 @@ button {
 
 .page-details #mastfooter {
   position: relative;
+}
+
+.palestineAlert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 26px;
+  padding: 4px 5px;
+  color: #fff;
+  text-align: center;
+  font-size: 13px;
+  line-height: 18px;
+  background: #bd1f34;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  z-index: 9999;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+}
+.palestineAlert img {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  width: 28px;
+  margin: 0 15px 0 0;
+}
+.palestineAlert p {
+  margin: 0;
+  padding: 0 0 1px;
+}
+
+#masthead {
+  top: 26px;
 }
