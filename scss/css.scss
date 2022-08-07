@@ -2173,7 +2173,7 @@ width: 100%;
 	display: block;
 	font-size: 14px;
 	font-weight: 600;
-	margin: 0 0 5px;
+	margin: 0 0 5px; 
 }
 
 .cookies p {
@@ -2185,18 +2185,13 @@ width: 100%;
 	display: -ms-flexbox;
 	display: flex;
 	margin: -5px;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
 	align-items: center;
-	-webkit-box-orient: horizontal;
-	-webkit-box-direction: normal;
 	-ms-flex-flow: row wrap;
-	flex-flow: row wrap;
+	flex-flow: row nowrap;
 }
 
 .cookies .btn-block>* {
 	margin: 5px;
-	-ms-flex-negative: 0;
 	flex-shrink: 0;
 }
 
@@ -2209,12 +2204,16 @@ width: 100%;
 	font-size: 12px;
 	cursor: pointer;
 	line-height: 16px;
+	margin: 0 !important;
 	text-transform: uppercase;
 }
 
 .cookies .link {
-	color: $primary; 
+	color: #000;
 	text-decoration: underline;
+	margin: 0 0 0 15px !important;
+	display: inline-block;;
+	vertical-align: top;
 }
 
 .cookies .link:hover {

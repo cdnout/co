@@ -9,6 +9,7 @@
 
 <div class="popup-overlay cookies cookieConsentContainer">
     <div class="popup">
+        <strong class="subtitle">Cookies</strong>
         <p>This website uses cookies, We and our partners use technology such as cookies to analyse our traffic and to show you personalised content and ads. You consent to our cookies by clicking "Agree" or by continuing to use our website.</p>
         <a href="javascript:;" class="submit btn btn-success">Agree</a>
         <a class="link" href="https://cdnout.com/privacy.php">Cookies Policy</a>
