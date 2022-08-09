@@ -1478,6 +1478,7 @@ button {
 .cdn-release .block:last-child {
   margin: 0;
   border: 0;
+  padding-bottom: 20px;
 }
 .cdn-release h3 {
   font-size: 14px;
@@ -2383,6 +2384,11 @@ button {
 
 .page-details #mastfooter {
   position: relative;
+  left: auto;
+  bottom: auto;
+  top: auto;
+  right: auto;
+  border: 0;
 }
 
 .palestineAlert {

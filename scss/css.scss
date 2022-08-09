@@ -1140,6 +1140,7 @@ width: 100%;
 		&:last-child {
 			margin: 0;
 			border: 0;
+			padding-bottom: 20px;
 		}
 
 	}
@@ -2112,6 +2113,11 @@ width: 100%;
 
 .page-details #mastfooter {
 	position: relative;
+	left: auto;
+	bottom: auto;
+	top: auto;
+	right: auto;
+	border: 0;
 }
 
 .palestineAlert {
