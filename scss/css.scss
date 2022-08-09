@@ -966,7 +966,10 @@ width: 100%;
 	h1 {
 		color: inherit;
 		font-size: 30px;
-		line-height: 1.15;
+		line-height: 40px;
+		min-height: 80px;
+		display: flex;
+		align-items: center;
 	}
 
 	.meta-holder {
@@ -2236,7 +2239,7 @@ width: 100%;
 		position: absolute;
 		left: 0;
 		top: 347px;
-		height: 80px; 
+		height: 80px;
 		overflow: hidden;
 		text-align: center;
 	}
