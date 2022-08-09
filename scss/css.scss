@@ -2219,18 +2219,19 @@ width: 100%;
 
 .banner-ad {
 	display: none;
-	max-height: 0;
 }
 .page-details {
 	.content-twocols {
-		padding-top: 110px;
+		padding-top: 150px;
 	}
 	.banner-ad {
-		max-height: inherit;
+		width: 100%;
 		display: block;
 		position: absolute;
 		left: 0;
-		top: 280px;
+		top: 310px;
+		height: 80px;
+		overflow: hidden;
 		text-align: center;
 	}
 }
