@@ -2218,7 +2218,7 @@ width: 100%;
 	color: #000;
 	text-decoration: underline;
 	margin: 0 0 0 15px !important;
-	display: inline-block;;
+	display: inline-block;
 	vertical-align: top;
 }
 
@@ -2230,6 +2230,12 @@ width: 100%;
 	display: none;
 }
 .page-details {
+	height: auto;
+
+	#page {
+		min-height: inherit;
+	}
+
 	.content-twocols {
 		padding-top: 150px;
 	}

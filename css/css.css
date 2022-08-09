@@ -2515,6 +2515,12 @@ button {
   display: none;
 }
 
+.page-details {
+  height: auto;
+}
+.page-details #page {
+  min-height: inherit;
+}
 .page-details .content-twocols {
   padding-top: 150px;
 }
