@@ -10,6 +10,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1523176470230362"
         crossorigin="anonymous"></script>
 
+
 <?php
 $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 header("Access-Control-Allow-Origin: *");

@@ -2181,12 +2181,9 @@ width: 100%;
 }
 
 .cookies .btn-block {
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
 	margin: -5px;
 	align-items: center;
-	-ms-flex-flow: row wrap;
 	flex-flow: row nowrap;
 }
 
@@ -2218,4 +2215,22 @@ width: 100%;
 
 .cookies .link:hover {
 	text-decoration: none;
+}
+
+.banner-ad {
+	display: none;
+	max-height: 0;
+}
+.page-details {
+	.content-twocols {
+		padding-top: 110px;
+	}
+	.banner-ad {
+		max-height: inherit;
+		display: block;
+		position: absolute;
+		left: 0;
+		top: 280px;
+		text-align: center;
+	}
 }

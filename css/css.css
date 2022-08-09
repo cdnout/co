@@ -2461,9 +2461,9 @@ button {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -ms-flex-flow: row wrap;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
           flex-flow: row nowrap;
 }
 
@@ -2496,4 +2496,21 @@ button {
 
 .cookies .link:hover {
   text-decoration: none;
+}
+
+.banner-ad {
+  display: none;
+  max-height: 0;
+}
+
+.page-details .content-twocols {
+  padding-top: 110px;
+}
+.page-details .banner-ad {
+  max-height: inherit;
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 280px;
+  text-align: center;
 }
